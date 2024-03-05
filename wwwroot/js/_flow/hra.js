@@ -537,10 +537,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         var iMaxSeq = 1; if (arr.length > 0) { iMaxSeq = arr[0].values; }
         $scope.MaxSeqDataMemberteam = iMaxSeq;
 
-        $scope.MaxSeqdata_approver = 0;
+        $scope.MaxSeqdataApprover = 0;
         var arr_check = $filter('filter')($scope.data_all.max, function (item) { return (item.name == 'approver'); });
         var iMaxSeq = 1; if (arr_check.length > 0) { iMaxSeq = arr_check[0].values; }
-        $scope.MaxSeqdata_approver = iMaxSeq;
+        $scope.MaxSeqdataApprover = iMaxSeq;
 
         var arr = $filter('filter')($scope.data_all.max, function (item) { return (item.name == 'drawing'); });
         var iMaxSeq = 1; if (arr.length > 0) { iMaxSeq = arr[0].values; }
@@ -565,7 +565,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         var arr = $filter('filter')($scope.data_all.max, function (item) { return (item.name == 'workers'); });
         var iMaxSeq = 1; if (arr.length > 0) { iMaxSeq = arr[0].values; }
-        $scope.MaxSeqdata_workers = iMaxSeq;
+        $scope.MaxSeqdataWorkers = iMaxSeq;
 
         var arr = $filter('filter')($scope.data_all.max, function (item) { return (item.name == 'worksheet'); });
         var iMaxSeq = 1; if (arr.length > 0) { iMaxSeq = arr[0].values; }
@@ -921,10 +921,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                         $scope.master_subarea = JSON.parse(replace_hashKey_arr(arr.subarea));
                         $scope.master_hazard_type = JSON.parse(replace_hashKey_arr(arr.hazard_type));
-                        $scope.master_hazard_riskfactors = JSON.parse(replace_hashKey_arr(arr.azard_riskfactors));
+                        $scope.master_hazard_riskfactors = JSON.parse(replace_hashKey_arr(arr.hazard_riskfactors));
                         $scope.master_worker_group = JSON.parse(replace_hashKey_arr(arr.worker_group));
                         $scope.master_worker_list = JSON.parse(replace_hashKey_arr(arr.worker_list));
                         $scope.master_activities = JSON.parse(replace_hashKey_arr(arr.activities));
+
+
                     }
 
                     //master search employeelist
@@ -953,31 +955,31 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                     //List of Areas to Be Assessed and Health Hazards or Risk Factors
                     if (true) {
-                        $scope.data_subareas = arr.data_subareas;
-                        $scope.data_subareas_def = clone_arr_newrow(arr.data_subareas);
-                        $scope.data_subareas_old = (arr.data_subareas);
+                        $scope.data_subareas = arr.subareas;
+                        $scope.data_subareas_def = clone_arr_newrow(arr.subareas);
+                        $scope.data_subareas_old = (arr.subareas);
 
-                        $scope.data_hazard = arr.data_hazard;
-                        $scope.data_hazard_def = clone_arr_newrow(arr.data_hazard);
-                        $scope.data_hazard_old = (arr.data_hazard);
+                        $scope.data_hazard = arr.hazard;
+                        $scope.data_hazard_def = clone_arr_newrow(arr.hazard);
+                        $scope.data_hazard_old = (arr.hazard);
                     }
 
                     //List of Worker Groups and Description of Tasks
                     if (true) {
-                        $scope.data_tasks = arr.data_tasks;
-                        $scope.data_tasks_def = clone_arr_newrow(arr.data_tasks);
-                        $scope.data_tasks_old = (arr.data_tasks);
+                        $scope.data_tasks = arr.tasks;
+                        $scope.data_tasks_def = clone_arr_newrow(arr.tasks);
+                        $scope.data_tasks_old = (arr.tasks);
 
-                        $scope.data_workers = arr.data_workers;
-                        $scope.data_workers_def = clone_arr_newrow(arr.data_workers);
-                        $scope.data_workers_old = (arr.data_workers);
+                        $scope.data_workers = arr.workers;
+                        $scope.data_workers_def = clone_arr_newrow(arr.workers);
+                        $scope.data_workers_old = (arr.workers);
                     }
 
                     //HRA Worksheet
                     if (true) {
-                        $scope.data_worksheet = arr.data_worksheet;
-                        $scope.data_worksheet_def = clone_arr_newrow(arr.data_worksheet);
-                        $scope.data_worksheet_old = (arr.data_worksheet);
+                        $scope.data_worksheet = arr.worksheet;
+                        $scope.data_worksheet_def = clone_arr_newrow(arr.worksheet);
+                        $scope.data_worksheet_old = (arr.worksheet);
                     }
 
                     //Approver
@@ -1799,7 +1801,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             if (arrTaskTypeOther.length > 0) { arrTaskTypeOther[0].no = 99; }
         }
     }
-     
+
 
     //Worksheet
     if (true) {
@@ -2059,11 +2061,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                         if (arr_chk[0].id_company == '' || arr_chk[0].id_company == null) { set_alert('Warning', 'Please select a valid Company'); return; }
                         if (arr_chk[0].id_apu == '' || arr_chk[0].id_apu == null) { set_alert('Warning', 'Please select a valid Area Process Unit'); return; }
-                        if (arr_chk[0].id_toc == '' || arr_chk[0].id_toc == null) { set_alert('Warning', 'Please select a valid Thaioil Complex'); return; }
-                        if ((arr_chk[0].id_unit_no == '' || arr_chk[0].id_unit_no == null) && (arr_chk[0].id_tagid == '' || arr_chk[0].id_tagid == null)) {
-                            set_alert('Warning', 'Please select a valid Unit No or Tag ID');
-                            return;
-                        }
                         if (arr_chk[0].pha_request_name == '' || arr_chk[0].id_company == null) { set_alert('Warning', 'Please select a valid Company'); return; }
 
                     }
@@ -2072,7 +2069,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         if (false) {
                             if (arr_chk[0].id_company == '' || arr_chk[0].id_company == null) { set_alert('Warning', 'Please select a valid Company'); return; }
                             if (arr_chk[0].id_apu == '' || arr_chk[0].id_apu == null) { set_alert('Warning', 'Please select a valid Area Process Unit'); return; }
-                            if (arr_chk[0].id_toc == '' || arr_chk[0].id_toc == null) { set_alert('Warning', 'Please select a valid Thaioil Complex'); return; }
                         }
 
                         if (true) {
@@ -2086,10 +2082,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                             if ($scope.data_header[0].request_approver > 0) {
 
                                 arr_chk = $scope.data_approver;
-                                if (arr_chk.length == 0) { set_alert('Warning', 'Please provide a valid ApproverTA2 List'); return; }
+                                if (arr_chk.length == 0) { set_alert('Warning', 'Please provide a valid Assessment Team Leader List'); return; }
                                 else {
                                     var irows_last = arr_chk.length - 1;
-                                    if (arr_chk[irows_last].user_name == null) { set_alert('Warning', 'Please provide a valid ApproverTA2 List'); return; }
+                                    if (arr_chk[irows_last].user_name == null) { set_alert('Warning', 'Please provide a valid Assessment Team Leader List'); return; }
                                 }
 
                             }
@@ -2178,8 +2174,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
 
             //check requie Field 
-            if (action == 'confirm_submit_genarate'
-                || action == 'confirm_submit_genarate_without') {
+            if (action == 'confirm_submit_genarate' || action == 'confirm_submit_genarate_without') {
                 $('#modalPleaseRegister').modal('hide');
             } else if (action == 'confirm_submit_approver') {
                 $('#modalSendMailApprover').modal('hide');
@@ -2189,11 +2184,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 if (pha_status == "11" && false) {
                     if (arr_chk[0].id_company == '' || arr_chk[0].id_company == null) { set_alert('Warning', 'Please select a valid Company'); return; }
                     if (arr_chk[0].id_apu == '' || arr_chk[0].id_apu == null) { set_alert('Warning', 'Please select a valid Area Process Unit'); return; }
-                    if (arr_chk[0].id_toc == '' || arr_chk[0].id_toc == null) { set_alert('Warning', 'Please select a valid Thaioil Complex'); return; }
-                    if ((arr_chk[0].id_unit_no == '' || arr_chk[0].id_unit_no == null) && (arr_chk[0].id_tagid == '' || arr_chk[0].id_tagid == null)) {
-                        set_alert('Warning', 'Please select a valid Unit No or Tag ID');
-                        return;
-                    }
+
                     if (arr_chk[0].pha_request_name == '' || arr_chk[0].id_company == null) { set_alert('Warning', 'Please select a valid Company'); return; }
                 }
 
@@ -2308,7 +2299,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     //check_data
     if (true) {
-        alert(1111);
+        //alert(1111);
         function check_data_general() {
 
             //แปลง date to yyyyMMdd
@@ -2675,6 +2666,65 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
 
             if (type_text == "meeting_date") { }
+            if (type_text == "unit_no") {
+                var arrText = $filter('filter')($scope.master_unit_no, function (item) {
+                    return (item.id == _arr.id_unit_no);
+                });
+                if (arrText.length > 0) {
+                    $scope.selectedBusiness_Unit = arrText[0].name;
+                }
+            }
+            if (type_text == "sub_area") {
+                var arrText = $filter('filter')($scope.master_subarea, function (item) {
+                    return (item.id == _arr.id_sub_area);
+                });
+                if (arrText.length > 0) {
+                    _arr.work_of_task = arrText[0].descriptions;
+                }
+            }
+            if (type_text == "health_hazard") {
+                var arrText = $filter('filter')($scope.master_hazard_riskfactors, function (item) {
+                    return (item.id == _arr.id_health_hazard);
+                });
+                if (arrText.length > 0) {
+                    _arr.health_effect_rating = arrText[0].hazards_rating;
+                }
+            }
+            if (type_text == "worker_group") {
+                var arrText = $filter('filter')($scope.master_worker_group, function (item) {
+                    return (item.id == _arr.id_worker_group);
+                });
+                if (arrText.length > 0) {
+                    _arr.worker_group = arrText[0].name;
+                }
+
+
+                //employee in worker group --> set to workers
+                if (true) {
+
+                    //clear data_workers by id_worker_group
+                    $scope.data_workers = $filter('filter')($scope.data_workers, function (item) {
+                        return (!(item.id_tasks == _arr.id));
+                    });
+                    $scope.data_workers = $filter('filter')($scope.data_workers, function (item) {
+                        return (!(item.action_type == 'new'));
+                    });
+
+                    var arrWorkerList = $filter('filter')($scope.master_worker_list, function (item) {
+                        return (item.id_worker_group == _arr.id_worker_group);
+                    });
+                    if (arrWorkerList.length > 0) {
+
+                        //add to data_workers
+                        for (var i = 0; i < arrWorkerList.length; i++) {
+                            var result = arrWorkerList[i];
+                            add_workers(_arr.id_worker_group, _arr.id, 0, result.user_name, result.user_displayname);
+                        }
+                    }
+                }
+
+                _arr.numbers_of_workers = arrWorkerList.length;
+            }
 
             action_type_changed(_arr, _seq);
 
@@ -2724,6 +2774,39 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
     }
 
+    //add workers to data_workers
+    if (true) {
+        function add_workers(id_worker_group, id_tasks, tasks_type_other, user_name, user_displayname) {
+
+            //add new relatedpeople
+            var seq = $scope.MaxSeqdataWorkers;
+
+            var newInput = clone_arr_newrow($scope.data_workers_def)[0];
+            newInput.seq = seq;
+            newInput.id = seq;
+            newInput.no = (0);
+            newInput.id_tasks = Number(id_tasks);
+            newInput.id_worker_group = Number(id_worker_group);
+            newInput.action_type = 'insert';
+            newInput.action_change = 1;
+
+            newInput.tasks_type_other = tasks_type_other;
+            newInput.user_name = user_name;
+            newInput.user_displayname = user_displayname;
+            newInput.user_title = null;
+            newInput.user_img = null;
+
+            $scope.data_workers.push(newInput);
+
+            var iNo = $scope.data_workers.length
+            running_no_level1($scope.data_workers, iNo, null);
+
+            $scope.MaxSeqdataWorkers = Number($scope.MaxSeqdataWorkers) + 1
+
+        }
+
+    }
+
     //functioin show history data ของแต่ละ field
     if (true) {
         $scope.filteredArr = [{ name: '', isActive: true }];
@@ -2763,49 +2846,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             if ($scope.data_general[0].action_type == '') {
                 action_type_changed($scope.data_general, $scope.data_general[0].seq);
             }
-        };
-
-        $scope.filterResultHistory = function (fieldText, fieldName, fieldID) {
-            //if (fieldText.length < 3) { return; }
-
-            $scope.filteredArr[0].fieldID = null;
-            $scope.filteredResults = [];
-            var arr = [];
-            if (fieldName == 'pha_request_name') {
-                arr = $scope.data_all.his_pha_request_name;
-            }
-            else if (fieldName == 'descriptions') {
-                //arr = $scope.data_all.his_descriptions;
-            }
-            else if (fieldName == 'workstep') {
-                arr = $scope.data_all.his_workstep;
-            }
-            else if (fieldName == 'taskdesc') {
-                arr = $scope.data_all.his_taskdesc;
-            }
-            else if (fieldName == 'potentailhazard') {
-                arr = $scope.data_all.his_potentailhazard;
-            }
-            else if (fieldName == 'possiblecase') {
-                arr = $scope.data_all.his_possiblecase;
-            }
-            else if (fieldName == 'existing_safeguards') {
-                arr = $scope.data_all.his_existing_safeguards;
-            }
-            else if (fieldName == 'recommendations') {
-                arr = $scope.data_all.his_recommendations;
-            }
-
-            try {
-                for (var i = 0; i < arr.length; i++) {
-                    var result = arr[i];
-                    if (result.name.toLowerCase().includes(fieldText.toLowerCase())) {
-                        $scope.filteredResults.push({ "field": fieldName, "name": result.name });
-                    }
-                }
-                $scope.showResults = $scope.filteredResults.length > 0;
-                $scope.filteredArr = [{ "fieldID": ($scope.showResults == true ? fieldID : '') }];
-            } catch { }
         };
 
         $scope.selectResult = function (result, items_ref, fieldName) {
@@ -2862,11 +2902,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.employeelist_show = [];
             var searchText = $scope.searchText;
             if (!searchText) { return; }
+            if (searchText.length < 3) { return; }
 
             var items = angular.copy($scope.employeelist_def, items);
             searchText = searchText.toLowerCase();
 
-            if (searchText.length < 3) { return items; }
             $scope.employeelist_show = items.filter(function (item) {
                 return (
                     item.employee_id.toLowerCase().includes(searchText.toLowerCase()) ||
@@ -2933,7 +2973,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 if (arr_items.length == 0) {
 
                     //add new employee to approve list ได้รายการเดียว 
-                    var seq = $scope.MaxSeqdata_approver;
+                    var seq = $scope.MaxSeqdataApprover;
 
                     var newInput = clone_arr_newrow($scope.data_approver_def)[0];
                     newInput.seq = seq;
@@ -2954,52 +2994,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     $scope.data_approver.push(newInput);
                     running_no_level1($scope.data_approver, null, null);
 
-                    $scope.MaxSeqdata_approver = Number($scope.MaxSeqdata_approver) + 1
+                    $scope.MaxSeqdataApprover = Number($scope.MaxSeqdataApprover) + 1
 
                 }
 
             }
-            else if (xformtype == "reviewer") {
-
-                var _xformtype = xformtype;
-                var arr_items = $filter('filter')($scope.data_relatedpeople, function (item) {
-                    return (item.id_session == seq_session && item.user_type == _xformtype);
-                });
-
-                if (arr_items.length == 0) {
-
-                    //add new relatedpeople
-                    var seq = $scope.MaxSeqdata_relatedpeople;
-
-                    var newInput = clone_arr_newrow($scope.data_relatedpeople_def)[0];
-                    newInput.seq = seq;
-                    newInput.id = seq;
-                    newInput.no = (0);
-                    newInput.id_session = Number(seq_session);
-                    newInput.action_type = 'insert';
-                    newInput.action_change = 1;
-
-                    newInput.approver_type = 'approver';
-                    newInput.user_type = xformtype;
-                    newInput.user_name = employee_name;
-                    newInput.user_displayname = employee_displayname;
-                    newInput.user_title = employee_position;
-                    newInput.user_img = employee_img;
-
-                    $scope.data_relatedpeople.push(newInput);
-                    running_no_level1($scope.data_relatedpeople, null, null);
-
-                    $scope.MaxSeqdata_relatedpeople = Number($scope.MaxSeqdata_relatedpeople) + 1
-
-                } else {
-                    arr_items[0].user_name = employee_name;
-                    arr_items[0].user_displayname = employee_displayname;
-                    arr_items[0].user_title = employee_position;
-                    arr_items[0].user_img = employee_img;
-                }
-
-            }
-
             apply();
 
             $('#modalEmployeeAdd').modal('show');
@@ -3055,6 +3054,19 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             running_no_level1($scope.data_approver, null, null);
             apply();
         };
+
+        $scope.actionChangeQMTS = function (item, seq) {
+
+        }
+        $scope.actionChangeQMTSUnCheck = function (item, seq) {
+
+            for (const value of $scope.data_approver) {
+                value.approver_type = 'section_head';
+            }
+            item.approver_type = 'approver';
+            apply();
+        }
+
     }
 
     //add Drawing workflow Approve

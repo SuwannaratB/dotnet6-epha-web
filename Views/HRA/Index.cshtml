@@ -81,7 +81,7 @@
                 </span>
                 <span class="mx-2" ng-if="cancle_type && data_header[0].action_change > 0">
                     <button class="btn btn-danger btn-sm" style="width: 100px;" ng-click="confirmCancle()">CANCEL</button>
-                </span> 
+                </span>
                 <span class="mx-2" ng-if="save_type">
                     <button class="btn btn-primary btn-sm" style="width: 100px;" ng-click="confirmSave('save')">SAVE</button>
                 </span>
@@ -202,7 +202,7 @@
                                     </div>
                                     <!-- area -->
                                     <!-- toc -->
-                                    <div class="col-md-auto p-1" ng-if="item.id_company != '9999' ">
+                                    <div class="col-md-auto p-1 d-none" ng-if="item.id_company != '9999' ">
                                         <div class="row g-0 align-items-center">
                                             <div class="col-12 p-1  ">
 
@@ -234,17 +234,17 @@
                                     <!-- Unit No -->
                                     <div class="col-md-3 p-1 align-items-top" ng-if="item.id_company != '9999' ">
 
-                                        <label class="form-label ps-0" for="unit"><b class="text-danger d-none"> * </b>Unit Name </label><spand class="text-danger" style="font-size:10px;">(กรณีที่ไม่มี Unit No ต้องเลือก TAG ID )</spand>
+                                        <label class="form-label ps-0" for="unit"><b class="text-danger d-none"> * </b>Name of Area </label>
                                         <label class="form-label ps-0" ng-if="select_history_tracking_record">
                                             <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
-                                               data-bs-placement="top" title=" Unit No : ADIP Unit" data-bs-html="true"></a>
+                                               data-bs-placement="top" title=" Name of Area" data-bs-html="true"></a>
                                         </label>
 
                                         <select class="form-control col-auto js-choice-unit_no"
                                                 ng-class="{'disabled-link':(!tab_general_active)}"
                                                 data-choices="data-choices"
                                                 data-options='{"removeItemButton":true,"placeholder":true}'
-                                                ng-change="actionChange(item,item.seq,'')" ng-model="item.id_unit_no">
+                                                ng-change="actionChange(item,item.seq,'unit_no')" ng-model="item.id_unit_no">
                                             <option ng-selected="item.id_unit_no == item2.id"
                                                     ng-repeat="item2 in master_unit_no" ng-value="item2.id"
                                                     ng-if="item2.id_company == item.id_company">
@@ -298,7 +298,7 @@
                                     </div>
                                 </div>
 
-                                <div class="mx-3 row  g-3 align-items-center" ng-repeat="item in data_general"
+                                <div class="mx-1 row  g-3 align-items-center" ng-repeat="item in data_general"
                                      ng-class="{'disabled-link':(!tab_general_active)}">
 
                                     <!-- Project Name -->
@@ -420,7 +420,7 @@
                                             <thead class="  text-uppercase text-start border-bottom">
                                                 <tr>
                                                     <th class="align-middle text-center" style="font-size: 10px;" rowspan="2">No</th>
-                                                    <th class="align-middle text-center" style="font-size: 10px;" rowspan="2">Member team {{!(data_general[0].expense_type=='MOC')?' and Assessment Team Leader (QMTS)':''}}</th>
+                                                    <th class="align-middle text-center" style="font-size: 10px;" rowspan="2">Member team {{!(data_general[0].expense_type=='MOC')?' and Assessment Team Leader':''}}</th>
 
                                                     <th class="align-middle text-center" style="font-size: 10px;" rowspan="2">Session Date Time </th>
                                                     <th class="align-middle text-center" style="font-size: 10px;" rowspan="2"></th>
@@ -458,18 +458,18 @@
                                                                 </div>
                                                             </div>
 
-                                                            <div class="col-6">
+                                                            <div class="col-6" ng-if="!(data_general[0].expense_type=='MOC')">
                                                                 <div class="row" ng-class="{'d-none':(!tab_general_active)}">
                                                                     <button class="btn btn-outline-secondary p-0 cursor-pointer col-auto" style="color: #2445fc; background-color: #f1f2f4; border-color: #f1f2f4;"
-                                                                            ng-click="openDataEmployeeAdd(item,'approver')" title="ผู้ทบทวนหลัก">
-                                                                        <span class="far fa-address-book fa-lg"></span>Add Assessment Team Leader (QMTS)
+                                                                            ng-click="openDataEmployeeAdd(item,'approver')">
+                                                                        <span class="far fa-address-book fa-lg"></span>Add Assessment Team Leader
                                                                     </button>
                                                                 </div>
                                                                 <div class="row" ng-repeat="item2 in data_approver | filter:{id_session:item.seq }">
 
                                                                     <div class="row align-items-center  p-1">
                                                                         <label class="mb-0 text-1100 fw-bold" style="width:80%;border-color: #f1f2f4;"
-                                                                               ng-if=" (item2.approver_type=='approver')">{{ '(Main)' + item2.user_displayname}}</label>
+                                                                               ng-if=" (item2.approver_type=='approver' && item2.user_displayname)">{{ '(QMTS)' + item2.user_displayname}}</label>
 
                                                                         <label class="mb-0 text-1100 fw-bold" style="width:80%;border-color: #f1f2f4;"
                                                                                ng-if="!(item2.approver_type=='approver')">{{ item2.user_displayname}}</label>
@@ -657,7 +657,7 @@
                                                     </td>
 
                                                     <td class="align-middle white-space-nowrap col-3">
-                                                          
+
                                                         <div class="uploadbox align-items-center cursor-pointer" ng-if="tab_general_active">
                                                             <div class=" align-items-center p-1 cursor-pointer ">
 
@@ -767,69 +767,69 @@
                     @* List of Areas to Be Assessed and Health Hazards or Risk Factors start*@
                     <div class="" ng-class="{'tab-pane fade show active':(action_part==2),'tab-pane fade':(action_part!==2)}"
                          id="tab-areas" role="tabpanel" aria-labelledby="areas-tab">
-                        <div class="tab-pane fade" id="tab-profile" role="tabpanel" aria-labelledby="profile-tab">
 
-                            <div style="background-color: #ffffff;">
+                        <div style="background-color: #ffffff;">
 
-                                <div class="mx-3 row  g-3 align-items-top ">
+                            <div class="mx-3 row  g-3 align-items-top ">
 
-                                    <p><b>NAME OF AREA : {{selectedBusiness_Unit}}</b></p>
+                                <p><b>NAME OF AREA : {{selectedBusiness_Unit}}</b></p>
 
-                                    <!------ NAME OF SUB AREA :------>
-                                    <div class="table-responsive scrollbar mb-3" id="table-container">
+                                <!------ NAME OF SUB AREA :------>
+                                <div class="table-responsive scrollbar mb-3" id="table-container">
 
-                                        <table class="table fs--2 mb-0 table-bordered">
+                                    <table class="table fs--2 mb-0 table-bordered">
 
-                                            <thead class=" text-uppercase  text-center bg-soft">
-                                                <tr>
-                                                    <th class="sort align-middle text-center px-0" colspan="1" rowspan="2">
+                                        <thead class=" text-uppercase  text-center bg-soft">
+                                            <tr>
+                                                <th class="sort align-middle text-center px-0" colspan="1" rowspan="2">
 
-                                                    </th>
-                                                    <th class="sort align-middle text-start px-0" colspan="1" rowspan="2">
-                                                        NAME OF SUB AREA
-                                                    </th>
-                                                    <th class="sort align-middle px-0" colspan="1" rowspan="1">
-                                                        DESCRIPTION OF WORK OR TASK
-                                                    </th>
-                                                </tr>
+                                                </th>
+                                                <th class="sort align-middle text-start px-1" colspan="1" rowspan="2">
+                                                    NAME OF SUB AREA
+                                                </th>
+                                                <th class="sort align-middle px-0" colspan="1" rowspan="1">
+                                                    DESCRIPTION OF WORK OR TASK
+                                                </th>
+                                            </tr>
 
-                                            </thead>
+                                        </thead>
 
-                                            <tbody class="list">
+                                        <tbody class="list">
 
-                                                <tr class="hover-actions-trigger btn-reveal-trigger position-static p-0" ng-repeat="item in data_subareas">
+                                            <tr class="hover-actions-trigger btn-reveal-trigger position-static p-0" ng-repeat="item in data_subareas">
 
-                                                    <td class="align-top text-center px-0" style="width: 20px;">
+                                                <td class="align-top text-center px-0" style="width: 20px;">
 
-                                                        <div class="">
-                                                            <div class="align-top ">
-                                                                <div class="font-sans-serif btn-reveal-trigger position-static ">
-                                                                    <span class="px-1">{{ item.no }}</span>
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="font-sans-serif btn-reveal-trigger position-static" ng-class="{'d-none': !(tab_general_active)}">
-                                                                <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 p-1"
-                                                                        type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true"
-                                                                        aria-expanded="false" data-bs-reference="parent">
-                                                                    <span class="fas fa-cog text-info"></span>
-                                                                </button>
-                                                                <div class="dropdown-menu dropdown-menu-end py-2">
-                                                                    <a class="dropdown-item text-success"
-                                                                       ng-click="addDataSubAreas(item.seq,$index)">
-                                                                        <span class="fas fa-copy"></span>
-                                                                        Add
-                                                                    </a>
-                                                                    <div class="dropdown-divider" ng-if="!(item.no == 1)"></div>
-                                                                    <a class="dropdown-item text-danger" ng-if="!(item.no == 1)"
-                                                                       ng-click="removeDataSubAreas(item.seq,$index)"><span class="fas fa-times-circle"></span> Remove</a>
-                                                                </div>
+                                                    <div class="">
+                                                        <div class="align-top ">
+                                                            <div class="font-sans-serif btn-reveal-trigger position-static ">
+                                                                <span class="px-1">{{ item.no }}</span>
                                                             </div>
                                                         </div>
 
-                                                    </td>
+                                                        <div class="font-sans-serif btn-reveal-trigger position-static" ng-class="{'d-none': !(tab_general_active)}">
+                                                            <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 p-1"
+                                                                    type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true"
+                                                                    aria-expanded="false" data-bs-reference="parent">
+                                                                <span class="fas fa-cog text-info"></span>
+                                                            </button>
+                                                            <div class="dropdown-menu dropdown-menu-end py-2">
+                                                                <a class="dropdown-item text-success"
+                                                                   ng-click="addDataSubAreas(item.seq,$index)">
+                                                                    <span class="fas fa-copy"></span>
+                                                                    Add
+                                                                </a>
+                                                                <div class="dropdown-divider" ng-if="!(item.no == 1)"></div>
+                                                                <a class="dropdown-item text-danger" ng-if="!(item.no == 1)"
+                                                                   ng-click="removeDataSubAreas(item.seq,$index)"><span class="fas fa-times-circle"></span> Remove</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
 
-                                                    <td class="align-top px-1 py-0" style="width: 200px;">
+                                                </td>
+
+                                                <td class="align-top px-1 py-0" style="width: 200px;">
+                                                    <div class="">
                                                         <select class="form-control"
                                                                 ng-class="{'disabled-link':(!tab_general_active || !(tab_general_active && data_header[0].pha_status<=12 ))}"
                                                                 ng-change="actionChange(item,item.seq,'sub_area')"
@@ -839,122 +839,121 @@
                                                                 {{item_m.name}}
                                                             </option>
                                                         </select>
-                                                    </td>
-                                                    <td class="d-flex align-items-start text-start px-0">
-                                                        <b class="d-flex align-items-start text-start px-">{{item.work_of_task}}</b>
-                                                    </td>
+                                                    </div>
+                                                </td>
+                                                <td class="d-flex align-items-start text-start px-0">
+                                                    <b class="d-flex align-items-start text-start px-">{{item.work_of_task}}</b>
+                                                </td>
 
-                                                </tr>
-
-
-                                            </tbody>
+                                            </tr>
 
 
-                                        </table>
+                                        </tbody>
 
-                                    </div>
+
+                                    </table>
 
                                 </div>
-                                <div class="mx-3 row  g-3 align-items-top ">
 
-                                    <!------ HAZARD------>
-                                    <div class="table-responsive scrollbar" id="table-container">
+                            </div>
+                            <div class="mx-3 row  g-3 align-items-top ">
 
-                                        <table class="table fs--2 mb-0 table-bordered">
+                                <!------ HAZARD------>
+                                <div class="table-responsive scrollbar" id="table-container">
 
-                                            <thead class=" text-uppercase  text-center bg-soft">
-                                                <tr>
-                                                    <th class="sort align-middle text-center px-0" colspan="2" rowspan="2">
-                                                        TYPE OF HAZARD
-                                                    </th>
-                                                    <th class="sort align-middle text-start px-0" colspan="1" rowspan="2">
-                                                        HEALTH HAZARDS OR RISK FACTOR
-                                                    </th>
-                                                    <th class="sort align-middle px-0" colspan="1" rowspan="1">
-                                                        HEALTH EFFECT RATING
-                                                    </th>
-                                                </tr>
-                                            </thead>
+                                    <table class="table fs--2 mb-0 table-bordered">
 
-                                            <tbody class="list">
+                                        <thead class=" text-uppercase  text-center bg-soft">
+                                            <tr>
+                                                <th class="sort align-middle text-center px-0" colspan="2" rowspan="2">
+                                                    TYPE OF HAZARD
+                                                </th>
+                                                <th class="sort align-middle text-start px-0" colspan="1" rowspan="2">
+                                                    HEALTH HAZARDS OR RISK FACTOR
+                                                </th>
+                                                <th class="sort align-middle px-0" colspan="1" rowspan="1">
+                                                    HEALTH EFFECT RATING
+                                                </th>
+                                            </tr>
+                                        </thead>
 
-                                                <tr class="hover-actions-trigger btn-reveal-trigger position-static p-0" ng-repeat="item in data_hazard">
+                                        <tbody class="list">
 
-                                                    <td class="align-top text-center px-0" style="width: 20px;">
+                                            <tr class="hover-actions-trigger btn-reveal-trigger position-static p-0" ng-repeat="item in data_hazard">
 
-                                                        <div class="">
-                                                            <div class="align-top ">
-                                                                <div class="font-sans-serif btn-reveal-trigger position-static ">
-                                                                    <span class="px-1">{{ item.no }}</span>
-                                                                </div>
-                                                            </div>
+                                                <td class="align-top text-center px-0" style="width: 20px;">
 
-                                                            <div class="font-sans-serif btn-reveal-trigger position-static" ng-class="{'d-none': !(tab_general_active)}">
-                                                                <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 p-1"
-                                                                        type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true"
-                                                                        aria-expanded="false" data-bs-reference="parent">
-                                                                    <span class="fas fa-cog text-info"></span>
-                                                                </button>
-                                                                <div class="dropdown-menu dropdown-menu-end py-2">
-                                                                    <a class="dropdown-item text-success" ng-click="addDataHazard(item.seq,$index)">
-                                                                        <span class="fas fa-copy"></span>
-                                                                        Add
-                                                                    </a>
-                                                                    <div class="dropdown-divider" ng-if="!(item.no == 1)"></div>
-                                                                    <a class="dropdown-item text-danger" ng-if="!(item.no == 1)"
-                                                                       ng-click="removeDataHazard(item.seq,$index)"><span class="fas fa-times-circle"></span> Remove</a>
-                                                                </div>
+                                                    <div class="">
+                                                        <div class="align-top ">
+                                                            <div class="font-sans-serif btn-reveal-trigger position-static ">
+                                                                <span class="px-1">{{ item.no }}</span>
                                                             </div>
                                                         </div>
 
-                                                    </td>
+                                                        <div class="font-sans-serif btn-reveal-trigger position-static" ng-class="{'d-none': !(tab_general_active)}">
+                                                            <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 p-1"
+                                                                    type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true"
+                                                                    aria-expanded="false" data-bs-reference="parent">
+                                                                <span class="fas fa-cog text-info"></span>
+                                                            </button>
+                                                            <div class="dropdown-menu dropdown-menu-end py-2">
+                                                                <a class="dropdown-item text-success" ng-click="addDataHazard(item.seq,$index)">
+                                                                    <span class="fas fa-copy"></span>
+                                                                    Add
+                                                                </a>
+                                                                <div class="dropdown-divider" ng-if="!(item.no == 1)"></div>
+                                                                <a class="dropdown-item text-danger" ng-if="!(item.no == 1)"
+                                                                   ng-click="removeDataHazard(item.seq,$index)"><span class="fas fa-times-circle"></span> Remove</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
 
-                                                    <td class="align-top px-1 py-0" style="width: 200px;">
-                                                        <select class="form-control"
-                                                                ng-class="{'disabled-link':(!tab_general_active || !(tab_general_active && data_header[0].pha_status<=12 ))}"
-                                                                ng-change="actionChange(item,item.seq,'type_hazard')"
-                                                                ng-model="item.id_type_hazard"
-                                                                ng-if="tab_general_active">
-                                                            <option ng-repeat="item_m in master_type_hazard" ng-value="item_m.id">
-                                                                {{item_m.name}}
-                                                            </option>
-                                                        </select>
-                                                    </td>
+                                                </td>
 
-                                                    <td class="align-top px-1 py-0" style="width: 200px;">
-                                                        <select class="form-control"
-                                                                ng-class="{'disabled-link':(!tab_general_active || !(tab_general_active && data_header[0].pha_status<=12 ))}"
-                                                                ng-change="actionChange(item,item.seq,'health_hazard')"
-                                                                ng-model="item.id_health_hazard"
-                                                                ng-if="tab_general_active">
-                                                            <option ng-repeat="item_m in master_health_hazard" ng-value="item_m.id">
-                                                                {{item_m.name}}
-                                                            </option>
-                                                        </select>
-                                                    </td>
+                                                <td class="align-top px-1 py-0" style="width: 200px;">
+                                                    <select class="form-control"
+                                                            ng-class="{'disabled-link':(!tab_general_active || !(tab_general_active && data_header[0].pha_status<=12 ))}"
+                                                            ng-change="actionChange(item,item.seq,'type_hazard')"
+                                                            ng-model="item.id_type_hazard"
+                                                            ng-if="tab_general_active">
+                                                        <option ng-repeat="item_m in master_hazard_type" ng-value="item_m.id">
+                                                            {{item_m.name}}
+                                                        </option>
+                                                    </select>
+                                                </td>
 
-                                                    <td class="align-top  text-center px-0">
-                                                        <b class="d-flex align-items-start text-start px-">{{item.work_of_task}}</b>
-                                                    </td>
+                                                <td class="align-top px-1 py-0" style="width: 200px;">
+                                                    <select class="form-control"
+                                                            ng-class="{'disabled-link':(!tab_general_active || !(tab_general_active && data_header[0].pha_status<=12 ))}"
+                                                            ng-change="actionChange(item,item.seq,'health_hazard')"
+                                                            ng-model="item.id_health_hazard"
+                                                            ng-if="tab_general_active">
+                                                        <option ng-repeat="item_m in master_hazard_riskfactors" ng-value="item_m.id">
+                                                            {{item_m.name}}
+                                                        </option>
+                                                    </select>
+                                                </td>
 
-                                                </tr>
+                                                <td class="align-top  text-center px-0">
+                                                    <b class="d-flex align-items-start text-start px-">{{item.health_effect_rating}}</b>
+                                                </td>
 
-                                            </tbody>
+                                            </tr>
 
-
-                                        </table>
-
-                                    </div>
+                                        </tbody>
 
 
+                                    </table>
 
                                 </div>
+
 
 
                             </div>
 
 
                         </div>
+
 
                     </div>
 
@@ -963,45 +962,45 @@
                     @* List of Worker Groups and Description of Tasks start*@
                     <div class="" ng-class="{'tab-pane fade show active':(action_part==3),'tab-pane fade':(action_part!==3)}"
                          id="tab-worker" role="tabpanel" aria-labelledby="worker-tab">
-                        <div class="tab-pane fade" id="tab-profile" role="tabpanel" aria-labelledby="profile-tab">
 
-                            <div style="background-color: #ffffff;">
+                        <div style="background-color: #ffffff;">
 
-                                <div class="mx-3 row  g-3 align-items-top ">
+                            <div class="mx-3 row  g-3 align-items-top ">
 
-                                    <div class="table-responsive scrollbar" id="table-container">
+                                <div class="table-responsive scrollbar" id="table-container">
 
-                                        <table class="table fs--2 mb-0 table-bordered">
+                                    <table class="table fs--2 mb-0 table-bordered">
 
-                                            <thead class=" text-uppercase  text-center bg-soft">
-                                                <tr>
-                                                    <th class="sort align-middle" colspan="3" rowspan="1">
-                                                        NAME OF WORKER GROUP
-                                                    </th>
-                                                    <th class="sort align-middle text-center" colspan="1" rowspan="2">
-                                                        NUMBERS OF WORKERS
-                                                    </th>
-                                                    <th class="sort align-middle text-center" colspan="1" rowspan="2">
-                                                        DESCRIPTION OF WORK OR TASK
-                                                    </th>
-                                                </tr>
-                                                <tr>
-                                                    <th class=" align-middle text-start">AREA</th>
-                                                    <th class=" align-middle text-start">WORKER GROUP</th>
-                                                    <th class=" align-middle text-start">EMPLOYEES /STAFF MEMBERS</th>
-                                                </tr>
-                                            </thead>
+                                        <thead class=" text-uppercase  text-center bg-soft">
+                                            <tr>
+                                                <th class="sort align-middle" colspan="3" rowspan="1">
+                                                    NAME OF WORKER GROUP
+                                                </th>
+                                                <th class="sort align-middle text-center" colspan="1" rowspan="2">
+                                                    NUMBERS OF WORKERS
+                                                </th>
+                                                <th class="sort align-middle text-center" colspan="1" rowspan="2">
+                                                    DESCRIPTION OF WORK OR TASK
+                                                </th>
+                                            </tr>
+                                            <tr>
+                                                <th class=" align-middle text-start">AREA</th>
+                                                <th class=" align-middle text-start">WORKER GROUP</th>
+                                                <th class=" align-middle text-start">EMPLOYEES /STAFF MEMBERS</th>
+                                            </tr>
+                                        </thead>
 
-                                            <tbody class="list" id="customer-rating-table-body">
+                                        <tbody class="list" id="customer-rating-table-body">
 
-                                                <tr class="hover-actions-trigger btn-reveal-trigger position-static" ng-repeat="item in data_tasks" ng-if="item.tasks_type_other == 0">
+                                            <tr class="hover-actions-trigger btn-reveal-trigger position-static" ng-repeat="item in data_tasks" ng-if="item.tasks_type_other == 0">
 
-                                                    <td class="align-top rating white-space-nowrap px-0" style="width: 150px;">
-                                                        <p class="text-1100 fw-bold" ng-if="$index == 0">{{selectedBusiness_Unit}}</p>
-                                                    </td>
+                                                <td class="align-top rating white-space-nowrap px-0" style="width: 150px;">
+                                                    <p class="text-1100 fw-bold" ng-if="$index == 0">{{selectedBusiness_Unit}}</p>
+                                                </td>
 
-                                                    <td class="align-top rating white-space-nowrap px-0" style="width: 250px;">
+                                                <td class="align-top rating white-space-nowrap px-0" style="width: 250px;">
 
+                                                    <div class="d-flex align-items-center mx-1">
                                                         <div class="">
                                                             <div class="font-sans-serif btn-reveal-trigger position-static"
                                                                  ng-class="{'d-none': !(tab_general_active)}"
@@ -1044,33 +1043,30 @@
                                                                ng-model="item.worker_group"
                                                                ng-if="item.tasks_type_other == 1">
 
-                                                    </td>
+                                                    </div>
+                                                </td>
 
-                                                    <td class="align-top rating px-0 d-flex flex-column align-items-center justify-content-start">
-                                                        <div class="d-flex justify-content-start w-100 ps-2"
-                                                             ng-repeat="workers in data_workers | filter:{id_tasks:item.id_tasks} | orderBy:'no'">
-                                                            <p class="text-1100 text-start fw-bold">{{workers.employee}}</p>
-                                                        </div>
-                                                    </td>
-
-
-                                                    <td class="align-top status text-center px-0" style="width: 50px;">
-                                                        <p><b>{{ (data_workers | filter:{id_tasks:item.id_tasks}).length }}</b></p>
-                                                    </td>
+                                                <td class="align-top rating px-0 d-flex flex-column align-items-center justify-content-start">
+                                                    <div class="d-flex justify-content-start w-100 ps-2"
+                                                         ng-repeat="workers in data_workers | filter:{id_tasks:item.id} | orderBy:'no'">
+                                                        <p class="text-1100 text-start fw-bold">{{workers.user_displayname}}</p>
+                                                    </div>
+                                                </td>
 
 
-                                                    <td class="align-top p-0">
-                                                        <textarea class="form-control " id="floatingTextarea2" ng-nodel="item.work_or_task"
-                                                                  placeholder="Description of Work or Task" style="height: 100px"></textarea>
-                                                    </td>
+                                                <td class="align-top status text-center px-0" style="width: 50px;">
+                                                    <p><b>{{ (data_workers | filter:{id_tasks:item.id}).length }}</b></p>
+                                                </td>
+                                                 
+                                                <td class="align-top p-0">
+                                                    <textarea class="form-control text-1100" id="floatingTextarea2" ng-nodel="item.work_or_task"
+                                                              placeholder="Description of Work or Task" style="height: 100px"></textarea>
+                                                </td>
 
-                                                </tr>
+                                            </tr>
 
-                                            </tbody>
-                                        </table>
-                                    </div>
-
-
+                                        </tbody>
+                                    </table>
                                 </div>
 
 
@@ -1079,15 +1075,16 @@
 
                         </div>
 
+
                     </div>
 
                     @* List of Worker Groups and Description of Tasks end*@
 
-                    
+
                     @* RAM start*@
-                        <div class="d-none" ng-class="{'tab-pane fade show active':(action_part==4),'tab-pane fade':(action_part!==4)}"
+                    <div class="d-none" ng-class="{'tab-pane fade show active':(action_part==4),'tab-pane fade':(action_part!==4)}"
                          id="tab-worksheet" role="tabpanel" aria-labelledby="worksheet-tab"></div>
-                    @* RAM end*@ 
+                    @* RAM end*@
 
 
                     @* HRA Worksheet start*@
@@ -1317,9 +1314,9 @@
                                                         <div class="d-flex align-items-center">
                                                             <div class="mx-1">
                                                                 <textarea class="form-control form-control-sm" rows="3" type="text"
-                                                                       placeholder="Hierarchy of Control (ALARP)" ng-disabled="item.initial_risk_rating === 'Low'"
-                                                                       ng-style="{'background-color': item.initial_risk_rating === 'Low' ? '#f2f2f2' : 'inherit'}"
-                                                                       ng-model="item.hierarchy_of_control">
+                                                                          placeholder="Hierarchy of Control (ALARP)" ng-disabled="item.initial_risk_rating === 'Low'"
+                                                                          ng-style="{'background-color': item.initial_risk_rating === 'Low' ? '#f2f2f2' : 'inherit'}"
+                                                                          ng-model="item.hierarchy_of_control">
                                                             </div>
                                                         </div>
                                                     </td>
@@ -1327,9 +1324,9 @@
                                                         <div class="d-flex align-items-center">
                                                             <div class="mx-1">
                                                                 <textarea class="form-control form-control-sm" rows="3" type="text"
-                                                                       placeholder="Effective?" ng-disabled="item.initial_risk_rating === 'Low'"
-                                                                       ng-style="{'background-color': item.initial_risk_rating === 'Low' ? '#f2f2f2' : 'inherit'}"
-                                                                       ng-model="item.effective">
+                                                                          placeholder="Effective?" ng-disabled="item.initial_risk_rating === 'Low'"
+                                                                          ng-style="{'background-color': item.initial_risk_rating === 'Low' ? '#f2f2f2' : 'inherit'}"
+                                                                          ng-model="item.effective">
                                                             </div>
                                                         </div>
                                                     </td>
@@ -1337,9 +1334,9 @@
                                                         <div class="d-flex align-items-center">
                                                             <div class="mx-1">
                                                                 <textarea class="form-control form-control-sm" rows="3" type="text"
-                                                                       placeholder="Residual Risk Rating" ng-disabled="item.initial_risk_rating === 'Low'"
-                                                                       ng-style="{'background-color': item.initial_risk_rating === 'Low' ? '#f2f2f2' : 'inherit'}"
-                                                                       ng-model="item.residual_risk_rating">
+                                                                          placeholder="Residual Risk Rating" ng-disabled="item.initial_risk_rating === 'Low'"
+                                                                          ng-style="{'background-color': item.initial_risk_rating === 'Low' ? '#f2f2f2' : 'inherit'}"
+                                                                          ng-model="item.residual_risk_rating">
                                                             </div>
                                                         </div>
                                                     </td>
@@ -1855,7 +1852,7 @@
                                                 <td class="email align-middle white-space-nowrap text-1000 pe-5">
                                                     HRA RECOMMENDATION RESPONSE SHEET
                                                 </td>
-                                            </tr> 
+                                            </tr>
                                             <tr class="hover-actions-trigger btn-reveal-trigger position-static d-none">
                                                 <td class="fs--1 align-middle ps-0 py-3">
 
@@ -1985,16 +1982,12 @@
                     </div>
                     @* end แสดงข้อมูลที่ ค้นหาตาม textsearch*@
 
-
                 </div>
 
                 <div class="modal-header bg-soft" ng-if="!(selectDatFormType =='owner' )">
 
                     <h5 class="text-900 mb-0" ng-if="selectDatFormType =='member'"> <span class=" me-2 text-primary"><B>|</B></span>Member Team</h5>
-                    <h5 class="text-900 mb-0" ng-if="selectDatFormType =='approver'"> <span class=" me-2 text-primary"><B>|</B></span>Safety Reviewer</h5>
-                    <h5 class="text-900 mb-0" ng-if="selectDatFormType =='reviewer'"> <span class=" me-2 text-primary"><B>|</B></span>Approver AE or AGSI</h5>
-                    <h5 class="text-900 mb-0" ng-if="selectDatFormType =='attendees'"> <span class=" me-2 text-primary"><B>|</B></span>ผู้จัดทำ (Attendees)</h5>
-                    <h5 class="text-900 mb-0" ng-if="selectDatFormType =='specialist'"> <span class=" me-2 text-primary"><B>|</B></span>ผู้เชี่ยวชาญเฉพาะด้าน (ถ้ามี)</h5>
+                    <h5 class="text-900 mb-0" ng-if="selectDatFormType =='approver'"> <span class=" me-2 text-primary"><B>|</B></span>Assessment Team Leader</h5>
 
                 </div>
 
@@ -2046,131 +2039,6 @@
                     </div>
                     @* end ข้อมูลเดียวกันกับตรง session*@
                 </div>
-
-                @* reviewer *@
-                <div class="modal-body" ng-if="selectDatFormType =='reviewer' ">
-                    <div class="col-auto" ng-repeat="item2 in data_relatedpeople | filter:{id_session: selectdata_session ,user_type:'reviewer'}"
-                         ng-if="!(item2.user_displayname ==''  || item2.user_displayname == null)">
-                        <div class="d-flex align-items-center p-1" style="height: 20px;">
-                            <button id="del-{{item2.seq}}" class="btn btn-link text-danger"
-                                    ng-class="{'d-none':(!tab_general_active)}"
-                                    ng-click="removeDataRelatedpeople(item2.seq, selectdata_session)">
-                                Remove
-                            </button>
-                            <label class="mb-0 ms-3 text-1100 fw-bold"
-                                   style="width:80%;border-color: #f1f2f4;">{{ item2.user_displayname}}</label>
-
-                        </div>
-                    </div>
-                </div>
-
-                @* relatedpeople group *@
-                <div class="modal-body" ng-if="!(selectDatFormType =='member' || selectDatFormType =='approver'|| selectDatFormType =='reviewer')">
-                    <div class="bg-white border-top border-bottom border-200 position-relative top-1">
-                        <div class="table-responsive scrollbar-overlay mx-n1 px-1">
-                            <table class="table table-sm fs--1 mb-0">
-                                <thead class=" text-uppercase">
-                                    <tr class="">
-                                        <th class="" style="width:150px;"> </th>
-                                        <th class="pe-5">Name (ชื่อ-นามสกุล)</th>
-                                        <th class="pe-5">Title (ตำแหน่ง)</th>
-                                    </tr>
-                                </thead>
-                                <tbody class=" list">
-                                    <tr class="hover-actions-trigger btn-reveal-trigger position-static"
-                                        ng-repeat="itemRel in data_relatedpeople | filter:{id_session:selectdata_session, user_type:selectDatFormType}"
-                                        ng-if="!(itemRel.user_displayname ==''  || itemRel.user_displayname == null)">
-                                        <td class="">
-                                            <button id="del-{{item2.seq}}" class="btn btn-link text-danger p-0 text-end" style="width:140px;"
-                                                    ng-class="{'d-none':(!tab_general_active)}"
-                                                    ng-click="removeDataRelatedpeople(itemRel.seq)">
-                                                Remove
-                                            </button>
-                                        </td>
-                                        <td class="">
-                                            <b>{{itemRel.user_displayname}}</b>
-                                        </td>
-                                        <td class="">
-                                            <b>{{itemRel.user_title}}</b>
-                                        </td>
-
-                                    </tr>
-                                    @*Free text*@
-                                    <tr class="hover-actions-trigger btn-reveal-trigger position-static"
-                                        ng-repeat="itemRel in data_relatedpeople_outsider | filter:{id_session:selectdata_session, user_type:selectDatFormType}">
-                                        <td class="">
-                                            <button id="del-{{item2.seq}}" class="btn btn-link text-danger p-0 text-end" style="width:140px;"
-                                                    ng-class="{'d-none':(!tab_general_active)}"
-                                                    ng-click="removeDataRelatedpeopleOutsider(itemRel.seq)">
-                                                Remove
-                                            </button>
-                                            <button id="add-{{item2.seq}}" class="btn btn-link text-primary p-0 text-end" style="width:140px;"
-                                                    ng-class="{'d-none':(!tab_general_active)}"
-                                                    ng-click="addnewFreebox(itemRel.seq)"
-                                                    ng-if="$last">
-                                                Add Other Contract
-                                            </button>
-                                        </td>
-                                        <td class="">
-                                            <input type="text" class="form-control form-control-sm" placeholder="Name"
-                                                   style="width: 100%;"
-                                                   ng-model="itemRel.user_displayname"
-                                                   ng-change="actionChange(itemRel,itemRel.seq,'')">
-                                        </td>
-                                        <td class="">
-                                            <input type="text" class="form-control form-control-sm" placeholder="Title"
-                                                   style="width: 100%;"
-                                                   ng-model="itemRel.user_title"
-                                                   ng-change="actionChange(itemRel,itemRel.seq,'')">
-                                        </td>
-
-                                    </tr>
-                                </tbody>
-                            </table>
-
-                        </div>
-                    </div>
-                </div>
-
-                <div class="d-none">
-                    @* attendees *@
-                    <div class="modal-body" ng-if="selectDatFormType =='attendees'">
-                        <div class="col-auto d-none" ng-repeat="item2 in data_relatedpeople | filter:{id_session: selectdata_session ,user_type:'attendees'}"
-                             ng-if="!(item2.user_displayname)">
-                            <div class="d-flex align-items-center p-1" style="height: 20px;">
-                                <button id="del-{{item2.seq}}" class="btn btn-link text-danger"
-                                        ng-class="{'d-none':(!tab_general_active)}"
-                                        ng-click="removeDataEmployee(item2.seq, selectdata_session)">
-                                    Remove
-                                </button>
-                                <label class="mb-0 ms-3 text-1100 fw-bold"
-                                       style="width:80%;border-color: #f1f2f4;">{{ item2.user_displayname}}</label>
-
-                            </div>
-                        </div>
-                    </div>
-
-                    @* specialist *@
-                    <div class="modal-body" ng-if="selectDatFormType =='specialist' ">
-
-                        <div class="col-auto" ng-repeat="item2 in data_relatedpeople | filter:{id_session: selectdata_session ,user_type:'specialist'}"
-                             ng-if="!(item2.user_displayname == null)">
-                            <div class="d-flex align-items-center p-1" style="height: 20px;">
-                                <button id="del-{{item2.seq}}" class="btn btn-link text-danger"
-                                        ng-class="{'d-none':(!tab_general_active)}"
-                                        ng-click="removeDataRelatedpeople(item2.seq)">
-                                    Remove
-                                </button>
-
-                                <label class="mb-0 ms-3 text-1100 fw-bold"
-                                       style="width:80%;border-color: #f1f2f4;">{{item2.user_displayname}}</label>
-
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
 
             </div>
         </div>
