@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+    <script src="js/config.js"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&amp;display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+
+    <link rel="stylesheet" href="css/theme.min.css">
+
+    <!-- css สำหรับ freezer table -->
+    <link rel="stylesheet" href="css/tablefreezer.css">
+
+
+
+  
+</head>
+<body ng-controller="myController">
+
+    <div class="container mt-3">
+
+                                            
+ 
+      <div id="fullscreenzone" style="background-color: #ffffff;">  
+
+            <div class=" border-bottom "  >
+                                                                                <!-- id ที่เอาไว้ทำให้ code ทำงาน -->
+                    <div class="table-responsive scrollbar tableFixHead " id="table-container">
+           
+                        <table class="table fs--2 mb-0 table-bordered  " cellpadding="0" cellspacing="0">
+                            <thead class=" text-uppercase  text-center  bg-soft  test" style="font-size: 10px;" id="myHeader">
+                                <tr>
+                                  <th class=" align-middle   mx-0" colspan="1" rowspan="2" style="padding: 0 !important;">Guide Word </th>
+                                  <th class=" align-middle   mx-0" colspan="1" rowspan="2" scope="col" style="padding: 0 !important;">Deviations</th>
+                                  <th class=" align-middle   mx-0"  colspan="1" rowspan="2" scope="col" style="padding: 0 !important; width: 200px;">Causes</th>
+                                  <th class=" align-middle   mx-0" colspan="1" rowspan="2" scope="col" style="padding: 0 !important; width: 200px;">Consequences</th>
+                   
+                                  <th class=" align-middle   mx-0" colspan="1" rowspan="1" scope="col" style="padding: 0 !important;">CAT </th>
+                                  <th class=" align-middle   mx-0" colspan="3" rowspan="1" scope="col" style="padding: 0 !important;"> Unmitigated Risk<br>Assessment Matrix</th>
+                                  <th class=" align-middle   mx-0" colspan="1" rowspan="1" scope="col" style="padding: 0 !important;">Major <br>Accident<br>Event </th>
+                                  <th class=" align-middle   mx-0" colspan="1" rowspan="2" scope="col" style="padding: 0 !important; width: 175px;"> Existing Safeguards</th>
+                                  <th class=" align-middle   mx-0" colspan="3" rowspan="1" scope="col" style="padding: 0 !important;"> Mitigated Risk<br>Assessment Matrix</th>
+                                  <th class=" align-middle   mx-0" colspan="1" rowspan="2" scope="col" style="padding: 0 !important; width: 200px;"> Recommendations</th>
+                                  <th class=" align-middle   mx-0" colspan="1" rowspan="2" scope="col" style="padding: 0 !important;">Responder</th>
+                                  <th class=" align-middle   mx-0" colspan="1" rowspan="2" scope="col" style="padding: 0 !important;">Action Status</th>
+                                </tr>
+                                <tr>
+                                  <th class=" align-middle  mx-0" style="font-size: 9px;" scope="col" style="padding: 0 !important;">(P/A/E/R/Q)</th>
+                                  <th class=" align-middle  mx-0" scope="col" style="padding: 0 !important;">S</th>
+                                  <th class=" align-middle  mx-0" scope="col" style="padding: 0 !important;">L</th>
+                                  <th class=" align-middle  mx-0" scope="col" style="padding: 0 !important;">R</th>
+                                  <th class=" align-middle  mx-0" scope="col" style="padding: 0 !important;">(Y/N)</th>
+                                  <th class=" align-middle  mx-0" scope="col" style="padding: 0 !important;">S</th>
+                                  <th class=" align-middle  mx-0" scope="col" style="padding: 0 !important;">L</th>
+                                  <th class=" align-middle  mx-0" scope="col" style="padding: 0 !important;">R</th>
+                                </tr>
+                            </thead>
+                                        
+                            <tbody class="">
+
+
+                                <tr class="rowwork " ng-repeat="item in DataWorkSheet">
+    
+                                    <td class=" " style="padding: 0 !important; width: 80px;" >
+                                        <p class=" mx-1  text-1100 fw-bold " >{{ item.no + 'Safety & Human Factor' }}  </p>
+                                        <!-- <p class=" mx-0  text-1100 fw-bold " >{{ item.no + ' ' + item.guidewords}}  </p> -->
+                                    </td>
+
+
+                                    <td class=" " style="padding: 0 !important; width: 80px;">
+                                        <p class="mx-1 text-1100 fw-bold" >{{item.deviations}} Operations / Start Up / 
+                                        Shutdown</p>
+                                    </td>
+
+                                    <td class="" style="padding: 0 !important;">
+
+                                    <div class="d-flex align-items-center w-100" ng-if="item.row_type =='causes'">
+                                        <span class=" font-sans-serif btn-reveal-trigger position-static pt-0 ">
+                                            <p class="p-0 m-0 me-1 text-end text-1100 fw-bold">{{item.seq_guidewords + '.' + item.seq_causes}}</p>
+                                            <button
+                                            class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 text-align-end p-1"
+                                            type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true"
+                                            aria-expanded="false" data-bs-reference="parent"><span
+                                                class="fas fa-cog text-info align-top"></span></button>
+        
+                                            <div class="dropdown-menu dropdown-menu-end py-2 align-top">
+                                            <a class="dropdown-item text-success" href="#!" ng-click="addDataWorkSheet('causes',item.seq_node,item.seq_guidewords, item.seq, item.seq_causes,
+                                                item.seq_consequences, item.seq_consequences_sub)"><span
+                                                class="fas fa-copy"></span>
+                                                Add</a>
+                                            <div class="dropdown-divider "></div><a class="dropdown-item text-danger" href="#!"
+                                                ng-click=addDataNodeDrawing(x.seq,item.seq)><span
+                                                class="fas fa-times-circle"></span> Remove</a>
+                                            </div>
+                                            <br>
+                                            <button data-bs-toggle="modal" data-bs-target="#modalSuggestionCauses"
+                                            class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 text-align-end p-1"><span
+                                            class="fas fa-lightbulb text-warning align-top"></span>
+                                            </button>
+                                        </span>
+        
+                                        <textarea ng-if="selectViewTypeFollowup == 1" class="form-control form-control-sm rounded-1 p-1 m-0 w-100 border border-end-0 border-top-0" rows="1" type="text" placeholder="Causes" style=" width: 200px; font-size: 10px;" >1.1</textarea>
+        
+                                        <textarea ng-if="selectViewTypeFollowup == 2" class="form-control form-control-sm rounded-0 p-1 m-0 w-100 border border-end-0 border-top-0" rows="4" type="text" placeholder="Causes" style=" width: 200px; font-size: 10px;">Causes xxx1</textarea>
+
+                                    </div>
+    
+
+                                    <div class="mx-auto " ng-if="item.row_type !='causes'">
+
+                                        <div class="text-center my-aoto showcase">
+                                        {{item.seq_guidewords + '.' + item.seq_causes}}
+                    
+                                        </div>
+                                        
+                                    </div>
+        
+        
+                                    </td>
+
+                                    <td class=" " style="padding: 0 !important;">
+
+                                    <div class="d-flex align-items-center w-100" ng-if="item.row_type =='causes' || item.row_type =='consequences'">
+                                        <span class=" align-top font-sans-serif btn-reveal-trigger position-static pt-0 ">
+                                        <p class="p-0 m-0 me-1 text-end">{{item.seq_guidewords + '.' + item.seq_causes+ '.' + item.seq_consequences}}</p>
+        
+                                        <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 text-align-end p-1"
+                                        type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true"
+                                        aria-expanded="false" data-bs-reference="parent"><span
+                                            class="fas fa-cog text-info align-top"></span></button>
+    
+                                        <div class="dropdown-menu dropdown-menu-end py-2 align-top ">
+                                        <a class="dropdown-item text-success" href="#!" ng-click="addDataWorkSheet('consequences',item.seq_node,item.seq_guidewords, item.seq, item.seq_causes, item.seq_consequences, item.seq_consequences_sub)"><span
+                                            class="fas fa-copy"></span>
+                                            Add</a>
+                                        <div class="dropdown-divider "></div><a class="dropdown-item text-danger"
+                                            href="#!"><span class="fas fa-times-circle"></span> Remove</a>
+                                        </div>
+                                        </span>
+                                        <textarea ng-if="selectViewTypeFollowup2 == 1"  class="form-control form-control-sm p-1 rounded-1 w-100 border border-end-0 border-top-0" rows="1" type="text" style=" width: 200px; font-size: 10px;" placeholder="Consequences">1.1.1</textarea>
+                                        <textarea ng-if="selectViewTypeFollowup2 == 2" class="form-control form-control-sm p-1 rounded-1 w-100 border border-end-0 border-top-0"  rows="4" type="text" style=" width: 200px; font-size: 10px;" placeholder="Consequences">Consequences xxx1</textarea>
+                                    </div>
+
+
+                                        <div class="mx-auto " ng-if="item.row_type !='causes' && item.row_type !='consequences' " >
+
+                                        <div class="text-center my-aoto showcase">
+                                            {{item.seq_guidewords + '.' + item.seq_causes+ '.' + item.seq_consequences}}
+                                        </div>
+                                        
+                                        </div>
+
+                                        
+                                    </td>
+
+                                    <td class=" " style="padding: 0 !important; width: 60px;">
+                                        <div class="d-flex align-items-center px-0 my-1 mx-auto">
+        
+                                        <div class="align-top  font-sans-serif btn-reveal-trigger position-static pt-0">
+                                            <p class="p-0 m-0 me-1 text-end d-none">{{item.seq_guidewords + '.' + item.seq_causes+
+                                            '.' +
+                                            item.seq_consequences+ '.' + item.seq_consequences_sub}}</p>
+        
+                                            <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 text-align-end p-1 mx-1"
+                                            type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true"
+                                            aria-expanded="false" data-bs-reference="parent"><span
+                                                class="fas fa-cog text-info align-top"></span></button>
+        
+                                            <div class="dropdown-menu dropdown-menu-end py-2 align-top">
+                                            <a class="dropdown-item text-success" href="#!" ng-click="addDataWorkSheet('consequences_sub',item.seq_node,item.seq_guidewords, item.seq, item.seq_causes,
+                                            item.seq_consequences, item.seq_consequences_sub)"><span
+                                                class="fas fa-copy"></span>
+                                                Add</a>
+                                            <div class="dropdown-divider "></div><a class="dropdown-item text-danger"
+                                                href="#!"><span class="fas fa-times-circle"></span> Remove</a>
+                                            </div>
+        
+                                        </div>
+
+                                        <select class="form-select rounded-1 mx-1 p-1" style="width: 50px;"   ng-model="selectedItemNodeCategory"  ng-init="selectedItemNodeCategory = selectedItemNodeCategory || DataCategory[0].id">
+                                        <option ng-repeat="y in DataCategory" ng-if="y.name !== ''" ng-model="y.id"
+                                        ng-selected="selectedItemNodeCategory == y.id" value="{{y.id}}">{{y.name}}
+                                        </option>
+                                        </select>
+
+                                        </div>
+    
+                                
+                            
+                                    </td>
+        
+        
+                                    <td class=" " style="padding: 0 !important; width: 30px;">
+                                        <div class="d-flex align-items-center ">
+                                        <button
+                                            class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 d-flex p-1 mx-auto"
+                                            type="button" ng-click="openModalDataRAM('s',item.seq,'befor')" data-bs-toggle="modal"
+                                            data-bs-target="#modalRAM">
+                                            <h6 class="me-1">{{item.ram_befor_security}}</h6> <span class="fas fa-pencil-alt fa-sm"></span>
+                                        </button>
+                                        </div>
+                                    </td>
+        
+                                    <td class=" " style="padding: 0 !important; width: 30px;">
+                                        <div class="d-flex align-items-center ">
+                                        <button
+                                            class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 d-flex p-1 mx-auto"
+                                            type="button" ng-click="openModalDataRAM('l',item.seq,'befor')" data-bs-toggle="modal"
+                                            data-bs-target="#modalRAM">
+                                            <h6 class="me-1">{{item.ram_befor_likelihood}}</h6> <span class="fas fa-pencil-alt fa-sm"></span>
+                                        </button>
+                                        </div>
+                                    </td>
+        
+                                    <td class=" py-0" style="padding: 0 !important; width: 30px;">
+                                        <div class="d-flex align-items-center ">
+                                        <button
+                                            ng-style="{ 'background-color' : ((item.ram_befor_risk == 'H') ? 'red' : ((item.ram_befor_risk == 'M') ? 'yellow' : ((item.ram_befor_risk == 'L') ? 'green' : 'white')) ) }"
+                                            class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 d-flex text-warning p-1 mx-auto"
+                                            type="button" ng-click="openModalDataRAM('r',item.seq,'befor')" data-bs-toggle="modal"
+                                            data-bs-target="#modalRAM">
+                                            <h6 class="">{{item.ram_befor_risk}}</h>
+                                        </button>
+                                        </div>
+                                    </td>
+        
+                                    <td class=" " style="padding: 0 !important; width: 60px;">
+                                        <div class="my-1 ">
+                                        <select class="form-select form-select-sm mx-1 p-1 rounded-1 mx-auto" style="width: 50px;">
+                                            <option value="Y" selected>Y</option>
+                                            <option value="N">N</option>
+                                        </select>
+                                        <!-- major_accident_event -->
+                                        </div>
+                                    </td>
+        
+                                    <td class=" " style="padding: 0 !important;">
+                                        <div ng-if="item.row_type =='causes' || item.row_type =='consequences'">
+                                            <textarea class="form-control form-control-sm p-1 rounded-1 w-100 border border-end-0 border-top-0" style="width: 175px;font-size: 10px;" rows="4"
+                                            type="text" placeholder="Existing Safeguards"
+                                            ng-model="item.existing_safeguards"></textarea>
+                                        </div>
+                                    </td>
+        
+                                    <td class=" " style="padding: 0 !important; width: 30px;">
+                                        <div class=" float-center">
+                                        <button
+                                            class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 d-flex p-1 mx-auto"
+                                            type="button" ng-click="openModalDataRAM('s',item.seq,'after')" data-bs-toggle="modal"
+                                            data-bs-target="#modalRAM">
+                                            <h6 class="me-1">{{item.ram_after_security}}</h6> <span class="fas fa-pencil-alt fa-sm"></span>
+                                        </button>
+                                        </div>
+                                    </td>
+        
+                                    <td class=" " style="padding: 0 !important; width: 30px;">
+                                        <div class="d-flex align-items-center ">
+                                        <button
+                                            class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 d-flex p-1 mx-auto"
+                                            type="button" ng-click="openModalDataRAM('l',item.seq,'after')" data-bs-toggle="modal"
+                                            data-bs-target="#modalRAM">
+                                            <h6 class="me-1">{{item.ram_after_likelihood}}</h6> <span class="fas fa-pencil-alt fa-sm"></span>
+                                        </button>
+                                        </div>
+                                    </td>
+        
+                                    <td class=" " style="padding: 0 !important; width: 30px;">
+                                        <div class=" ">
+                                        <button
+                                            ng-style="{ 'background-color' : ((item.ram_after_risk == 'H') ? 'red' : ((item.ram_after_risk == 'M') ? 'yellow' : ((item.ram_after_risk == 'L') ? 'green' : 'white')) ) }"
+                                            class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 d-flex text-warning p-1 mx-auto"
+                                            type="button" ng-click="openModalDataRAM('r',item.seq,'after')" data-bs-toggle="modal"
+                                            data-bs-target="#modalRAM">
+                                            <h6 class="">{{item.ram_after_risk}}</h6>
+                                        </button>
+                                        </div>
+                                    </td>
+        
+                                    <td class=" " style="padding: 0 !important;">
+                                        <div class="d-flex align-items-center w-100" >
+                                            <span class=" font-sans-serif btn-reveal-trigger position-static pt-0 ">
+                                                <button data-bs-toggle="modal" data-bs-target="#modalSuggestionRecommendations"
+                                                class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 text-align-end align-top p-1"><span
+                                                    class="fas fa-lightbulb text-warning align-top"></span></button>
+                                            </span>
+                                            <textarea class="form-control form-control-sm p-1 rounded-1 w-100  border border-end-0 border-top-0 " style="width: 240px; font-size: 10px;" rows="4"
+                                            type="text" placeholder="Recommendations"
+                                            ng-model="item.recommendations"></textarea>
+                                        </div>
+                                        
+                                    </td>
+        
+                                    <td class=" py-0" style="padding: 0 !important; width: 120px;">
+                                        
+                                        <div class="d-flex align-items-center ">
+                                        
+                                            <button ng-click="openModalDataEmployee('worksheet',item.seq)" data-bs-toggle="modal"
+                                            data-bs-target="#modalEmployee" class="btn btn-link px-0 mx-1"><span
+                                                class="far fa-address-book"></span>
+                                            </button>
+                                        
+                                            <button class="btn btn-sm transition-none btn-reveal fs--2 p-1 " type="button"
+                                            ng-click="removeDataEmpWorkSheet('worksheet',item.responder_id,item.seq)"
+                                            ng-if="item.responder_id>0">
+                                                <span class="fas fa-times text-danger"></span>
+                                            </button>
+
+                                                <p class="m-0  text-1100 fw-bold" style="width: 115px;">{{ item.responder_display}}
+                                                </p>
+        
+                                            </div>                                                        
+        
+                                    </td>
+        
+                                    <td class=" py-0" style="padding: 0 !important; width: 60px;">
+
+                                    <div class="text-center p-1">  
+        
+                                        <span class="badge badge-phoenix fs--2 badge-phoenix-success">
+                                        <span class="badge-label">Open </span>
+                                        </span>
+        
+                                    </div>
+                                    
+                                    </td>
+    
+                                </tr>
+    
+    
+    
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+            </div>
+
+      </div>
+
+
+    </div>
+
+
+    <script src="js/angular.min.js"></script>
+    
+    <script src="js/phoenix.js"></script>
+    
+    <script src="js/all.min.js"></script>
+
+    <script src="js/popper.min.js"></script>
+
+    
+    <script src="js/bootstrap.min.js"></script>
+
+    <!-- js สำ หรับ  freezer tabel header  -->
+    <script src="js/jsforfreezer.js"> </script>
+
+
+
+    
+
+</body>
+</html>

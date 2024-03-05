@@ -1,0 +1,188 @@
+﻿@{
+    ViewData["Title"] = "HAZOP Sub-Sofware";
+
+    Layout = "~/Views/Shared/_LayoutWeb.cshtml";
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.3/angular.min.js"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&amp;display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+
+    <link rel="stylesheet" href="~/assets/css/theme.min.css">
+
+    <link rel="stylesheet" href="~/assets/css/tablefreezer.css">
+
+    <link href="~/assets/css/theme.min.css" type="text/css" rel="stylesheet" id="style-default">
+    <link href="~/assets/css/choices.min.css" type="text/css" rel="stylesheet">
+
+    <script src="~/assets/js/config.js"></script>
+}
+
+<div class="content mt-1" style="font-size: 12px; min-height: auto!important;" id="divPage" ng-controller="ctrlAppPage">
+
+
+    <div class="row g-0">
+
+        <div class="col-12">
+            <div class="row g-3 justify-content-between align-items-center pt-2 pb-3">
+                <div class="col-6 col-md">
+                    <h5 class="text-900 mb-0" data-anchor="data-anchor"> <span class=" me-2 text-primary"><B>|</B></span>  Notification Daily Mail</h5>
+                </div>
+                <div class="col-6 col-md">
+                    <div class="d-flex align-items-center py-2  justify-content-end">
+                        <span class="mx-2" ng-if="cancle_type">
+                            <button class="btn btn-outline-secondary btn-sm" style="width: 100px;" ng-click="confirmCancle()">Back</button>
+                        </span>
+                        <span class="mx-2" ng-if="submit_type">
+                            <button class="btn btn-success btn-sm" style="width: 100px;" ng-click="confirmCreate('create')">Create</button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="card shadow-sm p-2 mb-3 bg-light rounded">
+
+
+                <div class="col-12 col-md mx-1 pt-2 ">
+
+                    <div class="table-responsive scrollbar tableFixHead" id="table-container" style="font-size: 10px;" tabindex="1">
+                        <table class="table fs--2 mb-0 table-bordered " cellpadding="0" cellspacing="0">
+                            <thead class=" text-uppercase  text-center  bg-soft  test" style="font-size: 10px;" id="myHeader">
+                                <tr>
+                                    <th class="align-middle text-center" scope="col" style="font-size: 10px;"></th>
+                                    <th class="align-middle" scope="col" style="font-size: 10px;">Sub-Software</th>
+                                    <th class="align-middle" scope="col" style="font-size: 10px;">PHA Status</th>
+                                    <th class="align-middle" scope="col" style="font-size: 10px;">PHA No.</th>
+                                    <th class="align-middle" scope="col" style="font-size: 10px;">Project Name/e-MOC Request Number</th>
+                                </tr>
+                            </thead>
+                            <tbody class="customer-rating-table-body">
+                                <tr class="hover-actions-trigger btn-reveal-trigger position-static rowwork"
+                                    ng-repeat="item in data_resulte" ng-if="item.pha_status == 13 || item.pha_status == 14">
+                                    <td class="align-top" style="width:100px;">
+                                        <div class="p-1" style="width:120px;">
+                                            <h6 class="fw-semi-bold text-primary"><a href="" ng-click="selectDaily(item)">Send Mail</a></h6> 
+                                        </div>
+                                    </td>
+                                    <td class="align-top" style="width:150px;">
+                                        <div class="p-1 text-center" style="width:100px;">
+                                            <h6 class="fw-semi-bold text-uppercase">{{item.pha_sub_software}}</h6>
+                                        </div>
+                                    </td>
+                                    <td class="align-top" style="width:150px;">
+                                        <div class="p-1 text-center" style="width:100px;">
+                                            <h6 class="fw-semi-bold text-uppercase">{{item.pha_status_name}}</h6>
+                                        </div>
+                                    </td>
+                                    <td class="align-top">
+                                        <div class="p-1 text-center">
+                                            <h6 class="fw-semi-bold">{{item.pha_no}}</h6>
+                                        </div>
+                                    </td>
+                                    <td class="align-top">
+                                        <div class="p-1 ">
+                                            <h6 class="fw-semi-bold">{{item.pha_request_name}}</h6>
+                                        </div>
+                                    </td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="row g-3 justify-content-between align-items-center pt-2 pb-3">
+                <div class="col-6 col-md">
+                    <h5 class="text-900 mb-0" data-anchor="data-anchor"> <span class=" me-2 text-primary"><B>|</B></span>  Notification Member Review</h5>
+                </div>
+                <div class="col-6 col-md">
+                    <div class="d-flex align-items-center py-2  justify-content-end">
+                        <span class="mx-2" ng-if="cancle_type">
+                            <button class="btn btn-outline-secondary btn-sm" style="width: 100px;" ng-click="confirmCancle()">Back</button>
+                        </span>
+                        <span class="mx-2" ng-if="submit_type">
+                            <button class="btn btn-success btn-sm" style="width: 100px;" ng-click="confirmCreate('create')">Create</button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="card shadow-sm p-2 mb-3 bg-light rounded">
+
+
+                <div class="col-12 col-md mx-1 pt-2 ">
+
+                    <div class="table-responsive scrollbar tableFixHead" id="table-container" style="font-size: 10px;" tabindex="1">
+                        <table class="table fs--2 mb-0 table-bordered " cellpadding="0" cellspacing="0">
+                            <thead class=" text-uppercase  text-center  bg-soft  test" style="font-size: 10px;" id="myHeader">
+                                <tr>
+                                    <th class="align-middle text-center" scope="col" style="font-size: 10px;"></th>
+                                    <th class="align-middle" scope="col" style="font-size: 10px;">Sub-Software</th>
+                                    <th class="align-middle" scope="col" style="font-size: 10px;">PHA Status</th>
+                                    <th class="align-middle" scope="col" style="font-size: 10px;">PHA No.</th>
+                                    <th class="align-middle" scope="col" style="font-size: 10px;">Project Name/e-MOC Request Number</th>
+                                </tr>
+                            </thead>
+                            <tbody class="customer-rating-table-body">
+                                <tr class="hover-actions-trigger btn-reveal-trigger position-static rowwork"
+                                    ng-repeat="item in data_resulte" ng-if="item.pha_status == 12 || item.pha_status == 22">
+                                    <td class="align-top" style="width:100px;">
+                                        <div class="p-1" style="width:120px;"> 
+                                            <h6 class="fw-semi-bold text-primary mt-3"><a href="" ng-click="selectMemberReview(item)">Send Mail</a></h6>
+                                        </div>
+                                    </td>
+                                    <td class="align-top" style="width:150px;">
+                                        <div class="p-1 text-center" style="width:100px;">
+                                            <h6 class="fw-semi-bold text-uppercase">{{item.pha_sub_software}}</h6>
+                                        </div>
+                                    </td>
+                                    <td class="align-top" style="width:150px;">
+                                        <div class="p-1 text-center" style="width:100px;">
+                                            <h6 class="fw-semi-bold text-uppercase">{{item.pha_status_name}}</h6>
+                                        </div>
+                                    </td>
+                                    <td class="align-top">
+                                        <div class="p-1 text-center">
+                                            <h6 class="fw-semi-bold">{{item.pha_no}}</h6>
+                                        </div>
+                                    </td>
+                                    <td class="align-top">
+                                        <div class="p-1 ">
+                                            <h6 class="fw-semi-bold">{{item.pha_request_name}}</h6>
+                                        </div>
+                                    </td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+@section Scripts {
+
+    <script src="~/assets/js/angular.min.js"></script>
+    <script src="~/assets/js/lodash.min.js"></script>
+    <script src="~/assets/js/phoenix.js"></script>
+    <script src="~/assets/js/choices.min.js"></script>
+    <script src="~/assets/js/fakedata.js"></script>
+
+    <script src="~/js/_flow/notification.js"></script>
+
+
+}

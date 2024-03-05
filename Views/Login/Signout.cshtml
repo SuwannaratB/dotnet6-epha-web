@@ -1,0 +1,44 @@
+@{
+    ViewData["Title"] = "Sign Out";
+
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.3/angular.min.js"></script>
+}
+<div class="row flex-center position-relative min-vh-100 g-0 py-5" id="divPage" ng-controller="ctrlApp">
+    <div class="container">
+        <div class="row flex-center min-vh-100 py-5">
+            <div class="col-sm-10 col-md-8 col-lg-5 col-xl-6 col-xxl-4">
+                <div class="text-center mb-6 mx-auto">
+                    <img class="mb-7 d-dark-none"
+                         src="../../../assets/img/spot-illustrations/1.png" alt="phoenix"><img class="mb-7 d-light-none"
+                                                                                               src="../../../assets/img/spot-illustrations/dark_1.png" alt="phoenix">
+                    <div class="mb-6">
+                        <h4 class="text-1000">Come back soon!</h4>
+                        <p class="text-700">
+                            Thanks for using E-PHA rocess Hazard Analysis<br class="d-lg-none">You are now
+                            successfully signed out.
+                        </p>
+                    </div>
+                    <div class="d-grid">
+                        <a class="btn btn-primary" href="/Login/index">
+                            <svg class="svg-inline--fa fa-angle-left me-2" aria-hidden="true" focusable="false" data-prefix="fas"
+                                 data-icon="angle-left" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512"
+                                 data-fa-i2svg="">
+                                <path fill="currentColor"
+                                      d="M192 448c-8.188 0-16.38-3.125-22.62-9.375l-160-160c-12.5-12.5-12.5-32.75 0-45.25l160-160c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25L77.25 256l137.4 137.4c12.5 12.5 12.5 32.75 0 45.25C208.4 444.9 200.2 448 192 448z">
+                                </path>
+                            </svg>Go to sign in page
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        $('#divLoading').hide();
+    </script>
+}

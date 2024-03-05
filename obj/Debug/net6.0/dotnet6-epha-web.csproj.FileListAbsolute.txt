@@ -1,0 +1,338 @@
+D:\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\appsettings.Development.json
+D:\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\appsettings.json
+D:\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\dotnet6-epha-web.staticwebassets.runtime.json
+D:\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\dotnet6-epha-web.exe
+D:\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\dotnet6-epha-web.deps.json
+D:\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\dotnet6-epha-web.runtimeconfig.json
+D:\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\dotnet6-epha-web.dll
+D:\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\dotnet6-epha-web.pdb
+D:\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\EPPlus.dll
+D:\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\EPPlus.Interfaces.dll
+D:\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\EPPlus.System.Drawing.dll
+D:\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\Microsoft.IO.RecyclableMemoryStream.dll
+D:\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\Microsoft.Win32.SystemEvents.dll
+D:\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\Newtonsoft.Json.dll
+D:\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\System.Drawing.Common.dll
+D:\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\System.Security.Cryptography.Pkcs.dll
+D:\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\runtimes\win\lib\net6.0\Microsoft.Win32.SystemEvents.dll
+D:\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\runtimes\unix\lib\net6.0\System.Drawing.Common.dll
+D:\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Drawing.Common.dll
+D:\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Security.Cryptography.Pkcs.dll
+D:\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.csproj.AssemblyReference.cache
+D:\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.GeneratedMSBuildEditorConfig.editorconfig
+D:\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.AssemblyInfoInputs.cache
+D:\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.AssemblyInfo.cs
+D:\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.csproj.CoreCompileInputs.cache
+D:\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.MvcApplicationPartsAssemblyInfo.cache
+D:\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.RazorAssemblyInfo.cache
+D:\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.RazorAssemblyInfo.cs
+D:\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\staticwebassets.build.json
+D:\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\staticwebassets.development.json
+D:\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\scopedcss\Pages\Shared\_Layout.cshtml.rz.scp.css
+D:\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\scopedcss\Views\Shared\_Layout.cshtml.rz.scp.css
+D:\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\scopedcss\Views\Shared\_LayoutAdmin.cshtml.rz.scp.css
+D:\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\scopedcss\Views\Shared\_LayoutLogin.cshtml.rz.scp.css
+D:\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\scopedcss\Views\Shared\_LayoutWeb.cshtml.rz.scp.css
+D:\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\scopedcss\bundle\dotnet6-epha-web.styles.css
+D:\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\scopedcss\projectbundle\dotnet6-epha-web.bundle.scp.css
+D:\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.csproj.CopyComplete
+D:\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.dll
+D:\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\refint\dotnet6-epha-web.dll
+D:\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.pdb
+D:\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.genruntimeconfig.cache
+D:\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\ref\dotnet6-epha-web.dll
+D:\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\staticwebassets\msbuild.dotnet6-epha-web.Microsoft.AspNetCore.StaticWebAssets.props
+D:\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\staticwebassets\msbuild.build.dotnet6-epha-web.props
+D:\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\staticwebassets\msbuild.buildMultiTargeting.dotnet6-epha-web.props
+D:\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\staticwebassets\msbuild.buildTransitive.dotnet6-epha-web.props
+D:\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\staticwebassets.pack.json
+D:\User's Folder\Desktop\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\appsettings.Development.json
+D:\User's Folder\Desktop\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\appsettings.json
+D:\User's Folder\Desktop\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\dotnet6-epha-web.staticwebassets.runtime.json
+D:\User's Folder\Desktop\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\dotnet6-epha-web.exe
+D:\User's Folder\Desktop\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\dotnet6-epha-web.deps.json
+D:\User's Folder\Desktop\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\dotnet6-epha-web.runtimeconfig.json
+D:\User's Folder\Desktop\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\dotnet6-epha-web.dll
+D:\User's Folder\Desktop\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\dotnet6-epha-web.pdb
+D:\User's Folder\Desktop\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\EPPlus.dll
+D:\User's Folder\Desktop\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\EPPlus.Interfaces.dll
+D:\User's Folder\Desktop\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\EPPlus.System.Drawing.dll
+D:\User's Folder\Desktop\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\Microsoft.IO.RecyclableMemoryStream.dll
+D:\User's Folder\Desktop\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\Microsoft.Win32.SystemEvents.dll
+D:\User's Folder\Desktop\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\Newtonsoft.Json.dll
+D:\User's Folder\Desktop\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\System.Drawing.Common.dll
+D:\User's Folder\Desktop\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\System.Security.Cryptography.Pkcs.dll
+D:\User's Folder\Desktop\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\runtimes\win\lib\net6.0\Microsoft.Win32.SystemEvents.dll
+D:\User's Folder\Desktop\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\runtimes\unix\lib\net6.0\System.Drawing.Common.dll
+D:\User's Folder\Desktop\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Drawing.Common.dll
+D:\User's Folder\Desktop\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Security.Cryptography.Pkcs.dll
+D:\User's Folder\Desktop\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.csproj.AssemblyReference.cache
+D:\User's Folder\Desktop\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.GeneratedMSBuildEditorConfig.editorconfig
+D:\User's Folder\Desktop\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.AssemblyInfoInputs.cache
+D:\User's Folder\Desktop\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.AssemblyInfo.cs
+D:\User's Folder\Desktop\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.csproj.CoreCompileInputs.cache
+D:\User's Folder\Desktop\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.MvcApplicationPartsAssemblyInfo.cache
+D:\User's Folder\Desktop\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.RazorAssemblyInfo.cache
+D:\User's Folder\Desktop\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.RazorAssemblyInfo.cs
+D:\User's Folder\Desktop\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\staticwebassets\msbuild.dotnet6-epha-web.Microsoft.AspNetCore.StaticWebAssets.props
+D:\User's Folder\Desktop\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\staticwebassets\msbuild.build.dotnet6-epha-web.props
+D:\User's Folder\Desktop\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\staticwebassets\msbuild.buildMultiTargeting.dotnet6-epha-web.props
+D:\User's Folder\Desktop\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\staticwebassets\msbuild.buildTransitive.dotnet6-epha-web.props
+D:\User's Folder\Desktop\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\staticwebassets.pack.json
+D:\User's Folder\Desktop\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\staticwebassets.build.json
+D:\User's Folder\Desktop\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\staticwebassets.development.json
+D:\User's Folder\Desktop\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\scopedcss\Pages\Shared\_Layout.cshtml.rz.scp.css
+D:\User's Folder\Desktop\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\scopedcss\Views\Shared\_Layout.cshtml.rz.scp.css
+D:\User's Folder\Desktop\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\scopedcss\Views\Shared\_LayoutAdmin.cshtml.rz.scp.css
+D:\User's Folder\Desktop\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\scopedcss\Views\Shared\_LayoutLogin.cshtml.rz.scp.css
+D:\User's Folder\Desktop\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\scopedcss\Views\Shared\_LayoutWeb.cshtml.rz.scp.css
+D:\User's Folder\Desktop\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\scopedcss\bundle\dotnet6-epha-web.styles.css
+D:\User's Folder\Desktop\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\scopedcss\projectbundle\dotnet6-epha-web.bundle.scp.css
+D:\User's Folder\Desktop\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.csproj.CopyComplete
+D:\User's Folder\Desktop\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.dll
+D:\User's Folder\Desktop\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\refint\dotnet6-epha-web.dll
+D:\User's Folder\Desktop\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.pdb
+D:\User's Folder\Desktop\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.genruntimeconfig.cache
+D:\User's Folder\Desktop\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\ref\dotnet6-epha-web.dll
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\appsettings.Development.json
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\appsettings.json
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\dotnet6-epha-web.staticwebassets.runtime.json
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\dotnet6-epha-web.exe
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\dotnet6-epha-web.deps.json
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\dotnet6-epha-web.runtimeconfig.json
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\dotnet6-epha-web.dll
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\dotnet6-epha-web.pdb
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\EPPlus.dll
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\EPPlus.Interfaces.dll
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\EPPlus.System.Drawing.dll
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\Microsoft.IO.RecyclableMemoryStream.dll
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\Microsoft.Win32.SystemEvents.dll
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\Newtonsoft.Json.dll
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\System.Drawing.Common.dll
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\System.Security.Cryptography.Pkcs.dll
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\runtimes\win\lib\net6.0\Microsoft.Win32.SystemEvents.dll
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\runtimes\unix\lib\net6.0\System.Drawing.Common.dll
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Drawing.Common.dll
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Security.Cryptography.Pkcs.dll
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.csproj.AssemblyReference.cache
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.AssemblyInfoInputs.cache
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.AssemblyInfo.cs
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.csproj.CoreCompileInputs.cache
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.RazorAssemblyInfo.cache
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.RazorAssemblyInfo.cs
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\staticwebassets\msbuild.dotnet6-epha-web.Microsoft.AspNetCore.StaticWebAssets.props
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\staticwebassets\msbuild.build.dotnet6-epha-web.props
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\staticwebassets\msbuild.buildMultiTargeting.dotnet6-epha-web.props
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\staticwebassets\msbuild.buildTransitive.dotnet6-epha-web.props
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\staticwebassets.pack.json
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\staticwebassets.build.json
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\staticwebassets.development.json
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\scopedcss\Pages\Shared\_Layout.cshtml.rz.scp.css
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\scopedcss\Views\Shared\_Layout.cshtml.rz.scp.css
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\scopedcss\Views\Shared\_LayoutAdmin.cshtml.rz.scp.css
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\scopedcss\Views\Shared\_LayoutLogin.cshtml.rz.scp.css
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\scopedcss\Views\Shared\_LayoutWeb.cshtml.rz.scp.css
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\scopedcss\bundle\dotnet6-epha-web.styles.css
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\scopedcss\projectbundle\dotnet6-epha-web.bundle.scp.css
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.csproj.CopyComplete
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.dll
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\refint\dotnet6-epha-web.dll
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.pdb
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.genruntimeconfig.cache
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\ref\dotnet6-epha-web.dll
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\appsettings.Development.json
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\appsettings.json
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\dotnet6-epha-web.staticwebassets.runtime.json
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\dotnet6-epha-web.exe
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\dotnet6-epha-web.deps.json
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\dotnet6-epha-web.runtimeconfig.json
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\dotnet6-epha-web.dll
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\dotnet6-epha-web.pdb
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\EPPlus.dll
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\EPPlus.Interfaces.dll
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\EPPlus.System.Drawing.dll
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\Microsoft.IO.RecyclableMemoryStream.dll
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\Microsoft.Win32.SystemEvents.dll
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\Newtonsoft.Json.dll
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\System.Drawing.Common.dll
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\System.Security.Cryptography.Pkcs.dll
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\runtimes\win\lib\net6.0\Microsoft.Win32.SystemEvents.dll
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\runtimes\unix\lib\net6.0\System.Drawing.Common.dll
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Drawing.Common.dll
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Security.Cryptography.Pkcs.dll
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.csproj.AssemblyReference.cache
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.AssemblyInfoInputs.cache
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.AssemblyInfo.cs
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.csproj.CoreCompileInputs.cache
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.RazorAssemblyInfo.cache
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.RazorAssemblyInfo.cs
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\staticwebassets\msbuild.dotnet6-epha-web.Microsoft.AspNetCore.StaticWebAssets.props
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\staticwebassets\msbuild.build.dotnet6-epha-web.props
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\staticwebassets\msbuild.buildMultiTargeting.dotnet6-epha-web.props
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\staticwebassets\msbuild.buildTransitive.dotnet6-epha-web.props
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\staticwebassets.pack.json
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\staticwebassets.build.json
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\staticwebassets.development.json
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\scopedcss\Pages\Shared\_Layout.cshtml.rz.scp.css
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\scopedcss\Views\Shared\_Layout.cshtml.rz.scp.css
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\scopedcss\Views\Shared\_LayoutAdmin.cshtml.rz.scp.css
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\scopedcss\Views\Shared\_LayoutLogin.cshtml.rz.scp.css
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\scopedcss\Views\Shared\_LayoutWeb.cshtml.rz.scp.css
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\scopedcss\bundle\dotnet6-epha-web.styles.css
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\scopedcss\projectbundle\dotnet6-epha-web.bundle.scp.css
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.csproj.CopyComplete
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.dll
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\refint\dotnet6-epha-web.dll
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.pdb
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.genruntimeconfig.cache
+C:\Users\suwan\OneDrive\Documents\EPSA\dotnet6-epha-web-20231016\dotnet6-epha-web\obj\Debug\net6.0\ref\dotnet6-epha-web.dll
+D:\dotnet6-epha-web\dotnet6-epha-web\bin\Debug\net6.0\appsettings.Development.json
+D:\dotnet6-epha-web\dotnet6-epha-web\bin\Debug\net6.0\appsettings.json
+D:\dotnet6-epha-web\dotnet6-epha-web\bin\Debug\net6.0\dotnet6-epha-web.staticwebassets.runtime.json
+D:\dotnet6-epha-web\dotnet6-epha-web\bin\Debug\net6.0\dotnet6-epha-web.exe
+D:\dotnet6-epha-web\dotnet6-epha-web\bin\Debug\net6.0\dotnet6-epha-web.deps.json
+D:\dotnet6-epha-web\dotnet6-epha-web\bin\Debug\net6.0\dotnet6-epha-web.runtimeconfig.json
+D:\dotnet6-epha-web\dotnet6-epha-web\bin\Debug\net6.0\dotnet6-epha-web.dll
+D:\dotnet6-epha-web\dotnet6-epha-web\bin\Debug\net6.0\dotnet6-epha-web.pdb
+D:\dotnet6-epha-web\dotnet6-epha-web\bin\Debug\net6.0\EPPlus.dll
+D:\dotnet6-epha-web\dotnet6-epha-web\bin\Debug\net6.0\EPPlus.Interfaces.dll
+D:\dotnet6-epha-web\dotnet6-epha-web\bin\Debug\net6.0\EPPlus.System.Drawing.dll
+D:\dotnet6-epha-web\dotnet6-epha-web\bin\Debug\net6.0\Microsoft.IO.RecyclableMemoryStream.dll
+D:\dotnet6-epha-web\dotnet6-epha-web\bin\Debug\net6.0\Microsoft.Win32.SystemEvents.dll
+D:\dotnet6-epha-web\dotnet6-epha-web\bin\Debug\net6.0\Newtonsoft.Json.dll
+D:\dotnet6-epha-web\dotnet6-epha-web\bin\Debug\net6.0\System.Drawing.Common.dll
+D:\dotnet6-epha-web\dotnet6-epha-web\bin\Debug\net6.0\System.Security.Cryptography.Pkcs.dll
+D:\dotnet6-epha-web\dotnet6-epha-web\bin\Debug\net6.0\runtimes\win\lib\net6.0\Microsoft.Win32.SystemEvents.dll
+D:\dotnet6-epha-web\dotnet6-epha-web\bin\Debug\net6.0\runtimes\unix\lib\net6.0\System.Drawing.Common.dll
+D:\dotnet6-epha-web\dotnet6-epha-web\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Drawing.Common.dll
+D:\dotnet6-epha-web\dotnet6-epha-web\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Security.Cryptography.Pkcs.dll
+D:\dotnet6-epha-web\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.csproj.AssemblyReference.cache
+D:\dotnet6-epha-web\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.GeneratedMSBuildEditorConfig.editorconfig
+D:\dotnet6-epha-web\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.AssemblyInfoInputs.cache
+D:\dotnet6-epha-web\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.AssemblyInfo.cs
+D:\dotnet6-epha-web\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.csproj.CoreCompileInputs.cache
+D:\dotnet6-epha-web\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.MvcApplicationPartsAssemblyInfo.cache
+D:\dotnet6-epha-web\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.RazorAssemblyInfo.cache
+D:\dotnet6-epha-web\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.RazorAssemblyInfo.cs
+D:\dotnet6-epha-web\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.sourcelink.json
+D:\dotnet6-epha-web\dotnet6-epha-web\obj\Debug\net6.0\staticwebassets.build.json
+D:\dotnet6-epha-web\dotnet6-epha-web\obj\Debug\net6.0\staticwebassets.development.json
+D:\dotnet6-epha-web\dotnet6-epha-web\obj\Debug\net6.0\staticwebassets\msbuild.dotnet6-epha-web.Microsoft.AspNetCore.StaticWebAssets.props
+D:\dotnet6-epha-web\dotnet6-epha-web\obj\Debug\net6.0\staticwebassets\msbuild.build.dotnet6-epha-web.props
+D:\dotnet6-epha-web\dotnet6-epha-web\obj\Debug\net6.0\staticwebassets\msbuild.buildMultiTargeting.dotnet6-epha-web.props
+D:\dotnet6-epha-web\dotnet6-epha-web\obj\Debug\net6.0\staticwebassets\msbuild.buildTransitive.dotnet6-epha-web.props
+D:\dotnet6-epha-web\dotnet6-epha-web\obj\Debug\net6.0\staticwebassets.pack.json
+D:\dotnet6-epha-web\dotnet6-epha-web\obj\Debug\net6.0\scopedcss\Pages\Shared\_Layout.cshtml.rz.scp.css
+D:\dotnet6-epha-web\dotnet6-epha-web\obj\Debug\net6.0\scopedcss\Views\Shared\_Layout.cshtml.rz.scp.css
+D:\dotnet6-epha-web\dotnet6-epha-web\obj\Debug\net6.0\scopedcss\Views\Shared\_LayoutAdmin.cshtml.rz.scp.css
+D:\dotnet6-epha-web\dotnet6-epha-web\obj\Debug\net6.0\scopedcss\Views\Shared\_LayoutLogin.cshtml.rz.scp.css
+D:\dotnet6-epha-web\dotnet6-epha-web\obj\Debug\net6.0\scopedcss\Views\Shared\_LayoutWeb.cshtml.rz.scp.css
+D:\dotnet6-epha-web\dotnet6-epha-web\obj\Debug\net6.0\scopedcss\bundle\dotnet6-epha-web.styles.css
+D:\dotnet6-epha-web\dotnet6-epha-web\obj\Debug\net6.0\scopedcss\projectbundle\dotnet6-epha-web.bundle.scp.css
+D:\dotnet6-epha-web\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.csproj.CopyComplete
+D:\dotnet6-epha-web\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.dll
+D:\dotnet6-epha-web\dotnet6-epha-web\obj\Debug\net6.0\refint\dotnet6-epha-web.dll
+D:\dotnet6-epha-web\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.pdb
+D:\dotnet6-epha-web\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.genruntimeconfig.cache
+D:\dotnet6-epha-web\dotnet6-epha-web\obj\Debug\net6.0\ref\dotnet6-epha-web.dll
+C:\Develop Drive\dotnet6-epha-web\dotnet6-epha-web\bin\Debug\net6.0\appsettings.Development.json
+C:\Develop Drive\dotnet6-epha-web\dotnet6-epha-web\bin\Debug\net6.0\appsettings.json
+C:\Develop Drive\dotnet6-epha-web\dotnet6-epha-web\bin\Debug\net6.0\dotnet6-epha-web.staticwebassets.runtime.json
+C:\Develop Drive\dotnet6-epha-web\dotnet6-epha-web\bin\Debug\net6.0\dotnet6-epha-web.exe
+C:\Develop Drive\dotnet6-epha-web\dotnet6-epha-web\bin\Debug\net6.0\dotnet6-epha-web.deps.json
+C:\Develop Drive\dotnet6-epha-web\dotnet6-epha-web\bin\Debug\net6.0\dotnet6-epha-web.runtimeconfig.json
+C:\Develop Drive\dotnet6-epha-web\dotnet6-epha-web\bin\Debug\net6.0\dotnet6-epha-web.dll
+C:\Develop Drive\dotnet6-epha-web\dotnet6-epha-web\bin\Debug\net6.0\dotnet6-epha-web.pdb
+C:\Develop Drive\dotnet6-epha-web\dotnet6-epha-web\bin\Debug\net6.0\EPPlus.dll
+C:\Develop Drive\dotnet6-epha-web\dotnet6-epha-web\bin\Debug\net6.0\EPPlus.Interfaces.dll
+C:\Develop Drive\dotnet6-epha-web\dotnet6-epha-web\bin\Debug\net6.0\EPPlus.System.Drawing.dll
+C:\Develop Drive\dotnet6-epha-web\dotnet6-epha-web\bin\Debug\net6.0\Microsoft.IO.RecyclableMemoryStream.dll
+C:\Develop Drive\dotnet6-epha-web\dotnet6-epha-web\bin\Debug\net6.0\Microsoft.Win32.SystemEvents.dll
+C:\Develop Drive\dotnet6-epha-web\dotnet6-epha-web\bin\Debug\net6.0\Newtonsoft.Json.dll
+C:\Develop Drive\dotnet6-epha-web\dotnet6-epha-web\bin\Debug\net6.0\System.Drawing.Common.dll
+C:\Develop Drive\dotnet6-epha-web\dotnet6-epha-web\bin\Debug\net6.0\System.Security.Cryptography.Pkcs.dll
+C:\Develop Drive\dotnet6-epha-web\dotnet6-epha-web\bin\Debug\net6.0\runtimes\win\lib\net6.0\Microsoft.Win32.SystemEvents.dll
+C:\Develop Drive\dotnet6-epha-web\dotnet6-epha-web\bin\Debug\net6.0\runtimes\unix\lib\net6.0\System.Drawing.Common.dll
+C:\Develop Drive\dotnet6-epha-web\dotnet6-epha-web\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Drawing.Common.dll
+C:\Develop Drive\dotnet6-epha-web\dotnet6-epha-web\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Security.Cryptography.Pkcs.dll
+C:\Develop Drive\dotnet6-epha-web\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.csproj.AssemblyReference.cache
+C:\Develop Drive\dotnet6-epha-web\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.GeneratedMSBuildEditorConfig.editorconfig
+C:\Develop Drive\dotnet6-epha-web\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.AssemblyInfoInputs.cache
+C:\Develop Drive\dotnet6-epha-web\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.AssemblyInfo.cs
+C:\Develop Drive\dotnet6-epha-web\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.csproj.CoreCompileInputs.cache
+C:\Develop Drive\dotnet6-epha-web\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.MvcApplicationPartsAssemblyInfo.cache
+C:\Develop Drive\dotnet6-epha-web\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.RazorAssemblyInfo.cache
+C:\Develop Drive\dotnet6-epha-web\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.RazorAssemblyInfo.cs
+C:\Develop Drive\dotnet6-epha-web\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.sourcelink.json
+C:\Develop Drive\dotnet6-epha-web\dotnet6-epha-web\obj\Debug\net6.0\staticwebassets.build.json
+C:\Develop Drive\dotnet6-epha-web\dotnet6-epha-web\obj\Debug\net6.0\staticwebassets.development.json
+C:\Develop Drive\dotnet6-epha-web\dotnet6-epha-web\obj\Debug\net6.0\staticwebassets\msbuild.dotnet6-epha-web.Microsoft.AspNetCore.StaticWebAssets.props
+C:\Develop Drive\dotnet6-epha-web\dotnet6-epha-web\obj\Debug\net6.0\staticwebassets\msbuild.build.dotnet6-epha-web.props
+C:\Develop Drive\dotnet6-epha-web\dotnet6-epha-web\obj\Debug\net6.0\staticwebassets\msbuild.buildMultiTargeting.dotnet6-epha-web.props
+C:\Develop Drive\dotnet6-epha-web\dotnet6-epha-web\obj\Debug\net6.0\staticwebassets\msbuild.buildTransitive.dotnet6-epha-web.props
+C:\Develop Drive\dotnet6-epha-web\dotnet6-epha-web\obj\Debug\net6.0\staticwebassets.pack.json
+C:\Develop Drive\dotnet6-epha-web\dotnet6-epha-web\obj\Debug\net6.0\scopedcss\Pages\Shared\_Layout.cshtml.rz.scp.css
+C:\Develop Drive\dotnet6-epha-web\dotnet6-epha-web\obj\Debug\net6.0\scopedcss\Views\Shared\_Layout.cshtml.rz.scp.css
+C:\Develop Drive\dotnet6-epha-web\dotnet6-epha-web\obj\Debug\net6.0\scopedcss\Views\Shared\_LayoutAdmin.cshtml.rz.scp.css
+C:\Develop Drive\dotnet6-epha-web\dotnet6-epha-web\obj\Debug\net6.0\scopedcss\Views\Shared\_LayoutLogin.cshtml.rz.scp.css
+C:\Develop Drive\dotnet6-epha-web\dotnet6-epha-web\obj\Debug\net6.0\scopedcss\Views\Shared\_LayoutWeb.cshtml.rz.scp.css
+C:\Develop Drive\dotnet6-epha-web\dotnet6-epha-web\obj\Debug\net6.0\scopedcss\bundle\dotnet6-epha-web.styles.css
+C:\Develop Drive\dotnet6-epha-web\dotnet6-epha-web\obj\Debug\net6.0\scopedcss\projectbundle\dotnet6-epha-web.bundle.scp.css
+C:\Develop Drive\dotnet6-epha-web\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-.6571E0EC.Up2Date
+C:\Develop Drive\dotnet6-epha-web\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.dll
+C:\Develop Drive\dotnet6-epha-web\dotnet6-epha-web\obj\Debug\net6.0\refint\dotnet6-epha-web.dll
+C:\Develop Drive\dotnet6-epha-web\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.pdb
+C:\Develop Drive\dotnet6-epha-web\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.genruntimeconfig.cache
+C:\Develop Drive\dotnet6-epha-web\dotnet6-epha-web\obj\Debug\net6.0\ref\dotnet6-epha-web.dll
+D:\dotnet6-epha-web\bin\Debug\net6.0\appsettings.Development.json
+D:\dotnet6-epha-web\bin\Debug\net6.0\appsettings.json
+D:\dotnet6-epha-web\bin\Debug\net6.0\dotnet6-epha-web.staticwebassets.runtime.json
+D:\dotnet6-epha-web\bin\Debug\net6.0\dotnet6-epha-web.exe
+D:\dotnet6-epha-web\bin\Debug\net6.0\dotnet6-epha-web.deps.json
+D:\dotnet6-epha-web\bin\Debug\net6.0\dotnet6-epha-web.runtimeconfig.json
+D:\dotnet6-epha-web\bin\Debug\net6.0\dotnet6-epha-web.dll
+D:\dotnet6-epha-web\bin\Debug\net6.0\dotnet6-epha-web.pdb
+D:\dotnet6-epha-web\bin\Debug\net6.0\EPPlus.dll
+D:\dotnet6-epha-web\bin\Debug\net6.0\EPPlus.Interfaces.dll
+D:\dotnet6-epha-web\bin\Debug\net6.0\EPPlus.System.Drawing.dll
+D:\dotnet6-epha-web\bin\Debug\net6.0\Microsoft.IO.RecyclableMemoryStream.dll
+D:\dotnet6-epha-web\bin\Debug\net6.0\Microsoft.Win32.SystemEvents.dll
+D:\dotnet6-epha-web\bin\Debug\net6.0\Newtonsoft.Json.dll
+D:\dotnet6-epha-web\bin\Debug\net6.0\System.Drawing.Common.dll
+D:\dotnet6-epha-web\bin\Debug\net6.0\System.Security.Cryptography.Pkcs.dll
+D:\dotnet6-epha-web\bin\Debug\net6.0\runtimes\win\lib\net6.0\Microsoft.Win32.SystemEvents.dll
+D:\dotnet6-epha-web\bin\Debug\net6.0\runtimes\unix\lib\net6.0\System.Drawing.Common.dll
+D:\dotnet6-epha-web\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Drawing.Common.dll
+D:\dotnet6-epha-web\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Security.Cryptography.Pkcs.dll
+D:\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.csproj.AssemblyReference.cache
+D:\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.GeneratedMSBuildEditorConfig.editorconfig
+D:\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.AssemblyInfoInputs.cache
+D:\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.AssemblyInfo.cs
+D:\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.csproj.CoreCompileInputs.cache
+D:\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.MvcApplicationPartsAssemblyInfo.cache
+D:\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.RazorAssemblyInfo.cache
+D:\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.RazorAssemblyInfo.cs
+D:\dotnet6-epha-web\obj\Debug\net6.0\staticwebassets\msbuild.dotnet6-epha-web.Microsoft.AspNetCore.StaticWebAssets.props
+D:\dotnet6-epha-web\obj\Debug\net6.0\staticwebassets\msbuild.build.dotnet6-epha-web.props
+D:\dotnet6-epha-web\obj\Debug\net6.0\staticwebassets\msbuild.buildMultiTargeting.dotnet6-epha-web.props
+D:\dotnet6-epha-web\obj\Debug\net6.0\staticwebassets\msbuild.buildTransitive.dotnet6-epha-web.props
+D:\dotnet6-epha-web\obj\Debug\net6.0\staticwebassets.pack.json
+D:\dotnet6-epha-web\obj\Debug\net6.0\staticwebassets.build.json
+D:\dotnet6-epha-web\obj\Debug\net6.0\staticwebassets.development.json
+D:\dotnet6-epha-web\obj\Debug\net6.0\scopedcss\Pages\Shared\_Layout.cshtml.rz.scp.css
+D:\dotnet6-epha-web\obj\Debug\net6.0\scopedcss\Views\Shared\_Layout.cshtml.rz.scp.css
+D:\dotnet6-epha-web\obj\Debug\net6.0\scopedcss\Views\Shared\_LayoutAdmin.cshtml.rz.scp.css
+D:\dotnet6-epha-web\obj\Debug\net6.0\scopedcss\Views\Shared\_LayoutLogin.cshtml.rz.scp.css
+D:\dotnet6-epha-web\obj\Debug\net6.0\scopedcss\Views\Shared\_LayoutWeb.cshtml.rz.scp.css
+D:\dotnet6-epha-web\obj\Debug\net6.0\scopedcss\bundle\dotnet6-epha-web.styles.css
+D:\dotnet6-epha-web\obj\Debug\net6.0\scopedcss\projectbundle\dotnet6-epha-web.bundle.scp.css
+D:\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.csproj.CopyComplete
+D:\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.dll
+D:\dotnet6-epha-web\obj\Debug\net6.0\refint\dotnet6-epha-web.dll
+D:\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.pdb
+D:\dotnet6-epha-web\obj\Debug\net6.0\dotnet6-epha-web.genruntimeconfig.cache
+D:\dotnet6-epha-web\obj\Debug\net6.0\ref\dotnet6-epha-web.dll

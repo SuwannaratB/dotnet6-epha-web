@@ -1,0 +1,206 @@
+﻿@{
+    ViewData["Title"] = "Portal";
+
+    Layout = "~/Views/Shared/_LayoutWeb.cshtml";
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.3/angular.min.js"></script>
+
+
+}
+
+<div class="row flex-center position-relative sg-0" style="max-height:100vh; max-width: 100%;" id="divPage" ng-controller="ctrlAppPage">
+
+    <div class="content" style="max-height:100vh; max-width: 100%;">
+        <div class="card shadow-none border border-300 " data-component-card="data-component-card">
+
+            <div class="card-body" style="max-width: 100%;">
+                <div class="col-12 " style="zoom:0.8;">
+
+                    <div class="card rounded shadow-lg border-0">
+
+                        <div class="card-body border-0">
+                            @* justify-content-center *@
+                            <div class="row gx-4 gy-2 d-flex justify-content-center" style="margin-left: auto !important;">
+
+                                <a id="menu_master" href="home/hometasks"
+                                   class="col-xxl-3 col-xl-3 col-lg-4 col-md-6 col-sm-9 col-12 text-decoration-none">
+
+                                    <div class="card border-0 rounded shadow p-3 mb-3 aspect-ratio aspect-ratio-4x3" 
+                                        style="background-color: #ffffff; width: 100%; height: 325px;">
+                                        <img src="../assets/img/iconforportal/home-task@3x.png"
+                                             class="w-100 h-100" alt="...">
+                                    </div>
+                                    <h3 class="mt-2 text-center">MY TASKS</h3>
+
+                                </a>
+                                <a id="menu_hazop" href="hazop/followup"
+                                    class="col-xxl-3 col-xl-3 col-lg-4 col-md-6 col-sm-9 col-12 text-decoration-none">
+
+                                    <div class="card border-0 rounded shadow p-3 mb-3 aspect-ratio aspect-ratio-4x3"
+                                        style="background-color: #ffffff; width: 100%; height: 325px;">
+                                        <img src="../assets/img/iconforportal/hazop@3x.png"
+                                            class="w-100 h-100" alt="...">
+                                    </div>
+                                    <h3 class="mt-2 text-center">HAZOP</h3>
+
+                                </a>
+                                <a id="menu_jsea" href="jsea/index"
+                                   class="col-xxl-3 col-xl-3 col-lg-4 col-md-6 col-sm-9 col-12 text-decoration-none">
+
+                                    <div class="card border-0 rounded shadow p-3 mb-3 aspect-ratio aspect-ratio-4x3"
+                                        style="background-color: #ffffff; width: 100%; height: 325px;">
+                                        <img src="../assets/img/iconforportal/jsea@3x.png" class="w-100 h-100"
+                                            alt="...">
+                                    </div>
+                                    <h3 class="mt-2 text-center">JSEA</h3>
+
+                                </a>
+
+                                <a id="menu_whatif" href="whatif/index"
+                                    class="col-xxl-3 col-xl-3 col-lg-4 col-md-6 col-sm-9 col-12 text-decoration-none">
+
+                                    <div class="card border-0 rounded shadow p-3 mb-3 aspect-ratio aspect-ratio-4x3"
+                                        style="background-color: #ffffff;  height: 325px; min-height: 150px;">
+                                        <img src="../assets/img/iconforportal/what-if@3x.png"
+                                            class="w-100 h-100" alt="...">
+                                    </div>
+                                    <h3 class="mt-2 text-center">WHAT'S IF</h3>
+
+                                </a>
+                                <a id="menu_hra" href="hra/index"
+                                    class="col-xxl-3 col-xl-3 col-lg-4 col-md-6 col-sm-9 col-12 text-decoration-none disabled-link">
+
+                                    <div class="card border-0 rounded shadow p-3 mb-3 aspect-ratio aspect-ratio-4x3"
+                                        style="background-color: #ffffff; width: 100%; height: 325px; min-height: 150px;">
+                                        <img src="../assets/img/iconforportal/hra@3x.png"
+                                            class="w-100 h-100" alt="...">
+                                    </div>
+                                    <h3 class="mt-2 text-center">HRA</h3>
+
+                                </a>
+                                <a id="menu_bowtie" href="bowtie/index"
+                                    class="col-xxl-3 col-xl-3 col-lg-4 col-md-6 col-sm-9 col-12 text-decoration-none disabled-link">
+
+                                    <div class="card border-0 rounded shadow p-3 mb-3 aspect-ratio aspect-ratio-4x3"
+                                        style="background-color: #ffffff; width: 100%; height: 325px; min-height: 150px;">
+                                        <img src="../assets/img/iconforportal/bow-tie@3x.png"
+                                            class="w-100 h-100" alt="...">
+                                    </div>
+                                    <h3 class="mt-2 text-center">BOW-TIE</h3>
+
+                                </a>
+                                <a id="menu_search" href="hazop/search"
+                                    class="col-xxl-3 col-xl-3 col-lg-4 col-md-6 col-sm-9 col-12 text-decoration-none">
+
+                                    <div class="card border-0 rounded shadow p-3 mb-3 aspect-ratio aspect-ratio-4x3"
+                                        style="background-color: #ffffff; width: 100%; height: 325px; min-height: 150px;">
+                                        <img src="../assets/img/iconforportal/search@3x.png"
+                                            class="w-100 h-100" alt="...">
+                                    </div>
+                                    <h3 class="mt-2 text-center">SEARCH</h3>
+
+                                </a>
+
+                                <a id="menu_report" href="report/index"
+                                    class="col-xxl-3 col-xl-3 col-lg-4 col-md-6 col-sm-9 col-12 text-decoration-none disabled-link">
+
+                                    <div class="card border-0 rounded shadow p-3 mb-3 aspect-ratio aspect-ratio-4x3"
+                                        style="background-color: #ffffff; width: 100%; height: 325px; min-height: 150px;">
+                                        <img src="../assets/img/iconforportal/dashboard@3x.png"
+                                            class="w-100 h-100" alt="...">
+                                    </div>
+                                    <h3 class="mt-2 text-center">DASHBOARD/REPORT</h3>
+
+                                </a>
+
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+@section scripts {
+    <script>
+
+        AppMenuPage.controller("ctrlAppPage", function ($scope, $http, conFig) {
+            $('#divLoading').hide();
+
+            $scope.emp_role_list = [
+                { menu: 'hazop', active_type: true },
+                { menu: 'jsea', active_type: true },
+                { menu: 'whatif', active_type: true },
+                { menu: 'master', active_type: true },
+            ];
+
+            role_menu();
+
+            function role_menu() {
+
+                $scope.role_type = conFig.role_type();
+               
+                if ($scope.role_type == 'admin') {
+
+
+                } else {
+
+                    document.getElementById('menu_report').style.display = "none";
+                    // document.getElementById('menu_master').style.display = "none";
+
+                }
+
+                return;
+
+                var user_name = $scope.user_name;
+                var role_type = $scope.role_type;
+                var pha_no = $scope.pha_no;
+                var pha_status = $scope.pha_status;
+
+                $scope.menu_hazop = (check_menu('hazop'));
+                $scope.menu_jsea = (check_menu('jsea'));
+                $scope.menu_whatif = (check_menu('whatif'));
+                $scope.menu_hra = (check_menu('hra'));
+                $scope.menu_bowtie = (check_menu('bowtie'));
+                $scope.menu_search = (check_menu('search'));
+                $scope.menu_report = (check_menu('report'));
+                $scope.menu_master = (check_menu('master'));
+
+            };
+
+            function check_menu(val) {
+                //call api
+                return true;
+            };
+
+            $scope.selected_menu = function (page) {
+                alert(page);
+
+                //var pha_no = $scope.pha_no;
+                //var pha_status = $scope.pha_status;
+                //HAZOP--> create, draft, conduct, follow, review
+                //HAZOP CAPEX--> create, draft, conduct, approve, reject, follow, review
+
+                conFig.controller_action_befor = 'Home/Portal';
+
+                page = page + "/index"
+                window.open(`@Url.Content("~/")${page}`, "_top")
+
+                return true;
+            };
+
+
+
+        });
+
+
+    </script>
+
+}

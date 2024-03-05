@@ -1,0 +1,141 @@
+@import url('https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@300&display=swap');
+
+[data-tooltip] {
+    --arrow-size: 5px;
+    position: relative;
+    z-index: 10;
+}
+
+/* Positioning and visibility settings of the tooltip */
+[data-tooltip]:before,
+[data-tooltip]:after {
+  position: absolute;
+  visibility: hidden;
+  opacity: 0.5;
+  bottom: 100%;
+  top: auto;
+  left: 50%;
+  pointer-events: none;
+  transition: 0.2s;
+  will-change: transform;
+  overflow: visible !important;
+  z-index: 9999;
+  box-sizing: border-box;
+}
+
+/* The actual tooltip with a dynamic width */
+[data-tooltip]:before {
+  content: attr(data-tooltip);
+  padding: 12px 20px;
+  min-width: 50px;
+  max-width: 300px;
+  width: max-content;
+  border-radius: 6px;
+  font-size: 14px;
+  font-family: 'Bai Jamjuree', sans-serif;
+  font-weight: normal;
+  line-height: 1.5;
+  background-color: rgba(102, 106, 109, 0.9);
+  background-image: linear-gradient(30deg,
+    rgba(59, 72, 80, 0.44),
+    rgba(59, 68, 75, 0.44),
+    rgba(60, 82, 88, 0.44));
+  box-shadow: 0px 0px 24px rgba(0, 0, 0, 0.2);
+  color: #fff;
+  text-align: center;
+  white-space: pre-wrap;
+  transform: translate(-50%,  calc(0px - var(--arrow-size))) scale(0.5);
+}
+
+/* Tooltip arrow */
+[data-tooltip]:after {
+  content: '';
+  left: 70%;
+  border-style: solid;
+  border-width: var(--arrow-size) var(--arrow-size) 0px var(--arrow-size); /* CSS triangle */
+  border-color: rgba(55, 64, 70, 0.9) transparent transparent transparent;
+  transition-duration: 0s;
+  transform-origin: top;  
+  transform: translateX(-50%) scaleY(0);
+}
+
+[data-tooltip]:hover:before,
+[data-tooltip]:hover:after {
+  visibility: visible;
+  opacity: 1;
+}
+
+[data-tooltip]:hover:before {
+  transition-delay: 0.3s;
+  transform: translate(-50%, calc(0px - var(--arrow-size))) scale(1);
+}
+
+[data-tooltip]:hover:after {
+  transition-delay: 0.5s; /* Starting after the grow effect */
+  transition-duration: 0.2s;
+  transform: translateX(-50%) scaleY(1);
+}
+
+.rounded-header th {
+  border-radius: 0.25rem;
+}
+
+
+/*Vertical tooltip*/
+[data-tooltip-location="right"]:before,
+[data-tooltip-location="right"]:after {
+  left: calc(100% + var(--arrow-size));
+}
+
+[data-tooltip-location="right"]:before {
+  transform: translate(var(--arrow-size), 70%) scale(0.5);
+  position: absolute;
+  background-color: rgba(0, 123, 255, 0.9);
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-weight: bold;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  width: max-content;
+}
+
+[data-tooltip-location="right"]:hover:before {
+  transform: translate(var(--arrow-size), 70%) scale(1);
+}
+
+
+[data-tooltip-location="right"]:after {
+  border-width: var(--arrow-size) var(--arrow-size) var(--arrow-size) 0px;
+  border-color: transparent rgba(0, 123, 255, 0.9) transparent transparent;
+  transform-origin: right;
+  transform: translateY(50%) scaleX(0);
+  transition: transform 0.2s ease;
+}
+
+[data-tooltip-location="right"]:hover:after {
+  transform: translateY(50%) scaleX(1);
+  opacity: 1;
+}
+
+
+
+
+/* Targeting smartphones */
+@media screen and (max-width: 414px) {
+
+}
+
+/* Targeting tablets */
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+
+}
+
+/* Targeting laptops and computers */
+@media screen and (min-width: 1366px) {
+  /* Styles for laptops and computers */
+}
+
+

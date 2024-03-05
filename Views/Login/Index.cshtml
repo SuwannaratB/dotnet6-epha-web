@@ -1,0 +1,177 @@
+﻿@{
+    ViewData["Title"] = "Login";
+
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.3/angular.min.js"></script>
+}
+<div class="row flex-center position-relative g-0" id="divPage" ng-controller="ctrlApp">
+    <div class="col-11 col-sm-10 col-xl-8">
+        <div class="card border border-200 auth-card">
+
+            <div class="card-body pe-md-0">
+                <div class="row align-items-center gx-0 gy-7">
+                    <div class="col-auto bg-100 dark__bg-1100 rounded-3 position-relative overflow-hidden auth-title-box">
+                        <div class="bg-holder" style="background-image:url(../../../assets/img/bg/38.png);">
+                        </div>
+                        <!--/.bg-holder-->
+
+                        <div class="position-relative px-4 px-lg-7 pt-7 pb-7 pb-sm-5 text-center text-md-start pb-lg-7 pb-md-7">
+                            <h2 class="mb-3 text-black fs-1">
+                                E-PHA <p class="text-500">Process Hazard Analysis</p>
+                            </h2>
+                            <p class="text-700">
+                                <!--Sub-Software HAZOP<br />Job Safety Environment Analysis (JSEA)<br />What’s If Analysis<br />Health Risk Assessment(HRA)<br />Bow-Tie Diagram-->
+                            </p>
+                            <p class="text-700">
+                                <!--Sub-Software<br />HAZOP<br />JSEA<br />What’s If<br />HRA<br />Bow-Tie Diagram-->
+                            </p>
+                            <ul class="list-unstyled mb-0 w-max-content w-md-auto mx-auto">
+                                <li class="d-flex align-items-center">
+                                    <span class="uil uil-check-circle text-success me-2"></span><span class="text-700 fw-semi-bold">HAZOP</span>
+                                </li>
+                                <li class="d-flex align-items-center">
+                                    <span class="uil uil-check-circle text-success me-2"></span><span class="text-700 fw-semi-bold">JSEA</span>
+                                </li>
+                                <li class="d-flex align-items-center">
+                                    <span class="uil uil-check-circle text-success me-2"></span><span class="text-700 fw-semi-bold">What’s If</span>
+                                </li>
+                                <li class="d-flex align-items-center">
+                                    <span class="uil uil-check-circle text-success me-2"></span><span class="text-700 fw-semi-bold">HRA</span>
+                                </li>
+                                <li class="d-flex align-items-center">
+                                    <span class="uil uil-check-circle text-success me-2"></span><span class="text-700 fw-semi-bold">Bow-Tie Diagram</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="position-relative z-index--1 mb-6 d-none d-md-block text-center mt-md-15">
+                            <img class="auth-title-box-img d-dark-none" src="../assets/img/spot-illustrations/auth.png"
+                                 alt="" /><img class="auth-title-box-img d-light-none"
+                                               src="../assets/img/spot-illustrations/auth-dark.png" alt="" />
+                        </div>
+                    </div>
+
+                    <div class="col mx-auto">
+
+                        <div class="auth-form-box">
+                            <form ng-submit="handleSubmit($event)">
+
+                                <div class="text-center mb-7">
+                                    <a class="d-flex flex-center text-decoration-none mb-4">
+                                        <div class="d-flex align-items-center fw-bolder fs-5 d-inline-block">
+                                            <img src="../assets/img/iconforportal/logo-thaioil-epha@3x.png" alt="phoenix" width="300" />
+                                        </div>
+                                    </a>
+                                    <h3 class="text-1000">Sign In</h3>
+                                    <p class="text-700">Get access to your account<br /> Staff or Contractor</p>
+                                </div>
+                                <div class="mb-3 text-start">
+                                    <label class="form-label" for="email">Email address</label>
+                                    <div class="form-icon-container">
+                                        <input class="form-control form-icon-input" id="email" type="email"
+                                               data-ng-model="form.user_name" name="user_name"
+                                               placeholder="name@thaioilgroup.com" /><span class="fas fa-user text-900 fs--1 form-icon"></span>
+                                    </div>
+                                </div>
+                                <div class="mb-3 text-start">
+                                    <label class="form-label" for="password">Password</label>
+                                    <div class="form-icon-container">
+                                        <input class="form-control form-icon-input" id="password" type="password"
+                                               data-ng-model="form.pass_word" name="pass_word"
+                                               placeholder="Password" /><span class="fas fa-key text-900 fs--1 form-icon"></span>
+                                    </div>
+                                </div>
+                                <div class="row flex-between-center mb-7  d-none">
+                                    <div class="col-auto">
+                                        <div class="form-check mb-0">
+                                            <input class="form-check-input" id="basic-checkbox" type="checkbox" checked="checked" />
+                                            <label class="form-check-label mb-0" for="basic-checkbox">Remember me</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-auto d-none">
+                                        <a class="fs--1 fw-semi-bold"
+                                           href="login/forgot">Forgot Password?</a>
+                                    </div>
+                                </div>
+                                <input type="submit" Class="btn btn-primary w-100" value="Sign In" />
+
+                                <div class="text-center">
+                                    <a class="fs--1 fw-bold"
+                                       href="login/signup">Create an account</a>
+                                </div>
+
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        const app = angular.module("app", []);
+        app.controller("ctrlApp", function ($scope, $http) {
+
+            $('#divLoading').hide();
+            console.log(`@ViewBag.endpoint`)
+
+            $scope.email = `@ViewBag.email`;
+            $scope.perfex = `@ViewBag.perfex`;
+            $scope.autoLogin = `@ViewBag.autoLogin`;
+            const loginAzure = `@ViewBag.loginAzure`;
+            $scope.loginAzure = loginAzure === 'true' ? true : false;
+
+            $scope.form = {
+                user_name: "zkuluwat@thaioilgroup.com",
+                pass_word: "1",
+            }
+            $scope.handleSubmit = function (ev) {
+
+                console.log(ev)
+                const { user_name, pass_word } = $scope.form
+
+                if (!user_name || !pass_word) { return; }
+
+                $.ajax({
+                    url: "Login/Authentication",
+                    data: '{"user_name":"' + user_name + '","pass_word":"' + pass_word + '"}',
+                    type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+                    beforeSend: function () {
+                        $("#divLoading").show();
+                    },
+                    complete: function () {
+                        $("#divLoading").hide();
+                    },
+                    success: function (data) {
+                        var arr = data;
+                        console.log(arr); 
+                        try {
+                            if (data.role_type == '') {
+                                alert('Unauthorized access to the system.'); return;
+                            };
+                        } catch { alert('Unauthorized access to the system.'); return; }
+
+                        window.open(data.page, "_top");
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        if (jqXHR.status == 500) {
+                            alert('Internal error: ' + jqXHR.responseText);
+                        } else {
+                            alert('Unexpected ' + textStatus);
+                        }
+                    }
+
+                });
+
+            }
+
+
+        });
+
+
+
+    </script>
+}

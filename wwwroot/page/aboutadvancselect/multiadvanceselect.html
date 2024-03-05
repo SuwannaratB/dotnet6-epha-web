@@ -1,0 +1,53 @@
+
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <script src="js/config.js"></script>
+
+    <link href="css/theme.min.css" type="text/css" rel="stylesheet" id="style-default">
+    <link href="css/choices.min.css" type="text/css" rel="stylesheet" >
+
+  </head>
+  <body ng-controller="myController">
+
+
+    <div class="container m-3" style="font-size: 10px;">
+
+      <div class="row">
+        <div class="col-5">
+          
+            <label for="" class="form-label ps-0" >Functional Location Audition</label>
+          
+            <select class="form-select rounded-1" data-choices="data-choices" data-options='{"removeItemButton":true,"placeholder":true}' multiple="multiple" ng-init="formData.functional_location ='Functional location ..'">
+          
+              <option ng-repeat="item in functional_list">{{item.name}}</option>
+              <option >None APU</option>
+
+            </select>
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <script src="js/angular.min.js"></script>
+    <script src="js/lodash.min.js"></script>
+    <script src="js/phoenix.js"></script>
+    <script src="js/choices.min.js"></script>
+    <script src="js/fakedata.js"></script>
+    
+
+
+  </body>
+</html>
+
+
+
+
+
+

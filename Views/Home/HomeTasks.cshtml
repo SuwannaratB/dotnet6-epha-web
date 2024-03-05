@@ -1,0 +1,540 @@
+﻿@{
+    ViewData["Title"] = "HAZOP Sub-Sofware";
+
+    Layout = "~/Views/Shared/_LayoutWeb.cshtml";
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.3/angular.min.js"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&amp;display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+
+    <link rel="stylesheet" href="~/assets/css/theme.min.css">
+
+    <link rel="stylesheet" href="~/assets/css/tablefreezer.css">
+
+    <link href="~/assets/css/theme.min.css" type="text/css" rel="stylesheet" id="style-default">
+
+    <link href="~/assets/css/choices.min.css" type="text/css" rel="stylesheet">
+
+    <script src="~/assets/js/config.js"></script>
+
+    <link rel="stylesheet" href="~/css/autocomplete.css">
+
+    <script src="~/assets/js/all.min.js"></script>
+
+}
+
+<div class="content mt-1" style="font-size: 12px; min-height: auto!important;" id="divPage" ng-controller="ctrlAppPage">
+
+    <div class="modal fade" id="modalMsg" tabindex="-1" aria-labelledby="modalMsgLabel" aria-hidden="true"
+         style="display: none;">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="text-900 mb-0" data-anchor="data-anchor" id="modalMsgLabel">
+                        <span class=" me-2 text-primary"><B>|</B></span> Please enter your comment.
+                    </h5>
+
+                    <button class="btn p-1" type="button" data-bs-dismiss="modal" aria-label="Close">
+                        <svg class="svg-inline--fa fa-xmark fs--1" aria-hidden="true" focusable="false"
+                             data-prefix="fas" data-icon="xmark" role="img" xmlns="http://www.w3.org/2000/svg"
+                             viewBox="0 0 320 512" data-fa-i2svg="">
+                            <path fill="currentColor"
+                                  d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z">
+                            </path>
+                        </svg>
+                    </button>
+
+                </div>
+                <div class="modal-body">
+                    <button class="btn btn-success me-1 mb-1" type="button">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modalMsgSave" tabindex="-1" aria-labelledby="modalMsgSaveLabel" aria-hidden="true"
+         style="display: none;">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="text-900 mb-0" data-anchor="data-anchor" id="modalMsgSaveLabel">
+                        <span class=" me-2 text-primary"><B>|</B></span>
+                    </h5>
+
+                    <button class="btn p-1" type="button" data-bs-dismiss="modal" aria-label="Close">
+                        <svg class="svg-inline--fa fa-xmark fs--1" aria-hidden="true" focusable="false"
+                             data-prefix="fas" data-icon="xmark" role="img" xmlns="http://www.w3.org/2000/svg"
+                             viewBox="0 0 320 512" data-fa-i2svg="">
+                            <path fill="currentColor"
+                                  d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z">
+                            </path>
+                        </svg>
+                    </button>
+
+                </div>
+                <div class="modal-body">
+                    <button class="btn btn-success me-1 mb-1" type="button">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modalMsgConfirmApprove" tabindex="-1" aria-labelledby="modalMsgConfirmApproveLabel" aria-hidden="true"
+         style="display: none;">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="text-900 mb-0" data-anchor="data-anchor" id="modalMsgConfirmApproveLabel">
+                        <span class=" me-2 text-primary"><B>|</B></span>Approver Review?
+                    </h5>
+                </div>
+                <div class="modal-body">
+
+                    <div class="row g-3 justify-content-between align-items-center mx-1">
+
+                        <div class="col-md-12 p-1 ps-3">
+                            <label ng-if="approve_type=='approve'" class="form-label ps-0"><b class="text-danger">The approver has approved the conduct of PHA.</b></label>
+                            <label ng-if="approve_type=='reject_no_comment'" class="form-label ps-0"><b class="text-danger">The approver has send back conduct of PHA.</b></label>
+
+                        </div>
+
+                        <div class="col-md-12 px-2" ng-if="approve_type=='reject_no_comment'">
+
+                            <label class="form-label ps-0" for="floatingTextarea2">
+                                <b class="text-danger"> * </b>Comment :{{approve_comment}}
+                            </label>
+
+                            <textarea class="form-control rounded-1" id="floatingTextarea2" placeholder="Enter your comment"
+                                      ng-model="approve_comment" style="height: 100px">  </textarea>
+
+                        </div>
+                        <div class="col-md-12 px-2">
+                            <button class="btn btn-outline-success btn-sm  ms-2" style="width: 100px;" ng-click="confirmArppoved()">{{(approve_type=='approve'?'Approve':'Send back with comment')}}</button>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Modal Export File Start-->
+    <div class="modal fade" id="modalExportFile" tabindex="-1" aria-labelledby="modalExportFileLabel"
+         aria-hidden="true" style="display: none;">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalExportFileLabel">Download File</h5>
+                    <button class="btn p-1" type="button" data-bs-dismiss="modal" aria-label="Close">
+                        <svg class="svg-inline--fa fa-xmark fs--1" aria-hidden="true" focusable="false" data-prefix="fas"
+                             data-icon="xmark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"
+                             data-fa-i2svg="">
+                            <path fill="currentColor"
+                                  d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z">
+                            </path>
+                        </svg>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="bg-white position-relative top-1">
+
+                        <a href="{{exportfile[0].DownloadPath}}" id="exportfile" name="exportfile" target="_blank">
+                            {{exportfile[0].Name}}
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!--Modal Export File End-->
+
+
+    <div class="row g-0">
+
+        <div class="col-12">
+
+            <div class="card shadow-sm p-2 mb-3 bg-light rounded">
+
+                <div class="card-body p-2">
+
+                    <div class="row">
+
+                        <div class="m-3 row  gx-0 align-items-center">
+
+                            <div class="card px-2 ">
+                                <div class="row g-3 justify-content-between align-items-center pt-2 pb-3">
+                                    <div class="col-6 col-md">
+                                        <h5 class="text-900 mb-0" data-anchor="data-anchor"> <span class=" me-2 text-primary"><B>|</B></span>  MY TASKS</h5>
+                                    </div>
+                                    <div class="col-auto col-md">
+                                        <div class="d-flex align-items-center py-2  justify-content-end">
+                                            <span class="mx-2">
+                                                <button class="btn btn-outline-secondary btn-sm" style="width: 100px;" ng-click="confirmBack()">Back</button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row g-3 justify-content-between align-items-center pt-2">
+                                    <div class="col-auto d-none">
+                                        <!-- ใช้ ms-auto เพื่อชิดขวา -->
+                                        <h6 class="fw-semi-bold text-primary ng-binding"><b>Total : {{data_resultes.length}} Tasks.</b></h6>
+                                    </div>
+                                    <div class="col-auto">
+
+                                        <div class="search-box position-relative">
+                                            <input class="form-control search-input search"
+                                                   ng-model="searchText" placeholder="Search Document Number" />
+                                            <span class="fas fa-search search-box-icon"></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row g-3 justify-content-between align-items-center pt-2 pb-3">
+
+                                    <div class="table-responsive scrollbar " id="table-container">
+
+                                        <table class="table fs--2 mb-0 " cellpadding="0" cellspacing="0" ng-if="!(item.action_required=='Approver')">
+                                            <thead class=" text-uppercase  text-center  bg-soft " style="font-size: 10px;" id="myHeader">
+                                                <tr>
+                                                    @* <td style='padding: 15px;' ng-if="item.pha_status== 21">Approver <br />Review</td> *@
+                                                    <td style='padding: 15px;'>
+                                                        <h6 class="fw-semi-bold text-primary"><b class="fw-semi-bold text-primary">Total : {{data_resultes.length}} Tasks.</b></h6>
+
+                                                        <i ng-if="task_up" class="fa fa-chevron-up cursor-pointer" ng-click="task_sort()"></i>
+                                                        <i ng-if="!task_up" class="fa fa-chevron-down cursor-pointer" ng-click="task_sort()"></i>
+                                                    </td>
+                                                    <td style='padding: 15px;'>PHA Type</td>
+                                                    <td style='padding: 15px;'>Action Required</td>
+                                                    <td style='padding: 15px;'>Document Number</td>
+                                                    <td style='padding: 15px;'>Document Title</td>
+                                                    <td style='padding: 15px;'>Rev.</td>
+                                                    <td style='padding: 15px;'>Originator</td>
+                                                    <td style='padding: 15px;'>Received</td>
+                                                    <td style='padding: 15px;'>
+                                                        Due Date
+                                                        <i ng-if="due_date_up" class="fa fa-chevron-up cursor-pointer" ng-click="due_date_sort()"></i>
+                                                        <i ng-if="!due_date_up" class="fa fa-chevron-down cursor-pointer" ng-click="due_date_sort()"></i>
+                                                    </td>
+                                                    <td style='padding: 15px;'>Remaining</td>
+                                                    <td style='padding: 15px;'>Consolidator</td>
+                                                    <td style='padding: 15px;'>
+                                                    </td>
+                                                </tr>
+                                            </thead>
+
+                                            <tbody class="customer-rating-table-body">
+                                                <tr class="hover-actions-trigger btn-reveal-trigger position-static rowwork"
+                                                    ng-repeat="item in data_resultes | MultiFieldFilter: searchText | orderBy: due_date_sort_by">
+
+
+                                                    <td class="align-top text-center">
+                                                        <div class="p-1 ">
+                                                            <h6 class="fw-semi-bold">{{item.task}}</h6>
+                                                        </div>
+                                                    </td>
+                                                    <td class="align-top text-center">
+                                                        <div class="p-1 ">
+                                                            <h6 class="fw-semi-bold">{{item.pha_type}}</h6>
+                                                        </div>
+                                                    </td>
+                                                    <td class="align-top text-center">
+                                                        <div class="p-1 ">
+                                                            <h6 class="fw-semi-bold cursor-pointer text-primary" title="Action Owner followup items."
+                                                                ng-if="item.action_required=='Recommendation Closing'" ng-click="editActionFollowup(item)">
+                                                                {{item.action_required}}
+                                                            </h6>
+                                                            <h6 class="fw-semi-bold cursor-pointer text-primary" title="Originator review action owner followup."
+                                                                ng-if="item.action_required=='Approve'" ng-click="editActionReviewFollowup(item)">
+                                                                {{item.action_required}}
+                                                            </h6>
+                                                            <h6 class="fw-semi-bold cursor-pointer text-primary" title="Waiting Approve Review."
+                                                                ng-if="item.action_required=='Approver'" ng-click="selectDoc(item)">
+                                                                {{item.action_required}}
+                                                            </h6>
+                                                            <h6 class="fw-semi-bold"
+                                                                ng-if="!(item.action_required=='Recommendation Closing' || item.action_required=='Approve' || item.action_required=='Approver') ">
+                                                                {{item.action_required}}
+                                                            </h6>
+                                                        </div>
+                                                        <div class="p-1 " ng-if="item.pha_status== 21 && false">
+                                                            <span class="mx-1">
+                                                                <button class="btn btn-outline-secondary p-2"
+                                                                        style="background-color: #ffffff; border-color: #9de59d"
+                                                                        ng-click="confirmApprove(item,'')">
+                                                                    <i class="fa-solid fa-file-circle-check" style="color: #9de59d "></i>
+                                                                </button>
+                                                            </span>
+                                                            <span class="mx-1">
+                                                                <button class="btn btn-outline-secondary p-2"
+                                                                        style="background-color: #ffffff; border-color: #ff9999;"
+                                                                        ng-click="confirmReject(item)">
+                                                                    <i class="fa-solid fa-file-circle-xmark" style="color: #ff9999;"></i>
+                                                                </button>
+                                                            </span>
+
+                                                        </div>
+                                                    </td>
+                                                    <td class="align-top text-center">
+                                                        <div class="p-1 ">
+                                                            <h6 class="fw-semi-bold">{{item.document_number}}</h6>
+                                                        </div>
+                                                    </td>
+                                                    <td class="align-top text-center">
+                                                        <div class="p-1 ">
+                                                            <h6 class="fw-semi-bold">{{item.document_title}}</h6>
+                                                        </div>
+                                                    </td>
+                                                    <td class="align-top text-center">
+                                                        <div class="p-1 ">
+                                                            <h6 class="fw-semi-bold">{{item.rev}}</h6>
+                                                        </div>
+                                                    </td>
+                                                    <td class="align-top text-center">
+                                                        <div class="p-1 ">
+                                                            <h6 class="fw-semi-bold">{{item.originator}}</h6>
+                                                        </div>
+                                                    </td>
+                                                    <td class="align-top text-center">
+                                                        <div class="p-1 ">
+                                                            <h6 class="fw-semi-bold">{{item.receivesd}}</h6>
+                                                        </div>
+                                                    </td>
+                                                    <td class="due_date align-top text-center">
+                                                        <div class="p-1 ">
+                                                            <h6 class="fw-semi-bold">{{item.due_date}}</h6>
+                                                        </div>
+                                                    </td>
+                                                    <td class="align-top text-center">
+                                                        <div class="p-1 " style="background-color: green;color:red" ng-if="item.remaining >3">
+                                                            <h6 class="fw-semi-bold">{{item.remaining}}</h6>
+                                                        </div>
+                                                        <div class="p-1 " style="background-color: yellow" ng-if="item.remaining >0 && item.remaining <3">
+                                                            <h6 class="fw-semi-bold">{{item.remaining}}</h6>
+                                                        </div>
+                                                        <div class="p-1 " style="background-color: red;color:white" ng-if="item.remaining <= 0 ">
+                                                            <h6 class="fw-semi-bold">{{item.remaining}}</h6>
+                                                        </div>
+                                                    </td>
+                                                    <td class="align-top text-center">
+                                                        <div class="p-1 ">
+                                                            <h6 class="fw-semi-bold">{{item.consolidator}}</h6>
+                                                        </div>
+                                                    </td>
+                                                    <td class="align-top text-end">
+                                                        <div class="p-0 m-0 text-center">
+
+                                                            <button class="btn btn-outline p-1 d-none" style=" background-color: #f1f2f4; width:120px;"
+                                                                    ng-click="confirmExport(item ,'pdf')">
+                                                                <span class="fa fa-file-pdf fa-lg text-danger "></span> Full Report
+                                                            </button>
+
+                                                            <button class="btn btn-outline text-primary p-1 ms-2 d-none"
+                                                                    style=" background-color: #f1f2f4; width:120px; "
+                                                                    ng-click="selectDoc(item)">
+                                                                See Details
+                                                            </button>
+
+                                                            <div class="form-check form-check-inline cursor-pointer p-0">
+                                                                <span class="fa-solid far fa-file-pdf text-danger" style="font-size:15px;"
+                                                                      ng-click="confirmExport(item ,'pdf')"></span>
+                                                                <b>
+                                                                    JSEA Report
+                                                                </b>
+                                                            </div>
+
+                                                            <h6 class="fw-semi-bold cursor-pointer text-primary" ng-click="selectDoc(item)">
+                                                                See Details
+                                                            </h6>
+                                                             
+
+
+                                                        </div>
+
+                                                    </td>
+                                                </tr>
+
+
+
+                                            </tbody>
+
+                                        </table>
+
+
+                                        <table class="table fs--2 mb-0 " cellpadding="0" cellspacing="0" ng-if="(item.action_required=='Approver')">
+                                            <thead class=" text-uppercase  text-center  bg-soft " style="font-size: 10px;" id="myHeader">
+                                                <tr>
+                                                    @* <td style='padding: 15px;' ng-if="item.pha_status== 21">Approver <br />Review</td> *@
+                                                    <td style='padding: 15px;'>
+                                                        <h6 class="fw-semi-bold text-primary"><b class="fw-semi-bold text-primary">Total : {{data_resultes.length}} Tasks.</b></h6>
+
+                                                        Task  <i ng-if="task_up" class="fa fa-chevron-up cursor-pointer" ng-click="task_sort()"></i>
+                                                        <i ng-if="!task_up" class="fa fa-chevron-down cursor-pointer" ng-click="task_sort()"></i>
+                                                    </td>
+                                                    <td style='padding: 15px;'>PHA Type</td>
+                                                    <td style='padding: 15px;'>Action Required</td>
+                                                    <td style='padding: 15px;'>Document Number</td>
+                                                    <td style='padding: 15px;'>Document Title</td>
+                                                    <td style='padding: 15px;'>Rev.</td>
+                                                    <td style='padding: 15px;'>Originator</td>
+                                                    <td style='padding: 15px;'>Consolidator</td>
+                                                    <td style='padding: 15px;'>
+                                                    </td>
+                                                </tr>
+                                            </thead>
+
+                                            <tbody class="customer-rating-table-body">
+                                                <tr class="hover-actions-trigger btn-reveal-trigger position-static rowwork"
+                                                    ng-repeat="item in data_resultes | MultiFieldFilter: searchText | orderBy: due_date_sort_by">
+
+
+                                                    <td class="align-top text-center">
+                                                        <div class="p-1 ">
+                                                            <h6 class="fw-semi-bold">{{item.task}}</h6>
+                                                        </div>
+                                                    </td>
+                                                    <td class="align-top text-center">
+                                                        <div class="p-1 ">
+                                                            <h6 class="fw-semi-bold">{{item.pha_type}}</h6>
+                                                        </div>
+                                                    </td>
+                                                    <td class="align-top text-center">
+                                                        <div class="p-1 ">
+                                                            <h6 class="fw-semi-bold cursor-pointer text-primary" title="Action Owner followup items."
+                                                                ng-if="item.action_required=='Recommendation Closing'" ng-click="editActionFollowup(item)">
+                                                                {{item.action_required}}
+                                                            </h6>
+                                                            <h6 class="fw-semi-bold cursor-pointer text-primary" title="Originator review action owner followup."
+                                                                ng-if="item.action_required=='Approve'" ng-click="editActionReviewFollowup(item)">
+                                                                {{item.action_required}}
+                                                            </h6>
+                                                            <h6 class="fw-semi-bold cursor-pointer text-primary" title="Waiting Approve Review."
+                                                                ng-if="item.action_required=='Approver'" ng-click="selectDoc(item)">
+                                                                {{item.action_required}}
+                                                            </h6>
+                                                            <h6 class="fw-semi-bold"
+                                                                ng-if="!(item.action_required=='Recommendation Closing' || item.action_required=='Approve' || item.action_required=='Approver') ">
+                                                                {{item.action_required}}
+                                                            </h6>
+                                                        </div>
+                                                        <div class="p-1 " ng-if="item.pha_status== 21 && false">
+                                                            <span class="mx-1">
+                                                                <button class="btn btn-outline-secondary p-2"
+                                                                        style="background-color: #ffffff; border-color: #9de59d"
+                                                                        ng-click="confirmApprove(item,'')">
+                                                                    <i class="fa-solid fa-file-circle-check" style="color: #9de59d "></i>
+                                                                </button>
+                                                            </span>
+                                                            <span class="mx-1">
+                                                                <button class="btn btn-outline-secondary p-2"
+                                                                        style="background-color: #ffffff; border-color: #ff9999;"
+                                                                        ng-click="confirmReject(item)">
+                                                                    <i class="fa-solid fa-file-circle-xmark" style="color: #ff9999;"></i>
+                                                                </button>
+                                                            </span>
+
+                                                        </div>
+                                                    </td>
+                                                    <td class="align-top text-center">
+                                                        <div class="p-1 ">
+                                                            <h6 class="fw-semi-bold">{{item.document_number}}</h6>
+                                                        </div>
+                                                    </td>
+                                                    <td class="align-top text-center">
+                                                        <div class="p-1 ">
+                                                            <h6 class="fw-semi-bold">{{item.document_title}}</h6>
+                                                        </div>
+                                                    </td>
+                                                    <td class="align-top text-center">
+                                                        <div class="p-1 ">
+                                                            <h6 class="fw-semi-bold">{{item.rev}}</h6>
+                                                        </div>
+                                                    </td>
+                                                    <td class="align-top text-center">
+                                                        <div class="p-1 ">
+                                                            <h6 class="fw-semi-bold">{{item.originator}}</h6>
+                                                        </div>
+                                                    </td>
+                                                    <td class="align-top text-center">
+                                                        <div class="p-1 ">
+                                                            <h6 class="fw-semi-bold">{{item.consolidator}}</h6>
+                                                        </div>
+                                                    </td>
+                                                    <td class="align-top text-end">
+                                                        <div class="p-0 m-0 text-start"> 
+                                                            <div class="form-check form-check-inline cursor-pointer p-0 m-0">
+                                                                <span class="fa-solid far fa-file-pdf text-danger" style="font-size:15px;"
+                                                                      ng-click="confirmExport(item ,'pdf')"></span>
+                                                                <b>
+                                                                    Full Report
+                                                                </b>
+                                                            </div> 
+                                                            <h6 class="fw-semi-bold cursor-pointer text-primary p-0 m-0" ng-click="selectDoc(item)">
+                                                                See Details
+                                                            </h6> 
+                                                        </div>
+
+                                                    </td>
+                                                </tr>
+
+
+
+                                            </tbody>
+
+                                        </table>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="row g-3 justify-content-between align-items-center ms-2 pt-2 pb-3">
+                                    <h6 class="fw-semi-bold text-section ng-binding"><b>List action required status</b></h6>
+                                    <br />1. Recommendation Closing -> Waiting Follow Up
+                                    <br />2. Reviewer ->  Member team Review
+                                    <br />3. Approve -> Originator review action owner followup
+                                    <br />4. Review & Approve -> Waiting Review Follow Up
+                                    <br />5. Approver -> Waiting Approve Review
+                                    <br />6. For Info --> Sub-Software to complated
+                                </div>
+                                <div class="row d-none">
+                                    <b> list action required status</b>
+                                    <br />1. Recommendation Closing -> Waiting Follow Up --> (Status Flow: 13)
+                                    <br />2. Review ->  Member team Review --> (Status  Flow: 12,22)
+                                    <br />3. Approve -> Originator review action owner followup --> (Status  Flow: 14)
+                                    <br />4. Review & Approve -> Waiting Review Follow Up --> (Status  Flow: 14)
+                                    <br />5. TA2 Approver  -> Waiting Approve Review --> (Status  Flow: 21)
+                                    <br />6. For Info  -->Waiting Approve Review (Status  Flow: 21)
+                                    <br />9. Closed-> Sub-Software to complated -> 91: Closed
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+@section Scripts {
+
+    <script src="~/assets/js/angular.min.js"></script>
+    <script src="~/assets/js/lodash.min.js"></script>
+    <script src="~/assets/js/phoenix.js"></script>
+    <script src="~/assets/js/choices.min.js"></script>
+    <script src="~/assets/js/fakedata.js"></script>
+
+    <script src="~/js/_flow/hometasks.js"></script>
+
+
+}

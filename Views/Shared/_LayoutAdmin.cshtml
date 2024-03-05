@@ -1,0 +1,543 @@
+﻿@inject IHttpContextAccessor HttpContextAccessor
+
+<!DOCTYPE html>
+<html lang="en">
+<base href="~/" />
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] EOSL Dashbaord</title>
+    @* <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" /> *@
+    <link rel="stylesheet" href="~/app-assets/css/vendors.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/app-assets/css/app.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/StyleSheetTOP.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/PerfectScrollBar.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/bootstrap-datepicker.min.css" asp-append-version="true" />
+
+    <link rel="stylesheet" type="text/css" href="~/app-assets/vendors/css/forms/selects/select2.min.css">
+    <link rel="stylesheet" type="text/css" href="~/app-assets/css/core/colors/palette-gradient.css">
+    <link rel="stylesheet" href="~/app-assets/css/core/menu/menu-types/horizontal-menu.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/app-assets/vendors/css/forms/icheck/icheck.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/app-assets/vendors/css/forms/icheck/custom.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/app-assets/icofont/icofont.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/app-assets/fonts/font-awesome/css/font-awesome.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/app-assets/js/apexcharts/dist/apexcharts.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/EOSL.styles.css" asp-append-version="true" />
+    <link rel="icon" type="image/x-icon" href="~/app-assets/images/thaioil_icon.ico">
+    @await RenderSectionAsync("style", required: false)
+</head>
+
+@* <body class="horizontal-layout horizontal-menu 2-columns menu-expanded" data-open="hover" data-menu="horizontal-menu" data-col="2-columns" onload="countdown();"> *@
+
+<body class="horizontal-layout horizontal-menu 2-columns   menu-expanded" data-open="hover" data-menu="horizontal-menu" data-col="2-columns" style="max-height: 100vh;">
+
+
+    <!-- fixed-top-->
+    <nav class="header-navbar navbar-expand-md navbar navbar-with-menu navbar-static-top navbar-dark bg-gradient-x-grey-blue navbar-border navbar-brand-center">
+        <div class="navbar-wrapper">
+            <div class="navbar-header" style="width: auto;">
+                <ul class="nav navbar-nav flex-row mt-0">
+                    <li class="nav-item mobile-menu d-md-none mr-auto"><a class="nav-link nav-menu-main menu-toggle hidden-xs"><i class="ft-menu font-large-1 d-none"></i></a></li>
+                    <li class="nav-item"><a class="navbar-brand mb-1" style="padding: 4px 0px">
+
+                            <img class="brand-logo" alt="stack admin logo" src="~/app-assets/images/Thaioil_Corporate_Logo_x.png" style="height: 40px;" />
+                            <h2 class="brand-text font-italic p-0 m-0"><b><span style="color: #da288b;" class="font-large-1">EOSL</span><span style="color: white;">&#32;Dashboard</span></b></h2>
+                        </a></li>
+
+                    <li class="nav-item d-md-none"><a class="nav-link open-navbar-container" data-toggle="collapse" data-target="#navbar-mobile"><i class="fa fa-ellipsis-v"></i></a></li>
+                </ul>
+            </div>
+            <div class="navbar-container content">
+                <div class="collapse navbar-collapse" id="navbar-mobile">
+                    <div class="d-none">
+                        <input id="countdown1" name="countdown1" class="font-size-xsmall " style="color:white; width: 140px; background-color: transparent; border-color: transparent;" value="" />
+                        <input id="countdown2" name="countdown2" class="font-size-xsmall " style="color:white; width: 140px; background-color: transparent; border-color: transparent;" value="" />
+                        <input id="countdown3" name="countdown3" class="font-size-xsmall " style="color:white; width: 140px; background-color: transparent; border-color: transparent;" value="" />
+                        <input id="countdown" name="countdown" class="font-size-xsmall " style="color:white; width: 140px; background-color: transparent; border-color: transparent;" value="" />
+                    </div>
+                    <ul class="nav navbar-nav mr-auto float-left ">
+
+                    </ul>
+                    <ul class="nav navbar-nav  float-left">
+                        <li class="dropdown dropdown-user nav-item">
+                            <span></span>
+                            <input id="disptimeout" name="disptimeout" class="font-size-xsmall " style="color:white; width: 140px; background-color: transparent; border-color: transparent;" value="" />
+                        </li>
+                    </ul>
+                    <ul class="nav navbar-nav float-right">
+                        <li class="dropdown dropdown-user nav-item"><a class="dropdown-toggle nav-link dropdown-user-link" data-toggle="dropdown"><span class="avatar avatar-online">
+                                    <img id="imguser_show" src="@ViewBag.user_img" alt="avatar"><i></i></span>
+                                <span id="user_display_show" data-ng-controller="disPlayNameController" class="user-name text-white" ngCloak>{{user_display}}</span></a>
+                            <input type="hidden" id="user_name_def" />
+                            <div class="dropdown-menu dropdown-menu-right">
+
+                                <a class="dropdown-item" runat="server" id="menu_switch_role_type" asp-action="portal" asp-controller="web"><i class="ft-settings"></i>Go to Dashboard</a>
+                                <a class="dropdown-item" asp-action="logout" asp-controller="login"><i class="ft-power"></i>Logout</a>
+
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+
+    <!-- Horizontal navigation-->
+    <div class="header-navbar navbar-expand-sm navbar navbar-horizontal navbar-fixed navbar-light navbar-without-dd-arrow navbar-shadow menu-border" role="navigation" data-menu="menu-wrapper">
+        <!-- Horizontal menu content-->
+        <div class="navbar-container main-menu-content" data-menu="menu-container">
+            <!-- include ../../../includes/mixins-->
+            <div class="main-menu-content" id="main-menu-content" data-ng-controller="menu">
+                <ul class="nav navbar-nav font-size-small" id="main-menu-navigation" data-menu="menu-navigation">
+                    <li id="Portal" runat="server"><a class="dropdown-toggle nav-link " href="~/admin"><i class="ft-home"></i><span>Home</span></a> </li>
+                    <li id="Roleauthorizationsetting" runat="server"><a class="dropdown-toggle nav-link" href="~/admin/Roleauthorizationsetting"><i class="fa fa-user"></i><span>Authorize User Group </span></a>
+                    </li>
+                    <li id="KpiInput" runat="server"><a class="dropdown-toggle nav-link" href="~/admin/KpiInput"><i class="fa fa-tachometer"></i><span>KPI </span></a>
+
+                    </li>
+
+                    <li runat="server" id="Overtimecontroltarget"><a class="dropdown-toggle nav-link" href="~/admin/Overtimecontroltarget"><i class="fa fa-clock-o"></i><span>Overtime Control</span></a>
+                    </li>
+
+                    <li runat="server" id="Opexgroup"><a class="dropdown-toggle nav-link" href="~/admin/Opexgroup">
+                            <i class="fas fa-coins d-none"></i>
+                            <img src="~/app-assets/icofont/fonts/money-bag-w-bath_v2-Recovered%20edit.png" style="width: 14px; height: 12px; margin-bottom: 3px" />
+                            <span>OPEX </span></a>
+
+                    </li>
+                    <li id="Approved_items" runat="server"><a class="dropdown-toggle nav-link" href="~/admin/Approved_items">
+                            <i class="icofont-stamp "></i><span>Approve OPEX </span></a>
+
+                    </li>
+                    <li runat="server" id="ProjectProgressInput"><a class="dropdown-toggle nav-link" href="~/admin/ProjectProgressPortalInput">
+                            <i class="fa fa-tasks"></i><span>Project Progress</span></a>
+
+                    </li>
+
+
+                    <li runat="server" id="CorelationPlan"><a class="dropdown-toggle nav-link" href="~/admin/CorelationPlan"><i class="fa fa-bar-chart"></i><span>Correlation</span></a>
+
+                    </li>
+                    <li runat="server" id="IDPPlan"><a class="dropdown-toggle nav-link" href="~/admin/IDPPlan"><i class="fa fa fa-address-book-o "></i><span>IDP</span></a>
+
+                    </li>
+                    <li runat="server" id="AssessmentPlan"><a class="dropdown-toggle nav-link" href="~/admin/AssessmentPlan"><i class="fa fa-calendar-check-o text-black-50"></i><span>Assessment</span></a>
+
+                    </li>
+                    <li runat="server" id="Equipmentmaintain"><a class="dropdown-toggle nav-link" href="~/admin/Equipmentmaintain"><i class="fa fa-wrench text-black-50"></i><span>Equipment Availability</span></a>
+
+                    </li>
+
+                    </li>
+                    @* <li runat="server" id="SLA"><a class="dropdown-toggle nav-link" href="~/master/SetSLARawData">
+                    <span>SLA</span></a>
+
+                    </li> *@
+                    <li runat="server" id="TAT"><a class="dropdown-toggle nav-link" href="~/master/ProductGroup">
+                            <img src="~/app-assets/images/icons/gauge-chart-white.png" class="img-fluid" style=" max-height: 15px;filter: invert(25);    transform: scale(1.2) translateY(-2px);">
+
+                            <span>TAT</span></a>
+
+                    </li>
+
+                    <li runat="server" id="master_data"><a class="dropdown-toggle nav-link" href="~/master">
+                            <i class="icofont-navigation-menu"></i><span>Master Data</span></a>
+
+                    </li>
+                    <li id="page_document" class="dropdown nav-item" data-menu="dropdown"><a class="dropdown-toggle nav-link" href="#" data-toggle="dropdown"><i class="fa fa-folder"></i><span>Document</span></a>
+                        <ul class="dropdown-menu">
+                            <li class="dropdown dropdown-submenu" data-menu="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#" data-toggle="dropdown"><i class="fa fa-file-text"></i>Admin</a>
+                                <ul class="dropdown-menu">
+                                    <li id="page_admin" onclick="op_doc_page(this.id)">
+                                        <a class="dropdown-item">Full Admin Document</a>
+                                    </li>
+                                    <li id="page_admin_powerbi" onclick="op_doc_page(this.id)">
+                                        <a class="dropdown-item">Full Admin Power BI Document</a>
+                                    </li>
+                                    <li id="page_admin_powerbi_email" onclick="next_page(this.id)">
+                                        <a class="dropdown-item">Full Admin Power BI Email</a>
+                                    </li>
+                                    <li id="page_systemteam" onclick="op_doc_page(this.id)">
+                                        <a class="dropdown-item">Group: Admin System Team </a>
+                                    </li>
+                                    <li id="page_eqopexteam" onclick="op_doc_page(this.id)">
+                                        <a class="dropdown-item">Group: Admin Equipment Team </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="dropdown dropdown-submenu" data-menu="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#" data-toggle="dropdown"><i class="fa fa-file-text"></i>Dashboard</a>
+                                <ul class="dropdown-menu">
+                                    <li id="page_user" onclick="op_doc_page(this.id)">
+                                        <a class="dropdown-item">Full Dashboard Document</a>
+                                    </li>
+                                    <li id="page_ds_powerbi" onclick="op_doc_page(this.id)">
+                                        <a class="dropdown-item">Full Dashboard Power BI Document</a>
+                                    </li>
+                                    <li id="page_eosl" onclick="op_doc_page(this.id)">
+                                        <a class="dropdown-item">Group: EOSL/ 5M/ Chemist/ ALM </a>
+                                    </li>
+                                    <li id="page_lta" onclick="op_doc_page(this.id)">
+                                        <a class="dropdown-item">Group: LTA, Supervisor Junior</a>
+                                    </li>
+
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+    @RenderBody()
+
+</body>
+
+<script src="~/app-assets/vendors/js/vendors.min.js" , asp-append-version="true"></script>
+<script src="~/app-assets/vendors/js/extensions/moment.min.js"></script>
+<script src="~/app-assets/vendors/js/ui/jquery.sticky.js" , asp-append-version="true"></script>
+<script src="~/js/bootstrap-datepicker.min.js" , asp-append-version="true"></script>
+<script src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
+<script src="~/app-assets/vendors/js/charts/jquery.sparkline.min.js" , asp-append-version="true"></script>
+<script src="~/app-assets/vendors/js/extensions/jquery.knob.min.js"></script>
+<script src="~/app-assets/vendors/js/forms/select/select2.full.min.js"></script>
+<script src="~/app-assets/js/scripts/forms/select/form-select2.js"></script>
+<script src="~/app-assets/js/jquery/jquery.tagsinput.js" , asp-append-version="true"></script>
+<script src="~/app-assets/js/jquery/jquery.animateNumber.min.js" , asp-append-version="true"></script>
+<script src="~/app-assets/vendors/js/charts/echarts/echarts.js" asp-append-version="true"></script>
+<script src="~/js/angular.js" , asp-append-version="true"></script>
+<script src="~/js/btnToTop.js" , asp-append-version="true"></script>
+<script src="~/js/site.js" , asp-append-version="true"></script>
+<script src="~/app-assets/js/http-client/index.js" , asp-append-version="true"></script>
+<script src="~/app-assets/js/AngularJS/angular-cookies.min.js" , asp-append-version="true"></script>
+
+
+<script src="~/app-assets/vendors/js/forms/validation/jqBootstrapValidation.js" , asp-append-version="true"></script>
+<script src="~/app-assets/vendors/js/forms/icheck/icheck.min.js" , asp-append-version="true"></script>
+<script src="~/app-assets/js/core/app-menu.min.js" asp-append-version="true"></script>
+<script src="~/app-assets/js/core/app.min.js" asp-append-version="true"></script>
+
+
+
+<script src="~/app-assets/js/scripts/forms/form-login-register.js" asp-append-version="true"></script>
+
+
+<script>
+    const MenuApp = angular.module("MenuApp", ["conFigmodule"])
+    function op_doc_page(id) {
+        var id_page = id;
+        if (id_page == 'page_admin') {
+            window.open("@Url.Content("~/")Document/ADMIN_MANUAL_EOSL-DASHBOARD.pdf", "_blank");
+        }
+        else if (id_page == 'page_eosl') {window.open("@Url.Content("~/")Document/EOSL_5M_Chemist_ALM_Training_EOSL-DASHBOARD.pdf", "_blank");}
+        else if (id_page == 'page_lta') {window.open("@Url.Content("~/")Document/LTA_Supervisor_Junior_Training_EOSL-DASHBOARD.pdf", "_blank");}
+        else if (id_page == 'page_systemteam') {window.open("@Url.Content("~/")Document/System_Team_Training_EOSL-DASHBOARD.pdf", "_blank");}
+        else if (id_page == 'page_eqopexteam') {window.open("@Url.Content("~/")Document/OPEX&Equipment_Team_Training_EOSL-DASHBOARD.pdf", "_blank");}
+        else {window.open("@Url.Content("~/")Document/USER_MANUAL_EOSL-DASHBOARD.pdf", "_blank");}
+
+    }
+    MenuApp.controller("menu", function ($scope, $window, authMenu) {
+        setTimeout(() => {
+            const moduleName = `@ViewBag.activeMenu`
+            if (moduleName) {
+                $(`#${moduleName}`).addClass('active');
+            }
+            const menuids = [
+                "Roleauthorizationsetting",
+                "KpiInput",
+                "Overtimecontroltarget",
+                "Opexgroup",
+                "Approved_items",
+    @* "ProjectProgressInput", *@
+                "CorelationPlan",
+                "IDPPlan",
+                "AssessmentPlan",
+                "Equipmentmaintain",
+                "master_data",
+                "SLA"
+                , "TAT"
+            ]
+            authMenu.checkRole(menuids, "admin", "", "admin");
+            $('#main-menu-navigation').attr('class', 'nav navbar-nav font-size-small')
+        }, 500)
+
+    })
+    const disPlayName = angular.module("conFigmodule", [])
+        .service("conFig", function ($http) {
+            this.appName = '@Url.Content("~/")';
+            this.pha_no = function (x) {
+                return `@ViewData["pha_no"]`;
+            }
+            this.pha_seq = function (x) {
+                return `@ViewData["pha_seq"]`;
+            }
+            this.pha_type_doc = function (x) {
+                return `@ViewData["pha_type_doc"]`;
+            }
+            this.userName = function (x) {
+                return `@ViewData["user_name"]`;
+            }
+            this.role_type = function (x) {
+                return `@ViewData["role_type"]`;
+            }
+            this.user_display = function (x) {
+                return `@ViewData["user_display"]`;
+            }
+            this.endpoint = function (x) {
+                return `@ViewData["endpoint"]`;
+            }
+            this.endpoint2 = function (x) {
+                return `@ViewData["service_api_url"]`;
+            }
+            this.DefBreakdownType = function (x) {
+                return `@ViewData["DefBreakdownType"]`;
+            }
+            this.absURL = function (x) {
+                return `@Url.Content("~/")`;
+            }
+            this.getUsersInTeam = function (user_name, empId, module) {
+                const op = {}
+                const body = {user_name, empId, module}
+                return $http.post(`@ViewData["endpoint"]/get_emp_data_team`, body)
+            }
+        })
+        .service("authMenu", function ($http, conFig) {
+            const pathName = `@ViewBag.pathname`
+            const menuids = [
+                "Roleauthorizationsetting",
+                "KpiInput",
+                "Overtimecontroltarget",
+                "Opexgroup",
+                "Approved_items",
+                "ProjectProgressInput",
+                "CorelationPlan",
+                "IDPPlan",
+                "AssessmentPlan",
+                "Equipmentmaintain",
+                "master_data",
+                "SLA"
+                , "TAT"
+            ]
+            this.getUserInEOSL = function () {
+                var url_ws_other = conFig.endpoint2();
+                const config = {
+                    headers: {
+                        "Content-Type": "application/json; charset=utf-8",
+
+                    }
+                }
+                var user_name = '@ViewBag.user_name';
+                const query = `select a.seq_role ,a.user_id,b.seq_menu_sub,lower(c.name) as menu_sub_name
+                            ,case when c.seq_menu = 1 then 'admin' else 'dashboard' end  page_type
+                            from  eols_m_role_user a
+                            inner join  eols_m_role_menu b on a.seq_role = b.seq_role
+                            inner join  eols_m_menu_sub c on  b.seq_menu_sub= c.seq 
+                            inner join eols_m_role r on a.seq_role = r.seq and lower(r.status_active) = 'active'
+                            where lower(a.user_id)  = lower('${user_name}')`
+                const body = {
+                    "xtype": "select",
+                    "xstring": query
+                }
+                return $http.post(url_ws_other + `/check_data`, JSON.stringify(body), config);
+            }
+            this.checkRole = (menuid, type, css_def, pageType) => {
+                const role_type = conFig.role_type();
+                if (role_type && role_type === 'admin') {return }
+                for (let m of menuid) {
+                    $('#' + m).addClass('d-none')
+                }
+                this.getUserInEOSL().then(({data}) => {
+                    const arr = data;
+                    let css_def = "";
+                    if (arr.length > 0) {
+                        dt = arr.filter((PAGE_TYPE) => PAGE_TYPE === type)
+                        this.displayMenu(dt, pageType);
+                    }
+
+                }).catch(err => console.log(err))
+            }
+            this.displayMenu = (dt, pageType) => {
+                if (pageType === 'admin') {
+                    const ProjectProgressInput = $('#ProjectProgressInput')
+                    const master_data = $('#master_data')
+                    const Roleauthorizationsetting = $('#Roleauthorizationsetting')
+                    const KpiInput = $('#KpiInput')
+                    const Overtimecontroltarget = $('#Overtimecontroltarget')
+                    const Equipmentmaintain = $('#Equipmentmaintain')
+                    const IDPPlan = $('#IDPPlan')
+                    const AssessmentPlan = $('#AssessmentPlan')
+                    const CorelationPlan = $('#CorelationPlan')
+                    const Opexgroup = $('#Opexgroup')
+                    const Approved_items = $('#Approved_items')
+                    for (let menu of dt) {
+                        if (dt["PAGE_TYPE"].toString() != "admin") {continue;}
+                        switch (dt["MENU_SUB_NAME"].toString()) {
+                            case "project progress":
+                                ProjectProgressInput.attr("class", css_def);
+                                break;
+
+                            case "master data":
+                                master_data.attr("class", css_def);
+                                break;
+
+                            case "authorize user group":
+                                Roleauthorizationsetting.attr("class", css_def);
+                                break;
+
+                            case "kpi":
+                                KpiInput.attr("class", css_def);
+                                break;
+
+                            case "overtime control":
+                                Overtimecontroltarget.attr("class", css_def);
+                                break;
+
+                            case "equipment availability":
+                                Equipmentmaintain.attr("class", css_def);
+                                break;
+
+                            case "idp":
+                                IDPPlan.attr("class", css_def);
+                                break;
+
+                            case "assessment":
+                                AssessmentPlan.attr("class", css_def);
+                                break;
+
+                            case "correlation":
+                                CorelationPlan.attr("class", css_def);
+                                break;
+
+                            case "budget":
+                                Opexgroup.attr("class", css_def);
+                                break;
+
+                            case "approve budget":
+                                Approved_items.attr("class", css_def);
+                                break;
+
+                        }
+                    }
+                }
+                else if (pageType === 'dashboard') {
+                    const page_labperformance = $('#page_labperformance')
+                    const page_kpi = $('#page_kpi')
+                    const page_overtime = $('#page_overtime')
+                    const page_budget = $('#page_budget')
+                    const page_producthighlight = $('#page_producthighlight')
+                    const page_projectprogress = $('#page_projectprogress')
+                    const page_benchmark = $('#page_benchmark')
+                    const page_competency = $('#page_competency')
+                    const page_corelation = $('#page_corelation')
+                    const page_assessment = $('#page_assessment')
+                    const page_idp = $('#page_idp')
+                    const page_equipment = $('#page_equipment')
+
+                    for (let menu of dt) {
+                        if (dt["PAGE_TYPE"].toString() != "dashboard") {continue;}
+                        switch (dt["MENU_SUB_NAME"].toString()) {
+                            case "lab performance overview":
+                                page_labperformance.attr("class", "");
+                                break;
+
+                            case "kpi":
+                                page_kpi.attr("class", "");
+                                break;
+
+                            case "overtime control":
+                                page_overtime.attr("class", "");
+                                break;
+
+                            case "budget":
+                                page_budget.attr("class", "");
+                                break;
+
+                            case "product monitoring":
+                                page_producthighlight.attr("class", "");
+                                break;
+
+                            case "project progress":
+                                page_projectprogress.attr("class", "");
+                                break;
+                            case "benchmarking monitoring":
+                                page_benchmark.attr("class", "");
+                                break;
+
+                            case "competency":
+                                page_competency.attr("class", "");
+                                break;
+
+                            case "correlation":
+                                page_corelation.attr("class", "");
+                                break;
+
+                            case "assessment":
+                                page_assessment.attr("class", "");
+                                break;
+                            case "idp":
+                                page_idp.attr("class", "");
+                                break;
+                            case "equipment availability":
+                                page_equipment.attr("class", "");
+                                break;
+
+                        }
+                    }
+
+                }
+
+            }
+        });
+    disPlayName.controller("disPlayNameController", function ($scope, conFig) {
+        $scope.userName = conFig.userName();
+        $scope.user_display = conFig.user_display();
+
+    })
+    const el = document.getElementById('main-menu-content');
+    const disPlayNameel = document.getElementById('user_display_show');
+    angular.element(document).ready(function () {
+    @* var isFiltered = '@HttpContextAccessor.HttpContext.Session.GetString("timeoutSession")';
+            alert(isFiltered); *@
+            console.log(el)
+        angular.bootstrap(el, ['MenuApp']);
+        angular.bootstrap(disPlayNameel, ['conFigmodule']);
+    @* disptimeout *@
+            (() => {
+                var countDownDate = moment().add(1800, 'seconds');
+
+                var x = setInterval(function () {
+                    diff = countDownDate.diff(moment());
+
+                    if (diff <= 0) {
+                        var today = new Date();
+                        clearInterval(x);
+                        if (window.confirm("Do you really want to leave?")) {
+                            window.location.assign('@Url.Content("~/")login/logout', '_self', '');
+                            return;
+                        }
+                        else {
+                            window.location.reload()
+                        }
+                        // If the count down is finished, write some text 
+                        $('#disptimeout').val("EXPIRED");
+                    } else
+                        $('#disptimeout').val(`Time out : ${moment.utc(diff).format("mm:ss")} minute`);
+
+                }, 1000);
+
+            })()
+        function getMinutesBetweenDates(startDate, endDate) {
+            var diff = endDate.getTime() - startDate.getTime();
+            return (diff / 60000);
+        }
+    });
+
+
+</script>
+@await RenderSectionAsync("Scripts", required: false)
+
+</html>

@@ -1,0 +1,466 @@
+﻿@inject IHttpContextAccessor HttpContextAccessor
+
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr" ng-app="app">
+<base href="~/" />
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <style>
+        .tableFixHead {
+            /* make the table scrollable if height is more than 200 px  */
+            overflow-y: auto;
+            /* gives an initial height of your px to the table */
+            /*height: 600px;*/
+        }
+
+            .tableFixHead thead {
+                position: sticky;
+                /* make the table heads sticky */
+                top: 0px;
+                /* table head will be placed from the top of the table and sticks to it */
+            }
+
+        table {
+            border-collapse: collapse;
+            /* make the table borders collapse to each other */
+            width: 100%;
+        }
+
+        th,
+        td {
+            padding: 8px 16px;
+            border: 1px solid #ccc;
+        }
+
+        th {
+            background: #eee;
+        }
+
+
+
+        .rowwork .showcase {
+            display: none;
+        }
+
+        .rowwork:hover .showcase {
+            display: block;
+        }
+
+        .uprightTbl * {
+            /* border: none; */
+            border-collapse: collapse;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+
+        .readonly-div {
+            background-color: #f5f5f5;
+            /* Background color to indicate disabled appearance */
+            color: #888;
+            /* Text color to indicate disabled appearance */
+            padding: 10px;
+            border: 1px solid #ccc;
+            /* Border to visually separate the div */
+            pointer-events: none;
+            /* Disable pointer events to prevent interactions */
+        }
+    </style>
+
+    <style>
+        /* ---disabled--- */
+        .disabled-link {
+            pointer-events: none;
+            /* You might want to add some visual indication that the link is disabled */
+            color: gray;
+            cursor: not-allowed;
+            text-decoration: none;
+            border-block-color:white;
+        }
+    </style>
+
+
+    <!-- ===============================================-->
+    <!--    Document Title-->
+    <!-- ===============================================-->
+    <title>e-PHA</title>
+
+    <!-- ===============================================-->
+    <!--    Favicons-->
+    <!-- ===============================================-->
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/img/favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/img/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/img/favicons/favicon-16x16.png">
+    <link rel="shortcut icon" type="image/x-icon" href="../assets/img/favicons/favicon.ico">
+    <link rel="manifest" href="../assets/img/favicons/manifest.json">
+
+    <meta name="msapplication-TileImage" content="../assets/img/favicons/mstile-150x150.png">
+    <meta name="theme-color" content="#ffffff">
+    <script src="../vendors/imagesloaded/imagesloaded.pkgd.min.js"></script>
+    <script src="../vendors/simplebar/simplebar.min.js"></script>
+    <script src="../assets/js/config.js"></script>
+
+    <script src="../vendors/choices/choices.min.js"></script>
+
+    <!-- ===============================================-->
+    <!--    Stylesheets-->
+    <!-- ===============================================-->
+    <link href="../vendors/flatpickr/flatpickr.min.css" rel="stylesheet" />
+
+    <link href="../vendors/choices/choices.min.css" rel="stylesheet">
+    <link href="../vendors/prism/prism-okaidia.css" rel="stylesheet">
+
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&amp;display=swap"
+          rel="stylesheet">
+    <link href="../vendors/simplebar/simplebar.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+    <link href="../assets/css/theme-rtl.min.css" type="text/css" rel="stylesheet" id="style-rtl">
+    <link href="../assets/css/theme.min.css" type="text/css" rel="stylesheet" id="style-default">
+    <link href="../assets/css/user-rtl.min.css" type="text/css" rel="stylesheet" id="user-style-rtl">
+    <link href="../assets/css/user.min.css" type="text/css" rel="stylesheet" id="user-style-default">
+
+    <link href="../vendors/sweetalert2/cdn.jsdelivr.net_npm_sweetalert2@11.7.12_dist_sweetalert2.min.css"
+          type="text/css" rel="stylesheet">
+
+    <link href="../vendors/sweetalert2/cdn.jsdelivr.net_npm_sweetalert2@11.7.12_dist_sweetalert2.min.css"
+          type="text/css" rel="stylesheet">
+
+    <link rel="stylesheet" href="../css/scollbar.css">
+
+    <script src="../js/angular.min.js"></script>
+    <script src="../js/cdn.jsdelivr.net_npm_pdfobject@2.2.12_pdfobject.min.js"></script>
+    <script src="../js/cdn.jsdelivr.net_npm_sweetalert2@11.7.12_dist_sweetalert2.all.min.js"></script>
+
+    <script>
+        var phoenixIsRTL = window.config.config.phoenixIsRTL;
+        if (phoenixIsRTL) {
+            var linkDefault = document.getElementById('style-default');
+            var userLinkDefault = document.getElementById('user-style-default');
+            linkDefault.setAttribute('disabled', true);
+            userLinkDefault.setAttribute('disabled', true);
+            document.querySelector('html').setAttribute('dir', 'rtl');
+        } else {
+            var linkRTL = document.getElementById('style-rtl');
+            var userLinkRTL = document.getElementById('user-style-rtl');
+            linkRTL.setAttribute('disabled', true);
+            userLinkRTL.setAttribute('disabled', true);
+        }
+    </script>
+
+
+</head>
+
+
+<body class="nav-slim " style="max-height: 100vh;">
+    <!-- ===============================================-->
+    <!--    Main Content-->
+    <!-- ===============================================-->
+    <main class="main max-vh-100" id="top">
+
+        <nav class="navbar navbar-light bg-white fixed-top navbar-expand-lg p-0">
+            <div class="container-fluid ">
+                <div class="d-flex flex-nowrap ">
+                    <a class="p-2 mb-0 p-0 text-decoration-none d-flex flex-wrap " href="Home/Portal">
+                        <img src="../assets/img/iconforportal/logo-thaioil-epha@3x.png" alt="" width="140"
+                             height="40" class="" ng-click="back_page(controller_action_befor)">
+                        <span class="pt-0 pt-md-1 ps-0 ps-md-2 d-none" style="font-size: 10px; color: #061f5c;"
+                              ng-click="back_page(controller_action_befor)"> <b> THAIIOL ELECTRONIC PROCESS HAZARD ANALYSIS</b></span>
+                    </a>
+                    <button class="navbar-toggler d-flex d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" style="position: absolute; right:10px;">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                </div>
+                <div class="collapse navbar-collapse " id="navbarSupportedContent" data-ng-controller="ctrlAppMenu">
+
+                    @*   <ul class="nav nav-underline navbar-nav ms-auto ">
+                    <li class="nav-item mx-3">
+                    <a class="nav-link active" aria-current="page" ng-click="selected_menu('hazop')">HAZOP</a>
+                    </li>
+                    <li class="nav-item mx-3">
+                    <a class="nav-link " ng-click="selected_menu('jsea')">JSEA</a>
+                    </li>
+                    <li class="nav-item mx-3">
+                    <a class="nav-link " ng-click="selected_menu('whatif')">What's IF</a>
+                    </li>
+                    <li class="nav-item mx-3">
+                    <a class="nav-link " ng-click="selected_menu('hra')">HRA</a>
+                    </li>
+                    <li class="nav-item mx-3">
+                    <a class="nav-link " ng-click="selected_menu('bowtie')">Bow-Tie</a>
+                    </li> 
+                    </ul> *@
+
+                    <ul class="nav nav-underline navbar-nav ms-auto ">
+                        <li class="nav-item mx-3 d-flex align-items-center" style="font-size: .8rem;font-weight: 700;" id="dropdownMenuButton"
+                            type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <a class="nav-link d-flex align-items-center" href="home/info">
+                                <i class=" uil-info-circle" style="font-size: 1.5rem;font-weight: 700;"></i> <b class="d-flex align-items-center">Help</b>
+                            </a>
+                        </li>   
+                    </ul>
+
+                    <ul class="nav  navbar-nav me-5 dropdown ">
+                        <li class="nav-item mx-3 " style="font-size: .8rem;font-weight: 700;" id="dropdownMenuButton"
+                            type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <a class="nav-link active"><i class="fa-regular fa-circle-user fa-xl"></i> {{user_display}}</a>
+                        </li>
+
+                        @* dropdownMenuButton *@
+                        <div class="dropdown-menu dropdown-menu-start py-0" aria-labelledby="dropdownMenuButton">
+                        <li class="nav-item">
+                            <a class="nav-link px-3" href="hazop/search">
+                                <span class="me-2 text-900"
+                                      data-feather="search"></span><span>Search</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link px-3 disabled-link" href="#!">
+                                <span class="me-2 text-900"
+                                      data-feather="pie-chart"></span>Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link px-3 disabled-link" href="#!">
+                                <span class="me-2 text-900"
+                                      data-feather="settings"></span>Master Data
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link px-3 disabled-link" href="#!">
+                                <span class="me-2 text-900"
+                                      data-feather="file-text"></span>Documentation
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link px-3 disabled-link" href="#!">
+                                <span class="me-2 text-900"
+                                      data-feather="user"></span>User Role : {{role_type}}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link px-3" href="hazop/notification">
+                                <span class="me-2 text-900"
+                                      data-feather="mail"></span><span>Noti</span>
+                            </a>
+                        </li>
+
+                        <a class="btn btn-phoenix-secondary d-flex flex-center w-100" href="login/Signout">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                 stroke-linejoin="round" class="feather feather-log-out me-2">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                <polyline points="16 17 21 12 16 7"></polyline>
+                                <line x1="21" y1="12" x2="9" y2="12"></line>
+                            </svg>Sign out
+                        </a>
+                </div>
+                        @* dropdownMenuButton *@
+
+
+                </ul>
+
+
+
+
+            </div>
+            </div>
+        </nav>
+
+        @RenderBody()
+        @*
+        <div class="loading modalloadding-container loader" id="divLoading">
+        <h3 class="modalloadding">
+        <i class="fa fa-circle-o-notch fa-spin fa-fw"></i>&#32;Loading&#8230;
+        </h3>
+        </div>
+
+        <style>
+        .loading {
+        position: fixed;
+        z-index: 999;
+        overflow: show;
+        margin: auto;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        }
+
+        .modalloadding-container {
+        display: flex;
+        justify-content: center;
+        /* Horizontally centers the modal */
+        align-items: center;
+        /* Vertically centers the modal */
+        height: 100vh;
+        /* Adjust this if you want a different height for the container */
+        background-color: rgba(0, 0, 0, 0.5);
+        /* Semi-transparent background */
+        }
+
+        .modalloadding {
+        background-color: #ffffff;
+        padding: 20px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+        /* Add any other modal styles you want */
+        }
+        </style>
+
+        *@
+
+        <div class="loading modalloading-container loader" id="divLoading">
+            <div class="modalloading bg-light" style="height: 150px; width: 300px; display: flex; flex-direction: column; align-items: center; justify-content: start; ">
+                <div class="h-10 w-100 d-flex justify-content-start align-items-center"
+                     style="background-color: #a9a9a9; border-top-right-radius: 20px; border-top-left-radius: 20px;">
+                    <i class="fa fa-circle fa-lg ms-2 d-none" style="color: #cfd8dc;"></i>
+                    <i class="fa fa-circle fa-lg mx-2 d-none" style="color: #cfd8dc;"></i>
+                    <i class="fa fa-circle fa-lg d-none" style="color: #cfd8dc;"></i>
+                </div>
+                <div class="m-auto text-center d-flex justify-content-center align-items-center">
+                    <i class="fa fa-circle-o-notch fa-spin fa-3x"></i>
+                    <p class="mt-2 h2 ms-3">Loading...</p>
+                </div>
+            </div>
+        </div>
+
+        <style>
+            .loading {
+                position: fixed;
+                z-index: 999;
+                overflow: show;
+                margin: auto;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                right: 0;
+            }
+
+            .modalloading-container {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                background-color: rgba(0, 0, 0, 0.5);
+            }
+
+            .modalloading {
+                background-color: #ffffff;
+                box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+                border-radius: 20px;
+            }
+        </style>
+
+
+    </main>
+
+
+
+    <!-- ===============================================-->
+    <!--    End of Main Content-->
+    <!-- ===============================================-->
+    <!-- ===============================================-->
+    <!--    JavaScripts-->
+    <!-- ===============================================-->
+    <script src="../vendors/popper/popper.min.js"></script>
+    <script src="../vendors/bootstrap/bootstrap.min.js"></script>
+    <script src="../vendors/anchorjs/anchor.min.js"></script>
+    <script src="../vendors/is/is.min.js"></script>
+    <script src="../vendors/fontawesome/all.min.js"></script>
+    <script src="../vendors/lodash/lodash.min.js"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=window.scroll"></script>
+    <script src="../vendors/list.js/list.min.js"></script>
+    <script src="../vendors/feather-icons/feather.min.js"></script>
+    <script src="../vendors/dayjs/dayjs.min.js"></script>
+    <script src="../vendors/choices/choices.min.js"></script>
+    <script src="../vendors/dropzone/dropzone.min.js"></script>
+    <script src="../vendors/prism/prism.js"></script>
+    <script src="../assets/js/phoenix.js"></script>
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+    <script>
+
+        const AppConFig = angular.module("conFigmodule", [])
+            .service("conFig", function ($http) {
+                this.user_name = function (x) {
+                    return `@ViewData["user_name"]`;
+                }
+                this.user_display = function (x) {
+                    return `@ViewData["user_display"]`;
+                }
+                this.role_type = function (x) {
+                    return `@ViewData["role_type"]`;
+                }
+                this.token_doc = function (x) {
+                    return `@ViewData["token_doc"]`;
+                }
+                this.pha_no = function (x) {
+                    return `@ViewData["pha_no"]`;
+                }
+                this.pha_seq = function (x) {
+                    return `@ViewData["pha_seq"]`;
+                }
+                this.pha_type_doc = function (x) {
+                    return `@ViewData["pha_type_doc"]`;
+                }
+                this.controller_action_befor = function (x) {
+                    return `@ViewData["controller_action_befor"]`;
+                }
+                this.service_api_url = function (x) {
+                    return `@ViewData["service_api_url"]`;
+                }
+                this.vendor = function (x) {
+                    return `@ViewData["vendor"]`;
+                }
+                this.responder_user_name = function (x) {
+                    return `@ViewData["responder_user_name"]`;
+                }
+            });
+
+        const AppMenuPage = angular.module("app", ["conFigmodule"]);
+        AppMenuPage.controller("ctrlAppMenu", function ($scope, $http, conFig) {
+
+
+            $scope.role_type = conFig.role_type();
+            $scope.token_doc = conFig.token_doc();
+            $scope.user_display = conFig.user_display();
+            $scope.pha_no = conFig.pha_no();
+            $scope.pha_seq = conFig.pha_seq();
+            $scope.pha_type_doc = conFig.pha_type_doc();
+            $scope.controller_action_befor = conFig.controller_action_befor();
+
+            $scope.selected_menu = function (page) {
+
+                page = page + "/index?create"
+                window.open(`@Url.Content("~/")${page}`, "_top")
+
+                return true;
+            };
+            $scope.back_page = function (page) {
+
+                alert($scope.controller_action_befor)
+                page = $scope.controller_action_befor;
+                window.open(`@Url.Content("~/")${page}`, "_top")
+
+                return true;
+            };
+
+        });
+
+    </script>
+
+</body>
+
+
+@await RenderSectionAsync("Scripts", required: false)
+
+
+</html>
