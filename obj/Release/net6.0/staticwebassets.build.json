@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "LNkVOpfvHr1Em7ReQOnnPRkq8Yc+relyOMMcx1fkff4=",
+  "Hash": "A6NCGPifobQ31xWwmG/53m9yiLXhSnDeJY263OapjXQ=",
   "Source": "dotnet6-epha-web",
   "BasePath": "_content/dotnet6-epha-web",
   "Mode": "Default",
@@ -28251,25 +28251,6 @@
       "OriginalItemSpec": "wwwroot\\favicon.ico"
     },
     {
-      "Identity": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\wwwroot\\js\\_flow 20231009.zip",
-      "SourceId": "dotnet6-epha-web",
-      "SourceType": "Discovered",
-      "ContentRoot": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\wwwroot\\",
-      "BasePath": "_content/dotnet6-epha-web",
-      "RelativePath": "js/_flow 20231009.zip",
-      "AssetKind": "All",
-      "AssetMode": "All",
-      "AssetRole": "Primary",
-      "AssetMergeBehavior": "PreferTarget",
-      "AssetMergeSource": "",
-      "RelatedAsset": "",
-      "AssetTraitName": "",
-      "AssetTraitValue": "",
-      "CopyToOutputDirectory": "Never",
-      "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\js\\_flow 20231009.zip"
-    },
-    {
       "Identity": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\wwwroot\\js\\_flow\\approve.js",
       "SourceId": "dotnet6-epha-web",
       "SourceType": "Discovered",
@@ -28382,6 +28363,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\js\\_flow\\hometasks.js"
+    },
+    {
+      "Identity": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\wwwroot\\js\\_flow\\hra.js",
+      "SourceId": "dotnet6-epha-web",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\wwwroot\\",
+      "BasePath": "_content/dotnet6-epha-web",
+      "RelativePath": "js/_flow/hra.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\js\\_flow\\hra.js"
     },
     {
       "Identity": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\wwwroot\\js\\_flow\\jsea.js",

@@ -144,8 +144,8 @@
                                                                     <option values="hazop" ng-selected="item_m.pha_sub_software == 'hazop'">HAZOP</option>
                                                                     <option values="jsea" ng-selected="item_m.pha_sub_software == 'jsea'">JSEA</option>
                                                                     <option values="whatif" ng-selected="item_m.pha_sub_software == 'whatif'">WHAT'S IF</option>
-                                                                </select>
-                                                                @* {{item_m.pha_sub_software}} *@
+                                                                    <option values="hra" ng-selected="item_m.pha_sub_software == 'hra'">HRA</option>
+                                                                </select> 
                                                             </div>
                                                         </div>
                                                     </div>
@@ -576,6 +576,35 @@
                                             </div>
 
                                         </div>
+
+                                        <div class="mx-3 row  g-3 align-items-center" ng-if="(item_m.pha_sub_software | lowercase)=='hra'">
+
+                                            <!-- Project Name -->
+                                            <div class="col-md-3 p-1">
+
+                                                <label class="form-label ps-0" for="unit">Task Name</label>
+                                                <label class="form-label ps-0" ng-if="select_history_tracking_record">
+                                                    <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
+                                                       data-bs-placement="top"
+                                                       title=" Task Name : PXXXXXXX-0001 New close loop drain of CDU-1 Analyzer"
+                                                       data-bs-html="true"></a>
+                                                </label>
+
+                                                <input class="form-control rounded-1" type="text" placeholder="Project Name"
+                                                       name="project_name"
+                                                       ng-keyup="filterResultGeneral(item_m.pha_request_name, 'pha_request_name')">
+
+                                                <ul class="list-group mt-2 w-25" style="position: absolute;" ng-show="showResults">
+                                                    <li class="list-group-item "
+                                                        ng-repeat="result in filteredResults | filter:{field:'pha_request_name'}"
+                                                        ng-click="selectResult(result,item,'pha_request_name')">
+                                                        {{ result.name }}
+                                                    </li>
+                                                </ul>
+
+                                            </div>
+                                        </div>
+
                                     </div>
 
                                     <div class="m-3 row  gx-0 align-items-center" style="z-index:0">

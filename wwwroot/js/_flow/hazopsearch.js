@@ -173,6 +173,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
                 if (sub_software == "JSEA") {
 
+                } else if (sub_software == "HRA") {
+
                 } else {
                     if ($scope.data_conditions[0].master_functional == null || $scope.data_conditions[0].master_functional == '') {
                         $scope.data_conditions[0].master_functional = null;

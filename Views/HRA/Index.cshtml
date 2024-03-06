@@ -1057,7 +1057,7 @@
                                                 <td class="align-top status text-center px-0" style="width: 50px;">
                                                     <p><b>{{ (data_workers | filter:{id_tasks:item.id}).length }}</b></p>
                                                 </td>
-                                                 
+
                                                 <td class="align-top p-0">
                                                     <textarea class="form-control text-1100" id="floatingTextarea2" ng-nodel="item.work_or_task"
                                                               placeholder="Description of Work or Task" style="height: 100px"></textarea>
@@ -1108,7 +1108,7 @@
                                             </button>
                                         </div>
 
-                                        <div class=" align-top text-end mt-3 " style="zoom:0.7;">
+                                        <div class=" align-top text-end mt-3 d-none" style="zoom:0.7;">
                                             <p class="form-label m-1 align-bottom text-end">
                                                 <svg class="svg-inline--fa fa-lightbulb text-warning" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="lightbulb" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" data-fa-i2svg=""><path fill="currentColor" d="M112.1 454.3c0 6.297 1.816 12.44 5.284 17.69l17.14 25.69c5.25 7.875 17.17 14.28 26.64 14.28h61.67c9.438 0 21.36-6.401 26.61-14.28l17.08-25.68c2.938-4.438 5.348-12.37 5.348-17.7L272 415.1h-160L112.1 454.3zM191.4 .0132C89.44 .3257 16 82.97 16 175.1c0 44.38 16.44 84.84 43.56 115.8c16.53 18.84 42.34 58.23 52.22 91.45c.0313 .25 .0938 .5166 .125 .7823h160.2c.0313-.2656 .0938-.5166 .125-.7823c9.875-33.22 35.69-72.61 52.22-91.45C351.6 260.8 368 220.4 368 175.1C368 78.61 288.9-.2837 191.4 .0132zM192 96.01c-44.13 0-80 35.89-80 79.1C112 184.8 104.8 192 96 192S80 184.8 80 176c0-61.76 50.25-111.1 112-111.1c8.844 0 16 7.159 16 16S200.8 96.01 192 96.01z"></path></svg>
                                                 Frequency Rating
@@ -1129,7 +1129,9 @@
 
                                     <div class="table-responsive scrollbar" id="table-container">
 
-                                        <table class="table fs--2 mb-0 table-bordered">
+
+
+                                        <table class="table fs--2 mb-0 table-bordered d-none">
                                             <thead class=" text-uppercase  text-center bg-soft" style="font-size: 10px;">
                                                 <tr>
                                                     <th class=" align-middle text-start " colspan="1" rowspan="2"></th>
@@ -1172,7 +1174,9 @@
 
                                             <tbody class="list" id="customer-rating-table-body">
 
-                                                <tr class="hover-actions-trigger btn-reveal-trigger position-static " ng-repeat-start="item_tasks in data_tasks">
+                                                <!-- Start of JobType -->
+                                                <tr class="hover-actions-trigger btn-reveal-trigger position-static "
+                                                    ng-repeat-start="item_tasks in data_tasks">
 
                                                     <td class="align-top text-center px-0" style="width: 20px;"
                                                         rowspan="{{data_hazard.length * (item_tasks.numbers_of_workers + 2 )}}">
@@ -1223,6 +1227,7 @@
 
                                                 </tr>
 
+                                                <!-- Start of middle repeat  -->
                                                 <tr ng-repeat-start="(health_hazard, item_hazard) in data_hazard track by $index ">
                                                     <td class="align-top product white-space-nowrap px-0 mx-2" style="width: 200px !important;"
                                                         rowspan="{{item_hazard.length + 1}}">
@@ -1255,9 +1260,11 @@
                                                     <td class="align-top px-0">
                                                         <div class="d-flex align-items-center me-2">
                                                             <div class="mx-1">
-                                                                <select class="form-select form-select-sm rounded-1" style="width: 130px;"
+                                                                <select class="form-select form-select-sm rounded-1"
+                                                                        ng-class="{'disabled-link':(!tab_worksheet_active)}"
+                                                                        style="width: 130px;"
                                                                         ng-model="item.id_frequency"
-                                                                        ng-change="updateSelectFREQUENCY($index)">
+                                                                        ng-change="actionChangeWorksheet(item,item.seq,'frequency_level')">
                                                                     <option value="" disabled selected>Select an option</option>
                                                                     <option value="1">L1. สัมผัสปีละ 1 ครั้ง</option>
                                                                     <option value="2">L2. สัมผัสปีละ 2 ครั้ง ถึงปีละ 3 ครั้ง</option>
@@ -1267,6 +1274,13 @@
                                                                 </select>
                                                             </div>
                                                             <div class="text-1100 fw-bold ps-2">{{item.unit_value}}</div>
+                                                            <button class="btn btn-outline-secondary p-0 cursor-pointer col-auto"
+                                                                    style="color: gold; background-color: #f1f2f4; border-color: #f1f2f4;"
+                                                                    ng-click="cloneFrequencyLevel(item)"
+                                                                    title="Copy ผลการประเมิณ ไปยัง ของพนักงาน อื่นๆ">
+                                                                <span class="far fa-clone fa-lg pe-1"></span>
+                                                            </button>
+
                                                         </div>
                                                     </td>
 
@@ -1292,7 +1306,17 @@
                                                     <!------EXPOSURE_LEVEL------->
                                                     <td class="align-top product white-space-nowrap bg-light-secondary px-0">
                                                         <div class="d-flex align-items-center justify-content-center">
-                                                            <div><p class="mb-0 ms-3 text-1100 fw-bold">{{item.exposure_level}}</p></div>
+                                                            @* <div><p class="mb-0 ms-3 text-1100 fw-bold">{{item.exposure_level}}</p></div> *@
+                                                            <select class="form-control"
+                                                                    ng-class="{'disabled-link':(!tab_worksheet_active)}"
+                                                                    ng-change="actionChangeWorksheet(item,item.seq,'exposure_level')"
+                                                                    ng-model="item.id_sub_area"
+                                                                    ng-if="tab_general_active">
+                                                                <option ng-repeat="item_m in master_subarea" ng-value="item_m.id">
+                                                                    {{item_m.name}}
+                                                                </option>
+                                                            </select>
+
                                                         </div>
                                                     </td>
                                                     <!------EXPOSURE_RATING-------->
@@ -1354,10 +1378,11 @@
                                                     </td>
                                                 </tr>
 
-                                                <!-- End of middle repeat  -->
+
+                                                <!-- End of Factor  -->
                                                 <tr ng-repeat-end></tr>
 
-                                                <!-- End of outer repeat -->
+                                                <!-- End of JobType -->
                                                 <tr ng-repeat-end></tr>
                                             </tbody>
 

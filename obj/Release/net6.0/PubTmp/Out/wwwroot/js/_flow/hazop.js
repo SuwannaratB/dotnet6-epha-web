@@ -2007,6 +2007,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                             newInput.causes_no = 1;
                             newInput.consequences_no = 1;
                             //newInput.recommendations_no = 1;
+                            newInput.category_no = 1;
 
                             newInput.action_type = 'insert';
                             newInput.action_change = 1;
@@ -2624,6 +2625,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                             newInput.causes_no = 1;
                             newInput.consequences_no = 1;
                             //newInput.recommendations_no = iNo;
+                            newInput.category_no = 1;
 
                             newInput.action_type = 'insert';
                             newInput.action_change = 1;
@@ -3081,7 +3083,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         var no = Number(item.no);
         var causes_no = Number(item.causes_no);
         var consequences_no = Number(item.consequences_no);
-        var cat_no = Number(item.cat_no);
+        var category_no = Number(item.category_no);
 
         var guidewords = item.guidewords;
         var deviations = item.deviations;
@@ -3132,7 +3134,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             //กรณีที่เป็น causes ให้ +1 
             causes_no += 1;
             consequences_no = 1;
-            cat_no = 1;
+            category_no = 1;
         }
         if (row_type == "consequences") {
             $scope.MaxSeqdata_nodeworksheetConsequences = Number($scope.MaxSeqdata_nodeworksheetConsequences) + 1;
@@ -3140,14 +3142,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             //กรณีที่เป็น consequences ให้ +1
             consequences_no += 1;
-            cat_no = 1;
+            category_no = 1;
         }
         if (row_type == "category") {
             $scope.MaxSeqdata_nodeworksheetCat = Number($scope.MaxSeqdata_nodeworksheetCat) + 1;
             seq_category = $scope.MaxSeqdata_nodeworksheetCat;
 
             //กรณีที่เป็น cat ให้ +1
-            cat_no += 1;
+            category_no += 1;
         }
 
         var newInput = clone_arr_newrow($scope.data_nodeworksheet_def)[0];
@@ -3172,6 +3174,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         newInput.no = (no + 0.5);
         newInput.causes_no = causes_no;
         newInput.consequences_no = consequences_no;
+        newInput.category_no = category_no;
 
         newInput.action_type = 'insert';
         newInput.action_change = 1;
@@ -3226,8 +3229,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 });
             } else if (row_type == "category") {
                 var arrCheck = $filter('filter')($scope.data_nodeworksheet, function (_item) {
-                    return (_item.id_node == seq_node && _item.seq_guide_word == seq_guide_word
-                        && _item.seq_causes == seq_causes && _item.seq_consequences == seq_consequences);
+                    return (_item.id_node == seq_node
+                        && _item.seq_guide_word == seq_guide_word
+                        && _item.seq_causes == seq_causes
+                        && _item.seq_consequences == seq_consequences);
                 });
             }
         }
@@ -3270,15 +3275,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             apply();
             return;
         }
-
-        //var arrdelete = $filter('filter')($scope.data_nodeworksheet, function (item) {
-        //    return (item.seq == seq && item.action_type == 'update');
-        //});
-        //if (arrdelete.length > 0) { $scope.data_nodeworksheet_delete.push(arrdelete[0]); }
-        //$scope.data_nodeworksheet = $filter('filter')($scope.data_nodeworksheet, function (item) {
-        //    return !(item.seq == seq);
-        //});
-
+         
         //Delete row select and upper row
         if (true) {
             if (row_type == "causes") {

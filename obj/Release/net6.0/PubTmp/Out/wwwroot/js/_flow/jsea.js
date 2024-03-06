@@ -2703,7 +2703,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 });
             } else if (row_type == "category") {
                 var arrCheck = $filter('filter')($scope.data_listworksheet, function (_item) {
-                    return (_item.seq_workstep == seq_workstep & _item.seq_taskdesc == seq_taskdesc & _item.seq_potentailhazard == seq_potentailhazard & _item.seq_possiblecase == seq_possiblecase);
+                    return (_item.seq_workstep == seq_workstep
+                        & _item.seq_taskdesc == seq_taskdesc
+                        & _item.seq_potentailhazard == seq_potentailhazard
+                        & _item.seq_possiblecase == seq_possiblecase);
                 });
             }
         }

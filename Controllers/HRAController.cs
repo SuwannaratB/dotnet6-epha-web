@@ -274,7 +274,35 @@ namespace dotnet6_epha_web.Controllers
 
             return View();
         }
- 
+
+        [HttpPost]
+        public async Task<IActionResult> set_session_doc([FromBody] LoadSessionDataViewModel model)
+        {
+            _sessionAuthen.service_api_url = _IConfiguration["EndPoint:service_api_url"];
+            _sessionAuthen.controller_action_befor = model.controller_action_befor;// "Home/Portal"; 
+            _sessionAuthen.pha_seq = model.pha_seq;
+            _sessionAuthen.pha_no = model.pha_no;
+            _sessionAuthen.pha_status = model.pha_status;
+            _sessionAuthen.pha_type_doc = model.pha_type_doc;
+
+
+            ViewData["user_display"] = _sessionAuthen.user_display;
+            ViewData["user_name"] = _sessionAuthen.user_name;
+            ViewData["role_type"] = _sessionAuthen.role_type;
+
+            ViewData["pha_seq"] = _sessionAuthen.pha_seq;
+            ViewData["pha_no"] = _sessionAuthen.pha_no;
+            ViewData["pha_status"] = _sessionAuthen.pha_status;
+            ViewData["pha_type_doc"] = _sessionAuthen.pha_type_doc;
+            ViewData["controller_action_befor"] = _sessionAuthen.controller_action_befor;
+            ViewData["service_api_url"] = _sessionAuthen.service_api_url;
+
+
+            LoginViewModel res_page = new LoginViewModel();
+            res_page.msg = "";
+            return Ok(res_page);
+        }
+
 
         [HttpPost] 
         public IActionResult Privacy()
