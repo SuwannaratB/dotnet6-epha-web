@@ -29,8 +29,6 @@
 
 <div class="content mt-1" style="font-size: 12px; min-height: auto!important;" id="divPage" ng-controller="ctrlAppPage">
 
-
-
     <div class="row g-0">
 
         <div class="col-6">
@@ -116,7 +114,6 @@
         </div>
 
     </div>
-
 
     <div class="row g-0">
         <div class="col-12 ">
@@ -601,7 +598,7 @@
 
                                                                     <div class="row align-items-center  p-1">
                                                                         <label class="mb-0 text-1100 fw-bold" style="width:80%;border-color: #f1f2f4;"
-                                                                               ng-if=" (item2.approver_type=='approver')">{{ '(Main)' + item2.user_displayname}}</label>
+                                                                               ng-if=" (item2.approver_type=='approver') && (item2.user_displayname != null)">{{ '(Main)' + item2.user_displayname}}</label> 
 
                                                                         <label class="mb-0 text-1100 fw-bold" style="width:80%;border-color: #f1f2f4;"
                                                                                ng-if="!(item2.approver_type=='approver')">{{ item2.user_displayname}}</label>
@@ -789,7 +786,6 @@
                                                                   style="font-size: 10px;"></textarea>
 
                                                     </td>
-
                                                     <td class="align-middle white-space-nowrap col-3">
 
                                                         <div class="d-flex align-items-center d-none ">
@@ -810,7 +806,7 @@
 
                                                         <div class="uploadbox align-items-center cursor-pointer">
                                                             <div class=" align-items-center p-1 cursor-pointer ">
-
+            
                                                                 <span class="mr-3 nametext text-primary" id="filename{{item.seq}}" ng-class="{'d-none':(!tab_general_active)}"
                                                                       ng-click="downloadFile(item)">
                                                                     <b>{{(item.document_file_size>0? item.document_file_name + '('+  item.document_file_size + 'KB)' : '')}}</b>
@@ -835,7 +831,7 @@
                                                                 <a class="nametext ms-3 filename-text me-2"
                                                                    ng-class="{'d-none':(tab_general_active)}"
                                                                    ng-click="downloadFile(item)">
-                                                                    <i class="far fa-file-pdf text-danger"></i> {{(item.document_file_size>0? item.document_file_name + '('+  item.document_file_size + 'KB)' : '')}}
+                                                                    <i class="far fa-file-pdf text-danger"></i> 
                                                                 </a>
 
                                                             </div>
@@ -848,7 +844,6 @@
                                                         </div>
 
                                                     </td>
-
                                                     <td class="align-middle ">
                                                         <div class="col-12">
                                                             <textarea class="form-control form-control-sm  rounded-1 shadow-sm  bg-body-tertiary"
@@ -889,8 +884,6 @@
                                                             </div>
                                                         </div>
                                                     </td>
-
-
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -3413,7 +3406,6 @@
                         </button>
                     </div>
                 </div>
-
                 <div class="modal-body" ng-if="Action_Msg_Header == 'Warning'">
                     <div class="d-flex justify-content-center align-items-center mb-3">
                         <h5 class="mb-0 text-center ms-5" style="font-size: 40px; font-weight: bold;" data-anchor="data-anchor" id="modalMsgLabel">
@@ -3432,7 +3424,6 @@
                         </button>
                     </div>
                 </div>
-
                 <div class="modal-body d-flex flex-column justify-content-center mb-4"
                      ng-if="Action_Msg_Confirm && Action_Msg_Header == 'Warning'">
                     <h5 class="mb-3 text-center" style="font-size: 16px; font-weight: bold;">
