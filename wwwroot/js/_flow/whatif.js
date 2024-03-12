@@ -149,6 +149,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         //fileUpload.value = ''; // ล้างค่าใน input file
         //fileNameDisplay.textContent = ''; // ล้างข้อความที่แสดงชื่อไฟล์
         //del.style.display = "none"; 
+        const fileInfoSpan = document.getElementById('filename' + seq);
+        fileInfoSpan.textContent = "";
+        
         var arr = $filter('filter')($scope.data_drawing,
             function (item) { return (item.seq == seq); }
         );
@@ -207,14 +210,15 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         });
         selectedTab.isActive = true;
 
-        try {
-            document.getElementById(selectedTab.name + "-tab").addEventListener("click", function (event) {
-                ev = event.target
-            });
+        // try {
+        //     document.getElementById(selectedTab.name + "-tab").addEventListener("click", function (event) {
+        //         ev = event.target
+        //     });
 
-            var tabElement = angular.element(ev);
-            tabElement[0].focus();
-        } catch (error) { }
+        //     var tabElement = angular.element(ev);
+        //     tabElement[0].focus();
+        //     console.log("tabElement",tabElement[0])
+        // } catch (error) { }
 
         check_tab(selectedTab.name);
 
@@ -259,7 +263,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             if (fileName.toLowerCase().indexOf('.pdf') == -1) {
                 fileInfoSpan.textContent = "";
-                set_alert('Warning', 'Please select a PDF, Word, or Excel file.');
+                // Check old files
+                if ($scope.data_drawing[0].document_file_size > 0) {
+                    fileInfoSpan.textContent = $scope.data_drawing[0].document_file_name + ' ('+  $scope.data_drawing[0].document_file_size + 'KB)';
+                }
+                set_alert("Warning", "Please select a PDF file.");
                 return;
             }
 
@@ -451,6 +459,24 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         } catch { }
 
         return "";
+    }
+
+    function set_alert(header, detail) {
+        $scope.$apply(function () {
+            $scope.Action_Msg_Header = header;
+            $scope.Action_Msg_Detail = detail;
+        });
+        $('#modalMsg').modal('show');
+    }
+
+    function set_alert_confirm(header, detail) {
+
+        $scope.Action_Msg_Confirm = true;
+
+        $scope.Action_Msg_Header = header;
+        $scope.Action_Msg_Detail = detail;
+
+        $('#modalMsg').modal('show');
     }
 
 
@@ -4359,25 +4385,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         return angular.toJson(arr_json);
     }
 
-
-    function set_alert(header, detail) {
-
-        $scope.Action_Msg_Header = header;
-        $scope.Action_Msg_Detail = detail;
-        $('#modalMsg').modal('show');
-    }
-    function set_alert_confirm(header, detail) {
-
-        $scope.Action_Msg_Confirm = true;
-
-        $scope.Action_Msg_Header = header;
-        $scope.Action_Msg_Detail = detail;
-
-        $('#modalMsg').modal('show');
-    }
-
-
-
     //start Update Action Type null to Update 
     $scope.actionChange = function (_arr, _seq, type_text) {
 
@@ -4695,27 +4702,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
 
     }
-
-    $scope.fillterDataEmployeeAdd = function () {
-        $scope.employeelist_show = [];
-        var searchText = $scope.searchText;
-        if (!searchText) { return; }
-
-        var items = angular.copy($scope.employeelist_def, items);
-        searchText = searchText.toLowerCase();
-
-
-        $scope.employeelist_show = items.filter(function (item) {
-            return (
-                item.employee_id.toLowerCase().includes(searchText.toLowerCase()) ||
-                item.employee_displayname.toLowerCase().includes(searchText.toLowerCase()) ||
-                item.employee_email.toLowerCase().includes(searchText.toLowerCase())
-            );
-        });
-        apply();
-        $('#modalEmployeeAdd').modal('show');
-    };
-
     $scope.choosDataEmployee = function (item) {
 
         var id = item.id;
