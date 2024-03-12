@@ -849,6 +849,10 @@
       "PackagePath": "staticwebassets\\assets\\img\\e-commerce\\whooping_banner_shape_2.png"
     },
     {
+      "Id": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\wwwroot\\assets\\img\\exposure_rating.png",
+      "PackagePath": "staticwebassets\\assets\\img\\exposure_rating.png"
+    },
+    {
       "Id": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\wwwroot\\assets\\img\\favicons\\android-chrome-192x192.png",
       "PackagePath": "staticwebassets\\assets\\img\\favicons\\android-chrome-192x192.png"
     },
@@ -2455,6 +2459,10 @@
     {
       "Id": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\wwwroot\\assets\\img\\products\\thumb-4.png",
       "PackagePath": "staticwebassets\\assets\\img\\products\\thumb-4.png"
+    },
+    {
+      "Id": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\wwwroot\\assets\\img\\risk_rating.png",
+      "PackagePath": "staticwebassets\\assets\\img\\risk_rating.png"
     },
     {
       "Id": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\wwwroot\\assets\\img\\sections\\1.webp",

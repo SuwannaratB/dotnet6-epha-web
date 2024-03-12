@@ -500,6 +500,15 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     return;
                 }
             }
+            else if ($scope.data_header[0].pha_status == 12 || $scope.data_header[0].pha_status == 22) {
+                if (selectedTab.name == 'worksheet') {
+                    genareate_worksheet();
+                }
+            }
+
+
+
+
         } catch (error) { }
 
         angular.forEach($scope.tabs, function (tab) {
@@ -571,7 +580,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         var arr = $filter('filter')($scope.data_all.max, function (item) { return (item.name == 'worksheet'); });
         var iMaxSeq = 1; if (arr.length > 0) { iMaxSeq = arr[0].values; }
-        $scope.MaxSeqdata_worksheet = iMaxSeq;
+        $scope.MaxSeqdataWorksheet = iMaxSeq;
 
         $scope.selectdata_session = 1;
         $scope.selectdata_memberteam = 1;
@@ -928,6 +937,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         $scope.master_worker_list = JSON.parse(replace_hashKey_arr(arr.worker_list));
                         $scope.master_activities = JSON.parse(replace_hashKey_arr(arr.activities));
 
+                        $scope.master_frequency_level = JSON.parse(replace_hashKey_arr(arr.frequency_level));
+                        $scope.master_exposure_level = JSON.parse(replace_hashKey_arr(arr.exposure_level));
+                        //$scope.master_exposure_rating = JSON.parse(replace_hashKey_arr(arr.exposure_rating));
+
+                        $scope.master_compare_exposure_rating = JSON.parse(replace_hashKey_arr(arr.compare_exposure_rating));
+                        $scope.master_compare_initial_risk_rating = JSON.parse(replace_hashKey_arr(arr.compare_initial_risk_rating));
 
                     }
 
@@ -992,8 +1007,17 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     }
 
                     get_max_id();
-                    set_format_date_time();  //set format date 
+                    set_format_date_time();  //set format date
 
+                    try {
+                        var id_unit_no = $scope.data_general[0].id_unit_no;
+                        var arrText = $filter('filter')($scope.master_unit_no, function (item) {
+                            return (item.id == id_unit_no);
+                        });
+                        if (arrText.length > 0) {
+                            $scope.selectedBusiness_Unit = arrText[0].name;
+                        }
+                    } catch { }
                 }
 
                 //clear _delete
@@ -1470,6 +1494,35 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             arr_items.sort((a, b) => a.no - b.no);
 
         }
+        function running_no_level1_lv1(arr_items, iNo, iRow, newInput) {
+
+            arr_items.sort((a, b) => a.no - b.no);
+            var first_row = true;
+            var iNoNew = iNo;
+            if (newInput == null) {
+                iNo = (iNo == null ? 1 : iNo) + 0;
+                iNoNew = iNo;
+            }
+
+            for (let i = (iRow); i < arr_items.length; i++) {
+
+                if (first_row == true && newInput !== null) {
+                    iNoNew++;
+                    newInput.no = (iNoNew);
+                    first_row = false;
+                } else {
+                    arr_items[i].no = iNoNew;
+                }
+                iNoNew++;
+            };
+            if (newInput !== null && newInput.action_type == 'insert') {
+                arr_items.push(newInput);
+            }
+            arr_items.sort((a, b) => a.no - b.no);
+
+
+        }
+
         $scope.addDataSession = function (seq, index) {
             $scope.MaxSeqDataSession = Number($scope.MaxSeqDataSession) + 1;
             var xValues = $scope.MaxSeqDataSession;
@@ -1659,22 +1712,26 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     //List of Areas to Be Assessed and Health Hazards or Risk Factors
     if (true) {
-        $scope.addDataSubAreas = function (seq, index) {
+        $scope.addDataSubAreas = function (item, index) {
             $scope.MaxSeqdataSubareas = Number($scope.MaxSeqdataSubareas) + 1;
             var xValues = $scope.MaxSeqdataSubareas;
 
+            var seq = item.seq;
             var arr = $filter('filter')($scope.data_subareas, function (item) { return (item.seq == seq); });
-            var iNo = 1; if (arr.length > 0) { iNo = arr[0].no; }
+            var iNo = 1; if (arr.length > 0) { iNo = arr[0].no; index_rows = arr[arr.length - 1].index_rows; }
+
 
             var newInput = clone_arr_newrow($scope.data_subareas_def)[0];
             newInput.seq = xValues;
             newInput.id = xValues;
-            newInput.no = (iNo + 1);
+
+            newInput.no = iNo + 1;
+
             newInput.action_type = 'insert';
             newInput.action_change = 0;
             newInput.action_new_row = 0;
 
-            running_no_level1($scope.data_subareas, iNo, index, newInput);
+            running_no_level1_lv1($scope.data_subareas, iNo, index, newInput);
 
             $scope.selectdata_subareas = xValues;
             apply();
@@ -1697,10 +1754,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             apply();
         };
 
-        $scope.addDataHazard = function (seq, index) {
+        $scope.addDataHazard = function (item, index) {
             $scope.MaxSeqdataHazard = Number($scope.MaxSeqdataHazard) + 1;
             var xValues = $scope.MaxSeqdataHazard;
 
+            var seq = item.seq;
             var arr = $filter('filter')($scope.data_hazard, function (item) { return (item.seq == seq); });
             var iNo = 1; if (arr.length > 0) { iNo = arr[0].no; }
 
@@ -1713,11 +1771,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             newInput.action_change = 0;
             newInput.action_new_row = 0;
 
-            running_no_level1($scope.data_hazard, iNo, index, newInput);
+            running_no_level1_lv1($scope.data_hazard, iNo, index, newInput);
 
             $scope.selectdata_hazard = xValues;
-
-            genareate_worksheet();
 
             apply();
 
@@ -1737,7 +1793,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             running_no_level1($scope.data_hazard, null, index, null);
 
-            genareate_worksheet();
+            if (!arrdelete[0].id_type_hazard) {
+                genareate_worksheet();
+            }
 
             apply();
         };
@@ -1746,10 +1804,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     //List of Worker Groups and Description of Tasks
     if (true) {
-        $scope.addDataTasks = function (seq, index) {
+        $scope.addDataTasks = function (item, index) {
             $scope.MaxSeqdataTasks = Number($scope.MaxSeqdataTasks) + 1;
             var xValues = $scope.MaxSeqdataTasks;
 
+            var seq = item.seq;
             var arr = $filter('filter')($scope.data_tasks, function (item) { return (item.seq == seq); });
             var iNo = 1; if (arr.length > 0) { iNo = arr[0].no; }
 
@@ -1761,14 +1820,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             newInput.action_change = 0;
             newInput.action_new_row = 0;
 
-            running_no_level1($scope.data_tasks, iNo, index, newInput);
+            newInput.tasks_type_other = 0;
+
+            running_no_level1_lv1($scope.data_tasks, iNo, index, newInput);
 
             $scope.selectdata_tasks = xValues;
 
             //set tasks_type_other = 1, no = 99 
             set_tasks_type_other();
-
-            genareate_worksheet();
 
             apply();
 
@@ -1791,7 +1850,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             //set tasks_type_other = 1, no = 99 
             set_tasks_type_other();
 
-            genareate_worksheet();
+            if (!arrdelete[0].id_worker_group) {
+                genareate_worksheet();
+            }
 
             apply();
         };
@@ -1842,215 +1903,184 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     if (true) {
         function genareate_worksheet() {
 
+            //loop data_hazard
+            //loop data_subareas
+            //loop data_workers
+
+            //loop data_worksheet
+
+
+            var index_rows = 0;
+            var id_business_unit = 0;
+            var id_hazard = 0;
+            var id_tasks = 0;
+            var id_workers = 0;
+
+            var row_type = '';
+            var arr_items_def = clone_arr_newrow($scope.data_worksheet_def);
+
+            var row_tasks_start = 0;
+            var row_hazard_start = 0;
+
+            var tasks_no = 0;
+
+            for (var t = 0; t < $scope.data_tasks.length; t++) {
+
+                id_tasks = $scope.data_tasks[t].id;
+                row_tasks_start = index_rows;
+                tasks_no = (t+1);
+
+                for (var h = 0; h < $scope.data_hazard.length; h++) {
+                    id_hazard = $scope.data_hazard[h].id;
+                    row_hazard_start = index_rows;
+
+
+                    for (var w = 0; w < $scope.data_workers.length; w++) {
+                        id_workers = $scope.data_workers[w].id;
+                        add_row_worksheet(arr_items_def, index_rows, row_type, id_hazard, id_tasks, id_workers, tasks_no );
+                        arr_items_def[index_rows].row_type = 'workers';
+
+                        index_rows += 1;
+                    }
+                    if (t == 0) { arr_items_def = $filter('filter')(arr_items_def, function (item) { return !(item.id == null); }); }
+
+                    arr_items_def[row_hazard_start].row_type = 'hazard';
+                    arr_items_def[row_hazard_start].row_span_hazard = ($filter('filter')(arr_items_def, function (item) {
+                        return !(item.id == null) && (
+                            (item.id_hazard == id_hazard)
+                            && (item.id_tasks == id_tasks)
+                        );
+                    })).length;
+                }
+
+                arr_items_def[row_tasks_start].row_type = 'tasks';
+                arr_items_def[row_tasks_start].tasks_no = tasks_no;
+                arr_items_def[row_tasks_start].row_span_tasks = ($filter('filter')(arr_items_def, function (item) {
+                    return !(item.id == null) && (item.id_tasks == id_tasks);
+                })).length;
+
+            }
+
+            console.clear();
+            console.log(arr_items_def);
+
+            if (arr_items_def.length > 0) {
+                $scope.data_worksheet = $filter('filter')(arr_items_def, function (item) { return !(item.id == null); });
+            }
+            apply();
+            console.log($scope.data_worksheet);
+
+
         }
 
-        function add_row_worksheet(arrCheck) {
-            //กรณีที่เหลือ row เดียว  
-            arrCheck[0].action_type = 'update';
-            arrCheck[0].action_change = 1;
-            arrCheck[0].action_status = 'Open';
+        function add_row_worksheet(arr_items_def, index_rows, row_type, id_hazard, id_tasks, id_workers, tasks_no) {
 
-            arrCheck[0].workstep = null;
-            arrCheck[0].taskdesc = null;
-            arrCheck[0].potentailhazard = null;
-            arrCheck[0].possiblecase = null;
+            var defMaxSeqdataWorksheet = $scope.MaxSeqdataWorksheet;
 
-            arrCheck[0].category_type = null;
+            $scope.MaxSeqdataWorksheet = Number($scope.MaxSeqdataWorksheet) + 1;
+            var xValues = $scope.MaxSeqdataWorksheet;
 
-            arrCheck[0].ram_befor_security = null;
-            arrCheck[0].ram_befor_likelihood = null;
-            arrCheck[0].ram_befor_risk = null;
-            arrCheck[0].major_accident_event = null;
-            arrCheck[0].safety_critical_equipment = null;
-            arrCheck[0].existing_safeguards = null;
-            arrCheck[0].ram_after_security = null;
-            arrCheck[0].ram_after_likelihood = null;
-            arrCheck[0].ram_after_risk = null;
-            arrCheck[0].recommendations = null;
+            var arr_worksheet = $filter('filter')($scope.data_worksheet, function (item) {
+                return (
+                    (item.id_hazard == id_hazard)
+                    && (item.id_tasks == id_tasks)
+                    && (item.id_workers == id_workers)
+                );
+            });
+            if (arr_worksheet.length == 0) {
 
-            arrCheck[0].responder_user_id = null;
-            arrCheck[0].responder_user_name = null;
-            arrCheck[0].responder_user_email = null;
-            arrCheck[0].responder_user_displayname = null;
-            arrCheck[0].responder_user_img = null;
+                var iNo = (index_rows + 1);
+                var newInput = clone_arr_newrow($scope.data_worksheet_def)[0];
+                newInput.seq = xValues;
+                newInput.id = xValues;
+                newInput.no = (iNo + 1);
+                newInput.action_type = 'insert';
+                newInput.action_status = 'Open';
+                newInput.action_change = 1;
+                newInput.action_new_row = 1;
 
-            arrCheck[0].row_type = row_type == "workstep";
-            apply();
+                newInput.index_rows = index_rows;
+                newInput.recommendations_no = (index_rows + 1);
+                newInput.tasks_no = tasks_no;
+
+                newInput.row_type = row_type;
+
+                //details
+                newInput.id_hazard = id_hazard;
+                newInput.id_tasks = id_tasks;
+                newInput.id_workers = id_workers;
+
+                var arrworkers = $filter('filter')($scope.data_workers, function (item) {
+                    return (item.id == id_workers);
+                });
+                if (arrworkers.length > 0) {
+                    newInput.responder_user_id = null;
+                    newInput.responder_user_name = arrworkers[0].user_name;
+                    newInput.responder_user_email = null;
+                    newInput.responder_user_displayname = arrworkers[0].user_displayname;
+                    newInput.responder_user_img = null;
+                }
+
+                //worker_group, activity, business_unit, health_hazard
+                var arrhazard = $filter('filter')($scope.data_hazard, function (item) {
+                    return (item.id == id_hazard);
+                });
+                if (arrhazard.length > 0) {
+                    newInput.tlv_std = arrhazard.tlv_standard; 
+                }
+                 
+                arr_items_def.push(newInput);
+
+            } else {
+                arr_worksheet[0].index_rows = (index_rows);
+                arr_worksheet[0].recommendations_no = (index_rows + 1);
+                arr_items_def.push(arr_worksheet[0]);
+            } 
+
         }
 
         $scope.cloneFrequencyLevel = function (item) {
 
         }
-         
-        $scope.calulateExposureRating = function (item) {
-            var tlv_std = item.tlv_std;
-            var frequency_level = item.id_frequency
-            var exposure_level = item.exposure_level
-            var health_effect_rating = item.health_effect_rating
 
-            var result_exposure_level;
-            var result_exposure_rating;
-            var initial_risk_rating;
+        function calulateExposureRating(_arr) {
 
-            var percentage = (item.exposureBand / tlv_std) * 100;
+            var frequency_level = _arr.id_frequency_level //col 3.6
+            var exposure_level = _arr.id_exposure_level//col 3.9
+            var result_exposure_rating;//col 3.10 => col 3.6 x col 3.9
 
-            console.log(employee)
+            var health_effect_rating = '';//col 3.5
+            var result_initial_risk_rating = '';//col 3.11 => col 3.5 x col 3.10
+            var arrhazard = $filter('filter')($scope.data_hazard, function (item) {
+                return (item.id == _arr.id_hazard);
+            });
+            if (arrhazard.length > 0) {
+                health_effect_rating = arrhazard[0].health_effect_rating;
+            } 
+           
+            try {
+                var arrret = $filter('filter')($scope.master_compare_exposure_rating, function (item) {
+                    return (item.frequency_level == frequency_level
+                        && item.exposure_level == exposure_level);
+                });
+                if (arrret.length > 0) {
+                    result_exposure_rating = arrret[0].results;
+                }
+                _arr.exposure_rating = result_exposure_rating;
+            } catch { _arr.exposure_rating = null; }
 
-            switch (true) {
-                case percentage < 10:
-                    result_EXPOSURE_LEVEL = "L1. <10%OEL";
-                    break;
-                case percentage < 50:
-                    result_EXPOSURE_LEVEL = "L2. <50%OEL";
-                    switch (frequency_level) {
-                        case "3":
-                        case "4":
-                            result_EXPOSURE_rating = "[2] = น้อย";
-                            break;
-                        case "5":
-                            result_EXPOSURE_rating = "[3] = ปานกลาง";
-                            break;
-                    }
-                    break;
-                case percentage < 75:
-                    result_EXPOSURE_LEVEL = "L3. <75%OEL";
-                    switch (frequency_level) {
-                        case "2":
-                        case "3":
-                            result_EXPOSURE_rating = "[2] = น้อย";
-                            break;
-                        case "4":
-                        case "5":
-                            result_EXPOSURE_rating = "[3] = ปานกลาง";
-                            break;
-                    }
-                    break;
-                case percentage < 100:
-                    result_EXPOSURE_LEVEL = "L4. 75%OEL<EB<100%OEL";
-                    switch (frequency_level) {
-                        case "2":
-                            result_EXPOSURE_rating = "[2] = น้อย";
-                            break;
-                        case "3":
-                            result_EXPOSURE_rating = "[3] = ปานกลาง";
-                            break;
-                        case "4":
-                        case "5":
-                            result_EXPOSURE_rating = "[4] = สูง";
-                            break;
-                    }
-                    break;
-                default:
-                    result_EXPOSURE_LEVEL = "L5. >100%OEL";
-                    switch (frequency_level) {
-                        case "2":
-                            result_EXPOSURE_rating = "[2] = น้อย";
-                            break;
-                        case "3":
-                            result_EXPOSURE_rating = "[3] = ปานกลาง";
-                            break;
-                        case "4":
-                            result_EXPOSURE_rating = "[4] = สูง";
-                            break;
-                        case "5":
-                            result_EXPOSURE_rating = "[5] = สูงมาก";
-                            break;
-                    }
-                    break;
-            }
+            try {
+                var arrret = $filter('filter')($scope.master_compare_initial_risk_rating, function (item) {
+                    return (item.health_effect_rating == health_effect_rating
+                        && item.exposure_rating == result_exposure_rating);
+                });
+                if (arrret.length > 0) {
+                    result_initial_risk_rating = arrret[0].results;
+                }
+                _arr.initial_risk_rating = result_initial_risk_rating;
+            } catch { _arr.initial_risk_rating = null; }
 
-            if (!result_EXPOSURE_rating) {
-                result_EXPOSURE_rating = "[1] = ไม่ได้รับสัมผัส";
-            }
-              
-            switch (result_EXPOSURE_rating) {
-                case "[1] = ไม่ได้รับสัมผัส":
-                    switch (harzard_rating) {
-                        case "1":
-                        case "2":
-                        case "3":
-                            Initial_Risk_rating = "Acceptable Risk";
-                            break;
-                        case "4":
-                        case "5":
-                            Initial_Risk_rating = "Low";
-                            break;
-                    }
-                    break;
-
-                case "[2] = น้อย":
-                    switch (harzard_rating) {
-                        case "1":
-                            Initial_Risk_rating = "Acceptable Risk";
-                            break;
-                        case "2":
-                        case "3":
-                        case "4":
-                            Initial_Risk_rating = "Low";
-                            break;
-                        case "5":
-                            Initial_Risk_rating = "Medium"; //Very High 
-                            break;
-                    }
-                    break;
-
-                case "[3] = ปานกลาง":
-                    switch (harzard_rating) {
-                        case "1":
-                            Initial_Risk_rating = "Acceptable Risk";
-                            break;
-                        case "2":
-                        case "3":
-                            Initial_Risk_rating = "Low";
-                            break;
-                        case "4":
-                        case "5":
-                            Initial_Risk_rating = "Medium"; //Very High 
-                            break;
-                    }
-                    break;
-
-                case "[4] = สูง":
-                    switch (harzard_rating) {
-                        case "1":
-                        case "2":
-                            Initial_Risk_rating = "Low";
-                            break;
-                        case "3":
-                        case "4":
-                            Initial_Risk_rating = "Medium";
-                            break;
-                        case "5":
-                            Initial_Risk_rating = "High"; //Very High 
-                            break;
-                    }
-                    break;
-
-                case "[5] = สูงมาก":
-                    switch (harzard_rating) {
-                        case "1":
-                            Initial_Risk_rating = "Low";
-                            break;
-                        case "2":
-                        case "3":
-                            Initial_Risk_rating = "Medium";
-                            break;
-                        case "4":
-                            Initial_Risk_rating = "High";
-                            break;
-                        case "5":
-                            Initial_Risk_rating = "Very High"; //Very High 
-                            break;
-                    }
-                    break;
-
-            }
-
-            employee.EXPOSURE_LEVEL = result_EXPOSURE_LEVEL;
-            employee.EXPOSURE_RATING = result_EXPOSURE_rating;
-            employee.INITIAL_RISK_RATING = Initial_Risk_rating;
-
-
+     
 
         };
 
@@ -2190,6 +2220,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 return;
             }
 
+           
             $.ajax({
                 url: url_ws + "Flow/" + action_export_report_type,
                 data: '{"sub_software":"hra","user_name":"' + user_name + '","seq":"' + seq + '","export_type":"' + data_type + '"}',
@@ -2892,6 +2923,17 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 });
                 if (arrText.length > 0) {
                     _arr.work_of_task = arrText[0].descriptions;
+                    _arr.action_change = 1;
+
+                }
+            }
+            if (type_text == "type_hazard") {
+                var arrText = $filter('filter')($scope.master_hazard_type, function (item) {
+                    return (item.id == _arr.id_type_hazard);
+                });
+                if (arrText.length > 0) {
+                    _arr.type_hazard = arrText[0].name;
+                    _arr.action_change = 1;
                 }
             }
             if (type_text == "health_hazard") {
@@ -2899,9 +2941,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     return (item.id == _arr.id_health_hazard);
                 });
                 if (arrText.length > 0) {
+                    _arr.health_hazard = arrText[0].name;
                     _arr.health_effect_rating = arrText[0].hazards_rating;
+                    _arr.tlv_std = arrText[0].tlv_standard;
+                    _arr.action_change = 1;
                 }
-            }
+            } 
+
             if (type_text == "worker_group") {
                 var arrText = $filter('filter')($scope.master_worker_group, function (item) {
                     return (item.id == _arr.id_worker_group);
@@ -2936,6 +2982,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                 _arr.numbers_of_workers = arrWorkerList.length;
             }
+            if (type_text == "work_or_task") {
+                _arr.action_change = 1;
+            }
 
             action_type_changed(_arr, _seq);
 
@@ -2943,23 +2992,44 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
         $scope.actionChangeWorksheet = function (_arr, _seq, type_text) {
 
-            if (_arr.recommendations == null || _arr.recommendations == '') {
-                if (_arr.recommendations_no == null || _arr.recommendations_no == '') {
-                    //recommendations != '' ให้ running action no  
-                    var arr_copy_def = angular.copy($scope.data_worksheet, arr_copy_def);
-                    arr_copy_def.sort((a, b) => Number(b.recommendations_no) - Number(a.recommendations_no));
-                    var recommendations_no = Number(Number(arr_copy_def[0].recommendations_no) + 1);
-                    _arr.recommendations_no = recommendations_no;
-                }
-            }
+            //if (_arr.recommendations == null || _arr.recommendations == '') {
+            //    if (_arr.recommendations_no == null || _arr.recommendations_no == '') {
+            //        //recommendations != '' ให้ running action no  
+            //        var arr_copy_def = angular.copy($scope.data_worksheet, arr_copy_def);
+            //        arr_copy_def.sort((a, b) => Number(b.recommendations_no) - Number(a.recommendations_no));
+            //        var recommendations_no = Number(Number(arr_copy_def[0].recommendations_no) + 1);
+            //        _arr.recommendations_no = recommendations_no;
+            //    }
+            //}
             action_type_changed(_arr, _seq);
 
+            if (type_text == "activity") {
+                var arrText = $filter('filter')($scope.master_activities, function (item) {
+                    return (item.id == _arr.id_activity);
+                });
+                if (arrText.length > 0) {
+                    _arr.activity = arrText[0].name;
+                }
+            }
             if (type_text == "frequency_level") {
+                var arrText = $filter('filter')($scope.master_frequency_level, function (item) {
+                    return (item.id == _arr.id_frequency_level);
+                });
+                if (arrText.length > 0) {
+                    _arr.frequency_level = arrText[0].name;
+                }
                 calulateExposureRating(_arr);
             }
             if (type_text == "exposure_level") {
-                calulateExposureRating(_arr);
+                var arrText = $filter('filter')($scope.master_exposure_level, function (item) {
+                    return (item.id == _arr.id_exposure_level);
+                });
+                if (arrText.length > 0) {
+                    _arr.exposure_level= arrText[0].name;
+                }
+                calulateExposureRating(_arr); 
             }
+
 
             //check action submit
             if (true) {
@@ -2968,6 +3038,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 });
                 if (arr_submit.length > 0) { $scope.submit_type = true; } else { $scope.submit_type = false; }
             }
+
             apply();
         }
         function action_type_changed(_arr, _seq) {
@@ -3354,5 +3425,15 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.form_valid = { valid_document_file: false };
         }
     }
+
+
+    $scope.Matrix_Frequency_Rating = function () {
+         
+        $('#modalMatrix_Frequency_Rating').modal('show');
+    };
+    $scope.Matrix_Exposure_Rating = function () {
+         
+        $('#modalMatrix_Exposure_Rating').modal('show');
+    };
 
 });

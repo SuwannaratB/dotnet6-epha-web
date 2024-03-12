@@ -6,7 +6,7 @@ AppMenuPage.filter('MemberteamMultiFieldFilter', function () {
         }
 
         searchText = searchText.toLowerCase();
-        if (searchText.length < 3) { return items; }
+        if (searchText.length < 3) { return ; }
         return items.filter(function (item) {
             return (
                 item.employee_id.toLowerCase().includes(searchText.toLowerCase()) ||
@@ -23,6 +23,7 @@ AppMenuPage.filter('ResponderMultiFieldFilter', function () {
         }
 
         searchResponderText = searchResponderText.toLowerCase();
+        if (searchResponderText.length < 3) { return; }
 
         return items.filter(function (item) {
             return (
@@ -40,6 +41,7 @@ AppMenuPage.filter('ApproverMultiFieldFilter', function () {
         }
 
         searchApproverText = searchApproverText.toLowerCase();
+        if (searchApproverText.length < 3) { return; }
 
         return items.filter(function (item) {
             return (
