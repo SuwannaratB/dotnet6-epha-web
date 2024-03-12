@@ -147,6 +147,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         //fileUpload.value = ''; // ล้างค่าใน input file
         //fileNameDisplay.textContent = ''; // ล้างข้อความที่แสดงชื่อไฟล์
         //del.style.display = "none"; 
+        var fileInput = document.getElementById('attfile-' + seq);
+        if (fileInput) {
+            fileInput.value = '';
+        }
+        
         const fileInfoSpan = document.getElementById('filename' + seq);
         fileInfoSpan.textContent = "";
         
@@ -3953,7 +3958,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             var id_valid = document.getElementById('valid-' + field);
 
             if (_item == '' || _item == null) {
-                // id_valid.className = "feedback text-danger";
+                id_valid.className = "feedback text-danger";
                 id_valid.focus();
                 return true;
             }

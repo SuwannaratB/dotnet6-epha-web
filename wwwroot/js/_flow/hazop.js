@@ -191,6 +191,16 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         //fileUpload.value = ''; // ล้างค่าใน input file
         //fileNameDisplay.textContent = ''; // ล้างข้อความที่แสดงชื่อไฟล์
         //del.style.display = "none"; 
+
+        var fileInput = document.getElementById('attfile-' + seq);
+        if (fileInput) {
+            fileInput.value = '';
+        }
+
+        const fileInfoSpan = document.getElementById('filename' + seq);
+        fileInfoSpan.textContent = "";
+        $scope.status_upload = false;
+
         var arr = $filter('filter')($scope.data_drawing,
             function (item) { return (item.seq == seq); }
         );
@@ -221,7 +231,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
 
     $scope.changeTab = function (selectedTab) {
-
         try {
 
             if ($scope.data_header[0].pha_status == 11) {
@@ -229,9 +238,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     || selectedTab.name == 'manage'
                     || selectedTab.name == 'report'
                 ) {
-
-                    if (!($scope.data_general[0].expense_type == 'OPEX' &&
-                        $scope.data_general[0].sub_expense_type == 'Internal Study')) {
+                    if ($scope.data_general[0].expense_type &&
+                        $scope.data_general[0].sub_expense_type &&
+                        $scope.data_general[0].id_apu &&
+                        $scope.data_general[0].functional_location &&
+                        $scope.data_drawing[0].document_no &&
+                        $scope.data_node[0].node &&
+                        $scope.data_nodedrawing[0].id_drawing &&
+                        $scope.status_upload) {
                         selectedTab = $scope.oldTab;
                         apply();
 
@@ -240,6 +254,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     } else {
                         $scope.tab_worksheet_show = true;
                         $scope.tab_managerecom_show = true;
+
+                        set_alert("Warning", "Please provide a valid Session List")
                     }
                 }
             }
@@ -249,15 +265,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             tab.isActive = false;
         });
         selectedTab.isActive = true;
-
-        try {
-            document.getElementById(selectedTab.name + "-tab").addEventListener("click", function (event) {
-                ev = event.target
-            });
-
-            var tabElement = angular.element(ev);
-            tabElement[0].focus();
-        } catch (error) { }
 
         check_tab(selectedTab.name);
 
@@ -304,10 +311,15 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             if (fileName.toLowerCase().indexOf('.pdf') == -1) {
                 fileInfoSpan.textContent = "";
                 set_alert('Warning', 'Please select a PDF file.');
+
+                // if ($scope.data_drawing[0].document_file_size > 0) {
+                //     fileInfoSpan.textContent = $scope.data_drawing[0].document_file_name + ' ('+  $scope.data_drawing[0].document_file_size + 'KB)';
+                // }
+                $scope.status_upload = false;
                 return;
             }
-
             var file_path = uploadFile(file, fileSeq, fileName, fileSize, file_part, file_doc);
+            $scope.status_upload = true;
 
         } else {
             fileInfoSpan.textContent = "";
@@ -1398,9 +1410,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         }
                     } catch { }
 
-
-
-                    console.log($scope);
                 }
 
             },
@@ -4809,7 +4818,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     $scope.filterResultHistory = function (fieldText, fieldName, fieldID) {
         //if (fieldText.length < 3) { return; }
-
         $scope.filteredArr[0].fieldID = null;
         $scope.filteredResults = [];
         var arr = [];
