@@ -219,7 +219,10 @@ namespace dotnet6_epha_web.Controllers
             }
 
             _sessionAuthen.service_api_url = _IConfiguration["EndPoint:service_api_url"];
-            _sessionAuthen.controller_action_befor = "Home/Portal";
+            if ((_sessionAuthen.controller_action_befor + "").ToString() == null)
+            {
+                _sessionAuthen.controller_action_befor = "Home/Portal";
+            }
 
             ViewData["user_display"] = _sessionAuthen.user_display;
             ViewData["user_name"] = _sessionAuthen.user_name;
@@ -234,14 +237,16 @@ namespace dotnet6_epha_web.Controllers
         }
         public IActionResult FollowupUpdate()
         {
-            //pha_seq,  pha_no ส่งมาจาก next_page ที่กดมาจากหน้า followup
             if (_sessionAuthen.role_type == "" || _sessionAuthen.role_type == null)
             {
                 return RedirectToAction("Index", "Login");
             }
 
             _sessionAuthen.service_api_url = _IConfiguration["EndPoint:service_api_url"];
-            _sessionAuthen.controller_action_befor = "Home/Portal";
+            if ((_sessionAuthen.controller_action_befor + "").ToString() == null)
+            {
+                _sessionAuthen.controller_action_befor = "Home/Portal";
+            }
 
             ViewData["user_display"] = _sessionAuthen.user_display;
             ViewData["user_name"] = _sessionAuthen.user_name;
@@ -250,12 +255,14 @@ namespace dotnet6_epha_web.Controllers
             ViewData["service_api_url"] = _sessionAuthen.service_api_url;
 
             //กรณีที่มีเลข seq แสดงว่ามาจากหน้า search ให้ แสดง details เลย  
+            ViewData["pha_sub_software"] = _sessionAuthen.pha_sub_software;
             ViewData["pha_seq"] = _sessionAuthen.pha_seq;
             ViewData["pha_no"] = _sessionAuthen.pha_no;
             ViewData["pha_status"] = _sessionAuthen.pha_status;
             ViewData["responder_user_name"] = _sessionAuthen.responder_user_name;
 
-            return View();
+            //return View();
+            return RedirectToAction("FollowupUpdate", "Hazop");
         }
 
         public IActionResult Search()
@@ -389,6 +396,7 @@ namespace dotnet6_epha_web.Controllers
             else if (_sessionAuthen.pha_type_doc == "followupupdate")
             {
                 _sessionAuthen.controller_action_befor = (model.pha_sub_software + "");
+                _sessionAuthen.pha_sub_software = (model.pha_sub_software + "");
                 _sessionAuthen.pha_seq = (model.pha_seq + "");
                 _sessionAuthen.pha_no = (model.pha_no + "");
                 _sessionAuthen.pha_status = (model.pha_status + "");

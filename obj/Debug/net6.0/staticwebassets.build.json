@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "vX8bgElnWyGhEPpKuPLAkMEA9zhRJM/80k3DMOXXRbw=",
+  "Hash": "e3lcW7j0nWwC5M+CAHi/3zHHR8ygXeopnk0OFGfSYqM=",
   "Source": "dotnet6-epha-web",
   "BasePath": "_content/dotnet6-epha-web",
   "Mode": "Default",
@@ -28648,6 +28648,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\js\\_flow\\whatif-fern.zip"
+    },
+    {
+      "Identity": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\wwwroot\\js\\_flow\\whatiffollowup.js",
+      "SourceId": "dotnet6-epha-web",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\wwwroot\\",
+      "BasePath": "_content/dotnet6-epha-web",
+      "RelativePath": "js/_flow/whatiffollowup.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\js\\_flow\\whatiffollowup.js"
     },
     {
       "Identity": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\wwwroot\\js\\angular.min.js",

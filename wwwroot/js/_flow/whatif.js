@@ -762,7 +762,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.MaxSeqDataDrawingDoc = iMaxSeq;
 
         //Task List
-        var arr = $filter('filter')($scope.data_all.max, function (item) { return (item.name == 'task'); });
+        var arr = $filter('filter')($scope.data_all.max, function (item) { return (item.name == 'tasklist'); });
         var iMaxSeq = 1; if (arr.length > 0) { iMaxSeq = arr[0].values; }
         $scope.MaxSeqDataTaskList = iMaxSeq;
 
@@ -1119,6 +1119,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.user_name = user_name;
         } else { pha_seq = $scope.pha_seq; }
 
+        $scope.display_selected_ram = true;
+
         call_api_load(page_load, action_submit, user_name, pha_seq);
     }
     function get_data_after_save(page_load, action_submit, pha_seq) {
@@ -1304,7 +1306,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                 //ตรวจสอบเพิ่มเติม
                 if (arr.user_in_pha_no[0].pha_no == '' && $scope.flow_role_type != 'admin') {
-                    if (arr.data_header[0].action_type != 'insert') {
+                    if (arr.header[0].action_type != 'insert') {
                         $scope.tab_general_active = false;
                         $scope.tab_node_active = false;
                         $scope.tab_worksheet_active = false;
@@ -3194,6 +3196,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     $scope.openModalDataRAM_Worksheet = function (_item, ram_type, seq, ram_type_action) {
 
+        $scope.display_selected_ram = true;
+
         $scope.selectdata_listworksheet = seq;
         $scope.selectedDataListworksheetRamType = ram_type;
         $scope.selectedDataRamTypeAction = ram_type_action;
@@ -3210,6 +3214,40 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.cal_ram_action_security = _item.ram_action_security;
             $scope.cal_ram_action_likelihood = _item.ram_action_likelihood;
             $scope.cal_ram_action_risk = _item.ram_action_risk;
+             
+        }
+
+        $scope.previewRam = (ram_type == 'r' ? true : false);
+
+
+        $scope.cal_ram_action_security = ($scope.cal_ram_action_security == null ? 'N/A' : $scope.cal_ram_action_security);
+        $scope.cal_ram_action_likelihood = ($scope.cal_ram_action_likelihood == null ? 'N/A' : $scope.cal_ram_action_likelihood);
+        $scope.cal_ram_action_risk = ($scope.cal_ram_action_risk == null ? 'N/A' : $scope.cal_ram_action_risk);
+
+
+        $('#modalRAM').modal('show');
+    }
+    $scope.openModalDataRAM_Recommendations = function (_item, ram_type, seq, ram_type_action) {
+
+        $scope.display_selected_ram = $scope.tab_managerecom_active;
+
+        $scope.selectdata_listworksheet = seq;
+        $scope.selectedDataListworksheetRamType = ram_type;
+        $scope.selectedDataRamTypeAction = ram_type_action;
+
+        if (ram_type_action == 'after') {
+            $scope.cal_ram_action_security = _item.ram_after_security;
+            $scope.cal_ram_action_likelihood = _item.ram_after_likelihood;
+            $scope.cal_ram_action_risk = _item.ram_after_risk;
+        } else if (ram_type_action == 'befor') {
+            $scope.cal_ram_action_security = _item.ram_befor_security;
+            $scope.cal_ram_action_likelihood = _item.ram_befor_likelihood;
+            $scope.cal_ram_action_risk = _item.ram_befor_risk;
+        } else if (ram_type_action == 'action') {
+            $scope.cal_ram_action_security = _item.ram_action_security;
+            $scope.cal_ram_action_likelihood = _item.ram_action_likelihood;
+            $scope.cal_ram_action_risk = _item.ram_action_risk;
+
         }
 
         $scope.previewRam = (ram_type == 'r' ? true : false);
@@ -3548,7 +3586,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         $.ajax({
             url: url_ws + "Flow/copy_pdf_file",
-            data: '{"file_name":"' + file_name + '","file_path":"' + file_path + '"'
+            data: '{"sub_software":"whatif","file_name":"' + file_name + '","file_path":"' + file_path + '"'
                 + ',"page_start_first":"' + page_start_first + '","page_start_second":"' + page_start_second + '"'
                 + ',"page_end_first":"' + page_end_first + '","page_end_second":"' + page_end_second + '"'
                 + '}',
@@ -3769,13 +3807,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         arr_chk = $scope.data_drawing;
                         if (arr_chk.length == 0) { set_alert('Warning', 'Please provide a valid Drawing List'); return; }
                         for (var i = 0; i < arr_chk.length; i++) {
-                            if (set_valid_items(arr_chk[i].node, 'drawing-document-file-' + arr_chk[i].seq)) { bCheckValid_Node = true; }
+                            if (set_valid_items(arr_chk[i].document_no, 'drawing-document-file-' + arr_chk[i].seq)) { bCheckValid_Node = true; }
+                            if (set_valid_items(arr_chk[i].document_file_name, 'drawing-document-file-' + arr_chk[i].seq)) { bCheckValid_Node = true; }
                         }
 
                         arr_chk = $scope.data_tasklist;
                         if (arr_chk.length == 0) { set_alert('Warning', 'Please provide a valid Tasks List'); return; }
                         for (var i = 0; i < arr_chk.length; i++) {
-                            if (set_valid_items(arr_chk[i].node, 'task-task-' + arr_chk[i].seq)) { bCheckValid_Node = true; }
+                            if (set_valid_items(arr_chk[i].list, 'task-task-' + arr_chk[i].seq)) { bCheckValid_Node = true; }
                         }
                     }
 
@@ -3783,13 +3822,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         arr_chk = $scope.data_listworksheet;
                         for (var i = 0; i < arr_chk.length; i++) {
 
-                            if (set_valid_items(arr_chk[i].causes, 'worksheet-listsystem-' + arr_chk[i].seq)) { bCheckValid_Worksheet = true; }
-                            if (set_valid_items(arr_chk[i].consequences, 'worksheet-listsubsystem-' + arr_chk[i].seq)) { bCheckValid_Worksheet = true; }
+                            //if (set_valid_items(arr_chk[i].causes, 'worksheet-listsystem-' + arr_chk[i].seq)) { bCheckValid_Worksheet = true; }
+                            //if (set_valid_items(arr_chk[i].consequences, 'worksheet-listsubsystem-' + arr_chk[i].seq)) { bCheckValid_Worksheet = true; }
 
-                            if (set_valid_items(arr_chk[i].responder_user_name, 'worksheet-causes-' + arr_chk[i].seq)) { bCheckValid_Worksheet = true; }
-                            if (set_valid_items(arr_chk[i].responder_user_name, 'worksheet-consequences-' + arr_chk[i].seq)) { bCheckValid_Worksheet = true; }
+                            //if (set_valid_items(arr_chk[i].responder_user_name, 'worksheet-causes-' + arr_chk[i].seq)) { bCheckValid_Worksheet = true; }
+                            //if (set_valid_items(arr_chk[i].responder_user_name, 'worksheet-consequences-' + arr_chk[i].seq)) { bCheckValid_Worksheet = true; }
 
-                            if (set_valid_items(arr_chk[i].estimated_end_date, 'worksheet-responder-' + arr_chk[i].seq)) { bCheckValid_Worksheet = true; }
+                            if (set_valid_items(arr_chk[i].responder_user_name, 'worksheet-responder-' + arr_chk[i].seq)) { bCheckValid_Worksheet = true; }
 
                             if (set_valid_items(arr_chk[i].estimated_start_date, 'worksheet-estimated-start-' + arr_chk[i].seq)) { bCheckValid_Manage = true; }
                             if (set_valid_items(arr_chk[i].estimated_end_date, 'worksheet-estimated-end-' + arr_chk[i].seq)) { bCheckValid_Manage = true; }
@@ -3955,7 +3994,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             var id_valid = document.getElementById('valid-' + field);
 
             if (_item == '' || _item == null) {
-                // id_valid.className = "feedback text-danger";
+                id_valid.className = "feedback text-danger";
                 id_valid.focus();
                 return true;
             }
@@ -4635,6 +4674,18 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     });
 
     page_load();
+    $scope.actionChangeSafety = function (item, seq) {
+
+    }
+    $scope.actionChangeSafetyUnCheck = function (item, seq) {
+
+        for (const value of $scope.data_approver) {
+            value.approver_type = 'safety';
+        }
+        item.approver_type = 'approver';
+        apply();
+    }
+
 
     $scope.openDataEmployeeAdd = function (item, form_type) {
 

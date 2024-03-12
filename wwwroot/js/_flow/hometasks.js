@@ -234,7 +234,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
         $('#modalMsgConfirmApprove').modal('hide');
     }
-    function next_page(controller_text, pha_status, responder_user_name) {
+    function next_page(sub_software, pha_status, responder_user_name) {
 
         controller_text = controller_text.toLowerCase();
         var pha_seq = $scope.pha_seq;
@@ -244,7 +244,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         $.ajax({
             url: "home/next_page",
             data: '{"pha_seq":"' + pha_seq + '","pha_type_doc":"' + pha_type_doc + '"'
-                + ',"pha_sub_software":"' + controller_text + '","pha_status":"' + pha_status + '"'
+                + ',"pha_sub_software":"' + sub_software + '","pha_status":"' + pha_status + '"'
                 + ',"responder_user_name":"' + responder_user_name + '"'
                 + ',"controller_action_befor":"home/hometasks"'
                 + '}',

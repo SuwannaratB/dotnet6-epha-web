@@ -240,7 +240,7 @@
                                                     </td>
                                                     <td class="align-top text-center">
                                                         <div class="p-1 ">
-                                                            <h6 class="fw-semi-bold">{{item.pha_type}}</h6>
+                                                            <h6 class="fw-semi-bold"> {{item.pha_type =='WHATIF'? "What's If" :item.pha_type  }}</h6>
                                                         </div>
                                                     </td>
                                                     <td class="align-top text-center">
@@ -344,7 +344,7 @@
                                                                 <span class="fa-solid far fa-file-pdf text-danger" style="font-size:15px;"
                                                                       ng-click="confirmExport(item ,'pdf')"></span>
                                                                 <b>
-                                                                    JSEA Report
+                                                                    {{item.pha_type =='WHATIF'? "What's If" :item.pha_type  }} Report
                                                                 </b>
                                                             </div>
 

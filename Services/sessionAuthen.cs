@@ -11,6 +11,12 @@ public class sessionAuthen
         Accessor = _Accessor;
         Accessors = _Accessor;
     }
+    public string pha_sub_software
+    {
+        get { return Accessor.HttpContext.Session.GetString("pha_sub_software") ?? ""; }
+
+        set { Accessor.HttpContext.Session.SetString("pha_sub_software", value); }
+    }
     public string responder_user_name
     {
         get { return Accessor.HttpContext.Session.GetString("responder_user_name") ?? ""; }

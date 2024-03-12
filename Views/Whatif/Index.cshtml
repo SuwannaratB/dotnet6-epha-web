@@ -1205,7 +1205,7 @@
                                                     </option>
                                                 </select>
                                             </div>
-                                            <div class="col-md-10 col-lg-11">
+                                            <div class="col-md-10 col-lg-11 d-none">
                                                 <h5 class="text-900 mb-0">
                                                     <a ng-click="openModalNewRAM()" style="font-size:10px;"
                                                        class="text-decoration-none cursor-pointer ps-3">
@@ -2717,14 +2717,14 @@
                                                 <div class="d-flex align-items-center text-end ">
                                                     <div class="align-items-center ">
                                                         <p class="transition-none fs--2p-1 ps-0 text-center rounded-1 cursor-pointer"
-                                                           ng-click="openModalDataRAM_Worksheet(item,'s',item.seq,'after',item.id_ram)" style="width: 20px; height:20px">
+                                                           ng-click="openModalDataRAM_Recommendations(item,'s',item.seq,'after',item.id_ram)" style="width: 20px; height:20px">
                                                             {{item.ram_after_security}}
                                                         </p>
                                                     </div>
 
                                                     <div class="align-items-center ">
                                                         <p class="transition-none fs--2p-1 ps-0 text-center rounded-1 cursor-pointer"
-                                                           ng-click="openModalDataRAM_Worksheet(item,'l',item.seq,'after',item.id_ram)" style="width: 20px; height:20px">
+                                                           ng-click="openModalDataRAM_Recommendations(item,'l',item.seq,'after',item.id_ram)" style="width: 20px; height:20px">
                                                             {{item.ram_after_likelihood}}
                                                         </p>
                                                     </div>
@@ -2732,7 +2732,7 @@
                                                     <div class="align-items-center ">
                                                         <p ng-style=" {'color': item.ram_after_risk === 'L' ? 'white' : 'black','background-color' : ((item.ram_after_risk == 'H') ? 'red' : ((item.ram_after_risk == 'M') ? 'yellow' : ((item.ram_after_risk == 'L') ? 'green' : '#D3D3D3')) )}"
                                                            class="transition-none fs--2p-1 ps-0 text-center rounded-1 cursor-pointer"
-                                                           ng-click="openModalDataRAM_Worksheet(item,'r',item.seq,'after',item.id_ram)" style="width: 20px; height:20px;">
+                                                           ng-click="openModalDataRAM_Recommendations(item,'r',item.seq,'after',item.id_ram)" style="width: 20px; height:20px;">
                                                             {{item.ram_after_risk}}
                                                         </p>
                                                     </div>
@@ -2743,14 +2743,14 @@
                                                 <div class="d-flex align-items-center text-end ">
                                                     <div class="align-items-center ">
                                                         <p class="transition-none fs--2p-1 ps-0 text-center rounded-1 cursor-pointer"
-                                                           ng-click="openModalDataRAM_Worksheet(item,'s',item.seq,'action',item.id_ram)" style="width: 20px; height:20px">
+                                                           ng-click="openModalDataRAM_Recommendations(item,'s',item.seq,'action',item.id_ram)" style="width: 20px; height:20px">
                                                             {{item.ram_action_security}}
                                                         </p>
                                                     </div>
 
                                                     <div class="align-items-center ">
                                                         <p class="transition-none fs--2p-1 ps-0 text-center rounded-1 cursor-pointer"
-                                                           ng-click="openModalDataRAM_Worksheet(item,'l',item.seq,'action',item.id_ram)" style="width: 20px; height:20px">
+                                                           ng-click="openModalDataRAM_Recommendations(item,'l',item.seq,'action',item.id_ram)" style="width: 20px; height:20px">
                                                             {{item.ram_action_likelihood}}
                                                         </p>
                                                     </div>
@@ -2758,7 +2758,7 @@
                                                     <div class="align-items-center ">
                                                         <p ng-style=" { 'background-color' : ((item.ram_action_risk == 'H') ? 'red' : ((item.ram_action_risk == 'M') ? 'yellow' : ((item.ram_action_risk == 'L') ? 'green' : '#D3D3D3')) ) }"
                                                            class="transition-none fs--2p-1 ps-0 text-center rounded-1 cursor-pointer"
-                                                           ng-click="openModalDataRAM_Worksheet(item,'r',item.seq,'action',item.id_ram)" style="width: 20px; height:20px">
+                                                           ng-click="openModalDataRAM_Recommendations(item,'r',item.seq,'action',item.id_ram)" style="width: 20px; height:20px">
                                                             {{item.ram_action_risk}}
                                                         </p>
                                                     </div>
@@ -3218,7 +3218,7 @@
                                     ng-click="removeDataApprover(item2.seq, selectdata_session)">
                                 Remove
                             </button>
-                            <div class="form-check mt-1 mb-0 text-1100 fw-bold d-none">
+                            <div class="form-check mt-1 mb-0 text-1100 fw-bold">
                                 <input class="form-check-input disabled-link" type="checkbox"
                                        ng-if="item2.approver_type =='approver'" checked
                                        ng-click="actionChangeSafety(item2,item2.seq)">
@@ -3256,7 +3256,7 @@
                 </div>
 
                 @* relatedpeople group *@
-                <div class="modal-body" ng-if="!(selectDatFormType =='member' || selectDatFormType =='approver'|| selectDatFormType =='reviewer')">
+                <div class="modal-body" ng-if="!(selectDatFormType =='member' || selectDatFormType =='approver'|| selectDatFormType =='owner'|| selectDatFormType =='reviewer')">
                     <div class="bg-white border-top border-bottom border-200 position-relative top-1">
                         <div class="table-responsive scrollbar-overlay mx-n1 px-1">
                             <table class="table table-sm fs--1 mb-0">
@@ -3562,7 +3562,7 @@
                             <table class="table table-sm fs--1 mb-0 col-auto ">
                                 <thead class="bg-light-primary">
                                     <tr>
-                                        <td rowspan="2" class="text-center"></td>
+                                        <td rowspan="2" class="text-center" ng-if="display_selected_ram"></td>
                                         <th rowspan="1" colspan="3" class="text-center" ng-if="select_columns_level != 5">Security</th>
                                         <th rowspan="1" colspan="6" class="text-center" ng-if="select_columns_level == 5">Security</th>
                                     </tr>
@@ -3583,7 +3583,7 @@
                                 <tbody class=" align-top text-start">
                                     <tr class="hover-actions-trigger btn-reveal-trigger position-static "
                                         ng-repeat="item_ram in master_security_level | filter:{id_ram:data_general[0].id_ram,category_type:item_ram.category_type}">
-                                        <td class=" text-end" style="width: 80px;">
+                                        <td class=" text-end" style="width: 80px;" ng-if="display_selected_ram">
                                             <a class="pointer" ng-click="selectDataRAM('s',item_ram.security_level)"
                                                aria-label="Close">Select</a>
                                         </td>
@@ -3605,7 +3605,7 @@
                             <table class="table table-sm fs--1 mb-0 col-auto ">
                                 <thead class="bg-light-primary">
                                     <tr>
-                                        <td rowspan="2" class="text-center"></td>
+                                        <td rowspan="2" class="text-center" ng-if="display_selected_ram"></td>
                                         <th rowspan="1" colspan="3" ng-if="select_columns_level != 5">Likelihood</th>
                                         <th rowspan="1" colspan="5" ng-if="select_columns_level == 5">Likelihood</th>
                                     </tr>
@@ -3624,7 +3624,7 @@
                                 <tbody class=" align-top text-start">
                                     <tr class="hover-actions-trigger btn-reveal-trigger position-static "
                                         ng-repeat="item_ram in master_likelihood_level | filter:{id_ram:data_general[0].id_ram,columns_level:item_ram.columns_level}">
-                                        <td class="text-end pointer" style="width: 80px;">
+                                        <td class="text-end pointer" style="width: 80px;" ng-if="display_selected_ram">
                                             <a class="pointer" ng-click="selectDataRAM('l',item_ram.likelihood_level)"
                                                aria-label="Close">Select</a>
                                         </td>

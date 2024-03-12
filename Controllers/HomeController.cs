@@ -40,7 +40,7 @@ namespace dotnet6_epha_web.Controllers
             _sessionAuthen.pha_no = "";
             _sessionAuthen.pha_status = "";
             _sessionAuthen.pha_type_doc = "";
-            _sessionAuthen.controller_action_befor = ""; 
+            _sessionAuthen.controller_action_befor = "";
 
             ViewData["user_display"] = _sessionAuthen.user_display;
             ViewData["user_name"] = _sessionAuthen.user_name;
@@ -50,7 +50,7 @@ namespace dotnet6_epha_web.Controllers
         }
 
         public async Task<IActionResult> Portal()
-        { 
+        {
             _sessionAuthen.pha_seq = "";
             _sessionAuthen.pha_no = "";
             _sessionAuthen.pha_status = "";
@@ -115,7 +115,9 @@ namespace dotnet6_epha_web.Controllers
                 _sessionAuthen.responder_user_name = (model.responder_user_name + "");
 
                 //res_page.page = model.pha_sub_software + "/followup";
-                res_page.page = model.pha_sub_software + "/followupUpdate";
+                //res_page.page = model.pha_sub_software + "/followupUpdate";
+                res_page.page = (model.pha_sub_software == "jsea" ? model.pha_sub_software : "hazop") + @"/followupUpdate";
+                _sessionAuthen.pha_sub_software = (model.pha_sub_software + "");
             }
             else
             {

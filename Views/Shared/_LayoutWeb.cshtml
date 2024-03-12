@@ -408,6 +408,9 @@
                 this.pha_seq = function (x) {
                     return `@ViewData["pha_seq"]`;
                 }
+                this.pha_sub_software = function (x) {
+                    return `@ViewData["pha_sub_software"]`;
+                }
                 this.pha_type_doc = function (x) {
                     return `@ViewData["pha_type_doc"]`;
                 }
@@ -435,6 +438,7 @@
             $scope.pha_no = conFig.pha_no();
             $scope.pha_seq = conFig.pha_seq();
             $scope.pha_type_doc = conFig.pha_type_doc();
+            $scope.pha_sub_software = conFig.pha_sub_software();
             $scope.controller_action_befor = conFig.controller_action_befor();
 
             $scope.selected_menu = function (page) {

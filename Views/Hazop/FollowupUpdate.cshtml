@@ -34,17 +34,31 @@
                             <div class="row g-3 justify-content-between align-items-center pt-2 pb-3">
 
                                 <div class="col-6 col-md">
-                                    <h5 class="text-900 mb-0" data-anchor="data-anchor">
+                                    
+                                    <div class="row">
+                                        <div class="col-auto">
+                                            <b>PHA No.:</b> <br>
+                                            @* <span class="text-uppercase text-primary cursor-pointer" ng-click="selectDocPreview()"> {{ (data_header[0].pha_version>0 ? data_header[0].pha_no : data_header[0].pha_sub_software + '-2023-00000XX')}}</span> *@
+                                            <span class="text-uppercase" ng-click="selectDocPreview()"> {{ (data_header[0].pha_version>0 ? data_header[0].pha_no : data_header[0].pha_sub_software + '-2023-00000XX')}}</span>
 
-                                        <span class="me-2">
-                                            <b class="text-primary cursor-pointer" ng-click="selectDocPreview()">{{data_general[0].txt_project_no}}</b>
-                                            <b class="">{{data_general[0].txt_project_name}}</b>
-                                        </span>
-                                        <br />
-                                        <span class="me-2">
-                                            <b class="">{{data_general[0].txt_revision}}</b>
-                                        </span>
-                                    </h5>
+                                        </div>
+                                        <div class="col-auto">
+                                            <b>Revision :</b> <br>
+                                            <span ng-if="data_header[0].pha_version>0 "> {{data_header[0].pha_version_text + '(' + data_header[0].pha_version_desc  +  ')'}}</span>
+                                            <span ng-if="data_header[0].pha_version==0 "> - </span>
+                                        </div>
+
+                                        <div class="col-auto">
+                                            <b>Request Status :</b> <br>
+                                            <span> {{data_header[0].pha_status_displayname}}</span>
+                                        </div>
+                                        <div class="col-auto">
+                                            <b>{{data_header[0].txt_project_name_header }} :</b> <br>
+                                            <span> {{data_header[0].txt_project_name}}</span> 
+                                        </div>
+
+                                    </div> 
+
                                 </div>
                                 <div class="col-6 col-md">
                                     <div class="d-flex align-items-center py-2  justify-content-end">
@@ -71,10 +85,10 @@
                                                         Recommen<br />dations No
                                                     </th>
                                                     <th class="sort align-middle " colspan="1" rowspan="3" scope="col">
-                                                        Node
+                                                        {{pha_sub_software=='whatif'?'Task':'Node'}}
                                                     </th>
                                                     <th class="sort align-middle " colspan="1" rowspan="3" scope="col">
-                                                        Casuse No
+                                                        {{pha_sub_software=='whatif'?"What's if(Casuse)":'Casuse No'}}
                                                     </th>
                                                     <th class="sort align-middle " colspan="1" rowspan="3">
                                                         Recommendations
@@ -171,14 +185,14 @@
 
                                                     <td class="align-top  px-1">
                                                         <div class="text-center">
-                                                            <p class="mb-0 ms-3 fw-bold" style="width: 120px;" rows="3">
+                                                            <p class="mb-0 ms-3 fw-bold" style="width: 30px;" rows="3">
                                                                 {{item_d.recommendations_no}}
                                                             </p>
                                                         </div>
                                                     </td>
                                                     <td class="align-top  px-1">
                                                         <div class="d-flex text-start">
-                                                            <p class="mb-0 ms-3 fw-bold" style="width: 120px;" rows="3">
+                                                            <p class="mb-0 ms-3 fw-bold" style="width: 30px;" rows="3">
                                                                 {{item_d.node_no+'.'}}
                                                             </p>
                                                         </div>
@@ -186,7 +200,7 @@
 
                                                     <td class="align-top  px-1">
                                                         <div class="align-items-center ">
-                                                            <p class="mb-0 ms-3 fw-bold" style="width: 120px;" rows="3"><a> {{item_d.causes_no+'.'}}</a></p>
+                                                            <p class="mb-0 ms-3 fw-bold" style="width: 30px;" rows="3">{{item_d.causes_no+'.'}}</p>
                                                         </div>
                                                     </td>
                                                     <td class="align-top  px-1">
@@ -261,8 +275,8 @@
 
                                                     <td class="align-top px-1" style="min-width:200px;">
 
-                                                        <div class=" p-0 cursor-pointer "
-                                                             ng-repeat="item_x in data_drawingworksheet | filter:{id_worksheet:item_d.seq}">
+                                                        <div class=" p-0 cursor-pointer " 
+                                                             ng-repeat="item_x in data_drawingworksheet | filter:{id_worksheet:item_d.seq, action_type : '!delete'}">
 
                                                             <div class="d-flex flex-nowrap"
                                                                  ng-if="!((flow_status == 14 ? item_d.reviewer_action_type : item_d.responder_action_type) == 2)">
@@ -345,20 +359,20 @@
 
                                                     </td>
 
-                                                    <td class="align-top  px-0" style=" width: 80px;">
+                                                    <td class="align-top  px-0" style=" width: 70px;">
                                                         <div class="align-items-center ">
                                                             <p><b>{{item_d.estimated_start_date_text}}</b></p>
                                                         </div>
                                                     </td>
 
 
-                                                    <td class="align-top  px-0" style=" width: 80px;">
+                                                    <td class="align-top  px-0" style=" width: 70px;">
                                                         <div class="align-items-center ">
                                                             <p><b>{{item_d.estimated_end_date_text}}</b></p>
                                                         </div>
                                                     </td>
 
-                                                    <td class="align-top  px-0" style=" width: 80px;" ng-if="!(flow_status == 13)">
+                                                    <td class="align-top  px-0" style=" width: 70px;" ng-if="!(flow_status == 13)">
                                                         <div class="align-items-center ">
                                                             <p><b>{{item_d.reviewer_date}}</b></p>
                                                         </div>
@@ -371,9 +385,9 @@
                                                                   ng-model="item_d.responder_comment"
                                                                   ng-if="!(item_d.responder_action_type== 2)"></textarea>
 
-                                                        <div class="row" ng-if="(item_d.responder_action_type== 2)">
+                                                        <div class="row" ng-if="(item_d.responder_action_type== 2)" style=" width: 150px;">
                                                             <h6><b>{{item_d.action_status}}</b></h6>
-                                                            <p>Comment: {{item_d.responder_comment}}</p>
+                                                            <p ng-if="!(item_d.responder_comment=='' || item_d.responder_comment== null)">Comment: {{item_d.responder_comment}}</p>
                                                         </div>
                                                     </td>
 
@@ -439,7 +453,17 @@
 
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title d-none" id="modalRAMLabel">Risk Assessment Matrix (RAM)</h5> 
+                    <h5 class="modal-title d-none" id="modalRAMLabel">Risk Assessment Matrix (RAM)</h5>
+                    
+                    <div class="col-auto ms-auto" style="zoom:1.5">
+                        <b class="pe-1 me-1"> Security : {{cal_ram_action_security}}</b>
+                        <b class="pe-1 me-1"> Likelihood : {{cal_ram_action_likelihood}}</b>
+                        <b class="pe-1 me-1">  Risk : </b>
+                        <label class="pe-1 me-1 text-center" style="width:100px"
+                               ng-style=" { 'background-color' : ((cal_ram_action_risk == 'H') ? 'red' : ((cal_ram_action_risk == 'M') ? 'yellow' : ((cal_ram_action_risk == 'L') ? 'green' : '#D3D3D3')) ) }">{{cal_ram_action_risk}}</label>
+                    </div>
+
+
                     <button class="btn p-1" type="button" data-bs-dismiss="modal" aria-label="Close">
                         <svg class="svg-inline--fa fa-xmark fs--1" aria-hidden="true" focusable="false" data-prefix="fas"
                              data-icon="xmark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"
@@ -453,13 +477,13 @@
 
                     <div class="row">
 
-                        <div class="col-12 mb-1">
+                      @*   <div class="col-12 mb-1">
                             <b class="pe-1 me-1"> Security : {{cal_ram_action_security}}</b>
                             <b class="pe-1 me-1"> Likelihood : {{cal_ram_action_likelihood}}</b>
                             <b class="pe-1 me-1">  Risk : </b>
                             <label class="pe-1 me-1 text-center" style="width:200px"
                                    ng-style=" { 'background-color' : ((cal_ram_action_risk == 'H') ? 'red' : ((cal_ram_action_risk == 'M') ? 'yellow' : ((cal_ram_action_risk == 'L') ? 'green' : '#D3D3D3')) ) }">{{cal_ram_action_risk}}</label>
-                        </div>
+                        </div> *@
 
                         <div class="col-6" ng-if="!previewRam">
                             <table class="table table-sm fs--1 mb-0 col-auto ">
@@ -628,8 +652,9 @@
                         <h5 ng-if="!ready_to_complate" class="modal-title mb-0 text-center" id="modalConfirmSubmitLabel" style="font-size: 40px; font-weight: bold;">
                             Do you want to update and close the item?
                         </h5>
-                        <h5 ng-if="ready_to_complate" title="Popup แจ้งกรณีที่เป็นการ Approve รายการสุดท้าย" class="modal-title mb-0 text-center" id="modalConfirmSubmitLabel" style="font-size: 40px; font-weight: bold;">
-                            HAZOP Ready to complate. Do you want to update and close the item?
+                        <h5 ng-if="ready_to_complate" title="Popup แจ้งกรณีที่เป็นการ Approve รายการสุดท้าย" class="modal-title mb-0 text-center"
+                        id="modalConfirmSubmitLabel" style="font-size: 25px; font-weight: bold;">
+                            {{pha_sub_software =='whatif'?"What's If": pha_sub_software }}HAZOP Ready to complate. <br />Do you want to update and close the item?
                         </h5>
                     </div>
                 </div>
