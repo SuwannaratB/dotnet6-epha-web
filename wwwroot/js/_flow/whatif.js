@@ -3955,7 +3955,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             var id_valid = document.getElementById('valid-' + field);
 
             if (_item == '' || _item == null) {
-                id_valid.className = "feedback text-danger";
+                // id_valid.className = "feedback text-danger";
                 id_valid.focus();
                 return true;
             }
@@ -4609,6 +4609,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.members = string;
         $scope.hidethis = true;
     }
+
+    $scope.toggleResultsVisibility = function () {
+        $scope.showResults = false;
+    };
+    
     //end functioin show history data ของแต่ละ field
 
     // <==== start Popup Employee ของ Member team==== >
