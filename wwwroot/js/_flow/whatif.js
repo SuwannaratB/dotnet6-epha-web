@@ -266,10 +266,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             if (fileName.toLowerCase().indexOf('.pdf') == -1) {
                 fileInfoSpan.textContent = "";
-                // Check old files
-                if ($scope.data_drawing[0].document_file_size > 0) {
-                    fileInfoSpan.textContent = $scope.data_drawing[0].document_file_name + ' ('+  $scope.data_drawing[0].document_file_size + 'KB)';
-                }
+                // if ($scope.data_drawing[0].document_file_size > 0) {
+                //     fileInfoSpan.textContent = $scope.data_drawing[0].document_file_name + ' ('+  $scope.data_drawing[0].document_file_size + 'KB)';
+                // }
                 set_alert("Warning", "Please select a PDF file.");
                 return;
             }
