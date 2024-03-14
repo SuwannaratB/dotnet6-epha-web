@@ -267,17 +267,27 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             if (fileName.toLowerCase().indexOf('.pdf') == -1) {
                 fileInfoSpan.textContent = "";
-                // if ($scope.data_drawing[0].document_file_size > 0) {
-                //     fileInfoSpan.textContent = $scope.data_drawing[0].document_file_name + ' ('+  $scope.data_drawing[0].document_file_size + 'KB)';
-                // }
                 set_alert("Warning", "Please select a PDF file.");
+                if ($scope.previousFile ) {
+                    input = $scope.previousFile;
+                    document.getElementById('filename' + fileSeq).textContent =    $scope.prevIileInfoSpan;
+                    $scope.status_upload = true;
+                }
                 return;
             }
 
             var file_path = uploadFile(file, fileSeq, fileName, fileSize, file_part, file_doc);
+            $scope.previousFile = fileInput;
+            $scope.prevIileInfoSpan = fileInfoSpan.textContent;
+            $scope.status_upload = true;
 
         } else {
             fileInfoSpan.textContent = "";
+            if ($scope.previousFile ) {
+                input = $scope.previousFile;
+                document.getElementById('filename' + fileSeq).textContent =    $scope.prevIileInfoSpan;
+                $scope.status_upload = true;
+            }
         }
     }
     $scope.fileSelectRAM = function (input) {
@@ -1178,8 +1188,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     $scope.master_apu = JSON.parse(replace_hashKey_arr(arr.apu));
 
                     $scope.employeelist_def = arr.employee;
+                    // $scope.data_general = arr.general;
+                    $scope.data_general = arr.general.filter((item, index) => index === 0);
 
-                    $scope.data_general = arr.general;
                     //set id to 5 
                     $scope.data_general.forEach(function (item) { item.id_ram = 5; });
 
