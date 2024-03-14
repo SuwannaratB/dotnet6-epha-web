@@ -339,19 +339,20 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             if (fileName.toLowerCase().indexOf('.pdf') == -1) {
                 fileInfoSpan.textContent = "";
                 set_alert('Warning', 'Please select a PDF file.');
-
-                // if ($scope.previousFile) {
-                //     fileInput.value = ""; 
-                //     fileInput.setAttribute('value', $scope.previousFile.name); 
-                // }
-
+                // $scope.clearFileName(fileSeq);
                 $scope.status_upload = false;
+
+                if ($scope.previousFile ) {
+                    input = $scope.previousFile;
+                    document.getElementById('filename' + fileSeq).textContent =    $scope.prevIileInfoSpan;
+                    $scope.status_upload = true;
+                }
                 return;
             }
             var file_path = uploadFile(file, fileSeq, fileName, fileSize, file_part, file_doc);
 
-            $scope.previousFile = file;
-
+            $scope.previousFile = fileInput;
+            $scope.prevIileInfoSpan = fileInfoSpan.textContent;
             $scope.status_upload = true;
 
         } else {
