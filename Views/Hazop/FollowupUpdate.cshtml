@@ -33,7 +33,7 @@
 
                             <div class="row g-3 justify-content-between align-items-center pt-2 pb-3">
 
-                                <div class="col-6 col-md">
+                                <div class="col-8 col-md">
                                     
                                     <div class="row">
                                         <div class="col-auto">
@@ -60,7 +60,7 @@
                                     </div> 
 
                                 </div>
-                                <div class="col-6 col-md">
+                                <div class="col-auto">
                                     <div class="d-flex align-items-center py-2  justify-content-end">
                                         <span class="mx-2" ng-if="cancle_type">
                                             <button class="btn btn-outline-secondary btn-sm" style="width: 100px;"
@@ -614,7 +614,7 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="text-900 mb-0" data-anchor="data-anchor" id="modalMsgConfirmLabel">
+                    <h5 class="text-900 mb-0" data-anchor="data-anchor" id="modalMsgConfirmLabel" style="font-size:25px;">
                         <span class=" me-2 text-primary"><B>|</B></span> Do you want to update and close the item?
                     </h5>
 
@@ -654,7 +654,7 @@
                         </h5>
                         <h5 ng-if="ready_to_complate" title="Popup แจ้งกรณีที่เป็นการ Approve รายการสุดท้าย" class="modal-title mb-0 text-center"
                         id="modalConfirmSubmitLabel" style="font-size: 25px; font-weight: bold;">
-                            {{pha_sub_software =='whatif'?"What's If": pha_sub_software }}HAZOP Ready to complate. <br />Do you want to update and close the item?
+                            {{pha_sub_software =='whatif'?"What's If": pha_sub_software }} Ready to complate. <br />Do you want to update and close the item?
                         </h5>
                     </div>
                 </div>

@@ -164,7 +164,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         $scope.action_part = 1;
         $scope.user_name = conFig.user_name();
 
-        $scope.pha_sub_software = conFig.pha_sub_software()
+        $scope.pha_sub_software = conFig.pha_sub_software().toLowerCase()
 
         $scope.data_all = [];
 
@@ -235,7 +235,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
         //open document 
         var controller_text =  'hazop';//item.pha_sub_software;
-        var pha_sub_software = conFig.pha_sub_software(); //'hazop';//item.pha_sub_software;
+        var pha_sub_software = conFig.pha_sub_software().toLowerCase()//'hazop';//item.pha_sub_software;
         var pha_status = $scope.flow_status;
 
         conFig.pha_seq = $scope.data_details[0].seq;
@@ -364,7 +364,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         var pha_no = conFig.pha_no();
         var token_doc = conFig.pha_seq();
         var responder_user_name = conFig.responder_user_name();
-        var sub_software = conFig.pha_sub_software(); //'hazop';
+        var sub_software = conFig.pha_sub_software().toLowerCase(); //'hazop';
 
         //alert($scope.flow_role_type);
         if ($scope.flow_role_type != 'admin') {
@@ -601,7 +601,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         var token_doc = _item.ID_PHA;
 
         //alert(url_ws + "Flow/set_follow_up");
-        var sub_software = conFig.pha_sub_software(); 
+        var sub_software = conFig.pha_sub_software().toLowerCase(); 
 
         $.ajax({
             url: url_ws + "Flow/set_follow_up",
@@ -708,7 +708,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         var user_name = $scope.user_name;
         var flow_action = action;
         var token_doc = conFig.pha_seq();
-        var sub_software = conFig.pha_sub_software(); 
+        var sub_software = conFig.pha_sub_software().toLowerCase() 
 
         $.ajax({
             url: url_ws + "Flow/set_follow_up_review",

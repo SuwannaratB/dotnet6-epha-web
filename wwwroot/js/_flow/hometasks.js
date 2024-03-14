@@ -236,7 +236,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
     }
     function next_page(sub_software, pha_status, responder_user_name) {
 
-        controller_text = controller_text.toLowerCase();
+        //controller_text = controller_text.toLowerCase();
         var pha_seq = $scope.pha_seq;
         var pha_type_doc = $scope.pha_type_doc;
 

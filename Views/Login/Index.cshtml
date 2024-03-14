@@ -42,6 +42,7 @@
                                 <li class="d-flex align-items-center">
                                     <span class="uil uil-check-circle text-success me-2"></span><span class="text-700 fw-semi-bold">Bow-Tie Diagram</span>
                                 </li>
+
                             </ul>
                         </div>
                         <div class="position-relative z-index--1 mb-6 d-none d-md-block text-center mt-md-15">
@@ -49,6 +50,8 @@
                                  alt="" /><img class="auth-title-box-img d-light-none"
                                                src="../assets/img/spot-illustrations/auth-dark.png" alt="" />
                         </div>
+
+
                     </div>
 
                     <div class="col mx-auto">
@@ -100,6 +103,12 @@
                                        href="login/signup">Create an account</a>
                                 </div>
 
+                                <div class="text-center p-5  ">
+                                    <a class="fs--1 fw-bold"
+                                       href="https://adbthailand0-my.sharepoint.com/:f:/g/personal/kuluwat_adb-thailand_com/EkW-km1DnTpHvRiZuWHn-XkBywrGmCB9VRb0q2XjJNTh1g?e=GPvB6r">Link Document Example UAT.</a>
+                                    <br />
+                                    <label class="form-label">Password : uatP1epha</label>
+                                </div>
                             </form>
 
                         </div>
@@ -147,7 +156,7 @@
                     },
                     success: function (data) {
                         var arr = data;
-                        console.log(arr); 
+                        console.log(arr);
                         try {
                             if (data.role_type == '') {
                                 alert('Unauthorized access to the system.'); return;

@@ -26,7 +26,8 @@
 
 }
 
-<div class="content mt-1" style="font-size: 12px;" id="divPage" ng-controller="ctrlAppPage">
+<div class="content mt-1" style="font-size: 12px;" id="divPage" ng-controller="ctrlAppPage"
+     ng-click="toggleResultsVisibility()">
 
 
     <div class="row g-0">
@@ -91,8 +92,12 @@
                 </span>
                 <span class="mx-2" ng-if="submit_type">
                     <button class="btn btn-success btn-sm" style="width: 150px;"
-                            ng-if=" data_header[0].pha_status == 11" ng-click="confirmSave('submit_register')">
+                            ng-if=" data_header[0].pha_status == 11 && data_general[0].sub_expense_type == 'Normal'" ng-click="confirmSave('submit_register')">
                         Task Register
+                    </button>
+                    <button class="btn btn-success btn-sm" style="width: 150px;"
+                            ng-if=" data_header[0].pha_status == 11 && !(data_general[0].sub_expense_type == 'Normal')" ng-click="confirmSave('submit')">
+                        Submit and Closed
                     </button>
                     <button class="btn btn-success btn-sm" style="width: 150px;"
                             ng-if=" data_header[0].pha_status == 12" ng-click="confirmSave('submit_conduct')">
@@ -269,7 +274,7 @@
                                            data-bs-placement="top" title=" Business Unit : ADIP Unit" data-bs-html="true"></a>
                                     </label>
 
-                                    <div ng-if="!(item.expense_type=='CAPEX' && item.sub_expense_type=='Study')">
+                                    <div ng-if="!(item.expense_type=='CAPEX' && (item.sub_expense_type=='Study' || item.sub_expense_type=='Internal Study'))">
 
                                         <select class="form-control"
                                                 ng-class="{'disabled-link':(!tab_general_active)}"
@@ -293,7 +298,7 @@
                                             </option>
                                         </select>
                                     </div>
-                                    <div ng-if="(item.expense_type=='CAPEX' && item.sub_expense_type=='Study')">
+                                    <div ng-if="(item.expense_type=='CAPEX' && (item.sub_expense_type=='Study' || item.sub_expense_type=='Internal Study'))">
                                         <input class="form-control rounded-1" ng-class="{'disabled-link':(!tab_general_active)}"
                                                type="text" placeholder="Business Unit"
                                                name="other_business_unit" ng-model="item.other_business_unit" />
@@ -313,13 +318,13 @@
                                            data-bs-placement="top" title=" Unit No : ADIP Unit" data-bs-html="true"></a>
                                     </label>
 
-                                    <div ng-if="!(item.expense_type=='CAPEX' && item.sub_expense_type=='Study')">
+                                    <div ng-if="!(item.expense_type=='CAPEX' && (item.sub_expense_type=='Study' || item.sub_expense_type=='Internal Study'))">
                                         <select class="form-control"
                                                 ng-class="{'disabled-link':(!tab_general_active)}"
                                                 data-choices="data-choices"
                                                 data-options='{"removeItemButton":true,"placeholder":true}'
                                                 ng-change="actionChange(item,item.seq,'')" ng-model="item.id_unit_no"
-                                                ng-if="tab_general_active && !(item.expense_type=='CAPEX' && item.sub_expense_type=='Study')">
+                                                ng-if="tab_general_active && !(item.expense_type=='CAPEX' && (item.sub_expense_type=='Study' || item.sub_expense_type=='Internal Study'))">
                                             <option ng-selected="item.id_unit_no == item2.id"
                                                     ng-repeat="item2 in master_unit_no"
                                                     ng-value="item2.id" ng-if="item2.id_apu == item.id_apu">
@@ -328,7 +333,7 @@
                                         </select>
 
                                         <select class="form-control disabled-link" ng-model="item.id_unit_no"
-                                                ng-if="!tab_general_active && !(item.expense_type=='CAPEX' && item.sub_expense_type=='Study')">
+                                                ng-if="!tab_general_active && !(item.expense_type=='CAPEX' && (item.sub_expense_type=='Study' || item.sub_expense_type=='Internal Study'))">
                                             <option ng-selected="item.id_unit_no == item2.id"
                                                     ng-repeat="item2 in master_unit_no" ng-value="item2.id"
                                                     ng-if="item2.id_apu == item.id_apu">
@@ -337,7 +342,7 @@
                                         </select>
                                     </div>
 
-                                    <div ng-if="(item.expense_type=='CAPEX' && item.sub_expense_type=='Study')">
+                                    <div ng-if="(item.expense_type=='CAPEX' && (item.sub_expense_type=='Study' || item.sub_expense_type=='Internal Study'))">
                                         <input class="form-control rounded-1" ng-class="{'disabled-link':(!tab_general_active)}"
                                                type="text" placeholder="Unit No"
                                                name="other_unit_no" ng-model="item.other_unit_no" />
@@ -358,25 +363,25 @@
 
                                         <label class="form-label ps-0" ng-if="select_history_tracking_record"><a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip" data-bs-placement="top" title=" Functional Location : TPX-76-LICSA-002-TX" data-bs-html="true"></a></label>
 
-                                        <div ng-if="!(item.expense_type=='CAPEX' && item.sub_expense_type=='Study')">
+                                        <div ng-if="!(item.expense_type=='CAPEX' && (item.sub_expense_type=='Study' || item.sub_expense_type=='Internal Study'))">
                                             <select class="form-control js-choice-functional"
                                                     ng-class="{'disabled-link':(!tab_general_active || !(tab_general_active && data_header[0].pha_status<=12 ))}"
                                                     data-choices="data-choices"
                                                     data-options='{"removeItemButton":true,"placeholder":true}'
                                                     ng-change="actionChange(item,item.seq,'')" ng-model='item.functional_location'
-                                                    ng-if="tab_general_active && !(item.expense_type=='CAPEX' && item.sub_expense_type=='Study')">
+                                                    ng-if="tab_general_active && !(item.expense_type=='CAPEX' && (item.sub_expense_type=='Study' || item.sub_expense_type=='Internal Study'))">
                                                 <option ng-repeat="item2 in master_functional" ng-value="item2.id">{{item2.name}}</option>
                                             </select>
 
                                             <select class="form-control disabled-link"
                                                     ng-model='item.functional_location'
-                                                    ng-if="!tab_general_active && !(item.expense_type=='CAPEX' && item.sub_expense_type=='Study')">
+                                                    ng-if="!tab_general_active && !(item.expense_type=='CAPEX' && (item.sub_expense_type=='Study' || item.sub_expense_type=='Internal Study'))">
                                                 <option ng-repeat="item2 in master_functional" ng-value="item2.id">{{item2.name}}</option>
                                             </select>
 
                                         </div>
 
-                                        <div ng-if="(item.expense_type=='CAPEX' && item.sub_expense_type=='Study')">
+                                        <div ng-if="(item.expense_type=='CAPEX' && (item.sub_expense_type=='Study' || item.sub_expense_type=='Internal Study'))">
                                             <input class="form-control rounded-1" ng-class="{'disabled-link':(!tab_general_active)}"
                                                    type="text" placeholder="Functional Location"
                                                    name="other_functional_location" ng-model="item.other_functional_location" />
@@ -980,7 +985,7 @@
                                                                           ng-model="item.node"
                                                                           ng-keyup="filterResultHistory(item.node, 'node', 'node_'+ item.seq);actionChange(item,item.seq,'node')"></textarea>
 
-                                                                <div class="autocomplete-dropdown" style="position: absolute;"
+                                                                <div class="autocomplete-dropdown" style="position: absolute;" ng-show="showResults"
                                                                      ng-class="{'ng-show' : (filteredArr[0].fieldID == ('node_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('node_'+item.seq)) }">
                                                                     <div class="autocomplete-option"
                                                                          ng-repeat="result in filteredResults | filter:{field:'node'}"
@@ -1009,7 +1014,7 @@
                                                                           ng-model="item.design_intent"
                                                                           ng-keyup="filterResultHistory(item.design_intent, 'design_intent', 'design_intent_'+ item.seq);actionChange(item,item.seq,'')"></textarea>
 
-                                                                <div class="autocomplete-dropdown" style="position: absolute;"
+                                                                <div class="autocomplete-dropdown" style="position: absolute;" ng-show="showResults"
                                                                      ng-class="{'ng-show' : (filteredArr[0].fieldID == ('design_intent_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('design_intent_'+item.seq)) }">
                                                                     <div class="autocomplete-option"
                                                                          ng-repeat="result in filteredResults | filter:{field:'design_intent'}"
@@ -1033,7 +1038,7 @@
                                                                           ng-model="item.design_conditions"
                                                                           ng-keyup="filterResultHistory(item.design_conditions, 'design_conditions', 'design_conditions_'+ item.seq);actionChange(item,item.seq,'')"></textarea>
 
-                                                                <div class="autocomplete-dropdown" style="position: absolute;"
+                                                                <div class="autocomplete-dropdown" style="position: absolute;" ng-show="showResults"
                                                                      ng-class="{'ng-show' : (filteredArr[0].fieldID == ('design_conditions_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('design_conditions_'+item.seq)) }">
                                                                     <div class="autocomplete-option"
                                                                          ng-repeat="result in filteredResults | filter:{field:'design_conditions'}"
@@ -1058,7 +1063,7 @@
                                                                           ng-model="item.operating_conditions"
                                                                           ng-keyup="filterResultHistory(item.operating_conditions, 'operating_conditions', 'operating_conditions_'+ item.seq);actionChange(item,item.seq,'')"></textarea>
 
-                                                                <div class="autocomplete-dropdown" style="position: absolute;"
+                                                                <div class="autocomplete-dropdown" style="position: absolute;" ng-show="showResults"
                                                                      ng-class="{'ng-show' : (filteredArr[0].fieldID == ('operating_conditions_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('operating_conditions_'+item.seq)) }">
                                                                     <div class="autocomplete-option"
                                                                          ng-repeat="result in filteredResults | filter:{field:'operating_conditions'}"
@@ -1082,7 +1087,7 @@
                                                                           ng-model="item.node_boundary"
                                                                           ng-keyup="filterResultHistory(item.node_boundary, 'node_boundary', 'node_boundary_'+ item.seq);actionChange(item,item.seq,'')"></textarea>
 
-                                                                <div class="autocomplete-dropdown" style="position: absolute;"
+                                                                <div class="autocomplete-dropdown" style="position: absolute;" ng-show="showResults"
                                                                      ng-class="{'ng-show' : (filteredArr[0].fieldID == ('node_boundary_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('node_boundary_'+item.seq)) }">
                                                                     <div class="autocomplete-option"
                                                                          ng-repeat="result in filteredResults | filter:{field:'node_boundary'}"
@@ -1736,7 +1741,7 @@
 
                         <div style="background-color: #ffffff;"
                              ng-if=" ( data_header[0].pha_status == 11 && tab_worksheet_active==true) || (data_header[0].pha_status >  11) ||
-(data_general[0].expense_type == 'OPEX' && data_general[0].sub_expense_type == 'Internal Study')">
+(data_general[0].expense_type == 'OPEX' && (data_general[0].sub_expense_type == 'Study' || data_general[0].sub_expense_type == 'Internal Study'))">
 
                             <div class="mx-3 row  g-3 align-items-top " ng-if="( data_node.length == 1 ? (data_node[0].node == null ? false : true) : true) ">
 
@@ -1796,8 +1801,9 @@
                                         <!-- ส่วนที่มีอยู่แล้ว -->
                                         <div class="float-end align-top">
 
-                                            <button class="btn btn-danger btn-sm  p-1 m-0 " ng-if="submit_type" ng-click="confirmSave('submit_genarate')">
-                                                <i class="fa-solid far fa-file-pdf  text-danger"></i> Genarate Full Report
+                                            <button class="btn btn-danger btn-sm  p-1 m-0 " ng-if="submit_type" 
+                                            ng-click="confirmSave('submit_genarate')">
+                                                <i class="fa-solid far fa-file-pdf  text-danger" ng-if="!(item.sub_expense_type=='Study' || item.sub_expense_type=='Internal Study')"></i> Genarate Full Report
                                             </button>
                                             <br>
                                             <button class="float-end btn btn-outline btn-sm p-1 m-1" ng-click="toggleFullscreen()">
@@ -1908,7 +1914,7 @@
                                                                       ng-model="item.causes"
                                                                       ng-keyup="filterResultHistory(item.causes, 'causes', 'causes_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')"></textarea>
 
-                                                            <div class="autocomplete-dropdown" style="position: absolute;"
+                                                            <div class="autocomplete-dropdown" style="position: absolute;" ng-show="showResults"
                                                                  ng-class="{'ng-show' : (filteredArr[0].fieldID == ('causes_worksheet_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('causes_worksheet_'+item.seq)) }">
                                                                 <div class="autocomplete-option"
                                                                      ng-repeat="result in filteredResults | filter:{field:'causes'}"
@@ -1968,7 +1974,7 @@
                                                                       ng-model="item.consequences"
                                                                       ng-keyup="filterResultHistory(item.consequences, 'consequences', 'consequences_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')"></textarea>
 
-                                                            <div class="autocomplete-dropdown" style="position: absolute;"
+                                                            <div class="autocomplete-dropdown" style="position: absolute;" ng-show="showResults"
                                                                  ng-class="{'ng-show' : (filteredArr[0].fieldID == ('consequences_worksheet_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('consequences_worksheet_'+item.seq)) }">
                                                                 <div class="autocomplete-option"
                                                                      ng-repeat="result in filteredResults | filter:{field:'consequences'}"
@@ -2094,7 +2100,7 @@
                                                                       ng-model="item.existing_safeguards"
                                                                       ng-keyup="filterResultHistory(item.existing_safeguards, 'existing_safeguards', 'existing_safeguards_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')"></textarea>
 
-                                                            <div class="autocomplete-dropdown" style="position: absolute;"
+                                                            <div class="autocomplete-dropdown" style="position: absolute;" ng-show="showResults"
                                                                  ng-class="{'ng-show' : (filteredArr[0].fieldID == ('existing_safeguards_worksheet_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('existing_safeguards_worksheet_'+item.seq)) }">
                                                                 <div class="autocomplete-option"
                                                                      ng-repeat="result in filteredResults | filter:{field:'existing_safeguards'}"
@@ -2178,7 +2184,7 @@
                                                                       ng-model="item.recommendations"
                                                                       ng-keyup="filterResultHistory(item.recommendations, 'recommendations', 'recommendations_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')"></textarea>
 
-                                                            <div class="autocomplete-dropdown" style="position: absolute;"
+                                                            <div class="autocomplete-dropdown" style="position: absolute;" ng-show="showResults"
                                                                  ng-class="{'ng-show' : (filteredArr[0].fieldID == ('recommendations_worksheet_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('recommendations_worksheet_'+item.seq)) }">
                                                                 <div class="autocomplete-option"
                                                                      ng-repeat="result in filteredResults | filter:{field:'recommendations'}"
@@ -2203,7 +2209,7 @@
                                                                       ng-model="item.safety_critical_equipment_tag"
                                                                       ng-keyup="filterResultHistory(item.safety_critical_equipment_tag, 'safety_critical_equipment_tag', 'safety_critical_equipment_tag'+ item.seq);actionChangeWorksheet(item,item.seq,'')"></textarea>
 
-                                                            <div class="autocomplete-dropdown" style="position: absolute;"
+                                                            <div class="autocomplete-dropdown" style="position: absolute;" ng-show="showResults"
                                                                  ng-class="{'ng-show' : (filteredArr[0].fieldID == ('safety_critical_equipment_tag_worksheet_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('safety_critical_equipment_tag_worksheet_'+item.seq)) }">
                                                                 <div class="autocomplete-option"
                                                                      ng-repeat="result in filteredResults | filter:{field:'safety_critical_equipment_tag'}"
@@ -3883,6 +3889,15 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="modalRAMLabel">Risk Assessment Matrix (RAM){{(selectedDataNodeWorksheetRamType =='s'?' : Security':(selectedDataNodeWorksheetRamType =='l'?' : Likelihood':''))}}</h5>
+
+                    <div class="col-auto ms-auto" style="zoom:1.5">
+                        <b class="pe-1 me-1"> Security : {{cal_ram_action_security}}</b>
+                        <b class="pe-1 me-1"> Likelihood : {{cal_ram_action_likelihood}}</b>
+                        <b class="pe-1 me-1">  Risk : </b>
+                        <label class="pe-1 me-1 text-center" style="width:100px"
+                               ng-style=" { 'background-color' : ((cal_ram_action_risk == 'H') ? 'red' : ((cal_ram_action_risk == 'M') ? 'yellow' : ((cal_ram_action_risk == 'L') ? 'green' : '#D3D3D3')) ) }">{{cal_ram_action_risk}}</label>
+                    </div>
+
                     <button class="btn p-1" type="button" data-bs-dismiss="modal" aria-label="Close">
                         <svg class="svg-inline--fa fa-xmark fs--1" aria-hidden="true" focusable="false" data-prefix="fas"
                              data-icon="xmark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"
@@ -3891,19 +3906,20 @@
                             </path>
                         </svg>
                     </button>
+
                 </div>
 
                 <div class="modal-body">
 
                     <div class="row">
 
-                        <div class="col-12 mb-1">
-                            <b class="pe-1 me-1"> Security : {{cal_ram_action_security}}</b>
-                            <b class="pe-1 me-1"> Likelihood : {{cal_ram_action_likelihood}}</b>
-                            <b class="pe-1 me-1">  Risk : </b>
-                            <label class="pe-1 me-1 text-center" style="width:200px"
-                                   ng-style=" { 'background-color' : ((cal_ram_action_risk == 'H') ? 'red' : ((cal_ram_action_risk == 'M') ? 'yellow' : ((cal_ram_action_risk == 'L') ? 'green' : '#D3D3D3')) ) }">{{cal_ram_action_risk}}</label>
-                        </div>
+                        @*  <div class="col-12 mb-1">
+                        <b class="pe-1 me-1"> Security : {{cal_ram_action_security}}</b>
+                        <b class="pe-1 me-1"> Likelihood : {{cal_ram_action_likelihood}}</b>
+                        <b class="pe-1 me-1">  Risk : </b>
+                        <label class="pe-1 me-1 text-center" style="width:200px"
+                        ng-style=" { 'background-color' : ((cal_ram_action_risk == 'H') ? 'red' : ((cal_ram_action_risk == 'M') ? 'yellow' : ((cal_ram_action_risk == 'L') ? 'green' : '#D3D3D3')) ) }">{{cal_ram_action_risk}}</label>
+                        </div> *@
 
                         <div class="col-6" ng-if="!previewRam">
 
@@ -4452,7 +4468,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="d-flex justify-content-center align-items-center mb-5">
-                        <h4 class="modal-title mb-0 text-center" id="modalSendMailTeamLabel" style="font-size: 40px; font-weight: bold;">
+                        <h4 class="modal-title mb-0 text-center" id="modalSendMailTeamLabel" style="font-size: 25px; font-weight: bold;">
                             Confirm send email to member review?
                         </h4>
                     </div>

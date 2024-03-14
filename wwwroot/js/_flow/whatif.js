@@ -6,14 +6,14 @@ AppMenuPage.filter('MemberteamMultiFieldFilter', function () {
         }
 
         searchText = searchText.toLowerCase();
-        if (searchText.length < 3) { return ; }
+        if (searchText.length < 3) { return; }
         return items.filter(function (item) {
             return (
                 item.employee_id.toLowerCase().includes(searchText.toLowerCase()) ||
                 item.employee_displayname.toLowerCase().includes(searchText.toLowerCase()) ||
                 item.employee_email.toLowerCase().includes(searchText.toLowerCase())
             );
-        }).slice(0, 10); 
+        }).slice(0, 10);
     };
 });
 AppMenuPage.filter('ResponderMultiFieldFilter', function () {
@@ -153,10 +153,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         if (fileInput) {
             fileInput.value = '';
         }
-        
+
         const fileInfoSpan = document.getElementById('filename' + seq);
         fileInfoSpan.textContent = "";
-        
+
         var arr = $filter('filter')($scope.data_drawing,
             function (item) { return (item.seq == seq); }
         );
@@ -194,14 +194,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     || selectedTab.name == 'manage'
                     || selectedTab.name == 'report'
                 ) {
-
-                    if (!($scope.data_general[0].expense_type == 'OPEX' &&
-                        $scope.data_general[0].sub_expense_type == 'Internal Study')) {
+                    if ($scope.data_general[0].sub_expense_type == 'Normal') {
                         selectedTab = $scope.oldTab;
                         apply();
 
                         $('#modalPleaseRegister').modal('show');
                         return;
+
                     } else {
                         $scope.tab_worksheet_show = true;
                         $scope.tab_managerecom_show = true;
@@ -890,7 +889,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         var json_relatedpeople = "";//check_data_relatedpeople();
         var json_relatedpeople_outsider = "";// check_data_relatedpeople_outsider();
         var json_drawing = check_data_drawing();
-         
+
         var json_list = check_data_tasklistlist();
         var json_listdrawing = check_data_tasklistlistdrawing();
         var json_listworksheet = check_data_listworksheet();
@@ -1276,6 +1275,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 $scope.data_tasklistdrawing_delete = [];
                 $scope.data_listworksheet_delete = [];
                 $scope.flow_role_type = conFig.role_type();// "admin";//admin,request,responder,approver
+                if (arr.header[0].pha_request_by.toLowerCase() == $scope.user_name.toLowerCase()) {
+                    $scope.flow_role_type = 'admin';
+                    conFig.role_type = 'admin';
+                }
                 $scope.flow_status = 0;
 
                 //แสดงปุ่ม
@@ -1478,9 +1481,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             if ($scope.data_general[0].sub_expense_type == 'Study' ||
                 $scope.data_general[0].sub_expense_type == 'Internal Study') {
                 check_case_sub_expense_type();
-            }
+            } else {   $scope.tab_worksheet_active = false;}
 
-            $scope.tab_worksheet_active = false;
+          
 
         }
         else if (pha_status_def == 12) {
@@ -3218,7 +3221,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.cal_ram_action_security = _item.ram_action_security;
             $scope.cal_ram_action_likelihood = _item.ram_action_likelihood;
             $scope.cal_ram_action_risk = _item.ram_action_risk;
-             
+
         }
 
         $scope.previewRam = (ram_type == 'r' ? true : false);
@@ -3784,7 +3787,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     if (arr_chk[0].expense_type == '' || arr_chk[0].expense_type == null) { set_alert('Warning', 'Please select a valid Expense Type'); return; }
                     if (arr_chk[0].sub_expense_type == '' || arr_chk[0].sub_expense_type == null) { set_alert('Warning', 'Please select a valid Sub-Expense Type'); return; }
                     if (arr_chk[0].id_apu == '' || arr_chk[0].id_apu == null) { set_alert('Warning', 'Please select a valid Area Process Unit'); return; }
-                    if (arr_chk[0].functional_location == '' || arr_chk[0].functional_location == null) { set_alert('Warning', 'Please select a valid Functional Location'); return; }
+                    //if (arr_chk[0].functional_location == '' || arr_chk[0].functional_location == null) { set_alert('Warning', 'Please select a valid Functional Location'); return; }
 
                     if (true) {
                         arr_chk = $scope.data_memberteam;
@@ -4656,7 +4659,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     $scope.toggleResultsVisibility = function () {
         $scope.showResults = false;
     };
-    
+
     //end functioin show history data ของแต่ละ field
 
     // <==== start Popup Employee ของ Member team==== >
@@ -4722,7 +4725,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 item.employee_displayname.toLowerCase().includes(searchText.toLowerCase()) ||
                 item.employee_email.toLowerCase().includes(searchText.toLowerCase())
             );
-        }).slice(0, 10); 
+        }).slice(0, 10);
         $('#modalEmployeeAdd').modal('show');
     };
 
@@ -5017,7 +5020,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         running_no_level1($scope.data_relatedpeople_outsider, null, null);
         apply();
     };
-     
+
     $scope.downloadFileReviewer = function (item) {
 
         $scope.exportfile[0].DownloadPath = item.document_file_path;

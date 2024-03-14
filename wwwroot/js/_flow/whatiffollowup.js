@@ -488,8 +488,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
     }
 
     $scope.confirmCancle = function () {
-        var page = conFig.controller_action_befor();
-        window.open(page, "_top")
+        //var page = conFig.controller_action_befor();
+        //window.open(page, "_top")
+        window.open('Home/Portal', "_top")
+
     }
     $scope.confirmCreate = function () {
 
