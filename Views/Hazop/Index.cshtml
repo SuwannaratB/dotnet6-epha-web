@@ -814,7 +814,8 @@
                                                                 <button id="del-{{item.seq}}" class="btn btn-link text-danger"
                                                                         ng-class="{'d-none':(!tab_general_active)}"
                                                                         ng-click="clearFileName(item.seq)"
-                                                                        ng-if="item.document_file_size>0">
+                                                                        ng-if="status_upload">
+                                                                        @* ng-if="item.document_file_size>0"> *@
                                                                     <span class="fa-regular fa-trash-can fa-lg"></span>
                                                                 </button>
                                                                 <br>

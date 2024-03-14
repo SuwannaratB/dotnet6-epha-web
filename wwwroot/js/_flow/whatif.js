@@ -283,6 +283,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         } else {
             fileInfoSpan.textContent = "";
+            if ($scope.previousFile ) {
+                input = $scope.previousFile;
+                document.getElementById('filename' + fileSeq).textContent =    $scope.prevIileInfoSpan;
+                $scope.status_upload = true;
+            }
         }
     }
     $scope.fileSelectRAM = function (input) {

@@ -338,8 +338,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             if (fileName.toLowerCase().indexOf('.pdf') == -1) {
                 fileInfoSpan.textContent = "";
-                set_alert('Warning', 'Please select a PDF file.');
-                // $scope.clearFileName(fileSeq);
+                set_alert_warning('Warning', 'Please select a PDF file.');
                 $scope.status_upload = false;
 
                 if ($scope.previousFile ) {
@@ -357,6 +356,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         } else {
             fileInfoSpan.textContent = "";
+            if ($scope.previousFile ) {
+                input = $scope.previousFile;
+                document.getElementById('filename' + fileSeq).textContent =    $scope.prevIileInfoSpan;
+                $scope.status_upload = true;
+            }
         }
     }
     $scope.fileSelectRAM = function (input) {
@@ -4700,9 +4704,18 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     function set_alert(header, detail) {
         $scope.Action_Msg_Header = header;
-        $scope.Action_Msg_Detail = detail;
+        $scope.Action_Msg_Detail = detail;    
         $('#modalMsg').modal('show');
     }
+
+    function set_alert_warning(header, detail) {
+        $scope.$apply(function () {
+            $scope.Action_Msg_Header = header;
+            $scope.Action_Msg_Detail = detail;
+        });   
+        $('#modalMsg').modal('show');
+    }
+
     function set_alert_confirm(header, detail) {
 
         $scope.Action_Msg_Confirm = true;
