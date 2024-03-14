@@ -31,7 +31,9 @@
 
 }
 
-<div class="content mt-1" style="font-size: 12px; min-height: auto !important; overflow-x:hidden;" id="divPage" ng-controller="ctrlAppPage">
+<div class="content mt-1" style="font-size: 12px; min-height: auto !important; overflow-x:hidden;" id="divPage"
+ng-controller="ctrlAppPage"
+     ng-click="toggleResultsVisibility()">
 
 
     <div class="row g-0">
@@ -1502,15 +1504,10 @@
                                         <div class="row">
                                             <div class=" col-auto pe-0 me-0">
                                                 <p class="form-label m-2 ps-0" style="min-width:200px;"><b>Task Name: </b>{{data_general[0].pha_request_name}}</p>
-                                            </div>
-                                            <div class=" col-auto pe-0 me-0">
-                                                <p class="form-label m-2 ps-0"><b>Date:</b></p>
-                                            </div>
-                                            <div class=" col-auto p-0 m-0 ps-1">
-                                                <p class="form-label m-2 ps-0" ng-if="tab_worksheet_active"><b>Date:</b></p>
-
-                                                <input type="date" class="form-control rounded-1  p-1 datetimepicker"
-                                                       ng-if="(!tab_worksheet_active)"
+                                            </div> 
+                                            <div class="d-flex col-auto p-0 m-0 ps-1">
+                                                <p class="form-label m-2 ps-0" ng-if="tab_worksheet_active"><b>Date:</b></p> 
+                                                <input type="date" class="form-control rounded-1  p-1 datetimepicker" 
                                                        id="target_start_date"
                                                        name="target_start_date"
                                                        ng-change="actionChange(data_general[0],data_general[0].seq,'')"
@@ -1533,7 +1530,7 @@
                                             </button>
                                         </div>
 
-                                        <div class=" align-top text-end mt-3 " style="zoom:0.7;">
+                                        <div class=" align-top text-end mt-0" style="zoom:0.7;">
                                             <p class="form-label m-1 align-bottom text-end">
                                                 <svg class="svg-inline--fa fa-lightbulb text-warning" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="lightbulb" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" data-fa-i2svg=""><path fill="currentColor" d="M112.1 454.3c0 6.297 1.816 12.44 5.284 17.69l17.14 25.69c5.25 7.875 17.17 14.28 26.64 14.28h61.67c9.438 0 21.36-6.401 26.61-14.28l17.08-25.68c2.938-4.438 5.348-12.37 5.348-17.7L272 415.1h-160L112.1 454.3zM191.4 .0132C89.44 .3257 16 82.97 16 175.1c0 44.38 16.44 84.84 43.56 115.8c16.53 18.84 42.34 58.23 52.22 91.45c.0313 .25 .0938 .5166 .125 .7823h160.2c.0313-.2656 .0938-.5166 .125-.7823c9.875-33.22 35.69-72.61 52.22-91.45C351.6 260.8 368 220.4 368 175.1C368 78.61 288.9-.2837 191.4 .0132zM192 96.01c-44.13 0-80 35.89-80 79.1C112 184.8 104.8 192 96 192S80 184.8 80 176c0-61.76 50.25-111.1 112-111.1c8.844 0 16 7.159 16 16S200.8 96.01 192 96.01z"></path></svg><!-- <span class="fas fa-lightbulb text-warning"></span> Font Awesome fontawesome.com -->
                                                 P=People/ E=Environment/ R=Reputation/ A=Asset
@@ -3372,7 +3369,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="d-flex justify-content-center align-items-center mb-5">
-                        <h4 class="modal-title mb-0 text-center" id="modalSendMailTeamLabel" style="font-size: 40px; font-weight: bold;">
+                        <h4 class="modal-title mb-0 text-center" id="modalSendMailTeamLabel" style="font-size: 30px; font-weight: bold;">
                             Confirm send email to member review?
                         </h4>
                     </div>
