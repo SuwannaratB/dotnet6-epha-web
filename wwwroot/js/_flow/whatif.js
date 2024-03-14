@@ -955,12 +955,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         var pha_no = conFig.pha_no();
                         var pha_type_doc = "edit";
 
-                        if (conFig.pha_seq() != null) {
-                            pha_seq = arr[0].pha_seq;
-                            pha_no = arr[0].pha_no;
-
-                            $scope.pha_seq = pha_seq;
-                        }
+                        $scope.pha_seq = arr[0].pha_seq;
 
                         var controller_text = "whatif";
 
