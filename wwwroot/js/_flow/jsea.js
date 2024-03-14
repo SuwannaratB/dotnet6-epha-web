@@ -2681,6 +2681,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         var seq_taskdesc = item.seq_taskdesc;
         var seq_potentailhazard = item.seq_potentailhazard;
         var seq_possiblecase = item.seq_possiblecase;
+        var seq_category = item.seq_category;
 
         //กรณีที่เป็นรายการเดียวไม่ต้องลบ ให้ cleare field 
         var arrCheck = [];
