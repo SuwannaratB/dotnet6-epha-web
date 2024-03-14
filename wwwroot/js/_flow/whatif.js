@@ -1188,8 +1188,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     $scope.master_apu = JSON.parse(replace_hashKey_arr(arr.apu));
 
                     $scope.employeelist_def = arr.employee;
+                    // $scope.data_general = arr.general;
+                    $scope.data_general = arr.general.filter((item, index) => index === 0);
 
-                    $scope.data_general = arr.general;
                     //set id to 5 
                     $scope.data_general.forEach(function (item) { item.id_ram = 5; });
 
