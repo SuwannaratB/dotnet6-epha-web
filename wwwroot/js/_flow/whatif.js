@@ -1049,13 +1049,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             user_approver = arr_json[0].user_name;
 
         } else { set_alert('Error', 'No Data.'); return; }
-        var json_drawingapprover = check_data_drawingwapprover(id_session);
+        var json_drawing_approver = check_data_drawing_approver(id_session);
 
         $.ajax({
             url: url_ws + "flow/set_approve",
             data: '{"sub_software":"whatif","user_name":"' + user_name + '","role_type":"' + flow_role_type + '","action":"' + flow_action + '","token_doc":"' + pha_seq + '","pha_status":"' + pha_status + '"'
                 + ',"id_session":"' + id_session + '","seq":"' + seq + '","action_status":"' + action_status + '","comment":"' + comment + '","user_approver":"' + user_approver + '"'
-                + ', "json_drawingapprover": ' + JSON.stringify(json_drawingapprover)
+                + ', "json_drawing_approver": ' + JSON.stringify(json_drawing_approver)
                 + '}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
             beforeSend: function () {
@@ -4406,7 +4406,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         return angular.toJson(arr_json);
     }
 
-    function check_data_drawingwapprover(id_session) {
+    function check_data_drawing_approver(id_session) {
 
         var pha_seq = $scope.data_header[0].seq;
 

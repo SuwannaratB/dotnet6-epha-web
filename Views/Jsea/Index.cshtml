@@ -559,6 +559,7 @@ ng-controller="ctrlAppPage"
                                                                 </div>
 
                                                             </div>
+                                                            <b class="p-0 text-danger"> Note:This JSEA will be approved by AE or AGSI via Safety Permit</b>
                                                         </div>
 
                                                         <div class="row d-flex pt-2 d-none" style="background-color:#F8F8F8; zoom:0.8;">
@@ -636,7 +637,6 @@ ng-controller="ctrlAppPage"
 
                                                             </div>
 
-                                                            <b class="p-0 text-danger"> Note:This JSEA will be approved by AE or AGSI via Safety Permit</b>
                                                         </div>
                                                     </td>
 
@@ -2037,7 +2037,8 @@ ng-controller="ctrlAppPage"
                                                 <td class="align-top white-space-nowrap  text-start">
                                                     <div class="col-md-12 p-1 ps-3 text-start" ng-if="!(item.approver_action_type == 2 || data_header[0].pha_status != 21)   ">
                                                         <div class="form-check form-check-inline cursor-pointer p-0">
-                                                            <span class="fa-solid far fa-file-pdf text-danger" style="font-size:15px;" ng-click="confirmExport('jsea_report','pdf')"></span>
+                                                            <span class="fa-solid far fa-file-pdf text-danger" style="font-size:15px;"
+                                                            ng-click="confirmExport('jsea_report','pdf')"></span>
                                                             <b>
                                                                 JSEA Report
                                                             </b>
@@ -2059,10 +2060,19 @@ ng-controller="ctrlAppPage"
                                                         </div>
                                                     </div>
 
-                                                    <div class="col-md-12 p-1 text-center" ng-if="(item.approver_action_type == 2 || data_header[0].pha_status != 21)">
-                                                        <label class="text-1100 fw-bold ">
-                                                            {{item.action_status =='approve' ? 'Approve' : 'Send back with Comment' }}
-                                                        </label>
+                                                    <div class="col-md-12 p-1 text-start" ng-if="(item.approver_action_type == 2 || data_header[0].pha_status != 21)">
+                                                        <div class="form-check form-check-inline cursor-pointer p-0">
+                                                            <span class="fa-solid far fa-file-pdf text-danger" style="font-size:15px;" 
+                                                            ng-click="confirmExport('jsea_report','pdf')"></span>
+                                                            <b>
+                                                                JSEA Report
+                                                            </b>
+                                                        </div><br />
+                                                         <div class="form-check form-check-inline" >
+                                                            <input class="form-check-input"  type="radio"    disabled  checked  />
+                                                            <label class="form-check-label">  {{item.action_status =='approve' ? 'Approve' : 'Send back with Comment' }}</label>
+                                                        </div>
+
                                                     </div>
 
                                                 </td>
@@ -2083,7 +2093,10 @@ ng-controller="ctrlAppPage"
                                                     </div>
                                                 </td>
                                                 <td class="align-top px-1 text-start" style="min-width:200px;">
-                                              
+                                                      <div class=" p-0 cursor-pointer "
+                                                         ng-repeat="item_x in data_drawing_approver  | filter:{id_approver : item.seq}  ">
+                                                        {{item_x.document_file_size}} xx {{item_x.document_file_name}}  
+                                                    </div>
                                                     <div class=" p-0 cursor-pointer "
                                                          ng-repeat="item_x in data_drawing_approver  | filter:{id_approver : item.seq}  ">
 
@@ -2122,8 +2135,8 @@ ng-controller="ctrlAppPage"
                                                                     </label>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                        @* {{item_x.document_file_size}} *@
+                                                        </div> 
+
                                                         <div class="text-start p-0 cursor-pointer d-flex flex-nowrap" ng-if="item_x.document_file_size>0 ">
                                                             <a class="nametext ms-3 filename-text me-2" ng-click="downloadFile(item_x)">
                                                                 <i class="far fa-file-pdf text-danger"></i> {{(item_x.document_file_size>0? item_x.document_file_name + '('+  item_x.document_file_size + 'KB)' : '')}}
