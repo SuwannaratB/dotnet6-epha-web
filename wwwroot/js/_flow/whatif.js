@@ -263,7 +263,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             const file = fileInput.files[0];
             const fileName = file.name;
             const fileSize = Math.round(file.size / 1024);
-            fileInfoSpan.textContent = `${fileName} (${fileSize} KB)`;
+            let shortenedFileName = fileName.length > 20 ? fileName.substring(0, 20) + '...' : fileName;
+            fileInfoSpan.textContent = `${shortenedFileName} (${fileSize} KB)`;
 
             if (fileName.toLowerCase().indexOf('.pdf') == -1) {
                 fileInfoSpan.textContent = "";
