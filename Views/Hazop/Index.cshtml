@@ -409,7 +409,7 @@
                                                 ng-model="item.functional_location_audition"
                                                 ng-change="actionChange(item,item.seq,'')"
                                                 ng-if="tab_general_active">
-                                            <option value=""></option>
+                                            @* <option value=""></option> *@
                                             <option ng-repeat="item2 in master_functional_audition"
                                                     ng-selected="item.functional_location_audition == item2.name"
                                                     value="{{item2.name}}">
