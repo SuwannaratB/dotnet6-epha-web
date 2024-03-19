@@ -3,12 +3,12 @@
   "WorkspaceRootPath": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{61C78411-B1F3-4F4C-9684-BB0AF4D5DBFB}|dotnet6-epha-web.csproj|c:\\develop drive\\dotnet6-epha-web\\dotnet6-epha-web\\views\\hazop\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{61C78411-B1F3-4F4C-9684-BB0AF4D5DBFB}|dotnet6-epha-web.csproj|solutionrelative:views\\hazop\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{61C78411-B1F3-4F4C-9684-BB0AF4D5DBFB}|dotnet6-epha-web.csproj|c:\\develop drive\\dotnet6-epha-web\\dotnet6-epha-web\\views\\jsea\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{61C78411-B1F3-4F4C-9684-BB0AF4D5DBFB}|dotnet6-epha-web.csproj|solutionrelative:views\\jsea\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{61C78411-B1F3-4F4C-9684-BB0AF4D5DBFB}|dotnet6-epha-web.csproj|c:\\develop drive\\dotnet6-epha-web\\dotnet6-epha-web\\wwwroot\\js\\_flow\\jsea.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{61C78411-B1F3-4F4C-9684-BB0AF4D5DBFB}|dotnet6-epha-web.csproj|solutionrelative:wwwroot\\js\\_flow\\jsea.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     }
   ],
   "DocumentGroupContainers": [
@@ -17,9 +17,23 @@
       "VerticalTabListWidth": 256,
       "DocumentGroups": [
         {
-          "DockedWidth": 26,
-          "SelectedChildIndex": 4,
+          "DockedWidth": 44,
+          "SelectedChildIndex": 0,
           "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\Views\\Jsea\\Index.cshtml",
+              "RelativeDocumentMoniker": "Views\\Jsea\\Index.cshtml",
+              "ToolTip": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\Views\\Jsea\\Index.cshtml",
+              "RelativeToolTip": "Views\\Jsea\\Index.cshtml",
+              "ViewState": "AQIAABgIAAAAAAAAAAAAADAIAAB5AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-03-14T14:44:14.333Z",
+              "IsPinned": true,
+              "EditorCaption": ""
+            },
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
@@ -31,32 +45,24 @@
             {
               "$type": "Bookmark",
               "Name": "ST:129:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
-            },
+            }
+          ]
+        },
+        {
+          "DockedWidth": 8,
+          "SelectedChildIndex": 0,
+          "Children": [
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "Index.cshtml",
-              "DocumentMoniker": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\Views\\Jsea\\Index.cshtml",
-              "RelativeDocumentMoniker": "Views\\Jsea\\Index.cshtml",
-              "ToolTip": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\Views\\Jsea\\Index.cshtml",
-              "RelativeToolTip": "Views\\Jsea\\Index.cshtml",
-              "ViewState": "AQIAACQIAAAAAAAAAAAswC4IAABNAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-03-14T14:44:14.333Z",
-              "IsPinned": true,
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "Index.cshtml",
-              "DocumentMoniker": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\Views\\Hazop\\Index.cshtml",
-              "RelativeDocumentMoniker": "Views\\Hazop\\Index.cshtml",
-              "ToolTip": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\Views\\Hazop\\Index.cshtml",
-              "RelativeToolTip": "Views\\Hazop\\Index.cshtml",
-              "ViewState": "AQIAACcHAAAAAAAAAAASwGoHAABoAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-03-15T02:29:17.601Z",
+              "Title": "jsea.js",
+              "DocumentMoniker": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\wwwroot\\js\\_flow\\jsea.js",
+              "RelativeDocumentMoniker": "wwwroot\\js\\_flow\\jsea.js",
+              "ToolTip": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\wwwroot\\js\\_flow\\jsea.js",
+              "RelativeToolTip": "wwwroot\\js\\_flow\\jsea.js",
+              "ViewState": "AQIAAOEDAAAAAAAAAAAAAPwDAAAIAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2024-03-15T03:13:32.851Z",
               "EditorCaption": ""
             }
           ]

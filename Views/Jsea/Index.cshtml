@@ -399,7 +399,7 @@ ng-controller="ctrlAppPage"
                                                     <div class="btn btn-phoenix ps-3  ">
 
                                                         <span class="mr-3 nametext text-primary" id="filename-template-{{item.seq}}"
-                                                              ng-click="downloadFileUpload(item)">
+                                                              ng-click="downloadFile(item)"> 
                                                             <b>{{(item.file_upload_size>0? item.file_upload_name + '('+  item.file_upload_size + 'KB)' : '')}}</b>
                                                         </span>
                                                         <br ng-if="!(item.file_upload_name =='' || item.file_upload_name == null)">
@@ -409,7 +409,7 @@ ng-controller="ctrlAppPage"
                                                         </label>
                                                         <input type="file" id="uploadfile-{{item.seq}}"
                                                                name="uploadfile{{item.seq}}"
-                                                               onchange="angular.element(this).scope().fileUploadSelect(this)"
+                                                               onchange="angular.element(this).scope().fileUploadSelectTemplate(this)"
                                                                style="display:none" />
 
                                                         <button id="deluploadfile-{{item.seq}}" class="btn btn-link text-danger"
@@ -2095,7 +2095,7 @@ ng-controller="ctrlAppPage"
                                                 <td class="align-top px-1 text-start" style="min-width:200px;">
                                                       <div class=" p-0 cursor-pointer "
                                                          ng-repeat="item_x in data_drawing_approver  | filter:{id_approver : item.seq}  ">
-                                                        {{item_x.document_file_size}} xx {{item_x.document_file_name}}  
+                                                        @* {{item_x.document_file_size}} xx {{item_x.document_file_name}}   *@
                                                     </div>
                                                     <div class=" p-0 cursor-pointer "
                                                          ng-repeat="item_x in data_drawing_approver  | filter:{id_approver : item.seq}  ">
@@ -2244,9 +2244,9 @@ ng-controller="ctrlAppPage"
                                                 <td class="fs--1 align-middle ps-0 py-3">
 
                                                     <div class="cursor-pointer">
-                                                        <span class="fa-solid far fa-file-excel text-success p-2" ng-click="confirmExport('hazop_ram','excel')"></span>
-                                                        <span class="fa-solid far fa-file-pdf text-danger p-2" ng-click="confirmExport('hazop_ram','pdf')"></span>
-                                                        <span class="fa-solid far fa-file-word text-secondary p-2 d-none" ng-click="confirmExport('hazop_ram','word')"></span>
+                                                        <span class="fa-solid far fa-file-excel text-success p-2" ng-click="confirmExport('jsea_ram','excel')"></span>
+                                                        <span class="fa-solid far fa-file-pdf text-danger p-2" ng-click="confirmExport('jsea_ram','pdf')"></span>
+                                                        <span class="fa-solid far fa-file-word text-secondary p-2 d-none" ng-click="confirmExport('jsea_ram','word')"></span>
                                                     </div>
                                                 </td>
                                                 <td class="email align-middle white-space-nowrap text-1000 pe-5">

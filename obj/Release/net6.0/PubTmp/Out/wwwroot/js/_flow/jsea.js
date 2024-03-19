@@ -1138,13 +1138,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             if (arr_json[0].approver_type == 'safety' && flow_action == 'submit') { action_status = 'approve' }
 
         } else { set_alert('Error', 'No Data.'); return; }
-        var json_drawingapprover = check_data_drawingwapprover(id_session);
+        var json_drawing_approver = check_data_drawing_approver(id_session); 
 
         $.ajax({
             url: url_ws + "flow/set_approve",
             data: '{"sub_software":"jsea","user_name":"' + user_name + '","role_type":"' + flow_role_type + '","action":"' + flow_action + '","token_doc":"' + pha_seq + '","pha_status":"' + pha_status + '"'
                 + ',"id_session":"' + id_session + '","seq":"' + seq + '","action_status":"' + action_status + '","comment":"' + comment + '","user_approver":"' + user_approver + '"'
-                + ', "json_drawingapprover": ' + JSON.stringify(json_drawingapprover)
+                + ', "json_drawing_approver": ' + JSON.stringify(json_drawing_approver)
                 + '}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
             beforeSend: function () {
@@ -1167,17 +1167,56 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         apply();
                     }
                     else {
-                        set_alert('Success', 'Data has been successfully submitted.');
 
-                        if (arr[0].pha_status == '13') {
+                        if (arr[0].pha_status == '21') {
                             //กรณีที่ TA2 approve all
-                            window.open('hazop/search', "_top");
+                            //window.open('hazop/search', "_top");
+
+                            var controller_action_befor = conFig.controller_action_befor();
+                            var pha_seq = conFig.pha_seq();
+                            var pha_no = conFig.pha_no();
+                           var pha_type_doc = 'update';
+
+                            var controller_text = "jsea";
+
+                            $.ajax({
+                                url: controller_text + "/set_session_doc",
+                                data: '{"controller_action_befor":"' + controller_action_befor + '","pha_seq":"' + pha_seq + '"'
+                                    + ',"pha_no":"' + pha_no + '","pha_status":"' + pha_status + '","pha_type_doc":"' + pha_type_doc + '"}',
+                                type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+                                beforeSend: function () {
+                                    $("#divLoading").show();
+                                },
+                                complete: function () {
+                                    $("#divLoading").hide();
+                                },
+                                success: function (data) {
+
+                                    get_data_after_save(false, (flow_action == 'submit' ? true : false), $scope.pha_seq);
+
+                                    set_alert('Success', 'Data has been successfully submitted.');
+                                    apply();
+                                },
+                                error: function (jqXHR, textStatus, errorThrown) {
+                                    if (jqXHR.status == 500) {
+                                        alert('Internal error: ' + jqXHR.responseText);
+                                    } else {
+                                        alert('Unexpected ' + textStatus);
+                                    }
+                                }
+
+                            });
+
+
+
+
                         } else if (arr[0].pha_status == '22') {
                             //กรณีที่ TA2 approve reject
                             window.open('hazop/search', "_top");
                         } else if (arr[0].pha_status == '91') {
                             //กรณีที่ approve all
                             window.open('hazop/search', "_top");
+
                         } else {
                             //กรณี TA2 approve some items
                             //ให้ update action_change = 0; 
@@ -2681,6 +2720,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         var seq_taskdesc = item.seq_taskdesc;
         var seq_potentailhazard = item.seq_potentailhazard;
         var seq_possiblecase = item.seq_possiblecase;
+        var seq_category = item.seq_category;
 
         //กรณีที่เป็นรายการเดียวไม่ต้องลบ ให้ cleare field 
         var arrCheck = [];
@@ -2773,7 +2813,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 //เก็บค่า Delete 
                 var arrdelete = $filter('filter')($scope.data_listworksheet, function (item) {
                     return ((item.seq == seq
-                        || (item.seq_possiblecase == seq_possiblecase && item.seq_potentailhazard == seq_potentailhazard && item.seq_taskdesc == seq_taskdesc && item.seq_workstep == seq_workstep))
+                        || (item.seq_possiblecase == seq_possiblecase && item.seq_potentailhazard == seq_potentailhazard
+                            && item.seq_taskdesc == seq_taskdesc && item.seq_workstep == seq_workstep))
                         && item.action_type == 'update');
                 });
                 if (arrdelete.length > 0) { $scope.data_listworksheet_delete.push(arrdelete[0]); }
@@ -2781,7 +2822,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 //เก็บค่า กรองข้อมูลที่เหลือ 
                 $scope.data_listworksheet = $filter('filter')($scope.data_listworksheet, function (item) {
                     return !((item.seq == seq
-                        || (item.seq_possiblecase == seq_possiblecase && item.seq_potentailhazard == seq_potentailhazard && item.seq_taskdesc == seq_taskdesc && item.seq_workstep == seq_workstep))
+                        || (item.seq_possiblecase == seq_possiblecase && item.seq_potentailhazard == seq_potentailhazard
+                            && item.seq_taskdesc == seq_taskdesc && item.seq_workstep == seq_workstep))
                     );
                 });
 
@@ -3958,7 +4000,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         return angular.toJson(arr_json);
     }
 
-    function check_data_drawingwapprover(id_session) {
+    function check_data_drawing_approver(id_session) {
 
         var pha_seq = $scope.data_header[0].seq;
 
