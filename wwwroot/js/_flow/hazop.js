@@ -623,6 +623,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     $scope.clickExportReport = function () {
         $('#modalExportImport').modal('show');
     }
+
     $scope.confirmExport = function (export_report_type, data_type) {
 
         var seq = $scope.data_header[0].seq;
@@ -889,6 +890,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         $scope.exportfile = [{ DownloadPath: '', Name: '' }];
     }
+
     function apply() {
         try {
             if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
@@ -896,6 +898,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
         } catch { }
     }
+
     function replace_hashKey_arr(_arr) {
         var json = JSON.stringify(_arr, function (key, value) {
             if (key === "$$hashKey") {
@@ -905,6 +908,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         });
         return json;
     }
+
     function page_load() {
 
         arr_def();
@@ -984,70 +988,103 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             complete: function () {
                 //$('#modalLoadding').modal('hide');
                 $("#divLoading").hide();
+                $('#modalPleaseRegister').hide();
             },
             success: function (data) {
+                // $.ajax({
+                //     url: controller_text + "/next_page",
+                //     data: '{"pha_seq":"' + parseInt(data[0].pha_seq) + 1 + '","pha_seq":"' + parseInt(data[0].pha_seq) + 1 + '","pha_type_doc":"' + 'edit' + '"'
+                //         + ',"pha_sub_software":"' + controller_text + '","pha_status":"' + pha_status + '"}',
+                //     type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+                //     beforeSend: function () {
+                //         $('#divLoading').show();
+                //     },
+                //     complete: function () {
+                //         $('#divLoading').hide();
+                //     },
+                //     success: function (data) {
+                //         var arr = data;
+                //         window.open(data.page, "_top");
+                //     },
+                //     error: function (jqXHR, textStatus, errorThrown) {
+                //         if (jqXHR.status == 500) {
+                //             alert('Internal error: ' + jqXHR.responseText);
+                //         } else {
+                //             alert('Unexpected ' + textStatus);
+                //         }
+                //     }
+        
+                // });
+
                 var arr = data;
-                if (arr[0].status == 'true') {
-                    $scope.pha_type_doc = 'update';
-                    if (action == 'save' || action == 'submit_moc') {
-
-                        var controller_action_befor = conFig.controller_action_befor();
-                        var pha_seq = conFig.pha_seq();
-                        var pha_no = conFig.pha_no();
-                        var pha_type_doc = "edit";
-
-                        $scope.pha_seq = conFig.pha_seq();
-
-                        var controller_text = "hazop";
-
-                        $.ajax({
-                            url: controller_text + "/set_session_doc",
-                            data: '{"controller_action_befor":"' + controller_action_befor + '","pha_seq":"' + pha_seq + '"'
-                                + ',"pha_no":"' + pha_no + '","pha_status":"' + pha_status + '","pha_type_doc":"' + pha_type_doc + '"}',
-                            type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
-                            beforeSend: function () {
-                                $("#divLoading").show();
-                            },
-                            complete: function () {
-                                $("#divLoading").hide();
-                            },
-                            success: function (data) {
-
-                                get_data_after_save(false, (flow_action == 'submit' ? true : false), $scope.pha_seq);
-
-                                set_alert('Success', 'Data has been successfully saved.');
-                                apply();
-                            },
-                            error: function (jqXHR, textStatus, errorThrown) {
-                                if (jqXHR.status == 500) {
-                                    alert('Internal error: ' + jqXHR.responseText);
-                                } else {
-                                    alert('Unexpected ' + textStatus);
-                                }
-                            }
-
-                        });
+                // if (data) {
+                //     console.log(data)
+                //     $scope.pha_type_doc = 'edit';
+                //     const pha_seq = parseInt(data[0].pha_seq) + 1;
+                //     call_api_load(true, false, conFig.user_name(), pha_seq);
+                // } else {
+                //     set_alert('Error', arr[0].status);
+                //     apply();
+                // }
 
 
+                    // $scope.pha_type_doc = 'edit';
+                    // if (true) {
+                    //     var controller_action_befor = conFig.controller_action_befor();
+                    //     var pha_seq = conFig.pha_seq();
+                    //     var pha_no = conFig.pha_no();
+                    //     var pha_type_doc = "edit";
+                    //     var controller_text = "hazop";
+                    //     $scope.pha_type_doc = 'edit';
+                    //     $.ajax({
+                    //         url: controller_text + "/set_session_doc",
+                    //         data: '{"controller_action_befor":"' + controller_action_befor + '","pha_seq":"' + pha_seq + '"'
+                    //             + ',"pha_no":"' + pha_no + '","pha_status":"' + pha_status + '","pha_type_doc":"' + pha_type_doc + '"}',
+                    //         type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+                    //         beforeSend: function () {
+                    //             $("#divLoading").show();
+                    //         },
+                    //         complete: function () {
+                    //             $("#divLoading").hide();
+                    //         },
+                    //         success: function (data) {
+                    //             get_data_after_save(false, (flow_action == 'submit' ? true : false), $scope.pha_seq);
+                    //             set_alert('Success', 'Data has been successfully saved.');
+                    //             apply();
+                    //             window.location.reload();
+                    //         },
+                    //         error: function (jqXHR, textStatus, errorThrown) {
+                    //             if (jqXHR.status == 500) {
+                    //                 alert('Internal error: ' + jqXHR.responseText);
+                    //             } else {
+                    //                 alert('Unexpected ' + textStatus);
+                    //             }
+                    //         }
+                    //     });
+                    // }
+                    // else if (flow_action == "confirm_submit_genarate" || flow_action == "confirm_submit_genarate_without") {
+                    //     set_alert('Success', 'Data has been successfully generated for the Full Report.');
+                    //     window.open('hazop/search', "_top");
+                    //     return;
+                    // }
+                    // else {
+                    //     set_alert('Success', 'Data has been successfully submitted.');
+                    //     window.open('hazop/search', "_top");
+                    //     return;
+                    // }
+
+                    if (data[0]) {
+                        var user_name = conFig.user_name();
+                        var pha_seq = data[0].pha_seq
+                        $scope.pha_type_doc = "edit";
+                        console.log('user_name ==> ',user_name)
+                        console.log('pha_seq ==> ', pha_seq)
+                        console.log('pha_type_doc ==> ',  $scope.pha_type_doc)
+                        arr_def();
+                        // get_data(false, false);
+                        call_api_load(false, false, user_name, pha_seq)
                     }
-                    else if (flow_action == "confirm_submit_genarate" || flow_action == "confirm_submit_genarate_without") {
-
-                        set_alert('Success', 'Data has been successfully generated for the Full Report.');
-                        window.open('hazop/search', "_top");
-                        return;
-                    }
-                    else {
-
-                        set_alert('Success', 'Data has been successfully submitted.');
-                        // window.open('hazop/search', "_top");
-                        console.log(pha_status)
-                        return;
-                    }
-                }
-                else {
-                    set_alert('Error', arr[0].status);
-                    apply();
-                }
+           
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 if (jqXHR.status == 500) {
@@ -1060,6 +1097,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         });
 
     }
+
     function save_data_approver(action) {
 
         var user_name = $scope.user_name;
@@ -1172,14 +1210,28 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         call_api_load(page_load, action_submit, user_name, pha_seq);
     }
+    
     function get_data_after_save(page_load, action_submit, pha_seq) {
         var user_name = conFig.user_name();
         call_api_load(false, action_submit, user_name, pha_seq);
     }
+
+    // function get_data_after_save(pha_seq) {
+    //     console.log('user_name', conFig.user_name())
+    //     console.log('pha_seq', pha_seq)
+    //     call_api_load(true, false, user_name, pha_seq);
+    // }
+
     function call_api_load(page_load, action_submit, user_name, pha_seq) {
-
         var type_doc = $scope.pha_type_doc;//review_document
-
+        if (pha_seq) {
+            type_doc = 'edit';
+        }
+        console.log('user_name',user_name)
+        console.log('pha_seq',pha_seq)
+        console.log('action_submit',action_submit)
+        console.log('page_load',page_load)
+        console.log('type_doc',type_doc)
         $.ajax({
             url: url_ws + "Flow/get_hazop_details",
             data: '{"sub_software":"hazop","user_name":"' + user_name + '","token_doc":"' + pha_seq + '","type_doc":"' + type_doc + '"}',
@@ -2986,6 +3038,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         $('#modalNewRAM').modal('show');
     };
+
     $scope.confirmAddRAM = function () {
         $('#modalNewRAM').modal('show');
         //$scope.ram_rows_level = 4;
@@ -3747,6 +3800,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.Attendees.splice(index, 1);
         }
     };
+
     $scope.Specialist = [];
 
     $scope.showSelectedDataSpecialist = function () {
@@ -3761,6 +3815,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.Specialist.splice(index, 1);
         }
     };
+
     $scope.selectReviewer = function (item) {
         $scope.selectedDataReviewer = item;
     }
@@ -4017,6 +4072,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
 
     }
+
     $scope.confirmMailtoMemberReview = function (action) {
 
         if (action == 'submit') {
@@ -4070,11 +4126,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $('#modalSendMailTeam').modal('hide');
         }
     }
+
     $scope.confirmCancle = function () {
         $scope.Action_Msg_Confirm = true;
 
         set_alert_confirm('Confirm canceling the PHA No.', '');
     }
+
     $scope.confirmSave = function (action) {
 
         //check required field 
@@ -4297,6 +4355,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         save_data_create(action);
 
     }
+
     $scope.confirmDialogApprover = function (_item, action) {
 
         var arr_chk = _item;
@@ -4340,11 +4399,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         } catch (ex) { }
     }
+
     function clear_valid_items(field) {
         //valid-nodeworksheet-responder-{{item.seq}}  --> -nodeworksheet-responder-{{item.seq}} 
         var id_valid = document.getElementById('valid-' + field);
         id_valid.className = "invalid-feedback text-danger";
     }
+    
     $scope.confirmSubmit = function (action) {
         $scope.Action_Msg_Confirm = false;
         if (action == 'no') {
@@ -4371,6 +4432,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.data_general[0].actual_end_date = $scope.data_general[0].actual_end_date.toISOString().split('T')[0];
         } catch { }
     }
+
     function check_master_ram() {
         // return angular.toJson($scope.master_ram);
         var arr_active = [];
@@ -4380,6 +4442,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         });
         return angular.toJson(arr_json);
     }
+
     function check_data_functional_audition() {
         //functional_location_audition
         var pha_seq = $scope.data_header[0].seq;
@@ -4408,6 +4471,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         return angular.toJson(arr_json);
     }
+
     function check_data_session() {
 
         var pha_seq = $scope.data_header[0].seq;
@@ -4443,6 +4507,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
         return angular.toJson(arr_json);
     }
+
     function check_data_memberteam() {
 
         var pha_seq = $scope.data_header[0].seq;
@@ -4496,6 +4561,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
         return angular.toJson(arr_json);
     }
+
     function check_data_approver() {
 
         var pha_seq = $scope.data_header[0].seq;
@@ -4548,6 +4614,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
         return angular.toJson(arr_json);
     }
+
     function check_data_drawing() {
 
         var pha_seq = $scope.data_header[0].seq;
@@ -4567,6 +4634,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
         return angular.toJson(arr_json);
     }
+
     function check_data_node() {
 
         var pha_seq = $scope.data_header[0].seq;
@@ -4586,6 +4654,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
         return angular.toJson(arr_json);
     }
+
     function check_data_nodedrawing() {
 
         var pha_seq = $scope.data_header[0].seq;
@@ -4605,6 +4674,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
         return angular.toJson(arr_json);
     }
+
     function check_data_nodeguidwords() {
 
         var pha_seq = $scope.data_header[0].seq;
@@ -4624,6 +4694,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
         return angular.toJson(arr_json);
     }
+
     function check_data_nodeworksheet() {
 
         var pha_status = $scope.data_header[0].pha_status;
@@ -4663,6 +4734,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         return angular.toJson(arr_json);
     }
+
     function check_data_ram_level() {
 
         //return angular.toJson($scope.master_ram_level);
@@ -4704,8 +4776,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         return angular.toJson(arr_json);
     }
-
-
 
     function set_alert(header, detail) {
         $scope.Action_Msg_Header = header;
@@ -4755,6 +4825,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         apply();
     }
+
     $scope.actionChangeNodeDrawing = function (_arr, _seq) {
         action_type_changed(_arr, _seq);
 
@@ -4781,6 +4852,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
         }
     }
+
     $scope.actionChangeWorksheet = function (_arr, _seq, type_text) {
 
         if (_arr.recommendations == null || _arr.recommendations == '') {
@@ -4801,6 +4873,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         if (arr_submit.length > 0) { $scope.submit_type = true; } else { $scope.submit_type = false; }
 
     }
+
     function action_type_changed(_arr, _seq) {
         if (_seq == undefined) { _seq = 1; }
         if (_arr.seq == _seq && _arr.action_type == '') {
@@ -4937,11 +5010,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         });
     };
 
-
     $scope.fillTextbox = function (string) {
         $scope.members = string;
         $scope.hidethis = true;
     }
+
     $scope.toggleResultsVisibility = function () {
         $scope.showResults = false;
         $scope.isShow = '';
@@ -4981,6 +5054,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         //alert($scope.selectDatFormType);
         $('#modalEmployeeAdd').modal('show');
     };
+
     $scope.fillterDataEmployeeAdd = function () {
         $scope.employeelist_show = [];
         var searchText = $scope.searchText;
@@ -5000,6 +5074,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         apply();
         $('#modalEmployeeAdd').modal('show');
     };
+
     $scope.choosDataEmployee = function (item) {
 
         var id = item.id;
@@ -5101,6 +5176,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $('#modalEmployeeAdd').modal('show');
         }
     };
+
     $scope.removeDataEmployee = function (seq, seq_session) {
 
         var arrdelete = $filter('filter')($scope.data_memberteam, function (item) {
@@ -5127,6 +5203,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         running_no_level1($scope.data_memberteam, null, null);
         apply();
     };
+
     $scope.applyDataEmployeeAdd = function () {
 
         // alert(xformtype);
@@ -5153,7 +5230,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         apply();
         $('#modalEmployeeAdd').modal('hide');
     };
-
 
     $scope.downloadFileReviewer = function (item) {
 
@@ -5184,6 +5260,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             apply();
         }
     }
+
     $scope.downloadFileOwner = function (item) {
         //  alert(1);
         $scope.id_worksheet_select = item.seq;
@@ -5241,6 +5318,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
         apply();
     }
+
     $scope.removeDataApproverDrawing = function (item_draw, seq_approver) {
         var user_name = $scope.user_name;
         var seq = item_draw.seq;
@@ -5263,6 +5341,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         clear_form_valid();
 
     }
+
     function clear_form_valid() {
         $scope.id_approver_select = null;
         $scope.form_valid = { valid_document_file: false };
