@@ -235,7 +235,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             const file = fileInput.files[0];
             const fileName = file.name;
             const fileSize = Math.round(file.size / 1024);
-            fileInfoSpan.textContent = `${fileName} (${fileSize} KB)`;
+            //fileInfoSpan.textContent = `${fileName} (${fileSize} KB)`;
+
+            let shortenedFileName = fileName.length > 20 ? fileName.substring(0, 20) + '...' : fileName;
+            fileInfoSpan.textContent = `${shortenedFileName} (${fileSize} KB)`;
+
 
             if (fileName.toLowerCase().indexOf('.xlsx') == -1) {
                 fileInfoSpan.textContent = "";
@@ -364,7 +368,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             const fileName = file.name;
             const fileSize = Math.round(file.size / 1024);
             try {
-                fileInfoSpan.textContent = `${fileName} (${fileSize} KB)`;
+                //fileInfoSpan.textContent = `${fileName} (${fileSize} KB)`;
+
+
+                let shortenedFileName = fileName.length > 20 ? fileName.substring(0, 20) + '...' : fileName;
+                fileInfoSpan.textContent = `${shortenedFileName} (${fileSize} KB)`;
+
+
             } catch { }
             if (file) {
                 const allowedFileTypes = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'jpg', 'png', 'gif']; // รายการของประเภทของไฟล์ที่อนุญาตให้แนบ
@@ -399,7 +409,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             const file = fileInput.files[0];
             const fileName = file.name;
             const fileSize = Math.round(file.size / 1024);
-            fileInfoSpan.textContent = `${fileName} (${fileSize} KB)`;
+            //fileInfoSpan.textContent = `${fileName} (${fileSize} KB)`;
+
+            let shortenedFileName = fileName.length > 20 ? fileName.substring(0, 20) + '...' : fileName;
+            fileInfoSpan.textContent = `${shortenedFileName} (${fileSize} KB)`;
+
 
             if (fileName.toLowerCase().indexOf('.pdf') == -1) {
                 fileInfoSpan.textContent = "";
@@ -716,13 +730,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         var action_export_report_type = "export_template_jsea";
         var data_type = "template";
+        var ram_type = $scope.data_general[0].id_ram;
 
         //$scope.confirmExport('jsea_worksheet', 'excel');
         //return;
 
         $.ajax({
             url: url_ws + "Flow/" + action_export_report_type,
-            data: '{"sub_software":"jsea","user_name":"' + user_name + '","seq":"' + seq + '","export_type":"' + data_type + '"}',
+            data: '{"sub_software":"jsea","user_name":"' + user_name + '","seq":"' + seq + '","export_type":"' + data_type + '","ram_type":"' + ram_type + '"}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
             beforeSend: function () {
                 //$('#modalLoadding').modal('show');
@@ -987,7 +1002,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         get_data(true, false);
     }
 
-    function save_data_create(action) {
+    function save_data_create(action, action_def) {
 
         check_data_general();
         check_data_tagid_audition();
@@ -1050,7 +1065,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                 if (arr[0].status == 'true') {
                     $scope.pha_type_doc = 'update';
-                    if (action == 'save') {
+                    if (action == 'save' || action == 'submit_moc'
+                        || action_def == "confirm_submit_register"
+                        || action_def == "confirm_submit_register_without") {
 
                         var controller_action_befor = conFig.controller_action_befor();
                         var pha_seq = arr[0].pha_seq;
@@ -1133,13 +1150,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
 
                     }
-
-                    else if (flow_action == "confirm_submit_genarate" || flow_action == "confirm_submit_genarate_without") {
-
-                        set_alert('Success', 'Data has been successfully generated for the Full Report.');
-                        window.open('hazop/search', "_top");
-                        return;
-                    }
+                     
                     else {
 
                         set_alert('Success', 'Data has been successfully submitted.');
@@ -1379,8 +1390,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     $scope.employeelist_def = arr.employee;
                     arr.general[0].input_type_excel = (arr.general[0].input_type_excel == null ? 0 : arr.general[0].input_type_excel);
                     $scope.data_general = arr.general;
-                   
-                    //$scope.data_general.forEach(function (item) { item.id_ram = 5; });
+
+                    //set id to 5 
+                    $scope.data_general.forEach(function (item) {
+                        item.id_ram = (item.id_ram == null ? 4 : item.id_ram);
+                    });
+
 
                     $scope.data_tagid_audition = arr.tagid_audition;
 
@@ -1456,7 +1471,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 $scope.data_relatedpeople_outsider_delete = [];
                 $scope.data_drawing_delete = [];
                 $scope.data_listworksheet_delete = [];
-                $scope.flow_role_type = conFig.role_type();// "admin";//admin,request,responder,approver
+                try {
+                    $scope.flow_role_type = conFig.role_type();// "admin";//admin,request,responder,approver
+                    if (arr.header[0].pha_request_by.toLowerCase() == $scope.user_name.toLowerCase()) {
+                        $scope.flow_role_type = 'admin';
+                        conFig.role_type = 'admin';
+                    }
+                } catch { }
                 $scope.flow_status = 0;
 
                 //แสดงปุ่ม
@@ -2911,11 +2932,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 });
             }
         }
-
-
-
-
-
+         
         running_no_format_2($scope.data_listworksheet, 1, 0, null);
         if (row_type == "workstep") {
             running_no_workstep();
@@ -3592,6 +3609,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
 
         //action after confirm 
+        var action_def = action; 
         if (true) {
             if (action == 'confirm_submit_register') {
                 $scope.Action_Msg_Confirm = true;
@@ -3639,7 +3657,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         //check requie Field 
         if (action == 'confirm_submit_genarate'
-            || action == 'confirm_submit_genarate_without') {
+            || action == 'confirm_submit_genarate_without'
+            || action == 'submit'
+            || action == 'submit_without') {
             $('#modalPleaseRegister').modal('hide');
         } else if (action == 'confirm_submit_approver') {
             $('#modalSendMailApprover').modal('hide');
@@ -3670,7 +3690,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
         }
 
-        save_data_create(action);
+        save_data_create(action, action_def);
 
 
     }
@@ -3728,7 +3748,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $('#modalMsg').modal('hide');
             return;
         }
-        save_data_create("submit");
+        save_data_create("submit","submit");
     }
     $scope.showHistory = false;
 
@@ -4310,6 +4330,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.members = string;
         $scope.hidethis = true;
     }
+    $scope.toggleResultsVisibility = function () {
+        $scope.showResults = false;
+        $scope.isShow = '';
+    };
     //end functioin show history data ของแต่ละ field
 
     // <==== start Popup Employee ของ Member team==== >

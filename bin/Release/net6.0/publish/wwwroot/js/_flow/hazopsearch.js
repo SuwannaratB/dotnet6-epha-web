@@ -85,7 +85,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                 sub_software = $scope.data_conditions[0].pha_sub_software;
             }
         } catch { }
-         
+
         //alert((sub_software == 'WHAT\'S IF' ? 'WHATIF' : sub_software));
 
         $.ajax({
@@ -110,14 +110,20 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
                 setTimeout(function () { var v = 0; }, 10000);
 
-                if (page_load) {
-                    $scope.data_all = arr;
-                    //apu, business_unit, unit_no, functional, approver, company, toc, tagid
-                    $scope.master_apu = JSON.parse(replace_hashKey_arr(arr.apu));
+                $scope.master_business_unit = null;
+                $scope.master_unit_no = null;
+
+                $scope.data_all = arr;
+                //apu, business_unit, unit_no, functional, approver, company, toc, tagid
+                $scope.master_apu = JSON.parse(replace_hashKey_arr(arr.apu));
+                $scope.master_unit_no = JSON.parse(replace_hashKey_arr(arr.unit_no));
+                if (arr.business_unit != null) {
                     $scope.master_business_unit = JSON.parse(replace_hashKey_arr(arr.business_unit));
-                    $scope.master_unit_no = JSON.parse(replace_hashKey_arr(arr.unit_no));
                     $scope.master_functional = JSON.parse(replace_hashKey_arr(arr.functional));
-                    $scope.master_approver = JSON.parse(replace_hashKey_arr(arr.approver));
+                }
+                //$scope.master_approver = JSON.parse(replace_hashKey_arr(arr.approver));
+
+                if (sub_software == "JSEA") {
                     try {
                         $scope.master_company = JSON.parse(replace_hashKey_arr(arr.company));
                         $scope.master_toc = JSON.parse(replace_hashKey_arr(arr.toc));
@@ -151,6 +157,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                 $scope.search_type = true;
                 $scope.clear_type = true;
 
+
                 $scope.master_unit_no_show = $filter('filter')($scope.master_unit_no, function (item) { return (item.id_apu == $scope.master_apu[0].id); });
 
                 if ($scope.data_conditions[0].master_apu == null || $scope.data_conditions[0].master_apu == '') {
@@ -158,25 +165,27 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                     var arr_clone_def = { id: $scope.data_conditions[0].master_apu, name: 'Please select' };
                     $scope.master_apu.splice(0, 0, arr_clone_def);
                 }
-                if ($scope.data_conditions[0].master_functional == null || $scope.data_conditions[0].master_functional == '') {
-                    $scope.data_conditions[0].master_functional = null;
-                    var arr_clone_def = { id: $scope.data_conditions[0].master_functional, name: 'Please select' };
-                    $scope.master_functional.splice(0, 0, arr_clone_def);
-                }
-                if ($scope.data_conditions[0].id_business_unit == null) {
-                    $scope.data_conditions[0].id_business_unit = null;
-                    var arr_clone_def = { id: $scope.data_conditions[0].id_business_unit, name: 'Please select' };
-                    $scope.master_business_unit.splice(0, 0, arr_clone_def);
-                }
                 if ($scope.data_conditions[0].master_unit_no == null || $scope.data_conditions[0].master_unit_no == '') {
                     $scope.data_conditions[0].master_unit_no = null;
                     var arr_clone_def = { id: $scope.data_conditions[0].master_unit_no, name: 'Please select' };
                     $scope.master_unit_no.splice(0, 0, arr_clone_def);
                 }
-                if ($scope.data_conditions[0].master_approver == null || $scope.data_conditions[0].master_approver == '') {
-                    $scope.data_conditions[0].master_approver = null;
-                    var arr_clone_def = { id: $scope.data_conditions[0].master_approver, name: 'Please select' };
-                    $scope.master_approver.splice(0, 0, arr_clone_def);
+
+                if (sub_software == "JSEA") {
+
+                } else if (sub_software == "HRA") {
+
+                } else {
+                    if ($scope.data_conditions[0].master_functional == null || $scope.data_conditions[0].master_functional == '') {
+                        $scope.data_conditions[0].master_functional = null;
+                        var arr_clone_def = { id: $scope.data_conditions[0].master_functional, name: 'Please select' };
+                        $scope.master_functional.splice(0, 0, arr_clone_def);
+                    }
+                    if ($scope.data_conditions[0].id_business_unit == null) {
+                        $scope.data_conditions[0].id_business_unit = null;
+                        var arr_clone_def = { id: $scope.data_conditions[0].id_business_unit, name: 'Please select' };
+                        $scope.master_business_unit.splice(0, 0, arr_clone_def);
+                    }
                 }
 
                 apply();
@@ -208,7 +217,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
     }
     $scope.SubSoftwateChange = function () {
+        //alert($scope.data_conditions[0].pha_sub_software);
+
+        $scope.data_conditions[0].pha_sub_software =
+            ($scope.data_conditions[0].pha_sub_software == "WHAT'S IF" ? 'WHATIF' : $scope.data_conditions[0].pha_sub_software);
+
         get_data(false, false);
+
     }
     $scope.selectDoc = function (item) {
 
@@ -230,7 +245,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                         (item.pha_sub_software == null ? 'x' : _item.pha_sub_software).toLowerCase() == (item.pha_sub_software == null ? 'x' : item.pha_sub_software).toLowerCase()
                         && (item.expense_type == null ? 'x' : _item.expense_type).toLowerCase() == (item.expense_type == null ? 'x' : item.expense_type).toLowerCase()
                         && (item.sub_expense_type == null ? 'x' : _item.sub_expense_type) == (item.sub_expense_type == null ? 'x' : item.sub_expense_type)
-                        //&& (item.reference_moc == null ? 'x' : _item.reference_moc).includes((item.reference_moc == null ? 'x' : item.reference_moc))
                         && (item.project_no == null ? 'x' : _item.pha_no).includes((item.project_no == null ? 'x' : item.project_no))
                         && (item.pha_request_name == null ? 'x' : _item.pha_request_name).includes((item.pha_request_name == null ? 'x' : item.pha_request_name))
                         && (item.id_apu == null ? true : _item.id_apu == item.id_apu)
@@ -240,6 +254,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                         && (item.expense_type == 'CAPEX' && item.sub_expense_type == 'Normal' ?
                             (item.approver_user_name == null ? 'x' : _item.approver_user_name)
                             == (item.approver_user_name == null ? 'x' : item.approver_user_name) : true)
+                        && (item.emp_active_search == null ? 'x' : _item.emp_active_search).includes((item.emp_active_search == null ? 'x' : item.emp_active_search))
+
                     );
                 });
             $scope.data_results = arr_search;
@@ -259,6 +275,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
     }
     function next_page(controller_text, pha_status) {
         controller_text = controller_text.toLowerCase();
+        console.log('controller_text',controller_text)
+        console.log('conFig.pha_seq',conFig.pha_seq)
+        console.log('conFig.pha_type_do',conFig.pha_type_doc)
+        console.log('pha_status',pha_status)
 
         $.ajax({
             url: controller_text + "/next_page",
@@ -317,11 +337,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             dropdown.style.display = 'none';
         }
     };
-    $scope.confirmExport = function (seq, sub_software, data_type) {
+    $scope.confirmExport = function (_item, data_type) {
 
-        var user_name = $scope.user_name;
-        sub_software = $scope.conditions[0].pha_sub_software.toLowerCase();
-
+        var user_name = ($scope.user_name + '');
+        var seq = _item.seq;
+        var sub_software = _item.pha_sub_software;
 
         $.ajax({
             url: url_ws + "Flow/export_" + sub_software + "_report",

@@ -353,7 +353,6 @@ namespace dotnet6_epha_web.Controllers
             ViewData["controller_action_befor"] = _sessionAuthen.controller_action_befor;
             ViewData["service_api_url"] = _sessionAuthen.service_api_url;
 
-
             LoginViewModel res_page = new LoginViewModel();
             res_page.msg = "";
             return Ok(res_page);

@@ -9,8 +9,8 @@ AppMenuPage.filter('MultiFieldFilter', function () {
 
         return items.filter(function (item) {
             return (
-                item.document_number.toLowerCase().includes(searchText.toLowerCase())  )
-           
+                item.document_number.toLowerCase().includes(searchText.toLowerCase()))
+
         });
     };
 });
@@ -40,7 +40,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         }
     };
 
-    var url_ws = conFig.service_api_url(); 
+    var url_ws = conFig.service_api_url();
 
     function apply() {
         try {
@@ -131,7 +131,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         } else {
             $scope.task_up = true;
             $scope.due_date_sort_by = '-task'; // เรียงลำดับเริ่มต้นตาม due_date
-        } 
+        }
         apply();
     }
     $scope.due_date_sort = function () {
@@ -162,7 +162,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         $scope.pha_seq = item.id_pha;
         $scope.pha_type_doc = 'followup';
 
-        next_page(controller_text, '');
+        next_page(controller_text, '', item.user_name);
     }
     $scope.editActionReviewFollowup = function (item) {
         //open document 
@@ -234,17 +234,22 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
         $('#modalMsgConfirmApprove').modal('hide');
     }
-    function next_page(controller_text, pha_status) {
+    function next_page(sub_software, pha_status, responder_user_name) {
 
-        controller_text = controller_text.toLowerCase();
+        //controller_text = controller_text.toLowerCase();
         var pha_seq = $scope.pha_seq;
         var pha_type_doc = $scope.pha_type_doc;
 
+
         $.ajax({
-            url:   "home/next_page",
+            url: "home/next_page",
             data: '{"pha_seq":"' + pha_seq + '","pha_type_doc":"' + pha_type_doc + '"'
-                + ',"pha_sub_software":"' + controller_text + '","pha_status":"' + pha_status + '"}',
+                + ',"pha_sub_software":"' + sub_software + '","pha_status":"' + pha_status + '"'
+                + ',"responder_user_name":"' + responder_user_name + '"'
+                + ',"controller_action_befor":"home/hometasks"'
+                + '}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+
             beforeSend: function () {
                 $("#divLoading").show();
             },
@@ -270,30 +275,16 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         window.open(page, "_top")
     }
     $scope.confirmExport = function (item, data_type) {
-         
-        var export_report_type = (item.pha_type == 'HAZOP' ? 'hazop_report'
-            : (item.pha_type == 'JSEA' ? 'jsea_report'
-                : 'whatif_report'));
+
+        var sub_software = (item.pha_type == 'HAZOP' ? 'hazop'
+            : (item.pha_type == 'JSEA' ? 'jsea'
+                : 'whatif'));
 
         var seq = item.id_pha;
         var user_name = $scope.user_name;
 
-        var action_export_report_type = "hazop_report";
-
-        if (export_report_type == "hazop_report") {
-            action_export_report_type = "export_hazop_report";
-        } else if (export_report_type == "hazop_worksheet") {
-            action_export_report_type = "export_hazop_worksheet";
-        } else if (export_report_type == "hazop_recommendation") {
-            action_export_report_type = "export_hazop_recommendation";
-        } else if (export_report_type == "hazop_ram") {
-            action_export_report_type = "export_hazop_ram";
-        } else if (export_report_type == "hazop_guidewords") {
-            action_export_report_type = "export_hazop_guidewords";
-        } else {
-            return;
-        }
-
+        var action_export_report_type = "export_" + sub_software + "_report";
+          
         $.ajax({
             url: url_ws + "Flow/" + action_export_report_type,
             data: '{"sub_software":"hazop","user_name":"' + user_name + '","seq":"' + seq + '","export_type":"' + data_type + '"}',
@@ -317,7 +308,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                         $scope.exportfile[0].Name = name;
 
 
-                        $('#modalExportFile').modal('show'); 
+                        $('#modalExportFile').modal('show');
                         apply();
                     }
                 } else {

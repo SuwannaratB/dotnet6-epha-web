@@ -416,8 +416,7 @@ namespace dotnet6_epha_web.Controllers
             _sessionAuthen.pha_seq = model.pha_seq;
             _sessionAuthen.pha_no = model.pha_no;
             _sessionAuthen.pha_status = model.pha_status;
-            _sessionAuthen.pha_type_doc = model.pha_type_doc;
-
+            _sessionAuthen.pha_type_doc = model.pha_type_doc; 
 
             ViewData["user_display"] = _sessionAuthen.user_display;
             ViewData["user_name"] = _sessionAuthen.user_name;

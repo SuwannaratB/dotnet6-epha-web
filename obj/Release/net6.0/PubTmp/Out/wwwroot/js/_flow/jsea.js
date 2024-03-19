@@ -224,7 +224,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
 
 
-    $scope.fileUploadSelect = function (input) {
+    $scope.fileUploadSelectTemplate = function (input) {
 
         var file_doc = $scope.data_header[0].pha_no;
         const fileInput = input;
@@ -259,21 +259,78 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 request.onreadystatechange = function () {
                     if (request.readyState === XMLHttpRequest.DONE) {
                         if (request.status === 200) {
+
                             // รับค่าที่ส่งมาจาก service ที่ตอบกลับมาด้วย responseText
                             const responseFromService = request.responseText;
-                            // ทำอะไรกับข้อมูลที่ได้รับเช่น แสดงผลหรือประมวลผลต่อไป
-                            console.log(responseFromService);
+                            const array = JSON.parse(responseFromService);
+                            if (true) {
+                                var file_name = array.msg[0].ATTACHED_FILE_NAME;
+                                var file_path = array.msg[0].ATTACHED_FILE_PATH;
 
-                            const jsonArray = JSON.parse(responseFromService);
+                                $scope.data_general[0].file_upload_name = file_name;
+                                $scope.data_general[0].file_upload_size = fileSize;
+                                $scope.data_general[0].file_upload_path = (url_ws.replace('/api/', '')) + file_path;
+                                $scope.data_general[0].action_change = 1;
+                            }
 
-                            var file_name = jsonArray[0].ATTACHED_FILE_NAME;
-                            var file_path = jsonArray[0].ATTACHED_FILE_PATH;
+                            if (array.max) {
 
-                            $scope.data_general[0].file_upload_name = file_name;
-                            $scope.data_general[0].file_upload_size = fileSize;
-                            $scope.data_general[0].file_upload_path = (url_ws.replace('/api/', '')) + file_path;
-                            $scope.data_general[0].action_change = 1;
+                                var arr = $filter('filter')(array.max, function (item) { return (item.name == 'memberteam'); });
+                                var iMaxSeq = 1; if (arr.length > 0) { iMaxSeq = arr[0].values; }
+                                $scope.MaxSeqDataMemberteam = iMaxSeq;
+
+                                $scope.MaxSeqdata_approver = 0;
+                                var arr_check = $filter('filter')(array.max, function (item) { return (item.name == 'approver'); });
+                                var iMaxSeq = 1; if (arr_check.length > 0) { iMaxSeq = arr_check[0].values; }
+                                $scope.MaxSeqdata_approver = iMaxSeq;
+
+                                var arr = $filter('filter')(array.max, function (item) { return (item.name == 'tasks_worksheet'); });
+                                var iMaxSeq = 1; if (arr.length > 0) { iMaxSeq = arr[0].values; }
+                                $scope.MaxSeqdata_listworksheet = iMaxSeq;
+
+
+                            }
+                            if (true) {
+
+                                var id_session = $scope.selectdata_session;
+
+                                if (array.memberteam) {
+                                    $scope.data_memberteam_old = [];
+                                    angular.copy($scope.data_memberteam, $scope.data_memberteam_old);
+
+                                    array.memberteam.forEach(function (member) {
+                                        member.id_session = id_session; // newValue คือค่าที่คุณต้องการให้ id_session อัปเดตเป็น
+                                    });
+
+                                    $scope.data_memberteam = array.memberteam; 
+                                    
+                                }
+                                if (array.approver) {
+                                    $scope.data_approver_old = [];
+                                    angular.copy($scope.data_approver, $scope.data_approver_old);
+
+                                    array.approver.forEach(function (approver) {
+                                        approver.id_session = id_session; // newValue คือค่าที่คุณต้องการให้ id_session อัปเดตเป็น
+                                    });
+
+                                    $scope.data_approver = array.approver; 
+
+                                }
+                                if (array.tasks_worksheet) {
+                                    //old data 
+                                    angular.copy($scope.data_listworksheet, $scope.data_listworksheet_delete);
+
+                                    $scope.data_listworksheet = JSON.parse(replace_hashKey_arr(array.tasks_worksheet));
+                                    $scope.data_listworksheet_def = clone_arr_newrow(array.tasks_worksheet);
+
+                                }
+                            } 
+
                             apply();
+
+
+
+
                             //set_alert('Warning', "Upload Data Success.");
                             $('#modalMsgFile').modal('show');
                         } else {
@@ -659,10 +716,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         var action_export_report_type = "export_template_jsea";
         var data_type = "template";
+        var ram_type = $scope.data_general[0].id_ram;
+
+        //$scope.confirmExport('jsea_worksheet', 'excel');
+        //return;
 
         $.ajax({
             url: url_ws + "Flow/" + action_export_report_type,
-            data: '{"sub_software":"jsea","user_name":"' + user_name + '","seq":"' + seq + '","export_type":"' + data_type + '"}',
+            data: '{"sub_software":"jsea","user_name":"' + user_name + '","seq":"' + seq + '","export_type":"' + data_type + '","ram_type":"' + ram_type + '"}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
             beforeSend: function () {
                 //$('#modalLoadding').modal('show');
@@ -927,7 +988,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         get_data(true, false);
     }
 
-    function save_data_create(action) {
+    function save_data_create(action, action_def) {
 
         check_data_general();
         check_data_tagid_audition();
@@ -990,7 +1051,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                 if (arr[0].status == 'true') {
                     $scope.pha_type_doc = 'update';
-                    if (action == 'save') {
+                    if (action == 'save' || action == 'submit_moc'
+                        || action_def == "confirm_submit_register"
+                        || action_def == "confirm_submit_register_without") {
 
                         var controller_action_befor = conFig.controller_action_befor();
                         var pha_seq = arr[0].pha_seq;
@@ -1073,13 +1136,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
 
                     }
-
-                    else if (flow_action == "confirm_submit_genarate" || flow_action == "confirm_submit_genarate_without") {
-
-                        set_alert('Success', 'Data has been successfully generated for the Full Report.');
-                        window.open('hazop/search', "_top");
-                        return;
-                    }
+                     
                     else {
 
                         set_alert('Success', 'Data has been successfully submitted.');
@@ -1138,7 +1195,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             if (arr_json[0].approver_type == 'safety' && flow_action == 'submit') { action_status = 'approve' }
 
         } else { set_alert('Error', 'No Data.'); return; }
-        var json_drawing_approver = check_data_drawing_approver(id_session); 
+        var json_drawing_approver = check_data_drawing_approver(id_session);
 
         $.ajax({
             url: url_ws + "flow/set_approve",
@@ -1175,7 +1232,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                             var controller_action_befor = conFig.controller_action_befor();
                             var pha_seq = conFig.pha_seq();
                             var pha_no = conFig.pha_no();
-                           var pha_type_doc = 'update';
+                            var pha_type_doc = 'update';
 
                             var controller_text = "jsea";
 
@@ -1319,14 +1376,18 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     $scope.employeelist_def = arr.employee;
                     arr.general[0].input_type_excel = (arr.general[0].input_type_excel == null ? 0 : arr.general[0].input_type_excel);
                     $scope.data_general = arr.general;
+
                     //set id to 5 
-                    $scope.data_general.forEach(function (item) { item.id_ram = 5; });
+                    $scope.data_general.forEach(function (item) {
+                        item.id_ram = (item.id_ram == null ? 4 : item.id_ram);
+                    });
+
 
                     $scope.data_tagid_audition = arr.tagid_audition;
 
                     $scope.data_session = arr.session;
                     $scope.data_session_def = clone_arr_newrow(arr.session);
-
+                   
                     $scope.data_memberteam = arr.memberteam;
                     $scope.data_memberteam_def = clone_arr_newrow(arr.memberteam);
                     $scope.data_memberteam_old = (arr.memberteam);
@@ -1362,6 +1423,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     set_data_listworksheet('');
                     set_master_ram_likelihood('');
 
+                    try {
+                        var id_session_last = arr.session[arr.session.length - 1].seq;
+                        $scope.selectdata_session = id_session_last;
+
+                    } catch { $scope.selectdata_session = $scope.MaxSeqDataSession; }
+
+
                     //get recommendations_no in tasks worksheet
                     if ($scope.data_listworksheet.length > 0) {
                         var arr_copy_def = angular.copy($scope.data_listworksheet, arr_copy_def);
@@ -1389,7 +1457,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 $scope.data_relatedpeople_outsider_delete = [];
                 $scope.data_drawing_delete = [];
                 $scope.data_listworksheet_delete = [];
-                $scope.flow_role_type = conFig.role_type();// "admin";//admin,request,responder,approver
+                try {
+                    $scope.flow_role_type = conFig.role_type();// "admin";//admin,request,responder,approver
+                    if (arr.header[0].pha_request_by.toLowerCase() == $scope.user_name.toLowerCase()) {
+                        $scope.flow_role_type = 'admin';
+                        conFig.role_type = 'admin';
+                    }
+                } catch { }
                 $scope.flow_status = 0;
 
                 //แสดงปุ่ม
@@ -1844,7 +1918,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     }
     function set_data_listworksheet(def_seq) {
-        
+
     }
     function set_master_ram_likelihood(ram_select) {
 
@@ -2622,7 +2696,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             seq_category = $scope.MaxSeqdata_listworksheetcategory;
 
             seq_category = xseq;
-             
+
             //กรณีที่เป็น cat ให้ +1
             category_no += 1;
         }
@@ -2844,11 +2918,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 });
             }
         }
-
-
-
-
-
+         
         running_no_format_2($scope.data_listworksheet, 1, 0, null);
         if (row_type == "workstep") {
             running_no_workstep();
@@ -3525,6 +3595,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
 
         //action after confirm 
+        var action_def = action; 
         if (true) {
             if (action == 'confirm_submit_register') {
                 $scope.Action_Msg_Confirm = true;
@@ -3572,7 +3643,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         //check requie Field 
         if (action == 'confirm_submit_genarate'
-            || action == 'confirm_submit_genarate_without') {
+            || action == 'confirm_submit_genarate_without'
+            || action == 'submit'
+            || action == 'submit_without') {
             $('#modalPleaseRegister').modal('hide');
         } else if (action == 'confirm_submit_approver') {
             $('#modalSendMailApprover').modal('hide');
@@ -3603,7 +3676,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
         }
 
-        save_data_create(action);
+        save_data_create(action, action_def);
 
 
     }
@@ -3661,7 +3734,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $('#modalMsg').modal('hide');
             return;
         }
-        save_data_create("submit");
+        save_data_create("submit","submit");
     }
     $scope.showHistory = false;
 

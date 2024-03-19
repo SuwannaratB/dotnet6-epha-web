@@ -38,7 +38,7 @@
                     <div class="row">
                         <div class="col-auto">
                             <b>PHA No.:</b> <br>
-                            <span class="text-uppercase"> {{ (data_header[0].pha_version>0 ? data_header[0].pha_no : data_header[0].pha_sub_software + '-2023-00000XX')}}</span>
+                            <span class="text-uppercase">{{ ( data_header[0].action_type =='update' ? data_header[0].pha_no : data_header[0].pha_sub_software + '-2023-00000XX')}}</span>
 
                         </div>
                         <div class="col-auto">
@@ -829,7 +829,7 @@
                                                                         ng-class="{'d-none':(!tab_general_active)}"
                                                                         ng-click="clearFileName(item.seq)"
                                                                         ng-if="status_upload">
-                                                                        @* ng-if="item.document_file_size>0"> *@
+                                                                    @* ng-if="item.document_file_size>0"> *@
                                                                     <span class="fa-regular fa-trash-can fa-lg"></span>
                                                                 </button>
                                                                 <br>
@@ -1883,13 +1883,19 @@
                                                                 </button>
 
                                                                 <div class="dropdown-menu dropdown-menu-end py-2 align-top">
+                                                                   @*  <a class="dropdown-item text-success"
+                                                                       ng-click="adddata_listworksheet_lv3('list_system',item,$index)">
+                                                                        <span class="fas fa-copy"></span>
+                                                                        Add xx
+                                                                    </a> *@
                                                                     <a class="dropdown-item text-success"
                                                                        ng-click="adddata_listworksheet_lv1('list_system',item,$index)">
                                                                         <span class="fas fa-copy"></span>
                                                                         Add
                                                                     </a>
-                                                                    <div class="dropdown-divider "></div><a class="dropdown-item text-danger"
-                                                                                                            ng-click="removeDataWorksheet('list_system',item,$index)">
+                                                                    <div class="dropdown-divider "></div>
+                                                                    <a class="dropdown-item text-danger"
+                                                                       ng-click="remove_listworksheet('list_system',item,$index)">
                                                                         <span class="fas fa-times-circle"></span> Remove
                                                                     </a>
                                                                 </div>
@@ -1941,7 +1947,7 @@
                                                                         Add
                                                                     </a>
                                                                     <div class="dropdown-divider "></div><a class="dropdown-item text-danger"
-                                                                                                            ng-click="removeDataWorksheet('list_sub_system',item,$index)">
+                                                                                                            ng-click="remove_listworksheet('list_sub_system',item,$index)">
                                                                         <span class="fas fa-times-circle"></span> Remove
                                                                     </a>
                                                                 </div>
@@ -1993,7 +1999,7 @@
                                                                         Add
                                                                     </a>
                                                                     <div class="dropdown-divider "></div><a class="dropdown-item text-danger"
-                                                                                                            ng-click="removeDataWorksheet('causes',item,$index)">
+                                                                                                            ng-click="remove_listworksheet('causes',item,$index)">
                                                                         <span class="fas fa-times-circle"></span> Remove
                                                                     </a>
                                                                 </div>
@@ -2045,7 +2051,7 @@
                                                                         Add
                                                                     </a>
                                                                     <div class="dropdown-divider "></div><a class="dropdown-item text-danger"
-                                                                                                            ng-click="removeDataWorksheet('consequences',item,$index)">
+                                                                                                            ng-click="remove_listworksheet('consequences',item,$index)">
                                                                         <span class="fas fa-times-circle"></span> Remove
                                                                     </a>
                                                                 </div>

@@ -51,20 +51,59 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
         // JavaScript file-like object 
         try {
-            const request = new XMLHttpRequest();
-            request.open("POST", url_ws + 'Flow/uploadfile_data_followup');
-            request.send(fd);
+            //const request = new XMLHttpRequest();
+            //request.open("POST", url_ws + 'Flow/uploadfile_data_followup');
+            //request.send(fd);
+             
+            //var arr = $filter('filter')($scope.data_drawingworksheet, function (item) { return (item.seq == seq); });
+            //if (arr.length > 0) {
+            //    arr[0].document_file_name = file_name;
+            //    arr[0].document_file_size = file_size;
+            //    arr[0].document_file_path = url_ws + 'AttachedFileTemp/FollowUp/' + file_name;
+            //    arr[0].document_module = $scope.document_module;
+            //    arr[0].action_change = 1;
+            //    apply();
+            //}
 
-            //var arr = $filter('filter')($scope.data_details, function (item) { return (item.seq == seq); });
-            var arr = $filter('filter')($scope.data_drawingworksheet, function (item) { return (item.seq == seq); });
-            if (arr.length > 0) {
-                arr[0].document_file_name = file_name;
-                arr[0].document_file_size = file_size;
-                arr[0].document_file_path = url_ws + 'AttachedFileTemp/FollowUp/' + file_name;
-                arr[0].document_module = $scope.document_module;
-                arr[0].action_change = 1;
-                apply();
-            }
+
+            try {
+                const request = new XMLHttpRequest();
+                request.open("POST", url_ws + 'Flow/uploadfile_data_followup');
+
+                request.onreadystatechange = function () {
+                    if (request.readyState === XMLHttpRequest.DONE) {
+                        if (request.status === 200) {
+                            // รับค่าที่ส่งมาจาก service ที่ตอบกลับมาด้วย responseText
+                            const responseFromService = request.responseText;
+                            // ทำอะไรกับข้อมูลที่ได้รับเช่น แสดงผลหรือประมวลผลต่อไป
+                            console.log(responseFromService);
+
+                            const jsonArray = JSON.parse(responseFromService);
+
+                            var file_name = jsonArray[0].ATTACHED_FILE_NAME;
+                            var file_path = jsonArray[0].ATTACHED_FILE_PATH;
+
+                            var arr = $filter('filter')($scope.data_drawingworksheet, function (item) { return (item.seq == seq); });
+                            if (arr.length > 0) {
+                                arr[0].document_file_name = file_name;
+                                arr[0].document_file_size = file_size;
+                                arr[0].document_file_path = (url_ws.replace('/api/', '')) + file_path;// (url_ws.replace('/api/', '/')) + 'AttachedFileTemp/Hazop/' + file_name;
+                                arr[0].document_module = $scope.document_module;
+                                arr[0].action_change = 1;
+                                apply();
+
+                            }
+                        } else {
+                            // กรณีเกิดข้อผิดพลาดในการร้องขอไปยัง server
+                            console.error('มีข้อผิดพลาด: ' + request.status);
+                        }
+                    }
+                };
+
+                request.send(fd);
+
+            } catch { }
+
         } catch (ex) { alert(ex); }
 
     }
@@ -120,12 +159,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
     }
 
     function arr_def() {
-        //conFig.controller_action_befor = 'Hazop/Index';
-        //alert(conFig.controller_action_befor());
-
+     
         $scope.selectViewTypeFollowup = true;
         $scope.action_part = 1;
         $scope.user_name = conFig.user_name();
+
+        $scope.pha_sub_software = conFig.pha_sub_software().toLowerCase()
 
         $scope.data_all = [];
 
@@ -195,7 +234,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
     $scope.selectDocPreview = function () {
 
         //open document 
-        var controller_text = 'hazop';//item.pha_sub_software;
+        var controller_text =  'hazop';//item.pha_sub_software;
+        var pha_sub_software = conFig.pha_sub_software().toLowerCase()//'hazop';//item.pha_sub_software;
         var pha_status = $scope.flow_status;
 
         conFig.pha_seq = $scope.data_details[0].seq;
@@ -204,7 +244,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         $.ajax({
             url: controller_text + "/next_page",
             data: '{"pha_seq":"' + conFig.pha_seq + '","pha_type_doc":"' + conFig.pha_type_doc + '"'
-                + ',"pha_sub_software":"' + controller_text + '","pha_status":"' + pha_status + '"}',
+                + ',"pha_sub_software":"' + pha_sub_software + '","pha_status":"' + pha_status + '"}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
             beforeSend: function () {
                 $("#divLoading").show();
@@ -235,8 +275,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         var id_pha = item_draw.id_pha;
         var id_worksheet = seq_nodeworksheet;
 
-        var xseq = Number($scope.MaxSeqdata_drawing) + 1;
-        $scope.MaxSeqdata_drawing = xseq;
+        var xseq = Number($scope.MaxSeqdata_drawing_worksheet) + 1;
+        $scope.MaxSeqdata_drawing_worksheet = xseq;
 
         //add Item Drawing 
         var add_items = {
@@ -292,7 +332,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
     function next_page(controller_text, pha_status) {
         controller_text = controller_text.toLowerCase();
-
+   
         $.ajax({
             url: controller_text + "/next_page",
             data: '{"pha_seq":"' + conFig.pha_seq + '","pha_type_doc":"' + conFig.pha_type_doc + '"'
@@ -324,7 +364,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         var pha_no = conFig.pha_no();
         var token_doc = conFig.pha_seq();
         var responder_user_name = conFig.responder_user_name();
-        var sub_software = 'hazop';
+        var sub_software = conFig.pha_sub_software().toLowerCase(); //'hazop';
 
         //alert($scope.flow_role_type);
         if ($scope.flow_role_type != 'admin') {
@@ -334,7 +374,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         $scope.cancle_type = true;
         $scope.export_type = false;
         $scope.submit_type = true;
-
+        //reviewer_comment
         $.ajax({
             url: url_ws + "Flow/load_follow_up_details",
             data: '{"sub_software":"' + sub_software + '","user_name":"' + user_name + '"'
@@ -357,16 +397,18 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                 };
 
                 $scope.data_pha_doc = arr.pha_doc;//pha_status,pha_no
+                $scope.data_header = arr.general;
+                $scope.data_general = arr.general;
                 $scope.data_details = arr.details;
                 $scope.data_drawingworksheet = arr.drawingworksheet;
                 $scope.data_drawingworksheet_responder = arr.drawingworksheet_responder;
                 $scope.data_drawingworksheet_reviewer = arr.drawingworksheet_reviewer;
 
                 if (true) {
-                    $scope.MaxSeqdata_drawing = 0;
+                    $scope.MaxSeqdata_drawing_worksheet = 0;
                     var arr_check = $filter('filter')(arr.max, function (item) { return (item.name == 'drawingworksheet'); });
                     var iMaxSeq = 1; if (arr_check.length > 0) { iMaxSeq = arr_check[0].values; }
-                    $scope.MaxSeqdata_drawing = iMaxSeq;
+                    $scope.MaxSeqdata_drawing_worksheet = iMaxSeq;
                 }
 
                 //เพิ่มแสดงข้อมูล RAM
@@ -403,9 +445,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
         });
     }
-
+ 
     $scope.confirmFollowBackSearch = function () {
-        var page = "hazop/followup";
+        var page = conFig.controller_action_befor(); 
         window.open(page, "_top");
     }
     $scope.confirmFollowBack = function () {
@@ -457,6 +499,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                 // item.reviewer_action_type
                 var arr_active = [];
                 angular.copy($scope.data_details, arr_active);
+                 
                 var arr_json = $filter('filter')(arr_active, function (item) {
                     return (item.reviewer_action_type == null
                         || item.reviewer_action_type < 2);
@@ -558,7 +601,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         var token_doc = _item.ID_PHA;
 
         //alert(url_ws + "Flow/set_follow_up");
-        var sub_software = 'hazop';
+        var sub_software = conFig.pha_sub_software().toLowerCase(); 
 
         $.ajax({
             url: url_ws + "Flow/set_follow_up",
@@ -583,6 +626,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                     return ((item.seq == _item.seq && item.action_type == 'update'));
                 });
                 if (arr.length > 0) {
+                    arr[0].action_status = 'Responed';
                     arr[0].action_type = 'update';
                     arr[0].action_change = 0;
                     arr[0].responder_action_type = (action == 'save' ? 1 : 2);
@@ -614,9 +658,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
                         if (arr.length == $scope.data_details.length) {
                             window.open("Home/Portal", "_top");
-                        } else {
-                            //window.open("hazop/FollowupUpdate", "_top");
-                            //set_alert('Success', 'Data has been successfully saved.');
+                        } else { 
                             $('#modalMsg').modal('show');
                         }
                     }
@@ -636,11 +678,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         });
     }
     $scope.confirmSaveReviewFollowup = function (action, _item) {
-
-        var arr_json_general = $filter('filter')($scope.data_general, function (item) {
-            return ((item.action_type == 'update' && item.action_change == 1));
-        });
-        var json_general = angular.toJson(arr_json_general);
+          
         var json_drawingworksheet = check_data_drawingworksheet(_item.seq);
 
         var arr_active = [];
@@ -670,7 +708,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         var user_name = $scope.user_name;
         var flow_action = action;
         var token_doc = conFig.pha_seq();
-        var sub_software = 'hazop';
+        var sub_software = conFig.pha_sub_software().toLowerCase() 
 
         $.ajax({
             url: url_ws + "Flow/set_follow_up_review",
@@ -724,9 +762,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
                         if (arr.length == $scope.data_details.length) {
                             window.open("Home/Portal", "_top");
-                        } else {
-                            //window.open("hazop/FollowupUpdate", "_top");
-                            //set_alert('Success', 'Data has been successfully saved.');
+                        } else { 
                             $('#modalMsg').modal('show');
                         }
                     }
@@ -765,6 +801,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             $scope.cal_ram_action_likelihood = _item.ram_action_likelihood;
             $scope.cal_ram_action_risk = _item.ram_action_risk;
         }
+        $scope.cal_ram_action_security = ($scope.cal_ram_action_security == null ? 'N/A' : $scope.cal_ram_action_security);
+        $scope.cal_ram_action_likelihood = ($scope.cal_ram_action_likelihood == null ? 'N/A' : $scope.cal_ram_action_likelihood); 
+        $scope.cal_ram_action_risk = ($scope.cal_ram_action_risk == null ? 'N/A' : $scope.cal_ram_action_risk);
 
         var arr_items = $filter('filter')($scope.master_ram_level, function (item) { return (item.id_ram == id_ram); });
         var category_type = Number(arr_items[0].category_type);
@@ -855,13 +894,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
     }
 
     $scope.downloadFile = function (item) {
-
-        //<b>{{(item.document_file_size>0? item.document_file_name + '('+  item.document_file_size + 'KB)' : '')}}</b>
-
-        //document_file_name:"HAZOP Report 202311281602.pdf"
-        //document_file_path:"https://localhost:7098/AttachedFileTemp/hazop/HAZOP-2023-0000001-DRAWING-202312251052.PDF"
-        //document_file_size:288
-
+          
         if (item.document_file_name != '') {
             //var path = (url_ws).replace('/api/', '') + item.document_file_path;
             var path = item.document_file_path;
