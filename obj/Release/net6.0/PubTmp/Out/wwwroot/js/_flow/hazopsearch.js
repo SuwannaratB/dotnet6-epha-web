@@ -275,6 +275,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
     }
     function next_page(controller_text, pha_status) {
         controller_text = controller_text.toLowerCase();
+        console.log('controller_text',controller_text)
+        console.log('conFig.pha_seq',conFig.pha_seq)
+        console.log('conFig.pha_type_do',conFig.pha_type_doc)
+        console.log('pha_status',pha_status)
 
         $.ajax({
             url: controller_text + "/next_page",
