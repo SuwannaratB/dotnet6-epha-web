@@ -984,9 +984,9 @@
                                                                           placeholder="Node" rows="3"
                                                                           ng-class="{'disabled-link':(!tab_node_active)}"
                                                                           ng-model="item.node"
-                                                                          ng-keyup="filterResultHistory(item.node, 'node', 'node_'+ item.seq);actionChange(item,item.seq,'node')"></textarea>
-
-                                                                <div class="autocomplete-dropdown" style="position: absolute;" ng-show="showResults"
+                                                                          ng-keyup="filterResultHistory(item.node, 'node', 'node_'+ item.seq);actionChange(item,item.seq,'node')">
+                                                                </textarea>
+                                                                <div class="autocomplete-dropdown" style="position: absolute;" ng-show="isShow == 'node_'+ item.seq"
                                                                      ng-class="{'ng-show' : (filteredArr[0].fieldID == ('node_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('node_'+item.seq)) }">
                                                                     <div class="autocomplete-option"
                                                                          ng-repeat="result in filteredResults | filter:{field:'node'}"
@@ -1014,7 +1014,6 @@
                                                                           ng-class="{'disabled-link':(!tab_node_active)}"
                                                                           ng-model="item.design_intent"
                                                                           ng-keyup="filterResultHistory(item.design_intent, 'design_intent', 'design_intent_'+ item.seq);actionChange(item,item.seq,'')"></textarea>
-
                                                                 <div class="autocomplete-dropdown" style="position: absolute;" ng-show="showResults"
                                                                      ng-class="{'ng-show' : (filteredArr[0].fieldID == ('design_intent_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('design_intent_'+item.seq)) }">
                                                                     <div class="autocomplete-option"
@@ -1872,6 +1871,7 @@
                                                     @* {{item.index_rows}} *@
                                                     <p class=" mx-1 ms-0  text-1100 fw-bold max-w-100 " ng-if="( item.causes_no == 1 && item.consequences_no == 1) && item.row_type == 'causes' ">{{item.guidewords_no +'.'+ item.guidewords }}  </p>
                                                 </td>
+
                                                 <td class="align-top border border-light border-end-0  border-start-0  border-top-0 " style="padding: 0 !important; width: 80px;">
                                                     <p class=" mx-1  text-1100 fw-bold " ng-if="( item.causes_no == 1 && item.consequences_no == 1) && item.row_type == 'causes' ">{{ item.deviations }}  </p>
                                                 </td>
@@ -1915,7 +1915,7 @@
                                                                       ng-model="item.causes"
                                                                       ng-keyup="filterResultHistory(item.causes, 'causes', 'causes_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')"></textarea>
 
-                                                            <div class="autocomplete-dropdown" style="position: absolute;" ng-show="showResults"
+                                                            <div class="autocomplete-dropdown" style="position: absolute;" ng-show="isShow == 'causes_worksheet_'+ item.seq"
                                                                  ng-class="{'ng-show' : (filteredArr[0].fieldID == ('causes_worksheet_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('causes_worksheet_'+item.seq)) }">
                                                                 <div class="autocomplete-option"
                                                                      ng-repeat="result in filteredResults | filter:{field:'causes'}"
@@ -1975,7 +1975,7 @@
                                                                       ng-model="item.consequences"
                                                                       ng-keyup="filterResultHistory(item.consequences, 'consequences', 'consequences_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')"></textarea>
 
-                                                            <div class="autocomplete-dropdown" style="position: absolute;" ng-show="showResults"
+                                                            <div class="autocomplete-dropdown" style="position: absolute;" ng-show="isShow == 'consequences_worksheet_'+ item.seq"
                                                                  ng-class="{'ng-show' : (filteredArr[0].fieldID == ('consequences_worksheet_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('consequences_worksheet_'+item.seq)) }">
                                                                 <div class="autocomplete-option"
                                                                      ng-repeat="result in filteredResults | filter:{field:'consequences'}"
@@ -2034,7 +2034,6 @@
                                                     </div>
                                                 </td>
 
-
                                                 <td class="align-top border border-light border-end-0  border-start-0  border-top-0 "
                                                     style="padding: 0 !important; width: 20px;">
                                                     <div class="align-items-center text-end mt-1" style=" width: 20px;"
@@ -2056,6 +2055,7 @@
                                                         </button>
                                                     </div>
                                                 </td>
+
                                                 <td class="align-top border border-light border-end-0  border-start-0  border-top-0 "
                                                     style="padding: 0 !important; width: 25px;">
                                                     <div class="align-items-center text-end mt-1" style=" width: 25px;">
@@ -2077,6 +2077,7 @@
                                                         </select>
                                                     </div>
                                                 </td>
+
                                                 <td class="align-top border border-light border-end-0  border-start-0  border-top-0 " style="padding: 0 !important; width: 40px;"
                                                     ng-if="data_header[0].safety_critical_equipment_show==1">
                                                     <div class="d-flex align-items-center text-end mt-1"
@@ -2101,7 +2102,7 @@
                                                                       ng-model="item.existing_safeguards"
                                                                       ng-keyup="filterResultHistory(item.existing_safeguards, 'existing_safeguards', 'existing_safeguards_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')"></textarea>
 
-                                                            <div class="autocomplete-dropdown" style="position: absolute;" ng-show="showResults"
+                                                            <div class="autocomplete-dropdown" style="position: absolute;" ng-show="isShow == 'existing_safeguards_worksheet_'+ item.seq"
                                                                  ng-class="{'ng-show' : (filteredArr[0].fieldID == ('existing_safeguards_worksheet_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('existing_safeguards_worksheet_'+item.seq)) }">
                                                                 <div class="autocomplete-option"
                                                                      ng-repeat="result in filteredResults | filter:{field:'existing_safeguards'}"
@@ -2115,7 +2116,6 @@
                                                     </div>
 
                                                 </td>
-
 
                                                 <td class="align-top border border-light border-end-0  border-start-0  border-top-0 "
                                                     style="padding: 0 !important; width: 20px;">
@@ -2136,6 +2136,7 @@
                                                         </button>
                                                     </div>
                                                 </td>
+
                                                 <td class="align-top border border-light border-end-0  border-start-0  border-top-0 "
                                                     style="padding: 0 !important; width: 25px;">
                                                     <div class="align-items-center text-end mt-1" style=" width: 25px;">
@@ -2165,6 +2166,7 @@
                                                     </div>
 
                                                 </td>
+
                                                 <td class="align-top border border-light border-end-0  border-start-0  border-top-0 " style="padding: 0 !important;">
 
                                                     <div class="d-flex align-items-top w-100">
@@ -2185,7 +2187,7 @@
                                                                       ng-model="item.recommendations"
                                                                       ng-keyup="filterResultHistory(item.recommendations, 'recommendations', 'recommendations_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')"></textarea>
 
-                                                            <div class="autocomplete-dropdown" style="position: absolute;" ng-show="showResults"
+                                                            <div class="autocomplete-dropdown" style="position: absolute;" ng-show="isShow == 'recommendations_worksheet_'+ item.seq"
                                                                  ng-class="{'ng-show' : (filteredArr[0].fieldID == ('recommendations_worksheet_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('recommendations_worksheet_'+item.seq)) }">
                                                                 <div class="autocomplete-option"
                                                                      ng-repeat="result in filteredResults | filter:{field:'recommendations'}"
@@ -2198,6 +2200,7 @@
                                                     </div>
 
                                                 </td>
+
                                                 <td class="align-top border border-light border-end-0  border-start-0  border-top-0 " style="padding: 0 !important;"
                                                     ng-if="data_header[0].safety_critical_equipment_show==1">
                                                     <div class="d-flex align-items-top w-100">
@@ -3145,12 +3148,12 @@
                 </div>
                 <div class="modal-header bg-soft" ng-if="!(selectDatFormType =='owner')">
                     <h5 class="text-900 mb-0">
-                        <span class=" me-2 text-primary"><B>|</B></span> {{selectDatFormType =='member' ? 'Member Team' : 'Approver'}}
+                        <span class=" me-2 text-primary"><B>|</B></span> {{selectDatFormType =='member' ? 'Member Team' : 'Approver'}} 
                     </h5>
                 </div>
                 <div class="modal-body" ng-if="selectDatFormType =='member'">
                     <div class="col-auto" ng-repeat="item2 in data_memberteam | filter:{id_session: selectdata_session }"
-                         ng-if="!(item2.user_displayname == '')">
+                         ng-if="!(item2.user_displayname == '' || item2.user_displayname == null)">
                         <div class="d-flex align-items-center p-1" style="height: 20px;">
                             <button id="del-{{item2.seq}}" class="btn btn-link text-danger"
                                     ng-class="{'d-none':(!tab_general_active)}"
@@ -3167,7 +3170,7 @@
                 <div class="modal-body" ng-if="selectDatFormType =='approver'">
                     @* start ข้อมูลเดียวกันกับตรง session Approver*@
                     <div class="col-auto" ng-repeat="item2 in data_approver | filter:{id_session: selectdata_session }"
-                         ng-if="!(item2.user_displayname == '')">
+                         ng-if="!(item2.user_displayname == '' || item2.user_displayname == null)">
                         <div class="d-flex align-items-center p-1" style="height: 20px;">
                             <button id="del-{{item2.seq}}" class="btn btn-link text-danger"
                                     ng-class="{'d-none':(!tab_general_active)}"

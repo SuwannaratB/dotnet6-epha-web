@@ -987,7 +987,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             },
             success: function (data) {
                 var arr = data;
-                console.log(arr);
                 if (arr[0].status == 'true') {
                     $scope.pha_type_doc = 'update';
                     if (action == 'save' || action == 'submit_moc') {
@@ -1040,7 +1039,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     else {
 
                         set_alert('Success', 'Data has been successfully submitted.');
-                        window.open('hazop/search', "_top");
+                        // window.open('hazop/search', "_top");
+                        console.log(pha_status)
                         return;
                     }
                 }
@@ -1191,7 +1191,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 $('#divLoading').hide();
             },
             success: function (data) {
-                console.log(data);
 
                 var action_part_befor = $scope.action_part;//(page_load == false ? $scope.action_part : 0);
                 var tabs_befor = (page_load == false ? $scope.tabs : null);
@@ -1434,7 +1433,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         }
                     } catch (ex) { alert(ex); console.clear(); }
 
-
+                    if ($scope.data_drawing[0].document_file_path) {
+                        $scope.status_upload = true;
+                    }
+   
                     $scope.$apply();
                     try {
                         if (page_load == true || true) {
@@ -2187,7 +2189,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         return arr_clone;
     }
     function running_index_level1_lv1(arr_items, iNo, iRow, newInput) {
-
         arr_items.sort((a, b) => a.index_rows - b.index_rows);
         var first_row = true;
         var iNoNew = iNo;
@@ -2213,6 +2214,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             //if (iRow > 0) { newInput.no = Number(newInput.no) + 0.1; } 
             arr_items.push(newInput);
         }
+       
         arr_items.sort((a, b) => a.index_rows - b.index_rows);
 
     }
@@ -3094,7 +3096,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     };
 
     $scope.adddata_nodeworksheet_lv1 = function (row_type, item, index) {
-
         if (true) {
             if (row_type.indexOf('causes') > -1) { row_type = 'causes'; }
             else if (row_type.indexOf('consequences') > -1) { row_type = 'consequences'; }
@@ -3138,11 +3139,15 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         //row now
         var iNo = no;
 
+        console.log('item',item)
+        console.log('index',index)
+        console.log("Number(item.index_rows)",item.index_rows)
+
         if (row_type == "causes") {
             var arr = $filter('filter')(arr_def, function (_item) {
                 return (_item.no >= no && _item.id_node == seq_node && _item.seq_guide_word == seq_guide_word
                     && _item.seq_causes == seq_causes);
-            });
+            }); 
             if (arr.length > 0) {
                 arr.sort((a, b) => a.no - b.no);
                 iNo = arr[arr.length - 1].no;
@@ -3238,9 +3243,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         running_index_worksheet(seq);
         index = index_rows;
 
-        console.clear();
-        console.log($scope.data_nodeworksheet);
-
+        // console.clear();
+        console.log('data_nodeworksheet',$scope.data_nodeworksheet);
+        console.log('iNo',iNo);
+        console.log('index',index);
+        console.log('newInput',newInput);
+        
         running_index_level1_lv1($scope.data_nodeworksheet, iNo, index, newInput);
 
         if (row_type == "causes" || row_type == "consequences") {
@@ -3251,6 +3259,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
         apply();
     }
+
     $scope.removeDataNodeWorksheet = function (row_type, item, index) {
         var seq_node = item.seq_node;
         var seq_guide_word = (item.seq_guide_word == null ? item.id_guide_word : item.seq_guide_word);
@@ -4912,6 +4921,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.showResults = $scope.filteredResults.length > 0;
             $scope.filteredArr = [{ "fieldID": ($scope.showResults == true ? fieldID : '') }];
         } catch { }
+
+        $scope.isShow = fieldID;
     };
 
     $scope.selectResult = function (result, items_ref, fieldName) {
@@ -4933,6 +4944,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
     $scope.toggleResultsVisibility = function () {
         $scope.showResults = false;
+        $scope.isShow = '';
     };
 
     //end functioin show history data ของแต่ละ field
