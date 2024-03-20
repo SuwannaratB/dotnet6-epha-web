@@ -237,31 +237,53 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         next_page(controller_text, conFig.pha_status);
     }
     $scope.actionChange = function (item) {
+
         try {
             var arr_search =
                 $filter('filter')($scope.data_results_def, function (_item) {
-
                     return (
-                        (item.pha_sub_software == null ? 'x' : _item.pha_sub_software).toLowerCase() == (item.pha_sub_software == null ? 'x' : item.pha_sub_software).toLowerCase()
-                        && (item.expense_type == null ? 'x' : _item.expense_type).toLowerCase() == (item.expense_type == null ? 'x' : item.expense_type).toLowerCase()
-                        && (item.sub_expense_type == null ? 'x' : _item.sub_expense_type) == (item.sub_expense_type == null ? 'x' : item.sub_expense_type)
-                        && (item.project_no == null ? 'x' : _item.pha_no).includes((item.project_no == null ? 'x' : item.project_no))
-                        && (item.pha_request_name == null ? 'x' : _item.pha_request_name).includes((item.pha_request_name == null ? 'x' : item.pha_request_name))
+                        (item.pha_sub_software == null ? 'x' : _item.pha_sub_software).toLowerCase() 
+                        == (item.pha_sub_software == null ? 'x' : item.pha_sub_software).toLowerCase()
+
+                        && (item.expense_type == null ? 'x' : _item.expense_type).toLowerCase() 
+                        == (item.expense_type == null ? 'x' : item.expense_type).toLowerCase()
+
+                        && (item.sub_expense_type == null ? 'x' : _item.sub_expense_type ?_item.sub_expense_type.toLowerCase() :_item.sub_expense_type) 
+                        == (item.sub_expense_type == null ? 'x' : item.sub_expense_type ?item.sub_expense_type.toLowerCase() :item.sub_expense_type)
+                        
+                        && (item.reference_moc == null || item.reference_moc == "" ? 'x' : _item.reference_moc ?_item.reference_moc.toLowerCase() :_item.reference_moc) 
+                        == (item.reference_moc == null || item.reference_moc == "" ? 'x' : item.reference_moc ?item.reference_moc.toLowerCase() :item.reference_moc)
+
+                        && (item.pha_request_name == null || item.pha_request_name == "" ? 'x' : _item.pha_request_name ?_item.pha_request_name.toLowerCase() :_item.pha_request_name) 
+                        == (item.pha_request_name == null || item.pha_request_name == "" ? 'x' : item.pha_request_name ?item.pha_request_name.toLowerCase() :item.pha_request_name) 
+
+                        && (item.project_no == null  ? 'x' : _item.pha_no.toLowerCase())
+                        .includes((item.project_no == null ? 'x' : item.project_no.toLowerCase()))
+
+                        && (item.create_date == null ?true  :formatDate(item.create_date, _item.create_date))
+
                         && (item.id_apu == null ? true : _item.id_apu == item.id_apu)
                         && (item.functional_location == null ? true : _item.functional_location == item.functional_location)
                         && (item.id_business_unit == null ? true : _item.id_business_unit == item.id_business_unit)
                         && (item.id_unit_no == null ? true : _item.id_unit_no == item.id_unit_no)
+                        
+                        && (item.id_toc == null ? true : parseInt(_item.id_toc) == parseInt(item.id_toc))
+                        && (item.id_tagid == null ? true : parseInt(_item.id_tagid) == parseInt(item.id_tagid))
+                        && (item.id_company == null ? true : parseInt(_item.id_company) == parseInt(item.id_company))
+                        
                         && (item.expense_type == 'CAPEX' && item.sub_expense_type == 'Normal' ?
                             (item.approver_user_name == null ? 'x' : _item.approver_user_name)
                             == (item.approver_user_name == null ? 'x' : item.approver_user_name) : true)
                         && (item.emp_active_search == null ? 'x' : _item.emp_active_search).includes((item.emp_active_search == null ? 'x' : item.emp_active_search))
-
                     );
                 });
             $scope.data_results = arr_search;
             apply();
-        } catch { }
+        } catch {
+
+         }
     }
+    
     $scope.confirmCancle = function () {
         var page = 'home/Portal';
         window.open(page, "_top")
@@ -307,6 +329,22 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             }
 
         });
+    }
+
+    function formatDate(create_date, datepicker) {
+        const createDate = new Date(create_date);
+        const datePickerDate = new Date(datepicker);
+        // กำหนด Time Zone ของ datepickerDate ให้เท่ากับ createDate
+        datePickerDate.setHours(createDate.getHours());
+        datePickerDate.setMinutes(createDate.getMinutes());
+        datePickerDate.setSeconds(createDate.getSeconds());
+        datePickerDate.setMilliseconds(createDate.getMilliseconds());
+
+        if (datePickerDate.getTime() !== createDate.getTime()) {
+            return false;
+        } 
+
+        return true;
     }
 
     //search list function
