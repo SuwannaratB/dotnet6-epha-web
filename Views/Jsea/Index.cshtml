@@ -2798,8 +2798,7 @@ ng-controller="ctrlAppPage"
     <!--Modal RAM Start-->
     <div class="modal fade modal-xl shadow-sm p-3 mb-5  rounded" id="modalRAM" tabindex="-1"
          aria-labelledby="modalRAMLabel" aria-hidden="true" style="display: none;">
-        <div class="modal-dialog modal-dialog-centered"
-             ng-style=" { 'width' :  (select_columns_level !=5 && (selectedDataNodeWorksheetRamType == 's' || selectedDataNodeWorksheetRamType == 'l')  ) ?'500px' :  '100%' }">
+        <div class="modal-dialog modal-dialog-centered" >
 
             <div class="modal-content">
                 <div class="modal-header">
@@ -2827,14 +2826,7 @@ ng-controller="ctrlAppPage"
                 <div class="modal-body">
 
                     <div class="row">
-                        @*
-                        <div class="col-12 mb-1">
-                        <b class="pe-1 me-1"> Security : {{cal_ram_action_security}}</b>
-                        <b class="pe-1 me-1"> Likelihood : {{cal_ram_action_likelihood}}</b>
-                        <b class="pe-1 me-1">  Risk : </b>
-                        <label class="pe-1 me-1 text-center" style="width:200px"
-                        ng-style=" { 'background-color' : ((cal_ram_action_risk == 'H') ? 'red' : ((cal_ram_action_risk == 'M') ? 'yellow' : ((cal_ram_action_risk == 'L') ? 'green' : '#D3D3D3')) ) }">{{cal_ram_action_risk}}</label>
-                        </div> *@
+                   
 
                         <div class="col-6" ng-if="!previewRam">
 
@@ -2884,9 +2876,9 @@ ng-controller="ctrlAppPage"
                             <table class="table table-sm fs--1 mb-0 col-auto ">
                                 <thead class="bg-light-primary">
                                     <tr>
-                                        <td rowspan="3" class="text-center"></td>
-                                        <th rowspan="2" colspan="3" ng-if="select_columns_level != 5">Likelihood</th>
-                                        <th rowspan="2" colspan="5" ng-if="select_columns_level == 5">Likelihood</th>
+                                        <td rowspan="2" class="text-center"></td>
+                                        <th rowspan="1" colspan="3" ng-if="select_columns_level != 5">Likelihood</th>
+                                        <th rowspan="1" colspan="5" ng-if="select_columns_level == 5">Likelihood</th>
                                     </tr>
                                     <tr ng-if="select_columns_level != 5">
                                         <td class="text-center">Level</td>
@@ -2908,9 +2900,10 @@ ng-controller="ctrlAppPage"
                                                aria-label="Close">Select</a>
                                         </td>
                                         <td class="text-center">{{item_ram.likelihood_level}}</td>
-                                        <td ng-if="item_ram.columns_level !== 5">{{item_ram.likelihood_show}}</td>
 
-                                        <td ng-if="item_ram.columns_level == 5">{{item_ram.likelihood_text}}</td>
+                                        <td ng-if="!(item_ram.columns_level == 5)">{{item_ram.likelihood_show}}</td>
+
+                                        <td >{{item_ram.likelihood_text}}</td>
                                         <td ng-if="item_ram.columns_level == 5">{{item_ram.likelihood_desc}}</td>
                                         <td ng-if="item_ram.columns_level == 5">{{item_ram.likelihood_criterion}}</td>
                                     </tr>

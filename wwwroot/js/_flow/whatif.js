@@ -202,6 +202,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         return;
 
                     } else {
+                        $scope.tab_worksheet_active = true;
+                        $scope.tab_managerecom_active = true;
                         $scope.tab_worksheet_show = true;
                         $scope.tab_managerecom_show = true;
                     }
@@ -1908,6 +1910,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     arr_copy[0].index_rows = (index_rows + 1);
 
                     $scope.newdata_worksheet_lv1('list_system', arr_copy[0], 0);
+
+                    $scope.data_listworksheet = $filter('filter')($scope.data_listworksheet, function (item) {
+                        return !(item.action_type == 'new');
+                    });
                 }
                 set_data_managerecom();
             }
@@ -2832,7 +2838,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         || item.seq_list_system == seq_list_system));
                 });
 
-            } else if (row_type == "list_sub_system") { 
+            } else if (row_type == "list_sub_system") {
 
                 //เก็บค่า Delete 
                 var arrdelete = $filter('filter')($scope.data_listworksheet, function (item) {
@@ -2850,7 +2856,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 });
 
             } else if (row_type == "causes") {
-             
+
 
                 //เก็บค่า Delete 
                 var arrdelete = $filter('filter')($scope.data_listworksheet, function (item) {
@@ -2868,7 +2874,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 });
 
             } else if (row_type == "consequences") {
-             
+
                 //เก็บค่า Delete 
                 var arrdelete = $filter('filter')($scope.data_listworksheet, function (item) {
                     return ((item.seq == seq
@@ -2904,7 +2910,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
 
             }
-             
+
         }
 
 
@@ -4847,7 +4853,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.members = string;
         $scope.hidethis = true;
     }
-     
+
     $scope.toggleResultsVisibility = function () {
         $scope.showResults = false;
         $scope.isShow = '';
@@ -5108,14 +5114,16 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         //if delete row 1 clear to null
         if ($scope.data_memberteam.length == 1 || $scope.data_memberteam.no == 1) {
-            var keysToClear = ['user_name', 'user_displayname'];
+             
+            if ($scope.data_memberteam[0].user_displayname == null) {
+                var keysToClear = ['user_name', 'user_displayname'];
+                  
+                keysToClear.forEach(function (key) {
+                    $scope.data_memberteam[0][key] = null;
+                });
 
-
-            keysToClear.forEach(function (key) {
-                $scope.data_memberteam[0][key] = null;
-            });
-
-            $scope.data_memberteam[0].no = 1;
+                $scope.data_memberteam[0].no = 1;
+            }
         }
 
         running_no_level1($scope.data_memberteam, null, null);
@@ -5161,13 +5169,16 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         //if delete row 1 clear to null
         if ($scope.data_approver.length == 1 || $scope.data_approver.no == 1) {
-            var keysToClear = ['user_name', 'user_displayname'];
 
-            keysToClear.forEach(function (key) {
-                $scope.data_approver[0][key] = null;
-            });
+            if ($scope.data_approver[0].user_displayname == null) {
+                var keysToClear = ['user_name', 'user_displayname'];
 
-            $scope.data_approver[0].no = 1;
+                keysToClear.forEach(function (key) {
+                    $scope.data_approver[0][key] = null;
+                });
+
+                $scope.data_approver[0].no = 1;
+            }
         }
 
         running_no_level1($scope.data_approver, null, null);
