@@ -251,11 +251,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                         && (item.sub_expense_type == null ? 'x' : _item.sub_expense_type ?_item.sub_expense_type.toLowerCase() :_item.sub_expense_type) 
                         == (item.sub_expense_type == null ? 'x' : item.sub_expense_type ?item.sub_expense_type.toLowerCase() :item.sub_expense_type)
                         
-                        && (item.reference_moc == null || item.reference_moc == "" ? 'x' : _item.reference_moc ?_item.reference_moc.toLowerCase() :_item.reference_moc) 
-                        == (item.reference_moc == null || item.reference_moc == "" ? 'x' : item.reference_moc ?item.reference_moc.toLowerCase() :item.reference_moc)
+                        && (_item.reference_moc == null || item.reference_moc == ''  ? 'x' : _item.reference_moc.toLowerCase())
+                        .includes((item.reference_moc == null || item.reference_moc == '' ? 'x' : item.reference_moc.toLowerCase()))
 
-                        && (item.pha_request_name == null || item.pha_request_name == "" ? 'x' : _item.pha_request_name ?_item.pha_request_name.toLowerCase() :_item.pha_request_name) 
-                        == (item.pha_request_name == null || item.pha_request_name == "" ? 'x' : item.pha_request_name ?item.pha_request_name.toLowerCase() :item.pha_request_name) 
+                        && (_item.pha_request_name == null || item.pha_request_name == ''  ? 'x' : _item.pha_request_name.toLowerCase())
+                        .includes((item.pha_request_name == null || item.pha_request_name == '' ? 'x' : item.pha_request_name.toLowerCase()))
 
                         && (item.project_no == null  ? 'x' : _item.pha_no.toLowerCase())
                         .includes((item.project_no == null ? 'x' : item.project_no.toLowerCase()))
@@ -266,7 +266,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                         && (item.functional_location == null ? true : _item.functional_location == item.functional_location)
                         && (item.id_business_unit == null ? true : _item.id_business_unit == item.id_business_unit)
                         && (item.id_unit_no == null ? true : _item.id_unit_no == item.id_unit_no)
-                        
+
                         && (item.id_toc == null ? true : parseInt(_item.id_toc) == parseInt(item.id_toc))
                         && (item.id_tagid == null ? true : parseInt(_item.id_tagid) == parseInt(item.id_tagid))
                         && (item.id_company == null ? true : parseInt(_item.id_company) == parseInt(item.id_company))
