@@ -267,6 +267,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         apply();
                         $('#modalPleaseRegister').modal('show');
                         return;
+                    } else {
+
+                        $scope.tab_worksheet_active = true;
+                        $scope.tab_managerecom_active = true;
+                        $scope.tab_worksheet_show = true;
+                        $scope.tab_managerecom_show = true;
                     }
 
 

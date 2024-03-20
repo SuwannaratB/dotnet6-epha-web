@@ -5,7 +5,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
 <Project>
   <PropertyGroup>
     <_PublishTargetUrl>C:\Develop Drive\dotnet6-epha-web\dotnet6-epha-web\bin\Release\net6.0\publish\</_PublishTargetUrl>
-    <History>True|2024-03-19T06:19:35.0112542Z;True|2024-03-19T10:55:52.2509404+07:00;True|2024-01-05T15:50:26.4416648+07:00;</History>
+    <History>True|2024-03-20T00:38:37.6808449Z;True|2024-03-20T07:12:10.7167982+07:00;True|2024-03-19T13:19:35.0112542+07:00;True|2024-03-19T10:55:52.2509404+07:00;True|2024-01-05T15:50:26.4416648+07:00;</History>
     <LastFailureDetails />
   </PropertyGroup>
 </Project>

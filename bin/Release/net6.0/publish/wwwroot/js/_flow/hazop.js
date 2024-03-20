@@ -267,6 +267,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         apply();
                         $('#modalPleaseRegister').modal('show');
                         return;
+                    } else {
+
+                        $scope.tab_worksheet_active = true;
+                        $scope.tab_managerecom_active = true;
+                        $scope.tab_worksheet_show = true;
+                        $scope.tab_managerecom_show = true;
                     }
 
 
@@ -338,7 +344,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             const file = fileInput.files[0];
             const fileName = file.name;
             const fileSize = Math.round(file.size / 1024);
-            fileInfoSpan.textContent = `${fileName} (${fileSize} KB)`;
+            //fileInfoSpan.textContent = `${fileName} (${fileSize} KB)`;
+
+            let shortenedFileName = fileName.length > 20 ? fileName.substring(0, 20) + '...' : fileName;
+            fileInfoSpan.textContent = `${shortenedFileName} (${fileSize} KB)`;
+
 
             if (fileName.toLowerCase().indexOf('.pdf') == -1) {
                 fileInfoSpan.textContent = "";
@@ -378,7 +388,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             const file = fileInput.files[0];
             const fileName = file.name;
             const fileSize = Math.round(file.size / 1024);
-            fileInfoSpan.textContent = `${fileName} (${fileSize} KB)`;
+            //fileInfoSpan.textContent = `${fileName} (${fileSize} KB)`;
+
+            let shortenedFileName = fileName.length > 20 ? fileName.substring(0, 20) + '...' : fileName;
+            fileInfoSpan.textContent = `${shortenedFileName} (${fileSize} KB)`;
+
 
             if (fileName.toLowerCase().indexOf('.pdf') == -1) {
                 fileInfoSpan.textContent = "";
@@ -405,7 +419,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             const file = fileInput.files[0];
             const fileName = file.name;
             const fileSize = Math.round(file.size / 1024);
-            fileInfoSpan.textContent = `${fileName} (${fileSize} KB)`;
+            //fileInfoSpan.textContent = `${fileName} (${fileSize} KB)`;
+
+            let shortenedFileName = fileName.length > 20 ? fileName.substring(0, 20) + '...' : fileName;
+            fileInfoSpan.textContent = `${shortenedFileName} (${fileSize} KB)`;
+
 
             if (fileName.toLowerCase().indexOf('.pdf') == -1) {
                 fileInfoSpan.textContent = "";

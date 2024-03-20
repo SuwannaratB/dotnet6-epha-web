@@ -1883,10 +1883,10 @@
                                                                 </button>
 
                                                                 <div class="dropdown-menu dropdown-menu-end py-2 align-top">
-                                                                   @*  <a class="dropdown-item text-success"
-                                                                       ng-click="adddata_listworksheet_lv3('list_system',item,$index)">
-                                                                        <span class="fas fa-copy"></span>
-                                                                        Add xx
+                                                                    @*  <a class="dropdown-item text-success"
+                                                                    ng-click="adddata_listworksheet_lv3('list_system',item,$index)">
+                                                                    <span class="fas fa-copy"></span>
+                                                                    Add xx
                                                                     </a> *@
                                                                     <a class="dropdown-item text-success"
                                                                        ng-click="adddata_listworksheet_lv1('list_system',item,$index)">
@@ -2106,8 +2106,8 @@
                                                                         <span class="fas fa-copy"></span>
                                                                         Add
                                                                     </a>
-                                                                    <div class="dropdown-divider "></div><a class="dropdown-item text-danger"
-                                                                                                            ng-click="removeDataListWorksheet('category',item,$index)"><span class="fas fa-times-circle"></span> Remove</a>
+                                                                    <div class="dropdown-divider "></div>
+                                                                    <a class="dropdown-item text-danger" ng-click="remove_listworksheet('category',item,$index)"><span class="fas fa-times-circle"></span> Remove</a>
                                                                 </div>
 
                                                             </div>
@@ -3540,8 +3540,7 @@
     <!--Modal RAM Start-->
     <div class="modal fade modal-xl shadow-sm p-3 mb-5  rounded" id="modalRAM" tabindex="-1"
          aria-labelledby="modalRAMLabel" aria-hidden="true" style="display: none;">
-        <div class="modal-dialog modal-dialog-centered"
-             ng-style=" { 'width' :  (select_columns_level !=5 && (selectedDataNodeWorksheetRamType == 's' || selectedDataNodeWorksheetRamType == 'l')  ) ?'500px' :  '100%' }">
+        <div class="modal-dialog modal-dialog-centered">
 
             <div class="modal-content">
                 <div class="modal-header">
@@ -3570,57 +3569,45 @@
 
                     <div class="row">
 
-                        @*   <div class="col-12 mb-1">
-                        <b class="pe-1 me-1"> Security : {{cal_ram_action_security}}</b>
-                        <b class="pe-1 me-1"> Likelihood : {{cal_ram_action_likelihood}}</b>
-                        <b class="pe-1 me-1">  Risk : </b>
-                        <label class="pe-1 me-1 text-center" style="width:200px"
-                        ng-style=" { 'background-color' : ((cal_ram_action_risk == 'H') ? 'red' : ((cal_ram_action_risk == 'M') ? 'yellow' : ((cal_ram_action_risk == 'L') ? 'green' : '#D3D3D3')) ) }">{{cal_ram_action_risk}}</label>
-                        </div> *@
 
-                        <div class="col-6" ng-if="!previewRam">
+                        <table class="table table-sm fs--1 mb-0 col-auto ">
+                            <thead class="bg-light-primary">
+                                <tr>
+                                    <td rowspan="2" class="text-center"></td>
+                                    <th rowspan="1" colspan="3" class="text-center" ng-if="select_columns_level != 5">Security</th>
+                                    <th rowspan="1" colspan="6" class="text-center" ng-if="select_columns_level == 5">Security</th>
+                                </tr>
+                                <tr ng-if="select_columns_level != 5">
+                                    <td class="text-center">Level</td>
+                                    <td>Description</td>
+                                </tr>
+                                <tr ng-if="select_columns_level == 5">
+                                    <td class="text-center">Level</td>
+                                    <td>People</td>
+                                    <td>Assets</td>
+                                    <td>Enhancement</td>
+                                    <td>Reputation</td>
+                                    <td>Product Quality</td>
+                                </tr>
+                            </thead>
 
-                            <table class="table table-sm fs--1 mb-0 col-auto ">
-                                <thead class="bg-light-primary">
-                                    <tr>
-                                        <td rowspan="2" class="text-center" ng-if="display_selected_ram"></td>
-                                        <th rowspan="1" colspan="3" class="text-center" ng-if="select_columns_level != 5">Security</th>
-                                        <th rowspan="1" colspan="6" class="text-center" ng-if="select_columns_level == 5">Security</th>
-                                    </tr>
-                                    <tr ng-if="select_columns_level != 5">
-                                        <td class="text-center">Level</td>
-                                        <td>Description</td>
-                                    </tr>
-                                    <tr ng-if="select_columns_level == 5">
-                                        <td class="text-center">Level</td>
-                                        <td>People</td>
-                                        <td>Assets</td>
-                                        <td>Enhancement</td>
-                                        <td>Reputation</td>
-                                        <td>Product Quality</td>
-                                    </tr>
-                                </thead>
-
-                                <tbody class=" align-top text-start">
-                                    <tr class="hover-actions-trigger btn-reveal-trigger position-static "
-                                        ng-repeat="item_ram in master_security_level | filter:{id_ram:data_general[0].id_ram,category_type:item_ram.category_type}">
-                                        <td class=" text-end" style="width: 80px;" ng-if="display_selected_ram">
-                                            <a class="pointer" ng-click="selectDataRAM('s',item_ram.security_level)"
-                                               aria-label="Close">Select</a>
-                                        </td>
-                                        <td class="text-center">{{item_ram.security_level}}</td>
-                                        <td ng-if="item_ram.category_type !== 5">{{item_ram.security_text}}</td>
-                                        <td ng-if="item_ram.category_type == 5">{{item_ram.people_text}}</td>
-                                        <td ng-if="item_ram.category_type == 5">{{item_ram.assets_text}}</td>
-                                        <td ng-if="item_ram.category_type == 5">{{item_ram.enhancement_text}}</td>
-                                        <td ng-if="item_ram.category_type == 5">{{item_ram.reputation_text}}</td>
-                                        <td ng-if="item_ram.category_type == 5">{{item_ram.product_quality_text}}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-
-
-                        </div>
+                            <tbody class=" align-top text-start">
+                                <tr class="hover-actions-trigger btn-reveal-trigger position-static "
+                                    ng-repeat="item_ram in master_security_level | filter:{id_ram:data_general[0].id_ram,category_type:item_ram.category_type}">
+                                    <td class=" text-end" style="width: 80px;">
+                                        <a class="pointer" ng-click="selectDataRAM('s',item_ram.security_level)"
+                                           aria-label="Close">Select</a>
+                                    </td>
+                                    <td class="text-center">{{item_ram.security_level}}</td>
+                                    <td ng-if="item_ram.category_type !== 5">{{item_ram.security_text}}</td>
+                                    <td ng-if="item_ram.category_type == 5">{{item_ram.people_text}}</td>
+                                    <td ng-if="item_ram.category_type == 5">{{item_ram.assets_text}}</td>
+                                    <td ng-if="item_ram.category_type == 5">{{item_ram.enhancement_text}}</td>
+                                    <td ng-if="item_ram.category_type == 5">{{item_ram.reputation_text}}</td>
+                                    <td ng-if="item_ram.category_type == 5">{{item_ram.product_quality_text}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
                         <div class="col-6" ng-if="!previewRam">
 
                             <table class="table table-sm fs--1 mb-0 col-auto ">

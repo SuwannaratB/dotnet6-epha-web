@@ -326,6 +326,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             arr[0].action_change = 1;
             apply();
         }
+
+        var arr = $filter('filter')($scope.data_drawingworksheet, function (item) { return (item.seq == seq && !(item.action_type == 'delete')); });
+        if (arr.length == 0) {
+            $scope.addDataWorksheetDrawing(item_draw, seq_nodeworksheet);
+        }
+
         clear_form_valid();
 
     }
