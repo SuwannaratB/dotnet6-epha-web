@@ -26,7 +26,7 @@
 
 }
 
-<div class="content mt-1" style="font-size: 12px;" id="divPage" ng-controller="ctrlAppPage" 
+<div class="content mt-1" style="font-size: 12px;" id="divPage" ng-controller="ctrlAppPage"
      ng-click="toggleResultsVisibility()">
 
 
@@ -178,7 +178,6 @@
 
                                 <label class="form-label ps-0" for="expense_type">
                                     <b class="text-danger"> * </b>Sub Project Type
-                                    Type
                                 </label>
                                 <label class="form-label ps-0" ng-if="select_history_tracking_record">
                                     <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
@@ -325,7 +324,7 @@
                                                 data-options='{"removeItemButton":true,"placeholder":true}'
                                                 ng-change="actionChange(item,item.seq,'')" ng-model="item.id_unit_no"
                                                 ng-if="tab_general_active && !(item.expense_type=='CAPEX' && (item.sub_expense_type=='Study' || item.sub_expense_type=='Internal Study'))">
-                                            <option ng-selected="item.id_unit_no == item2.id"
+                                            <option ng-selected="item.id_unit_no == item2.id && item.area_check == item2.area_check"
                                                     ng-repeat="item2 in master_unit_no"
                                                     ng-value="item2.id" ng-if="item2.id_apu == item.id_apu">
                                                 {{item2.name}}
@@ -358,7 +357,7 @@
 
                                     <div class="col-5 p-1">
                                         <label class="form-label ps-0" for="organizerSingle">
-                                            <b class="text-danger"> * </b>Functional Location
+                                            Functional Location
                                         </label>
 
                                         <label class="form-label ps-0" ng-if="select_history_tracking_record"><a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip" data-bs-placement="top" title=" Functional Location : TPX-76-LICSA-002-TX" data-bs-html="true"></a></label>
@@ -791,7 +790,7 @@
 
                                                     </td>
 
-                                                    <td class="align-middle white-space-nowrap col-3">
+                                                    <td class="align-middle white-space col-3">
 
                                                         <div class="uploadbox align-items-center cursor-pointer">
                                                             <div class="col-12 align-items-center p-1 cursor-pointer ">
@@ -799,7 +798,7 @@
                                                                 <span class="mr-3 nametext text-primary" id="filename{{item.seq}}"
                                                                       ng-class="{'d-none':(!tab_general_active)}"
                                                                       ng-click="downloadFile(item)">
-                                                                    <b>{{(item.document_file_size>0? item.document_file_name + '('+  item.document_file_size + 'KB)' : '')}}</b>
+                                                                    <b style="font-size:x-small">{{(item.document_file_size>0? item.document_file_name + '('+  item.document_file_size + 'KB)' : '')}}</b>
                                                                 </span>
                                                                 <br>
                                                                 <label class="dz-message-text text-primary fw-bold cursor-pointer"
@@ -814,8 +813,7 @@
                                                                 <button id="del-{{item.seq}}" class="btn btn-link text-danger"
                                                                         ng-class="{'d-none':(!tab_general_active)}"
                                                                         ng-click="clearFileName(item.seq)"
-                                                                        ng-if="status_upload">
-                                                                        @* ng-if="item.document_file_size>0"> *@
+                                                                        ng-if="status_upload"> 
                                                                     <span class="fa-regular fa-trash-can fa-lg"></span>
                                                                 </button>
                                                                 <br>
@@ -1237,7 +1235,7 @@
                                                                    onchange="angular.element(this).scope().fileSelectRAM(this)"
                                                                    style="display: none;" />
 
-                                                            <span class="mr-3 dz-message-text text-primary fw-bold" id="filename_ram_{{itemRam.seq}}">
+                                                            <span class="mr-3 dz-message-text text-primary fw-bold" style="font-size:x-small" id="filename_ram_{{itemRam.seq}}">
                                                                 RAM File Name : {{(itemRam.document_file_size>0? itemRam.document_file_name + '('+  itemRam.document_file_size + 'KB)' :itemRam.document_file_name )}}
                                                             </span>
 
@@ -1250,7 +1248,12 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-12 align-items-center">
-                                                    <img src="{{itemRam.document_file_path}}" style="width: 400px;  height:300px;" />
+                                                    <button class="float-end btn btn-outline btn-sm p-1 m-1" ng-click="toggleFullscreen_ram()">
+                                                        <i class="fas fa-expand" style="color: #a1a1a6"></i>
+                                                    </button>
+                                                    <div id="fullscreenzone_ram" style="z-index:998" >
+                                                        <img src="{{itemRam.document_file_path}}" class="cursor-pointer" style="width: 100%; " ng-click="toggleFullscreen_ram()" />
+                                                    </div>
                                                 </div>
 
                                             </div>
@@ -1740,8 +1743,7 @@
                          id="tab-worksheet" role="tabpanel" aria-labelledby="worksheet-tab">
 
                         <div style="background-color: #ffffff;"
-                             ng-if=" ( data_header[0].pha_status == 11 && tab_worksheet_active==true) || (data_header[0].pha_status >  11) ||
-(data_general[0].expense_type == 'OPEX' && (data_general[0].sub_expense_type == 'Study' || data_general[0].sub_expense_type == 'Internal Study'))">
+                             ng-if=" ( data_header[0].pha_status == 11 && tab_worksheet_active==true) || (data_header[0].pha_status >  11) || (data_general[0].expense_type == 'OPEX' && (data_general[0].sub_expense_type == 'Study' || data_general[0].sub_expense_type == 'Internal Study'))">
 
                             <div class="mx-3 row  g-3 align-items-top " ng-if="( data_node.length == 1 ? (data_node[0].node == null ? false : true) : true) ">
 
@@ -1753,7 +1755,7 @@
                                             </div>
                                             <div class=" col-auto p-0 m-0 ps-1">
                                                 <select class="form-select rounded-1 mx-1 p-1  border-start-0  border-end-0 border-top-0" ng-model="selectedItemNodeView"
-                                                        ng-click="viewDataNodeList(selectedItemNodeView)">
+                                                        ng-change="viewDataNodeList(selectedItemNodeView)">
                                                     <option ng-selected="selectedItemNodeView == item2.seq"
                                                             ng-repeat="item2 in data_node" ng-value="item2.seq">
                                                         {{item2.node}}
@@ -1801,15 +1803,15 @@
                                         <!-- ส่วนที่มีอยู่แล้ว -->
                                         <div class="float-end align-top">
 
-                                            <button class="btn btn-danger btn-sm  p-1 m-0 " ng-if="submit_type" 
-                                            ng-click="confirmSave('submit_genarate')">
+                                            <button class="btn btn-danger btn-sm  p-1 m-0 " ng-if="submit_type"
+                                                    ng-click="confirmSave('submit_genarate')">
                                                 <i class="fa-solid far fa-file-pdf  text-danger" ng-if="!(item.sub_expense_type=='Study' || item.sub_expense_type=='Internal Study')"></i> Genarate Full Report
                                             </button>
                                             <br>
                                             <button class="float-end btn btn-outline btn-sm p-1 m-1" ng-click="toggleFullscreen()">
                                                 <i class="fas fa-expand" style="color: #a1a1a6"></i>
                                             </button>
-                                            <div class="float-end align-top pt-2 ms-1" ng-class="{'tab-pane fade show active':!(data_header[0].pha_status==12)}">
+                                            <div class="float-end align-top pt-2 ms-1 d-none" ng-class="{'tab-pane fade show active':!(data_header[0].pha_status==12)}">
                                                 <div class="float-end pe-3">
                                                     <div class="form-check form-switch cursor-pointer">
                                                         <input class="form-check-input cursor-pointer" name="sceSwitchCheckChecked" id="sceSwitchCheckChecked"
@@ -1833,8 +1835,8 @@
                                     <table class="table fs--2 mb-0 table-bordered " style="min-height:400px;" cellpadding="0" cellspacing="0">
                                         <thead class=" text-uppercase  text-center  bg-soft  test" style="font-size: 10px;" id="myHeader">
                                             <tr>
-                                                <th class=" align-middle   mx-0" colspan="1" rowspan="2" style="padding: 0 !important;  width: 200px;">Guide Word </th>
-                                                <th class=" align-middle   mx-0" colspan="1" rowspan="2" scope="col" style="padding: 0 !important;">Deviations</th>
+                                                <th class=" align-middle   mx-0" colspan="1" rowspan="2" style="padding: 0 !important;  width: 80px;">Guide Word </th>
+                                                <th class=" align-middle   mx-0" colspan="1" rowspan="2" scope="col" style="padding: 0 !important; width: 80px;">Deviations</th>
                                                 <th class=" align-middle   mx-0" colspan="1" rowspan="2" scope="col" style="padding: 0 !important; width: 200px;">Causes</th>
                                                 <th class=" align-middle   mx-0" colspan="1" rowspan="2" scope="col" style="padding: 0 !important; width: 200px;">Consequences</th>
 
@@ -2036,6 +2038,7 @@
 
                                                 <td class="align-top border border-light border-end-0  border-start-0  border-top-0 "
                                                     style="padding: 0 !important; width: 20px;">
+                                                    @* <b class="text-danger">{{item.index_rows}}</b> *@
                                                     <div class="align-items-center text-end mt-1" style=" width: 20px;"
                                                          ng-class="{'disabled-link':(!tab_worksheet_active)}">
                                                         <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end"
@@ -2274,7 +2277,7 @@
 
                             </div>
                             <div class="align-items-center mb-5 mt-2">
-                                <div class="form-check form-switch cursor-pointer">
+                                <div class="form-check form-switch cursor-pointer d-none">
                                     <input class="form-check-input cursor-pointer" name="sceSwitchNoteChecked" id="sceSwitchNoteChecked"
                                            type="checkbox"
                                            ng-click="node_note_show()" />
@@ -3148,7 +3151,7 @@
                 </div>
                 <div class="modal-header bg-soft" ng-if="!(selectDatFormType =='owner')">
                     <h5 class="text-900 mb-0">
-                        <span class=" me-2 text-primary"><B>|</B></span> {{selectDatFormType =='member' ? 'Member Team' : 'Approver'}} 
+                        <span class=" me-2 text-primary"><B>|</B></span> {{selectDatFormType =='member' ? 'Member Team' : 'Approver'}}
                     </h5>
                 </div>
                 <div class="modal-body" ng-if="selectDatFormType =='member'">
@@ -3756,7 +3759,7 @@
 
                                             <button class="btn btn-phoenix-primary  ms-1  float-end bg-light-primary">
                                                 <a class="dropdown-item text-primary"
-                                                   ng-click="AddDataGuideWords()">
+                                                   ng-click="AddDataGuideWords(true)">
                                                     <span class="fas fa-check"></span>
                                                     Apply
                                                 </a>
@@ -3776,19 +3779,17 @@
                                             <th class="white-space-nowrap fs--1 align-middle ps-0" style="width:5%;">
                                                 Active
                                             </th>
-                                            <th class=" align-middle pe-5" scope="col" data-sort="employee" style="width:15%;">
+                                            <th class=" align-middle pe-5" scope="col">
                                                 Deviations
                                             </th>
-                                            <th class=" align-middle pe-5" scope="col" data-sort="email" style="width:15%;">
-                                                Guide
-                                                Words
+                                            <th class=" align-middle pe-5" scope="col">
+                                                Guide Words
                                             </th>
-                                            <th class=" align-middle text-end" scope="col" data-sort="total-orders" style="width:30%">
+                                            <th class=" align-middle pe-5" scope="col">
                                                 Process Deviation (Examples of Cause)
                                             </th>
-                                            <th class=" align-middle ps-7" scope="col" data-sort="city" style="width:30%;">
-                                                Area of
-                                                Application
+                                            <th class=" align-middle pe-5" scope="col">
+                                                Area of  Application
                                             </th>
                                         </tr>
                                     </thead>
@@ -3801,19 +3802,18 @@
 
                                             <td class="fs--1 align-middle ps-0 py-3">
                                                 <input type="checkbox" class="form-check-input text-end " disabled="true"
-                                                       ng-model="itemMod.selected" ng-if="(itemMod.def_selected==1)">
+                                                       ng-change="actionChangeGuidwords(itemMod,true)"
+                                                       ng-model="itemMod.selected" 
+                                                       ng-if="(itemMod.def_selected==1)">
 
                                                 <input type="checkbox" class="form-check-input text-end cursor-pointer"
+                                                       ng-change="actionChangeGuidwords(itemMod,false)"
                                                        ng-model="itemMod.selected" ng-if="!(itemMod.def_selected==1)">
                                             </td>
-                                            <td class="customer align-middle white-space-nowrap pe-5">{{itemMod.deviations}}</td>
-                                            <td class="email align-middle white-space-nowrap text-1000 ps-7">{{item.guide_words}}</td>
-                                            <td class="total-orders align-middle text-1000 ps-7">
-                                                <p class="text-break">
-                                                    {{itemMod.process_deviation}}
-                                                </p>
-                                            </td>
-                                            <td class="city align-middle white-space-nowrap text-1000 ps-7">{{itemMod.area_application}}</td>
+                                            <td class="align-middle ps-1">{{itemMod.deviations}}</td>
+                                            <td class="align-middle ps-1">{{itemMod.guide_words}}</td>
+                                            <td class="align-middle ps-1">{{itemMod.process_deviation}}</td>
+                                            <td class="align-middle ps-1">{{itemMod.area_application}}</td>
                                         </tr>
 
                                     </tbody>
@@ -3884,10 +3884,13 @@
 
 
     *@
+
+    @* RAM *@
+
     <!--Modal RAM Start-->
     <div class="modal fade modal-xl shadow-sm p-3 mb-5  rounded" id="modalRAM" tabindex="-1"
          aria-labelledby="modalRAMLabel" aria-hidden="true" style="display: none;">
-        <div class="modal-dialog modal-dialog-centered" >
+        <div class="modal-dialog modal-dialog-centered">
 
             <div class="modal-content">
                 <div class="modal-header">
@@ -3917,52 +3920,57 @@
                     <div class="row">
 
 
-                        <table class="table table-sm fs--1 mb-0 col-auto ">
-                            <thead class="bg-light-primary">
-                                <tr>
-                                    <td rowspan="2" class="text-center"></td>
-                                    <th rowspan="1" colspan="3" class="text-center" ng-if="select_columns_level != 5">Security</th>
-                                    <th rowspan="1" colspan="6" class="text-center" ng-if="select_columns_level == 5">Security</th>
-                                </tr>
-                                <tr ng-if="select_columns_level != 5">
-                                    <td class="text-center">Level</td>
-                                    <td>Description</td>
-                                </tr>
-                                <tr ng-if="select_columns_level == 5">
-                                    <td class="text-center">Level</td>
-                                    <td>People</td>
-                                    <td>Assets</td>
-                                    <td>Enhancement</td>
-                                    <td>Reputation</td>
-                                    <td>Product Quality</td>
-                                </tr>
-                            </thead>
-
-                            <tbody class=" align-top text-start">
-                                <tr class="hover-actions-trigger btn-reveal-trigger position-static "
-                                    ng-repeat="item_ram in master_security_level | filter:{id_ram:data_general[0].id_ram,category_type:item_ram.category_type}">
-                                    <td class=" text-end" style="width: 80px;">
-                                        <a class="pointer" ng-click="selectDataRAM('s',item_ram.security_level)"
-                                           aria-label="Close">Select</a>
-                                    </td>
-                                    <td class="text-center">{{item_ram.security_level}}</td>
-                                    <td ng-if="item_ram.category_type !== 5">{{item_ram.security_text}}</td>
-                                    <td ng-if="item_ram.category_type == 5">{{item_ram.people_text}}</td>
-                                    <td ng-if="item_ram.category_type == 5">{{item_ram.assets_text}}</td>
-                                    <td ng-if="item_ram.category_type == 5">{{item_ram.enhancement_text}}</td>
-                                    <td ng-if="item_ram.category_type == 5">{{item_ram.reputation_text}}</td>
-                                    <td ng-if="item_ram.category_type == 5">{{item_ram.product_quality_text}}</td>
-                                </tr>
-                            </tbody>
-                        </table>
                         <div class="col-6" ng-if="!previewRam">
 
                             <table class="table table-sm fs--1 mb-0 col-auto ">
                                 <thead class="bg-light-primary">
                                     <tr>
-                                        <td rowspan="3" class="text-center"></td>
-                                        <th rowspan="2" colspan="3" ng-if="select_columns_level != 5">Likelihood</th>
-                                        <th rowspan="2" colspan="5" ng-if="select_columns_level == 5">Likelihood</th>
+                                        <td rowspan="2" class="text-center"></td>
+                                        <th rowspan="1" colspan="3" class="text-center" ng-if="select_columns_level != 5">Security</th>
+                                        <th rowspan="1" colspan="6" class="text-center" ng-if="select_columns_level == 5">Security</th>
+                                    </tr>
+                                    <tr ng-if="select_columns_level != 5">
+                                        <td class="text-center">Level</td>
+                                        <td>Description</td>
+                                    </tr>
+                                    <tr ng-if="select_columns_level == 5">
+                                        <td class="text-center">Level</td>
+                                        <td>People</td>
+                                        <td>Assets</td>
+                                        <td>Enhancement</td>
+                                        <td>Reputation</td>
+                                        <td>Product Quality</td>
+                                    </tr>
+                                </thead>
+
+                                <tbody class=" align-top text-start">
+                                    <tr class="hover-actions-trigger btn-reveal-trigger position-static "
+                                        ng-repeat="item_ram in master_security_level | filter:{id_ram:data_general[0].id_ram,category_type:item_ram.category_type}">
+                                        <td class=" text-end" style="width: 80px;">
+                                            <a class="pointer" ng-click="selectDataRAM('s',item_ram.security_level)"
+                                               aria-label="Close">Select</a>
+                                        </td>
+                                        <td class="text-center">{{item_ram.security_level}}</td>
+                                        <td ng-if="item_ram.category_type !== 5">{{item_ram.security_text}}</td>
+                                        <td ng-if="item_ram.category_type == 5">{{item_ram.people_text}}</td>
+                                        <td ng-if="item_ram.category_type == 5">{{item_ram.assets_text}}</td>
+                                        <td ng-if="item_ram.category_type == 5">{{item_ram.enhancement_text}}</td>
+                                        <td ng-if="item_ram.category_type == 5">{{item_ram.reputation_text}}</td>
+                                        <td ng-if="item_ram.category_type == 5">{{item_ram.product_quality_text}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+
+                        </div>
+                        <div class="col-6" ng-if="!previewRam">
+
+                            <table class="table table-sm fs--1 mb-0 col-auto ">
+                                <thead class="bg-light-primary">
+                                    <tr>
+                                        <td rowspan="2" class="text-center"></td>
+                                        <th rowspan="1" colspan="3" ng-if="select_columns_level != 5">Likelihood</th>
+                                        <th rowspan="1" colspan="5" ng-if="select_columns_level == 5">Likelihood</th>
                                     </tr>
                                     <tr ng-if="select_columns_level != 5">
                                         <td class="text-center">Level</td>
@@ -3984,9 +3992,10 @@
                                                aria-label="Close">Select</a>
                                         </td>
                                         <td class="text-center">{{item_ram.likelihood_level}}</td>
-                                        <td ng-if="item_ram.columns_level !== 5">{{item_ram.likelihood_show}}</td>
 
-                                        <td ng-if="item_ram.columns_level == 5">{{item_ram.likelihood_text}}</td>
+                                        <td ng-if="!(item_ram.columns_level == 5)">{{item_ram.likelihood_show}}</td>
+
+                                        <td>{{item_ram.likelihood_text}}</td>
                                         <td ng-if="item_ram.columns_level == 5">{{item_ram.likelihood_desc}}</td>
                                         <td ng-if="item_ram.columns_level == 5">{{item_ram.likelihood_criterion}}</td>
                                     </tr>
@@ -3998,7 +4007,7 @@
                         <div class="col-12 mt-1 pt-1" style="zoom:0.7;">
 
                             <div class="text-center cursor-pointer " ng-repeat="itemRam in master_ram | filter:{id: data_general[0].id_ram}">
-                                <img src="{{itemRam.document_file_path}}" style="width: 400px;  height:300px;" />
+                                <img src="{{itemRam.document_file_path}}" style="width: 80%;" class="cursor-pointer"   />
                             </div>
 
                         </div>
@@ -4119,6 +4128,62 @@
         </div>
     </div>
     <!--Modal RAM End-->
+    <!--Modal New RAM-->
+    <div class="modal fade" id="modalNewRAM" tabindex="-1" aria-labelledby="modalNewRAM"
+         aria-hidden="true" style="display: none;">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalNewRAM">Risk Assessment Matrix</h5>
+                    <button class="btn p-1" type="button" data-bs-dismiss="modal" aria-label="Close">
+                        <svg class="svg-inline--fa fa-xmark fs--1" aria-hidden="true" focusable="false" data-prefix="fas"
+                             data-icon="xmark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"
+                             data-fa-i2svg="">
+                            <path fill="currentColor"
+                                  d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z">
+                            </path>
+                        </svg>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="row g-3 flex-start mb-3">
+                        <div class="col-md-8 ps-2">
+                            <input class="form-control rounded-1 ps-1" ng-class="{'disabled-link':(!tab_general_active)}"
+                                   type="text" placeholder="Ram Name"
+                                   name="ram_name"
+                                   ng-model="item.ram_name"
+                                   ng-keyup="actionChange_ram_name(item.ram_name)">
+                        </div>
+                    </div>
+
+                    <div class="row g-3 flex-center">
+                        <div class="d-flex flex-center ">
+                            <select class="form-control" ng-model="ram_rows_level">
+                                <option ng-repeat="itemNo in master_no">
+                                    {{itemNo.name}}
+                                </option>
+                            </select>
+                            <label class="form-label" style=" width:100px">X</label>
+                            <select class="form-control" ng-model="ram_columns_level">
+                                <option ng-repeat="itemNo in master_no">
+                                    {{itemNo.name}}
+                                </option>
+                            </select>
+                            <span class="mx-2" ng-if="save_type">
+                                <button class="btn btn-primary btn-sm" style="width: 100px;" ng-click="confirmAddRAM()">Add</button>
+                            </span>
+                        </div>
+                        <div class="">
+                            <label class="form-label">{{ram_msg_level}}</label>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!--Modal New RAM-->
     @* x
 
     *@

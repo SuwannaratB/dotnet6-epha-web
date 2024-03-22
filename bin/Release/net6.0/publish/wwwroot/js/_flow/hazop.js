@@ -243,8 +243,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                         if (!$scope.data_general[0].expense_type ||
                             !$scope.data_general[0].sub_expense_type ||
-                            !$scope.data_general[0].id_apu ||
-                            !$scope.data_general[0].functional_location
+                            !$scope.data_general[0].id_apu
                         ) {
                             $scope.tab_worksheet_show = true;
                             $scope.tab_managerecom_show = true;
@@ -274,27 +273,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         $scope.tab_worksheet_show = true;
                         $scope.tab_managerecom_show = true;
                     }
-
-
-                    // if ($scope.data_general[0].expense_type &&
-                    //     $scope.data_general[0].sub_expense_type &&
-                    //     $scope.data_general[0].id_apu &&
-                    //     $scope.data_general[0].functional_location &&
-                    //     $scope.data_drawing[0].document_no &&
-                    //     $scope.data_node[0].node &&
-                    //     $scope.data_nodedrawing[0].id_drawing &&
-                    //     $scope.status_upload) {
-                    //     selectedTab = $scope.oldTab;
-                    //     apply();
-
-                    //     $('#modalPleaseRegister').modal('show');
-                    //     return;
-                    // } else {
-                    //     $scope.tab_worksheet_show = true;
-                    //     $scope.tab_managerecom_show = true;
-
-                    //     set_alert("Warning", "Please provide a valid Session List")
-                    // }
                 }
             }
         } catch (error) { }
@@ -771,9 +749,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.data_drawing_approver_delete = [];
 
 
-
         $scope.select_history_tracking_record = false;
-        //$scope.functional_location_audition = ["TPX-76-LICSA-001-TX", "TPX-76-LICSA-002-TX", "TPX-76-LICSA-003-TX"];
 
         $scope.selectedItemNodeView = 0;
         $scope.selectedDataNodeWorksheetRamType = null;
@@ -1018,7 +994,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 console.log(arr);
                 if (arr[0].status == 'true') {
                     $scope.pha_type_doc = 'update';
-                    if (action == 'save' || action == 'submit_moc' 
+                    if (action == 'save' || action == 'submit_moc'
                         || action_def == "confirm_submit_register"
                         || action_def == "confirm_submit_register_without") {
 
@@ -1102,7 +1078,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         });
 
 
-                    } 
+                    }
                     else {
 
                         set_alert('Success', 'Data has been successfully submitted.');
@@ -1244,308 +1220,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     function get_data_after_save(page_load, action_submit, pha_seq) {
         var user_name = conFig.user_name();
         call_api_load(false, action_submit, user_name, pha_seq);
-    }
-
-    // function get_data_after_save(pha_seq) {
-    //     console.log('user_name', conFig.user_name())
-    //     console.log('pha_seq', pha_seq)
-    //     call_api_load(true, false, user_name, pha_seq);
-    // }
-
-    function call_api_loadx(page_load, action_submit, user_name, pha_seq) {
-        var type_doc = $scope.pha_type_doc;//review_document
-        if (pha_seq) {
-            type_doc = 'edit';
-        }
-        console.log('user_name', user_name)
-        console.log('pha_seq', pha_seq)
-        console.log('action_submit', action_submit)
-        console.log('page_load', page_load)
-        console.log('type_doc', type_doc)
-        $.ajax({
-            url: url_ws + "Flow/get_hazop_details",
-            data: '{"sub_software":"hazop","user_name":"' + user_name + '","token_doc":"' + pha_seq + '","type_doc":"' + type_doc + '"}',
-            type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
-            beforeSend: function () {
-                $('#divLoading').show();
-            },
-            complete: function () {
-                $('#divLoading').hide();
-            },
-            success: function (data) {
-
-                var action_part_befor = $scope.action_part;//(page_load == false ? $scope.action_part : 0);
-                var tabs_befor = (page_load == false ? $scope.tabs : null);
-
-                var arr = data;
-                if (true) {
-                    $scope.data_all = arr;
-                    $scope.master_apu = arr.apu;
-                    $scope.master_business_unit_def = arr.business_unit;
-                    $scope.master_business_unit = arr.business_unit;
-                    $scope.master_unit_no = arr.unit_no;
-                    $scope.master_functional = arr.functional;
-                    $scope.master_functional_audition = arr.functional;//ใช้ใน functional audition
-
-                    //แก้ไขเบื้องต้น เนื่องจาก path file ผิดต้องเป็น folder hazop
-                    for (let i = 0; i < arr.ram.length; i++) {
-                        arr.ram[i].document_file_path = (url_ws.replace('/api/', '/')) + arr.ram[i].document_file_path;
-                    }
-
-                    $scope.master_ram = arr.ram;
-                    $scope.master_ram_level = arr.ram_level;
-                    $scope.master_ram_color = arr.ram_color;
-                    $scope.master_ram_priority = [{ id: 1, name: 'H' }, { id: 2, name: 'M' }, { id: 3, name: 'L' }, { id: 4, name: 'N' }, { id: 5, name: 'N/A' }];
-                    $scope.master_ram_criterion = [{ id: 'N', name: 'N' }, { id: 'Y', name: 'Y' }];
-                    $scope.master_security_level = arr.security_level;
-                    $scope.master_likelihood_level = arr.likelihood_level;
-                    $scope.master_no = [{ id: 4, name: 4 }, { id: 5, name: 5 }, { id: 6, name: 6 }, { id: 7, name: 7 }, { id: 8, name: 8 }, { id: 9, name: 9 }, { id: 10, name: 10 }];
-                    $scope.ram_rows_level = 5;
-                    $scope.ram_columns_level = 5;
-
-                    $scope.master_apu = JSON.parse(replace_hashKey_arr(arr.apu));
-
-                    $scope.master_guidwords = arr.guidwords;
-                    $scope.employeelist_def = arr.employee;
-
-                    if (true) {
-                        arr.header[0].safety_critical_equipment_show = (arr.header[0].safety_critical_equipment_show == null ? 0 : arr.header[0].safety_critical_equipment_show);
-                        $scope.data_header = arr.header;
-
-                        var inputs = document.getElementsByTagName('sceSwitchCheckChecked');
-                        for (var i = 0; i < inputs.length; i++) {
-                            if (inputs[i].type == 'checkbox') {
-                                if ($scope.data_header[0].safety_critical_equipment_show == 1) {
-                                    inputs[i].checked = true;
-                                } else { inputs[i].checked = false; }
-                            }
-                        }
-                    }
-
-                    $scope.data_general = arr.general;
-
-                    $scope.data_functional_audition = arr.functional_audition;
-
-                    $scope.data_session = arr.session;
-                    $scope.data_session_def = clone_arr_newrow(arr.session);
-
-                    $scope.data_memberteam = arr.memberteam;
-                    $scope.data_memberteam_def = clone_arr_newrow(arr.memberteam);
-                    $scope.data_memberteam_old = (arr.memberteam);
-
-                    $scope.data_approver = arr.approver;
-                    $scope.data_approver_def = clone_arr_newrow(arr.approver);
-                    $scope.data_approver_old = (arr.approver);
-
-                    $scope.data_drawing = arr.drawing;
-                    $scope.data_drawing_def = clone_arr_newrow(arr.drawing);
-
-                    $scope.data_drawing_approver_responder = arr.drawingworksheet_responder;
-                    $scope.data_drawing_approver_reviewer = arr.drawingworksheet_reviewer;
-
-                    $scope.data_node = arr.node;
-                    $scope.data_node_def = clone_arr_newrow(arr.node);
-
-                    //แก้ไขเบื้องต้น เนื่องจาก path file ผิดต้องเป็น folder hazop 
-                    for (let i = 0; i < arr.nodedrawing; i++) {
-
-                        if (arr.nodedrawing[i].document_file_path.indexOf('/FollowUp/') > -1) {
-                            arr.nodedrawing[i].document_file_path = arr.nodedrawing[i].document_file_path.replace('/FollowUp/', '/hazop/');
-                        }
-                    }
-                    $scope.data_nodedrawing = arr.nodedrawing;
-                    $scope.data_nodedrawing_def = clone_arr_newrow(arr.nodedrawing);
-
-                    if (true) {
-                        $scope.data_nodeguidwords = arr.nodeguidwords;
-                        $scope.data_nodeguidwords_def = clone_arr_newrow(arr.nodeguidwords);
-                    }
-
-                    $scope.data_nodeworksheet = arr.nodeworksheet;
-                    $scope.data_nodeworksheet_def = clone_arr_newrow(arr.nodeworksheet);
-
-                    $scope.data_drawing_approver = arr.drawing_approver;
-                    $scope.data_drawing_approver_def = clone_arr_newrow(arr.drawing_approver);
-                    $scope.data_drawing_approver_old = (arr.drawing_approver);
-
-                    get_max_id();
-                    set_data_general();
-                    set_data_nodeguidwords();
-                    set_data_nodeworksheet();
-                    set_master_ram_likelihood('');
-
-                    //get recommendations_no in node worksheet
-                    if ($scope.data_nodeworksheet.length > 0) {
-                        var arr_copy_def = angular.copy($scope.data_nodeworksheet, arr_copy_def);
-                        arr_copy_def.sort((a, b) => Number(b.recommendations_no) - Number(a.recommendations_no));
-                        var recommendations_no = Number(Number(arr_copy_def[0].recommendations_no) + 1);
-                        for (let i = 0; i < $scope.data_nodeworksheet; i++) {
-                            if ($scope.data_nodeworksheet[i].recommendations == null || $scope.data_nodeworksheet[i].recommendations == '') {
-                                if ($scope.data_nodeworksheet[i].recommendations_no == null || $scope.data_nodeworksheet[i].recommendations_no == '') {
-                                    $scope.data_nodeworksheet[i].recommendations_no = recommendations_no;
-                                    recommendations_no += 1;
-                                }
-                            }
-                        }
-
-                        $scope.selectedItemNodeView = $scope.data_nodeworksheet[0].id_node;
-                    }
-
-                }
-
-                $scope.data_session_delete = [];
-                $scope.data_memberteam_delete = [];
-                $scope.data_drawing_delete = [];
-                $scope.data_node_delete = [];
-                $scope.data_nodedrawing_delete = [];
-                $scope.data_nodeguidwords_delete = [];
-                $scope.data_nodeworksheet_delete = [];
-                try {
-                    $scope.flow_role_type = str(conFig.role_type());// "admin";//admin,request,responder,approver
-                } catch { }
-                if (arr.header[0].pha_request_by.toLowerCase() == $scope.user_name.toLowerCase()) {
-                    $scope.flow_role_type = 'admin';
-                    conFig.role_type = 'admin';
-                }
-                $scope.flow_status = 0;
-
-                //แสดงปุ่ม
-                $scope.flexSwitchCheckChecked = false;
-                $scope.back_type = true;
-                $scope.cancle_type = false;
-                $scope.export_type = false;
-                $scope.save_type = true;
-                $scope.submit_review = true;
-                $scope.action_to_review_type = false;
-                $scope.submit_type = true;
-
-                $scope.selectActiveNotification = ($scope.data_header[0].active_notification == 1 ? true : false);
-
-                if (page_load) {
-                    if (arr.header[0].pha_status == 21 || arr.header[0].pha_status == 22) {
-                        $scope.tabs = [
-                            { name: 'general', action_part: 1, title: 'General Information', isActive: true, isShow: false },
-                            { name: 'session', action_part: 2, title: 'HAZOP Session', isActive: false, isShow: false },
-                            { name: 'node', action_part: 3, title: 'Node', isActive: false, isShow: false },
-                            { name: 'ram', action_part: 4, title: 'RAM', isActive: false, isShow: false },
-                            { name: 'worksheet', action_part: 5, title: 'HAZOP Worksheet', isActive: false, isShow: false },
-                            { name: 'manage', action_part: 6, title: 'Manage Recommendations', isActive: false, isShow: false },
-                            { name: 'approver', action_part: 7, title: 'Approver', isActive: false, isShow: false },
-                            { name: 'report', action_part: 8, title: 'Report', isActive: false, isShow: false }
-                        ];
-                    }
-                }
-
-
-                $scope.data_header = JSON.parse(replace_hashKey_arr(arr.header));
-                set_form_action(action_part_befor, !action_submit, page_load);
-
-                //ตรวจสอบเพิ่มเติม
-                if (arr.user_in_pha_no[0].pha_no == '' && $scope.flow_role_type != 'admin') {
-                    if (arr.header[0].action_type != 'insert') {
-                        $scope.tab_general_active = false;
-                        $scope.tab_node_active = false;
-                        $scope.tab_worksheet_active = false;
-                        $scope.tab_managerecom_active = false;
-
-                        $scope.save_type = false;
-                        $scope.submit_review = false;
-                        $scope.submit_type = false;
-                    }
-                } else if (arr.user_in_pha_no[0].pha_no != '' && $scope.flow_role_type != 'admin') {
-                    if (arr.header[0].action_type != 'insert') {
-                        $scope.tab_general_active = false;
-                        $scope.tab_node_active = false;
-                        $scope.tab_worksheet_active = false;
-                        $scope.tab_managerecom_active = false;
-
-                        $scope.save_type = false;
-                        $scope.submit_review = false;
-                        $scope.submit_type = false;
-                    }
-                }
-
-                if (true) {
-
-                    if (!page_load) {
-                        if (!action_submit) {
-                            $scope.action_part = action_part_befor;
-                            $scope.tabs = tabs_befor;
-                        }
-                    }
-
-                    var i = 0;
-                    var id_ram = $scope.data_general[0].id_ram;
-                    var arr_items = $filter('filter')($scope.master_ram_level, function (item) { return (item.id_ram == id_ram); });
-                    if (arr_items.length > 0) {
-
-                        $scope.select_rows_level = arr_items[0].rows_level;
-                        $scope.select_columns_level = arr_items[0].columns_level;
-                        $scope.selected_ram_img = (url_ws.replace('/api/', '/')) + arr_items[0].document_file_path;
-                    }
-
-                    try {
-                        $scope.master_apu = JSON.parse(replace_hashKey_arr(arr.apu));
-                        $scope.master_functional = JSON.parse(replace_hashKey_arr(arr.functional));
-                        $scope.master_business_unit = JSON.parse(replace_hashKey_arr(arr.business_unit));
-                        $scope.master_business_unit_def = JSON.parse(replace_hashKey_arr(arr.business_unit));
-                        $scope.master_unit_no = JSON.parse(replace_hashKey_arr(arr.unit_no));
-
-                        if ($scope.data_general[0].master_apu == null || $scope.data_general[0].master_apu == '') {
-                            $scope.data_general[0].master_apu = null;
-                            //var arr_clone_def = { id: $scope.data_general[0].master_apu, name: 'Please select' };
-                            var arr_clone_def = { id: null, name: 'Please select' };
-                            $scope.master_apu.splice(0, 0, arr_clone_def);
-                        }
-                        if ($scope.data_general[0].master_functional == null || $scope.data_general[0].master_functional == '') {
-                            $scope.data_general[0].master_functional = null;
-                            //var arr_clone_def = { id: $scope.data_general[0].master_functional, name: 'Please select' };
-                            var arr_clone_def = { id: null, name: 'Please select' };
-                            $scope.master_functional.splice(0, 0, arr_clone_def);
-                        }
-                        //if ($scope.data_general[0].id_business_unit == null) {
-                        //    $scope.data_general[0].id_business_unit = null;
-                        //    //var arr_clone_def = { id: $scope.data_general[0].id_business_unit, name: 'Please select' };
-                        //    var arr_clone_def = { id: null, name: 'Please select' };
-                        //    $scope.master_business_unit.splice(0, 0, arr_clone_def);
-                        //}
-                        if ($scope.data_general[0].master_unit_no == null || $scope.data_general[0].master_unit_no == '') {
-                            $scope.data_general[0].master_unit_no = null;
-                            //var arr_clone_def = { id: $scope.data_general[0].master_unit_no, name: 'Please select' };
-                            var arr_clone_def = { id: null, name: 'Please select' };
-                            $scope.master_unit_no.splice(0, 0, arr_clone_def);
-                        }
-                    } catch (ex) { alert(ex); console.clear(); }
-
-                    if ($scope.data_drawing[0].document_file_path) {
-                        $scope.status_upload = true;
-                    }
-
-                    $scope.$apply();
-                    try {
-                        if (page_load == true || true) {
-                            const choices1 = new Choices('.js-choice-apu');
-                            const choices2 = new Choices('.js-choice-functional');
-                            const choices5 = new Choices('.js-choice-functional_audition');
-
-                            //const choices3 = new Choices('.js-choice-business_unit');
-                            //const choices4 = new Choices('.js-choice-unit_no');
-                        }
-                    } catch { }
-
-                }
-
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                if (jqXHR.status == 500) {
-                    alert('Internal error: ' + jqXHR.responseText);
-                } else {
-                    alert('Unexpected ' + textStatus);
-                }
-            }
-
-        });
-
     }
     function call_api_load(page_load, action_submit, user_name, pha_seq) {
 
@@ -1694,10 +1368,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 $scope.data_nodeguidwords_delete = [];
                 $scope.data_nodeworksheet_delete = [];
                 try {
-                $scope.flow_role_type = conFig.role_type();// "admin";//admin,request,responder,approver
-                if (arr.header[0].pha_request_by.toLowerCase() == $scope.user_name.toLowerCase()) {
-                    $scope.flow_role_type = 'admin';
-                    conFig.role_type = 'admin';
+                    $scope.flow_role_type = conFig.role_type();// "admin";//admin,request,responder,approver
+                    if (arr.header[0].pha_request_by.toLowerCase() == $scope.user_name.toLowerCase()) {
+                        $scope.flow_role_type = 'admin';
+                        conFig.role_type = 'admin';
                     }
                 } catch { }
                 $scope.flow_status = 0;
@@ -2267,7 +1941,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
 
         var functional_location_audition = $scope.data_general[0].functional_location_audition;
-        //var xSplitFunc = (functional_audition).replaceAll('"','').replace('[','').replace(']','').split(",");
         var xSplitFunc = (functional_location_audition).replaceAll('"', '').replace('[', '').replace(']', '').split(",");
         var _functoArr = [];
         for (var i = 0; i < xSplitFunc.length; i++) {
@@ -2282,17 +1955,27 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
     function set_data_nodeguidwords() {
 
+        if ($scope.data_nodeworksheet.length > 0) {
+            if (!($scope.data_nodeworksheet[0].action_type == 'new')) {
+                //กรณีที่เคยมีข้อมุล ให้เอาตามที่เคยเลือกไป 
+                var arr = $filter('filter')($scope.master_guidwords, { def_selected: 1 });
+
+
+
+                return;
+            }
+        }
+
         var iNo = 1;
         for (let n = 0; n < $scope.data_node.length; n++) {
             var seq_node = Number($scope.data_node[n].seq);
-            //var arr = $filter('filter')($scope.master_guidwords, { def_selected: true });
             var arr = $filter('filter')($scope.master_guidwords, { def_selected: 1 });
 
             var arr_def = [];
             for (let i = 0; i < arr.length; i++) {
 
                 var ar_check = $filter('filter')($scope.data_nodeguidwords,
-                    { id_node: seq_node, id_guid_words: arr[i].seq });
+                    { id_node: seq_node, id_guide_word: arr[i].seq });
 
                 if (ar_check.length > 0) {
                     for (let iold = 0; iold < ar_check.length; iold++) {
@@ -2453,6 +2136,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                 angular.copy(arr_def, $scope.data_nodeworksheet);
 
+                for (let i = 0; i < $scope.data_nodeworksheet.length; i++) {
+                    $scope.data_nodeworksheet[i].index_rows = i;
+                }
+
+                running_recommendations_no();
+
                 set_data_managerecom();
 
                 for (let i = 0; i < $scope.data_nodeguidwords.length; i++) {
@@ -2462,6 +2151,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 }
             }
         }
+
+
     }
     function set_master_ram_likelihood(ram_select) {
 
@@ -2979,7 +2670,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.addDataNodeDrawing("", $scope.selectdata_node);
 
         //add NodeDrawing  
-        $scope.AddDataGuideWords();
+        $scope.AddDataGuideWords(false);
 
         add_data_nodeworksheet_new_node(xValues);
 
@@ -2996,6 +2687,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             var xseq_category = Number($scope.MaxSeqdata_nodeworksheetCat);
             var row_type = "causes";
 
+            var index_rows = 0;
             var iNo = 1;
             var arr_node = $filter('filter')($scope.data_node, function (item) { return (item.id == seq_node_select); });
             for (let n = 0; n < arr_node.length; n++) {
@@ -3041,6 +2733,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                             newInput.seq_consequences = xseq_consequences;
                             newInput.seq_category = xseq_category;
 
+                            //newInput.index_rows = index_rows;
                             newInput.no = iNo;
                             newInput.causes_no = 1;
                             newInput.consequences_no = 1;
@@ -3055,12 +2748,16 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                             $scope.selectdata_nodeworksheet = xseq;
                             iNo++;
+                            index_rows++;
                         }
                     }
                 }
             }
 
-            running_index_nodeworksheet('');
+            //running_index_nodeworksheet('');
+            for (let i = 0; i < $scope.data_nodeworksheet.length; i++) {
+                $scope.data_nodeworksheet[i].index_rows = i;
+            }
 
             var arr_nodeguidwords = $filter('filter')($scope.data_nodeguidwords, function (item) { return (item.seq_node == seq_node_select); });
             for (let i = 0; i < arr_nodeguidwords.length; i++) {
@@ -3251,18 +2948,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     $scope.master_guidwords[i].selected = true;
                     //$scope.master_guidwords[i].def_selected = true;
                 } else {
-                    $scope.master_guidwords[i].selected = false;
-                    //$scope.master_guidwords[i].def_selected = false;
-
+                    $scope.master_guidwords[i].selected = (arr[i].def_selected == 1 ? true : false);
                 }
             } catch (e) { }
         };
 
         if (bCheckNewDataByNode == false) {
             for (let i = 0; i < arr.length; i++) {
-
                 $scope.master_guidwords[i].selected = true;
-                //$scope.master_guidwords[i].def_selected = true;
             };
         }
 
@@ -3271,81 +2964,99 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $('#modalGuideWords').modal('show');
 
     };
-    $scope.AddDataGuideWords = function () {
+    $scope.AddDataGuideWords = function (change_guideword) {
 
-        var seq_node = $scope.selectdata_node;
+        //if (true) { 
+        //    for (let i = 0; i < $scope.master_guidwords.length; i++) {  ;
+        //        $scope.master_guidwords[i].def_selected = ($scope.master_guidwords[i].selected ? 1 : 0);
+        //    }
+        //}
 
+        //var seq_node = $scope.selectdata_node;
+        var arr_def = [];
         if ($scope.data_node.length > 0) {
 
-            for (let iNode = 0; iNode < $scope.data_node.length; iNode++) {
+            //loop add guide by node
+            if (true) {
+                for (let iNode = 0; iNode < $scope.data_node.length; iNode++) {
 
-                seq_node = $scope.data_node[iNode].seq;
+                    var seq_node = $scope.data_node[iNode].seq;
+                    var arr = $filter('filter')($scope.master_guidwords, { def_selected: 1 });
+                    arr = $filter('filter')($scope.master_guidwords, { selected: true });
+                    //if (change_guideword) { arr = $filter('filter')($scope.master_guidwords, { def_selected: 1, selected: true }); }
+                    //else {
+                    //    //กรณีที่เป็นการเพิ่ม Node และไม่ใช่ Node ใหม่ที่เพิ่ม ไม่ต้อง newrow
+                    //    if (!(seq_node == $scope.selectdata_node)) { break; }
+                    //} 
+                    for (let i = 0; i < arr.length; i++) {
 
-                //var arr = $filter('filter')($scope.master_guidwords, { def_selected: true });
-                var arr = $filter('filter')($scope.master_guidwords, { def_selected: 1 });
+                        var ar_check = $filter('filter')($scope.data_nodeguidwords, { id_node: seq_node, id_guide_word: arr[i].seq });
+                        if (ar_check.length > 0) {
+                            //ข้อมูลเดิม
+                            arr_def.push(ar_check[0]);
+                            continue;
+                        } else {
 
-                var arr_def = [];
-                for (let i = 0; i < arr.length; i++) {
+                            //add new Guidwords in node
+                            var seq = Number($scope.MaxSeqDataNodeGuidWords);
 
-                    var ar_check = $filter('filter')($scope.data_nodeguidwords, { id_node: seq_node, id_guid_words: arr[i].seq });
+                            var newInput = clone_arr_newrow($scope.data_nodeguidwords_def)[0];
+                            newInput.seq = seq;
+                            newInput.id = seq;
+                            newInput.no = (0);
+                            newInput.id_node = Number(seq_node);
+                            newInput.seq_node = Number(seq_node);
+                            newInput.action_type = 'insert';
+                            newInput.action_change = 1;
 
-                    if (ar_check.length > 0) {
-                        //ข้อมูลเดิม
-                        arr_def.push(ar_check[0]);
-                        continue;
+                            newInput.id_guide_word = arr[i].seq;
+                            newInput.guidewords = arr[i].guidewords;
+                            newInput.deviations = arr[i].deviations;
+                            newInput.guidewords_no = arr[i].guidewords_no;
+
+                            arr_def.push(newInput);
+                        }
+
+                        $scope.MaxSeqDataNodeGuidWords = Number($scope.MaxSeqDataNodeGuidWords) + 1;
                     }
 
-                    //add new Guidwords in node
-                    var seq = Number($scope.MaxSeqDataNodeGuidWords);
-
-                    var newInput = clone_arr_newrow($scope.data_nodeguidwords_def)[0];
-                    newInput.seq = seq;
-                    newInput.id = seq;
-                    newInput.no = (0);
-                    newInput.id_node = Number(seq_node);
-                    newInput.seq_node = Number(seq_node);
-                    newInput.action_type = 'insert';
-                    newInput.action_change = 1;
-
-                    newInput.id_guide_word = arr[i].seq;
-                    newInput.guidewords = arr[i].guidewords;
-                    newInput.deviations = arr[i].deviations;
-                    newInput.guidewords_no = arr[i].guidewords_no;
-
-                    arr_def.push(newInput);
-
-                    $scope.MaxSeqDataNodeGuidWords = Number($scope.MaxSeqDataNodeGuidWords) + 1;
                 }
 
-            }
 
-            if (arr_def.length > 0) {
                 var arr_copy_def = angular.copy($scope.data_nodeguidwords, arr_copy_def);
 
-                //update ข้อมูลทั้งหมดใหม่ 
+                //update ข้อมูลทั้งหมดใส่ใน data_nodeguidwords  
                 $scope.data_nodeguidwords = [];
                 for (let i = 0; i < arr_def.length; i++) {
                     $scope.data_nodeguidwords.push(arr_def[i]);
                 }
 
-                //delete ข้อมูลเดิม
+                //delete ข้อมูล guidwords เดิมที่ไม่ได้เลือกในของใหม่ เทียบจาก seq guidwords
                 for (let i = 0; i < arr_copy_def.length; i++) {
-                    seq_node = arr_copy_def[i].seq_node;
-                    var seq_check = arr_copy_def[i].seq;
+                    var id_guide_word_check = arr_copy_def[i].id_guide_word;
                     var arrdelete = $filter('filter')($scope.data_nodeguidwords, function (item) {
-                        return (item.seq_node == seq_node && item.seq == seq_check);
+                        return (item.id_guide_word == id_guide_word_check);
                     });
                     if (arrdelete.length == 0) {
                         if (arr_copy_def[i].action_type == 'update') {
                             $scope.data_nodeguidwords_delete.push(arr_copy_def[i]);
+                            continue;
                         }
                     }
+
+                    ////add ข้อมูลเดิมเก่า
+                    //$scope.data_nodeguidwords.push(arr_copy_def[i]);
                 }
+
+                running_no_level1($scope.data_nodeguidwords, null, null);
+
             }
 
-            running_no_level1($scope.data_nodeguidwords, null, null);
 
+            //add worksheet
+            if ($scope.data_node.length > 0) { set_data_nodeworksheet(); }
             apply();
+
         }
 
         console.log("AddDataGuideWords seq:" + $scope.selectdata_node);
@@ -3353,7 +3064,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         $('#modalGuideWords').modal('hide');
     };
+    $scope.actionChangeGuidwords = function (_arr, _selected) {
+        return;
+        _arr.selected = !(_selected);
 
+        apply();
+    }
 
     // <==== (Kul) RAM  ====>
     $scope.openModalNewRAM = function (seq) {
@@ -3468,6 +3184,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     $scope.viewDataNodeList = function (seq) {
         $scope.selectedItemNodeView = seq;
         console.log($scope);
+        try {
+            apply();
+        } catch { }
     };
 
     $scope.adddata_nodeworksheet_lv1 = function (row_type, item, index) {
@@ -3632,7 +3351,26 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         } else if (row_type == "category") {
             //not running
         }
+
+        running_recommendations_no();
+
         apply();
+    }
+    function running_recommendations_no() {
+        if (true) {
+            //recommendations != '' ให้ running action no  
+            var arr_copy_def = angular.copy($scope.data_nodeworksheet, arr_copy_def);
+            arr_copy_def.sort((a, b) => Number(b.recommendations_no) - Number(a.recommendations_no));
+            var recommendations_no = Number(Number(arr_copy_def[0].recommendations_no) + 1);
+
+            for (var i = 0; i < $scope.data_nodeworksheet.length; i++) {
+                if ($scope.data_nodeworksheet[i].recommendations_no == null ||
+                    $scope.data_nodeworksheet[i].recommendations_no == '') {
+                    $scope.data_nodeworksheet[i].recommendations_no = recommendations_no;
+                    recommendations_no += 1;
+                }
+            }
+        }
     }
 
     $scope.removeDataNodeWorksheet = function (row_type, item, index) {
@@ -4273,7 +4011,40 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         //alert($scope.isFullscreen);
     };
+    $scope.toggleFullscreen_ram = function () {
+        var element = document.getElementById('fullscreenzone_ram');
 
+        if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.mozFullScreenElement && !document.msFullscreenElement) {
+            if (element.requestFullscreen) {
+                element.requestFullscreen();
+            } else if (element.mozRequestFullScreen) {
+                element.mozRequestFullScreen();
+            } else if (element.webkitRequestFullscreen) {
+                element.webkitRequestFullscreen();
+            } else if (element.msRequestFullscreen) {
+                element.msRequestFullscreen();
+            }
+
+            $scope.isFullscreenRam = true;
+
+            element.style.overflow = 'auto';
+        } else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+            } else if (document.mozCancelFullScreen) {
+                document.mozCancelFullScreen();
+            } else if (document.msExitFullscreen) {
+                document.msExitFullscreen();
+            }
+
+            $scope.isFullscreenRam = false;
+
+            element.style.overflow = 'hidden';
+        }
+
+    };
     document.addEventListener('keydown', $scope.handleKeydown);
 
     $scope.handleKeydown = function (event) {
@@ -4482,15 +4253,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                     if (!arr_chk[0].expense_type ||
                         !arr_chk[0].sub_expense_type ||
-                        !arr_chk[0].functional_location ||
                         !arr_chk[0].id_apu
                     ) return set_alert('Warning', 'Please select a valid General Information');
-
-                    //if (!$scope.data_drawing[0].document_no ||
-                    //    !$scope.data_node[0].node ||
-                    //    !$scope.data_nodedrawing[0].id_drawing ||
-                    //    !$scope.status_upload
-                    //) return set_alert('Warning', 'Please select a valid Node'); 
 
                 }
                 else if (pha_status == "12") {
@@ -4503,7 +4267,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     if (arr_chk[0].expense_type == '' || arr_chk[0].expense_type == null) { set_alert('Warning', 'Please select a valid Expense Type'); return; }
                     if (arr_chk[0].sub_expense_type == '' || arr_chk[0].sub_expense_type == null) { set_alert('Warning', 'Please select a valid Sub-Expense Type'); return; }
                     if (arr_chk[0].id_apu == '' || arr_chk[0].id_apu == null) { set_alert('Warning', 'Please select a valid Area Process Unit'); return; }
-                    if (arr_chk[0].functional_location == '' || arr_chk[0].functional_location == null) { set_alert('Warning', 'Please select a valid Functional Location'); return; }
 
                     if (true) {
                         arr_chk = $scope.data_memberteam;
@@ -4663,7 +4426,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 if (arr_chk[0].expense_type == '' || arr_chk[0].expense_type == null) { set_alert('Warning', 'Please select a valid Expense Type'); return; }
                 if (arr_chk[0].sub_expense_type == '' || arr_chk[0].sub_expense_type == null) { set_alert('Warning', 'Please select a valid Sub-Expense Type'); return; }
                 if (arr_chk[0].id_apu == '' || arr_chk[0].id_apu == null) { set_alert('Warning', 'Please select a valid Area Process Unit'); return; }
-                if (arr_chk[0].functional_location == '' || arr_chk[0].functional_location == null) { set_alert('Warning', 'Please select a valid Functional Location'); return; }
             }
         }
         else {
@@ -4738,7 +4500,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $('#modalMsg').modal('hide');
             return;
         }
-        save_data_create("submit","submit");
+        save_data_create("submit", "submit");
     }
 
 
@@ -4774,7 +4536,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         var pha_seq = $scope.data_header[0].seq;
         var functional_audition_arr = $scope.data_general[0].functional_location_audition;
         var functional_audition_text = '';
-        //var xSplitFunc = (functional_audition).replaceAll('"', '').replace('[', '').replace(']', '').split(",");
         for (var i = 0; i < functional_audition_arr.length; i++) {
 
             if (functional_audition_text != '') { functional_audition_text += ','; }
@@ -5181,15 +4942,15 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     $scope.actionChangeWorksheet = function (_arr, _seq, type_text) {
 
-        if (_arr.recommendations == null || _arr.recommendations == '') {
-            if (_arr.recommendations_no == null || _arr.recommendations_no == '') {
-                //recommendations != '' ให้ running action no  
-                var arr_copy_def = angular.copy($scope.data_nodeworksheet, arr_copy_def);
-                arr_copy_def.sort((a, b) => Number(b.recommendations_no) - Number(a.recommendations_no));
-                var recommendations_no = Number(Number(arr_copy_def[0].recommendations_no) + 1);
-                _arr.recommendations_no = recommendations_no;
-            }
-        }
+        //if (_arr.recommendations == null || _arr.recommendations == '') {
+        //    if (_arr.recommendations_no == null || _arr.recommendations_no == '') {
+        //        //recommendations != '' ให้ running action no  
+        //        var arr_copy_def = angular.copy($scope.data_nodeworksheet, arr_copy_def);
+        //        arr_copy_def.sort((a, b) => Number(b.recommendations_no) - Number(a.recommendations_no));
+        //        var recommendations_no = Number(Number(arr_copy_def[0].recommendations_no) + 1);
+        //        _arr.recommendations_no = recommendations_no;
+        //    }
+        //}
         action_type_changed(_arr, _seq);
 
         var arr_submit = $filter('filter')($scope.data_nodeworksheet, function (item) {

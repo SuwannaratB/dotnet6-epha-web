@@ -3,12 +3,24 @@
   "WorkspaceRootPath": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{61C78411-B1F3-4F4C-9684-BB0AF4D5DBFB}|dotnet6-epha-web.csproj|c:\\develop drive\\dotnet6-epha-web\\dotnet6-epha-web\\wwwroot\\js\\_flow\\hazop.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
-      "RelativeMoniker": "D:0:0:{61C78411-B1F3-4F4C-9684-BB0AF4D5DBFB}|dotnet6-epha-web.csproj|solutionrelative:wwwroot\\js\\_flow\\hazop.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+      "AbsoluteMoniker": "D:0:0:{61C78411-B1F3-4F4C-9684-BB0AF4D5DBFB}|dotnet6-epha-web.csproj|c:\\develop drive\\dotnet6-epha-web\\dotnet6-epha-web\\wwwroot\\js\\_flow\\hometasks.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{61C78411-B1F3-4F4C-9684-BB0AF4D5DBFB}|dotnet6-epha-web.csproj|solutionrelative:wwwroot\\js\\_flow\\hometasks.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{61C78411-B1F3-4F4C-9684-BB0AF4D5DBFB}|dotnet6-epha-web.csproj|c:\\develop drive\\dotnet6-epha-web\\dotnet6-epha-web\\views\\whatif\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{61C78411-B1F3-4F4C-9684-BB0AF4D5DBFB}|dotnet6-epha-web.csproj|solutionrelative:views\\whatif\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{61C78411-B1F3-4F4C-9684-BB0AF4D5DBFB}|dotnet6-epha-web.csproj|c:\\develop drive\\dotnet6-epha-web\\dotnet6-epha-web\\wwwroot\\js\\_flow\\jsea.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{61C78411-B1F3-4F4C-9684-BB0AF4D5DBFB}|dotnet6-epha-web.csproj|solutionrelative:wwwroot\\js\\_flow\\jsea.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{61C78411-B1F3-4F4C-9684-BB0AF4D5DBFB}|dotnet6-epha-web.csproj|c:\\develop drive\\dotnet6-epha-web\\dotnet6-epha-web\\views\\jsea\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{61C78411-B1F3-4F4C-9684-BB0AF4D5DBFB}|dotnet6-epha-web.csproj|solutionrelative:views\\jsea\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{61C78411-B1F3-4F4C-9684-BB0AF4D5DBFB}|dotnet6-epha-web.csproj|c:\\develop drive\\dotnet6-epha-web\\dotnet6-epha-web\\views\\hazop\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{61C78411-B1F3-4F4C-9684-BB0AF4D5DBFB}|dotnet6-epha-web.csproj|solutionrelative:views\\hazop\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{61C78411-B1F3-4F4C-9684-BB0AF4D5DBFB}|dotnet6-epha-web.csproj|c:\\develop drive\\dotnet6-epha-web\\dotnet6-epha-web\\wwwroot\\js\\_flow\\hazop.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{61C78411-B1F3-4F4C-9684-BB0AF4D5DBFB}|dotnet6-epha-web.csproj|solutionrelative:wwwroot\\js\\_flow\\hazop.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{61C78411-B1F3-4F4C-9684-BB0AF4D5DBFB}|dotnet6-epha-web.csproj|c:\\develop drive\\dotnet6-epha-web\\dotnet6-epha-web\\wwwroot\\js\\_flow\\whatif.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
@@ -21,23 +33,9 @@
       "VerticalTabListWidth": 256,
       "DocumentGroups": [
         {
-          "DockedWidth": 21,
-          "SelectedChildIndex": 0,
+          "DockedWidth": 37,
+          "SelectedChildIndex": -1,
           "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "Index.cshtml",
-              "DocumentMoniker": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\Views\\Whatif\\Index.cshtml",
-              "RelativeDocumentMoniker": "Views\\Whatif\\Index.cshtml",
-              "ToolTip": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\Views\\Whatif\\Index.cshtml",
-              "RelativeToolTip": "Views\\Whatif\\Index.cshtml",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAABUAAAAvAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-03-20T00:16:33.016Z",
-              "IsPinned": true,
-              "EditorCaption": ""
-            },
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
@@ -53,33 +51,81 @@
           ]
         },
         {
-          "DockedWidth": 25,
+          "DockedWidth": 9,
           "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "hazop.js",
-              "DocumentMoniker": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\wwwroot\\js\\_flow\\hazop.js",
-              "RelativeDocumentMoniker": "wwwroot\\js\\_flow\\hazop.js",
-              "ToolTip": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\wwwroot\\js\\_flow\\hazop.js",
-              "RelativeToolTip": "wwwroot\\js\\_flow\\hazop.js",
-              "ViewState": "AQIAABkJAAAAAAAAAAAqwCYJAAAAAAAA",
+              "Title": "hometasks.js",
+              "DocumentMoniker": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\wwwroot\\js\\_flow\\hometasks.js",
+              "RelativeDocumentMoniker": "wwwroot\\js\\_flow\\hometasks.js",
+              "ToolTip": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\wwwroot\\js\\_flow\\hometasks.js",
+              "RelativeToolTip": "wwwroot\\js\\_flow\\hometasks.js",
+              "ViewState": "AQIAAD8AAAAAAAAAAAAnwGcAAAAfAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2024-03-20T00:27:35.184Z",
+              "WhenOpened": "2024-03-21T05:51:47.873Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\Views\\Jsea\\Index.cshtml",
+              "RelativeDocumentMoniker": "Views\\Jsea\\Index.cshtml",
+              "ToolTip": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\Views\\Jsea\\Index.cshtml",
+              "RelativeToolTip": "Views\\Jsea\\Index.cshtml",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAADoDAABeAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-03-21T01:31:22.175Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\Views\\Hazop\\Index.cshtml",
+              "RelativeDocumentMoniker": "Views\\Hazop\\Index.cshtml",
+              "ToolTip": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\Views\\Hazop\\Index.cshtml",
+              "RelativeToolTip": "Views\\Hazop\\Index.cshtml",
+              "ViewState": "AQIAAAsDAAAAAAAAAAAowCEDAAAtAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-03-21T01:26:18.384Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
               "Title": "whatif.js",
               "DocumentMoniker": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\wwwroot\\js\\_flow\\whatif.js",
               "RelativeDocumentMoniker": "wwwroot\\js\\_flow\\whatif.js",
               "ToolTip": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\wwwroot\\js\\_flow\\whatif.js",
               "RelativeToolTip": "wwwroot\\js\\_flow\\whatif.js",
-              "ViewState": "AQIAAFcHAAAAAAAAAAAuwIIHAAAmAAAA",
+              "ViewState": "AQIAAHkQAAAAAAAAAAAewIkQAAAYAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
               "WhenOpened": "2024-03-20T00:16:45.455Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "hazop.js",
+              "DocumentMoniker": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\wwwroot\\js\\_flow\\hazop.js",
+              "RelativeDocumentMoniker": "wwwroot\\js\\_flow\\hazop.js",
+              "ToolTip": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\wwwroot\\js\\_flow\\hazop.js",
+              "RelativeToolTip": "wwwroot\\js\\_flow\\hazop.js",
+              "ViewState": "AQIAAEkTAAAAAAAAAAAowFMTAAAkAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2024-03-20T00:27:35.184Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "jsea.js",
+              "DocumentMoniker": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\wwwroot\\js\\_flow\\jsea.js",
+              "RelativeDocumentMoniker": "wwwroot\\js\\_flow\\jsea.js",
+              "ToolTip": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\wwwroot\\js\\_flow\\jsea.js",
+              "RelativeToolTip": "wwwroot\\js\\_flow\\jsea.js",
+              "ViewState": "AQIAAOEFAAAAAAAAAAArwPAFAAAnAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2024-03-20T06:17:47.615Z"
             }
           ]
         }

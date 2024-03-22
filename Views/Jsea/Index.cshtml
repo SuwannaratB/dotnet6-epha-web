@@ -32,7 +32,7 @@
 }
 
 <div class="content mt-1" style="font-size: 12px; min-height: auto !important; overflow-x:hidden;" id="divPage"
-ng-controller="ctrlAppPage"
+     ng-controller="ctrlAppPage"
      ng-click="toggleResultsVisibility()">
 
 
@@ -399,7 +399,7 @@ ng-controller="ctrlAppPage"
                                                     <div class="btn btn-phoenix ps-3  ">
 
                                                         <span class="mr-3 nametext text-primary" id="filename-template-{{item.seq}}"
-                                                              ng-click="downloadFile(item)"> 
+                                                              ng-click="downloadFile(item)">
                                                             <b>{{(item.file_upload_size>0? item.file_upload_name + '('+  item.file_upload_size + 'KB)' : '')}}</b>
                                                         </span>
                                                         <br ng-if="!(item.file_upload_name =='' || item.file_upload_name == null)">
@@ -813,7 +813,7 @@ ng-controller="ctrlAppPage"
 
                                                     </td>
 
-                                                    <td class="align-middle white-space-nowrap col-3">
+                                                    <td class="align-middle col-3">
 
 
                                                         <div class="d-flex align-items-center d-none ">
@@ -832,14 +832,14 @@ ng-controller="ctrlAppPage"
 
                                                         </div>
 
-                                                        <div class="uploadbox align-items-center cursor-pointer" ng-if="tab_general_active">
+                                                        <div class="row uploadbox align-items-center cursor-pointer" ng-if="tab_general_active">
                                                             <div class=" align-items-center p-1 cursor-pointer ">
 
                                                                 <span class="mr-3 nametext text-primary"
                                                                       id="filename{{item.seq}}" ng-class="{'d-none':(!tab_general_active)}"
                                                                       ng-click="downloadFile(item)"
                                                                       ng-if="item.document_file_size>0">
-                                                                    <b>{{(item.document_file_size>0? item.document_file_name + '('+  item.document_file_size + 'KB)' : '')}}</b>
+                                                                    <b style="font-size:x-small;">{{(item.document_file_size>0? item.document_file_name + '('+  item.document_file_size + 'KB)' : '')}}</b>
                                                                 </span>
                                                                 <br ng-if="item.document_file_size>0">
                                                                 <label class="dz-message-text text-primary fw-bold cursor-pointer"
@@ -1504,10 +1504,10 @@ ng-controller="ctrlAppPage"
                                         <div class="row">
                                             <div class=" col-auto pe-0 me-0">
                                                 <p class="form-label m-2 ps-0" style="min-width:200px;"><b>Task Name: </b>{{data_general[0].pha_request_name}}</p>
-                                            </div> 
+                                            </div>
                                             <div class="d-flex col-auto p-0 m-0 ps-1">
-                                                <p class="form-label m-2 ps-0" ng-if="tab_worksheet_active"><b>Date:</b></p> 
-                                                <input type="date" class="form-control rounded-1  p-1 datetimepicker" 
+                                                <p class="form-label m-2 ps-0" ng-if="tab_worksheet_active"><b>Date:</b></p>
+                                                <input type="date" class="form-control rounded-1  p-1 datetimepicker"
                                                        id="target_start_date"
                                                        name="target_start_date"
                                                        ng-change="actionChange(data_general[0],data_general[0].seq,'')"
@@ -2038,7 +2038,7 @@ ng-controller="ctrlAppPage"
                                                     <div class="col-md-12 p-1 ps-3 text-start" ng-if="!(item.approver_action_type == 2 || data_header[0].pha_status != 21)   ">
                                                         <div class="form-check form-check-inline cursor-pointer p-0">
                                                             <span class="fa-solid far fa-file-pdf text-danger" style="font-size:15px;"
-                                                            ng-click="confirmExport('jsea_report','pdf')"></span>
+                                                                  ng-click="confirmExport('jsea_report','pdf')"></span>
                                                             <b>
                                                                 JSEA Report
                                                             </b>
@@ -2062,14 +2062,14 @@ ng-controller="ctrlAppPage"
 
                                                     <div class="col-md-12 p-1 text-start" ng-if="(item.approver_action_type == 2 || data_header[0].pha_status != 21)">
                                                         <div class="form-check form-check-inline cursor-pointer p-0">
-                                                            <span class="fa-solid far fa-file-pdf text-danger" style="font-size:15px;" 
-                                                            ng-click="confirmExport('jsea_report','pdf')"></span>
+                                                            <span class="fa-solid far fa-file-pdf text-danger" style="font-size:15px;"
+                                                                  ng-click="confirmExport('jsea_report','pdf')"></span>
                                                             <b>
                                                                 JSEA Report
                                                             </b>
                                                         </div><br />
-                                                         <div class="form-check form-check-inline" >
-                                                            <input class="form-check-input"  type="radio"    disabled  checked  />
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" disabled checked />
                                                             <label class="form-check-label">  {{item.action_status =='approve' ? 'Approve' : 'Send back with Comment' }}</label>
                                                         </div>
 
@@ -2081,7 +2081,7 @@ ng-controller="ctrlAppPage"
                                                     <div class="col-md-12 p-1 ps-3" ng-if="!(item.approver_action_type == 2 || data_header[0].pha_status != 21)">
                                                         <textarea class="form-control rounded-1" id="floatingTextarea2" placeholder="Enter your comment"
                                                                   ng-model="item.comment">  </textarea>
-                                                                   
+
                                                         <div id="valid-approver-comment-{{item.seq}}" class="invalid-feedback text-danger">
                                                             Please select a valid comment.
                                                         </div>
@@ -2093,7 +2093,7 @@ ng-controller="ctrlAppPage"
                                                     </div>
                                                 </td>
                                                 <td class="align-top px-1 text-start" style="min-width:200px;">
-                                                      <div class=" p-0 cursor-pointer "
+                                                    <div class=" p-0 cursor-pointer "
                                                          ng-repeat="item_x in data_drawing_approver  | filter:{id_approver : item.seq}  ">
                                                         @* {{item_x.document_file_size}} xx {{item_x.document_file_name}}   *@
                                                     </div>
@@ -2135,7 +2135,7 @@ ng-controller="ctrlAppPage"
                                                                     </label>
                                                                 </div>
                                                             </div>
-                                                        </div> 
+                                                        </div>
 
                                                         <div class="text-start p-0 cursor-pointer d-flex flex-nowrap" ng-if="item_x.document_file_size>0 ">
                                                             <a class="nametext ms-3 filename-text me-2" ng-click="downloadFile(item_x)">
@@ -2798,7 +2798,7 @@ ng-controller="ctrlAppPage"
     <!--Modal RAM Start-->
     <div class="modal fade modal-xl shadow-sm p-3 mb-5  rounded" id="modalRAM" tabindex="-1"
          aria-labelledby="modalRAMLabel" aria-hidden="true" style="display: none;">
-        <div class="modal-dialog modal-dialog-centered" >
+        <div class="modal-dialog modal-dialog-centered">
 
             <div class="modal-content">
                 <div class="modal-header">
@@ -2826,7 +2826,7 @@ ng-controller="ctrlAppPage"
                 <div class="modal-body">
 
                     <div class="row">
-                   
+
 
                         <div class="col-6" ng-if="!previewRam">
 
@@ -2903,7 +2903,7 @@ ng-controller="ctrlAppPage"
 
                                         <td ng-if="!(item_ram.columns_level == 5)">{{item_ram.likelihood_show}}</td>
 
-                                        <td >{{item_ram.likelihood_text}}</td>
+                                        <td>{{item_ram.likelihood_text}}</td>
                                         <td ng-if="item_ram.columns_level == 5">{{item_ram.likelihood_desc}}</td>
                                         <td ng-if="item_ram.columns_level == 5">{{item_ram.likelihood_criterion}}</td>
                                     </tr>
