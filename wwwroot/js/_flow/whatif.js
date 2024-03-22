@@ -705,7 +705,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.data_drawing_approver_delete = [];
 
         $scope.select_history_tracking_record = false;
-        //$scope.functional_location_audition = ["TPX-76-LICSA-001-TX", "TPX-76-LICSA-002-TX", "TPX-76-LICSA-003-TX"];
 
         $scope.selectedItemListView = 0;
         $scope.selectedDataListworksheetRamType = null;
@@ -1870,7 +1869,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
 
         var functional_location_audition = $scope.data_general[0].functional_location_audition;
-        //var xSplitFunc = (functional_audition).replaceAll('"','').replace('[','').replace(']','').split(",");
         var xSplitFunc = (functional_location_audition).replaceAll('"', '').replace('[', '').replace(']', '').split(",");
         var _functoArr = [];
         for (var i = 0; i < xSplitFunc.length; i++) {
@@ -3958,18 +3956,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     if (arr_chk[0].expense_type == '' || arr_chk[0].expense_type == null) { set_alert('Warning', 'Please select a valid Expense Type'); return; }
                     if (arr_chk[0].sub_expense_type == '' || arr_chk[0].sub_expense_type == null) { set_alert('Warning', 'Please select a valid Sub-Expense Type'); return; }
                     if (arr_chk[0].id_apu == '' || arr_chk[0].id_apu == null) { set_alert('Warning', 'Please select a valid Area Process Unit'); return; }
-                    if (arr_chk[0].functional_location == '' || arr_chk[0].functional_location == null) { set_alert('Warning', 'Please select a valid Functional Location'); return; }
 
 
                     arr_chk = $scope.data_memberteam;
                     if (arr_chk.length == 0) { set_alert('Warning', 'Please provide a valid Session List'); return; }
-                    //else {
-                    //    var irows_last = arr_chk.length - 1;
-                    //    if (arr_chk[irows_last].user_name == null) {
-                    //        set_alert('Warning', 'Please provide a valid Session List'); return;
-                    //    }
-                    //}
-
+                  
                 }
                 else if (pha_status == "12") {
 
@@ -3981,7 +3972,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     if (arr_chk[0].expense_type == '' || arr_chk[0].expense_type == null) { set_alert('Warning', 'Please select a valid Expense Type'); return; }
                     if (arr_chk[0].sub_expense_type == '' || arr_chk[0].sub_expense_type == null) { set_alert('Warning', 'Please select a valid Sub-Expense Type'); return; }
                     if (arr_chk[0].id_apu == '' || arr_chk[0].id_apu == null) { set_alert('Warning', 'Please select a valid Area Process Unit'); return; }
-                    //if (arr_chk[0].functional_location == '' || arr_chk[0].functional_location == null) { set_alert('Warning', 'Please select a valid Functional Location'); return; }
 
                     if (true) {
                         arr_chk = $scope.data_memberteam;
@@ -4146,7 +4136,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 if (arr_chk[0].expense_type == '' || arr_chk[0].expense_type == null) { set_alert('Warning', 'Please select a valid Expense Type'); return; }
                 if (arr_chk[0].sub_expense_type == '' || arr_chk[0].sub_expense_type == null) { set_alert('Warning', 'Please select a valid Sub-Expense Type'); return; }
                 if (arr_chk[0].id_apu == '' || arr_chk[0].id_apu == null) { set_alert('Warning', 'Please select a valid Area Process Unit'); return; }
-                if (arr_chk[0].functional_location == '' || arr_chk[0].functional_location == null) { set_alert('Warning', 'Please select a valid Functional Location'); return; }
             }
         }
         else {
@@ -4251,7 +4240,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         var pha_seq = $scope.data_header[0].seq;
         var functional_audition_arr = $scope.data_general[0].functional_location_audition;
         var functional_audition_text = '';
-        //var xSplitFunc = (functional_audition).replaceAll('"', '').replace('[', '').replace(']', '').split(",");
         for (var i = 0; i < functional_audition_arr.length; i++) {
 
             if (functional_audition_text != '') { functional_audition_text += ','; }
