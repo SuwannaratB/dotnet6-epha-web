@@ -120,7 +120,27 @@
   opacity: 1;
 }
 
+.ram-s-5 {
+  gap: 35px;
+  padding: 17px;
+}
 
+.ram-l-5 {
+  padding-right: 128px !important; 
+  gap: 57px;
+  padding: 20px 0;
+}
+
+.ram-s-4 {
+  gap: 65px;
+  padding: 24px;
+}
+
+.ram-l-4 {
+  padding-right: 65px !important; 
+  gap: 152px;
+  padding: 20px 0;
+}
 
 
 /* Targeting smartphones */
