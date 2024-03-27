@@ -1254,6 +1254,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     //แก้ไขเบื้องต้น เนื่องจาก path file ผิดต้องเป็น folder hazop
                     for (let i = 0; i < arr.ram.length; i++) {
                         arr.ram[i].document_file_path = (url_ws.replace('/api/', '/')) + arr.ram[i].document_file_path;
+                        arr.ram[i].document_definition_file_path = (url_ws.replace('/api/', '/')) + arr.ram[i].document_definition_file_path;
                     }
 
                     $scope.master_ram = arr.ram;
