@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("dotnet6-epha-web")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a8058430e44df8f38a9cc3389eba986e876a7604")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d51ed03f1377f7039c56970e7fd6bfe83a6ad862")]
 [assembly: System.Reflection.AssemblyProductAttribute("dotnet6-epha-web")]
 [assembly: System.Reflection.AssemblyTitleAttribute("dotnet6-epha-web")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
