@@ -329,6 +329,20 @@
                                 <div class="mx-2 row g-3 align-items-center" ng-repeat="item in data_general"
                                      ng-class="{'disabled-link':(!tab_general_active)}">
 
+                                    <!-- Task Type -->
+                                    <div class="col-1 p-1">
+                                        <label class="form-label ps-0" for="tagid"><b class="text-danger d-none"> * </b>Task Type </label>
+                                        <select class="form-control js-choice-tagid"
+                                                data-choices="data-choices"
+                                                data-options='{"removeItemButton":true,"placeholder":true}'
+                                                ng-change="actionChange(item,item.seq,'')" ng-model="item.id_request_type">
+                                            <option ng-selected="item.id_request_type == item.id"
+                                                    ng-repeat="item in data_request_type" ng-value="item.id">
+                                                {{item.name}}
+                                            </option>
+                                        </select>
+                                    </div>
+
                                     <!-- Task Name -->
                                     <div class="col-md-4 p-1">
                                         <label class="form-label ps-0"><b class="text-danger"> * </b>Task Name </label>
@@ -337,7 +351,6 @@
                                                data-bs-placement="top"
                                                data-bs-html="true"></a>
                                         </label>
-
                                         <input class="form-control rounded-1 ps-1"
                                                ng-class="{'disabled-link':(!tab_general_active)}"
                                                type="text" placeholder="Task Name"
@@ -428,37 +441,64 @@
                                     </div>
                                 </div>
 
-                                <div class="mx-2 row  gx-0 align-items-center" ng-repeat="item in data_general"
+                                <div class="mx-2 row  gx-0 " ng-repeat="item in data_general"
                                      ng-class="{'disabled-link':(!tab_general_active)}">
 
                                     <div class="col-5 p-1 d-none">
-
                                         <label class="form-label ps-0" for="description_general">Study Objective and Work Scope :</label>
                                         <label class="form-label ps-0" ng-if="select_history_tracking_record">
-                                            <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
-                                               data-bs-placement="top" title="Study Objective and Work Scope :  " data-bs-html="true"></a>
+                                            <a class="form-label far fa-comment-alt text-warning cursor-pointer" 
+                                                data-bs-toggle="tooltip"
+                                                data-bs-placement="top" 
+                                                title="Study Objective and Work Scope :  " 
+                                                data-bs-html="true">
+                                            </a>
                                         </label>
-
-                                        <textarea class="form-control rounded-1" ng-class="{'disabled-link':(!tab_general_active)}"
-                                                  id="work_scope" name="work_scope"
-                                                  placeholder="Study Objective and Work Scope" style="height: 100px"
-                                                  ng-model="item.work_scope"></textarea>
-
+                                        <textarea class="form-control rounded-1" 
+                                                ng-class="{'disabled-link':(!tab_general_active)}"
+                                                id="work_scope"
+                                                name="work_scope"
+                                                placeholder="Study Objective and Work Scope" 
+                                                style="height: 100px"
+                                                ng-model="item.work_scope">
+                                        </textarea>
                                     </div>
 
-                                    <div class="col-5 p-1">
+                                     <div class="col-5 p-1 mt-4 text-primary" style="border-right: 1px solid #e8e8e8;">
+                                        <p>1. จะต้องได้รับใบอนุญาตการทำงานและต้องจัดให้มีการทำ Toolbox talk เพื่อแจ้งให้ผู้ทำงานทุกฝ่ายที่ข้องเกี่ยวกับอันตรายและข้อควรระวังด้านความปลอดภัย ได้รับทราบ</p>
+                                        <p>2. ต้องสวมใส่อุปกรณ์ป้องกันภัยส่วนบุคคล เช่น หมวกนิรภัย แว่นตานิรภัย รองเท้านิรภัย ถุงมือ กางเกงขายาว และเสื้อแขนยาว ผ้า cotton 100% อย่างหนา หรือเป็นผ้าทนไฟ</p>
+                                        <p>3. สถานที่ปฏิบัติงานต้องได้รับการดูแลให้อยู่ในสภาพที่ปลอดภัยและเป็นระเบียบอยู่เสมอ มีผู้ควบคุมงานอยู่ตลอดเวลา</p>
+                                        <p>4. อุปกรณ์ เครื่องมือ หรืออุปกรณ์ที่เกี่ยวข้องกับงานยก ทั้งหมดต้องมั่นใจว่าสภาพดีและมีใบรับรองที่ถูกต้อง</p>
+                                     </div>
 
-                                        <label class="form-label ps-0" for="description_general">Description/Remark :</label>
+                                    <div class="col-5 p-1 mt-4">
+                                         <div class="form-check form-switch ">
+                                            <input class="form-check-input" 
+                                                    id="flexSwitchCheckChecked" 
+                                                    type="checkbox" 
+                                                    ng-model="isChecDescription" 
+                                                    ng-change="toggleDescription()"/>
+
+                                             <label class="form-check-label" for="description_general">Description/Remark</label>
+                                        </div>
+                                       
                                         <label class="form-label ps-0" ng-if="select_history_tracking_record">
-                                            <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
-                                               data-bs-placement="top" title=" Description/Remark :  " data-bs-html="true"></a>
+                                            <a class="form-label far fa-comment-alt text-warning cursor-pointer" 
+                                                data-bs-toggle="tooltip"
+                                                data-bs-placement="top" 
+                                                title=" Description/Remark :  " 
+                                                data-bs-html="true">
+                                            </a>
                                         </label>
-
-                                        <textarea class="form-control rounded-1" ng-class="{'disabled-link':(!tab_general_active)}"
-                                                  id="description_general" name="description_general"
-                                                  placeholder="Description/Remark" style="height: 100px"
-                                                  ng-model="item.descriptions"></textarea>
-
+                                        <textarea class="form-control rounded-1" 
+                                                ng-class="{'disabled-link':(!tab_general_active)}"
+                                                id="description_general" 
+                                                name="description_general"
+                                                placeholder="Description/Remark" 
+                                                style="height: 100px"
+                                                ng-model="item.descriptions"
+                                                ng-if="isChecDescription">
+                                        </textarea>
                                     </div>
                                 </div>
 
@@ -521,80 +561,111 @@
                                                         <div class="row d-flex">
                                                             <div class="col-6">
                                                                 <div class="row" ng-class="{'d-none':(!tab_general_active)}">
-
-                                                                    <button class="btn btn-outline-secondary p-0 cursor-pointer col-auto" style="color: #2445fc; background-color: #f1f2f4; border-color: #f1f2f4;"
+                                                                    <button class="btn btn-outline-secondary p-0 cursor-pointer col-auto" 
+                                                                            style="color: #2445fc; background-color: #f1f2f4; border-color: #f1f2f4;"
                                                                             ng-click="openDataEmployeeAdd(item,'member')">
-                                                                        <span class="far fa-address-book fa-lg pe-1"></span>Add Member Team/Attendees
+                                                                        <span class="far fa-address-book fa-lg pe-1"></span>
+                                                                        Add Member Team/Attendees
                                                                     </button>
-
                                                                 </div>
-
-                                                                <div class="row" ng-repeat="item2 in data_memberteam | filter:{id_session:item.seq }">
-
+                                                                <div class="row" ng-repeat="item2 in data_memberteam ">
                                                                     <div class="row align-items-center  p-1">
                                                                         <label class="mb-0 text-1100 fw-bold"
-                                                                               style="width:80%;border-color: #f1f2f4;">{{ item2.user_displayname}}</label>
-
+                                                                               style="width:80%;border-color: #f1f2f4;">
+                                                                               {{ item2.user_displayname}}
+                                                                        </label>
                                                                     </div>
                                                                 </div>
                                                             </div>
-
                                                             <div class="col-6">
                                                                 <div class="row" ng-class="{'d-none':(!tab_general_active)}">
-                                                                    <button class="btn btn-outline-secondary p-0 cursor-pointer col-auto" style="color: #2445fc; background-color: #f1f2f4; border-color: #f1f2f4;"
-                                                                            ng-click="openDataEmployeeAdd(item,'approver')" title="ผู้ทบทวนหลัก">
-                                                                        <span class="far fa-address-book fa-lg"></span>Add Safety Reviewer
+                                                                    <button class="btn btn-outline-secondary p-0 cursor-pointer col-auto" 
+                                                                            style="color: #2445fc; background-color: #f1f2f4; border-color: #f1f2f4;"
+                                                                            ng-click="openDataEmployeeAdd(item,'approver')" 
+                                                                            title="ผู้ทบทวนหลัก">
+                                                                        <span class="far fa-address-book fa-lg"></span>
+                                                                        Add Safety Reviewer
                                                                     </button>
                                                                 </div>
                                                                 <div class="row" ng-repeat="item2 in data_approver | filter:{id_session:item.seq }">
-
                                                                     <div class="row align-items-center  p-1">
-                                                                        <label class="mb-0 text-1100 fw-bold" style="width:80%;border-color: #f1f2f4;"
-                                                                               ng-if=" (item2.approver_type=='approver')">{{ '(Main)' + item2.user_displayname}}</label>
-
-                                                                        <label class="mb-0 text-1100 fw-bold" style="width:80%;border-color: #f1f2f4;"
-                                                                               ng-if="!(item2.approver_type=='approver')">{{ item2.user_displayname}}</label>
-
+                                                                        <label class="mb-0 text-1100 fw-bold" 
+                                                                                style="width:80%;border-color: #f1f2f4;"
+                                                                                ng-if=" (item2.approver_type=='approver')">
+                                                                               {{ '(Main)' + item2.user_displayname}}
+                                                                        </label>
+                                                                        <label class="mb-0 text-1100 fw-bold" 
+                                                                                style="width:80%;border-color: #f1f2f4;"
+                                                                                ng-if="!(item2.approver_type=='approver')">
+                                                                                {{ item2.user_displayname}}
+                                                                        </label>
                                                                     </div>
                                                                 </div>
-
                                                             </div>
+                                                            @* <b class="p-0 text-danger"> Note:This JSEA will be approved by AE or AGSI via Safety Permit</b> *@
+                                                        </div>
+
+                                                        <div class="row d-flex mt-4">
+                                                             <div class="col-6 ">
+                                                                <div class="row" ng-class="{'d-none':(!tab_general_active)}">
+                                                                    <button class="btn btn-outline-secondary p-0 cursor-pointer col-auto" 
+                                                                            style="color: #2445fc; background-color: #f1f2f4; border-color: #f1f2f4;"
+                                                                            ng-click="openDataEmployeeAdd(item,'specialist')">
+                                                                        <span class="far fa-address-book fa-lg pe-1"></span>
+                                                                        Add ผู้เชี่ยวชาญเฉพาะด้าน (ถ้ามี):
+                                                                    </button>
+                                                                </div>
+                                                                <div class="row" ng-repeat="item2 in data_relatedpeople | filter:{id_session:item.seq, user_type:'specialist'}">
+                                                                    <div class="row align-items-center  p-1">
+                                                                        <label class="mb-0 text-1100 fw-bold" 
+                                                                                style="width:80%;border-color: #f1f2f4;">
+                                                                            {{ item2.user_displayname}}
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row" ng-repeat="item2 in data_relatedpeople_outsider | filter:{id_session:item.seq, user_type:'specialist'}">
+                                                                    <div class="row align-items-center  p-1">
+                                                                        <label class="mb-0 text-1100 fw-bold"
+                                                                               style="width:80%;border-color: #f1f2f4;">
+                                                                               {{ item2.user_displayname}}
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            
                                                             <b class="p-0 text-danger"> Note:This JSEA will be approved by AE or AGSI via Safety Permit</b>
                                                         </div>
 
                                                         <div class="row d-flex pt-2 d-none" style="background-color:#F8F8F8; zoom:0.8;">
-
                                                             <div class="col-6  mt-1">
                                                                 <div class="row" ng-class="{'d-none':(!tab_general_active)}">
-
-                                                                    <button class="btn btn-outline-secondary p-0 cursor-pointer col-auto" style="color: #2445fc; background-color: #f1f2f4; border-color: #f1f2f4;"
-                                                                            ng-click="openDataEmployeeAdd(item,'attendees')" title=" ผู้จัดทำ">
-                                                                        <span class="far fa-address-book fa-lg pe-1"></span>Add Attendees:
+                                                                    <button class="btn btn-outline-secondary p-0 cursor-pointer col-auto" 
+                                                                            style="color: #2445fc; background-color: #f1f2f4; border-color: #f1f2f4;"
+                                                                            ng-click="openDataEmployeeAdd(item,'attendees')" 
+                                                                            title=" ผู้จัดทำ">
+                                                                        <span class="far fa-address-book fa-lg pe-1"></span>
+                                                                        Add Attendees:
                                                                     </button>
-
                                                                 </div>
-
                                                                 <div class="row" ng-repeat="item2 in data_relatedpeople | filter:{id_session:item.seq, user_type:'attendees'}">
-
                                                                     <div class="row align-items-center  p-1">
                                                                         <label class="mb-0 text-1100 fw-bold"
-                                                                               style="width:80%;border-color: #f1f2f4;">{{ item2.user_displayname}}</label>
-
+                                                                               style="width:80%;border-color: #f1f2f4;">{
+                                                                            { item2.user_displayname}}
+                                                                        </label>
                                                                     </div>
                                                                 </div>
                                                                 <div class="row" ng-repeat="item2 in data_relatedpeople_outsider | filter:{id_session:item.seq, user_type:'attendees'}">
-
                                                                     <div class="row align-items-center  p-1">
                                                                         <label class="mb-0 text-1100 fw-bold"
-                                                                               style="width:80%;border-color: #f1f2f4;">{{ item2.user_displayname}}</label>
-
+                                                                               style="width:80%;border-color: #f1f2f4;">
+                                                                            {{ item2.user_displayname}}
+                                                                        </label>
                                                                     </div>
                                                                 </div>
-
                                                             </div>
 
                                                             <div class="col-6  mt-1 d-none">
-
                                                                 <div class="row" ng-class="{'d-none':(!tab_general_active)}">
                                                                     <button class="btn btn-outline-secondary p-0 cursor-pointer col-auto" style="color: #2445fc; background-color: #f1f2f4; border-color: #f1f2f4;"
                                                                             ng-click="openDataEmployeeAdd(item,'reviewer')">
@@ -602,39 +673,41 @@
                                                                     </button>
                                                                 </div>
                                                                 <div class="row" ng-repeat="item2 in data_relatedpeople | filter:{id_session:item.seq, user_type:'reviewer'}">
-
                                                                     <div class="row align-items-center  p-1">
                                                                         <label class="mb-0 text-1100 fw-bold"
-                                                                               style="width:80%;border-color: #f1f2f4;">{{ item2.user_displayname}}</label>
-
+                                                                               style="width:80%;border-color: #f1f2f4;">
+                                                                               {{ item2.user_displayname}}
+                                                                        </label>
                                                                     </div>
                                                                 </div>
 
                                                             </div>
+
                                                             <div class="col-6  mt-1">
                                                                 <div class="row" ng-class="{'d-none':(!tab_general_active)}">
-                                                                    <button class="btn btn-outline-secondary p-0 cursor-pointer col-auto" style="color: #2445fc; background-color: #f1f2f4; border-color: #f1f2f4;"
+                                                                    <button class="btn btn-outline-secondary p-0 cursor-pointer col-auto" 
+                                                                            style="color: #2445fc; background-color: #f1f2f4; border-color: #f1f2f4;"
                                                                             ng-click="openDataEmployeeAdd(item,'specialist')">
-                                                                        <span class="far fa-address-book fa-lg pe-1"></span>Add ผู้เชี่ยวชาญเฉพาะด้าน (ถ้ามี):
+                                                                        <span class="far fa-address-book fa-lg pe-1"></span>
+                                                                        Add ผู้เชี่ยวชาญเฉพาะด้าน (ถ้ามี):
                                                                     </button>
                                                                 </div>
                                                                 <div class="row" ng-repeat="item2 in data_relatedpeople | filter:{id_session:item.seq, user_type:'specialist'}">
-
                                                                     <div class="row align-items-center  p-1">
-                                                                        <label class="mb-0 text-1100 fw-bold"
-                                                                               style="width:80%;border-color: #f1f2f4;">{{ item2.user_displayname}}</label>
-
+                                                                        <label class="mb-0 text-1100 fw-bold" 
+                                                                                style="width:80%;border-color: #f1f2f4;">
+                                                                            {{ item2.user_displayname}}
+                                                                        </label>
                                                                     </div>
                                                                 </div>
                                                                 <div class="row" ng-repeat="item2 in data_relatedpeople_outsider | filter:{id_session:item.seq, user_type:'specialist'}">
-
                                                                     <div class="row align-items-center  p-1">
                                                                         <label class="mb-0 text-1100 fw-bold"
-                                                                               style="width:80%;border-color: #f1f2f4;">{{ item2.user_displayname}}</label>
-
+                                                                               style="width:80%;border-color: #f1f2f4;">
+                                                                               {{ item2.user_displayname}}
+                                                                        </label>
                                                                     </div>
                                                                 </div>
-
                                                             </div>
 
                                                         </div>
@@ -716,28 +789,44 @@
                                                         <div class="col-12" style="width: 158px;">
                                                             <div class="float-end">
                                                                 <span class="mx-1">
-                                                                    <button class="btn btn-outline-secondary p-2" style="color: #ff2828; background-color: #f1f2f4; border-color: #ff2828;"
+                                                                    <button class="btn btn-outline-secondary p-2" 
+                                                                            style="color: #ff2828; background-color: #f1f2f4; border-color: #ff2828;"
+                                                                            data-toggle="tooltip" 
+                                                                            data-placement="top" 
+                                                                            title="Remove"
                                                                             ng-click=removeDataSession(item.seq,$index)>
                                                                         <span class="fa-regular fa-trash-can fa-lg"></span>
                                                                     </button>
                                                                 </span>
 
                                                                 <span class="mx-1">
-                                                                    <button class="btn btn-outline-secondary p-2" style="color: #2445fc; background-color: #f1f2f4; border-color: #2445fc;"
+                                                                    <button class="btn btn-outline-secondary p-2" 
+                                                                            style="color: #2445fc; background-color: #f1f2f4; border-color: #2445fc;"
+                                                                            data-toggle="tooltip" 
+                                                                            data-placement="top" 
+                                                                            title="Copy"
                                                                             ng-click=copyDataSession(item.seq,$index)>
                                                                         <span class="fas fa-copy fa-lg"></span>
                                                                     </button>
                                                                 </span>
 
                                                                 <span class="mx-1 d-none">
-                                                                    <button class="btn btn-outline-secondary p-2" style="color: #1336fc; background-color: #f1f2f4; border-color: #a8a8a8;"
+                                                                    <button class="btn btn-outline-secondary p-2" 
+                                                                            style="color: #1336fc; background-color: #f1f2f4; border-color: #a8a8a8;"
+                                                                            data-toggle="tooltip" 
+                                                                            data-placement="top" 
+                                                                            title="Copy"
                                                                             ng-click=copyDataSession(item.seq,$index)>
                                                                         <span class="fas fa-copy fa-lg"></span>
                                                                     </button>
                                                                 </span>
 
                                                                 <span class="mx-1">
-                                                                    <button class="btn btn-outline-secondary p-2" style="color: #0abe0a; background-color: #f1f2f4; border-color: #0abe0a;"
+                                                                    <button class="btn btn-outline-secondary p-2" 
+                                                                            style="color: #0abe0a; background-color: #f1f2f4; border-color: #0abe0a;"
+                                                                            data-toggle="tooltip" 
+                                                                            data-placement="top" 
+                                                                            title="Add"
                                                                             ng-click=addDataSession(item.seq,$index)>
                                                                         <span class="fas fa-square-plus fa-lg"></span>
                                                                     </button>
@@ -939,27 +1028,32 @@
                     <div class="" ng-class="{'tab-pane fade show active':(action_part==2),'tab-pane fade':(action_part!==2)}"
                          id="tab-ram" role="tabpanel" aria-labelledby="ram-tab">
 
-
                         <div class="m-3 row  gx-0 align-items-center">
 
-                            <div class="card px-2 pb-2 ">
+                            <div class="card px-2 pb-2" style="height: 100vh;">
                                 <div class="row g-3 justify-content-between align-items-center pt-2 pb-3">
                                     <div class="col-12 col-md">
-                                        <h5 class="text-900 mb-0"> <span class=" me-2 text-primary"><B>|</B></span><b class="text-danger"> * </b> Risk Assessment Matrix</h5>
+                                        <h5 class="text-900 mb-0"> <span class=" me-2 text-primary"><B>|</B></span><b class="text-danger"> * </b> Risk Assessment Matrix 5X5</h5>
                                     </div>
                                 </div>
                                 <div class="col-sm-12 col-md mx-1 pb-2  ">
-                                    <div class="row ">
+                                    @* <div class="row ">
                                         <div class="d-flex flex-wrap">
                                             <div class="col-md-2 col-lg-1" ng-repeat="item in data_general">
-                                                <select id="ddl-ram" class="form-control form-control-sm" ng-class="{'disabled-link':(!tab_general_active)}"
-                                                        ng-change="actionChange(item,item.seq,'ChangeRAM')" ng-model="item.id_ram">
+                                                <select id="ddl-ram" 
+                                                        class="form-control form-control-sm" 
+                                                        ng-class="{'disabled-link':(!tab_general_active)}"
+                                                        ng-change="actionChange(item,item.seq,'ChangeRAM')" 
+                                                        ng-model="item.id_ram"
+                                                        disabled>
                                                     <option ng-selected="item.id_ram == item2.id"
-                                                            ng-repeat="item2 in master_ram" ng-value="item2.id">
+                                                            ng-repeat="item2 in master_ram" 
+                                                            ng-value="item2.id">
                                                         {{ item2.name }}
                                                     </option>
                                                 </select>
                                             </div>
+
                                             <div class="col-md-10 col-lg-11" ng-if="(!tab_general_active)">
                                                 <h5 class="text-900 mb-0">
                                                     <a ng-click="openModalNewRAM()" style="font-size:10px;"
@@ -968,14 +1062,14 @@
                                                     </a>
                                                 </h5>
                                             </div>
-
                                         </div>
-                                    </div>
+                                    </div> *@
+
                                     <div class="row ps-2 mt-2">
-                                        <div class="col-5 mt-4" style="background-color : #F8F8F8 ; height:350px;"
+                                        <div class="col-12 mt-4" style="background-color : #F8F8F8 ; height:350px;"
                                              ng-repeat="itemRam in master_ram | filter:{id: data_general[0].id_ram}">
 
-                                            <div class="row ">
+                                            <div class="row">
                                                 <div class="col-12">
                                                     <div class="p-0 cursor-pointer " ng-class="{'d-none':(!tab_node_active)}">
 
@@ -1004,8 +1098,9 @@
 
                                                     </div>
                                                 </div>
+
                                                 <div class="col-12 align-items-center">
-                                                    <img src="{{itemRam.document_file_path}}" style="width: 400px;  height:300px;" />
+                                                    <img src="{{itemRam.document_file_path}}" style="width: 100%;  height:100%;" />
                                                 </div>
 
                                             </div>
@@ -1120,6 +1215,7 @@
                                                             <td class="align-middle text-center" style="width:150px;">
                                                                 <b>{{item_ram.security_level}}</b>
                                                             </td>
+                                                            
                                                             <td class="align-top text-center">
                                                                 <input class="form-control " type="text" ng-model="item_ram.ram1_text" placeholder="RAM">
 
@@ -1155,6 +1251,7 @@
                                                                 </div>
 
                                                             </td>
+
                                                             <td class="align-top text-center">
                                                                 <input class="form-control " type="text" ng-model="item_ram.ram2_text" placeholder="RAM">
 
@@ -1191,6 +1288,7 @@
                                                                 </div>
 
                                                             </td>
+
                                                             <td class="align-top text-center">
                                                                 <input class="form-control " type="text" ng-model="item_ram.ram3_text" placeholder="RAM">
 
@@ -1226,6 +1324,7 @@
                                                                 </div>
 
                                                             </td>
+
                                                             <td class="align-top text-center">
                                                                 <input class="form-control " type="text" ng-model="item_ram.ram4_text" placeholder="RAM">
 
@@ -1260,6 +1359,7 @@
                                                                     </div>
                                                                 </div>
                                                             </td>
+
                                                             <td class="align-top text-center" ng-if="select_columns_level >= 5 ">
                                                                 <input class="form-control " type="text" ng-model="item_ram.ram5_text" placeholder="RAM">
 
@@ -1294,6 +1394,7 @@
                                                                     </div>
                                                                 </div>
                                                             </td>
+
                                                             <td class="align-top text-center" ng-if="select_columns_level >= 6 ">
                                                                 <input class="form-control " type="text" ng-model="item_ram.ram6_text" placeholder="RAM">
 
@@ -1330,6 +1431,7 @@
                                                                     </div>
                                                                 </div>
                                                             </td>
+
                                                             <td class="align-top text-center" ng-if="select_columns_level >= 7 ">
                                                                 <input class="form-control " type="text" ng-model="item_ram.ram7_text" placeholder="RAM">
 
@@ -1365,6 +1467,7 @@
                                                                     </div>
                                                                 </div>
                                                             </td>
+
                                                             <td class="align-top text-center" ng-if="select_columns_level >= 8 ">
                                                                 <input class="form-control " type="text" ng-model="item_ram.ram8_text" placeholder="RAM">
 
@@ -1494,12 +1597,8 @@
                          id="tab-worksheet" role="tabpanel" aria-labelledby="worksheet-tab">
 
                         <div style="background-color: #ffffff;">
-
-                            <div class="mx-3 row  g-3 align-items-top ">
-
-
-                                <div class="col-md-5 ">
-
+                            <div class="mx-3 row  g-3 align-items-top mb-4">
+                                <div class="col-md-7">
                                     <div class="col-md-12">
                                         <div class="row">
                                             <div class=" col-auto pe-0 me-0">
@@ -1512,17 +1611,13 @@
                                                        name="target_start_date"
                                                        ng-change="actionChange(data_general[0],data_general[0].seq,'')"
                                                        ng-model="data_general[0].target_start_date" placeholder="dd/mm/yyyy" />
-
-
                                             </div>
                                         </div>
                                     </div>
-
                                 </div>
-                                <div class="col-7">
 
+                                <div class="col-5">
                                     <div class="col-12 float-end align-top text-end ">
-
                                         <!-- ส่วนที่มีอยู่แล้ว -->
                                         <div class=" align-top text-end">
                                             <button class="float-end btn btn-outline btn-sm p-1 m-1" ng-click="toggleFullscreen()">
@@ -1545,40 +1640,37 @@
 
                                 </div>
                             </div>
-                            <div class="row ">
-                            </div>
 
                             <div class="border-bottom" id="fullscreenzone" style="background-color: #ffffff;">
-
                                 <div class="table-responsive scrollbar tableFixHead" style="min-height:400px">
                                     <table class="table fs--2 mb-0 table-bordered" cellpadding="0" cellspacing="0">
                                         <thead class="text-uppercase  text-center py-8 bg-soft" style="font-size: 10px;" id="myHeader">
                                             <tr class="">
-                                                <th class="align-middle mx-0" colspan="1" rowspan="2" style="padding: 0 !important; width: 200px; max-width:300px;"
+                                                <th class="align-middle mx-0" colspan="1" rowspan="2" style="padding: 0 !important; width: 8%;"
                                                     data-tooltip="ลำดับขั้นตอนหลัก" data-bs-placement="top" data-bs-toggle="tooltip">ลำดับขั้นตอนหลัก<br />(Work step)</th>
-                                                <th class=" align-middle   mx-0" colspan="1" rowspan="2" style="padding: 0 !important; width: 200px; max-width:300px;"
+                                                <th class=" align-middle   mx-0" colspan="1" rowspan="2" style="padding: 0 !important; width: 8%;"
                                                     data-tooltip="ลักษณะ/กิจกรรมการทำงาน">ลักษณะ/กิจกรรมการทำงาน<br />(Task description)</th>
-                                                <th class=" align-middle   mx-0" colspan="1" rowspan="2" style="padding: 0 !important; width: 200px; max-width:300px;"
+                                                <th class=" align-middle   mx-0" colspan="1" rowspan="2" style="padding: 0 !important; width: 22%;"
                                                     data-tooltip="อันตรายที่อาจเกิดขึ้น และอาจเกิดผลกระทบต่อ คน สิ่งแวดล้อม ชื่อเสียง หรือทรัพย์สิน">อันตรายที่อาจเกิดขึ้น และอาจเกิดผลกระทบต่อ คน สิ่งแวดล้อม ชื่อเสียง หรือทรัพย์สิน<br />(Potential Hazard and Consequence to PERA)</th>
-                                                <th class=" align-middle   mx-0" colspan="1" rowspan="2" style="padding: 0 !important; width: 200px; max-width:300px;"
+                                                <th class=" align-middle   mx-0" colspan="1" rowspan="2" style="padding: 0 !important; width: 22%;"
                                                     data-tooltip="อะไรคือสาเหตุที่ทำให้อันตราย อาจก่อให้เกิดผลกระทบต่อ คน สิ่งแวดล้อม ชื่อเสียง หรือทรัพย์สิน เช่นอาจเกิดจาก คน อุปกรณ์ วิธีการ หรือสภาพแวดล้อม เป็นต้น">
                                                     อะไรคือสาเหตุที่ทำให้อันตราย อาจก่อให้เกิดผลกระทบต่อ คน สิ่งแวดล้อม ชื่อเสียง หรือทรัพย์สิน เช่นอาจเกิดจาก คน อุปกรณ์ วิธีการ หรือสภาพแวดล้อม เป็นต้น<br />(Possible cause to release <br> the hazard and produce an incident)
                                                 </th>
-                                                <th class=" align-middle   mx-0" colspan="1" rowspan="2" style="padding: 0 !important;"
-                                                    ng-if="select_columns_level != '4' ">CAT<br>(P/A/E/R/Q) </th>
-                                                <th class=" align-middle   mx-0" colspan="3" rowspan="1" style="padding: 0 !important;">Risk<br>Assessment Matrix</th>
-                                                <th class=" align-middle   mx-0" colspan="1" rowspan="2" style="padding: 0 !important; width: 200px; max-width:450px;"
+                                                @* <th class=" align-middle   mx-0" colspan="1" rowspan="2" style="padding: 0 !important;"
+                                                    ng-if="select_columns_level != '4' ">CAT<br>(P/A/E/R/Q) </th> *@
+                                                <th class=" align-middle   mx-0" colspan="2" rowspan="1" style="padding: 0 !important; width: 5%;">Initial<br>risk</th>
+                                                <th class=" align-middle   mx-0" colspan="1" rowspan="2" style="padding: 0 !important; width: 22%;"
                                                     data-tooltip="ข้อปฏิบัติเพื่อลดผลกระทบจากอันตรายที่อาจเกิดขึ้น">ข้อปฏิบัติเพื่อลดผลกระทบจากอันตรายที่อาจเกิดขึ้น<br />(Recommendations)</th>
-                                                <th class=" align-middle   mx-0" colspan="1" rowspan="2" style="padding: 0 !important; width: 200px; max-width:350px;"
+                                                <th class=" align-middle   mx-0" colspan="1" rowspan="2" style="padding: 0 !important; width: 8%;"
                                                     data-tooltip="ผู้รับผิดชอบ">ผู้รับผิดชอบ<br />(Action by)</th>
-                                                <th class=" align-middle   mx-0" colspan="3" rowspan="1" style="padding: 0 !important;">Residual Risk<br>Assessment Matrix</th>
+                                                <th class=" align-middle   mx-0" colspan="3" rowspan="1" style="padding: 0 !important; width: 5%;">Residual<br>risk</th>
                                             </tr>
                                             <tr>
-                                                <th class=" align-middle  mx-0" style="padding: 0 !important;">S</th>
-                                                <th class=" align-middle  mx-0" style="padding: 0 !important;">L</th>
+                                                @* <th class=" align-middle  mx-0" style="padding: 0 !important;">S</th> *@
+                                                <th class=" align-middle  mx-0" style="padding: 0 !important;">S/L</th>
                                                 <th class=" align-middle  mx-0" style="padding: 0 !important;">IR</th>
-                                                <th class=" align-middle  mx-0" style="padding: 0 !important;">S</th>
-                                                <th class=" align-middle  mx-0" style="padding: 0 !important;">L</th>
+                                                @* <th class=" align-middle  mx-0" style="padding: 0 !important;">S</th> *@
+                                                <th class=" align-middle  mx-0" style="padding: 0 !important;">S/L</th>
                                                 <th class=" align-middle  mx-0" style="padding: 0 !important;">RR</th>
                                             </tr>
                                         </thead>
@@ -1813,7 +1905,7 @@
                                                 </td>
 
                                                 @* cat *@
-                                                <td class="align-top border border-light border-end-0  border-start-0  border-top-0 "
+                                                @* <td class="align-top border border-light border-end-0  border-start-0  border-top-0 "
                                                     style="padding: 0 !important; width: 70px;" ng-if="select_columns_level != '4' ">
 
                                                     <div class="d-flex align-items-top px-0" style="width: 70px;">
@@ -1853,9 +1945,9 @@
                                                             </option>
                                                         </select>
                                                     </div>
-                                                </td>
+                                                </td> *@
 
-                                                <td class="align-top border border-light border-end-0  border-start-0  border-top-0 "
+                                                @* <td class="align-top border border-light border-end-0  border-start-0  border-top-0 "
                                                     style="padding: 0 !important; width: 20px;">
                                                     <div class="align-items-center text-end mt-1" style=" width: 20px;"
                                                          ng-class="{'disabled-link':(!tab_worksheet_active)}">
@@ -1864,28 +1956,42 @@
                                                             <div class="d-flex"><h6 class="me-1">{{item.ram_befor_security}}</h6> <span class="fas fa-pencil-alt fa-sm" style=" width: 8px;"></span> </div>
                                                         </button>
                                                     </div>
-                                                </td>
+                                                </td> *@
 
                                                 <td class="align-top border border-light border-end-0  border-start-0  border-top-0 "
                                                     style="padding: 0 !important; width: 20px;">
                                                     <div class="align-items-center text-end mt-1" style=" width: 20px;"
                                                          ng-class="{'disabled-link':(!tab_worksheet_active)}">
                                                         <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end"
-                                                                type="button" ng-click="openModalDataRAM_Worksheet(item,'l',item.seq,'befor')">
-                                                            <div class="d-flex"><h6 class="me-1">{{item.ram_befor_likelihood}}</h6> <span class="fas fa-pencil-alt fa-sm" style=" width: 8px;"></span> </div>
+                                                                type="button" 
+                                                                ng-click="openModalDataRAM_Worksheet(item,'l',item.seq,'befor')">
+                                                            <div class="d-flex">
+                                                                <h6 class="me-1"  style="font-size: 10px !important;">
+                                                                    {{item.ram_befor_security}} 
+                                                                    <span ng-if="item.ram_befor_security && item.ram_befor_likelihood">/</span> 
+                                                                    {{item.ram_befor_likelihood}}
+                                                                </h6> 
+                                                                <span class="fas fa-pencil-alt fa-sm" style=" width: 8px;"></span> 
+                                                            </div>
                                                         </button>
                                                     </div>
                                                 </td>
+
                                                 <td class="align-top border border-light border-end-0  border-start-0  border-top-0 "
                                                     style="padding: 0 !important; width: 25px;">
                                                     <div class="align-items-center text-end mt-1" style=" width: 25px;">
                                                         <button ng-style=" { 'background-color' : ((item.ram_befor_risk == 'H') ? 'red' : ((item.ram_befor_risk == 'M') ? 'yellow' : ((item.ram_befor_risk == 'L') ? 'green' : '#D3D3D3')) ) }"
                                                                 class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end"
-                                                                type="button" ng-click="openModalDataRAM_Worksheet(item,'r',item.seq,'befor')" style="width: 25px;">
-                                                            <div class="text-center" style=" width: 25px;"><h6 class="me-1 text-center" style=" width: 25px;">{{item.ram_befor_risk}}</h6></div>
+                                                                type="button" 
+                                                                ng-click="openModalDataRAM_Worksheet(item,'r',item.seq,'befor')" 
+                                                                style="width: 25px;">
+                                                            <div class="text-center" style=" width: 25px;">
+                                                                <h6 class="me-1 text-center" style=" width: 25px;">{{item.ram_befor_risk}}</h6>
+                                                            </div>
                                                         </button>
                                                     </div>
                                                 </td>
+                                                
                                                 @* recommendations *@
                                                 <td class="align-top border border-light border-end-0  border-start-0  border-top-0 "
                                                     style="padding: 0 !important; width: 200px; max-width:400px;">
@@ -1923,6 +2029,7 @@
                                                         </div>
                                                     </div>
                                                 </td>
+
                                                 @* responder *@
                                                 <td class="align-top border border-light border-end-0  border-start-0  border-top-0 "
                                                     style="padding: 0 !important; width: 200px; max-width:400px;">
@@ -1953,7 +2060,8 @@
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td class="align-top border border-light border-end-0  border-start-0  border-top-0 "
+
+                                                @* <td class="align-top border border-light border-end-0  border-start-0  border-top-0 "
                                                     style="padding: 0 !important; width: 20px;">
                                                     <div class="align-items-center text-end mt-1" style=" width: 20px;" ng-class="{'disabled-link':(!tab_worksheet_active)}">
                                                         <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end"
@@ -1961,16 +2069,25 @@
                                                             <div class="d-flex"><h6 class="me-1">{{item.ram_after_security}}</h6> <span class="fas fa-pencil-alt fa-sm" style=" width: 8px;"></span> </div>
                                                         </button>
                                                     </div>
-                                                </td>
+                                                </td> *@
+
                                                 <td class="align-top border border-light border-end-0  border-start-0  border-top-0 "
                                                     style="padding: 0 !important; width: 20px;">
                                                     <div class="align-items-center text-end mt-1" style=" width: 20px;" ng-class="{'disabled-link':(!tab_worksheet_active)}">
                                                         <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end"
                                                                 type="button" ng-click="openModalDataRAM_Worksheet(item,'l',item.seq,'after')">
-                                                            <div class="d-flex"><h6 class="me-1">{{item.ram_after_likelihood}}</h6> <span class="fas fa-pencil-alt fa-sm" style=" width: 8px;"></span> </div>
+                                                            <div class="d-flex">
+                                                                <h6 class="me-1" style="font-size: 10px !important;">
+                                                                    {{item.ram_after_security}}
+                                                                    <span ng-if="item.ram_after_security && item.ram_after_likelihood">/</span>
+                                                                     {{item.ram_after_likelihood}}
+                                                                </h6> 
+                                                                <span class="fas fa-pencil-alt fa-sm" style=" width: 8px;"></span> 
+                                                            </div>
                                                         </button>
                                                     </div>
                                                 </td>
+
                                                 <td class="align-top border border-light border-end-0  border-start-0  border-top-0 "
                                                     style="padding: 0 !important; width: 25px;">
                                                     <div class="align-items-center text-end mt-1" style=" width: 25px;">
@@ -2298,42 +2415,43 @@
          aria-hidden="true" style="display: none;">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header" ng-if="selectDatFormType != 'specialist'">
                     <h5 class="text-900 mb-0" data-anchor="data-anchor" id="modalEmployeeCheckLabel">
                         <span class=" me-2 text-primary"><B>|</B></span> Search Employee/Contract
                     </h5>
-
-                    <button class="btn p-1" type="button" data-bs-dismiss="modal" aria-label="Close">
-                        <svg class="svg-inline--fa fa-xmark fs--1" aria-hidden="true" focusable="false" data-prefix="fas"
-                             data-icon="xmark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"
-                             data-fa-i2svg="">
+                    <button class="btn p-1" 
+                            type="button" 
+                            data-bs-dismiss="modal" 
+                            aria-label="Close">
+                        <svg class="svg-inline--fa fa-xmark fs--1" 
+                            aria-hidden="true" 
+                            focusable="false" 
+                            data-prefix="fas"
+                            data-icon="xmark" 
+                            role="img" 
+                            xmlns="http://www.w3.org/2000/svg" 
+                            viewBox="0 0 320 512"
+                            data-fa-i2svg="">
                             <path fill="currentColor"
                                   d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z">
                             </path>
                         </svg>
                     </button>
-
                 </div>
-                <div class="modal-body">
 
+                <div class="modal-body" ng-class="{'d-none':(selectDatFormType == 'specialist')}">
                     <div class="mb-4">
-
                         <div class="row g-3">
-
                             <div class="col-auto">
-
                                 <div class="search-box position-relative">
-
                                     <input class="form-control search-input search"
-                                           ng-model="searchText" placeholder="Search"
+                                           ng-model="searchText" 
+                                           placeholder="Search"
                                            ng-change="fillterDataEmployeeAdd()" />
                                     <span class="fas fa-search search-box-icon"></span>
                                 </div>
-
                             </div>
-
                         </div>
-
                     </div>
 
                     @* start แสดงข้อมูลที่ ค้นหาตาม textsearch*@
@@ -2344,6 +2462,7 @@
                                     <tr class="text-center">
                                         <th class=""> </th>
                                         <th class="pe-5" scope="col">Employee</th>
+                                        <th class="pe-5" scope="col">QMTS,ENMA</th>
                                         <th class="pe-5" scope="col">E-Mail</th>
                                         <th class="pe-5" scope="col">Employee Type</th>
 
@@ -2353,10 +2472,10 @@
 
                                     <tr class="hover-actions-trigger btn-reveal-trigger position-static text-center"
                                         ng-repeat="item in employeelist_show">
-
                                         <td class="">
                                             <a class="dropdown-item text-primary"
-                                               ng-click="choosDataEmployee(item)">
+                                               ng-click="choosDataEmployee(item)"
+                                               style="cursor: pointer;">
                                                 Add
                                             </a>
                                         </td>
@@ -2364,16 +2483,19 @@
                                         <td class="">
                                             <a class=" text-decoration-none d-flex align-items-center">
                                                 <div class="avatar avatar-m" style="height: 20px; width: 20px;">
-                                                    <img ng-if="item.employee_img" class="rounded-circle" ng-src="../../{{ item.employee_img }}" alt="">
+                                                    <img ng-if="item.employee_img" 
+                                                    class="rounded-circle" 
+                                                    ng-src="../../{{ item.employee_img }}" alt="">
                                                 </div>
                                                 <p class="mb-0 ms-3 text-1100 fw-bold"> ({{item.employee_id}}){{item.employee_displayname}} </p>
                                             </a>
                                         </td>
 
+                                        <td class="">{{item.employee_position}} </td>
+
                                         <td class="">{{item.employee_email}} </td>
 
                                         <td class="">{{item.employee_type}}</td>
-
                                     </tr>
                                 </tbody>
                             </table>
@@ -2381,8 +2503,6 @@
                         </div>
                     </div>
                     @* end แสดงข้อมูลที่ ค้นหาตาม textsearch*@
-
-
                 </div>
 
                 <div class="modal-header bg-soft" ng-if="!(selectDatFormType =='owner' )">
@@ -2824,103 +2944,44 @@
                 </div>
 
                 <div class="modal-body">
-
                     <div class="row">
-
-
-                        <div class="col-6" ng-if="!previewRam">
-
-                            <table class="table table-sm fs--1 mb-0 col-auto ">
-                                <thead class="bg-light-primary">
-                                    <tr>
-                                        <td rowspan="2" class="text-center"></td>
-                                        <th rowspan="1" colspan="3" class="text-center" ng-if="select_columns_level != 5">Security</th>
-                                        <th rowspan="1" colspan="6" class="text-center" ng-if="select_columns_level == 5">Security</th>
-                                    </tr>
-                                    <tr ng-if="select_columns_level != 5">
-                                        <td class="text-center">Level</td>
-                                        <td>Description</td>
-                                    </tr>
-                                    <tr ng-if="select_columns_level == 5">
-                                        <td class="text-center">Level</td>
-                                        <td>People</td>
-                                        <td>Assets</td>
-                                        <td>Enhancement</td>
-                                        <td>Reputation</td>
-                                        <td>Product Quality</td>
-                                    </tr>
-                                </thead>
-
-                                <tbody class=" align-top text-start">
-                                    <tr class="hover-actions-trigger btn-reveal-trigger position-static "
-                                        ng-repeat="item_ram in master_security_level | filter:{id_ram:data_general[0].id_ram,category_type:item_ram.category_type}">
-                                        <td class=" text-end" style="width: 80px;">
-                                            <a class="pointer" ng-click="selectDataRAM('s',item_ram.security_level)"
-                                               aria-label="Close">Select</a>
-                                        </td>
-                                        <td class="text-center">{{item_ram.security_level}}</td>
-                                        <td ng-if="item_ram.category_type !== 5">{{item_ram.security_text}}</td>
-                                        <td ng-if="item_ram.category_type == 5">{{item_ram.people_text}}</td>
-                                        <td ng-if="item_ram.category_type == 5">{{item_ram.assets_text}}</td>
-                                        <td ng-if="item_ram.category_type == 5">{{item_ram.enhancement_text}}</td>
-                                        <td ng-if="item_ram.category_type == 5">{{item_ram.reputation_text}}</td>
-                                        <td ng-if="item_ram.category_type == 5">{{item_ram.product_quality_text}}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-
-
-                        </div>
-                        <div class="col-6" ng-if="!previewRam">
-
-                            <table class="table table-sm fs--1 mb-0 col-auto ">
-                                <thead class="bg-light-primary">
-                                    <tr>
-                                        <td rowspan="2" class="text-center"></td>
-                                        <th rowspan="1" colspan="3" ng-if="select_columns_level != 5">Likelihood</th>
-                                        <th rowspan="1" colspan="5" ng-if="select_columns_level == 5">Likelihood</th>
-                                    </tr>
-                                    <tr ng-if="select_columns_level != 5">
-                                        <td class="text-center">Level</td>
-                                        <td>Description</td>
-                                    </tr>
-                                    <tr ng-if="select_columns_level == 5">
-                                        <td class="text-center">Level</td>
-                                        <td>Description</td>
-                                        <td>Description(2)</td>
-                                        <td>Criterion</td>
-                                    </tr>
-                                </thead>
-
-                                <tbody class=" align-top text-start">
-                                    <tr class="hover-actions-trigger btn-reveal-trigger position-static "
-                                        ng-repeat="item_ram in master_likelihood_level | filter:{id_ram:data_general[0].id_ram,columns_level:item_ram.columns_level}">
-                                        <td class="text-end pointer" style="width: 80px;">
-                                            <a class="pointer" ng-click="selectDataRAM('l',item_ram.likelihood_level)"
-                                               aria-label="Close">Select</a>
-                                        </td>
-                                        <td class="text-center">{{item_ram.likelihood_level}}</td>
-
-                                        <td ng-if="!(item_ram.columns_level == 5)">{{item_ram.likelihood_show}}</td>
-
-                                        <td>{{item_ram.likelihood_text}}</td>
-                                        <td ng-if="item_ram.columns_level == 5">{{item_ram.likelihood_desc}}</td>
-                                        <td ng-if="item_ram.columns_level == 5">{{item_ram.likelihood_criterion}}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-
-                        </div>
-
-                        <div class="col-12 mt-1 pt-1" style="zoom:0.7;">
-
-                            <div class="text-center cursor-pointer " ng-repeat="itemRam in master_ram | filter:{id: data_general[0].id_ram}">
-                                <img src="{{itemRam.document_file_path}}" style="width: 400px;  height:300px;" />
+                        <div class="row">
+                            <div class="col-6 d-flex justify-content-end gap-10">
+                                
                             </div>
+                            <div class="col-6 d-flex justify-content-end" 
+                              ng-class="{'ram-l-5': (data_general[0].id_ram == 5) ,'ram-l-4': (data_general[0].id_ram == 4)}">
+                                <div class="d-flex justify-content-end align-items-center flex-column" 
+                                    ng-repeat="item_ram in master_likelihood_level | filter:{id_ram:data_general[0].id_ram,columns_level:item_ram.columns_level}">
+                                    <label for="likelihood"><b>{{item_ram.likelihood_level}}</b></label>
+                                    <input type="radio" 
+                                            id="likelihood" 
+                                            name="likelihood" 
+                                            ng-click="selectDataRAM('l',item_ram.likelihood_level)"
+                                            style="cursor: pointer; width: 30px; height: 30px;">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-1 d-flex flex-column justify-content-end"  
+                            ng-class="{'ram-s-5': (data_general[0].id_ram == 5) ,'ram-s-4': (data_general[0].id_ram == 4)}">
+                            <div class="d-flex justify-content-end align-items-center gap-2" 
+                                ng-repeat="item_ram in master_security_level | filter:{id_ram:data_general[0].id_ram,category_type:item_ram.category_type}">
+                                <label for="security_level"><b>{{item_ram.security_level}}</b></label>
+                                <input type="radio" 
+                                        id="security_level" 
+                                        name="security_level"  
+                                        ng-click="selectDataRAM('s',item_ram.security_level)"
+                                       style="cursor: pointer; width: 30px; height: 30px;">
+                            </div>
+                        </div>
 
+                        <div class="col-11">
+                            <div class="cursor-pointer " ng-repeat="itemRam in master_ram | filter:{id: data_general[0].id_ram}">
+                                <img src="{{itemRam.document_file_path}}" style="width: 100%;  height:100%;" />
+                            </div>
                         </div>
                     </div>
-
                 </div>
 
                 <div class="modal-body d-none">
