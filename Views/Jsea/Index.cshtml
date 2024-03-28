@@ -29,6 +29,7 @@
 
     <script src="~/assets/js/all.min.js"></script>
 
+    <link rel="stylesheet" href="~/css/myStyles.css">
 }
 
 <div class="content mt-1" style="font-size: 12px; min-height: auto !important; overflow-x:hidden;" id="divPage"
@@ -130,7 +131,7 @@
 
                 <div class="card-header mb-0 pb-0 border border-bottom-0 ">
 
-                    <ul class="nav nav-underline border-3 border-primary border-bottom " id="myTab" role="tablist">
+                 @*    <ul class="nav nav-underline border-3 border-primary border-bottom " id="myTab" role="tablist">
 
                         <li ng-repeat="tab in tabs" class="mx-2 " ng-if="tab.isShow || true">
                             <a ng-click="changeTab(tab)"
@@ -142,6 +143,23 @@
                                aria-controls="tab-{{tab.name}}"
                                aria-selected="tab.isActive">{{ tab.title }}</a>
                         </li>
+                    </ul> *@
+
+                    <ul class="nav nav-underline border-3 border-primary border-bottom " id="myTab" role="tablist" style="position: relative;">
+
+                        <li ng-repeat="tab in tabs" class="mx-2 " ng-if="tab.isShow || true">
+                            <a ng-click="changeTab(tab)"
+                               class="btn btn-outline-primary border border-0 "
+                               ng-class="{'btn btn-outline-primary border border-0 active': (tab.isActive==true),'btn btn-outline-primary border border-0 ': (tab.isActive==false) }"
+                               style="border-radius: 10px 10px 0px 0px !important;"
+                               id="{{tab.name}}-tab" name="{{tab.name}}-tab"
+                               data-bs-toggle="tab" href="#tab-{{tab.name}}" role="tab"
+                               aria-controls="tab-{{tab.name}}"
+                               aria-selected="tab.isActive">{{ tab.title }}</a>
+                        </li>
+                        <div style="display:flex; align-items: center; gap: 10px; position: absolute; bottom:4px; right: 0">
+                            Save data before <b style="font-size: 18px;" ng-class="{ 'blinking-text': (counter < 600) }">{{counter/60 | number:0}}</b> minutes
+                        </div>
                     </ul>
 
                 </div>
@@ -2462,7 +2480,7 @@
                                     <tr class="text-center">
                                         <th class=""> </th>
                                         <th class="pe-5" scope="col">Employee</th>
-                                        <th class="pe-5" scope="col">QMTS,ENMA</th>
+                                        <th class="pe-5" scope="col">Indicator</th>
                                         <th class="pe-5" scope="col">E-Mail</th>
                                         <th class="pe-5" scope="col">Employee Type</th>
 

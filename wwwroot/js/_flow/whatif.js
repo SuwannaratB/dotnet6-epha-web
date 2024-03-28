@@ -55,6 +55,7 @@ AppMenuPage.filter('ApproverMultiFieldFilter', function () {
 
 
 AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) {
+   
     //search list function
     $scope.autoComplete = function (DataFilter, idinput) {
 
@@ -98,8 +99,27 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
     };
 
 });
-AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, $document) {
-    //file:///D:/04KUL_PROJECT_2023/e-PHA/phoenix-v1.12.0/public/apps/email/compose.html
+
+AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, $document, $interval) {
+
+    function startTimer() {
+        $scope.counter = 1800;
+        var interval = $interval(function () {
+            $scope.counter--;
+            if ($scope.counter == 0) {
+                // $scope.confirmSave('save');
+                set_alert("Warning", "Please save the information.")
+                $scope.stopTimer();
+                startTimer();
+            }
+        }, 1000);
+
+        $scope.stopTimer = function () {
+            $interval.cancel(interval);
+        };
+    }
+
+    $scope.startTimer = startTimer;
 
     $scope.formatTo24Hour = function (_time) {
 
@@ -997,6 +1017,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                                 set_alert('Success', 'Data has been successfully saved.');
                                 apply();
+
+                                $scope.stopTimer();
                             },
                             error: function (jqXHR, textStatus, errorThrown) {
                                 if (jqXHR.status == 500) {
@@ -1459,7 +1481,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     } catch (ex) { alert(ex); console.clear(); }
 
 
-                    $scope.$apply();
+                    $scope.$apply(); 
+
+                   startTimer();
+
                     try {
                         if (page_load == true || true) {
                             const choices1 = new Choices('.js-choice-apu');
@@ -4903,18 +4928,50 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         if (!searchText) { return; }
 
         var items = angular.copy($scope.employeelist_def, items);
-        searchText = searchText.toLowerCase();
+        // console.log(items)
+        // searchText = searchText.toLowerCase();
 
         if (searchText.length < 3) { return items; }
-        $scope.employeelist_show = items.filter(function (item) {
-            return (
-                item.employee_id.toLowerCase().includes(searchText.toLowerCase()) ||
-                item.employee_displayname.toLowerCase().includes(searchText.toLowerCase()) ||
-                item.employee_email.toLowerCase().includes(searchText.toLowerCase())
-            );
-        }).slice(0, 10);
-        $('#modalEmployeeAdd').modal('show');
+
+        getEmployees(searchText, function (data) {
+            $scope.employeelist_show = data.employee
+            // return (
+            //     item.employee_id.toLowerCase().includes(searchText.toLowerCase()) ||
+            //     item.employee_displayname.toLowerCase().includes(searchText.toLowerCase()) ||
+            //     item.employee_email.toLowerCase().includes(searchText.toLowerCase())
+            // )}).slice(0, 10);
+            apply();
+            $('#modalEmployeeAdd').modal('show');
+        });
     };
+
+    function getEmployees(keywords, callback) {
+        $.ajax({
+            url: url_ws + "Flow/employees_search",
+            data: '{"user_filter_text":"' + keywords + '"'
+                + ',"max_rows":"10"'
+                + '}',
+            type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+            beforeSend: function () {
+                $("#divLoading").show();
+            },
+            complete: function () {
+                $("#divLoading").hide();
+            },
+            success: function (data) {
+                callback(data);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                if (jqXHR.status == 500) {
+                    alert('Internal error: ' + jqXHR.responseText);
+                } else {
+                    alert('Unexpected ' + textStatus);
+                }
+            }
+
+        });
+    }
+
 
     function add_relatedpeople_outsider(xformtype, seq_session) {
 

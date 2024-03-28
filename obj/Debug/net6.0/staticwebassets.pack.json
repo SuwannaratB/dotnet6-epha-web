@@ -5925,6 +5925,10 @@
       "PackagePath": "staticwebassets\\css\\button.css"
     },
     {
+      "Id": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\wwwroot\\css\\myStyles.css",
+      "PackagePath": "staticwebassets\\css\\myStyles.css"
+    },
+    {
       "Id": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\wwwroot\\css\\scollbar.css",
       "PackagePath": "staticwebassets\\css\\scollbar.css"
     },

@@ -22,8 +22,9 @@
     <link rel="stylesheet" href="~/css/autocomplete.css">
     <link rel="stylesheet" href="~/css/button.css" />
 
-    <script src="~/assets/js/all.min.js"></script>
+    <script src="~/assets/js/all.min.js"></script> 
 
+    <link rel="stylesheet" href="~/css/myStyles.css">
 }
 
 <div class="content mt-1" style="font-size: 12px;" id="divPage" ng-controller="ctrlAppPage"
@@ -128,7 +129,7 @@
 
                 <div class="card-header mb-0 pb-0 border border-bottom-0 ">
 
-                    <ul class="nav nav-underline border-3 border-primary border-bottom " id="myTab" role="tablist">
+                @*     <ul class="nav nav-underline border-3 border-primary border-bottom " id="myTab" role="tablist">
 
                         <li ng-repeat="tab in tabs" class="mx-2 " ng-if="tab.isShow || true">
                             <a ng-click="changeTab(tab)"
@@ -140,6 +141,22 @@
                                aria-controls="tab-{{tab.name}}"
                                aria-selected="tab.isActive">{{ tab.title }}</a>
                         </li>
+                    </ul> *@
+                    <ul class="nav nav-underline border-3 border-primary border-bottom " id="myTab" role="tablist" style="position: relative;">
+
+                        <li ng-repeat="tab in tabs" class="mx-2 " ng-if="tab.isShow || true">
+                            <a ng-click="changeTab(tab)"
+                               class="btn btn-outline-primary border border-0 "
+                               ng-class="{'btn btn-outline-primary border border-0 active': (tab.isActive==true),'btn btn-outline-primary border border-0 ': (tab.isActive==false) }"
+                               style="border-radius: 10px 10px 0px 0px !important;"
+                               id="{{tab.name}}-tab" name="{{tab.name}}-tab"
+                               data-bs-toggle="tab" href="#tab-{{tab.name}}" role="tab"
+                               aria-controls="tab-{{tab.name}}"
+                               aria-selected="tab.isActive">{{ tab.title }}</a>
+                        </li>
+                        <div style="display:flex; align-items: center; gap: 10px; position: absolute; bottom:4px; right: 0">
+                            Save data before <b style="font-size: 18px;" ng-class="{ 'blinking-text': (counter < 600) }">{{counter/60 | number:0}}</b> minutes
+                        </div>
                     </ul>
 
                 </div>
@@ -2587,20 +2604,23 @@
                                             <th class=" align-middle text-start" colspan="1" rowspan="3">Recommendations</th>
                                             <th class=" align-middle" colspan="1" rowspan="3">Action Owner</th>
                                             <th class=" align-middle" colspan="1" rowspan="3" ng-if="data_header[0].pha_status >12">Document File</th>
+
+                                            <th class=" align-middle" colspan="1" rowspan="3">implement</th>
+
+                                            <th class=" align-middle " colspan="2" rowspan="1">
+                                                <b class="text-danger"> * </b>Recommendations Close Plan
+                                            </th>
                                             <th class=" align-middle" colspan="2" rowspan="1">
                                                 Risk Assessment Matrix
                                             </th>
                                             <th class=" align-middle" colspan="1" rowspan="3">Action<br />Status<br />(Items)</th>
-                                            <th class=" align-middle " colspan="2" rowspan="1">
-                                                <b class="text-danger"> * </b>Recommendations Close Plan
-                                            </th>
                                             <th class=" align-middle" colspan="1" rowspan="3">Action Close Date</th>
                                         </tr>
                                         <tr>
-                                            <th class=" align-middle" scope="col" colspan="1" rowspan="1" title="MITIGATED RISK ASSESSMENT MATRIX">Before Action</th>
-                                            <th class=" align-middle" scope="col" colspan="1" rowspan="1">After Action</th>
                                             <th class=" align-middle" scope="col" rowspan="2">Start Date</th>
                                             <th class=" align-middle" scope="col" rowspan="2">End Date</th>
+                                            <th class=" align-middle" scope="col" colspan="1" rowspan="1" title="MITIGATED RISK ASSESSMENT MATRIX">Before Action</th>
+                                            <th class=" align-middle" scope="col" colspan="1" rowspan="1">After Action</th>
                                         </tr>
                                         <tr class="text-center">
                                             <th class="sort align-middle " scope="col">
@@ -2718,31 +2738,39 @@
                                                 </div>
 
                                             </td>
-                                            <td class="align-top rating white-space-nowrap ">
-                                                <div class="d-flex align-items-center text-end ">
-                                                    <div class="align-items-center ">
-                                                        <p class="transition-none fs--2p-1 ps-0 text-center rounded-1 cursor-pointer"
-                                                           ng-click="openModalDataRAM_Worksheet(item,'s',item.seq,'after',item.id_ram)" style="width: 20px; height:20px">
-                                                            {{item.ram_after_security}}
-                                                        </p>
-                                                    </div>
+                                            <td class="align-top rating white-space-nowrap">
+                                                <div class="ms-3">
 
-                                                    <div class="align-items-center ">
-                                                        <p class="transition-none fs--2p-1 ps-0 text-center rounded-1 cursor-pointer"
-                                                           ng-click="openModalDataRAM_Worksheet(item,'l',item.seq,'after',item.id_ram)" style="width: 20px; height:20px">
-                                                            {{item.ram_after_likelihood}}
-                                                        </p>
-                                                    </div>
+                                                    <input type="checkbox" ng-if="(item.implement==1)" checked
+                                                           ng-click="actionChangeWorksheet(item,item.seq,'implement_uncheck')"
+                                                           style="cursor: pointer;width:20px; height:20px;">
 
-                                                    <div class="align-items-center ">
-                                                        <p ng-style=" {'color': item.ram_after_risk === 'L' ? 'white' : 'black','background-color' : ((item.ram_after_risk == 'H') ? 'red' : ((item.ram_after_risk == 'M') ? 'yellow' : ((item.ram_after_risk == 'L') ? 'green' : '#D3D3D3')) )}"
-                                                           class="transition-none fs--2p-1 ps-0 text-center rounded-1 cursor-pointer"
-                                                           ng-click="openModalDataRAM_Worksheet(item,'r',item.seq,'after',item.id_ram)" style="width: 20px; height:20px;">
-                                                            {{item.ram_after_risk}}
-                                                        </p>
-                                                    </div>
+                                                    <input type="checkbox" ng-if="!(item.implement==1)"
+                                                           ng-click="actionChangeWorksheet(item,item.seq,'implement_check')"
+                                                           style="cursor: pointer;width:20px; height:20px;">
                                                 </div>
+                                            </td>
+                                            <td class="align-top rating white-space-nowrap">
+                                                <input type="date" class="form-control datetimepicker rounded-1" ng-class="{'disabled-link':(!tab_managerecom_active)}"
+                                                       placeholder="Start Date dd/mm/yyyy"
+                                                       ng-model="item.estimated_start_date"
+                                                       ng-change="actionChangeWorksheet(item,item.seq,'')">
 
+
+                                                <div id="valid-nodeworksheet-estimated-start-{{item.seq}}"
+                                                     class="invalid-feedback text-danger">
+                                                    Please provide a valid Responder.
+                                                </div>
+                                            </td>
+                                            <td class="align-top rating white-space-nowrap">
+                                                <input type="date" class="form-control  datetimepicker rounded-1" ng-class="{'disabled-link':(!tab_managerecom_active)}"
+                                                       placeholder="End Date dd/mm/yyyy"
+                                                       ng-model="item.estimated_end_date"
+                                                       ng-change="actionChangeWorksheet(item,item.seq,'')">
+                                                <div id="valid-nodeworksheet-estimated-end-{{item.seq}}"
+                                                     class="invalid-feedback text-danger">
+                                                    Please provide a valid Responder.
+                                                </div>
                                             </td>
                                             <td class="align-top rating white-space-nowrap ">
                                                 <div class="d-flex align-items-center text-end ">
@@ -2770,33 +2798,37 @@
                                                 </div>
                                             </td>
 
+                                            <td class="align-top rating white-space-nowrap ">
+                                                <div class="d-flex align-items-center text-end ">
+                                                    <div class="align-items-center ">
+                                                        <p class="transition-none fs--2p-1 ps-0 text-center rounded-1 cursor-pointer"
+                                                           ng-click="openModalDataRAM_Worksheet(item,'s',item.seq,'after',item.id_ram)" style="width: 20px; height:20px">
+                                                            {{item.ram_after_security}}
+                                                        </p>
+                                                    </div>
+
+                                                    <div class="align-items-center ">
+                                                        <p class="transition-none fs--2p-1 ps-0 text-center rounded-1 cursor-pointer"
+                                                           ng-click="openModalDataRAM_Worksheet(item,'l',item.seq,'after',item.id_ram)" style="width: 20px; height:20px">
+                                                            {{item.ram_after_likelihood}}
+                                                        </p>
+                                                    </div>
+
+                                                    <div class="align-items-center ">
+                                                        <p ng-style=" {'color': item.ram_after_risk === 'L' ? 'white' : 'black','background-color' : ((item.ram_after_risk == 'H') ? 'red' : ((item.ram_after_risk == 'M') ? 'yellow' : ((item.ram_after_risk == 'L') ? 'green' : '#D3D3D3')) )}"
+                                                           class="transition-none fs--2p-1 ps-0 text-center rounded-1 cursor-pointer"
+                                                           ng-click="openModalDataRAM_Worksheet(item,'r',item.seq,'after',item.id_ram)" style="width: 20px; height:20px;">
+                                                            {{item.ram_after_risk}}
+                                                        </p>
+                                                    </div>
+                                                </div>
+
+                                            </td>
                                             <td class="align-top rating white-space-nowrap">
                                                 <div class="ms-3">
                                                     <label>
                                                         {{item.action_status}}
                                                     </label>
-                                                </div>
-                                            </td>
-                                            <td class="align-top rating white-space-nowrap">
-                                                <input type="date" class="form-control datetimepicker rounded-1" ng-class="{'disabled-link':(!tab_managerecom_active)}"
-                                                       placeholder="Start Date dd/mm/yyyy"
-                                                       ng-model="item.estimated_start_date"
-                                                       ng-change="actionChangeWorksheet(item,item.seq,'')">
-
-
-                                                <div id="valid-nodeworksheet-estimated-start-{{item.seq}}"
-                                                     class="invalid-feedback text-danger">
-                                                    Please provide a valid Responder.
-                                                </div>
-                                            </td>
-                                            <td class="align-top rating white-space-nowrap">
-                                                <input type="date" class="form-control  datetimepicker rounded-1" ng-class="{'disabled-link':(!tab_managerecom_active)}"
-                                                       placeholder="End Date dd/mm/yyyy"
-                                                       ng-model="item.estimated_end_date"
-                                                       ng-change="actionChangeWorksheet(item,item.seq,'')">
-                                                <div id="valid-nodeworksheet-estimated-end-{{item.seq}}"
-                                                     class="invalid-feedback text-danger">
-                                                    Please provide a valid Responder.
                                                 </div>
                                             </td>
                                             <td class="align-top  px-0" style=" width: 80px;">
@@ -3152,6 +3184,7 @@
                                     <tr class="text-center">
                                         <th class=""> </th>
                                         <th class="pe-5" scope="col">Employee</th>
+                                        <th class="pe-5" scope="col">Indicator</th>
                                         <th class="pe-5" scope="col">E-Mail</th>
                                         <th class="pe-5" scope="col">Employee Type</th>
 
@@ -3178,6 +3211,9 @@
                                                 <p class="mb-0 ms-3 text-1100 fw-bold"> ({{item.employee_id}}){{item.employee_displayname}} </p>
                                             </a>
                                         </td>
+
+
+                                        <td class="">{{item.employee_position}} </td>
 
                                         <td class="">{{item.employee_email}} </td>
 
@@ -3853,6 +3889,7 @@
                                                 <input type="checkbox" class="form-check-input text-end cursor-pointer"
                                                        ng-change="actionChangeGuidwords(itemMod,false)"
                                                        ng-model="itemMod.selected" ng-if="!(itemMod.def_selected==1)">
+                                                {{itemMod.guidewords_no +'.'}}
                                             </td>
                                             <td class="align-middle ps-1">{{itemMod.deviations}}</td>
                                             <td class="align-middle ps-1">{{itemMod.guide_words}}</td>
@@ -3923,15 +3960,9 @@
             </div>
         </div>
     </div>
-    <!--Modal Export & Import Data End-->
-    @* x
+    @* Modal Export & Import Data End *@
 
-
-    *@
-
-    @* RAM *@
-
-    <!--Modal RAM Start-->
+    @* Modal RAM Start *@
     <div class="modal fade modal-xl shadow-sm p-3 mb-5  rounded" id="modalRAM" tabindex="-1"
          aria-labelledby="modalRAMLabel" aria-hidden="true" style="display: none;">
         <div class="modal-dialog modal-dialog-centered">
@@ -4014,10 +4045,11 @@
                                      ng-repeat="item_ram in master_likelihood_level | filter:{id_ram:data_general[0].id_ram,columns_level:item_ram.columns_level}">
                                     <label for="likelihood"><b>{{item_ram.likelihood_level}}</b></label>
                                     <input type="radio"
-                                           id="likelihood"
+                                           id="likelihood" checked="{{cal_ram_action_likelihood == item_ram.likelihood_level}}"
                                            name="likelihood"
                                            ng-click="selectDataRAM('l',item_ram.likelihood_level)"
                                            style="cursor: pointer;width:30px; height:30px;">
+                                    {{cal_ram_action_likelihood == item_ram.likelihood_level}}
                                 </div>
                             </div>
                         </div>
@@ -4031,6 +4063,7 @@
                                        name="security_level"
                                        ng-click="selectDataRAM('s',item_ram.security_level)"
                                        style="cursor: pointer;width:30px; height:30px;">
+                                {{cal_ram_action_security == item_ram.security_level}}
                             </div>
                         </div>
 
@@ -4047,8 +4080,8 @@
 
         </div>
     </div>
-    <!--Modal RAM End-->
-    <!--Modal New RAM-->
+    @* Modal RAM End *@
+    @* Modal New RAM *@
     <div class="modal fade" id="modalNewRAM" tabindex="-1" aria-labelledby="modalNewRAM"
          aria-hidden="true" style="display: none;">
         <div class="modal-dialog modal-dialog-centered">
@@ -4103,11 +4136,10 @@
             </div>
         </div>
     </div>
-    <!--Modal New RAM-->
-    @* x
+    @* Modal New RAM *@
 
-    *@
-    <!--Modal Notification Start-->
+
+    @* Modal Notification Start*@
     <div class="modal fade modal-xl" id="modalNotification" tabindex="-1" aria-labelledby="modalNotificationLabel"
          aria-hidden="true" style="display: none;">
         <div class="modal-dialog modal-dialog-centered">
@@ -4185,8 +4217,9 @@
             </div>
         </div>
     </div>
-    <!--Modal Notification End-->
-    <!--Modal Export File Start-->
+    @* Modal Notification End*@
+
+    @* Modal Export File Start*@
     <div class="modal fade" id="modalExportFile" tabindex="-1" aria-labelledby="modalExportFileLabel"
          aria-hidden="true" style="display: none;">
         <div class="modal-dialog modal-dialog-centered">
@@ -4218,8 +4251,9 @@
             </div>
         </div>
     </div>
-    <!--Modal Export File End-->
-    <!--Modal Cause Show-->
+    @* Modal Export File End*@
+
+    @* Modal Cause Show *@
     <div class="modal fade modal-xl" id="modalCauseText" tabindex="-1" aria-labelledby="modalCauseTextLabel"
          aria-hidden="true" style="display: none;">
         <div class="modal-dialog modal-dialog-centered">
@@ -4250,8 +4284,9 @@
             </div>
         </div>
     </div>
-    <!--Modal Cause Show-->
-    <!--Modal New RAM-->
+    @* Modal Cause Show *@
+
+    @* Modal New RAM *@
     <div class="modal fade" id="modalNewRAM" tabindex="-1" aria-labelledby="modalNewRAM"
          aria-hidden="true" style="display: none;">
         <div class="modal-dialog modal-dialog-centered">
@@ -4299,7 +4334,8 @@
             </div>
         </div>
     </div>
-    <!--Modal New RAM-->
+    @* Modal New RAM *@
+
     @* xxxx *@
     <!--Modal Check Send e-Mail Task Register-->
     <div class="modal fade" id="modalSendMailRegister" tabindex="-1" aria-labelledby="modalSendMailRegisterLabel"

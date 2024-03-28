@@ -1254,6 +1254,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     //แก้ไขเบื้องต้น เนื่องจาก path file ผิดต้องเป็น folder hazop
                     for (let i = 0; i < arr.ram.length; i++) {
                         arr.ram[i].document_file_path = (url_ws.replace('/api/', '/')) + arr.ram[i].document_file_path;
+                        arr.ram[i].document_definition_file_path = (url_ws.replace('/api/', '/')) + arr.ram[i].document_definition_file_path;
                     }
 
                     $scope.master_ram = arr.ram;
@@ -2052,6 +2053,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                 for (let n = 0; n < $scope.data_node.length; n++) {
 
+                    var iGuidewordsNo = 1;
+
                     var id_node_def = Number($scope.data_node[n].seq);
                     var node_no = Number($scope.data_node[n].no);
 
@@ -2068,6 +2071,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         var guidewords = arr_nodeguidwords[i].guidewords;
                         var deviations = arr_nodeguidwords[i].deviations;
                         var guidewords_no = arr_nodeguidwords[i].guidewords_no;
+                        //Kuluwat 202403227 guidewords_no ให้ใช้เป็น running ตาม node แทน
+                        guidewords_no = iGuidewordsNo; iGuidewordsNo += 1;
 
                         var arr = $filter('filter')($scope.data_nodeworksheet, function (item) {
                             return (item.id_node == id_node_def && item.id_guide_word == id_guide_word_def);
@@ -3027,9 +3032,24 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                 //update ข้อมูลทั้งหมดใส่ใน data_nodeguidwords  
                 $scope.data_nodeguidwords = [];
-                for (let i = 0; i < arr_def.length; i++) {
-                    $scope.data_nodeguidwords.push(arr_def[i]);
+                //for (let i = 0; i < arr_def.length; i++) {
+                //    $scope.data_nodeguidwords.push(arr_def[i]);
+                //}
+                for (let iNode = 0; iNode < $scope.data_node.length; iNode++) {
+                    var seq_node = $scope.data_node[iNode].seq;
+                    var arrNode_def = $filter('filter')(arr_def, function (item) {
+                        return (item.seq_node == seq_node);
+                    });
+                    var arr_nodeguidwords = arrNode_def.sort((a, b) => {
+                        return parseFloat(a.guidewords_no) - parseFloat(b.guidewords_no);
+                    });
+
+                    for (let i = 0; i < arr_nodeguidwords.length; i++) {
+                        $scope.data_nodeguidwords.push(arr_nodeguidwords[i]);
+                    }
                 }
+
+
 
                 //delete ข้อมูล guidwords เดิมที่ไม่ได้เลือกในของใหม่ เทียบจาก seq guidwords
                 for (let i = 0; i < arr_copy_def.length; i++) {
@@ -3047,7 +3067,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     ////add ข้อมูลเดิมเก่า
                     //$scope.data_nodeguidwords.push(arr_copy_def[i]);
                 }
-
                 running_no_level1($scope.data_nodeguidwords, null, null);
 
             }
@@ -4942,6 +4961,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     $scope.actionChangeWorksheet = function (_arr, _seq, type_text) {
 
+
         //if (_arr.recommendations == null || _arr.recommendations == '') {
         //    if (_arr.recommendations_no == null || _arr.recommendations_no == '') {
         //        //recommendations != '' ให้ running action no  
@@ -4953,10 +4973,36 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         //}
         action_type_changed(_arr, _seq);
 
+        ////กรณี เพิ่ม action ให้สามารถ Copy detail ใน ตารางได้ --> เบื้องต้นจะเพิ่มข้อมูล ที่กรอกใหม่ ไปไว้ใน track history
+        //if (type_text == 'causes' || type_text == 'consequences' || type_text == 'existing_safeguards'
+        //    || type_text == 'existing_safeguards' || type_text == 'recommendations') {
+        //    var item_text = "";
+        //    var arr_def = [];
+        //    if (fieldName == 'causes') {
+        //        arr_def = $scope.data_all.his_causes;
+        //        item_text = _arr.causes;
+        //    }
+        //    else if (fieldName == 'consequences') {
+        //        arr_def = $scope.data_all.his_consequences;
+        //        item_text = _arr.consequences;
+        //    }
+        //    else if (fieldName == 'existing_safeguards') {
+        //        arr_def = $scope.data_all.his_existing_safeguards;
+        //        item_text = _arr.existing_safeguards;
+        //    }
+        //    else if (fieldName == 'recommendations') {
+        //        arr_def = $scope.data_all.his_recommendations;
+        //        item_text = _arr.safety_critical_equipment_tag;
+        //    } 
+        //    //ค้นหาข้อมูลว่ามีอยู่แล้วหรือป่าว
+        //    var arr_check = $filter('filter')(arr_def, function (item) { return !(item.seq == seq); });
+        //    if (arr_check.length == 0) { arr_def.push({ name: item_text }); }
+        //}
+
+        //เปิดปุ่ม submit
         var arr_submit = $filter('filter')($scope.data_nodeworksheet, function (item) {
             return ((item.action_type !== '' || item.action_type !== null));
         });
-
         if (arr_submit.length > 0) { $scope.submit_type = true; } else { $scope.submit_type = false; }
 
     }
