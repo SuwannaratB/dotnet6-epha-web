@@ -94,6 +94,7 @@ AppMenuPage.filter('SearchGuideWordsFieldFilter', function () {
 });
 
 AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) {
+     
     //search list function
     $scope.autoComplete = function (DataFilter, idinput) {
 
@@ -141,8 +142,27 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         $scope.GuideWordsfilterCriteria.ActionText = val;
     };
 });
-AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, $document) {
-    //file:///D:/04KUL_PROJECT_2023/e-PHA/phoenix-v1.12.0/public/apps/email/compose.html
+
+AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, $document, $interval) { 
+
+    function startTimer() {
+        $scope.counter = 1800;
+        var interval = $interval(function () {
+            $scope.counter--;
+            if ($scope.counter == 0) {
+                // $scope.confirmSave('save');
+                set_alert("Warning", "Please save the information.")
+                $scope.stopTimer();
+                startTimer();
+            }
+        }, 1000);
+
+        $scope.stopTimer = function () {
+            $interval.cancel(interval);
+        };
+    }
+
+    $scope.startTimer = startTimer;
 
     $scope.formatTo24Hour = function (_time) {
 
@@ -1066,6 +1086,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                                 set_alert('Success', 'Data has been successfully saved for PHA Conduct.');
                                 apply();
+
+                                $scope.stopTimer();
                             },
                             error: function (jqXHR, textStatus, errorThrown) {
                                 if (jqXHR.status == 500) {
@@ -1487,6 +1509,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
 
                     $scope.$apply();
+                    startTimer();
                     try {
                         if (page_load == true || true) {
                             const choices1 = new Choices('.js-choice-apu');
@@ -2053,6 +2076,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                 for (let n = 0; n < $scope.data_node.length; n++) {
 
+                    var iGuidewordsNo = 1;
+
                     var id_node_def = Number($scope.data_node[n].seq);
                     var node_no = Number($scope.data_node[n].no);
 
@@ -2069,6 +2094,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         var guidewords = arr_nodeguidwords[i].guidewords;
                         var deviations = arr_nodeguidwords[i].deviations;
                         var guidewords_no = arr_nodeguidwords[i].guidewords_no;
+                        //Kuluwat 202403227 guidewords_no ให้ใช้เป็น running ตาม node แทน
+                        guidewords_no = iGuidewordsNo; iGuidewordsNo += 1;
 
                         var arr = $filter('filter')($scope.data_nodeworksheet, function (item) {
                             return (item.id_node == id_node_def && item.id_guide_word == id_guide_word_def);
@@ -3028,9 +3055,24 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                 //update ข้อมูลทั้งหมดใส่ใน data_nodeguidwords  
                 $scope.data_nodeguidwords = [];
-                for (let i = 0; i < arr_def.length; i++) {
-                    $scope.data_nodeguidwords.push(arr_def[i]);
+                //for (let i = 0; i < arr_def.length; i++) {
+                //    $scope.data_nodeguidwords.push(arr_def[i]);
+                //}
+                for (let iNode = 0; iNode < $scope.data_node.length; iNode++) {
+                    var seq_node = $scope.data_node[iNode].seq;
+                    var arrNode_def = $filter('filter')(arr_def, function (item) {
+                        return (item.seq_node == seq_node);
+                    });
+                    var arr_nodeguidwords = arrNode_def.sort((a, b) => {
+                        return parseFloat(a.guidewords_no) - parseFloat(b.guidewords_no);
+                    });
+
+                    for (let i = 0; i < arr_nodeguidwords.length; i++) {
+                        $scope.data_nodeguidwords.push(arr_nodeguidwords[i]);
+                    }
                 }
+
+
 
                 //delete ข้อมูล guidwords เดิมที่ไม่ได้เลือกในของใหม่ เทียบจาก seq guidwords
                 for (let i = 0; i < arr_copy_def.length; i++) {
@@ -3048,7 +3090,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     ////add ข้อมูลเดิมเก่า
                     //$scope.data_nodeguidwords.push(arr_copy_def[i]);
                 }
-
                 running_no_level1($scope.data_nodeguidwords, null, null);
 
             }
@@ -4808,6 +4849,29 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 var date_value = $scope.data_nodeworksheet[i].estimated_end_date.toISOString().split('T');
                 if (date_value.length > 0) { $scope.data_nodeworksheet[i].estimated_end_date = date_value[0]; }
             } catch { }
+
+
+            try {
+                var date_value = $scope.data_nodeworksheet[i].estimated_start_date.toISOString().split('T');
+                if (date_value.length > 0) { $scope.data_nodeworksheet[i].estimated_start_date = date_value[0]; }
+            } catch { }
+            try {
+                var date_value = $scope.data_nodeworksheet[i].estimated_end_date.toISOString().split('T');
+                if (date_value.length > 0) { $scope.data_nodeworksheet[i].estimated_end_date = date_value[0]; }
+            } catch { }
+
+
+            if (pha_status == "11" || pha_status == "12" || pha_status == "22") {
+                try {
+                    var date_value = $scope.data_nodeworksheet[i].reviewer_action_date.toISOString().split('T');
+                    if (date_value.length > 0) { $scope.data_nodeworksheet[i].reviewer_action_date = date_value[0]; }
+                } catch { }
+                try {
+                    var date_value = $scope.data_nodeworksheet[i].responder_action_date.toISOString().split('T');
+                    if (date_value.length > 0) { $scope.data_nodeworksheet[i].responder_action_date = date_value[0]; }
+                } catch { } 
+            }
+
         }
 
         var arr_active = [];
@@ -4943,21 +5007,81 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     $scope.actionChangeWorksheet = function (_arr, _seq, type_text) {
 
-        //if (_arr.recommendations == null || _arr.recommendations == '') {
-        //    if (_arr.recommendations_no == null || _arr.recommendations_no == '') {
-        //        //recommendations != '' ให้ running action no  
-        //        var arr_copy_def = angular.copy($scope.data_nodeworksheet, arr_copy_def);
-        //        arr_copy_def.sort((a, b) => Number(b.recommendations_no) - Number(a.recommendations_no));
-        //        var recommendations_no = Number(Number(arr_copy_def[0].recommendations_no) + 1);
-        //        _arr.recommendations_no = recommendations_no;
-        //    }
-        //}
         action_type_changed(_arr, _seq);
 
+        var _implement = false;
+        if (type_text == "implement_uncheck") {
+            _arr.implement = 0; _implement = true;
+        } else if (type_text == "implement_check") {
+            _arr.implement = 1; _implement = true;
+        }
+        if (_implement) {
+            //set Data
+            //1. Risk Assessment Matrix -> After to Action
+            //  --> ram_after_security, ram_after_likelihood, ram_after_risk
+            //  --> ram_action_security, ram_action_likelihood, ram_action_risk
+            //2. Action Status -> action_status = Closed
+            //3. Reviewer Date
+            //  --> reviewer_action_type = 2, reviewer_action_date = sysdate()
+            //  --> responder_action_type = 2, responder_action_date = sysdate()
+
+            var dateNow = new Date(Date.now());
+
+            // ดึงข้อมูลวันที่, เดือน, และปี
+            var day = dateNow.getDate();
+            var month = dateNow.toLocaleString('default', { month: 'short' });
+            var year = dateNow.getFullYear();
+
+            // สร้างสตริง "DD MMM YYYY"
+            var formattedDate = day + ' ' + month + ' ' + year;
+             
+
+            if (_arr.implement == 0) {
+
+                _arr.ram_action_security = _arr.ram_after_security;
+                _arr.ram_action_likelihood = _arr.ram_after_likelihood;
+                _arr.ram_action_risk = _arr.ram_after_risk;
+
+                _arr.action_status = 'Closed';
+
+                _arr.reviewer_action_type = 2;
+                _arr.reviewer_action_date = dateNow;
+
+                _arr.responder_action_type = 2;
+                _arr.responder_action_date = dateNow;
+
+                _arr.estimated_start_date = dateNow;
+                _arr.estimated_end_date = dateNow;
+
+                //dd MMM yyyy
+                _arr.reviewer_date = formattedDate;
+
+            } else {
+                _arr.ram_action_security = null;
+                _arr.ram_action_likelihood = null;
+                _arr.ram_action_risk = null;
+
+                _arr.action_status = 'Open'
+
+                _arr.reviewer_action_type = null;
+                _arr.reviewer_action_date = null;
+
+                _arr.responder_action_type = null;
+                _arr.reviewer_action_date = null;
+
+                _arr.estimated_start_date = null;
+                _arr.estimated_end_date = null;
+
+                //dd MMM yyyy
+                _arr.reviewer_date = null;
+            }
+
+        }
+
+        //เปิดปุ่ม submit
         var arr_submit = $filter('filter')($scope.data_nodeworksheet, function (item) {
             return ((item.action_type !== '' || item.action_type !== null));
         });
-
         if (arr_submit.length > 0) { $scope.submit_type = true; } else { $scope.submit_type = false; }
 
     }
@@ -5143,25 +5267,76 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $('#modalEmployeeAdd').modal('show');
     };
 
+    //$scope.fillterDataEmployeeAdd = function () {
+    //    $scope.employeelist_show = [];
+    //    var searchText = $scope.searchText;
+    //    if (!searchText) { return; }
+
+    //    var items = angular.copy($scope.employeelist_def, items);
+    //    searchText = searchText.toLowerCase();
+
+    //    if (searchText.length < 3) { return items; }
+    //    $scope.employeelist_show = items.filter(function (item) {
+    //        return (
+    //            item.employee_id.toLowerCase().includes(searchText.toLowerCase()) ||
+    //            item.employee_displayname.toLowerCase().includes(searchText.toLowerCase()) ||
+    //            item.employee_email.toLowerCase().includes(searchText.toLowerCase())
+    //        );
+    //    }).slice(0, 10);
+    //    apply();
+    //    $('#modalEmployeeAdd').modal('show');
+    //};
     $scope.fillterDataEmployeeAdd = function () {
         $scope.employeelist_show = [];
         var searchText = $scope.searchText;
         if (!searchText) { return; }
 
         var items = angular.copy($scope.employeelist_def, items);
-        searchText = searchText.toLowerCase();
+        // console.log(items)
+        // searchText = searchText.toLowerCase();
 
         if (searchText.length < 3) { return items; }
-        $scope.employeelist_show = items.filter(function (item) {
-            return (
-                item.employee_id.toLowerCase().includes(searchText.toLowerCase()) ||
-                item.employee_displayname.toLowerCase().includes(searchText.toLowerCase()) ||
-                item.employee_email.toLowerCase().includes(searchText.toLowerCase())
-            );
-        }).slice(0, 10);
-        apply();
-        $('#modalEmployeeAdd').modal('show');
+
+        getEmployees(searchText, function (data) {
+            $scope.employeelist_show = data.employee
+            // return (
+            //     item.employee_id.toLowerCase().includes(searchText.toLowerCase()) ||
+            //     item.employee_displayname.toLowerCase().includes(searchText.toLowerCase()) ||
+            //     item.employee_email.toLowerCase().includes(searchText.toLowerCase())
+            // )}).slice(0, 10);
+            apply();
+            $('#modalEmployeeAdd').modal('show');
+        });
     };
+
+
+    function getEmployees(keywords, callback) {
+        $.ajax({
+            url: url_ws + "Flow/employees_search",
+            data: '{"user_filter_text":"' + keywords + '"'
+                + ',"max_rows":"10"'
+                + '}',
+            type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+            beforeSend: function () {
+                $("#divLoading").show();
+            },
+            complete: function () {
+                $("#divLoading").hide();
+            },
+            success: function (data) {
+                callback(data);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                if (jqXHR.status == 500) {
+                    alert('Internal error: ' + jqXHR.responseText);
+                } else {
+                    alert('Unexpected ' + textStatus);
+                }
+            }
+
+        });
+    }
+
 
     $scope.choosDataEmployee = function (item) {
 

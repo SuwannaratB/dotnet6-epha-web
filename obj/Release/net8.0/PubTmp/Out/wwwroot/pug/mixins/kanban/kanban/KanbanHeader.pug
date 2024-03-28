@@ -1,0 +1,97 @@
+
+mixin KanbanHeader  
+  -
+    var kanbanUsers = [
+      {
+        avatar:'team/30.webp',
+        name: 'Stanly Drinkwater'
+      },
+      {
+        avatar:'team/60.webp',
+        name: 'Emma Watson'
+      },
+      {
+        avatar:'team/25.webp',
+        name: 'Igor Borvibson'
+      },
+      {
+        avatar:'team/5.webp',
+        name: 'Luis Bunuel'
+      }
+    ];
+
+
+  .row.gx-0.py-2.px-5.border-bottom.border-300.justify-content-between.justify-content-md-start
+    .col-auto
+      //- select.form-select.kanban-select.ps-0.fs-0
+        option(selected) Phoenix 
+        option.fs--2 Boreas
+        option Erebus
+      .dropdown
+        button.btn.btn-link.text-decoration-none.text-1100.fs-0.ps-0(type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false") 
+          span.fs-1 Phoenix
+          span.fas.fa-angle-down.fs--1.ms-2.text-500(data-fa-transform='up-2')
+        .dropdown-menu.py-0 
+          a.dropdown-item(href="#!") Sparrow
+          a.dropdown-item(href="#!") Boreas
+          a.dropdown-item(href="#!") Erebus
+
+
+    .col-auto.d-flex.align-items-center
+      .avatar-group
+        each user in kanbanUsers
+          a.dropdown-toggle.dropdown-caret-none.d-inline-block(href='#' role='button' data-bs-toggle='dropdown' aria-expanded='false' data-bs-auto-close="outside")
+            +Avatar({
+              size: 'm',
+              img: user.avatar,
+              round: 'circle',
+              imgClass:user.avatar==="team/avatar.webp" ? 'avatar-placeholder' : ''
+            })
+          +AvatarDropdownMenu(user) 
+      button.btn.btn-primary.ms-4.fs--2.px-3
+        span.fas.fa-user-plus.me-sm-2
+        span.d-none.d-sm-inline invite
+    .col-md-auto.d-flex.align-items-center.ms-auto.mt-2.mt-md-0
+      -
+        var items = [
+          {
+            icon: 'fas fa-filter',
+            title: 'Filter'
+          },
+          {
+            icon: 'fa-solid fa-right-left',
+            title: 'Export/import'
+          },
+          {
+            icon: 'fas fa-palette',
+            title: 'Modify'
+          },
+          {
+            icon: 'fa-solid fa-bars-staggered',
+            title: 'Gantt'
+          },
+          {
+            icon: 'fa-solid fa-calendar-days',
+            title: 'Calendar'
+          },
+          {
+            icon: 'fa-solid fa-box-archive',
+            title: 'Archive'
+          },
+        ]
+      ul.nav.justify-content-between.w-100
+        li.nav-item.fs--1
+          a.nav-link.text-900.px-2.px-sm-3.px-lg-2.px-xl-3.fw-bold(href='#!' data-bs-toggle="modal" data-bs-target="#searchBoxModal")
+            span.fs--2.me-1.fas.fa-search(data-fa-transform="up-2")
+            span.d-none.d-xxl-inline Search
+        each item in items
+          li.nav-item.fs--1
+            a.nav-link.text-900.px-2.px-sm-3.px-lg-2.px-xl-3.fw-bold(href='#!')
+              span.fs--2.me-1(data-fa-transform="up-2" class=`${item.icon}`)
+              span.d-none.d-xxl-inline #{item.title}
+        li.nav-item.fs--1.ms-auto
+          button.btn.btn-link.nav-link.text-900.fw-bold.px-1.ps-sm-3.ps-lg-2.ps-xl-3(data-phoenix-toggle='offcanvas' data-phoenix-target='#offcanvasKanban') 
+            span.fa-solid.fa-bars.fs--2(data-fa-transform="up-2")
+        //- li.nav-item
+          a.btn.btn-phoenix-secondary.p-2(data-phoenix-toggle="offcanvas" data-phoenix-target='#offcanvasKanban' href="#offcanvasKanban" role="button")
+            span.fa-solid.fa-bars

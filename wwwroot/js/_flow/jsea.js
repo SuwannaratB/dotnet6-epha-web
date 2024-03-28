@@ -55,6 +55,8 @@ AppMenuPage.filter('ApproverMultiFieldFilter', function () {
 
 
 AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) {
+      
+
     //search list function
     $scope.autoComplete = function (DataFilter, idinput) {
 
@@ -98,8 +100,27 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
     };
 
 });
-AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, $document, $element) {
-    //file:///D:/04KUL_PROJECT_2023/e-PHA/phoenix-v1.12.0/public/apps/email/compose.html
+
+AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, $document, $interval) {
+
+    function startTimer() {
+        $scope.counter = 1800;
+        var interval = $interval(function () {
+            $scope.counter--;
+            if ($scope.counter == 0) {
+                // $scope.confirmSave('save');
+                set_alert("Warning", "Please save the information.")
+                $scope.stopTimer();
+                startTimer();
+            }
+        }, 1000);
+
+        $scope.stopTimer = function () {
+            $interval.cancel(interval);
+        };
+    }
+
+    $scope.startTimer = startTimer;
 
     $scope.formatTo24Hour = function (_time) {
 
@@ -1095,6 +1116,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                                 set_alert('Success', 'Data has been successfully saved.');
                                 apply();
+
+                                $scope.stopTimer();
                             },
                             error: function (jqXHR, textStatus, errorThrown) {
                                 if (jqXHR.status == 500) {
@@ -1610,6 +1633,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     } catch (ex) { alert(ex); console.clear(); }
 
                     $scope.$apply();
+                    startTimer();   
                     try {
                         if (page_load == true || true) {
                             //const choices0 = new Choices('.js-choice-company');
@@ -4526,10 +4550,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         var searchText = $scope.searchText;
         if (!searchText) { return; }
        
-        // var items = angular.copy($scope.employeelist_def, items);
+     var items = angular.copy($scope.employeelist_def, items);
         // console.log(items)
         // searchText = searchText.toLowerCase();
-
+    
         if (searchText.length < 3) { return items; }
        
         getEmployees(searchText, function(data) {

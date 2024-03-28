@@ -206,14 +206,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         });
         selectedTab.isActive = true;
 
-        try {
-            document.getElementById(selectedTab.name + "-tab").addEventListener("click", function (event) {
-                ev = event.target
-            });
-
-            var tabElement = angular.element(ev);
-            tabElement[0].focus();
-        } catch (error) { }
+        // try {
+        //     document.getElementById(selectedTab.name + "-tab").addEventListener("click", function (event) {
+        //         ev = event.target
+        //     });
+        //     var tabElement = angular.element(ev);
+        //     tabElement[0].focus();
+        // } catch (error) { }
 
         check_tab(selectedTab.name);
 
@@ -1397,6 +1396,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     });
 
 
+
                     $scope.data_tagid_audition = arr.tagid_audition;
 
                     $scope.data_session = arr.session;
@@ -1430,7 +1430,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     $scope.data_drawing_approver = arr.drawing_approver;
                     $scope.data_drawing_approver_def = clone_arr_newrow(arr.drawing_approver);
                     $scope.data_drawing_approver_old = (arr.drawing_approver);
-
+                
                     get_max_id();
                     set_data_general();
                     set_data_related_people();//set format date
@@ -1471,6 +1471,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 $scope.data_relatedpeople_outsider_delete = [];
                 $scope.data_drawing_delete = [];
                 $scope.data_listworksheet_delete = [];
+                $scope.data_request_type = arr.request_type;
+                $scope.data_attendees= [];
+
+
                 try {
                     $scope.flow_role_type = conFig.role_type();// "admin";//admin,request,responder,approver
                     if (arr.header[0].pha_request_by.toLowerCase() == $scope.user_name.toLowerCase()) {
@@ -1619,6 +1623,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                 }
 
+                addDefaultMember();
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 if (jqXHR.status == 500) {
@@ -1630,6 +1635,30 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         });
 
+    }
+
+    function addDefaultMember(){
+        console.log('data_header ',$scope.data_header)
+       const data = {
+        seq: 1249,
+        id: $scope.data_header[0].id,
+        employee_id: "",
+        employee_name: $scope.data_header[0].request_user_name,
+        employee_displayname: $scope.data_header[0].request_user_displayname,
+        employee_email: "",
+        employee_position: "",
+        employee_position1: "",
+        employee_img: "",
+        employee_type: "Employee  ",
+        selected_type: 0,
+        }
+
+        $scope.MaxSeqDataMemberteam = 2;
+        $scope.selectdata_session = 138;
+        $scope.selectDatFormType= 'member';
+        $scope.setDefualt = true;
+        $scope.choosDataEmployee(data)
+        $scope.setDefualt = false;
     }
 
     function set_form_action(action_part_befor, action_save, page_load) {
@@ -2317,7 +2346,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         var seq_session = $scope.selectdata_session;
         var arr = $filter('filter')($scope.employeelist, { selected: true });
-
+        
         var arr_def = [];
         for (let i = 0; i < arr.length; i++) {
 
@@ -4432,7 +4461,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         running_no_level1($scope.data_relatedpeople_outsider, iNo, null);
 
         $scope.MaxSeqdata_relatedpeople_outsider = Number($scope.MaxSeqdata_relatedpeople_outsider) + 1
-
+        console.log('data_relatedpeople_outsider => ', $scope.data_relatedpeople_outsider)
     };
     //relatedpeople end
 
@@ -4445,7 +4474,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.selectDatFormType = form_type;//member, approver, owner
         $scope.employeelist_show = [];
         $scope.searchText = '';
-
+    
         if (form_type == 'attendees' || form_type == 'specialist') {
             add_relatedpeople_outsider(form_type, item.seq);
         }
@@ -4487,32 +4516,65 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             running_no_level1($scope.data_relatedpeople_outsider, iNo, null);
 
             $scope.MaxSeqdata_relatedpeople_outsider = Number($scope.MaxSeqdata_relatedpeople_outsider) + 1
-
         }
-
+        console.log('data_relatedpeople_outsider => ',$scope.data_relatedpeople_outsider)
+        console.log('data_relatedpeople => ',$scope.data_relatedpeople)
     }
 
     $scope.fillterDataEmployeeAdd = function () {
         $scope.employeelist_show = [];
         var searchText = $scope.searchText;
         if (!searchText) { return; }
-
-        var items = angular.copy($scope.employeelist_def, items);
-        searchText = searchText.toLowerCase();
+       
+        // var items = angular.copy($scope.employeelist_def, items);
+        // console.log(items)
+        // searchText = searchText.toLowerCase();
 
         if (searchText.length < 3) { return items; }
-        $scope.employeelist_show = items.filter(function (item) {
-            return (
-                item.employee_id.toLowerCase().includes(searchText.toLowerCase()) ||
-                item.employee_displayname.toLowerCase().includes(searchText.toLowerCase()) ||
-                item.employee_email.toLowerCase().includes(searchText.toLowerCase())
-            );
-        }).slice(0, 10);
-        apply();
-        $('#modalEmployeeAdd').modal('show');
+       
+        getEmployees(searchText, function(data) {
+            $scope.employeelist_show = data.employee
+            // return (
+            //     item.employee_id.toLowerCase().includes(searchText.toLowerCase()) ||
+            //     item.employee_displayname.toLowerCase().includes(searchText.toLowerCase()) ||
+            //     item.employee_email.toLowerCase().includes(searchText.toLowerCase())
+            // )}).slice(0, 10);
+            apply();
+            $('#modalEmployeeAdd').modal('show');
+        });
     };
-    $scope.choosDataEmployee = function (item) {
 
+    function getEmployees(keywords, callback){
+        $.ajax({
+            url: url_ws + "Flow/employees_search",
+            data: '{"user_filter_text":"' + keywords + '"'
+                + ',"max_rows":"10"'
+                + '}',
+            type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+            beforeSend: function () {
+                $("#divLoading").show();
+            },
+            complete: function () {
+                $("#divLoading").hide();
+            },
+            success: function (data) {
+                callback(data); 
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                if (jqXHR.status == 500) {
+                    alert('Internal error: ' + jqXHR.responseText);
+                } else {
+                    alert('Unexpected ' + textStatus);
+                }
+            }
+
+        });
+    }
+
+    $scope.choosDataEmployee = function (item) {
+        console.log('item ',item)
+        console.log('selectDatFormType ',$scope.selectDatFormType)
+        console.log('selectdata_session ',$scope.selectdata_session)
         var id = item.id;
         var employee_name = item.employee_name;
         var employee_displayname = item.employee_displayname;
@@ -4524,16 +4586,15 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         var xformtype = $scope.selectDatFormType;
 
         if (xformtype == "member") {
-
             var arr_items = $filter('filter')($scope.data_memberteam, function (item) {
                 return (item.id_session == seq_session && item.user_name == employee_name);
             });
-
+        
             if (arr_items.length == 0) {
 
                 //add new employee 
                 var seq = $scope.MaxSeqDataMemberteam;
-
+                console.log('MaxSeqDataMemberteam ', $scope.MaxSeqDataMemberteam)
                 var newInput = clone_arr_newrow($scope.data_memberteam_def)[0];
                 newInput.seq = seq;
                 newInput.id = seq;
@@ -4546,12 +4607,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 newInput.user_displayname = employee_displayname;
                 newInput.user_title = employee_position;
                 newInput.user_img = employee_img;
-
+                console.log('newInput ',newInput)
                 $scope.data_memberteam.push(newInput);
                 running_no_level1($scope.data_memberteam, null, null);
 
                 $scope.MaxSeqDataMemberteam = Number($scope.MaxSeqDataMemberteam) + 1
-
+                console.log('data_memberteam ', $scope.data_memberteam)
             }
 
         }
@@ -4685,7 +4746,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 running_no_level1($scope.data_relatedpeople, null, null);
 
                 $scope.MaxSeqdata_relatedpeople = Number($scope.MaxSeqdata_relatedpeople) + 1
-
+                console.log('data_relatedpeople => ',$scope.data_relatedpeople)
             }
 
         }
@@ -4693,13 +4754,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         apply();
 
-        if (xformtype == "owner") {
+        if (xformtype == "owner" || $scope.setDefualt) {
             $('#modalEmployeeAdd').modal('hide');
         }
         else {
             $('#modalEmployeeAdd').modal('show');
         }
     };
+
     $scope.removeDataEmployee = function (seq, seq_session) {
 
         var arrdelete = $filter('filter')($scope.data_memberteam, function (item) {
@@ -4726,6 +4788,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         running_no_level1($scope.data_memberteam, null, null);
         apply();
     };
+
     $scope.applyDataEmployeeAdd = function () {
 
         // alert(xformtype);
@@ -4904,6 +4967,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
         apply();
     }
+
     $scope.removeDataApproverDrawing = function (item_draw, seq_approver) {
         var user_name = $scope.user_name;
         var seq = item_draw.seq;
@@ -4926,12 +4990,17 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         clear_form_valid();
 
     }
+
     function clear_form_valid() {
         $scope.id_approver_select = null;
         $scope.form_valid = { valid_document_file: false };
     }
 
-
+    $scope.toggleDescription = function() {
+        console.log($scope.isChecDescription)
+        $scope.isChecDescription = !$scope.isChecDescription;
+        apply();
+    };
 
 
 });
