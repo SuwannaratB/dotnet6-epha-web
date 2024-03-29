@@ -36,31 +36,32 @@
             <div class="card shadow-sm p-2 mb-3 bg-light rounded">
                 <div class="card-body p-2">
 
-                    <div class="row">
-                        <div class="col-auto">
-                            <b>PHA No.:</b> <br>
-                            <span class="text-uppercase">{{ ( data_header[0].action_type =='update' ? data_header[0].pha_no : data_header[0].pha_sub_software + '-2023-00000XX')}}</span>
-
+                    <div class="row justify-content-between">
+                        <div class="col-auto d-flex gap-4 ">
+                            <div class="col-auto">
+                                <b>PHA No.:</b> <br>
+                                <span class="text-uppercase">{{ ( data_header[0].action_type =='update' ? data_header[0].pha_no : data_header[0].pha_sub_software + '-2023-00000XX')}}</span>
+                            </div>
+                            <div class="col-auto">
+                                <b>Revision :</b> <br>
+                                <span ng-if="data_header[0].pha_version>0 "> {{data_header[0].pha_version_text + '(' + data_header[0].pha_version_desc  +  ')'}}</span>
+                                <span ng-if="data_header[0].pha_version==0 "> - </span>
+                            </div>
+                            <div class="col-auto">
+                                <b>Request By :</b> <br>
+                                <span>{{data_header[0].request_user_displayname}}</span>
+                            </div>
+                            <div class="col-auto">
+                                <b>Request Status :</b> <br>
+                                <span> {{data_header[0].pha_status_displayname}}</span>
+                            </div>
                         </div>
-                        <div class="col-auto">
-                            <b>Revision :</b> <br>
-                            <span ng-if="data_header[0].pha_version>0 "> {{data_header[0].pha_version_text + '(' + data_header[0].pha_version_desc  +  ')'}}</span>
-                            <span ng-if="data_header[0].pha_version==0 "> - </span>
+                        <div class="col-auto" ng-class="{ 'd-none': (minutes > 9) }">
+                            <div class="col-auto">
+                                <b>Expire Within :</b> <br>
+                                <span ng-class="{ 'blinking-text': (minutes <= 10) }">{{counterText}} </span>
+                            </div>
                         </div>
-
-                        <div class="col-auto">
-                            <b>Request By :</b> <br>
-                            <span>{{data_header[0].request_user_displayname}}</span>
-                        </div>
-
-                        <div class="col-auto">
-                            <b>Request Status :</b> <br>
-                            <span> {{data_header[0].pha_status_displayname}}</span>
-                        </div>
-
-                    </div>
-
-                    <div class="row">
                     </div>
 
                 </div>
@@ -1240,8 +1241,18 @@
 
                             <div class="card px-2 pb-2 ">
                                 <div class="row g-3 justify-content-between align-items-center pt-2 pb-3">
-                                    <div class="col-12 col-md">
+                                    <div class="col-10 col-md">
                                         <h5 class="text-900 mb-0"> <span class=" me-2 text-primary"><B>|</B></span><b class="text-danger"> * </b> Risk Assessment Matrix</h5>
+                                    </div>
+                                     <div class="col-2">
+                                        <span class="mx-1 d-flex" style="float:right;">
+                                            <a class="m-1 text-info cursor-pointer"
+                                               href="{{y.document_definition_file_path}}" 
+                                               target="_blank"
+                                               ng-repeat="y in master_ram | filter:{id: data_general[0].id_ram}">
+                                               Definition Consequence Rating
+                                            </a>
+                                        </span>
                                     </div>
                                 </div>
                                 <div class="col-sm-12 col-md mx-1 pb-2  ">
@@ -1268,15 +1279,12 @@
                                         </div>
                                     </div>
                                     <div class="row ps-2 mt-2">
-                                        <div class="col-5 mt-4" style="background-color : #F8F8F8 ; height:350px;"
+                                        <div class="col-12 mt-4"
                                              ng-repeat="itemRam in master_ram | filter:{id: data_general[0].id_ram}">
 
-                                            <div class="row ">
+                                            @* <div class="row ">
                                                 <div class="col-12">
                                                     <div class="p-0 cursor-pointer " ng-class="{'d-none':(!tab_node_active)}">
-
-
-
                                                         <div ng-if="!((select_rows_level==4 && select_columns_level==4) || (select_rows_level==5 && select_columns_level==5))">
                                                             <br>
                                                             <label class="dz-message-text text-primary fw-bold"
@@ -1301,9 +1309,13 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-12 align-items-center">
-                                                    <img src="{{itemRam.document_file_path}}" style="width: 400px;  height:300px;" />
+                                                    <img src="{{itemRam.document_file_path}}" style="width: 100%;  height:300px;" />
                                                 </div>
-
+                                            </div> *@
+                                            <div class=" d-flex justify-content-center">
+                                                <div class="row" style="background-color : #F8F8F8 ; width:70%;">
+                                                    <img src="{{itemRam.document_file_path}}" class="cursor-pointer" />
+                                                </div>
                                             </div>
                                         </div>
 
