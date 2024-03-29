@@ -42,30 +42,33 @@
         <div class="col-6">
             <div class="card shadow-sm p-2 mb-3 bg-light rounded">
                 <div class="card-body p-2">
+                   <div class="row justify-content-between">
+                        <div class="col-auto d-flex gap-4 ">
+                             <div class="col-auto">
+                                <b>PHA No.:</b> <br>
+                                <span class="text-uppercase">{{ ( data_header[0].action_type =='update' ? data_header[0].pha_no : data_header[0].pha_sub_software + '-2023-00000XX')}}</span>
+                            </div>
+                            <div class="col-auto">
+                                <b>Revision :</b> <br>
+                                <span ng-if="data_header[0].pha_version>0 "> {{data_header[0].pha_version_text + '(' + data_header[0].pha_version_desc  +  ')'}}</span>
+                                <span ng-if="data_header[0].pha_version==0 "> - </span>
 
-                    <div class="row">
-                        <div class="col-auto">
-                            <b>PHA No.:</b> <br>
-                            <span class="text-uppercase">{{ ( data_header[0].action_type =='update' ? data_header[0].pha_no : data_header[0].pha_sub_software + '-2023-00000XX')}}</span>
-
+                            </div>
+                            <div class="col-auto">
+                                <b>Request By :</b> <br>
+                                <span>{{data_header[0].request_user_displayname}}</span>
+                            </div>
+                            <div class="col-auto">
+                                <b>Request Status :</b> <br>
+                                <span> {{data_header[0].pha_status_displayname}}</span>
+                            </div>
                         </div>
-                        <div class="col-auto">
-                            <b>Revision :</b> <br>
-                            <span ng-if="data_header[0].pha_version>0 "> {{data_header[0].pha_version_text + '(' + data_header[0].pha_version_desc  +  ')'}}</span>
-                            <span ng-if="data_header[0].pha_version==0 "> - </span>
-
-                        </div>
-
-                        <div class="col-auto">
-                            <b>Request By :</b> <br>
-                            <span>{{data_header[0].request_user_displayname}}</span>
-                        </div>
-
-                        <div class="col-auto">
-                            <b>Request Status :</b> <br>
-                            <span> {{data_header[0].pha_status_displayname}}</span>
-                        </div>
-
+                        <div class="col-auto" ng-class="{ 'd-none': (minutes > 9) }">
+                            <div class="col-auto">
+                                <b>Expire Within :</b> <br>
+                                <span ng-class="{ 'blinking-text': (minutes <= 10) }">{{counterText}} </span>
+                            </div>
+                       </div>
                     </div>
 
                     <div class="row">
@@ -157,9 +160,6 @@
                                aria-controls="tab-{{tab.name}}"
                                aria-selected="tab.isActive">{{ tab.title }}</a>
                         </li>
-                        <div style="display:flex; align-items: center; gap: 10px; position: absolute; bottom:4px; right: 0">
-                            Save data before <b style="font-size: 18px;" ng-class="{ 'blinking-text': (counter < 600) }">{{counter/60 | number:0}}</b> minutes
-                        </div>
                     </ul>
 
                 </div>
@@ -174,9 +174,9 @@
                         <div class="m-3 row  gx-0 align-items-center ">
                             <div class="card border-0">
                                 <div class="mx-1 row g-3 align-items-center" ng-repeat="item in data_general ">
+
                                     <!-- company -->
                                     <div class="col-md-2 ">
-
                                         <label class="form-label ps-0" for="expense_type">
                                             <b class="text-danger d-none"> * </b>Company
                                         </label>
@@ -184,7 +184,6 @@
                                             <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
                                                data-bs-placement="top" name="company" title="" data-bs-html="true"></a>
                                         </label>
-
                                         <select class="form-control js-choice-company "
                                                 ng-class="{'disabled-link':(!tab_general_active)}"
                                                 data-choices="data-choices"
@@ -194,14 +193,12 @@
                                                 {{item2.name}}
                                             </option>
                                         </select>
-
                                     </div>
-                                    <!-- company -->
+ 
                                     <!-- area -->
                                     <div class="col-md-auto p-1 " ng-if="item.id_company != '9999' ">
                                         <div class="row g-0 align-items-center">
                                             <div class="col-12 p-1  ">
-
                                                 <label class="form-label ps-0" for="area"><b class="text-danger d-none"> * </b>Area Process Unit </label>
                                                 <label class="form-label ps-0" ng-if="select_history_tracking_record">
                                                     <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
@@ -222,12 +219,11 @@
 
                                         </div>
                                     </div>
-                                    <!-- area -->
+
                                     <!-- toc -->
                                     <div class="col-md-auto p-1" ng-if="item.id_company != '9999' ">
                                         <div class="row g-0 align-items-center">
                                             <div class="col-12 p-1  ">
-
                                                 <label class="form-label ps-0" for="toc"><b class="text-danger d-none"> * </b>Thaioil Complex </label>
                                                 <label class="form-label ps-0" ng-if="select_history_tracking_record">
                                                     <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
@@ -252,10 +248,9 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <!-- toc -->
+              
                                     <!-- Unit No -->
                                     <div class="col-md-3 p-1 align-items-top" ng-if="item.id_company != '9999' ">
-
                                         <label class="form-label ps-0" for="unit"><b class="text-danger d-none"> * </b>Unit No </label><spand class="text-danger" style="font-size:10px;">(กรณีที่ไม่มี Unit No ต้องเลือก TAG ID )</spand>
                                         <label class="form-label ps-0" ng-if="select_history_tracking_record">
                                             <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
@@ -275,10 +270,9 @@
                                         </select>
 
                                     </div>
-                                    <!-- Unit No -->
+                                
                                     <!-- Tag ID -->
                                     <div class="col-md-auto p-1 align-items-top" ng-if="item.id_company != '9999' ">
-
                                         <label class="form-label ps-0" for="tagid"><b class="text-danger d-none"> * </b>Tag ID/ Equipment </label>
                                         <label class="form-label ps-0" ng-if="select_history_tracking_record">
                                             <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
@@ -297,7 +291,7 @@
                                         </select>
 
                                     </div>
-                                    <!-- Tag ID -->
+                                  
                                     <!-- Tag ID Audition => tagid_audition -->
                                     <div class="col-md-auto p-1 align-items-top">
                                         <label class="form-label ps-0" for="tagid_audition">Tag ID/ Equipment Audition</label>
@@ -315,7 +309,7 @@
                                                 ng-model="item.tagid_audition"
                                                 ng-change="actionChange(item,item.seq,'')"
                                                 ng-if="tab_general_active">
-                                            <option value=""></option>
+                                                 <option value="" disabled selected hidden>Please select</option>
                                             <option ng-repeat="item2 in master_tagid"
                                                     ng-selected="item.tagid_audition == item2.name"
                                                     value="{{item2.name}}">
@@ -330,6 +324,7 @@
                                                ng-model="item.tagid_audition" />
 
                                     </div>
+
                                     <!-- description -->
                                     <div class="col-md-auto p-1 align-items-top" ng-if="item.id_company == '9999' ">
                                         <label class="form-label ps-0">Description</label>
@@ -342,10 +337,32 @@
                                                   id="description_general" name="description_general"
                                                   placeholder="Description" style="height: 30px; width:150%;"></textarea>
                                     </div>
+
                                 </div>
                                 <!-- Tag ID Audition-->
                                 <div class="mx-2 row g-3 align-items-center" ng-repeat="item in data_general"
                                      ng-class="{'disabled-link':(!tab_general_active)}">
+
+                                    <!-- department -->
+                                    <div class="col-1 p-1">
+                                        <label class="form-label ps-0" for="departments">
+                                            <b class="text-danger d-none"> * </b>
+                                            Departments 
+                                        </label>
+                                        <select class="form-control js-choice-tagid"
+                                                data-choices="data-choices-department"
+                                                data-options='{"removeItemButton":true,"placeholder":true}'
+                                                ng-change="actionChange(item,item.seq,'')" 
+                                                ng-model="item.id_department">
+                                            <option value="" disabled selected hidden>Please select</option>
+                                            <option ng-selected="item.id_department == item.id"
+                                                    ng-repeat="item in data_departments" 
+                                                    ng-value="item.id">
+                                                {{item.name}}
+                                            </option>
+                                            
+                                        </select>
+                                    </div>
 
                                     <!-- Task Type -->
                                     <div class="col-1 p-1">
@@ -353,9 +370,12 @@
                                         <select class="form-control js-choice-tagid"
                                                 data-choices="data-choices"
                                                 data-options='{"removeItemButton":true,"placeholder":true}'
-                                                ng-change="actionChange(item,item.seq,'')" ng-model="item.id_request_type">
+                                                ng-change="actionChange(item,item.seq,'')" 
+                                                ng-model="item.id_request_type">
+                                            <option value="" disabled selected hidden>Please select</option>
                                             <option ng-selected="item.id_request_type == item.id"
-                                                    ng-repeat="item in data_request_type" ng-value="item.id">
+                                                    ng-repeat="item in data_request_type" 
+                                                    ng-value="item.id">
                                                 {{item.name}}
                                             </option>
                                         </select>
@@ -375,7 +395,7 @@
                                                name="pha_request_name"
                                                ng-model="item.pha_request_name"
                                                ng-keyup="filterResultGeneral(item.pha_request_name, 'pha_request_name')">
-                                        <ul class="list-group mt-2 w-25" style="position: absolute;" ng-show="showResults">
+                                        <ul class="list-group mt-2 w-25" style="position: absolute; z-index: 999" ng-show="showResults">
                                             <li class="list-group-item "
                                                 ng-repeat="result in filteredResults | filter:{field:'pha_request_name'}"
                                                 ng-click="selectResult(result,item,'pha_request_name')">
@@ -1055,8 +1075,18 @@
 
                             <div class="card px-2 pb-2" style="height: 100vh;">
                                 <div class="row g-3 justify-content-between align-items-center pt-2 pb-3">
-                                    <div class="col-12 col-md">
+                                    <div class="col-10">
                                         <h5 class="text-900 mb-0"> <span class=" me-2 text-primary"><B>|</B></span><b class="text-danger"> * </b> Risk Assessment Matrix 5X5</h5>
+                                    </div>
+                                     <div class="col-2">
+                                        <span class="mx-1 d-flex" style="float:right;">
+                                            <a class="m-1 text-info cursor-pointer"
+                                               href="{{y.document_definition_file_path}}" 
+                                               target="_blank"
+                                               ng-repeat="y in master_ram | filter:{id: data_general[0].id_ram}">
+                                               Definition Consequence Rating
+                                            </a>
+                                        </span>
                                     </div>
                                 </div>
                                 <div class="col-sm-12 col-md mx-1 pb-2  ">
@@ -1089,14 +1119,18 @@
                                     </div> *@
 
                                     <div class="row ps-2 mt-2">
-                                        <div class="col-12 mt-4" style="background-color : #F8F8F8 ; height:350px;"
+                                        <div class="col-12 mt-4"
                                              ng-repeat="itemRam in master_ram | filter:{id: data_general[0].id_ram}">
-
-                                            <div class="row">
+                                                  <div class="row">
+                                                    <div class="col-12 d-flex justify-content-center">
+                                                        <div class="row" style="background-color : #F8F8F8 ; width:75%;">
+                                                            <img src="{{itemRam.document_file_path}}" class="cursor-pointer" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @* <div class="row">
                                                 <div class="col-12">
                                                     <div class="p-0 cursor-pointer " ng-class="{'d-none':(!tab_node_active)}">
-
-
 
                                                         <div ng-if="!((select_rows_level==4 && select_columns_level==4) || (select_rows_level==5 && select_columns_level==5))">
                                                             <br>
@@ -1121,12 +1155,14 @@
 
                                                     </div>
                                                 </div>
-
-                                                <div class="col-12 align-items-center">
-                                                    <img src="{{itemRam.document_file_path}}" style="width: 100%;  height:100%;" />
+                                                <div class="row">
+                                                    <div class="col-12 d-flex justify-content-center">
+                                                        <div class="row" style="background-color : #F8F8F8 ; width:75%;">
+                                                            <img src="{{itemRam.document_file_path}}" class="cursor-pointer" />
+                                                        </div>
+                                                    </div>
                                                 </div>
-
-                                            </div>
+                                            </div> *@
                                         </div>
 
                                         <div class="col-6 mt-4" style="background-color : #F8F8F8;  height:350px;"
