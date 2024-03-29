@@ -903,31 +903,36 @@
                                                             <h6 class="fw-semi-bold">{{item.no}}</h6>
                                                         </div>
                                                     </td>
+
                                                     <td class="align-middle white-space-nowrap ">
-                                                        <textarea ng-keyup="actionChange(item,item.seq,'')" ng-model="item.document_name"
-                                                                  class="form-control form-control-sm  rounded-1 shadow-sm  bg-body-tertiary"
-                                                                  ng-class="{'disabled-link':(!tab_general_active)}"
-                                                                  placeholder="Document Name"
-                                                                  style="font-size: 10px;"></textarea>
+                                                        <textarea ng-keyup="actionChange(item,item.seq,'')" 
+                                                                ng-model="item.document_name"
+                                                                class="form-control form-control-sm  rounded-1 shadow-sm  bg-body-tertiary"
+                                                                ng-class="{'disabled-link':(!tab_general_active)}"
+                                                                placeholder="Document Name"
+                                                                style="font-size: 10px;">
+                                                        </textarea>
                                                     </td>
+
                                                     <td class="align-middle white-space-nowrap d-none">
-
-                                                        <textarea ng-keyup="actionChange(item,item.seq,'')" ng-model="item.document_no"
-                                                                  class="form-control form-control-sm  rounded-1 shadow-sm  bg-body-tertiary"
-                                                                  ng-class="{'disabled-link':(!tab_general_active)}"
-                                                                  placeholder="Drawing No"
-                                                                  style="font-size: 10px;"></textarea>
-
+                                                        <textarea ng-keyup="actionChange(item,item.seq,'')" 
+                                                                ng-model="item.document_no"
+                                                                class="form-control form-control-sm  rounded-1 shadow-sm  bg-body-tertiary"
+                                                                ng-class="{'disabled-link':(!tab_general_active)}"
+                                                                placeholder="Drawing No"
+                                                                style="font-size: 10px;">
+                                                        </textarea>
                                                     </td>
 
                                                     <td class="align-middle col-3">
-
-
                                                         <div class="d-flex align-items-center d-none ">
-                                                            <input type="file" id="file-upload-1" ng-click="showFileName(1)" hidden />
+                                                            <input type="file" 
+                                                                id="file-upload-1" 
+                                                                ng-click="showFileName(1)" 
+                                                                hidden />
                                                             <span id="fileNameDisplay-1"></span>
-
-                                                            <button id="del1" class="btn btn-sm transition-none btn-reveal fs--2 p-1"
+                                                            <button id="del1"
+                                                                    class="btn btn-sm transition-none btn-reveal fs--2 p-1"
                                                                     ng-class="{'disabled-link':(!tab_general_active)}"
                                                                     style="display: none;"
                                                                     ng-click="clearFileName(item.seq)">
@@ -935,15 +940,12 @@
                                                                     <span class="fas fa-times"></span>
                                                                 </a>
                                                             </button>
-
-
                                                         </div>
-
                                                         <div class="row uploadbox align-items-center cursor-pointer" ng-if="tab_general_active">
-                                                            <div class=" align-items-center p-1 cursor-pointer ">
-
+                                                            <div class=" align-items-center p-1 cursor-pointer ">\
                                                                 <span class="mr-3 nametext text-primary"
-                                                                      id="filename{{item.seq}}" ng-class="{'d-none':(!tab_general_active)}"
+                                                                      id="filename{{item.seq}}" 
+                                                                      ng-class="{'d-none':(!tab_general_active)}"
                                                                       ng-click="downloadFile(item)"
                                                                       ng-if="item.document_file_size>0">
                                                                     <b style="font-size:x-small;">{{(item.document_file_size>0? item.document_file_name + '('+  item.document_file_size + 'KB)' : '')}}</b>
@@ -957,7 +959,6 @@
                                                                        name="file{{item.seq}}"
                                                                        onchange="angular.element(this).scope().fileSelect(this,'drawing')"
                                                                        style="display:none" />
-
                                                                 <button id="del-{{item.seq}}" class="btn btn-link text-danger"
                                                                         ng-class="{'d-none':(!tab_general_active)}"
                                                                         ng-click="clearFileName(item.seq)"
@@ -968,25 +969,23 @@
                                                                 <a class="nametext ms-3 filename-text me-2"
                                                                    ng-class="{'d-none':(tab_general_active)}"
                                                                    ng-click="downloadFile(item)">
-                                                                    <i class="far fa-file-pdf text-danger"></i> {{(item.document_file_size>0? item.document_file_name + '('+  item.document_file_size + 'KB)' : '')}}
+                                                                    <i class="far fa-file-pdf text-danger"></i> 
+                                                                    {{(item.document_file_size>0? item.document_file_name + '('+  item.document_file_size + 'KB)' : '')}}
                                                                 </a>
                                                             </div>
-
                                                         </div>
                                                         <div class=" align-items-center p-1 cursor-pointer " ng-if="!tab_general_active">
                                                             <a class="nametext ms-3 filename-text me-2"
                                                                ng-class="{'d-none':(tab_general_active)}"
                                                                ng-click="downloadFile(item)">
-                                                                <i class="far fa-file-pdf text-danger"></i> {{(item.document_file_size>0? item.document_file_name + '('+  item.document_file_size + 'KB)' : '')}}
+                                                                <i class="far fa-file-pdf text-danger"></i> 
+                                                                {{(item.document_file_size>0? item.document_file_name + '('+  item.document_file_size + 'KB)' : '')}}
                                                             </a>
                                                         </div>
-
                                                         <div id="drawing-document-file-{{item.seq}}"
                                                              class="invalid-feedback text-danger">
                                                             Please provide a valid Drawing.(Max size 10mb)
                                                         </div>
-
-
                                                     </td>
 
                                                     <td class="align-middle ">
@@ -996,41 +995,47 @@
                                                                       ng-keyup="actionChange(item,item.seq,'')"
                                                                       ng-model="item.descriptions"
                                                                       placeholder="Comment"
-                                                                      style="font-size: 10px;"></textarea>
+                                                                      style="font-size: 10px;">
+                                                            </textarea>
                                                         </div>
-
                                                     </td>
+
                                                     <td class="align-middle " style="width: 158px;" ng-class="{'d-none': (!tab_general_active)}">
                                                         <div class="col-12" style="width: 158px;">
                                                             <div class="float-end ">
-
                                                                 <span class="mx-1">
-                                                                    <button class="btn btn-outline-secondary p-2" style="color: #ff2828; background-color: #f1f2f4; border-color: #ff2828;"
-                                                                            ng-click=removeDrawingDoc(item.seq,$index-1)>
+                                                                    <button class="btn btn-outline-secondary p-2" 
+                                                                            style="color: #ff2828; background-color: #f1f2f4; border-color: #ff2828;"
+                                                                            ng-click=removeDrawingDoc(item.seq,$index-1)
+                                                                            data-toggle="tooltip" 
+                                                                            data-placement="top" 
+                                                                            title="Remove">
                                                                         <span class="fa-regular fa-trash-can fa-lg"></span>
                                                                     </button>
                                                                 </span>
-
                                                                 <span class="mx-1 d-none">
-                                                                    <button class="btn btn-outline-secondary p-2" style="color: #1336fc; background-color: #f1f2f4; border-color: #a8a8a8;"
-                                                                            ng-click=copyDrawingDoc(item.seq,$index)>
+                                                                    <button class="btn btn-outline-secondary p-2" 
+                                                                            style="color: #1336fc; background-color: #f1f2f4; border-color: #a8a8a8;"
+                                                                            ng-click=copyDrawingDoc(item.seq,$index)
+                                                                            data-toggle="tooltip" 
+                                                                            data-placement="top" 
+                                                                            title="Copy">
                                                                         <span class="fas fa-copy fa-lg"></span>
                                                                     </button>
                                                                 </span>
-
                                                                 <span class="mx-1">
-                                                                    <button class="btn btn-outline-secondary p-2" style="color: #0abe0a; background-color: #f1f2f4; border-color: #0abe0a;"
-                                                                            ng-click=addDrawingDoc(item.seq,$index)>
+                                                                    <button class="btn btn-outline-secondary p-2" 
+                                                                            style="color: #0abe0a; background-color: #f1f2f4; border-color: #0abe0a;"
+                                                                            ng-click=addDrawingDoc(item.seq,$index)
+                                                                            data-toggle="tooltip" 
+                                                                            data-placement="top" 
+                                                                            title="Add">
                                                                         <span class="fas fa-square-plus fa-lg"></span>
                                                                     </button>
                                                                 </span>
-
-
                                                             </div>
                                                         </div>
                                                     </td>
-
-
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -1699,19 +1704,23 @@
                                                 ng-repeat="item in data_listworksheet | orderBy:'no'">
 
                                                 @* workstep *@
-                                                <td class="align-top border border-light border-end-0  border-start-0  border-top-0 "
-                                                    style="padding: 0 !important; width: 200px; max-width:300px;">
-
+                                                <td class="align-top border border-light border-end-0  border-start-0  border-top-0 "style="padding: 0 !important; width: 200px; max-width:300px;">
                                                     <div class="d-flex align-items-top w-100" ng-if="item.row_type =='workstep' ">
                                                         <div>
                                                             <p class="p-0 m-0 me-1 text-end">{{item.workstep_no +'.'}}</p>
                                                             <div class="" ng-class="{'d-none': !(tab_worksheet_active)}">
                                                                 <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 text-align-end p-1"
-                                                                        type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true"
-                                                                        aria-expanded="false" data-bs-reference="parent">
+                                                                        type="button" 
+                                                                        data-bs-toggle="dropdown" 
+                                                                        data-boundary="window" 
+                                                                        aria-haspopup="true"
+                                                                        aria-expanded="false" 
+                                                                        data-bs-reference="parent"
+                                                                        data-toggle="tooltip" 
+                                                                        data-placement="top" 
+                                                                        title="Options">
                                                                     <span class="fas fa-cog text-info align-top"></span>
                                                                 </button>
-
                                                                 <div class="dropdown-menu dropdown-menu-end py-2 align-top">
                                                                     <a class="dropdown-item text-success" ng-click="adddata_listworksheet_lv1('workstep',item,$index)">
                                                                         <span class="fas fa-copy"></span>
@@ -1730,13 +1739,16 @@
                                                         <div class="autocomplete-container" style=" width: 100%; " ng-class="{'disabled-link':(!tab_worksheet_active)}">
                                                             <textarea class="form-control form-control-sm rounded-1 p-0 m-0 w-100 border border-end-0 border-top-0"
                                                                       style=" width: 100vh; font-size: 10px;"
-                                                                      id="workstep_worksheet_{{item.seq}}" name="workstep_worksheet_{{item.seq}}"
-                                                                      placeholder="Work Step" rows="3"
+                                                                      id="workstep_worksheet_{{item.seq}}" 
+                                                                      name="workstep_worksheet_{{item.seq}}"
+                                                                      placeholder="Work Step" 
+                                                                      rows="3"
                                                                       ng-model="item.workstep"
                                                                       ng-keyup="filterResultHistory(item.workstep, 'workstep', 'workstep_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'');
                                                                                 (contentModified && item.workstep.trim() !== '') ? updateWorksheetChanges(item, item.seq, '') : null"
-                                                                      ng-mouseenter="showTooltip = true" ng-mouseleave="showTooltip = false"></textarea>
-
+                                                                      ng-mouseenter="showTooltip = true" 
+                                                                      ng-mouseleave="showTooltip = false">
+                                                            </textarea>
                                                             <div class="autocomplete-dropdown" style="position: absolute;"
                                                                  ng-class="{'ng-show' : (filteredArr[0].fieldID == ('workstep_worksheet_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('workstep_worksheet_'+item.seq)) }">
                                                                 <div class="autocomplete-option"
@@ -1753,24 +1765,26 @@
                                                             <span class="fa-regular fa-lightbulb fa-lg"></span>
                                                         </div>
                                                     </div>
-
-
                                                 </td>
 
                                                 @* taskdesc *@
-                                                <td class="align-top border border-light border-end-0  border-start-0  border-top-0 "
-                                                    style="padding: 0 !important; width: 200px; max-width:300px;">
-
+                                                <td class="align-top border border-light border-end-0  border-start-0  border-top-0 " style="padding: 0 !important; width: 200px; max-width:300px;">
                                                     <div class="d-flex align-items-top w-100" ng-if="item.row_type =='workstep' || item.row_type =='taskdesc'">
                                                         <div>
                                                             <p class="p-0 m-0 me-1 text-end">{{item.workstep_no +'.'+item.taskdesc_no +'.'}}</p>
                                                             <div class="" ng-class="{'d-none':(!tab_worksheet_active)}">
                                                                 <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 text-align-end p-1"
-                                                                        type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true"
-                                                                        aria-expanded="false" data-bs-reference="parent">
+                                                                        type="button" 
+                                                                        data-bs-toggle="dropdown" 
+                                                                        data-boundary="window" 
+                                                                        aria-haspopup="true"
+                                                                        aria-expanded="false" 
+                                                                        data-bs-reference="parent"
+                                                                        data-toggle="tooltip" 
+                                                                        data-placement="top" 
+                                                                        title="Options">
                                                                     <span class="fas fa-cog text-info align-top"></span>
                                                                 </button>
-
                                                                 <div class="dropdown-menu dropdown-menu-end py-2 align-top">
                                                                     <a class="dropdown-item text-success"
                                                                        ng-click="adddata_listworksheet_lv1('taskdesc',item,$index)">
@@ -1786,15 +1800,16 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-
                                                         <div class="autocomplete-container" style=" width: 100%; " ng-class="{'disabled-link':(!tab_worksheet_active)}">
                                                             <textarea class="form-control form-control-sm rounded-1 p-0 m-0 w-100 border border-end-0 border-top-0"
                                                                       style=" width: 200px; font-size: 10px;"
-                                                                      id="taskdesc_worksheet_{{item.seq}}" name="taskdesc_worksheet_{{item.seq}}"
-                                                                      placeholder="taskdesc" rows="3"
+                                                                      id="taskdesc_worksheet_{{item.seq}}" 
+                                                                      name="taskdesc_worksheet_{{item.seq}}"
+                                                                      placeholder="taskdesc" 
+                                                                      rows="3"
                                                                       ng-model="item.taskdesc"
-                                                                      ng-keyup="filterResultHistory(item.taskdesc, 'taskdesc', 'taskdesc_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')"></textarea>
-
+                                                                      ng-keyup="filterResultHistory(item.taskdesc, 'taskdesc', 'taskdesc_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')">
+                                                            </textarea>
                                                             <div class="autocomplete-dropdown" style="position: absolute;"
                                                                  ng-class="{'ng-show' : (filteredArr[0].fieldID == ('taskdesc_worksheet_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('taskdesc_worksheet_'+item.seq)) }">
                                                                 <div class="autocomplete-option"
@@ -1813,19 +1828,23 @@
                                                 </td>
 
                                                 @* potentailhazard *@
-                                                <td class="align-top border border-light border-end-0  border-start-0  border-top-0 "
-                                                    style="padding: 0 !important; width: 200px; max-width:300px;">
-
+                                                <td class="align-top border border-light border-end-0  border-start-0  border-top-0 " style="padding: 0 !important; width: 200px; max-width:300px;">
                                                     <div class="d-flex align-items-top w-100" ng-if="item.row_type =='workstep' || item.row_type =='taskdesc' || item.row_type =='potentailhazard'">
                                                         <div>
                                                             <p class="p-0 m-0 me-1 text-end">{{item.workstep_no  + '.'+item.taskdesc_no + '.'+item.potentailhazard_no +'.'}}</p>
                                                             <div class="" ng-class="{'d-none':(!tab_worksheet_active)}">
                                                                 <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 text-align-end p-1"
-                                                                        type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true"
-                                                                        aria-expanded="false" data-bs-reference="parent">
+                                                                        type="button" 
+                                                                        data-bs-toggle="dropdown" 
+                                                                        data-boundary="window" 
+                                                                        aria-haspopup="true"
+                                                                        aria-expanded="false" 
+                                                                        data-bs-reference="parent"
+                                                                        data-toggle="tooltip" 
+                                                                        data-placement="top" 
+                                                                        title="Options">
                                                                     <span class="fas fa-cog text-info align-top"></span>
                                                                 </button>
-
                                                                 <div class="dropdown-menu dropdown-menu-end py-2 align-top">
                                                                     <a class="dropdown-item text-success"
                                                                        ng-click="adddata_listworksheet_lv1('potentailhazard',item,$index)">
@@ -1841,15 +1860,16 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-
                                                         <div class="autocomplete-container" style=" width: 100%; " ng-class="{'disabled-link':(!tab_worksheet_active)}">
                                                             <textarea class="form-control form-control-sm rounded-1 p-0 m-0 w-100 border border-end-0 border-top-0"
                                                                       style=" width: 200px; font-size: 10px;"
-                                                                      id="potentailhazard_worksheet_{{item.seq}}" name="potentailhazard_worksheet_{{item.seq}}"
-                                                                      placeholder="potentailhazard" rows="3"
+                                                                      id="potentailhazard_worksheet_{{item.seq}}" 
+                                                                      name="potentailhazard_worksheet_{{item.seq}}"
+                                                                      placeholder="potentailhazard" 
+                                                                      rows="3"
                                                                       ng-model="item.potentailhazard"
-                                                                      ng-keyup="filterResultHistory(item.potentailhazard, 'potentailhazard', 'potentailhazard_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')"></textarea>
-
+                                                                      ng-keyup="filterResultHistory(item.potentailhazard, 'potentailhazard', 'potentailhazard_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')">
+                                                            </textarea>
                                                             <div class="autocomplete-dropdown" style="position: absolute;"
                                                                  ng-class="{'ng-show' : (filteredArr[0].fieldID == ('potentailhazard_worksheet_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('potentailhazard_worksheet_'+item.seq)) }">
                                                                 <div class="autocomplete-option"
@@ -1859,28 +1879,34 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="ms-2 mt-1 pe-auto ps-2" style="cursor: pointer;" ng-show="showHistory"
-                                                             data-tooltip-location="right"
-                                                             data-tooltip="This is the tooltip content ">
+                                                        <div class="ms-2 mt-1 pe-auto ps-2" 
+                                                            style="cursor: pointer;" 
+                                                            ng-show="showHistory"
+                                                            data-tooltip-location="right"
+                                                            data-tooltip="This is the tooltip content ">
                                                             <span class="fa-regular fa-lightbulb fa-lg"></span>
                                                         </div>
                                                     </div>
                                                 </td>
 
                                                 @* possiblecase *@
-                                                <td class="align-top border border-light border-end-0  border-start-0  border-top-0 "
-                                                    style="padding: 0 !important; width: 200px; max-width:300px;">
-
+                                                <td class="align-top border border-light border-end-0  border-start-0  border-top-0 " style="padding: 0 !important; width: 200px; max-width:300px;">
                                                     <div class="d-flex align-items-top w-100" ng-if="item.row_type =='workstep' || item.row_type =='taskdesc' || item.row_type =='potentailhazard' || item.row_type =='possiblecase'">
                                                         <div>
                                                             <p class="p-0 m-0 me-1 text-end">{{item.workstep_no  + '.'+item.taskdesc_no + '.'+item.potentailhazard_no + '.' + item.possiblecase_no +'.'}}</p>
                                                             <div class="" ng-class="{'d-none':(!tab_worksheet_active)}">
                                                                 <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 text-align-end p-1"
-                                                                        type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true"
-                                                                        aria-expanded="false" data-bs-reference="parent">
+                                                                        type="button" 
+                                                                        data-bs-toggle="dropdown" 
+                                                                        data-boundary="window" 
+                                                                        aria-haspopup="true"
+                                                                        aria-expanded="false" 
+                                                                        data-bs-reference="parent"
+                                                                        data-toggle="tooltip" 
+                                                                        data-placement="top" 
+                                                                        title="Options">
                                                                     <span class="fas fa-cog text-info align-top"></span>
                                                                 </button>
-
                                                                 <div class="dropdown-menu dropdown-menu-end py-2 align-top">
                                                                     <a class="dropdown-item text-success"
                                                                        ng-click="adddata_listworksheet_lv1('possiblecase',item,$index)">
@@ -1896,15 +1922,16 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-
                                                         <div class="autocomplete-container" style=" width: 100%; " ng-class="{'disabled-link':(!tab_worksheet_active)}">
                                                             <textarea class="form-control form-control-sm rounded-1 p-0 m-0 w-100 border border-end-0 border-top-0"
                                                                       style=" width: 200px; font-size: 10px;"
-                                                                      id="possiblecase_worksheet_{{item.seq}}" name="possiblecase_worksheet_{{item.seq}}"
-                                                                      placeholder="possiblecase" rows="3"
+                                                                      id="possiblecase_worksheet_{{item.seq}}" 
+                                                                      name="possiblecase_worksheet_{{item.seq}}"
+                                                                      placeholder="possiblecase" 
+                                                                      rows="3"
                                                                       ng-model="item.possiblecase"
-                                                                      ng-keyup="filterResultHistory(item.possiblecase, 'possiblecase', 'possiblecase_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')"></textarea>
-
+                                                                      ng-keyup="filterResultHistory(item.possiblecase, 'possiblecase', 'possiblecase_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')">
+                                                            </textarea>
                                                             <div class="autocomplete-dropdown" style="position: absolute;"
                                                                  ng-class="{'ng-show' : (filteredArr[0].fieldID == ('possiblecase_worksheet_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('possiblecase_worksheet_'+item.seq)) }">
                                                                 <div class="autocomplete-option"
