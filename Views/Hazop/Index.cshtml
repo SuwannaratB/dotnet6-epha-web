@@ -37,29 +37,32 @@
             <div class="card shadow-sm p-2 mb-3 bg-light rounded">
                 <div class="card-body p-2">
 
-                    <div class="row">
-                        <div class="col-auto">
-                            <b>PHA No.:</b> <br>
-                            <span class="text-uppercase">{{ ( data_header[0].action_type =='update' ? data_header[0].pha_no : data_header[0].pha_sub_software + '-2023-00000XX')}}</span>
-
+                     <div class="row justify-content-between">
+                        <div class="col-auto d-flex gap-4 ">
+                            <div class="col-auto">
+                                <b>PHA No.:</b> <br>
+                                <span class="text-uppercase">{{ ( data_header[0].action_type =='update' ? data_header[0].pha_no : data_header[0].pha_sub_software + '-2023-00000XX')}}</span>
+                            </div>
+                            <div class="col-auto">
+                                <b>Revision :</b> <br>
+                                <span ng-if="data_header[0].pha_version>0 "> {{data_header[0].pha_version_text + '(' + data_header[0].pha_version_desc  +  ')'}}</span>
+                                <span ng-if="data_header[0].pha_version==0 "> - </span>
+                            </div>
+                            <div class="col-auto">
+                                <b>Request By :</b> <br>
+                                <span>{{data_header[0].request_user_displayname}}</span>
+                            </div>
+                            <div class="col-auto">
+                                <b>Request Status :</b> <br>
+                                <span> {{data_header[0].pha_status_displayname}}</span>
+                            </div>
                         </div>
-                        <div class="col-auto">
-                            <b>Revision :</b> <br>
-                            <span ng-if="data_header[0].pha_version>0 "> {{data_header[0].pha_version_text + '(' + data_header[0].pha_version_desc  +  ')'}}</span>
-                            <span ng-if="data_header[0].pha_version==0 "> - </span>
-
+                        <div class="col-auto" ng-class="{ 'd-none': (minutes > 9) }">
+                            <div class="col-auto">
+                                <b>Expire Within :</b> <br>
+                                <span ng-class="{ 'blinking-text': (minutes <= 29) }">{{counterText}} </span>
+                            </div>
                         </div>
-
-                        <div class="col-auto">
-                            <b>Request By :</b> <br>
-                            <span>{{data_header[0].request_user_displayname}}</span>
-                        </div>
-
-                        <div class="col-auto">
-                            <b>Request Status :</b> <br>
-                            <span> {{data_header[0].pha_status_displayname}}</span>
-                        </div>
-
                     </div>
 
                     <div class="row">
@@ -154,9 +157,6 @@
                                aria-controls="tab-{{tab.name}}"
                                aria-selected="tab.isActive">{{ tab.title }}</a>
                         </li>
-                        <div style="display:flex; align-items: center; gap: 10px; position: absolute; bottom:4px; right: 0">
-                            Save data before <b style="font-size: 18px;" ng-class="{ 'blinking-text': (counter < 600) }">{{counter/60 | number:0}}</b> minutes
-                        </div>
                     </ul>
 
                 </div>
@@ -1242,11 +1242,13 @@
                                     <div class="col-2 d-none">
                                         <span class="mx-1 d-flex" style="float:right;">
                                             <a class="m-1 text-info cursor-pointer"
-                                               href="{{y.document_definition_file_path}}" target="_blank"
-                                               ng-repeat="y in master_ram | filter:{id: data_general[0].id_ram}">Definition Consequence Rating</a>
+                                               href="{{y.document_definition_file_path}}" 
+                                               target="_blank"
+                                               ng-repeat="y in master_ram | filter:{id: data_general[0].id_ram}">
+                                               Definition Consequence Rating
+                                            </a>
                                         </span>
                                     </div>
-
                                 </div>
                                 <div class="col-sm-12 col-md mx-1 pb-2  ">
                                     <div class="row ">
@@ -1817,9 +1819,9 @@
                                     </div>
 
                                 </div>
-                                <div class="row col-12">
-                                    <div class="col-12">
-                                        <div class="row" style="background-color : #F8F8F8 ; width:80%">
+                                <div class="row">
+                                    <div class="col-12 d-flex justify-content-center">
+                                        <div class="row" style="background-color : #F8F8F8 ; width:75%;">
                                             <img src="{{itemRam.document_file_path}}" class="cursor-pointer" />
                                         </div>
                                     </div>
