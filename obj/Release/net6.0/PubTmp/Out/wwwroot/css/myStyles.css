@@ -17,3 +17,7 @@
     color: red;
     animation: blink 1s infinite;
 }
+
+.d-none {
+    display: none;
+}

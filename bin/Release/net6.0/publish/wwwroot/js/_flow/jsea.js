@@ -104,23 +104,33 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, $document, $interval) {
 
     function startTimer() {
-        $scope.counter = 1800;
+        $scope.counter = 1800; // 1800 วินาทีเท่ากับ 30 นาที
         var interval = $interval(function () {
+            var minutes = Math.floor($scope.counter / 60); // หานาทีที่เหลืออยู่
+            var seconds = $scope.counter % 60; // หาวินาทีที่เหลืออยู่
+    
+            // แสดงเวลาที่เหลืออยู่ในรูปแบบนาทีและวินาที
+            $scope.counterText = minutes + ' min. ' + seconds + ' sec.';
+            $scope.minutes = minutes
+    
+            // ลดเวลาลงทีละหนึ่งวินาที
             $scope.counter--;
+    
             if ($scope.counter == 0) {
-                // $scope.confirmSave('save');
+                // เมื่อเวลาครบ 0 ให้แสดงแจ้งเตือน
                 set_alert("Warning", "Please save the information.")
                 $scope.stopTimer();
-                startTimer();
+                startTimer(); // เริ่มนับใหม่
             }
         }, 1000);
-
+    
         $scope.stopTimer = function () {
             $interval.cancel(interval);
         };
     }
-
+    
     $scope.startTimer = startTimer;
+    
 
     $scope.formatTo24Hour = function (_time) {
 
@@ -1495,6 +1505,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 $scope.data_drawing_delete = [];
                 $scope.data_listworksheet_delete = [];
                 $scope.data_request_type = arr.request_type;
+                $scope.data_departments = arr.departments;
                 $scope.data_attendees= [];
 
 
@@ -4309,10 +4320,16 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             arr = $scope.data_all.his_recommendations;
         }
 
+        var count = 0; 
         for (var i = 0; i < arr.length; i++) {
             var result = arr[i];
             if (result.name.toLowerCase().startsWith(fieldText.toLowerCase())) {
                 $scope.filteredResults.push({ "field": fieldName, "name": result.name });
+                count++;
+            }
+
+            if (count >= 10) {
+                break; 
             }
         }
 
