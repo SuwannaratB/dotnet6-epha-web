@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "T7Xwd3/BuMss8M0TNU52nvB3/0ue2RGOL57ZIK/pAGg=",
+  "Hash": "YLjwevXrqkosGCABGWzUoiL6afDK+hqdl2Nhvs9kC8w=",
   "Source": "dotnet6-epha-web",
   "BasePath": "_content/dotnet6-epha-web",
   "Mode": "Default",
@@ -28173,6 +28173,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\css\\button.css"
+    },
+    {
+      "Identity": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\wwwroot\\css\\myStyles.css",
+      "SourceId": "dotnet6-epha-web",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\wwwroot\\",
+      "BasePath": "_content/dotnet6-epha-web",
+      "RelativePath": "css/myStyles.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\css\\myStyles.css"
     },
     {
       "Identity": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\wwwroot\\css\\scollbar.css",
