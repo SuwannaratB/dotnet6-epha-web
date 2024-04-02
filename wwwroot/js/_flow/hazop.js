@@ -2888,6 +2888,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         set_data_nodeworksheet();
     }
+
     $scope.removeDataNodeList = function (seq, index) {
 
         var arrdelete = $filter('filter')($scope.data_node, function (item) {
@@ -3407,11 +3408,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         index = index_rows;
 
         // console.clear();
-        console.log('data_nodeworksheet', $scope.data_nodeworksheet);
         console.log('iNo', iNo);
         console.log('index', index);
         console.log('newInput', newInput);
-
         running_index_level1_lv1($scope.data_nodeworksheet, iNo, index, newInput);
 
         if (row_type == "causes" || row_type == "consequences") {
@@ -3422,9 +3421,19 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
 
         running_recommendations_no();
-
         apply();
     }
+
+    $scope.copyNodeList = function (level, seq) {
+        console.log('data => ',$scope.data_nodeworksheet)
+        if (level && seq) {
+            $scope.data_copy = $scope.data_nodeworksheet.filter(function(item) {
+                return item.seq === seq;
+            });
+            console.log('data_copy => ',$scope.data_copy)
+        }
+    }
+
     function running_recommendations_no() {
         if (true) {
             //recommendations != '' ให้ running action no  
@@ -3591,6 +3600,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         return _index;
     }
+
     function running_no_causes(seq_node, seq_guide_word) {
         //row_type;//guideword,causes,consequences,cat
         var arr_items = $filter('filter')($scope.data_nodeworksheet, function (item) {
@@ -3627,6 +3637,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             iNoNew++;
         };
     }
+
     function running_no_consequences(seq_node, seq_guide_word, seq_causes) {
 
         //row_type;//guideword,causes,consequences,cat
@@ -3677,6 +3688,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         $('#modalRAM').modal('show');
     }
+
     $scope.openModalDataRAM = function (_item, ram_type, seq, ram_type_action) {
 
         $scope.selectdata_nodeworksheet = seq;
@@ -3686,12 +3698,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         $('#modalRAM').modal('show');
     }
+
     $scope.openModalDataNotification = function (item) {
         //modalNotification
 
         //item.id_apu 
         $('#modalNotification').modal('show');
     }
+
     $scope.selectDataRAM = function (ram_type, id_select) {
 
         var xseq = $scope.selectdata_nodeworksheet;
@@ -3787,6 +3801,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         $('#modalRAM').modal('show');
     }
+
     $scope.openModalDataEmployee = function (form_type, seq) {
         //openModalDataEmployee('info', item.seq)
         $scope.selectDatFormType = form_type;
@@ -3794,6 +3809,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         $('#modalEmployeeSelect').modal('show');
     }
+
     $scope.selectDataEmployee = function (item) {
 
         var id = item.id;
@@ -3837,6 +3853,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.data_header[0].approver_user_displayname = null;
         apply();
     };
+
     $scope.removeDataEmpWorkSheet = function (form_type, id, seq) {
         var xseq = seq;
         var xformtype = $scope.selectDatFormType;

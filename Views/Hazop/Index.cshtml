@@ -2082,7 +2082,6 @@
                                                     style="padding: 0 !important;">
                                                     Action<br>Status
                                                 </th>
-                                            </tr>
                                             <tr>
                                                 <th title="" class=" align-middle  mx-0" scope="col" style="padding: 0 !important;">S</th>
                                                 <th title="" class=" align-middle  mx-0" scope="col" style="padding: 0 !important;">L</th>
@@ -2129,6 +2128,16 @@
                                                                         <span class="fas fa-copy"></span>
                                                                         Add
                                                                     </a>
+                                                                    <div class="dropdown-divider"></div>        
+                                                                    <a class="dropdown-item text-primary" ng-click="copyNodeList('causes',item.seq)">
+                                                                        <span class="fas fa-copy"></span>
+                                                                        Copy
+                                                                    </a>
+                                                                    <div class="dropdown-divider" ng-if="data_copy"></div>        
+                                                                    <a class="dropdown-item" ng-if="data_copy" ng-click="">
+                                                                        <span class="fas fa-copy"></span>
+                                                                        Paste
+                                                                    </a>
                                                                     <div class="dropdown-divider " ng-if="!(item.causes_no == 1)"></div>
                                                                     <a class="dropdown-item text-danger"
                                                                        ng-if="!(item.causes_no == 1)"
@@ -2147,11 +2156,13 @@
                                                         <div class="autocomplete-container" style=" width: 100%; " ng-class="{'disabled-link':(!tab_worksheet_active)}">
                                                             <textarea class="form-control form-control-sm rounded-1 p-0 m-0 w-100 border border-end-0 border-top-0"
                                                                       style=" width: 100vh; font-size: 10px;"
-                                                                      id="causes_worksheet_{{item.seq}}" name="causes_worksheet_{{item.seq}}"
-                                                                      placeholder="Causes" rows="3"
+                                                                      id="causes_worksheet_{{item.seq}}" 
+                                                                      name="causes_worksheet_{{item.seq}}"
+                                                                      placeholder="Causes" 
+                                                                      rows="3"
                                                                       ng-model="item.causes"
-                                                                      ng-keyup="filterResultHistory(item.causes, 'causes', 'causes_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')"></textarea>
-
+                                                                      ng-keyup="filterResultHistory(item.causes, 'causes', 'causes_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')">
+                                                            </textarea>
                                                             <div class="autocomplete-dropdown" style="position: absolute;" ng-show="isShow == 'causes_worksheet_'+ item.seq"
                                                                  ng-class="{'ng-show' : (filteredArr[0].fieldID == ('causes_worksheet_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('causes_worksheet_'+item.seq)) }">
                                                                 <div class="autocomplete-option"
