@@ -145,6 +145,24 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
 AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, $document, $interval) { 
 
+    $scope.data_tooltip = [
+        { id: 1, title_th: 'คำแนะนำ', title_en: 'GUIDE WORD'},
+        { id: 2, title_th: 'การเบี่ยงเบน', title_en: 'Deviations'},
+        { id: 3, title_th: 'สาเหตุ', title_en: 'CAUSES'},
+        { id: 4, title_th: 'ผลที่ตามมา', title_en: 'CONSEQUENCES'},
+        { id: 5, title_th: '', title_en: 'CAT'},
+        { id: 6, title_th: '', title_en: 'Unmitigated Risk Assessment Matrix'},
+        { id: 7, title_th: 'อุบัติเหตุร้ายแรง', title_en: 'Major Accident Event'},
+        { id: 8, title_th: '', title_en: 'Safety Critical Equipmen'},
+        { id: 9, title_th: 'มาตรการป้องกันที่มีอยู่', title_en: 'Existing Safeguards'},
+        { id: 10, title_th: 'เมทริกซ์การประเมินความเสี่ยงที่ลดลง', title_en: 'Mitigated Risk Assessment Matrix'},
+        { id: 11, title_th: '', title_en: 'Action No'},
+        { id: 12, title_th: 'คำแนะนำ', title_en: 'Recommendations'},
+        { id: 13, title_th: '', title_en: 'Equipment Tag. No.'},
+        { id: 14, title_th: '', title_en: 'Action Owner'},
+        { id: 15, title_th: '', title_en: 'Action Status'},
+    ];
+
     function startTimer() {
         $scope.counter = 1800; // 1800 วินาทีเท่ากับ 30 นาที
         var interval = $interval(function () {

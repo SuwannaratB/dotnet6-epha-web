@@ -1930,22 +1930,158 @@
                                     <table class="table fs--2 mb-0 table-bordered " style="min-height:400px;" cellpadding="0" cellspacing="0">
                                         <thead class=" text-uppercase  text-center  bg-soft  test" style="font-size: 10px;" id="myHeader">
                                             <tr>
-                                                <th title="" class=" align-middle   mx-0" colspan="1" rowspan="2" style="padding: 0 !important;  width: 80px;">Guide Word </th>
-                                                <th title="" class=" align-middle   mx-0 d-none" colspan="1" rowspan="2" scope="col" style="padding: 0 !important; width: 80px;">Deviations</th>
-                                                <th title="" class=" align-middle   mx-0" colspan="1" rowspan="2" scope="col" style="padding: 0 !important; width: 200px;">Causes</th>
-                                                <th title="" class=" align-middle   mx-0" colspan="1" rowspan="2" scope="col" style="padding: 0 !important; width: 200px;">Consequences</th>
-
-                                                <th title="" class=" align-middle   mx-0" colspan="1" rowspan="2" scope="col" style="padding: 0 !important;" ng-if="select_columns_level == 5">CAT<br>(P/A/E/R/Q) </th>
-                                                <th title="" class=" align-middle   mx-0" colspan="3" rowspan="1" scope="col" style="padding: 0 !important;"> Unmitigated Risk<br>Assessment Matrix</th>
-                                                <th title="" class=" align-middle   mx-0" colspan="1" rowspan="2" scope="col" style="padding: 0 !important;">Major <br>Accident<br>Event<br>(Y/N)</th>
-                                                <th title="" class=" align-middle   mx-0" colspan="1" rowspan="2" scope="col" style="padding: 0 !important;" ng-if="data_header[0].safety_critical_equipment_show==1">Safety<br>Critical<br>Equipment<br>(Y/N)</th>
-                                                <th title="" class=" align-middle   mx-0" colspan="1" rowspan="2" scope="col" style="padding: 0 !important; width: 150px;"> Existing Safeguards</th>
-                                                <th title="" class=" align-middle   mx-0" colspan="3" rowspan="1" scope="col" style="padding: 0 !important;"> Mitigated Risk<br>Assessment Matrix</th>
-                                                <th title="" class=" align-middle   mx-0" colspan="1" rowspan="2" scope="col" style="padding: 0 !important; width: 50px;"> Action<br />No</th>
-                                                <th title="" class=" align-middle   mx-0" colspan="1" rowspan="2" scope="col" style="padding: 0 !important; width: 200px;"> Recommendations</th>
-                                                <th title="" class=" align-middle   mx-0" colspan="1" rowspan="2" scope="col" style="padding: 0 !important; width: 200px;" ng-if="data_header[0].safety_critical_equipment_show==1"> Equipment Tag. No.</th>
-                                                <th title="" class=" align-middle   mx-0" colspan="1" rowspan="2" scope="col" style="padding: 0 !important;">Action Owner</th>
-                                                <th title="" class=" align-middle   mx-0" colspan="1" rowspan="2" scope="col" style="padding: 0 !important;">Action<br>Status</th>
+                                                <th class=" align-middle mx-0" 
+                                                    colspan="1" 
+                                                    rowspan="2" 
+                                                    data-toggle="tooltip" 
+                                                    data-placement="top" 
+                                                    title="{{data_tooltip[0].title_th}}  {{data_tooltip[0].title_en}}"
+                                                    style="padding: 0 !important;  width: 80px;">
+                                                    Guide Word 
+                                                </th>
+                                                <th class=" align-middle mx-0 d-none" 
+                                                    colspan="1" 
+                                                    rowspan="2" 
+                                                    scope="col" 
+                                                    data-toggle="tooltip" 
+                                                    data-placement="top" 
+                                                    title="{{data_tooltip[1].title_th}}  {{data_tooltip[1].title_en}}"
+                                                    style="padding: 0 !important; width: 80px;">
+                                                    Deviations
+                                                </th>
+                                                <th class=" align-middle mx-0" 
+                                                    colspan="1" 
+                                                    rowspan="2" 
+                                                    scope="col" 
+                                                    data-toggle="tooltip" 
+                                                    data-placement="top" 
+                                                    title="{{data_tooltip[2].title_th}}  {{data_tooltip[2].title_en}}"
+                                                    style="padding: 0 !important; width: 200px;">
+                                                    Causes
+                                                </th>
+                                                <th class=" align-middle mx-0" 
+                                                    colspan="1" 
+                                                    rowspan="2" 
+                                                    scope="col" 
+                                                    data-toggle="tooltip" 
+                                                    data-placement="top" 
+                                                    title="{{data_tooltip[3].title_th}}  {{data_tooltip[3].title_en}}"
+                                                    style="padding: 0 !important; width: 200px;">
+                                                    Consequences
+                                                </th>
+                                                <th class=" align-middle mx-0" 
+                                                    colspan="1" 
+                                                    rowspan="2" 
+                                                    scope="col" 
+                                                    data-toggle="tooltip" 
+                                                    data-placement="top" 
+                                                    title="{{data_tooltip[4].title_th}}  {{data_tooltip[4].title_en}}"
+                                                    style="padding: 0 !important;" 
+                                                    ng-if="select_columns_level == 5">
+                                                    CAT<br>(P/A/E/R/Q) 
+                                                </th>
+                                                <th class=" align-middle mx-0" 
+                                                    colspan="3" 
+                                                    rowspan="1" 
+                                                    scope="col"
+                                                    data-toggle="tooltip" 
+                                                    data-placement="top" 
+                                                    title="{{data_tooltip[5].title_th}}  {{data_tooltip[5].title_en}}" 
+                                                    style="padding: 0 !important;"> 
+                                                    Unmitigated Risk<br>Assessment Matrix
+                                                </th>
+                                                <th class=" align-middle mx-0" 
+                                                    colspan="1" 
+                                                    rowspan="2" 
+                                                    scope="col" 
+                                                    data-toggle="tooltip" 
+                                                    data-placement="top" 
+                                                    title="{{data_tooltip[6].title_th}}  {{data_tooltip[6].title_en}}"
+                                                    style="padding: 0 !important;">
+                                                    Major <br>Accident<br>Event<br>(Y/N)
+                                                </th>
+                                                <th class=" align-middle mx-0" 
+                                                    colspan="1" 
+                                                    rowspan="2" 
+                                                    scope="col"
+                                                    data-toggle="tooltip" 
+                                                    data-placement="top" 
+                                                    title="{{data_tooltip[7].title_th}}  {{data_tooltip[7].title_en}}"
+                                                    style="padding: 0 !important;" 
+                                                    ng-if="data_header[0].safety_critical_equipment_show==1">
+                                                    Safety<br>Critical<br>Equipment<br>(Y/N)
+                                                </th>
+                                                <th class=" align-middle mx-0" 
+                                                    colspan="1" 
+                                                    rowspan="2" 
+                                                    scope="col" 
+                                                    data-toggle="tooltip" 
+                                                    data-placement="top" 
+                                                    title="{{data_tooltip[8].title_th}}  {{data_tooltip[8].title_en}}" 
+                                                    style="padding: 0 !important; width: 150px;"> 
+                                                    Existing Safeguards
+                                                </th>
+                                                <th class=" align-middle mx-0" 
+                                                    colspan="3" 
+                                                    rowspan="1" 
+                                                    scope="col"
+                                                    data-toggle="tooltip" 
+                                                    data-placement="top" 
+                                                    title="{{data_tooltip[9].title_th}}  {{data_tooltip[9].title_en}}"
+                                                    style="padding: 0 !important;"> 
+                                                    Mitigated Risk<br>Assessment Matrix
+                                                </th>
+                                                <th class=" align-middle mx-0" 
+                                                    colspan="1" 
+                                                    rowspan="2" 
+                                                    scope="col"
+                                                    data-toggle="tooltip" 
+                                                    data-placement="top" 
+                                                    title="{{data_tooltip[10].title_th}}  {{data_tooltip[10].title_en}}"  
+                                                    style="padding: 0 !important; width: 50px;"> 
+                                                    Action<br />No
+                                                </th>
+                                                <th class=" align-middle mx-0" 
+                                                    colspan="1" 
+                                                    rowspan="2" 
+                                                    scope="col" 
+                                                    data-toggle="tooltip" 
+                                                    data-placement="top" 
+                                                    title="{{data_tooltip[11].title_th}}  {{data_tooltip[11].title_en}}"  
+                                                    style="padding: 0 !important; width: 200px;"> 
+                                                    Recommendations
+                                                </th>
+                                                <th class=" align-middle mx-0" 
+                                                    colspan="1" 
+                                                    rowspan="2" 
+                                                    scope="col" 
+                                                    data-toggle="tooltip" 
+                                                    data-placement="top" 
+                                                    title="{{data_tooltip[12].title_th}}  {{data_tooltip[12].title_en}}"  
+                                                    style="padding: 0 !important; width: 200px;" 
+                                                    ng-if="data_header[0].safety_critical_equipment_show==1"> 
+                                                    Equipment Tag. No.
+                                                </th>
+                                                <th class=" align-middle mx-0" 
+                                                    colspan="1" 
+                                                    rowspan="2" 
+                                                    scope="col" 
+                                                    data-toggle="tooltip" 
+                                                    data-placement="top" 
+                                                    title="{{data_tooltip[13].title_th}}  {{data_tooltip[13].title_en}}"  
+                                                    style="padding: 0 !important;">
+                                                    Action Owner
+                                                </th>
+                                                <th class=" align-middle mx-0" 
+                                                    colspan="1" 
+                                                    rowspan="2" 
+                                                    scope="col" 
+                                                    data-toggle="tooltip" 
+                                                    data-placement="top" 
+                                                    title="{{data_tooltip[14].title_th}}  {{data_tooltip[14].title_en}}"  
+                                                    style="padding: 0 !important;">
+                                                    Action<br>Status
+                                                </th>
                                             </tr>
                                             <tr>
                                                 <th title="" class=" align-middle  mx-0" scope="col" style="padding: 0 !important;">S</th>
