@@ -101,7 +101,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
 });
 
-AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, $document, $interval) {
+AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, $document, $interval,$rootScope,$window) {
 
     var unsavedChanges = false;
 
@@ -1462,6 +1462,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     //แก้ไขเบื้องต้น เนื่องจาก path file ผิดต้องเป็น folder jsea
                     for (let i = 0; i < arr.ram.length; i++) {
                         arr.ram[i].document_file_path = (url_ws.replace('/api/', '/')) + arr.ram[i].document_file_path;
+                        arr.ram[i].document_definition_file_path = (url_ws.replace('/api/', '/')) + arr.ram[i].document_definition_file_path;                    
                     }
 
                     $scope.master_ram = arr.ram;
@@ -2158,22 +2159,30 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             iNoNew = iNo;
         }
 
+        console.log(iNo,newInput)
         for (let i = (iNo); i < arr_items.length; i++) {
 
+            console.log(i)
             if (first_row == true && newInput !== null) {
                 iNoNew++;
+                console.log("for if Check old",newInput.no,"Check new",iNoNew)
                 newInput.no = (iNoNew);
-                first_row = false;
+                console.log("for if Check old",newInput.no,"Check new",iNoNew)
+                first_row = false;//1
             } else {
                 arr_items[i].no = iNoNew;
             }
             iNoNew++;
         };
 
+        
         if (newInput !== null && newInput.action_type == 'insert') {
             //if (iRow > 0) { newInput.no = Number(newInput.no) + 0.1; } 
             arr_items.push(newInput);
         }
+        
+        // Set 1st alway 1
+        if (arr_items.length > 0) {arr_items[0].no = 1;}
 
         arr_items.sort((a, b) => a.no - b.no);
     }
@@ -2545,6 +2554,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         apply();
     }
     $scope.removeDrawingDoc = function (seq, index) {
+        console.log("Check ",seq, index)
         var arrdelete = $filter('filter')($scope.data_drawing, function (item) {
             return (item.seq == seq && item.action_type == 'update');
         });
@@ -2570,6 +2580,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.data_drawing[0].no = 1;
         }
 
+        console.log("Check before run",$scope.data_drawing,index)
         running_no_format_1($scope.data_drawing, null, index, null); //index??
 
         apply();
@@ -4317,8 +4328,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         apply();
 
         unsavedChanges = true;
-        console.log("Still unsaved")
-        console.log($scope.data_listworksheet);
 
     }
     $scope.actionChangeRelatedPeople = function (_arr, _seq, type_text) {

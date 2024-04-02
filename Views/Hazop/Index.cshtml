@@ -3258,7 +3258,7 @@
                                 <tbody class=" list">
 
                                     <tr class="hover-actions-trigger btn-reveal-trigger position-static text-center"
-                                        ng-repeat="item in employeelist_show">
+                                        ng-if="employeelist_show.length > 0 && employeelist_show[0].employee_displayname !== null" ng-repeat="item in employeelist_show">
 
                                         <td class="">
                                             <a class="dropdown-item text-primary"
@@ -3284,6 +3284,12 @@
 
                                         <td class="">{{item.employee_type}}</td>
 
+                                    </tr>
+                                    <!-- Show "Not Found" message when employeelist_show is empty or the first item is null -->
+                                    <tr ng-if="employeelist_show[0].employee_displayname === null">
+                                        <td colspan="5">
+                                            <p class="mb-0 ms-3 text-1100 fw-bold text-center"> Not Found </p>
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
