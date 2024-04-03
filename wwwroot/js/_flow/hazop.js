@@ -2728,7 +2728,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     // <==== (Kul) Node List zone function  ====>   
     $scope.addDataNodeList = function (seq, index) {
-
+        
         $scope.MaxSeqDataNodeList = Number($scope.MaxSeqDataNodeList) + 1;
         var xValues = Number($scope.MaxSeqDataNodeList);
 
@@ -2758,6 +2758,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         add_data_nodeworksheet_new_node(xValues);
 
+        resetDataNodeList();
     }
 
     function add_data_nodeworksheet_new_node(seq_node_select) {
@@ -2951,6 +2952,30 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
 
     };
+
+    function resetDataNodeList() {
+        for (var i = 24; i < $scope.data_nodeworksheet.length; i++) {
+            $scope.data_nodeworksheet[i].causes = null;
+            $scope.data_nodeworksheet[i].consequences = null;
+            $scope.data_nodeworksheet[i].category_type = null;
+            $scope.data_nodeworksheet[i].ram_befor_risk = null;
+            $scope.data_nodeworksheet[i].ram_befor_security = null;
+            $scope.data_nodeworksheet[i].ram_befor_likelihood = null;
+            $scope.data_nodeworksheet[i].major_accident_event = null;
+            $scope.data_nodeworksheet[i].existing_safeguards = null;
+            $scope.data_nodeworksheet[i].ram_after_risk = null;
+            $scope.data_nodeworksheet[i].ram_after_security = null;
+            $scope.data_nodeworksheet[i].ram_after_likelihood = null;
+            $scope.data_nodeworksheet[i].recommendations = null;
+            $scope.data_nodeworksheet[i].safety_critical_equipment_tag = null;
+            $scope.data_nodeworksheet[i].responder_user_id = null;
+            $scope.data_nodeworksheet[i].responder_user_name = null;
+            $scope.data_nodeworksheet[i].responder_user_displayname = null;
+            $scope.data_nodeworksheet[i].responder_user_email = null;
+            $scope.data_nodeworksheet[i].responder_user_img = null;
+        }
+        console.log('reset => ',$scope.data_nodeworksheet)
+    }
 
 
     // <==== (Kul) NodeDrawing zone function  ====>
