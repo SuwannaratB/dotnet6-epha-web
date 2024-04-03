@@ -102,6 +102,21 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
 AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, $document, $interval) {
 
+    $scope_data_tooltip = [
+        { id:1, title_th: '', title_en: 'List System' },
+        { id:1, title_th: '', title_en: 'List Sub System' },
+        { id:1, title_th: '', title_en: 'What If (cause)' },
+        { id:1, title_th: '', title_en: 'Consequence' },
+        { id:1, title_th: '', title_en: 'CAT (P/A/E/R/Q)' },
+        { id:1, title_th: '', title_en: 'Risk Assessment' },
+        { id:1, title_th: '', title_en: 'Safeguard / Mitigation' },
+        { id:1, title_th: '', title_en: 'Residual Risk' },
+        { id:1, title_th: '', title_en: 'Action No' },
+        { id:1, title_th: '', title_en: 'Recommendations' },
+        { id:1, title_th: '', title_en: 'Responder' },
+        { id:1, title_th: '', title_en: 'Action<br>Status' },
+    ]
+
     function startTimer() {
         $scope.counter = 1800; // 1800 วินาทีเท่ากับ 30 นาที
         var interval = $interval(function () {

@@ -154,9 +154,6 @@
                                aria-controls="tab-{{tab.name}}"
                                aria-selected="tab.isActive">{{ tab.title }}</a>
                         </li>
-                        <div style="display:flex; align-items: center; gap: 10px; position: absolute; bottom:4px; right: 0">
-                            Save data before <b style="font-size: 18px;" ng-class="{ 'blinking-text': (counter < 600) }">{{counter/60 | number:0}}</b> minutes
-                        </div>
                     </ul>
                 </div>
 
@@ -1899,19 +1896,83 @@
                                     <table class="table fs--2 mb-0 table-bordered " cellpadding="0" cellspacing="0">
                                         <thead class=" text-uppercase  text-center  bg-soft  test" style="font-size: 10px;" id="myHeader">
                                             <tr>
-                                                <th class=" align-middle   mx-0" colspan="1" rowspan="2" style="padding: 0 !important; width: 200px;">List System</th>
-                                                <th class=" align-middle   mx-0" colspan="1" rowspan="2" style="padding: 0 !important; width: 200px;">List Sub System</th>
-                                                <th class=" align-middle   mx-0" colspan="1" rowspan="2" style="padding: 0 !important; width: 200px;">What If (cause)</th>
-                                                <th class=" align-middle   mx-0" colspan="1" rowspan="2" style="padding: 0 !important; width: 200px;">Consequence</th>
-                                                <th class=" align-middle   mx-0" colspan="1" rowspan="2" style="padding: 0 !important;"
-                                                    ng-if="select_columns_level == 5">CAT<br>(P/A/E/R/Q) </th>
-                                                <th class=" align-middle   mx-0" colspan="3" rowspan="1" scope="col" style="padding: 0 !important;"> Risk<br>Assessment</th>
-                                                <th class=" align-middle   mx-0" colspan="1" rowspan="2" scope="col" style="padding: 0 !important; width:100px;"> Safeguard / Mitigation</th>
-                                                <th class=" align-middle   mx-0" colspan="3" rowspan="1" style="padding: 0 !important;">Residual Risk </th>
-                                                <th class=" align-middle   mx-0" colspan="1" rowspan="2" scope="col" style="padding: 0 !important; width: 50px;"> Action<br />No</th>
-                                                <th class=" align-middle   mx-0" colspan="1" rowspan="2" style="padding: 0 !important; width: 200px;">Recommendations</th>
-                                                <th class=" align-middle   mx-0" colspan="1" rowspan="2" style="padding: 0 !important;">Responder</th>
-                                                <th class=" align-middle   mx-0" colspan="1" rowspan="2" scope="col" style="padding: 0 !important;">Action<br>Status</th>
+                                                <th class=" align-middle   mx-0" 
+                                                    colspan="1" 
+                                                    rowspan="2" 
+                                                    style="padding: 0 !important; width: 200px;">
+                                                    List System
+                                                </th>
+                                                <th class=" align-middle   mx-0" 
+                                                    colspan="1" 
+                                                    rowspan="2" 
+                                                    style="padding: 0 !important; width: 200px;">
+                                                    List Sub System
+                                                </th>
+                                                <th class=" align-middle   mx-0" 
+                                                    colspan="1" 
+                                                    rowspan="2" 
+                                                    style="padding: 0 !important; width: 200px;">
+                                                    What If (cause)
+                                                </th>
+                                                <th class=" align-middle   mx-0" 
+                                                    colspan="1" 
+                                                    rowspan="2" 
+                                                    style="padding: 0 !important; width: 200px;">
+                                                    Consequence
+                                                </th>
+                                                <th class=" align-middle   mx-0" 
+                                                    colspan="1" 
+                                                    rowspan="2" 
+                                                    style="padding: 0 !important;"
+                                                    ng-if="select_columns_level == 5">
+                                                    CAT<br>(P/A/E/R/Q) 
+                                                </th>
+                                                <th class=" align-middle   mx-0" 
+                                                    colspan="3" 
+                                                    rowspan="1" 
+                                                    scope="col" 
+                                                    style="padding: 0 !important;"> 
+                                                    Risk<br>Assessment
+                                                </th>
+                                                <th class=" align-middle   mx-0" 
+                                                    colspan="1" 
+                                                    rowspan="2" 
+                                                    scope="col" 
+                                                    style="padding: 0 !important; width:100px;"> 
+                                                    Safeguard / Mitigation
+                                                </th>
+                                                <th class=" align-middle   mx-0" 
+                                                    colspan="3" 
+                                                    rowspan="1" 
+                                                    style="padding: 0 !important;">
+                                                    Residual Risk 
+                                                </th>
+                                                <th class=" align-middle   mx-0" 
+                                                    colspan="1" 
+                                                    rowspan="2" 
+                                                    scope="col" 
+                                                    style="padding: 0 !important; width: 50px;"> 
+                                                    Action<br />No
+                                                </th>
+                                                <th class=" align-middle   mx-0" 
+                                                    colspan="1" 
+                                                    rowspan="2" 
+                                                    style="padding: 0 !important; width: 200px;">
+                                                    Recommendations
+                                                </th>
+                                                <th class=" align-middle   mx-0" 
+                                                    colspan="1" 
+                                                    rowspan="2" 
+                                                    style="padding: 0 !important;">
+                                                    Responder
+                                                </th>
+                                                <th class=" align-middle   mx-0" 
+                                                    colspan="1" 
+                                                    rowspan="2" 
+                                                    scope="col" 
+                                                    style="padding: 0 !important;">
+                                                    Action<br>Status
+                                                </th>
                                             </tr>
                                             <tr>
                                                 <th class=" align-middle  mx-0" scope="col" style="padding: 0 !important;">S</th>
