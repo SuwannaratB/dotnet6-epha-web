@@ -3425,12 +3425,38 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
 
     $scope.copyNodeList = function (level, seq) {
-        console.log('data => ',$scope.data_nodeworksheet)
         if (level && seq) {
             $scope.data_copy = $scope.data_nodeworksheet.filter(function(item) {
                 return item.seq === seq;
             });
-            console.log('data_copy => ',$scope.data_copy)
+        }
+    }
+
+    $scope.pasteNodeList = function (level, seq) {
+        if ($scope.data_copy && level && seq) {
+            const data = $scope.data_nodeworksheet.filter(function(item) {
+                return item.seq === seq;
+            });
+            // paste data
+            data[0].causes = $scope.data_copy[0].causes;
+            data[0].consequences = $scope.data_copy[0].consequences;
+            data[0].category_type = $scope.data_copy[0].category_type;
+            data[0].ram_befor_risk = $scope.data_copy[0].ram_befor_risk;
+            data[0].ram_befor_security = $scope.data_copy[0].ram_befor_security;
+            data[0].ram_befor_likelihood = $scope.data_copy[0].ram_befor_likelihood;
+            data[0].major_accident_event = $scope.data_copy[0].major_accident_event;
+            data[0].existing_safeguards = $scope.data_copy[0].existing_safeguards;
+            // data[0].recommendations_no = $scope.data_copy[0].recommendations_no;
+            data[0].ram_after_risk = $scope.data_copy[0].ram_after_risk;
+            data[0].ram_after_security = $scope.data_copy[0].ram_after_security;
+            data[0].ram_after_likelihood = $scope.data_copy[0].ram_after_likelihood;
+            data[0].recommendations = $scope.data_copy[0].recommendations;
+            data[0].safety_critical_equipment_tag = $scope.data_copy[0].safety_critical_equipment_tag;
+            data[0].responder_user_id = $scope.data_copy[0].responder_user_id;
+            data[0].responder_user_name = $scope.data_copy[0].responder_user_name;
+            data[0].responder_user_displayname = $scope.data_copy[0].responder_user_displayname;
+            data[0].responder_user_email = $scope.data_copy[0].responder_user_email;
+            data[0].responder_user_img = $scope.data_copy[0].responder_user_img;
         }
     }
 
