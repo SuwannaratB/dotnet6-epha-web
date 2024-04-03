@@ -101,7 +101,33 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
 });
 
-AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, $document, $interval) {
+AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, $document, $interval,$rootScope,$window) {
+
+    var unsavedChanges = false;
+
+    // Track location changes
+    $rootScope.$on('$locationChangeStart', function(event, next, current) {
+        console.log('Location is changing from:', current, 'to:', next);
+
+        if (unsavedChanges) {
+            var confirmLeave = $window.confirm("You have unsaved changes. Are you sure you want to leave?");
+            if (!confirmLeave) {
+                event.preventDefault();
+            }
+        }
+    });
+
+    // close tab / browser window
+    $window.addEventListener('beforeunload', function(event) {
+        console.log("Trigger Ec=vent",event)
+        if (unsavedChanges) {
+            var confirmationMessage = 'You have unsaved changes. Are you sure you want to leave?';
+    
+            event.preventDefault();
+            event.returnValue = confirmationMessage;
+            return confirmationMessage;
+        }
+    });
 
     function startTimer() {
         $scope.counter = 1800; // 1800 วินาทีเท่ากับ 30 นาที
@@ -297,6 +323,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                             // รับค่าที่ส่งมาจาก service ที่ตอบกลับมาด้วย responseText
                             const responseFromService = request.responseText;
                             const array = JSON.parse(responseFromService);
+
                             if (true) {
                                 var file_name = array.msg[0].ATTACHED_FILE_NAME;
                                 var file_path = array.msg[0].ATTACHED_FILE_PATH;
@@ -336,7 +363,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                                         member.id_session = id_session; // newValue คือค่าที่คุณต้องการให้ id_session อัปเดตเป็น
                                     });
 
-                                    $scope.data_memberteam = array.memberteam; 
+                                    $scope.data_memberteam = [...$scope.data_memberteam, ...array.memberteam]; 
+                                    
+                                    //console.log("check array memberteam", array.memberteam, "check memberteam", $scope.data_memberteam);
                                     
                                 }
                                 if (array.approver) {
@@ -347,8 +376,38 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                                         approver.id_session = id_session; // newValue คือค่าที่คุณต้องการให้ id_session อัปเดตเป็น
                                     });
 
-                                    $scope.data_approver = array.approver; 
+                                    $scope.data_approver = [...$scope.data_approver,...array.approver]; 
 
+                                    // Remove duplicates based on id
+                                    $scope.data_approver = $scope.data_approver.reduce((acc, current) => {
+                                        const existingItem = acc.find(item => item.id === current.id);
+                                        if (!existingItem) {
+                                            acc.push(current);
+                                        }
+                                        return acc;
+                                    }, []);
+
+                                }
+                                if (array.relatedpeople_outsider) {
+                                    //$scope.data_approver_old = [];
+                                    //angular.copy($scope.data_approver, $scope.data_approver_old);
+
+                                    array.relatedpeople_outsider.forEach(function (approver) {
+                                        approver.id_session = id_session; // newValue คือค่าที่คุณต้องการให้ id_session อัปเดตเป็น
+                                    });
+
+                                    $scope.data_relatedpeople_outsider = [...$scope.data_relatedpeople_outsider,...array.relatedpeople_outsider]; 
+
+                                    // Remove duplicates based on id
+                                    $scope.data_relatedpeople_outsider = $scope.data_relatedpeople_outsider.reduce((acc, current) => {
+                                        const existingItem = acc.find(item => item.id === current.id);
+                                        if (!existingItem) {
+                                            acc.push(current);
+                                        }
+                                        return acc;
+                                    }, []);
+
+                                    console.log("check array relatedpeople", array.relatedpeople_outsider, "check relatedpeoplem",  $scope.data_relatedpeople_outsider);                                                                     
                                 }
                                 if (array.tasks_worksheet) {
                                     //old data 
@@ -360,10 +419,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                                 }
                             } 
 
+                            console.log(array)
+                            unsavedChanges = true;
                             apply();
-
-
-
 
                             //set_alert('Warning', "Upload Data Success.");
                             $('#modalMsgFile').modal('show');
@@ -1404,6 +1462,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     //แก้ไขเบื้องต้น เนื่องจาก path file ผิดต้องเป็น folder jsea
                     for (let i = 0; i < arr.ram.length; i++) {
                         arr.ram[i].document_file_path = (url_ws.replace('/api/', '/')) + arr.ram[i].document_file_path;
+                        arr.ram[i].document_definition_file_path = (url_ws.replace('/api/', '/')) + arr.ram[i].document_definition_file_path;                    
                     }
 
                     $scope.master_ram = arr.ram;
@@ -2100,22 +2159,30 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             iNoNew = iNo;
         }
 
+        console.log(iNo,newInput)
         for (let i = (iNo); i < arr_items.length; i++) {
 
+            console.log(i)
             if (first_row == true && newInput !== null) {
                 iNoNew++;
+                console.log("for if Check old",newInput.no,"Check new",iNoNew)
                 newInput.no = (iNoNew);
-                first_row = false;
+                console.log("for if Check old",newInput.no,"Check new",iNoNew)
+                first_row = false;//1
             } else {
                 arr_items[i].no = iNoNew;
             }
             iNoNew++;
         };
 
+        
         if (newInput !== null && newInput.action_type == 'insert') {
             //if (iRow > 0) { newInput.no = Number(newInput.no) + 0.1; } 
             arr_items.push(newInput);
         }
+        
+        // Set 1st alway 1
+        if (arr_items.length > 0) {arr_items[0].no = 1;}
 
         arr_items.sort((a, b) => a.no - b.no);
     }
@@ -2487,6 +2554,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         apply();
     }
     $scope.removeDrawingDoc = function (seq, index) {
+        console.log("Check ",seq, index)
         var arrdelete = $filter('filter')($scope.data_drawing, function (item) {
             return (item.seq == seq && item.action_type == 'update');
         });
@@ -2512,6 +2580,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.data_drawing[0].no = 1;
         }
 
+        console.log("Check before run",$scope.data_drawing,index)
         running_no_format_1($scope.data_drawing, null, index, null); //index??
 
         apply();
@@ -3756,6 +3825,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         save_data_create(action, action_def);
 
+        unsavedChanges = false;
+        console.log("Aready saved")
 
     }
 
@@ -4231,10 +4302,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             set_master_ram_likelihood(_arr.id_ram);
         }
 
+        unsavedChanges = true;
         apply();
     }
     $scope.actionChangeWorksheet = function (_arr, _seq, type_text) {
-
+        
         if (_arr.recommendations == null || _arr.recommendations == '') {
             if (_arr.recommendations_no == null || _arr.recommendations_no == '') {
                 //recommendations != '' ให้ running action no  
@@ -4255,7 +4327,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         apply();
 
-        console.log($scope.data_listworksheet);
+        unsavedChanges = true;
 
     }
     $scope.actionChangeRelatedPeople = function (_arr, _seq, type_text) {
