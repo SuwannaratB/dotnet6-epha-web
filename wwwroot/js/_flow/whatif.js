@@ -100,22 +100,48 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
 });
 
-AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, $document, $interval) {
+AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, $document, $interval, $rootScope, $window) {
 
-    $scope_data_tooltip = [
+    $scope.data_tooltip = [
         { id:1, title_th: '', title_en: 'List System' },
-        { id:1, title_th: '', title_en: 'List Sub System' },
-        { id:1, title_th: '', title_en: 'What If (cause)' },
-        { id:1, title_th: '', title_en: 'Consequence' },
-        { id:1, title_th: '', title_en: 'CAT (P/A/E/R/Q)' },
-        { id:1, title_th: '', title_en: 'Risk Assessment' },
-        { id:1, title_th: '', title_en: 'Safeguard / Mitigation' },
-        { id:1, title_th: '', title_en: 'Residual Risk' },
-        { id:1, title_th: '', title_en: 'Action No' },
-        { id:1, title_th: '', title_en: 'Recommendations' },
-        { id:1, title_th: '', title_en: 'Responder' },
-        { id:1, title_th: '', title_en: 'Action<br>Status' },
+        { id:2, title_th: '', title_en: 'List Sub System' },
+        { id:3, title_th: '', title_en: 'What If (cause)' },
+        { id:4, title_th: '', title_en: 'Consequence' },
+        { id:5, title_th: '', title_en: 'CAT (P/A/E/R/Q)' },
+        { id:6, title_th: '', title_en: 'Risk Assessment' },
+        { id:7, title_th: '', title_en: 'Safeguard / Mitigation' },
+        { id:8, title_th: '', title_en: 'Residual Risk' },
+        { id:9, title_th: '', title_en: 'Action No' },
+        { id:10, title_th: '', title_en: 'Recommendations' },
+        { id:11, title_th: '', title_en: 'Responder' },
+        { id:12, title_th: '', title_en: 'Action Status' },
     ]
+
+    var unsavedChanges = false;
+
+    // Track location changes
+    $rootScope.$on('$locationChangeStart', function(event, next, current) {
+        console.log('Location is changing from:', current, 'to:', next);
+
+        if (unsavedChanges) {
+            var confirmLeave = $window.confirm("You have unsaved changes. Are you sure you want to leave?");
+            if (!confirmLeave) {
+                event.preventDefault();
+            }
+        }
+    });
+
+    // close tab / browser window
+    $window.addEventListener('beforeunload', function(event) {
+        console.log("Trigger Ec=vent",event)
+        if (unsavedChanges) {
+            var confirmationMessage = 'You have unsaved changes. Are you sure you want to leave?';
+    
+            event.preventDefault();
+            event.returnValue = confirmationMessage;
+            return confirmationMessage;
+        }
+    });
 
     function startTimer() {
         $scope.counter = 1800; // 1800 วินาทีเท่ากับ 30 นาที
@@ -4668,7 +4694,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     //start Update Action Type null to Update 
     $scope.actionChange = function (_arr, _seq, type_text) {
-
+        unsavedChanges = true;
         action_type_changed(_arr, _seq);
 
         var arr_submit = $filter('filter')($scope.data_tasklist, function (item) {
@@ -4691,6 +4717,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
 
     $scope.actionChangeTaskDrawing = function (_arr, _seq) {
+        unsavedChanges = true;
         action_type_changed(_arr, _seq);
 
         var arr_submit = $filter('filter')($scope.data_tasklist, function (item) {
@@ -4718,7 +4745,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
 
     $scope.actionChangeWorksheet = function (_arr, _seq, type_text) {
-
+        unsavedChanges = true;
         if (_arr.recommendations == null || _arr.recommendations == '') {
             if (_arr.recommendations_no == null || _arr.recommendations_no == '') {
                 //recommendations != '' ให้ running action no  
