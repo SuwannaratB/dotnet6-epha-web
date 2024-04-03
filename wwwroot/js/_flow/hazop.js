@@ -143,7 +143,34 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
     };
 });
 
-AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, $document, $interval) { 
+AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, $document, $interval,$rootScope,$window) { 
+
+    var unsavedChanges = false;
+
+    // Track location changes
+    $rootScope.$on('$locationChangeStart', function(event, next, current) {
+        console.log('Location is changing from:', current, 'to:', next);
+
+        if (unsavedChanges) {
+            var confirmLeave = $window.confirm("You have unsaved changes. Are you sure you want to leave?");
+            if (!confirmLeave) {
+                event.preventDefault();
+            }
+        }
+    });
+
+    // close tab / browser window
+    $window.addEventListener('beforeunload', function(event) {
+        console.log("Trigger Ec=vent",event)
+        if (unsavedChanges) {
+            var confirmationMessage = 'You have unsaved changes. Are you sure you want to leave?';
+    
+            event.preventDefault();
+            event.returnValue = confirmationMessage;
+            return confirmationMessage;
+        }
+    });
+
 
     function startTimer() {
         $scope.counter = 1800; // 1800 วินาทีเท่ากับ 30 นาที
@@ -3812,6 +3839,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             $scope.actionChangeWorksheet(arr_items, arr_items.seq);
         }
+
+        unsavedChanges = true;
         apply();
         $('#modalEmployeeSelect').modal('hide');
     };
@@ -4493,6 +4522,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
         }
 
+        unsavedChanges = false;
         save_data_create(action, action_def);
 
     }
@@ -4553,6 +4583,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $('#modalMsg').modal('hide');
             return;
         }
+
+        unsavedChanges = false;
         save_data_create("submit", "submit");
     }
 
@@ -4966,6 +4998,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     //start Update Action Type null to Update 
     $scope.actionChange = function (_arr, _seq, type_text) {
+        console.log("Test unsave ")
 
         action_type_changed(_arr, _seq);
 
@@ -4986,10 +5019,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.selectedItemNodeView = _seq;
         }
 
+        unsavedChanges = true;
         apply();
     }
 
     $scope.actionChangeNodeDrawing = function (_arr, _seq) {
+        console.log("test unssave")
         action_type_changed(_arr, _seq);
 
         var arr_submit = $filter('filter')($scope.data_node, function (item) {
@@ -5014,6 +5049,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 apply();
             }
         }
+
+        unsavedChanges = true;
     }
 
     $scope.actionChangeWorksheet = function (_arr, _seq, type_text) {
@@ -5086,6 +5123,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 //dd MMM yyyy
                 _arr.reviewer_date = null;
             }
+            
 
         }
 
@@ -5094,6 +5132,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             return ((item.action_type !== '' || item.action_type !== null));
         });
         if (arr_submit.length > 0) { $scope.submit_type = true; } else { $scope.submit_type = false; }
+        unsavedChanges = true;
 
     }
 
