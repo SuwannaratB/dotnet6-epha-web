@@ -206,7 +206,7 @@
                                                 </label>
                                                 <label class="form-label ps-0" for="area"></label>
                                                 <select class="form-control js-choice-apu"
-                                                        ng-class="{'disabled-link':(!tab_general_active)}"
+                                                        ng-class="{'disabled-\link':(!tab_general_active)}"
                                                         data-choices="data-choices"
                                                         data-options='{"removeItemButton":true,"placeholder":true}'
                                                         ng-change="actionChange(item,item.seq,'')" ng-model="item.id_apu">
@@ -624,17 +624,17 @@
                                                                         <span class="far fa-address-book fa-lg"></span>
                                                                         Add Safety Reviewer
                                                                     </button>
-                                                                </div>
-                                                                <div class="row" ng-repeat="item2 in data_approver | filter:{id_session:item.seq }">
+
+                                                                <div class="row" ng-repeat="item2 in data_approver"> 
                                                                     <div class="row align-items-center  p-1">
                                                                         <label class="mb-0 text-1100 fw-bold" 
                                                                                 style="width:80%;border-color: #f1f2f4;"
-                                                                                ng-if=" (item2.approver_type=='approver')">
+                                                                                ng-if=" (item2.approver_type === 'approver')">
                                                                                {{ '(Main)' + item2.user_displayname}}
                                                                         </label>
                                                                         <label class="mb-0 text-1100 fw-bold" 
                                                                                 style="width:80%;border-color: #f1f2f4;"
-                                                                                ng-if="!(item2.approver_type=='approver')">
+                                                                                ng-if="!(item2.approver_type === 'safety')">
                                                                                 {{ item2.user_displayname}}
                                                                         </label>
                                                                     </div>
@@ -661,7 +661,8 @@
                                                                         </label>
                                                                     </div>
                                                                 </div>
-                                                                <div class="row" ng-repeat="item2 in data_relatedpeople_outsider | filter:{id_session:item.seq, user_type:'specialist'}">
+
+                                                                <div class="row" ng-repeat="item2 in data_relatedpeople_outsider"><!------ | filter:{id_session:item.seq, user_type:'specialist'}----->
                                                                     <div class="row align-items-center  p-1">
                                                                         <label class="mb-0 text-1100 fw-bold"
                                                                                style="width:80%;border-color: #f1f2f4;">
@@ -962,7 +963,7 @@
                                                             </button>
                                                         </div>
                                                         <div class="row uploadbox align-items-center cursor-pointer" ng-if="tab_general_active">
-                                                            <div class=" align-items-center p-1 cursor-pointer ">\
+                                                            <div class=" align-items-center p-1 cursor-pointer ">
                                                                 <span class="mr-3 nametext text-primary"
                                                                       id="filename{{item.seq}}" 
                                                                       ng-class="{'d-none':(!tab_general_active)}"
@@ -1081,11 +1082,8 @@
                                      <div class="col-2">
                                         <span class="mx-1 d-flex" style="float:right;">
                                             <a class="m-1 text-info cursor-pointer"
-                                               href="{{y.document_definition_file_path}}" 
-                                               target="_blank"
-                                               ng-repeat="y in master_ram | filter:{id: data_general[0].id_ram}">
-                                               Definition Consequence Rating
-                                            </a>
+                                               href="{{y.document_definition_file_path}}" target="_blank"
+                                               ng-repeat="y in master_ram | filter:{id: data_general[0].id_ram}">Definition Consequence Rating<span class="fas fa-file-pdf fa-lg ms-1"></span></a>
                                         </span>
                                     </div>
                                 </div>
@@ -1733,8 +1731,6 @@
                                                 <th class=" align-middle  mx-0" style="padding: 0 !important;">RR</th>
                                             </tr>
                                         </thead>
-
-
                                         <tbody class="">
                                             <tr class="rowwork border border-dashed"
                                                 ng-repeat="item in data_listworksheet | orderBy:'no'">
@@ -2549,36 +2545,33 @@
 
                                     </tr>
                                 </thead>
-                                <tbody class=" list">
-
-                                    <tr class="hover-actions-trigger btn-reveal-trigger position-static text-center"
-                                        ng-repeat="item in employeelist_show">
-                                        <td class="">
-                                            <a class="dropdown-item text-primary"
-                                               ng-click="choosDataEmployee(item)"
-                                               style="cursor: pointer;">
-                                                Add
-                                            </a>
-                                        </td>
-
-                                        <td class="">
-                                            <a class=" text-decoration-none d-flex align-items-center">
-                                                <div class="avatar avatar-m" style="height: 20px; width: 20px;">
-                                                    <img ng-if="item.employee_img" 
-                                                    class="rounded-circle" 
-                                                    ng-src="../../{{ item.employee_img }}" alt="">
-                                                </div>
-                                                <p class="mb-0 ms-3 text-1100 fw-bold"> ({{item.employee_id}}){{item.employee_displayname}} </p>
-                                            </a>
-                                        </td>
-
-                                        <td class="">{{item.employee_position}} </td>
-
-                                        <td class="">{{item.employee_email}} </td>
-
-                                        <td class="">{{item.employee_type}}</td>
-                                    </tr>
-                                </tbody>
+                                    <tbody class="list">
+                                        <!-- Check if employeelist_show is not empty and the first item in the array is not null -->
+                                        <tr ng-if="employeelist_show.length > 0 && employeelist_show[0].employee_displayname !== null" ng-repeat="item in employeelist_show">
+                                            <td class="">
+                                                <a class="dropdown-item text-primary" ng-click="choosDataEmployee(item)">
+                                                    Add
+                                                </a>
+                                            </td>
+                                            <td class="">
+                                                <a class="text-decoration-none d-flex align-items-center">
+                                                    <div class="avatar avatar-m" style="height: 20px; width: 20px;">
+                                                        <img ng-if="item.employee_img" class="rounded-circle" ng-src="../../{{ item.employee_img }}" alt="">
+                                                    </div>
+                                                    <p class="mb-0 ms-3 text-1100 fw-bold"> ({{item.employee_id}}){{item.employee_displayname}} </p>
+                                                </a>
+                                            </td>
+                                            <td class="">{{item.employee_position}} </td>
+                                            <td class="">{{item.employee_email}} </td>
+                                            <td class="">{{item.employee_type}}</td>
+                                        </tr>
+                                        <!-- Show "Not Found" message when employeelist_show is empty or the first item is null -->
+                                        <tr ng-if="employeelist_show[0].employee_displayname === null">
+                                            <td colspan="5">
+                                                <p class="mb-0 ms-3 text-1100 fw-bold text-center"> Not Found </p>
+                                            </td>
+                                        </tr>
+                                    </tbody>
                             </table>
 
                         </div>
@@ -2784,9 +2777,9 @@
          aria-hidden="true" style="display: none;">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content" style="width: 100%; min-height: 300px;">
-                <div class="modal-header bg-warning">
+                <div class="modal-header bg-primary">
                     <h5 class="text-900 mb-0" data-anchor="data-anchor" id="modalMsgFileLabel">
-                        <span class=" me-2"><B>|</B></span>Warning
+                        <span class=" me-2"><B>|</B></span>Upload Successful
                     </h5>
                     <button class="btn p-1" type="button" data-bs-dismiss="modal" aria-label="Close">
                         <svg class="svg-inline--fa fa-xmark fs--1" aria-hidden="true" focusable="false" data-prefix="fas"
@@ -3004,7 +2997,11 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="modalRAMLabel">Risk Assessment Matrix (RAM){{(selectedDataNodeWorksheetRamType =='s'?' : Security':(selectedDataNodeWorksheetRamType =='l'?' : Likelihood':''))}}</h5>
-
+                        <span class="mx-1 d-flex">
+                            <a class="m-1 text-info cursor-pointer"
+                                href="{{y.document_definition_file_path}}" target="_blank"
+                                ng-repeat="y in master_ram | filter:{id: data_general[0].id_ram}">Definition Consequence Rating<span class="fas fa-file-pdf fa-lg ms-1"></span></a>
+                        </span>
 
                     <div class="col-auto ms-auto" style="zoom:1.5">
                         <b class="pe-1 me-1"> Security : {{cal_ram_action_security}}</b>
@@ -3027,8 +3024,7 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="row">
-                            <div class="col-6 d-flex justify-content-end gap-10">
-                                
+                            <div class="col-6 d-flex justify-content-center gap-10">
                             </div>
                             <div class="col-6 d-flex justify-content-end" 
                               ng-class="{'ram-l-5': (data_general[0].id_ram == 5) ,'ram-l-4': (data_general[0].id_ram == 4)}">
