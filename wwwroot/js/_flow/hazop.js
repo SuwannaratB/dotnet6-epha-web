@@ -1544,8 +1544,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         if ($scope.data_general[0].master_functional == null || $scope.data_general[0].master_functional == '') {
                             $scope.data_general[0].master_functional = null;
                             //var arr_clone_def = { id: $scope.data_general[0].master_functional, name: 'Please select' };
-                            var arr_clone_def = { id: null, name: 'Please select' };
-                            $scope.master_functional.splice(0, 0, arr_clone_def);
+                            // var arr_clone_def = { id: null, name: 'Please select' };
+                            // $scope.master_functional.splice(0, 0, arr_clone_def);
                         }
                         //if ($scope.data_general[0].id_business_unit == null) {
                         //    $scope.data_general[0].id_business_unit = null;
@@ -1560,7 +1560,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                             $scope.master_unit_no.splice(0, 0, arr_clone_def);
                         }
                     } catch (ex) { alert(ex); console.clear(); }
-
 
                     $scope.$apply();
                     startTimer();
@@ -3532,6 +3531,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
 
     $scope.removeDataNodeWorksheet = function (row_type, item, index) {
+        console.log('default => ',item)
         var seq_node = item.seq_node;
         var seq_guide_word = (item.seq_guide_word == null ? item.id_guide_word : item.seq_guide_word);
         var seq = item.seq;
@@ -5145,9 +5145,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         var _implement = false;
         if (type_text == "implement_uncheck") {
-            _arr.implement = 0; _implement = true;
+            _arr.implement = 0; 
+            _implement = true;
         } else if (type_text == "implement_check") {
-            _arr.implement = 1; _implement = true;
+            _arr.implement = 1; 
+            _implement = true;
         }
         if (_implement) {
             //set Data
@@ -5219,7 +5221,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         });
         if (arr_submit.length > 0) { $scope.submit_type = true; } else { $scope.submit_type = false; }
         unsavedChanges = true;
-
     }
 
     function action_type_changed(_arr, _seq) {
