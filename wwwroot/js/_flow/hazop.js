@@ -3595,7 +3595,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             arrCheck[0].responder_user_email = null;
             arrCheck[0].responder_user_displayname = null;
             arrCheck[0].responder_user_img = null;
-
+  
             apply();
             return;
         }
@@ -3633,6 +3633,18 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         (item.seq == seq
                             || (item.seq_consequences == seq_consequences && item.seq_causes == seq_causes))
                     );
+                });
+
+                // after reset no
+                const guidewords_no = item.guidewords_no;
+                const causes_no = item.causes_no;
+                const consequences_no = item.consequences_no;
+                $scope.data_nodeworksheet.forEach(function(item) {
+                    if ( item.guidewords_no == guidewords_no && item.causes_no == causes_no ) {
+                        if (item.consequences_no > consequences_no ) {
+                            item.consequences_no = item.consequences_no - 1;
+                        }
+                    }
                 });
 
             } else if (row_type == "category") {
