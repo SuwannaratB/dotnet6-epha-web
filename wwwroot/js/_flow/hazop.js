@@ -3356,10 +3356,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         //row now
         var iNo = no;
 
-        console.log('item', item)
-        console.log('index', index)
-        console.log("Number(item.index_rows)", item.index_rows)
-
         if (row_type == "causes") {
             var arr = $filter('filter')(arr_def, function (_item) {
                 return (_item.no >= no && _item.id_node == seq_node && _item.seq_guide_word == seq_guide_word
@@ -3451,19 +3447,16 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
         else if (row_type == "consequences") {
             newInput.causes = item.causes;
+
         } else if (row_type == "category") {
             newInput.causes = item.causes;
             newInput.consequences = item.consequences;
         }
         $scope.selectdata_nodeworksheet = xseq;
-
         running_index_worksheet(seq);
         index = index_rows;
 
         // console.clear();
-        console.log('iNo', iNo);
-        console.log('index', index);
-        console.log('newInput', newInput);
         running_index_level1_lv1($scope.data_nodeworksheet, iNo, index, newInput);
 
         if (row_type == "causes" || row_type == "consequences") {
