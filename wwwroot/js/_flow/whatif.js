@@ -2133,6 +2133,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             iNoNew++;
         };
         if (newInput !== null && newInput.action_type == 'insert') { arr_items.push(newInput); }
+        // Set 1st alway 1
+        if (arr_items.length > 0) {arr_items[0].no = 1;}
         arr_items.sort((a, b) => a.no - b.no);
 
     }

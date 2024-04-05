@@ -1233,7 +1233,8 @@
                     <div class="" ng-class="{'tab-pane fade show active':(action_part==4),'tab-pane fade':(action_part!==4)}"
                          id="tab-ram" role="tabpanel" aria-labelledby="ram-tab">
 
-                        <div class="m-3 row  gx-0 align-items-center" ng-if="flow_role_type == 'admin' && tab_worksheet_active">
+                        <!------&& tab_worksheet_active---->
+                        <div class="m-3 row  gx-0 align-items-center" ng-if="flow_role_type == 'admin' ">
                             <div class="card px-2 pb-2 ">
                                 <div class="row g-3 justify-content-between align-items-center pt-2 pb-3">
                                     <div class="col-10">
@@ -1935,12 +1936,18 @@
                                                 <th title="" class=" align-middle   mx-0" colspan="1" rowspan="2" scope="col" style="padding: 0 !important; width: 200px;">Causes</th>
                                                 <th title="" class=" align-middle   mx-0" colspan="1" rowspan="2" scope="col" style="padding: 0 !important; width: 200px;">Consequences</th>
 
-                                                <th title="" class=" align-middle   mx-0" colspan="1" rowspan="2" scope="col" style="padding: 0 !important;" ng-if="select_columns_level == 5">CAT<br>(P/A/E/R/Q) </th>
-                                                <th title="" class=" align-middle   mx-0" colspan="3" rowspan="1" scope="col" style="padding: 0 !important;"> Unmitigated Risk<br>Assessment Matrix</th>
+                                                <th title="P - People&#10;A - Asset&#10;E - Environment&#10;R - Reputation&#10;Q - Quality" 
+                                                    class="align-middle mx-0 cursor-pointer white-space: pre-line;" colspan="1" rowspan="2" scope="col" style="padding: 0 !important;" ng-if="select_columns_level == 5">
+                                                    CAT<br>(P/A/E/R/Q)
+                                                </th>
+                                                <th title="Risk after implementing this MOC without Protection/Mitigation (Barriers)" 
+                                                    class=" align-middle   mx-0 cursor-pointer"  colspan="3" rowspan="1" scope="col" style="padding: 0 !important;"> Unmitigated Risk<br>Assessment Matrix</th>
                                                 <th title="" class=" align-middle   mx-0" colspan="1" rowspan="2" scope="col" style="padding: 0 !important;">Major <br>Accident<br>Event<br>(Y/N)</th>
                                                 <th title="" class=" align-middle   mx-0" colspan="1" rowspan="2" scope="col" style="padding: 0 !important;" ng-if="data_header[0].safety_critical_equipment_show==1">Safety<br>Critical<br>Equipment<br>(Y/N)</th>
-                                                <th title="" class=" align-middle   mx-0" colspan="1" rowspan="2" scope="col" style="padding: 0 !important; width: 150px;"> Existing Safeguards</th>
-                                                <th title="" class=" align-middle   mx-0" colspan="3" rowspan="1" scope="col" style="padding: 0 !important;"> Mitigated Risk<br>Assessment Matrix</th>
+                                                <th title="มาตรการควบคุมหรือป้องกัน(Barriers)ที่มีอยู่ในปัจจุบัน และ มาตรการเพิ่มเติมจากที่ได้ออกแบบไว้แล้วใน Detail design" 
+                                                    class=" align-middle   mx-0 cursor-pointer" colspan="1" rowspan="2" scope="col" style="padding: 0 !important; width: 150px;">  Protection/Mitigation Barriers</th>
+                                                <th title="Risk after implementing this MOC with implemented  Protection/Mitigation (Barriers)" 
+                                                    class=" align-middle   mx-0 cursor-pointer" colspan="3" rowspan="1" scope="col" style="padding: 0 !important;"> Mitigated Risk<br>Assessment Matrix</th>
                                                 <th title="" class=" align-middle   mx-0" colspan="1" rowspan="2" scope="col" style="padding: 0 !important; width: 50px;"> Action<br />No</th>
                                                 <th title="" class=" align-middle   mx-0" colspan="1" rowspan="2" scope="col" style="padding: 0 !important; width: 200px;"> Recommendations</th>
                                                 <th title="" class=" align-middle   mx-0" colspan="1" rowspan="2" scope="col" style="padding: 0 !important; width: 200px;" ng-if="data_header[0].safety_critical_equipment_show==1"> Equipment Tag. No.</th>
@@ -1948,12 +1955,12 @@
                                                 <th title="" class=" align-middle   mx-0" colspan="1" rowspan="2" scope="col" style="padding: 0 !important;">Action<br>Status</th>
                                             </tr>
                                             <tr>
-                                                <th title="" class=" align-middle  mx-0" scope="col" style="padding: 0 !important;">S</th>
-                                                <th title="" class=" align-middle  mx-0" scope="col" style="padding: 0 !important;">L</th>
-                                                <th title="" class=" align-middle  mx-0" scope="col" style="padding: 0 !important;">R</th>
-                                                <th title="" class=" align-middle  mx-0" scope="col" style="padding: 0 !important;">S</th>
-                                                <th title="" class=" align-middle  mx-0" scope="col" style="padding: 0 !important;">L</th>
-                                                <th title="" class=" align-middle  mx-0" scope="col" style="padding: 0 !important;">R</th>
+                                                <th title="Severity" class=" align-middle  mx-0 cursor-pointer" scope="col" style="padding: 0 !important;">S</th>
+                                                <th title="Likelihood" class=" align-middle  mx-0 cursor-pointer" scope="col" style="padding: 0 !important;">L</th>
+                                                <th title="Risk" class=" align-middle  mx-0 cursor-pointer" scope="col" style="padding: 0 !important;">R</th>
+                                                <th title="Severity" class=" align-middle  mx-0 cursor-pointer" scope="col" style="padding: 0 !important;">S</th>
+                                                <th title="Likelihood" class=" align-middle  mx-0 cursor-pointer" scope="col" style="padding: 0 !important;">L</th>
+                                                <th title="Risk" class=" align-middle  mx-0 cursor-pointer" scope="col" style="padding: 0 !important;">R</th>
                                             </tr>
                                         </thead>
 
