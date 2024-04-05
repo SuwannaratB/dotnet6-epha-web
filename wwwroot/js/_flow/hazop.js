@@ -3447,7 +3447,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
         else if (row_type == "consequences") {
             newInput.causes = item.causes;
-
+            
         } else if (row_type == "category") {
             newInput.causes = item.causes;
             newInput.consequences = item.consequences;
@@ -3733,6 +3733,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         arr_items.sort((a, b) => a.no - b.no);
         var first_row = true;
         var iNoNewsafety_critical_equipment_show = 1;
+        var iNoNew = 1;
 
         for (let i = 0; i < arr_items.length; i++) {
             arr_items[i].consequences_no = (iNoNew);

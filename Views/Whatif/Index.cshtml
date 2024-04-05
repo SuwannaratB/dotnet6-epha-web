@@ -2900,32 +2900,33 @@
                                                 </div>
 
                                             </td>
+
                                             <td class="align-top rating white-space-nowrap ">
                                                 <div class="d-flex align-items-center text-end ">
                                                     <div class="align-items-center ">
                                                         <p class="transition-none fs--2p-1 ps-0 text-center rounded-1 cursor-pointer"
-                                                           ng-click="openModalDataRAM_Recommendations(item,'s',item.seq,'after',item.id_ram)" style="width: 20px; height:20px">
-                                                            {{item.ram_after_security}}
+                                                           ng-click="openModalDataRAM_Recommendations(item,'s',item.seq,'befor',item.id_ram)" style="width: 20px; height:20px">
+                                                            {{item.ram_befor_security}}
                                                         </p>
                                                     </div>
 
                                                     <div class="align-items-center ">
                                                         <p class="transition-none fs--2p-1 ps-0 text-center rounded-1 cursor-pointer"
-                                                           ng-click="openModalDataRAM_Recommendations(item,'l',item.seq,'after',item.id_ram)" style="width: 20px; height:20px">
-                                                            {{item.ram_after_likelihood}}
+                                                           ng-click="openModalDataRAM_Recommendations(item,'l',item.seq,'befor',item.id_ram)" style="width: 20px; height:20px">
+                                                            {{item.ram_befor_likelihood}}
                                                         </p>
                                                     </div>
 
                                                     <div class="align-items-center ">
-                                                        <p ng-style=" {'color': item.ram_after_risk === 'L' ? 'white' : 'black','background-color' : ((item.ram_after_risk == 'H') ? 'red' : ((item.ram_after_risk == 'M') ? 'yellow' : ((item.ram_after_risk == 'L') ? 'green' : '#D3D3D3')) )}"
+                                                        <p ng-style=" { 'background-color' : ((item.ram_befor_risk == 'H') ? 'red' : ((item.ram_befor_risk == 'M') ? 'yellow' : ((item.ram_befor_risk == 'L') ? 'green' : '#D3D3D3')) ) }"
                                                            class="transition-none fs--2p-1 ps-0 text-center rounded-1 cursor-pointer"
-                                                           ng-click="openModalDataRAM_Recommendations(item,'r',item.seq,'after',item.id_ram)" style="width: 20px; height:20px;">
-                                                            {{item.ram_after_risk}}
+                                                           ng-click="openModalDataRAM_Recommendations(item,'r',item.seq,'befor',item.id_ram)" style="width: 20px; height:20px">
+                                                            {{item.ram_befor_risk}}
                                                         </p>
                                                     </div>
                                                 </div>
-
                                             </td>
+
                                             <td class="align-top rating white-space-nowrap ">
                                                 <div class="d-flex align-items-center text-end ">
                                                     <div class="align-items-center ">
@@ -2943,13 +2944,14 @@
                                                     </div>
 
                                                     <div class="align-items-center ">
-                                                        <p ng-style=" { 'background-color' : ((item.ram_action_risk == 'H') ? 'red' : ((item.ram_action_risk == 'M') ? 'yellow' : ((item.ram_action_risk == 'L') ? 'green' : '#D3D3D3')) ) }"
+                                                        <p ng-style=" {'color': item.ram_action_risk === 'L' ? 'white' : 'black','background-color' : ((item.ram_action_risk == 'H') ? 'red' : ((item.ram_action_risk == 'M') ? 'yellow' : ((item.ram_action_risk == 'L') ? 'green' : '#D3D3D3')) )}"
                                                            class="transition-none fs--2p-1 ps-0 text-center rounded-1 cursor-pointer"
-                                                           ng-click="openModalDataRAM_Recommendations(item,'r',item.seq,'action',item.id_ram)" style="width: 20px; height:20px">
+                                                           ng-click="openModalDataRAM_Recommendations(item,'r',item.seq,'action',item.id_ram)" style="width: 20px; height:20px;">
                                                             {{item.ram_action_risk}}
                                                         </p>
                                                     </div>
                                                 </div>
+
                                             </td>
 
                                             <td class="align-top rating white-space-nowrap">
