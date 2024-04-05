@@ -1234,7 +1234,7 @@
                     <div class="" ng-class="{'tab-pane fade show active':(action_part==4),'tab-pane fade':(action_part!==4)}"
                          id="tab-ram" role="tabpanel" aria-labelledby="ram-tab">
 
-                        <div class="m-3 row  gx-0 align-items-center">
+                        <div class="m-3 row  gx-0 align-items-center" ng-if="flow_role_type == 'admin' && tab_worksheet_active ">
 
                             <div class="card px-2 pb-2 ">
                                 <div class="row g-3 justify-content-between align-items-center pt-2 pb-3">
@@ -1790,7 +1790,32 @@
                             </div>
                         </div>
 
+                        <div class="m-3 row  gx-0 align-items-center" ng-if="!(flow_role_type == 'admin') || !tab_worksheet_active">
+                            <div class="card px-2 pb-2 " ng-repeat="itemRam in master_ram | filter:{id: data_general[0].id_ram}">
+                                <div class="row g-3 justify-content-between align-items-center pt-2 pb-3">
+                                    <div class="col-10">
+                                        <h5 class="text-900 mb-0"> <span class=" me-2 text-primary"><B>|</B></span><b class="text-danger"> * </b> Risk Assessment Matrix {{itemRam.name}}</h5>
+                                    </div>
 
+                                    <div class="col-auto">
+                                        <span class="mx-1 d-flex" style="float:right;">
+                                            <a class="m-1 text-info cursor-pointer"
+                                               href="{{y.document_definition_file_path}}" target="_blank"
+                                               ng-repeat="y in master_ram | filter:{id: data_general[0].id_ram}">Definition Consequence Rating<span class="fas fa-file-pdf fa-lg ms-1"></span></a>
+                                        </span>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-12 d-flex justify-content-center">
+                                        <div class="row" style="background-color : #F8F8F8 ; width:75%;">
+                                            <img src="{{itemRam.document_file_path}}" class="cursor-pointer" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
 
                     </div>
                     <!-- RAM end-->

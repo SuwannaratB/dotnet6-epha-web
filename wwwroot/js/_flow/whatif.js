@@ -100,6 +100,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
 });
 
+
 AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, $document, $interval, $rootScope, $window) {
 
     $scope.data_tooltip = [
@@ -1295,6 +1296,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     //แก้ไขเบื้องต้น เนื่องจาก path file ผิดต้องเป็น folder whatif
                     for (let i = 0; i < arr.ram.length; i++) {
                         arr.ram[i].document_file_path = (url_ws.replace('/api/', '/')) + arr.ram[i].document_file_path;
+                        arr.ram[i].document_definition_file_path = (url_ws.replace('/api/', '/')) + arr.ram[i].document_definition_file_path;
                     }
 
                     $scope.master_ram = arr.ram;
@@ -2174,6 +2176,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             iNoNew++;
         };
         if (newInput !== null && newInput.action_type == 'insert') { arr_items.push(newInput); }
+        // Set 1st alway 1
+        if (arr_items.length > 0) {arr_items[0].no = 1;}
         arr_items.sort((a, b) => a.no - b.no);
 
     }
@@ -4005,7 +4009,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         set_alert_confirm('Confirm canceling the PHA No.', '');
     }
     $scope.confirmSave = function (action) {
-
+        unsavedChanges = false;
         //check required field 
         var pha_status = $scope.data_header[0].pha_status;
         //11	DF	Draft
@@ -4713,6 +4717,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         if (type_text == "task") {
             $scope.selectedItemListView = _seq;
         }
+
+        unsavedChanges = true;
         apply();
     }
 
@@ -4742,6 +4748,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 apply();
             }
         }
+        unsavedChanges = true;
     }
 
     $scope.actionChangeWorksheet = function (_arr, _seq, type_text) {
@@ -4762,6 +4769,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         });
 
         if (arr_submit.length > 0) { $scope.submit_type = true; } else { $scope.submit_type = false; }
+
+        unsavedChanges = true;
 
     }
     function action_type_changed(_arr, _seq) {

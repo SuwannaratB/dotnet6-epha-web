@@ -1233,7 +1233,8 @@
                     <div class="" ng-class="{'tab-pane fade show active':(action_part==4),'tab-pane fade':(action_part!==4)}"
                          id="tab-ram" role="tabpanel" aria-labelledby="ram-tab">
 
-                        <div class="m-3 row  gx-0 align-items-center" ng-if="flow_role_type == 'admin' && tab_worksheet_active">
+                        <!------&& tab_worksheet_active---->
+                        <div class="m-3 row  gx-0 align-items-center" ng-if="flow_role_type == 'admin' ">
                             <div class="card px-2 pb-2 ">
                                 <div class="row g-3 justify-content-between align-items-center pt-2 pb-3">
                                     <div class="col-10">
@@ -2082,13 +2083,15 @@
                                                     style="padding: 0 !important;">
                                                     Action<br>Status
                                                 </th>
+                                            </tr>
+
                                             <tr>
-                                                <th title="" class=" align-middle  mx-0" scope="col" style="padding: 0 !important;">S</th>
-                                                <th title="" class=" align-middle  mx-0" scope="col" style="padding: 0 !important;">L</th>
-                                                <th title="" class=" align-middle  mx-0" scope="col" style="padding: 0 !important;">R</th>
-                                                <th title="" class=" align-middle  mx-0" scope="col" style="padding: 0 !important;">S</th>
-                                                <th title="" class=" align-middle  mx-0" scope="col" style="padding: 0 !important;">L</th>
-                                                <th title="" class=" align-middle  mx-0" scope="col" style="padding: 0 !important;">R</th>
+                                                <th title="Severity" class=" align-middle  mx-0 cursor-pointer" scope="col" style="padding: 0 !important;">S</th>
+                                                <th title="Likelihood" class=" align-middle  mx-0 cursor-pointer" scope="col" style="padding: 0 !important;">L</th>
+                                                <th title="Risk" class=" align-middle  mx-0 cursor-pointer" scope="col" style="padding: 0 !important;">R</th>
+                                                <th title="Severity" class=" align-middle  mx-0 cursor-pointer" scope="col" style="padding: 0 !important;">S</th>
+                                                <th title="Likelihood" class=" align-middle  mx-0 cursor-pointer" scope="col" style="padding: 0 !important;">L</th>
+                                                <th title="Risk" class=" align-middle  mx-0 cursor-pointer" scope="col" style="padding: 0 !important;">R</th>
                                             </tr>
                                         </thead>
 
