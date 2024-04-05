@@ -1030,7 +1030,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         //submit, submit_without, submit_complete
         var flow_action = (action == 'submit_complete' ? 'submit' : action);
-
         $.ajax({
             url: url_ws + "Flow/set_hazop",
             data: '{"user_name":"' + user_name + '","token_doc":"' + token_doc + '","pha_status":"' + pha_status + '","pha_version":"' + pha_version + '","action_part":"' + action_part + '"'
@@ -3447,7 +3446,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
         else if (row_type == "consequences") {
             newInput.causes = item.causes;
-            
+
         } else if (row_type == "category") {
             newInput.causes = item.causes;
             newInput.consequences = item.consequences;
@@ -3480,29 +3479,31 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     $scope.pasteNodeList = function (level, seq) {
         if ($scope.data_copy && level && seq) {
-            const data = $scope.data_nodeworksheet.filter(function(item) {
-                return item.seq === seq;
+            $scope.data_nodeworksheet.forEach(element => {
+                if (element.seq === seq) {
+                   element.action_change = 1
+                   element.causes = $scope.data_copy[0].causes;
+                   element.consequences = $scope.data_copy[0].consequences;
+                   element.category_type = $scope.data_copy[0].category_type;
+                   element.ram_befor_risk = $scope.data_copy[0].ram_befor_risk;
+                   element.ram_befor_security = $scope.data_copy[0].ram_befor_security;
+                   element.ram_befor_likelihood = $scope.data_copy[0].ram_befor_likelihood;
+                   element.major_accident_event = $scope.data_copy[0].major_accident_event;
+                   element.existing_safeguards = $scope.data_copy[0].existing_safeguards;
+                    //element.recommendations_no = $scope.data_copy[0].recommendations_no;
+                   element.ram_after_risk = $scope.data_copy[0].ram_after_risk;
+                   element.ram_after_security = $scope.data_copy[0].ram_after_security;
+                   element.ram_after_likelihood = $scope.data_copy[0].ram_after_likelihood;
+                   element.recommendations = $scope.data_copy[0].recommendations;
+                   element.safety_critical_equipment_tag = $scope.data_copy[0].safety_critical_equipment_tag;
+                   element.responder_user_id = $scope.data_copy[0].responder_user_id;
+                   element.responder_user_name = $scope.data_copy[0].responder_user_name;
+                   element.responder_user_displayname = $scope.data_copy[0].responder_user_displayname;
+                   element.responder_user_email = $scope.data_copy[0].responder_user_email;
+                   element.responder_user_img = $scope.data_copy[0].responder_user_img;
+                }
             });
-            // paste data
-            data[0].causes = $scope.data_copy[0].causes;
-            data[0].consequences = $scope.data_copy[0].consequences;
-            data[0].category_type = $scope.data_copy[0].category_type;
-            data[0].ram_befor_risk = $scope.data_copy[0].ram_befor_risk;
-            data[0].ram_befor_security = $scope.data_copy[0].ram_befor_security;
-            data[0].ram_befor_likelihood = $scope.data_copy[0].ram_befor_likelihood;
-            data[0].major_accident_event = $scope.data_copy[0].major_accident_event;
-            data[0].existing_safeguards = $scope.data_copy[0].existing_safeguards;
-            // data[0].recommendations_no = $scope.data_copy[0].recommendations_no;
-            data[0].ram_after_risk = $scope.data_copy[0].ram_after_risk;
-            data[0].ram_after_security = $scope.data_copy[0].ram_after_security;
-            data[0].ram_after_likelihood = $scope.data_copy[0].ram_after_likelihood;
-            data[0].recommendations = $scope.data_copy[0].recommendations;
-            data[0].safety_critical_equipment_tag = $scope.data_copy[0].safety_critical_equipment_tag;
-            data[0].responder_user_id = $scope.data_copy[0].responder_user_id;
-            data[0].responder_user_name = $scope.data_copy[0].responder_user_name;
-            data[0].responder_user_displayname = $scope.data_copy[0].responder_user_displayname;
-            data[0].responder_user_email = $scope.data_copy[0].responder_user_email;
-            data[0].responder_user_img = $scope.data_copy[0].responder_user_img;
+            apply();
         }
     }
 
@@ -4613,7 +4614,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 }
             }
         }
-
+   
         unsavedChanges = false;
         save_data_create(action, action_def);
 
