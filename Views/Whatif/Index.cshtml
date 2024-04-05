@@ -2276,7 +2276,7 @@
                                                                       style=" width: 400px; font-size: 10px;"
                                                                       id="safeguards_worksheet_{{item.seq}}" 
                                                                       name="safeguards_worksheet_{{item.seq}}"
-                                                                      placeholder="Existing Safeguards" 
+                                                                      placeholder="PROTECTION/MITIGATION BARRIERS" 
                                                                       rows="3"
                                                                       ng-model="item.existing_safeguards"
                                                                       ng-keyup="filterResultHistory(item.existing_safeguards, 'safeguards', 'safeguards_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')">
@@ -3262,7 +3262,7 @@
                                         ng-repeat="item in employeelist_show">
 
                                         <td class="">
-                                            <a class="dropdown-item text-primary"
+                                            <a class="dropdown-item text-primary cursor-pointer"
                                                ng-click="choosDataEmployee(item)">
                                                 Add
                                             </a>
