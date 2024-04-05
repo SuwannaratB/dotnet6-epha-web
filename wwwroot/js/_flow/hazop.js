@@ -1544,8 +1544,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         if ($scope.data_general[0].master_functional == null || $scope.data_general[0].master_functional == '') {
                             $scope.data_general[0].master_functional = null;
                             //var arr_clone_def = { id: $scope.data_general[0].master_functional, name: 'Please select' };
-                            var arr_clone_def = { id: null, name: 'Please select' };
-                            $scope.master_functional.splice(0, 0, arr_clone_def);
+                            // var arr_clone_def = { id: null, name: 'Please select' };
+                            // $scope.master_functional.splice(0, 0, arr_clone_def);
                         }
                         //if ($scope.data_general[0].id_business_unit == null) {
                         //    $scope.data_general[0].id_business_unit = null;
@@ -1560,7 +1560,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                             $scope.master_unit_no.splice(0, 0, arr_clone_def);
                         }
                     } catch (ex) { alert(ex); console.clear(); }
-
 
                     $scope.$apply();
                     startTimer();
@@ -3357,10 +3356,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         //row now
         var iNo = no;
 
-        console.log('item', item)
-        console.log('index', index)
-        console.log("Number(item.index_rows)", item.index_rows)
-
         if (row_type == "causes") {
             var arr = $filter('filter')(arr_def, function (_item) {
                 return (_item.no >= no && _item.id_node == seq_node && _item.seq_guide_word == seq_guide_word
@@ -3452,19 +3447,16 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
         else if (row_type == "consequences") {
             newInput.causes = item.causes;
+            
         } else if (row_type == "category") {
             newInput.causes = item.causes;
             newInput.consequences = item.consequences;
         }
         $scope.selectdata_nodeworksheet = xseq;
-
         running_index_worksheet(seq);
         index = index_rows;
 
         // console.clear();
-        console.log('iNo', iNo);
-        console.log('index', index);
-        console.log('newInput', newInput);
         running_index_level1_lv1($scope.data_nodeworksheet, iNo, index, newInput);
 
         if (row_type == "causes" || row_type == "consequences") {
@@ -3532,6 +3524,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
 
     $scope.removeDataNodeWorksheet = function (row_type, item, index) {
+        console.log('default => ',item)
         var seq_node = item.seq_node;
         var seq_guide_word = (item.seq_guide_word == null ? item.id_guide_word : item.seq_guide_word);
         var seq = item.seq;
@@ -3595,7 +3588,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             arrCheck[0].responder_user_email = null;
             arrCheck[0].responder_user_displayname = null;
             arrCheck[0].responder_user_img = null;
-
+  
             apply();
             return;
         }
@@ -3633,6 +3626,18 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         (item.seq == seq
                             || (item.seq_consequences == seq_consequences && item.seq_causes == seq_causes))
                     );
+                });
+
+                // after reset no
+                const guidewords_no = item.guidewords_no;
+                const causes_no = item.causes_no;
+                const consequences_no = item.consequences_no;
+                $scope.data_nodeworksheet.forEach(function(item) {
+                    if ( item.guidewords_no == guidewords_no && item.causes_no == causes_no ) {
+                        if (item.consequences_no > consequences_no ) {
+                            item.consequences_no = item.consequences_no - 1;
+                        }
+                    }
                 });
 
             } else if (row_type == "category") {
@@ -3728,6 +3733,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         arr_items.sort((a, b) => a.no - b.no);
         var first_row = true;
         var iNoNewsafety_critical_equipment_show = 1;
+        var iNoNew = 1;
 
         for (let i = 0; i < arr_items.length; i++) {
             arr_items[i].consequences_no = (iNoNew);
@@ -5145,9 +5151,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         var _implement = false;
         if (type_text == "implement_uncheck") {
-            _arr.implement = 0; _implement = true;
+            _arr.implement = 0; 
+            _implement = true;
         } else if (type_text == "implement_check") {
-            _arr.implement = 1; _implement = true;
+            _arr.implement = 1; 
+            _implement = true;
         }
         if (_implement) {
             //set Data
@@ -5219,7 +5227,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         });
         if (arr_submit.length > 0) { $scope.submit_type = true; } else { $scope.submit_type = false; }
         unsavedChanges = true;
-
     }
 
     function action_type_changed(_arr, _seq) {

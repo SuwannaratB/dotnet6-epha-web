@@ -371,24 +371,31 @@
                             <!-- functional location -->
                             <div class="col-md-7 p-1 align-items-top">
                                 <div class="row g-0 align-items-top">
-
                                     <div class="col-5 p-1">
                                         <label class="form-label ps-0" for="organizerSingle">
                                             Functional Location
                                         </label>
-
-                                        <label class="form-label ps-0" ng-if="select_history_tracking_record"><a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip" data-bs-placement="top" title=" Functional Location : TPX-76-LICSA-002-TX" data-bs-html="true"></a></label>
-
+                                        <label class="form-label ps-0" ng-if="select_history_tracking_record">
+                                            <a class="form-label far fa-comment-alt text-warning cursor-pointer" 
+                                                data-bs-toggle="tooltip" 
+                                                data-bs-placement="top" 
+                                                title=" Functional Location : TPX-76-LICSA-002-TX" 
+                                                data-bs-html="true">
+                                            </a>
+                                        </label>
                                         <div ng-if="!(item.expense_type=='CAPEX' && (item.sub_expense_type=='Study' || item.sub_expense_type=='Internal Study'))">
                                             <select class="form-control js-choice-functional"
                                                     ng-class="{'disabled-link':(!tab_general_active || !(tab_general_active && data_header[0].pha_status<=12 ))}"
                                                     data-choices="data-choices"
                                                     data-options='{"removeItemButton":true,"placeholder":true}'
-                                                    ng-change="actionChange(item,item.seq,'')" ng-model='item.functional_location'
+                                                    ng-change="actionChange(item,item.seq,'')" 
+                                                    ng-model='item.functional_location'
                                                     ng-if="tab_general_active && !(item.expense_type=='CAPEX' && (item.sub_expense_type=='Study' || item.sub_expense_type=='Internal Study'))">
-                                                <option ng-repeat="item2 in master_functional" ng-value="item2.id">{{item2.name}}</option>
+                                                <option disabled ng-value="null">Please select</option>
+                                                <option ng-repeat="item2 in master_functional" 
+                                                        ng-value="item2.id">{{item2.name}}
+                                                </option>
                                             </select>
-
                                             <select class="form-control disabled-link"
                                                     ng-model='item.functional_location'
                                                     ng-if="!tab_general_active && !(item.expense_type=='CAPEX' && (item.sub_expense_type=='Study' || item.sub_expense_type=='Internal Study'))">
@@ -398,9 +405,12 @@
                                         </div>
 
                                         <div ng-if="(item.expense_type=='CAPEX' && (item.sub_expense_type=='Study' || item.sub_expense_type=='Internal Study'))">
-                                            <input class="form-control rounded-1" ng-class="{'disabled-link':(!tab_general_active)}"
-                                                   type="text" placeholder="Functional Location"
-                                                   name="other_functional_location" ng-model="item.other_functional_location" />
+                                            <input class="form-control rounded-1" 
+                                                    ng-class="{'disabled-link':(!tab_general_active)}"
+                                                   type="text" 
+                                                   placeholder="Functional Location"
+                                                   name="other_functional_location" 
+                                                   ng-model="item.other_functional_location" />
                                         </div>
 
 
@@ -2145,7 +2155,8 @@
                                                                     <a class="dropdown-item text-danger"
                                                                        ng-if="!(item.causes_no == 1)"
                                                                        ng-click="removeDataNodeWorksheet('causes',item,$index)">
-                                                                        <span class="fas fa-times-circle"></span> Remove
+                                                                        <span class="fas fa-times-circle"></span> 
+                                                                        Remove
                                                                     </a>
                                                                 </div>
                                                                 <br>
@@ -2223,7 +2234,8 @@
                                                                     <a class="dropdown-item text-danger"
                                                                         ng-if="!(item.consequences_no == 1)"
                                                                         ng-click="removeDataNodeWorksheet('consequences',item,$index)">
-                                                                        <span class="fas fa-times-circle"></span> Remove
+                                                                        <span class="fas fa-times-circle"></span> 
+                                                                        Remove
                                                                     </a>
                                                                 </div>
                                                                 <br>
@@ -2928,6 +2940,7 @@
                                                     </label>
                                                 </div>
                                             </td>
+
                                             <td class="align-top rating white-space-nowrap">
                                                 <div class="ms-3">
                                                     <label>
@@ -2935,6 +2948,7 @@
                                                     </label>
                                                 </div>
                                             </td>
+
                                             <td class="align-top rating white-space-nowrap">
                                                 <div class="ms-3">
                                                     <label>
@@ -2942,6 +2956,7 @@
                                                     </label>
                                                 </div>
                                             </td>
+
                                             <td class="align-top rating white-space-nowrap text-start">
                                                 <div class="ms-3">
                                                     <label>
@@ -2949,6 +2964,7 @@
                                                     </label>
                                                 </div>
                                             </td>
+
                                             <td class="align-top rating white-space-nowrap">
                                                 <div class="ms-3">
                                                     <label>
@@ -2956,6 +2972,7 @@
                                                     </label>
                                                 </div>
                                             </td>
+
                                             <td class="align-top rating white-space-nowrap" ng-if="data_header[0].pha_status >12">
                                                 <div class="ms-3 text-start d-none">
                                                     <a class="nametext ms-3 filename-text me-2 cursor-pointer" ng-click="downloadFileOwner(item)"
@@ -2986,6 +3003,7 @@
                                                 </div>
 
                                             </td>
+
                                             <td class="align-top rating white-space-nowrap">
                                                 <div class="ms-3">
 
@@ -2998,6 +3016,7 @@
                                                            style="cursor: pointer;width:20px; height:20px;">
                                                 </div>
                                             </td>
+
                                             <td class="align-top rating white-space-nowrap">
                                                 <input type="date" class="form-control datetimepicker rounded-1" ng-class="{'disabled-link':(!tab_managerecom_active)}"
                                                        placeholder="Start Date dd/mm/yyyy"
@@ -3010,6 +3029,7 @@
                                                     Please provide a valid Responder.
                                                 </div>
                                             </td>
+
                                             <td class="align-top rating white-space-nowrap">
                                                 <input type="date" class="form-control  datetimepicker rounded-1" ng-class="{'disabled-link':(!tab_managerecom_active)}"
                                                        placeholder="End Date dd/mm/yyyy"
@@ -3020,27 +3040,28 @@
                                                     Please provide a valid Responder.
                                                 </div>
                                             </td>
+
                                             <td class="align-top rating white-space-nowrap ">
                                                 <div class="d-flex align-items-center text-end ">
                                                     <div class="align-items-center ">
                                                         <p class="transition-none fs--2p-1 ps-0 text-center rounded-1 cursor-pointer"
                                                            ng-click="openModalDataRAM_Worksheet(item,'s',item.seq,'action',item.id_ram)" style="width: 20px; height:20px">
-                                                            {{item.ram_action_security}}
+                                                            {{item.ram_befor_security}}
                                                         </p>
                                                     </div>
 
                                                     <div class="align-items-center ">
                                                         <p class="transition-none fs--2p-1 ps-0 text-center rounded-1 cursor-pointer"
                                                            ng-click="openModalDataRAM_Worksheet(item,'l',item.seq,'action',item.id_ram)" style="width: 20px; height:20px">
-                                                            {{item.ram_action_likelihood}}
+                                                            {{item.ram_befor_likelihood}}
                                                         </p>
                                                     </div>
 
                                                     <div class="align-items-center ">
-                                                        <p ng-style=" { 'background-color' : ((item.ram_action_risk == 'H') ? 'red' : ((item.ram_action_risk == 'M') ? 'yellow' : ((item.ram_action_risk == 'L') ? 'green' : '#D3D3D3')) ) }"
+                                                        <p ng-style=" { 'background-color' : ((item.ram_befor_risk == 'H') ? 'red' : ((item.ram_befor_risk == 'M') ? 'yellow' : ((item.ram_befor_risk == 'L') ? 'green' : '#D3D3D3')) ) }"
                                                            class="transition-none fs--2p-1 ps-0 text-center rounded-1 cursor-pointer"
                                                            ng-click="openModalDataRAM_Worksheet(item,'r',item.seq,'action',item.id_ram)" style="width: 20px; height:20px">
-                                                            {{item.ram_action_risk}}
+                                                            {{item.ram_befor_risk}}
                                                         </p>
                                                     </div>
                                                 </div>
@@ -3051,27 +3072,28 @@
                                                     <div class="align-items-center ">
                                                         <p class="transition-none fs--2p-1 ps-0 text-center rounded-1 cursor-pointer"
                                                            ng-click="openModalDataRAM_Worksheet(item,'s',item.seq,'after',item.id_ram)" style="width: 20px; height:20px">
-                                                            {{item.ram_after_security}}
+                                                            {{item.ram_action_security}}
                                                         </p>
                                                     </div>
 
                                                     <div class="align-items-center ">
                                                         <p class="transition-none fs--2p-1 ps-0 text-center rounded-1 cursor-pointer"
                                                            ng-click="openModalDataRAM_Worksheet(item,'l',item.seq,'after',item.id_ram)" style="width: 20px; height:20px">
-                                                            {{item.ram_after_likelihood}}
+                                                            {{item.ram_action_likelihood}}
                                                         </p>
                                                     </div>
 
                                                     <div class="align-items-center ">
-                                                        <p ng-style=" {'color': item.ram_after_risk === 'L' ? 'white' : 'black','background-color' : ((item.ram_after_risk == 'H') ? 'red' : ((item.ram_after_risk == 'M') ? 'yellow' : ((item.ram_after_risk == 'L') ? 'green' : '#D3D3D3')) )}"
+                                                        <p ng-style=" { 'background-color' : ((item.ram_action_risk == 'H') ? 'red' : ((item.ram_action_risk == 'M') ? 'yellow' : ((item.ram_action_risk == 'L') ? 'green' : '#D3D3D3')) ) }"
                                                            class="transition-none fs--2p-1 ps-0 text-center rounded-1 cursor-pointer"
                                                            ng-click="openModalDataRAM_Worksheet(item,'r',item.seq,'after',item.id_ram)" style="width: 20px; height:20px;">
-                                                            {{item.ram_after_risk}}
+                                                            {{item.ram_action_risk}}
                                                         </p>
                                                     </div>
                                                 </div>
 
                                             </td>
+                                            
                                             <td class="align-top rating white-space-nowrap">
                                                 <div class="ms-3">
                                                     <label>
@@ -3079,6 +3101,7 @@
                                                     </label>
                                                 </div>
                                             </td>
+
                                             <td class="align-top  px-0" style=" width: 80px;">
                                                 <div class="align-items-center ">
                                                     <p><b>{{item.reviewer_date}}</b></p>
