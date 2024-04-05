@@ -2073,6 +2073,16 @@
                                                                         <span class="fas fa-copy"></span>
                                                                         Add
                                                                     </a>
+                                                                    <div class="dropdown-divider"></div>        
+                                                                    <a class="dropdown-item text-primary" ng-click="copyList('list_system',item.seq)">
+                                                                        <span class="fas fa-copy"></span>
+                                                                        Copy
+                                                                    </a>
+                                                                    <div class="dropdown-divider" ng-if="data_copy"></div>        
+                                                                    <a class="dropdown-item" ng-if="data_copy" ng-click="pasteList('list_system',item.seq)">
+                                                                        <span class="fas fa-copy"></span>
+                                                                        Paste
+                                                                    </a>                                                                    
                                                                     <div class="dropdown-divider " ng-if="!(item.list_system_no == 1)"></div>
                                                                     <a class="dropdown-item text-danger" ng-if="!(item.list_system_no == 1)"
                                                                        ng-click="remove_listworksheet('list_system',item,$index)">

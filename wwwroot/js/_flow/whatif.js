@@ -3245,6 +3245,46 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         apply();
 
     }
+    $scope.copyList = function (level, seq) {
+        if (level && seq) {
+            $scope.data_copy = $scope.data_listworksheet.filter(function(item) {
+                return item.seq === seq;
+            });
+        }
+        console.log("show copy",$scope.data_copy)
+    }
+
+    $scope.pasteList = function (level, seq) {
+        if ($scope.data_copy && level && seq) {
+            $scope.data_listworksheet.forEach(element => {
+                if (element.seq === seq) {
+                   element.action_change = 1;
+                   element.list_system = $scope.data_copy[0].list_system
+                   element.list_sub_system = $scope.data_copy[0].list_sub_system;
+                   element.causes = $scope.data_copy[0].causes;
+                   element.consequences = $scope.data_copy[0].consequences;
+                   element.category_type = $scope.data_copy[0].category_type;
+                   element.ram_befor_risk = $scope.data_copy[0].ram_befor_risk;
+                   element.ram_befor_security = $scope.data_copy[0].ram_befor_security;
+                   element.ram_befor_likelihood = $scope.data_copy[0].ram_befor_likelihood;
+                   element.major_accident_event = $scope.data_copy[0].major_accident_event;
+                   element.existing_safeguards = $scope.data_copy[0].existing_safeguards;
+                    //element.recommendations_no = $scope.data_copy[0].recommendations_no;
+                   element.ram_after_risk = $scope.data_copy[0].ram_after_risk;
+                   element.ram_after_security = $scope.data_copy[0].ram_after_security;
+                   element.ram_after_likelihood = $scope.data_copy[0].ram_after_likelihood;
+                   element.recommendations = $scope.data_copy[0].recommendations;
+                   element.safety_critical_equipment_tag = $scope.data_copy[0].safety_critical_equipment_tag;
+                   element.responder_user_id = $scope.data_copy[0].responder_user_id;
+                   element.responder_user_name = $scope.data_copy[0].responder_user_name;
+                   element.responder_user_displayname = $scope.data_copy[0].responder_user_displayname;
+                   element.responder_user_email = $scope.data_copy[0].responder_user_email;
+                   element.responder_user_img = $scope.data_copy[0].responder_user_img;
+                }
+            });
+            apply();
+        }
+    }
 
     $scope.newdata_worksheet_lv1 = function (row_type, item, index) {
 
