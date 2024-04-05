@@ -1244,7 +1244,7 @@
                          id="tab-ram" role="tabpanel" aria-labelledby="ram-tab">
 
                         <!------&& tab_worksheet_active---->
-                        <div class="m-3 row  gx-0 align-items-center" ng-if="flow_role_type == 'admin' ">
+                        <div class="m-3 row  gx-0 align-items-center" ng-if="flow_role_type == 'admin' && tab_worksheet_active ">
                             <div class="card px-2 pb-2 ">
                                 <div class="row g-3 justify-content-between align-items-center pt-2 pb-3">
                                     <div class="col-10">
@@ -1986,7 +1986,7 @@
                                                     scope="col" 
                                                     data-toggle="tooltip" 
                                                     data-placement="top" 
-                                                    title="{{data_tooltip[4].title_th}}  {{data_tooltip[4].title_en}}"
+                                                    title="P - People&#10;A - Asset&#10;E - Environment&#10;R - Reputation&#10;Q - Quality"
                                                     style="padding: 0 !important;" 
                                                     ng-if="select_columns_level == 5">
                                                     CAT<br>(P/A/E/R/Q) 
