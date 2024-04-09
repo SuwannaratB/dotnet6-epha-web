@@ -665,13 +665,13 @@
                                                                            type="time" placeholder="hour : minute" />
 
                                                                     <select class="form-select rounded-1  me-1 p-1" ng-model="item.meeting_start_time_hh"
-                                                                            style="width:60px">
+                                                                            style="width:60px" ng-change="actionChange(item,item.seq,'')">
                                                                         <option ng-repeat="item2 in master_hours" ng-value="item2.id">
                                                                             {{item2.name}}
                                                                         </option>
                                                                     </select>
                                                                     <select class="form-select rounded-1  me-1 p-1" ng-model="item.meeting_start_time_mm"
-                                                                            style="width:60px">
+                                                                            style="width:60px" ng-change="actionChange(item,item.seq,'')">
                                                                         <option ng-repeat="item2 in master_minutes" ng-value="item2.id">
                                                                             {{item2.name}}
                                                                         </option>
@@ -690,13 +690,13 @@
                                                                            type="time" placeholder="hour : minute" />
 
                                                                     <select class="form-select rounded-1  me-1 p-1" ng-model="item.meeting_end_time_hh"
-                                                                            style="width:60px">
+                                                                            style="width:60px" ng-change="actionChange(item,item.seq,'')">
                                                                         <option ng-repeat="item2 in master_hours" ng-value="item2.id">
                                                                             {{item2.name}}
                                                                         </option>
                                                                     </select>
                                                                     <select class="form-select rounded-1  me-1 p-1" ng-model="item.meeting_end_time_mm"
-                                                                            style="width:60px">
+                                                                            style="width:60px" ng-change="actionChange(item,item.seq,'')">
                                                                         <option ng-repeat="item2 in master_minutes" ng-value="item2.id">
                                                                             {{item2.name}}
                                                                         </option>
@@ -1244,7 +1244,7 @@
                          id="tab-ram" role="tabpanel" aria-labelledby="ram-tab">
 
                         <!------&& tab_worksheet_active---->
-                        <div class="m-3 row  gx-0 align-items-center" ng-if="flow_role_type == 'admin' && tab_worksheet_active ">
+                        <div class="m-3 row  gx-0 align-items-center" ng-if="flow_role_type == 'admin' && tab_worksheet_active">
                             <div class="card px-2 pb-2 ">
                                 <div class="row g-3 justify-content-between align-items-center pt-2 pb-3">
                                     <div class="col-10">

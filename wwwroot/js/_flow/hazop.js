@@ -4746,21 +4746,22 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             try {
                 $scope.data_session[0].meeting_date = $scope.data_session[0].meeting_date.toISOString().split('T')[0];
             } catch { }
-            if ($scope.data_session[i].meeting_start_time !== null) {
+            try {
                 //12/31/1969 7:55:00 PM 
                 var hh = $scope.data_session[i].meeting_start_time_hh; var mm = $scope.data_session[i].meeting_start_time_mm;
                 var valtime = "1970-01-01T" + (hh).substring(hh.length - 2) + ":" + (mm).substring(mm.length - 2) + ":00.000Z";
-
+  
                 $scope.data_session[i].meeting_start_time = new Date(valtime);
-            }
-            if ($scope.data_session[i].meeting_end_time !== null) {
+            } catch { }
+  
+            try {
                 //12/31/1969 7:55:00 PM
                 var hh = $scope.data_session[i].meeting_end_time_hh; var mm = $scope.data_session[i].meeting_end_time_mm;
                 var valtime = "1970-01-01T" + (hh).substring(hh.length - 2) + ":" + (mm).substring(mm.length - 2) + ":00.000Z";
                 $scope.data_session[i].meeting_end_time = new Date(valtime);
-            }
+            } catch { }
         }
-
+  
         var arr_active = [];
         angular.copy($scope.data_session, arr_active);
         var arr_json = $filter('filter')(arr_active, function (item) {
