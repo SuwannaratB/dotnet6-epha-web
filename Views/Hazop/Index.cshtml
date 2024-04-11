@@ -2168,7 +2168,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="autocomplete-container" style=" width: 100%; " ng-class="{'disabled-link':(!tab_worksheet_active)}">
-                                                            <textarea class="form-control form-control-sm rounded-1 p-0 m-0 w-100 border border-end-0 border-top-0"
+                                                            <textarea class="form-control form-control-sm rounded-1 p-0 m-0 w-100 border border-end-0 border-top-0" 
                                                                       style=" width: 100vh; font-size: 10px;"
                                                                       id="causes_worksheet_{{item.seq}}" 
                                                                       name="causes_worksheet_{{item.seq}}"
@@ -2191,7 +2191,6 @@
                                                          class="invalid-feedback text-danger">
                                                         Please provide a valid Causes.
                                                     </div>
-
                                                 </td>
 
                                                 @* consequences *@
@@ -2315,6 +2314,10 @@
                                                             </option>
                                                         </select>
                                                     </div>
+                                                    <div id="valid-nodeworksheet-category_type-{{item.seq}}"
+                                                        class="invalid-feedback text-danger" style="margin-top: 17px;">
+                                                        Please a valid.
+                                                    </div>
                                                 </td>
 
                                                 <td class="align-top border border-light border-end-0  border-start-0  border-top-0 "
@@ -2371,6 +2374,10 @@
                                                             <option value="N">N</option>
                                                         </select>
                                                     </div>
+                                                    <div id="valid-nodeworksheet-major_accident_event-{{item.seq}}"
+                                                        class="invalid-feedback text-danger" style="margin-top: 17px;">
+                                                        Please a valid.
+                                                    </div>
                                                 </td>
 
                                                 <td class="align-top border border-light border-end-0  border-start-0  border-top-0 " 
@@ -2413,6 +2420,10 @@
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                    </div>
+                                                     <div id="valid-nodeworksheet-existing_safeguards-{{item.seq}}"
+                                                        class="invalid-feedback text-danger">
+                                                        Please provide a valid Existing Safeguards.
                                                     </div>
                                                 </td>
 
@@ -2494,7 +2505,9 @@
                                                                       placeholder="Recommendations" 
                                                                       rows="3"
                                                                       ng-model="item.recommendations"
-                                                                      ng-keyup="filterResultHistory(item.recommendations, 'recommendations', 'recommendations_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')">
+                                                                      ng-change="recommentAction($index)"
+                                                                      ng-keyup="
+                                                                      filterResultHistory(item.recommendations, 'recommendations', 'recommendations_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')">
                                                             </textarea>
                                                             <div class="autocomplete-dropdown" style="position: absolute;" ng-show="isShow == 'recommendations_worksheet_'+ item.seq"
                                                                  ng-class="{'ng-show' : (filteredArr[0].fieldID == ('recommendations_worksheet_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('recommendations_worksheet_'+item.seq)) }">
@@ -2538,14 +2551,16 @@
                                                 <td class="align-top border border-light border-end-0  border-start-0  border-top-0 " style="padding: 0 !important; width: 120px;">
                                                     <div class="d-flex align-items-center ">
                                                         <div class="" ng-class="{'disabled-link':(!tab_worksheet_active)}">
-                                                            <button ng-click="openDataEmployeeAdd(item,'owner')" 
+                                                            <button ng-click="
+                                                                    openDataEmployeeAdd(item,'owner'); 
+                                                                    recommentAction_valid(item);" 
                                                                     class="btn btn-link px-0 mx-1"
                                                                     data-toggle="tooltip" 
-                                                                    data-placement="top" 
                                                                     title="Add Employee">
                                                                 <span class="far fa-address-book"></span>
                                                             </button>
-                                                            <button class="btn btn-sm transition-none btn-reveal fs--2 p-1 " type="button"
+                                                            <button class="btn btn-sm transition-none btn-reveal fs--2 p-1 " 
+                                                                    type="button"
                                                                     ng-click="removeDataEmpWorkSheet('worksheet',item.seq)"
                                                                     ng-if="item.responder_id>0">
                                                                 <span class="fas fa-times text-danger"></span>
@@ -2556,7 +2571,7 @@
                                                         </p>
                                                     </div>
                                                     <div id="valid-nodeworksheet-responder-{{item.seq}}"
-                                                         class="invalid-feedback text-danger">
+                                                         class="invalid-feedback text-danger ">
                                                         Please provide a valid Responder.
                                                     </div>
                                                 </td>
@@ -3045,14 +3060,14 @@
                                                 <div class="d-flex align-items-center text-end ">
                                                     <div class="align-items-center ">
                                                         <p class="transition-none fs--2p-1 ps-0 text-center rounded-1 cursor-pointer"
-                                                           ng-click="openModalDataRAM_Worksheet(item,'s',item.seq,'action',item.id_ram)" style="width: 20px; height:20px">
+                                                           style="width: 20px; height:20px">
                                                             {{item.ram_befor_security}}
                                                         </p>
                                                     </div>
 
                                                     <div class="align-items-center ">
                                                         <p class="transition-none fs--2p-1 ps-0 text-center rounded-1 cursor-pointer"
-                                                           ng-click="openModalDataRAM_Worksheet(item,'l',item.seq,'action',item.id_ram)" style="width: 20px; height:20px">
+                                                           style="width: 20px; height:20px">
                                                             {{item.ram_befor_likelihood}}
                                                         </p>
                                                     </div>
@@ -3060,7 +3075,7 @@
                                                     <div class="align-items-center ">
                                                         <p ng-style=" { 'background-color' : ((item.ram_befor_risk == 'H') ? 'red' : ((item.ram_befor_risk == 'M') ? 'yellow' : ((item.ram_befor_risk == 'L') ? 'green' : '#D3D3D3')) ) }"
                                                            class="transition-none fs--2p-1 ps-0 text-center rounded-1 cursor-pointer"
-                                                           ng-click="openModalDataRAM_Worksheet(item,'r',item.seq,'action',item.id_ram)" style="width: 20px; height:20px">
+                                                           style="width: 20px; height:20px">
                                                             {{item.ram_befor_risk}}
                                                         </p>
                                                     </div>
@@ -3078,15 +3093,17 @@
 
                                                     <div class="align-items-center ">
                                                         <p class="transition-none fs--2p-1 ps-0 text-center rounded-1 cursor-pointer"
-                                                           ng-click="openModalDataRAM_Worksheet(item,'l',item.seq,'after',item.id_ram)" style="width: 20px; height:20px">
+                                                            ng-click="openModalDataRAM_Worksheet(item,'r',item.seq,'action',item.id_ram)"
+                                                            style="width: 20px; height:20px">
                                                             {{item.ram_action_likelihood}}
                                                         </p>
                                                     </div>
 
                                                     <div class="align-items-center ">
                                                         <p ng-style=" { 'background-color' : ((item.ram_action_risk == 'H') ? 'red' : ((item.ram_action_risk == 'M') ? 'yellow' : ((item.ram_action_risk == 'L') ? 'green' : '#D3D3D3')) ) }"
-                                                           class="transition-none fs--2p-1 ps-0 text-center rounded-1 cursor-pointer"
-                                                           ng-click="openModalDataRAM_Worksheet(item,'r',item.seq,'after',item.id_ram)" style="width: 20px; height:20px;">
+                                                            class="transition-none fs--2p-1 ps-0 text-center rounded-1 cursor-pointer"
+                                                            ng-click="openModalDataRAM_Worksheet(item,'r',item.seq,'action',item.id_ram)"
+                                                            style="width: 20px; height:20px;">
                                                             {{item.ram_action_risk}}
                                                         </p>
                                                     </div>

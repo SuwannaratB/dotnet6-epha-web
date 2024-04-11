@@ -4405,6 +4405,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         //check required field 
         var pha_status = $scope.data_header[0].pha_status;
+        $scope.confirmSave_status = true;
         //11	DF	Draft
         //12	WP	Waiting PHA Conduct
         //13	PC	PHA Conduct
@@ -4480,15 +4481,19 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                     if (true) {
                         arr_chk = $scope.data_nodeworksheet;
+                        console.log(arr_chk)
                         for (var i = 0; i < arr_chk.length; i++) {
 
                             if (set_valid_items(arr_chk[i].causes, 'nodeworksheet-causes-' + arr_chk[i].seq)) { bCheckValid_Worksheet = true; }
                             if (set_valid_items(arr_chk[i].consequences, 'nodeworksheet-consequences-' + arr_chk[i].seq)) { bCheckValid_Worksheet = true; }
-                            if (set_valid_items(arr_chk[i].responder_user_name, 'nodeworksheet-responder-' + arr_chk[i].seq)) { bCheckValid_Worksheet = true; }
-                            //valid-nodeworksheet-estimated-start-57
+                            // if (set_valid_items(arr_chk[i].responder_user_name, 'nodeworksheet-responder-' + arr_chk[i].seq)) { bCheckValid_Worksheet = true; }
                             if (set_valid_items(arr_chk[i].estimated_start_date, 'nodeworksheet-estimated-start-' + arr_chk[i].seq)) { bCheckValid_Manage = true; }
                             if (set_valid_items(arr_chk[i].estimated_end_date, 'nodeworksheet-estimated-end-' + arr_chk[i].seq)) { bCheckValid_Manage = true; }
-
+                            
+                            if (set_valid_items(arr_chk[i].category_type, 'nodeworksheet-category_type-' + arr_chk[i].seq)) { bCheckValid_Worksheet = true; }
+                            if (set_valid_items(arr_chk[i].major_accident_event, 'nodeworksheet-major_accident_event-' + arr_chk[i].seq)) { bCheckValid_Worksheet = true; }
+                            if (set_valid_items(arr_chk[i].existing_safeguards, 'nodeworksheet-existing_safeguards-' + arr_chk[i].seq)) { bCheckValid_Worksheet = true; }
+                            // if (set_valid_items(arr_chk[i].recommendations, 'nodeworksheet-recommendations-' + arr_chk[i].seq)) { bCheckValid_Worksheet = true; }
                         }
                     }
 
@@ -4609,7 +4614,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 $("#divLoading").hide();
 
                 if ($scope.flow_role_type == 'admin') {
-                    //mail noti
                     $('#modalSendMail').modal('show');
                 }
             }
@@ -4658,8 +4662,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 id_valid.className = "feedback text-danger";
                 id_valid.focus();
                 return true;
+            } else { 
+                id_valid.className = "invalid-feedback text-danger"; 
+                return false; 
             }
-            else { id_valid.className = "invalid-feedback text-danger"; return false; }
 
         } catch (ex) { }
     }
@@ -5305,6 +5311,20 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
     };
 
+    $scope.recommentAction = function(index) {
+        var item = $scope.data_nodeworksheet[index];
+        var data = item.responder_user_name;
+        if (!item.recommendations) {
+            data = 'true';
+        }
+        set_valid_items(data, 'nodeworksheet-responder-' + item.seq)
+    }
+
+    $scope.recommentAction_valid = function(item) {
+        $scope.recomment_clear_valid = 'nodeworksheet-responder-' + item.seq;
+        // clear_valid_items('nodeworksheet-responder-' + item.seq)
+    }
+
     $scope.filterResultHistory = function (fieldText, fieldName, fieldID) {
         //if (fieldText.length < 3) { return; }
         $scope.filteredArr[0].fieldID = null;
@@ -5406,7 +5426,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     page_load();
 
     $scope.openDataEmployeeAdd = function (item, form_type) {
-
         $scope.selectedData = item;
         $scope.selectdata_session = item.seq;
         $scope.selectDatFormType = form_type;//member, approver, owner
@@ -5527,7 +5546,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 running_no_level1($scope.data_memberteam, null, null);
 
                 $scope.MaxSeqDataMemberteam = Number($scope.MaxSeqDataMemberteam) + 1
-
             }
 
         }
@@ -5581,6 +5599,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             arr_items.action_change = 1;
 
         }
+
+        clear_valid_items($scope.recomment_clear_valid);
+        $scope.recomment_clear_valid = '';
+
         apply();
 
         if (xformtype == "owner") {

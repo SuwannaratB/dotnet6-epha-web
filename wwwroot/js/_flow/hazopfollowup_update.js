@@ -30,15 +30,18 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         const fileInfoSpan = document.getElementById('filename' + fileSeq);
 
         if (fileInput.files.length > 0) {
+            console.log('if')
             const file = fileInput.files[0];
             const fileName = file.name;
             const fileSize = Math.round(file.size / 1024);
             fileInfoSpan.textContent = `${fileName} (${fileSize} KB)`;
-
+            $scope.fileInfoSpan = `${fileName} (${fileSize} KB)`;
+            
             var file_path = uploadFile(file, fileSeq, fileName, fileSize);
 
         } else {
             fileInfoSpan.textContent = "";
+            $scope.fileInfoSpan = '';
         }
     }
     function uploadFile(file_obj, seq, file_name, file_size) {
@@ -90,6 +93,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                                 arr[0].document_file_path = (url_ws.replace('/api/', '')) + file_path;// (url_ws.replace('/api/', '/')) + 'AttachedFileTemp/Hazop/' + file_name;
                                 arr[0].document_module = $scope.document_module;
                                 arr[0].action_change = 1;
+                                clear_valid_items('upload_file-'+ $scope.seqUpload);
+                                $scope.seqUpload = null;
                                 apply();
 
                             }
@@ -188,6 +193,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
 
         $scope.employeelist = [];
+        $scope.implementItem = [];
+        $scope.fileInfoSpan = '';
 
         // ล้างช่องข้อมูลหลังจากเพิ่มข้อความ
         $scope.employee_id = '';
@@ -266,7 +273,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
         });
     }
-
 
     //add Drawing
     $scope.addDataWorksheetDrawing = function (item_draw, seq_nodeworksheet) {
@@ -410,6 +416,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                 $scope.data_drawingworksheet_responder = arr.drawingworksheet_responder;
                 $scope.data_drawingworksheet_reviewer = arr.drawingworksheet_reviewer;
 
+                // add key implement
+                $scope.data_details.forEach(function (_item) {
+                    _item.implement = false;
+                });
+
                 if (true) {
                     $scope.MaxSeqdata_drawing_worksheet = 0;
                     var arr_check = $filter('filter')(arr.max, function (item) { return (item.name == 'drawingworksheet'); });
@@ -469,7 +480,17 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
         if ($scope.flow_status == 13) {
             item.action_change = 1;
-            $scope.confirmSaveFollowup('save', item);
+
+            if (item.implement) {
+                const validRemark = set_valid_items(item.responder_comment, 'remark-'+ item.seq);
+                const validUploadFile = set_valid_items($scope.fileInfoSpan, 'upload_file-'+ item.seq);
+
+                if (!validRemark && !validUploadFile) {
+                    $scope.confirmSaveFollowup('save', item);
+                }
+            }else {
+                $scope.confirmSaveFollowup('save', item);
+            }
 
         } else if ($scope.flow_status == 14) {
 
@@ -478,6 +499,72 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         }
 
     };
+
+    $scope.actionImplement = function (item) {
+        var docfiles = $filter('filter')($scope.data_drawingworksheet, function (_item) {
+            return (_item.id_worksheet == item.seq && 
+                    _item.action_type != 'delete' &&
+                    _item.document_file_name != null
+            );
+        });
+
+        if (docfiles.length > 0) {
+            $scope.fileInfoSpan = docfiles[0].document_file_name;
+        }else {
+            $scope.fileInfoSpan = '';
+        }
+
+        $scope.data_details.forEach(function (_item) {
+            if (item.seq == _item.seq) {
+                _item.implement = !_item.implement;
+
+                if (_item.implement) {
+                    set_valid_items(_item.responder_comment, 'remark-'+_item.seq);
+                    set_valid_items($scope.fileInfoSpan, 'upload_file-'+_item.seq);
+                }else {
+                    clear_valid_items('remark-'+_item.seq);
+                    clear_valid_items('upload_file-'+_item.seq);
+                }
+             
+            }
+        });
+    }
+
+    $scope.actionInput = function (item) {
+        $scope.data_details.forEach(function (_item) {
+            if (item.seq == _item.seq && item.implement) {
+                // const field = 'remark-'+_item.seq
+                set_valid_items(_item.responder_comment, 'remark-'+_item.seq);
+                // set_valid_items(_item.responder_comment, 'upload_file-'+_item.seq);
+            }
+        });
+    }
+
+    $scope.setSeqUpload = function (seq) {
+        $scope.seqUpload = seq;
+    }
+
+    function set_valid_items(_item, field) {
+        try {
+            var id_valid = document.getElementById('valid-' + field);
+            console.log(id_valid)
+            if (_item == '' || _item == null) {
+                id_valid.className = "feedback text-danger";
+                id_valid.focus();
+                return true;
+            } else { 
+                id_valid.className = "invalid-feedback text-danger"; 
+                return false; 
+            }
+
+        } catch (ex) { }
+    }
+
+    function clear_valid_items(field) {
+        var id_valid = document.getElementById('valid-' + field);
+        id_valid.className = "invalid-feedback text-danger";
+    }
+
     $scope.showConfirmDialogSubmit = function (item, action) {
         clear_form_valid();
 
