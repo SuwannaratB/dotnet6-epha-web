@@ -100,7 +100,7 @@
                                                         Risk Assessment Matrix
                                                     </th>
                                                     <th class="sort align-middle " colspan="1" rowspan="3" scope="col">
-                                                        Document File
+                                                        HAZOP RECOMMENDATION <br /> RESPONSE SHEET 
                                                     </th>
                                                     <th class="sort align-middle " colspan="1" rowspan="3" scope="col" ng-if="!(flow_status == 13)">
                                                         Action<br />Status<br />(Items)
@@ -112,7 +112,7 @@
                                                         Action Close Date
                                                     </th>
                                                     <th class="sort align-middle " colspan="1" rowspan="3" scope="col" ng-if="(flow_status == 13)">
-                                                        Remark
+                                                    Action responded
                                                     </th>
 
                                                     <th class="sort align-middle " colspan="1" rowspan="3">
@@ -200,7 +200,7 @@
 
                                                     <td class="align-top  px-1">
                                                         <div class="align-items-center ">
-                                                            <p class="mb-0 ms-3 fw-bold" style="width: 30px;" rows="3">{{item_d.causes_no+'.'}}</p>
+                                                            <p class="mb-0 ms-3 fw-bold" style="width: 25px;" rows="3">{{item_d.causes_no+'.'}}</p>
                                                         </div>
                                                     </td>
                                                     <td class="align-top  px-1">
@@ -273,7 +273,7 @@
                                                     </td>
 
 
-                                                    <td class="align-top px-1" style="min-width:200px;">
+                                                    <td class="align-top px-1" style="width:100px;">
 
                                                         <div class=" p-0 cursor-pointer " 
                                                              ng-repeat="item_x in data_drawingworksheet | filter:{id_worksheet:item_d.seq, action_type : '!delete'}">
@@ -377,7 +377,7 @@
                                                             <p><b>{{item_d.reviewer_date}}</b></p>
                                                         </div>
                                                     </td>
-                                                    <td class="align-top  px-0" style=" width: 80px;" ng-if="(flow_status == 13)">
+                                                    <td class="align-top  px-0" style=" width: 100px;" ng-if="(flow_status == 13)">
 
                                                         <textarea class="form-control form-control-sm rounded-1 p-0 mt-1 w-100 border border-end-0 border-top-0"
                                                                   style=" width: 100vh; font-size: 10px;"
