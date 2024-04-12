@@ -344,7 +344,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             if (fileName.toLowerCase().indexOf('.pdf') == -1) {
                 fileInfoSpan.textContent = "";
-                set_alert("Warning", "Please select a PDF file.");
+                set_alert_warning('Warning', 'Please select a PDF file.');
                 if ($scope.previousFile) {
                     input = $scope.previousFile;
                     document.getElementById('filename' + fileSeq).textContent = $scope.prevIileInfoSpan;
@@ -559,7 +559,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         return "";
     }
 
-    function set_alert(header, detail) {
+    /*function set_alert(header, detail) {
         try {
             $scope.$apply(function () {
                 $scope.Action_Msg_Header = header;
@@ -569,6 +569,20 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.Action_Msg_Header = header;
             $scope.Action_Msg_Detail = detail;
         }
+        $('#modalMsg').modal('show');
+    }*/
+
+    function set_alert(header, detail) {
+        $scope.Action_Msg_Header = header;
+        $scope.Action_Msg_Detail = detail;
+        $('#modalMsg').modal('show');
+    }
+
+    function set_alert_warning(header, detail) {
+        $scope.$apply(function () {
+            $scope.Action_Msg_Header = header;
+            $scope.Action_Msg_Detail = detail;
+        });
         $('#modalMsg').modal('show');
     }
 
@@ -4062,13 +4076,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         //91	CL	Closed
         //81	CN	Cancle
 
-
         //call required field
         if (true) {
             var bCheckRequiredField = false;
 
             if (action == 'submit_register' || action == 'submit_conduct' || action == 'submit_genarate') {
-
+                console.log("now it",pha_status)
                 var bCheckValid = false;
                 var arr_chk = $scope.data_general;
                 if (pha_status == "11") {
@@ -4076,13 +4089,15 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     if (arr_chk[0].sub_expense_type == '' || arr_chk[0].sub_expense_type == null) { set_alert('Warning', 'Please select a valid Sub-Expense Type'); return; }
                     if (arr_chk[0].id_apu == '' || arr_chk[0].id_apu == null) { set_alert('Warning', 'Please select a valid Area Process Unit'); return; }
 
+                    console.log($scope.data_memberteam)
 
                     arr_chk = $scope.data_memberteam;
+                    
                     if (arr_chk.length == 0) { set_alert('Warning', 'Please provide a valid Session List'); return; }
                   
                 }
                 else if (pha_status == "12") {
-
+                    
                     var bCheckValid_Session = false;
                     var bCheckValid_Node = false;
                     var bCheckValid_Worksheet = false;
@@ -4093,10 +4108,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     if (arr_chk[0].id_apu == '' || arr_chk[0].id_apu == null) { set_alert('Warning', 'Please select a valid Area Process Unit'); return; }
 
                     if (true) {
+                        console.log("so will check",$scope.data_memberteam)
                         arr_chk = $scope.data_memberteam;
                         if (arr_chk.length == 0) { set_alert('Warning', 'Please provide a valid Session List'); return; }
                         else {
                             var irows_last = arr_chk.length - 1;
+                            console.log(arr_chk,irows_last,arr_chk[irows_last].user_name)
                             if (arr_chk[irows_last].user_name == null) { set_alert('Warning', 'Please provide a valid Session List'); return; }
                         }
 

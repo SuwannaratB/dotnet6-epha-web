@@ -482,14 +482,26 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             item.action_change = 1;
 
             if (item.implement) {
-                const validRemark = set_valid_items(item.responder_comment, 'remark-'+ item.seq);
+                // const validRemark = set_valid_items(item.responder_comment, 'remark-'+ item.seq);
                 const validUploadFile = set_valid_items($scope.fileInfoSpan, 'upload_file-'+ item.seq);
 
-                if (!validRemark && !validUploadFile) {
+                if (!validUploadFile) {
+                    console.log('im save')
                     $scope.confirmSaveFollowup('save', item);
                 }
             }else {
-                $scope.confirmSaveFollowup('save', item);
+                var docfiles = $filter('filter')($scope.data_drawingworksheet, function (_item) {
+                    return (_item.id_worksheet == item.seq && 
+                            _item.action_type != 'delete' 
+                    );
+                })[0];
+
+                const validRemark = set_valid_items(item.responder_comment, 'remark-'+ item.seq);
+                const validUploadFile = set_valid_items(docfiles.document_file_name, 'upload_file-'+ item.seq);
+                if (!validRemark && !validUploadFile) {
+                    console.log('save')
+                    $scope.confirmSaveFollowup('save', item);
+                }
             }
 
         } else if ($scope.flow_status == 14) {
@@ -518,8 +530,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             if (item.seq == _item.seq) {
                 _item.implement = !_item.implement;
 
-                if (_item.implement) {
-                    set_valid_items(_item.responder_comment, 'remark-'+_item.seq);
+                if (!_item.implement) {
+                    // set_valid_items(_item.responder_comment, 'remark-'+_item.seq);
                     set_valid_items($scope.fileInfoSpan, 'upload_file-'+_item.seq);
                 }else {
                     clear_valid_items('remark-'+_item.seq);
@@ -532,7 +544,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
     $scope.actionInput = function (item) {
         $scope.data_details.forEach(function (_item) {
-            if (item.seq == _item.seq && item.implement) {
+            if (item.seq == _item.seq && !item.implement) {
                 // const field = 'remark-'+_item.seq
                 set_valid_items(_item.responder_comment, 'remark-'+_item.seq);
                 // set_valid_items(_item.responder_comment, 'upload_file-'+_item.seq);
