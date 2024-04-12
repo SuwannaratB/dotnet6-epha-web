@@ -96,13 +96,7 @@
                                                         Risk Assessment Matrix
                                                     </th>
                                                     <th class="sort align-middle " colspan="1" rowspan="3" scope="col">
-                                                        Implement
-                                                    </th>
-                                                    <th class="sort align-middle " colspan="1" rowspan="3" scope="col" >
-                                                        Remark
-                                                    </th>
-                                                    <th class="sort align-middle " colspan="1" rowspan="3" scope="col">
-                                                        Document File
+                                                        HAZOP RECOMMENDATION <br /> RESPONSE SHEET 
                                                     </th>
                                                     <th class="sort align-middle " colspan="1" rowspan="3" scope="col" ng-if="!(flow_status == 13)">
                                                         Action<br />Status<br />(Items)
@@ -113,13 +107,17 @@
                                                     <th class="sort align-middle " colspan="1" rowspan="3" scope="col" ng-if="!(flow_status == 13)">
                                                         Action Close Date
                                                     </th>
+                                                    <th class="sort align-middle " colspan="1" rowspan="3" scope="col" ng-if="(flow_status == 13)">
+                                                    Action responded
+                                                    </th>
+
                                                     <th class="sort align-middle " colspan="1" rowspan="3">
                                                         Over Due (Day)
                                                     </th>
                                                         <th class="sort align-middle " colspan="1" rowspan="3" scope="col">
                                                         Action Owner
                                                     </th>
-                                                    <th class="sort align-middle " colspan="1" rowspan="3"></th>
+                                                    <!-- <th class="sort align-middle " colspan="1" rowspan="3"></th> -->
                                                 </tr>
 
                                                 <tr class="text-center">
@@ -267,28 +265,15 @@
                                                         </div>
                                                     </td>
 
-                                                    <td class="align-top  px-0">
+                                                    <!-- <td class="align-top  px-0">
                                                         <div class="ms-3">
                                                             <input type="checkbox"
                                                                 ng-model="item_d.implement"
                                                                 ng-click="actionImplement(item_d)"
                                                                 style="cursor: pointer;width:20px; height:20px;">
                                                         </div>
-                                                    </td>
+                                                    </td> -->
 
-                                                    <td class="align-top  px-0" style=" min-width:200px;">
-                                                        <textarea class="form-control form-control-sm rounded-1 p-0 mt-1 w-100 border border-end-0 border-top-0"
-                                                                style=" width: 100vh; font-size: 10px;"
-                                                                placeholder="Remark" 
-                                                                rows="1"
-                                                                ng-change="actionInput(item_d)"
-                                                                ng-model="item_d.responder_comment">
-                                                        </textarea>
-                                                        <div id="valid-remark-{{item_d.seq}}"
-                                                            class="invalid-feedback text-danger">
-                                                            Please provide a valid Remark.
-                                                        </div>
-                                                    </td>
 
                                                     <td class="align-top px-1" style="min-width:200px;">
                                                         <div class=" p-0 cursor-pointer " 
@@ -390,6 +375,19 @@
                                                     <td class="align-top  px-0" style=" width: 70px;">
                                                         <div class="align-items-center ">
                                                             <p><b>{{item_d.estimated_end_date_text}}</b></p>
+                                                        </div>
+                                                    </td>
+                                                     <td class="align-top  px-0" style=" min-width:200px;">
+                                                        <textarea class="form-control form-control-sm rounded-1 p-0 mt-1 w-100 border border-end-0 border-top-0"
+                                                                style=" width: 100vh; font-size: 10px;"
+                                                                placeholder="Remark" 
+                                                                rows="1"
+                                                                ng-change="actionInput(item_d)"
+                                                                ng-model="item_d.responder_comment">
+                                                        </textarea>
+                                                        <div id="valid-remark-{{item_d.seq}}"
+                                                            class="invalid-feedback text-danger">
+                                                            Please provide a valid Remark.
                                                         </div>
                                                     </td>
 
