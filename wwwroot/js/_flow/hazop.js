@@ -363,6 +363,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         apply();
     };
 
+    $scope.editWorksheet = function (tab_worksheet_active) {
+        $scope.tab_worksheet_active = !tab_worksheet_active;
+    }
+
     $scope.changeTab_Focus = function (selectedTab, nameTab) {
         angular.forEach($scope.tabs, function (tab) {
             tab.isActive = false;
