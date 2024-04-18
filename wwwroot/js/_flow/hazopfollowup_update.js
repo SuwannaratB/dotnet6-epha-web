@@ -377,6 +377,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         var token_doc = conFig.pha_seq();
         var responder_user_name = conFig.responder_user_name();
         var sub_software = conFig.pha_sub_software().toLowerCase(); //'hazop';
+        
+        if (responder_user_name == "undefined") {
+            responder_user_name = "";
+        }
 
         //alert($scope.flow_role_type);
         if ($scope.flow_role_type != 'admin') {
@@ -498,18 +502,24 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
                 const validRemark = set_valid_items(item.responder_comment, 'remark-'+ item.seq);
                 const validUploadFile = set_valid_items(docfiles.document_file_name, 'upload_file-'+ item.seq);
-                if (!validRemark && !validUploadFile) {
+                const validComment= set_valid_items(item.reviewer_comment, 'comment-'+ item.seq);
+                if (!validRemark && !validUploadFile && !validComment) {
                     console.log('save')
                     $scope.confirmSaveFollowup('save', item);
                 }
             }
 
         } else if ($scope.flow_status == 14) {
-
             item.action_change = 1;
+
+            if (item.action_status == 'Close with condition') {
+                console.log(item.reviewer_comment)
+                const validComment = set_valid_items(item.reviewer_comment, 'comment-'+ item.seq);
+
+                if(validComment) return
+            }
             $scope.confirmSaveReviewFollowup('save', item);
         }
-
     };
 
     $scope.actionImplement = function (item) {
@@ -559,7 +569,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
     function set_valid_items(_item, field) {
         try {
             var id_valid = document.getElementById('valid-' + field);
-            console.log(id_valid)
             if (_item == '' || _item == null) {
                 id_valid.className = "feedback text-danger";
                 id_valid.focus();
@@ -581,7 +590,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         clear_form_valid();
 
         if (action == 'submit') {
-
+            
             //เนื่องจากย้ายมาในระดับ row
             $scope.id_worksheet_select = item.seq;
             //if (item.document_file_size == 0 || item.document_file_size == null) {
@@ -589,7 +598,35 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             //    return;
             //}
             //var fileUploadOwner = document.getElementById('attfile-owner-' + inputId);
-            if ($scope.data_drawingworksheet == null) { $scope.form_valid.valid_document_file = true; return; }
+
+            // if ($scope.data_drawingworksheet == null) { 
+            //     $scope.form_valid.valid_document_file = true; 
+            //     return; 
+            // }
+
+            // check implement
+            if (item.implement) {
+                // const validRemark = set_valid_items(item.responder_comment, 'remark-'+ item.seq);
+                const validUploadFile = set_valid_items($scope.fileInfoSpan, 'upload_file-'+ item.seq);
+
+                if (validUploadFile) {
+                    console.log('im save')
+                    return;
+                }
+            }else {
+                var docfiles = $filter('filter')($scope.data_drawingworksheet, function (_item) {
+                    return (_item.id_worksheet == item.seq && 
+                            _item.action_type != 'delete' 
+                    );
+                })[0];
+
+                const validRemark = set_valid_items(item.responder_comment, 'remark-'+ item.seq);
+                const validUploadFile = set_valid_items(docfiles.document_file_name, 'upload_file-'+ item.seq);
+                if (validRemark || validUploadFile) {
+                    return
+                }
+            }
+
             if ($scope.data_drawingworksheet.length > 0) {
                 var arr_drawing = $filter('filter')($scope.data_drawingworksheet, function (item) {
                     return (item.id_worksheet == $scope.id_worksheet_select && item.document_file_name != null);

@@ -74,7 +74,6 @@
         </div>
 
         <div class="col-6 ">
-
             <div class="d-flex align-items-center py-2  justify-content-end">
                 <span class="mx-2">
                     <button class="btn btn-outline-secondary btn-sm" style="width: 100px;" ng-click="confirmBack()">BACK</button>
@@ -85,8 +84,20 @@
                 <span class="mx-2" ng-if="export_type && false">
                     <button class="btn text-light btn-sm" style="background-color: #e90f8b;" ng-click="clickExportReport()">EXPORT/IMPORT</button>
                 </span>
-                <span class="mx-2" ng-if="save_type">
-                    <button class="btn btn-primary btn-sm" style="width: 100px;" ng-click="confirmSave('save')">SAVE</button>
+                <span class="mx-2" >
+                    <button class="btn btn-warning btn-sm" 
+                        style="width: 100px;" 
+                        ng-if="data_header[0].pha_status == 13 && action_part == 5 && (flow_role_type == 'admin' || flow_role_type == 'originator')"
+                        ng-click="editWorksheet(tab_worksheet_active)">
+                         EDIT
+                    </button>
+                </span>
+                <span class="mx-2" ng-if="save_type || (data_header[0].pha_status == 13 && action_part == 5)">
+                    <button class="btn btn-primary btn-sm" 
+                        style="width: 100px;" 
+                        ng-click="confirmSave('save')">
+                        SAVE
+                    </button>
                 </span>
                 <span class="mx-2" ng-if="action_to_review_type">
                     <button class="btn btn-warning btn-sm" style="width: 200px;"
