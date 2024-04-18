@@ -135,18 +135,18 @@
                                                         Hazop recommendations responded sheet
                                                     </th>
                                                     @* Status 13 *@
-                                                    <th class="sort align-middle " colspan="1" rowspan="3" scope="col" ng-if="flow_status != 14">
+                                                    @* <th class="sort align-middle " colspan="1" rowspan="3" scope="col" ng-if="!(flow_status == 13)">
                                                         Action<br />Status<br />(Items)
-                                                    </th>
+                                                    </th> *@
                                                     <th class="sort align-middle " colspan="2" rowspan="1" scope="col">
                                                         Recommendations Close Plan
                                                     </th>
                                                     <th class="sort align-middle " colspan="1" rowspan="3" scope="col" ng-if="!(flow_status == 13)">
                                                         Action Close Date
                                                     </th>
-                                                    <th class="sort align-middle " colspan="1" rowspan="3" scope="col" ng-if="(flow_status == 13)">
+                                                    @* <th class="sort align-middle " colspan="1" rowspan="3" scope="col" ng-if="!(flow_status == 13)">
                                                     Action responded
-                                                    </th>
+                                                    </th> *@
 
                                                     <th class="sort align-middle " colspan="1" rowspan="3">
                                                         Over Due (Day)
@@ -526,7 +526,7 @@
                                                     </td>
 
                                                     @* status 13 *@
-                                                    <td class="align-top  px-1" ng-if="flow_status != 14">
+                                                    @* <td class="align-top  px-1" ng-if="!(flow_status == 13)">
                                                         <div class="align-items-start " style=" width: 95px;">
                                                             <select class="form-select form-select-sm p-1"
                                                                     ng-model="item_d.action_status"
@@ -555,7 +555,7 @@
                                                             </div>
                                                         </div>
 
-                                                    </td>
+                                                    </td> *@
 
                                                     <td class="align-top  px-0" style=" width: 70px;">
                                                         <div class="align-items-center ">
