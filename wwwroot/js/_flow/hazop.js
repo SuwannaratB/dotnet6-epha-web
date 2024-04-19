@@ -355,8 +355,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             if (selectedTab.action_part == 6) {
                 $scope.data_nodeworksheet.forEach(_item => {
-                    if (_item.recommendations && _item.responder_user_id) {
+                    if (_item.recommendations && _item.responder_user_displayname && !_item.estimated_start_date) {
                         _item.estimated_start_date = new Date();
+                        $scope.actionChangeWorksheet(_item, _item.seq, '');
                     }
                 });
             }
@@ -1433,7 +1434,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     set_data_nodeguidwords();
                     set_data_nodeworksheet();
                     set_master_ram_likelihood('');
-
+                    console.log('node',$scope.data_nodeworksheet)
                     //get recommendations_no in node worksheet
                     if ($scope.data_nodeworksheet.length > 0) {
                         var arr_copy_def = angular.copy($scope.data_nodeworksheet, arr_copy_def);
@@ -5215,7 +5216,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             // สร้างสตริง "DD MMM YYYY"
             var formattedDate = day + ' ' + month + ' ' + year;
              
-
             if (_arr.implement == 0) {
 
                 _arr.ram_action_security = _arr.ram_after_security;
