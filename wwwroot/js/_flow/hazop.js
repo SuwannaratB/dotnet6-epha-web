@@ -314,7 +314,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 ) {
 
                     if ($scope.data_general[0].sub_expense_type == 'Normal') {
-
+                        
                         if (!$scope.data_general[0].expense_type ||
                             !$scope.data_general[0].sub_expense_type ||
                             !$scope.data_general[0].id_apu
@@ -337,6 +337,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                             $scope.tab_managerecom_show = true;
                             return set_alert('Warning', 'Please select a valid Node');
                         }
+                        
                         apply();
                         $('#modalPleaseRegister').modal('show');
                         return;
@@ -348,6 +349,16 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         $scope.tab_managerecom_show = true;
                     }
                 }
+            }
+
+            // default start date recommendations
+
+            if (selectedTab.action_part == 6) {
+                $scope.data_nodeworksheet.forEach(_item => {
+                    if (_item.recommendations && _item.responder_user_id) {
+                        _item.estimated_start_date = new Date();
+                    }
+                });
             }
         } catch (error) { }
 
@@ -1304,6 +1315,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         var type_doc = $scope.pha_type_doc;//review_document
 
+        $scope.params = get_params();
+
         $.ajax({
             url: url_ws + "Flow/get_hazop_details",
             data: '{"sub_software":"hazop","user_name":"' + user_name + '","token_doc":"' + pha_seq + '","type_doc":"' + type_doc + '"}',
@@ -1483,9 +1496,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     }
                 }
 
-
                 $scope.data_header = JSON.parse(replace_hashKey_arr(arr.header));
+
                 set_form_action(action_part_befor, !action_submit, page_load);
+
+                if($scope.params == 'edit') $scope.tab_worksheet_active = true;
 
                 //ตรวจสอบเพิ่มเติม
                 if (arr.user_in_pha_no[0].pha_no == '' && $scope.flow_role_type != 'admin') {
@@ -1590,6 +1605,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         });
 
+    }
+
+    function get_params() {
+        var queryParams = new URLSearchParams(window.location.search);
+        var dataReceived = queryParams.get('data');
+        return dataReceived;
     }
 
     function set_form_action(action_part_befor, action_save, page_load) {
@@ -1703,6 +1724,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.selectedItemNodeView = $scope.data_node[0].seq;
 
             var tag_name = 'manage';
+
+            if($scope.params == 'edit') {
+                tag_name = 'worksheet';
+            } 
+
             var arr_tab = $filter('filter')($scope.tabs, function (item) {
                 return ((item.name == tag_name));
             });

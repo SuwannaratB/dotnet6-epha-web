@@ -222,6 +222,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         get_data(false, false);
 
     }
+
     $scope.selectDoc = function (item) {
 
         var controller_text = item.pha_sub_software;
@@ -232,6 +233,18 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         conFig.pha_sub_software = item.pha_sub_software;
 
         next_page(controller_text, conFig.pha_status);
+    }
+
+    $scope.editDoc = function (item) {
+
+        var controller_text = item.pha_sub_software;
+
+        conFig.pha_seq = item.seq;
+        conFig.pha_type_doc = 'edit';
+        conFig.pha_status = item.pha_status;
+        conFig.pha_sub_software = item.pha_sub_software;
+
+        next_page(controller_text, conFig.pha_status, conFig.pha_type_doc);
     }
     $scope.actionChange = function (item) {
 
@@ -306,12 +319,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
         get_data(true, false);
     }
-    function next_page(controller_text, pha_status) {
+    function next_page(controller_text, pha_status, editPage) {
         controller_text = controller_text.toLowerCase();
-        console.log('controller_text', controller_text)
-        console.log('conFig.pha_seq', conFig.pha_seq)
-        console.log('conFig.pha_type_do', conFig.pha_type_doc)
-        console.log('pha_status', pha_status)
 
         $.ajax({
             url: controller_text + "/next_page",
@@ -328,8 +337,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                 $('#divLoading').hide();
             },
             success: function (data) {
-                var arr = data;
-                window.open(data.page, "_top");
+                // var arr = data;
+                // window.open(data.page, "_top");
+                window.open(`${data.page}?data=` + encodeURIComponent(editPage), '_top');
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 if (jqXHR.status == 500) {

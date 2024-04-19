@@ -702,7 +702,6 @@
                                                 </div>
                                             </div>
                                             <div class="col-12 col-md mx-1">
-
                                                 <div class="table-responsive scrollbar " id="table-container">
                                                     <table class="table fs--2 mb-0 " cellpadding="0" cellspacing="0">
                                                         <thead class=" text-uppercase   bg-soft  test" style="font-size: 10px;" id="myHeader">
@@ -717,9 +716,7 @@
 
                                                             </tr>
                                                         </thead>
-
                                                         <tbody class="customer-rating-table-body">
-
                                                             <tr class="hover-actions-trigger btn-reveal-trigger position-static rowwork"
                                                                 ng-repeat="item_h in data_results">
                                                                 <td class="align-top text-end">
@@ -728,66 +725,82 @@
                                                                         <button class="btn btn-outline text-secondary p-1 "
                                                                                 @* style=" background-color: #f1f2f4; " *@
                                                                                 ng-click="confirmExport(item_h,'pdf')"
-                                                                                ng-class="{'disabled-link text-secondary':(!(item_h.pha_status>11))}">
+                                                                                ng-class="{'disabled-link text-secondary':(!(item_h.pha_status>11))}"
+                                                                                data-toggle="tooltip" 
+                                                                                data-placement="top" 
+                                                                                title="Export PDF">
                                                                             <span class="fa-solid fa-file-arrow-down fa-lg"></span>
                                                                         </button>
                                                                         <button class="btn btn-outline text-primary p-1 ms-1" 
-                                                                        @* style=" background-color: #f1f2f4; " *@
-                                                                                ng-click="selectDoc(item_h)">
+                                                                                @* style=" background-color: #f1f2f4; " *@
+                                                                                ng-click="selectDoc(item_h)"
+                                                                                data-toggle="tooltip" 
+                                                                                data-placement="top" 
+                                                                                title="View Detail">
                                                                                 <span class="fa-solid fa-circle-info fa-lg"></span>
                                                                             @* See Details *@
                                                                         </button>
                                                                     </div>
                                                                 </td>
+
                                                                 <td class="align-top">
                                                                     <div class="p-1 ">
                                                                         <h6 class="fw-semi-bold">{{item_h.pha_no}}</h6>
                                                                     </div>
                                                                 </td>
+
                                                                 <td class="align-top">
                                                                     <div class="p-1 ">
                                                                         <h6 class="fw-semi-bold">{{item_h.pha_request_name}}</h6>
                                                                     </div>
                                                                 </td>
+
                                                                 <td class="align-top text-center">
                                                                     <div class="p-1 ">
                                                                         <h6 class="fw-semi-bold">{{item_h.pha_status_displayname}}</h6>
                                                                     </div>
                                                                 </td>
+
                                                                 <td class="align-top text-center">
                                                                     <div class="p-1 ">
                                                                         <h6 class="fw-semi-bold" ng-if="!(item_h.pha_version_desc ==null)">{{ item_h.pha_version_text + '('+ item_h.pha_version_desc +')'}}</h6>
                                                                         <h6 class="fw-semi-bold" ng-if="(item_h.pha_version_desc ==null)">{{ item_h.pha_version_text}}</h6>
                                                                     </div>
                                                                 </td>
+
                                                                 <td class="align-top">
                                                                     <div class="p-1 ">
                                                                         <h6 class="fw-semi-bold">{{item_h.request_user_displayname}}</h6>
                                                                     </div>
                                                                 </td>
-                                                                <td class="align-top">
 
+                                                                <td class="align-top">
                                                                     <div class="d-flex p-1" ng-if="(item_h.pha_request_by == user_name || flow_role_type == 'admin') && !(item_h.pha_status==81) ">
                                                                         <span class="mx-1">
-                                                                            <button class="btn btn-outline text-primary p-1 ms-1" title="Copy PHA No."
+                                                                            <button class="btn btn-outline text-primary p-1 ms-1" 
+                                                                                    title="Copy PHA No."
                                                                                     ng-click="selectManageDocument(item_h,'copy')">
                                                                                 <span class="fa-solid fa-copy fa-lg"></span>
                                                                             </button>
                                                                         </span>
                                                                         <span class="mx-1">
-                                                                            <button class="btn btn-outline text-danger p-1 ms-1" title="Cancel PHA No."
+                                                                            <button class="btn btn-outline text-danger p-1 ms-1" 
+                                                                                    title="Cancel PHA No."
                                                                                     ng-click="selectManageDocument(item_h,'cancel')"> 
                                                                                 <span class="fa-solid fa-ban fa-lg"></span>
                                                                             </button>
                                                                         </span>
+                                                                        <span class="mx-1" ng-if="item_h.pha_status == 13">
+                                                                            <button class="btn btn-outline text-secondery p-1 ms-1" 
+                                                                                    title="Edit PHA"
+                                                                                    ng-click="editDoc(item_h)">
+                                                                                <span class="fa-solid fa-pen fa-lg"></span>
+                                                                            </button>
+                                                                        </span>
                                                                     </div>
-
                                                                 </td>
-
                                                             </tr>
-
                                                         </tbody>
-
                                                     </table>
 
                                                 </div>

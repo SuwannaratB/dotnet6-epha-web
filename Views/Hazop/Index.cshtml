@@ -84,15 +84,15 @@
                 <span class="mx-2" ng-if="export_type && false">
                     <button class="btn text-light btn-sm" style="background-color: #e90f8b;" ng-click="clickExportReport()">EXPORT/IMPORT</button>
                 </span>
-                <span class="mx-2" >
+                @* <span class="mx-2" >
                     <button class="btn btn-warning btn-sm" 
                         style="width: 100px;" 
-                        ng-if="data_header[0].pha_status == 13 && action_part == 5 && (flow_role_type == 'admin' || flow_role_type == 'originator')"
+                        ng-if="params == 'edit' && data_header[0].pha_status == 13 && action_part == 5 && (flow_role_type == 'admin' || flow_role_type == 'originator')"
                         ng-click="editWorksheet(tab_worksheet_active)">
                          EDIT
                     </button>
-                </span>
-                <span class="mx-2" ng-if="save_type || (data_header[0].pha_status == 13 && action_part == 5)">
+                </span> *@
+                <span class="mx-2" ng-if="save_type || (params == 'edit' && data_header[0].pha_status == 13 && action_part == 5)">
                     <button class="btn btn-primary btn-sm" 
                         style="width: 100px;" 
                         ng-click="confirmSave('save')">
@@ -3048,8 +3048,6 @@
                                                        placeholder="Start Date dd/mm/yyyy"
                                                        ng-model="item.estimated_start_date"
                                                        ng-change="actionChangeWorksheet(item,item.seq,'')">
-
-
                                                 <div id="valid-nodeworksheet-estimated-start-{{item.seq}}"
                                                      class="invalid-feedback text-danger">
                                                     Please provide a valid Responder.
