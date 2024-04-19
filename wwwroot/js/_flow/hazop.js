@@ -4649,10 +4649,26 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 }
             }
         }
-   
+
+        // check follow up edit
+        if ($scope.params == 'edit') {
+            return $('#modalEditConfirm').modal('show');
+        }
+        
         unsavedChanges = false;
         save_data_create(action, action_def);
 
+    }
+
+    $scope.confirmEdit = function () {
+        $('#modalEditConfirm').modal('hide');
+        setTimeout(function() {
+            save_data_create('save', 'save');
+        }, 200); 
+    }
+
+    $scope.cancelEdit = function () {
+        return $('#modalEditConfirm').modal('hide');
     }
 
     $scope.confirmDialogApprover = function (_item, action) {
