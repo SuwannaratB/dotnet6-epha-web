@@ -127,7 +127,7 @@
                                                     <th class="sort align-middle " colspan="1" rowspan="3" scope="col" ng-if="flow_status != 14">
                                                         Implement
                                                     </th>
-                                                    <th class="sort align-middle " colspan="1" rowspan="3" scope="col" >
+                                                    <th class="sort align-middle " colspan="1" rowspan="3" scope="col" ng-if="flow_status != 14">
                                                         Remark
                                                     </th>
                                                     @* Hazop recommendations responded sheet 13 *@
@@ -318,14 +318,26 @@
                                                     </td>
 
                                                     @* action owner responded 14 *@
-                                                    <td class="align-top  px-1"  ng-if="flow_status == 14">
-                                                        <div class="align-items-center ">
+                                                    <td class="align-top  px-1"  style=" min-width:200px;"  ng-if="flow_status == 14">
+                                                        <div class="text-start mb-2">
                                                             <p class="mb-0 ms-3 fw-bold" style="width: 120px;">
                                                                 {{item_d.responder_user_displayname}}
                                                             </p>
-                                                            <a class="nametext ms-3 filename-text me-2" ng-if="flow_status == 14" ng-click="downloadFileOwner(item_d)">
+                                                            <a class="nametext ms-3 filename-text me-2" 
+                                                                ng-if="flow_status == 14" 
+                                                                ng-click="downloadFileOwner(item_d)">
                                                                 <i class="far fa-file-pdf text-danger"></i> Document File
                                                             </a>
+                                                        </div>
+                                                        <div class="px-3">
+                                                            <textarea class="form-control form-control-sm rounded-1 p-0 mt-1 w-100 border border-end-0 border-top-0"
+                                                                    style=" width: 100vh; font-size: 10px;"
+                                                                    placeholder="Remark" 
+                                                                    rows="1"
+                                                                    ng-change="actionInput(item_d)"
+                                                                    ng-model="item_d.responder_comment"
+                                                                    >
+                                                            </textarea>
                                                         </div>
                                                     </td>
 
@@ -443,7 +455,7 @@
                                                         </div>
                                                     </td> 
 
-                                                    <td class="align-top  px-0" style=" min-width:200px;">
+                                                    <td class="align-top  px-0" style=" min-width:200px;" ng-if="flow_status != 14">
                                                         <textarea class="form-control form-control-sm rounded-1 p-0 mt-1 w-100 border border-end-0 border-top-0"
                                                                 style=" width: 100vh; font-size: 10px;"
                                                                 placeholder="Remark" 
@@ -934,7 +946,7 @@
                 <div class="modal-body">
 
                     <div class="bg-white position-relative top-1"
-                         ng-repeat="item_x in data_drawingworksheet_responder | filter:{id_worksheet:id_worksheet_select}">
+                         ng-repeat="item_x in data_drawingworksheet_responder | filter:{seq:id_worksheet_select}">
                         <a href="{{item_x.document_file_path}}" target="_blank">
                             {{item_x.document_file_name}}
                         </a>
