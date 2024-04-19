@@ -1156,4 +1156,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
         $('#modalExportReviewerFile').modal('show');
     }
+
+    $scope.openModalTempletes = function () {
+        $('#modalTemplates').modal('show');
+    }
 });
