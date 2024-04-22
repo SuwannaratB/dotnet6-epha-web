@@ -1010,7 +1010,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
 
     function save_data_create(action, action_def) {
-
         if ($scope.action_part != 4) { set_data_managerecom(); }
 
         check_data_general();
@@ -1501,7 +1500,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                 set_form_action(action_part_befor, !action_submit, page_load);
 
-                if($scope.params == 'edit') $scope.tab_worksheet_active = true;
+                // if($scope.params == 'edit')  $scope.action_owner_active = true;
+                $scope.action_owner_active = true;
 
                 //ตรวจสอบเพิ่มเติม
                 if (arr.user_in_pha_no[0].pha_no == '' && $scope.flow_role_type != 'admin') {
@@ -4654,7 +4654,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         if ($scope.params == 'edit') {
             return $('#modalEditConfirm').modal('show');
         }
-        
+
         unsavedChanges = false;
         save_data_create(action, action_def);
 
@@ -5029,26 +5029,28 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         for (var i = 0; i < $scope.data_nodeworksheet.length; i++) {
             $scope.data_nodeworksheet[i].id = Number($scope.data_nodeworksheet[i].seq);
             $scope.data_nodeworksheet[i].id_pha = pha_seq;
-
+         
             //ram_action_security, ram_action_likelihood, ram_action_risk, estimated_start_date, estimated_end_date, document_file_path, document_file_name, action_status, responder_action_type, responder_user_name, responder_user_displayname
             try {
                 var date_value = $scope.data_nodeworksheet[i].estimated_start_date.toISOString().split('T');
                 if (date_value.length > 0) { $scope.data_nodeworksheet[i].estimated_start_date = date_value[0]; }
             } catch { }
+         
             try {
                 var date_value = $scope.data_nodeworksheet[i].estimated_end_date.toISOString().split('T');
                 if (date_value.length > 0) { $scope.data_nodeworksheet[i].estimated_end_date = date_value[0]; }
             } catch { }
 
 
-            try {
-                var date_value = $scope.data_nodeworksheet[i].estimated_start_date.toISOString().split('T');
-                if (date_value.length > 0) { $scope.data_nodeworksheet[i].estimated_start_date = date_value[0]; }
-            } catch { }
-            try {
-                var date_value = $scope.data_nodeworksheet[i].estimated_end_date.toISOString().split('T');
-                if (date_value.length > 0) { $scope.data_nodeworksheet[i].estimated_end_date = date_value[0]; }
-            } catch { }
+            // try {
+            //     var date_value = $scope.data_nodeworksheet[i].estimated_start_date.toISOString().split('T');
+            //     if (date_value.length > 0) { $scope.data_nodeworksheet[i].estimated_start_date = date_value[0]; }
+            // } catch { }
+
+            // try {
+            //     var date_value = $scope.data_nodeworksheet[i].estimated_end_date.toISOString().split('T');
+            //     if (date_value.length > 0) { $scope.data_nodeworksheet[i].estimated_end_date = date_value[0]; }
+            // } catch { }
 
 
             if (pha_status == "11" || pha_status == "12" || pha_status == "22") {
@@ -5073,6 +5075,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.data_nodeworksheet_delete[i].action_type = 'delete';
             arr_json.push($scope.data_nodeworksheet_delete[i]);
         }
+
+        console.log('return ',arr_json)
 
         return angular.toJson(arr_json);
     }
@@ -5201,7 +5205,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
 
     $scope.actionChangeWorksheet = function (_arr, _seq, type_text) {
-
+ 
         action_type_changed(_arr, _seq);
 
         var _implement = false;
@@ -5231,7 +5235,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             // สร้างสตริง "DD MMM YYYY"
             var formattedDate = day + ' ' + month + ' ' + year;
-             
+
             if (_arr.implement == 0) {
 
                 _arr.ram_action_security = _arr.ram_after_security;
@@ -5248,7 +5252,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                 _arr.estimated_start_date = dateNow;
                 _arr.estimated_end_date = dateNow;
-
                 //dd MMM yyyy
                 _arr.reviewer_date = formattedDate;
 
@@ -5274,13 +5277,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             
 
         }
-
         //เปิดปุ่ม submit
         var arr_submit = $filter('filter')($scope.data_nodeworksheet, function (item) {
             return ((item.action_type !== '' || item.action_type !== null));
         });
         if (arr_submit.length > 0) { $scope.submit_type = true; } else { $scope.submit_type = false; }
         unsavedChanges = true;
+        console.log('confirm ==> ',$scope.data_nodeworksheet)
     }
 
     function action_type_changed(_arr, _seq) {

@@ -92,11 +92,18 @@
                          EDIT
                     </button>
                 </span> *@
-                <span class="mx-2" ng-if="save_type || (params == 'edit' && data_header[0].pha_status == 13 && action_part == 5)">
+                <span class="mx-2" ng-if="save_type">
                     <button class="btn btn-primary btn-sm" 
                         style="width: 100px;" 
                         ng-click="confirmSave('save')">
                         SAVE
+                    </button>
+                </span>
+                <span class="mx-2" ng-if="params == 'edit' && data_header[0].pha_status == 13 && action_part == 5">
+                    <button class="btn btn-primary btn-sm" 
+                        style="width: 100px;" 
+                        ng-click="confirmSave('save')">
+                        CHANGE
                     </button>
                 </span>
                 <span class="mx-2" ng-if="action_to_review_type">
@@ -2561,7 +2568,7 @@
 
                                                 <td class="align-top border border-light border-end-0  border-start-0  border-top-0 " style="padding: 0 !important; width: 120px;">
                                                     <div class="d-flex align-items-center ">
-                                                        <div class="" ng-class="{'disabled-link':(!tab_worksheet_active)}">
+                                                        <div class="" ng-class="{'disabled-link':(!action_owner_active)}">
                                                             <button ng-click="
                                                                     openDataEmployeeAdd(item,'owner'); 
                                                                     recommentAction_valid(item);" 
@@ -4971,7 +4978,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="text-900 mb-0" data-anchor="data-anchor" id="modalEditConfirm">
-                        <span class=" me-2 text-primary"><B>|</B></span> Do you want to confirm to edit?
+                        <span class=" me-2 text-primary"><B>|</B></span> Do you want to confirm to change?
                     </h5>
 
                     <button class="btn p-1" type="button" data-bs-dismiss="modal" aria-label="Close">
