@@ -2946,6 +2946,20 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     );
                 });
 
+                // after reset no
+                const list_system_no = item.list_system_no;
+                const list_sub_system_no = item.list_sub_system_no;
+                /*const list_system_no = item.list_system_no;
+                const causes_no = item.causes_no;
+                const consequences_no = item.consequences_no;*/
+                $scope.data_listworksheet.forEach(function(item) {
+                    if ( item.list_system_no == list_system_no) {
+                        if (item.list_sub_system_no > list_sub_system_no ) {
+                            item.list_sub_system_no = item.list_sub_system_no - 1;
+                        }
+                    }
+                });
+
             } else if (row_type == "causes") {
 
 
@@ -2964,6 +2978,20 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     );
                 });
 
+                // after reset no
+                const list_system_no = item.list_system_no;
+                const list_sub_system_no = item.list_sub_system_no;
+                const causes_no = item.causes_no;
+                /*const causes_no = item.causes_no;
+                const consequences_no = item.consequences_no;*/
+                $scope.data_listworksheet.forEach(function(item) {
+                    if ( item.list_system_no == list_system_no && item.list_sub_system_no == list_sub_system_no) {
+                        if (item.causes_no > causes_no ) {
+                            item.causes_no = item.causes_no - 1;
+                        }
+                    }
+                });
+
             } else if (row_type == "consequences") {
 
                 //เก็บค่า Delete 
@@ -2980,6 +3008,20 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         || (item.seq_consequences == seq_consequences && item.seq_causes == seq_causes && item.seq_list_sub_system == seq_list_sub_system && item.seq_list_system == seq_list_system))
                     );
                 });
+
+
+                // after reset no
+                const list_system_no = item.list_system_no;
+                const list_sub_system_no = item.list_sub_system_no;
+                const causes_no = item.causes_no;
+                const consequences_no = item.consequences_no;
+                $scope.data_listworksheet.forEach(function(item) {
+                    if ( item.list_system_no == list_system_no && item.list_sub_system_no == list_sub_system_no && item.causes_no == causes_no) {
+                        if (item.consequences_no > consequences_no ) {
+                            item.consequences_no = item.consequences_no - 1;
+                        }
+                    }
+                });                
 
 
             } else if (row_type == 'category') {
@@ -3007,8 +3049,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         running_index_worksheet('');
         running_no_level1_lv1($scope.data_listworksheet, 1, 0, null);
-        //running_no_format_2($scope.data_listworksheet, 1, 0, null);
-
 
         if (row_type == "list_system") {
             running_no_list();
