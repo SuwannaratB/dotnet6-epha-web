@@ -1,6 +1,34 @@
 
-AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) {
+AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$rootScope,$window) {
     $('#divLoading').hide();
+
+
+    var unsavedChanges = false;
+
+    // Track location changes
+    $rootScope.$on('$locationChangeStart', function(event, next, current) {
+        console.log('Location is changing from:', current, 'to:', next);
+
+        if (unsavedChanges) {
+            var confirmLeave = $window.confirm("You have unsaved changes. Are you sure you want to leave?");
+            if (!confirmLeave) {
+                event.preventDefault();
+            }
+        }
+    });
+
+    // close tab / browser window
+    $window.addEventListener('beforeunload', function(event) {
+        console.log("Trigger Ec=vent",event)
+        if (unsavedChanges) {
+            var confirmationMessage = 'You have unsaved changes. Are you sure you want to leave?';
+    
+            event.preventDefault();
+            event.returnValue = confirmationMessage;
+            return confirmationMessage;
+        }
+    });
+
 
     //  add file 
     $scope.clearFileName = function (inputId) {
@@ -111,6 +139,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
         } catch (ex) { alert(ex); }
 
+        unsavedChanges = true;
     }
 
 
@@ -545,6 +574,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             }
             $scope.confirmSaveReviewFollowup('save', item);
         }
+        unsavedChanges = false;
     };
 
     $scope.actionImplement = function (item) {
@@ -575,6 +605,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
              
             }
         });
+        unsavedChanges = true;
     }
 
     $scope.actionInput = function (item) {
@@ -585,6 +616,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                 // set_valid_items(_item.responder_comment, 'upload_file-'+_item.seq);
             }
         });
+
+        unsavedChanges = true;
     }
 
     $scope.setSeqUpload = function (seq) {
@@ -615,7 +648,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         clear_form_valid();
 
         if (action == 'submit') {
-            
+            unsavedChanges = false;
             //เนื่องจากย้ายมาในระดับ row
             $scope.id_worksheet_select = item.seq;
             //if (item.document_file_size == 0 || item.document_file_size == null) {
@@ -951,37 +984,53 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         });
     }
 
-    $scope.openModalDataRAM = function (_item, ram_type, seq, ram_type_action) {
+    $scope.openModalDataRAM = function (ram_type, _item, ram_type_action, id_ram, preview) {
+        var seq = _item.seq;
 
         $scope.selectdata_nodeworksheet = seq;
         $scope.selectedDataNodeWorksheetRamType = ram_type;
         $scope.selectedDataRamTypeAction = ram_type_action;
 
+        $scope.selectedDataID_Ram = id_ram;
         if (ram_type_action == 'after') {
             $scope.cal_ram_action_security = _item.ram_after_security;
             $scope.cal_ram_action_likelihood = _item.ram_after_likelihood;
             $scope.cal_ram_action_risk = _item.ram_after_risk;
-        } else if (ram_type_action == 'befor') {
-            $scope.cal_ram_action_security = _item.ram_befor_security;
-            $scope.cal_ram_action_likelihood = _item.ram_befor_likelihood;
-            $scope.cal_ram_action_risk = _item.ram_befor_risk;
-        } else if (ram_type_action == 'action') {
+        } else {
             $scope.cal_ram_action_security = _item.ram_action_security;
             $scope.cal_ram_action_likelihood = _item.ram_action_likelihood;
             $scope.cal_ram_action_risk = _item.ram_action_risk;
         }
-
-        $scope.previewRam = (ram_type == 'r' ? true : false);
-
-
         $scope.cal_ram_action_security = ($scope.cal_ram_action_security == null ? 'N/A' : $scope.cal_ram_action_security);
-        $scope.cal_ram_action_likelihood = ($scope.cal_ram_action_likelihood == null ? 'N/A' : $scope.cal_ram_action_likelihood);
+        $scope.cal_ram_action_likelihood = ($scope.cal_ram_action_likelihood == null ? 'N/A' : $scope.cal_ram_action_likelihood); 
         $scope.cal_ram_action_risk = ($scope.cal_ram_action_risk == null ? 'N/A' : $scope.cal_ram_action_risk);
 
+        var arr_items = $filter('filter')($scope.master_ram_level, function (item) { return (item.id_ram == id_ram); });
+        if (arr_items.length > 0) {
 
-        console.log($scope.data_nodeworksheet)
+            //$scope.select_rows_level = arr_items[0].rows_level;
+            //$scope.select_columns_level = arr_items[0].columns_level;
+        }
+        var category_type = Number(arr_items[0].category_type);
+        $scope.selectedDataRamType = category_type;
+
+        $scope.previewRam = (preview == true ? true : false);
+        if ($scope.data_details.length > 0) {
+
+            if (($scope.flow_status == 14 ? _item.reviewer_action_type : _item.responder_action_type) == 2) {
+                $scope.previewRam = true;
+            }
+
+        }
+
+
+
+        apply();
+
         $('#modalRAM').modal('show');
     }
+
+
 
     /*$scope.openModalDataRAM = function (ram_type, _item, ram_type_action, id_ram, preview) {
         var seq = _item.seq;
@@ -1030,48 +1079,51 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
     }*/
     $scope.selectDataRAM = function (ram_type, id_select) {
 
-        console.log(ram_type, id_select)
         var xseq = $scope.selectdata_nodeworksheet;
         var xbefor = $scope.selectedDataRamTypeAction;
 
-        for (let i = 0; i < $scope.data_nodeworksheet.length; i++) {
+        for (let i = 0; i < $scope.data_details.length; i++) {
             try {
 
-                if ($scope.data_nodeworksheet[i].seq !== xseq) { continue; }
+                if ($scope.data_details[i].seq !== xseq) { continue; }
 
-                if (xbefor == "befor" && ram_type == "s") { $scope.data_nodeworksheet[i].ram_befor_security = id_select; }
-                if (xbefor == "befor" && ram_type == "l") { $scope.data_nodeworksheet[i].ram_befor_likelihood = id_select; }
+                if (xbefor == "befor" && ram_type == "s") { $scope.data_details[i].ram_befor_security = id_select; }
+                if (xbefor == "befor" && ram_type == "l") { $scope.data_details[i].ram_befor_likelihood = id_select; }
 
-                if (xbefor == "after" && ram_type == "s") { $scope.data_nodeworksheet[i].ram_after_security = id_select; }
-                if (xbefor == "after" && ram_type == "l") { $scope.data_nodeworksheet[i].ram_after_likelihood = id_select; }
+                if (xbefor == "after" && ram_type == "s") { $scope.data_details[i].ram_after_security = id_select; }
+                if (xbefor == "after" && ram_type == "l") { $scope.data_details[i].ram_after_likelihood = id_select; }
 
-                if (xbefor == "action" && ram_type == "s") { $scope.data_nodeworksheet[i].ram_action_security = id_select; }
-                if (xbefor == "action" && ram_type == "l") { $scope.data_nodeworksheet[i].ram_action_likelihood = id_select; }
+                if (xbefor == "action" && ram_type == "s") { $scope.data_details[i].ram_action_security = id_select; }
+                if (xbefor == "action" && ram_type == "l") { $scope.data_details[i].ram_action_likelihood = id_select; }
 
-                var ram_security = $scope.data_nodeworksheet[i].ram_befor_security + "";
-                var ram_likelihood = $scope.data_nodeworksheet[i].ram_befor_likelihood + "";
+                var ram_security = $scope.data_details[i].ram_befor_security + "";
+                var ram_likelihood = $scope.data_details[i].ram_befor_likelihood + "";
                 var ram_risk = "";
                 if (xbefor == "after") {
-                    ram_security = $scope.data_nodeworksheet[i].ram_after_security + "";
-                    ram_likelihood = $scope.data_nodeworksheet[i].ram_after_likelihood + "";
+                    ram_security = $scope.data_details[i].ram_after_security + "";
+                    ram_likelihood = $scope.data_details[i].ram_after_likelihood + "";
                 }
                 if (xbefor == "action") {
-                    ram_security = $scope.data_nodeworksheet[i].ram_action_security + "";
-                    ram_likelihood = $scope.data_nodeworksheet[i].ram_action_likelihood + "";
+                    ram_security = $scope.data_details[i].ram_action_security + "";
+                    ram_likelihood = $scope.data_details[i].ram_action_likelihood + "";
                 }
                 if (ram_security == "" || ram_likelihood == "") {
-                    if (xbefor == "befor") { $scope.data_nodeworksheet[i].ram_befor_risk = ""; }
-                    else if (xbefor == "after") { $scope.data_nodeworksheet[i].ram_after_risk = ""; }
-                    else if (xbefor == "action") { $scope.data_nodeworksheet[i].ram_action_risk = ""; }
+                    if (xbefor == "befor") { $scope.data_details[i].ram_befor_risk = ""; }
+                    else if (xbefor == "after") { $scope.data_details[i].ram_after_risk = ""; }
+                    else if (xbefor == "action") { $scope.data_details[i].ram_action_risk = ""; }
                     break;
                 }
 
 
                 var safety_critical_equipment = 'N';
-                var id_ram = $scope.data_general[0].id_ram;
+                var id_ram = ($scope.data_general[0].id_ram === undefined || $scope.data_general[0].id_ram === null) ? '5' : $scope.data_general[0].id_ram;
+                console.log(id_ram,"show",$scope.master_ram_level,"ram_likelihood",ram_likelihood,"ram_security",ram_security)
+
                 var arr_items = $filter('filter')($scope.master_ram_level, function (item) {
                     return (item.id_ram == id_ram && item.security_level == ram_security);
                 });
+
+                console.log(arr_items,"ram_likelihood",ram_likelihood,"ram_security",ram_security)
                 if (arr_items.length > 0) {
                     //check ram_likelihood ว่าตก columns ไหน เพื่อหา ram1_priority
                     if (ram_likelihood == arr_items[0].likelihood1_level) { ram_risk = arr_items[0].ram1_priority; safety_critical_equipment = arr_items[0].likelihood1_criterion; }
@@ -1087,43 +1139,44 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                 }
 
                 if (xbefor == "befor" && (ram_type == "s" || ram_type == "l")) {
-                    $scope.data_nodeworksheet[i].safety_critical_equipment = safety_critical_equipment;
+                    $scope.data_details[i].safety_critical_equipment = safety_critical_equipment;
                 }
 
-                if (xbefor == "befor") { $scope.data_nodeworksheet[i].ram_befor_risk = ram_risk; }
-                else if (xbefor == "after") { $scope.data_nodeworksheet[i].ram_after_risk = ram_risk; }
-                else if (xbefor == "action") { $scope.data_nodeworksheet[i].ram_action_risk = ram_risk; }
+                if (xbefor == "befor") { $scope.data_details[i].ram_befor_risk = ram_risk; }
+                else if (xbefor == "after") { $scope.data_details[i].ram_after_risk = ram_risk; }
+                else if (xbefor == "action") { $scope.data_details[i].ram_action_risk = ram_risk; }
 
-                if ($scope.data_nodeworksheet[i].action_type == 'update') {
-                    $scope.data_nodeworksheet[i].action_change = 1;
+                if ($scope.data_details[i].action_type == 'update') {
+                    $scope.data_details[i].action_change = 1;
                 }
 
                 var ram_type_action = $scope.selectedDataRamTypeAction;
                 if (ram_type_action == 'after') {
-                    $scope.cal_ram_action_security = $scope.data_nodeworksheet[i].ram_after_security;
-                    $scope.cal_ram_action_likelihood = $scope.data_nodeworksheet[i].ram_after_likelihood;
-                    $scope.cal_ram_action_risk = $scope.data_nodeworksheet[i].ram_after_risk;
+                    $scope.cal_ram_action_security = $scope.data_details[i].ram_after_security;
+                    $scope.cal_ram_action_likelihood = $scope.data_details[i].ram_after_likelihood;
+                    $scope.cal_ram_action_risk = $scope.data_details[i].ram_after_risk;
                 } else if (ram_type_action == 'befor') {
-                    $scope.cal_ram_action_security = $scope.data_nodeworksheet[i].ram_befor_security;
-                    $scope.cal_ram_action_likelihood = $scope.data_nodeworksheet[i].ram_befor_likelihood;
-                    $scope.cal_ram_action_risk = $scope.data_nodeworksheet[i].ram_befor_risk;
+                    $scope.cal_ram_action_security = $scope.data_details[i].ram_befor_security;
+                    $scope.cal_ram_action_likelihood = $scope.data_details[i].ram_befor_likelihood;
+                    $scope.cal_ram_action_risk = $scope.data_details[i].ram_befor_risk;
                 } else if (ram_type_action == 'action') {
-                    $scope.cal_ram_action_security = $scope.data_nodeworksheet[i].ram_action_security;
-                    $scope.cal_ram_action_likelihood = $scope.data_nodeworksheet[i].ram_action_likelihood;
-                    $scope.cal_ram_action_risk = $scope.data_nodeworksheet[i].ram_action_risk;
+                    $scope.cal_ram_action_security = $scope.data_details[i].ram_action_security;
+                    $scope.cal_ram_action_likelihood = $scope.data_details[i].ram_action_likelihood;
+                    $scope.cal_ram_action_risk = $scope.data_details[i].ram_action_risk;
                 }
-                $scope.actionChangeWorksheet($scope.data_nodeworksheet[i], $scope.data_nodeworksheet[i].seq);
+                action_type_changed($scope.data_details[i], $scope.data_details[i].seq);
 
                 break;
 
             } catch (e) { }
         }
 
-
+        unsavedChanges = true;
         apply();
 
         $('#modalRAM').modal('show');
     }
+
     function action_type_changed(_arr, _seq) {
         if (_seq == undefined) { _seq = 1; }
         if (_arr.seq == _seq && _arr.action_type == '') {

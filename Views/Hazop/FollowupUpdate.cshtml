@@ -383,77 +383,93 @@
                                                     </td>
 
                                                     @*Before action*@
-                                                    <td class="align-top  px-1   ">
+                                                    <td class="align-top  px-1">
                                                         <div class="d-flex ">
-                                                            <div class="align-items-center ">
-                                                                <p class="transition-none fs--2p-1 ps-0 text-center rounded-1"
-                                                                   ng-click="openModalDataRAM('s',item_d,'after',item_d.id_ram,true)" style="width: 20px; height:20px">
+                                                            <div class="align-items-center">
+                                                                <h6 class="transition-none fs--2p-1 ps-0 text-center rounded-1 h-100 d-flex justify-content-center align-items-center"
+                                                                    ng-click="openModalDataRAM('s',item_d,'after',item_d.id_ram,true)"
+                                                                    style="width: 20px;">
                                                                     {{item_d.ram_after_security}}
-                                                                </p>
+                                                                </h6>
                                                             </div>
 
-                                                            <div class="align-items-center ">
-                                                                <p class="transition-none fs--2p-1 ps-0 text-center rounded-1"
-                                                                   ng-click="openModalDataRAM('l',item_d,'after',item_d.id_ram,true)" style="width: 20px; height:20px">
+                                                            <div class="align-items-center">
+                                                                <h6 class="transition-none fs--2p-1 ps-0 text-center rounded-1 h-100 d-flex justify-content-center align-items-center"
+                                                                    ng-click="openModalDataRAM('l',item_d,'after',item_d.id_ram,true)"
+                                                                    style="width: 20px;">
                                                                     {{item_d.ram_after_likelihood}}
-                                                                </p>
+                                                                </h6>
                                                             </div>
-                                                            <div class="align-items-center text-end mt-1" style=" width: 30px;">
-                                                                <button ng-style=" { 'background-color' : ((item.ram_after_risk == 'H') ? 'red' : ((item.ram_after_risk == 'M') ? 'yellow' : ((item.ram_after_risk == 'L') ? 'green' : '#D3D3D3')) ) }"
-                                                                        class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end"
-                                                                        type="button" 
-                                                                        ng-click="openModalDataRAM('r',item_d,'after',item_d.id_ram,true)"
-                                                                        style="width: 30px;">
-                                                                    <div class="d-flex text-center" style=" width: 25px;">
-                                                                        <h6 class="me-1 text-center" style=" width: 30px;">{{item_d.ram_after_risk}}</h6>
-                                                                        <span class="fas fa-pencil-alt fa-sm " style=" width: 8px;"></span>
+
+                                                            <div class="align-items-center text-end mt-1"
+                                                                style=" width: 30px;">
+                                                                <button
+                                                                    ng-style=" { 'background-color' : ((item_d.ram_after_risk == 'H') ? 'red' : ((item_d.ram_after_risk == 'M') ? 'yellow' : ((item_d.ram_after_risk == 'L') ? 'green' : '#D3D3D3')) ) }"
+                                                                    class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end"
+                                                                    type="button"
+                                                                    ng-click="openModalDataRAM('r',item_d,'after',item_d.id_ram,true)"
+                                                                    style="width: 30px;">
+                                                                    <div class="d-flex text-center"
+                                                                        style=" width: 25px;">
+                                                                        <h6 class="me-1 text-center"
+                                                                            style=" width: 30px;">
+                                                                            {{item_d.ram_after_risk}}</h6>
+                                                                        <span class="fas fa-pencil-alt fa-sm "
+                                                                            style=" width: 8px;"></span>
                                                                     </div>
                                                                 </button>
-                                                            </div>                                                                
+                                                            </div>
                                                         </div>
                                                     </td>
 
                                                     @*After action*@
-                                                    <td class="align-top  px-1   ">
+                                                    <td class="align-top  px-1">
                                                         <div class="d-flex ">
-                                                            <div class="align-items-center ">
-                                                                <p class="transition-none btn-reveal fs--2p-1 ps-0 text-center rounded-1 cursor-pointer"
-                                                                   ng-click="openModalDataRAM('s',item_d,'action',item_d.id_ram,false)" style="width: 20px; height:20px">
+                                                            <div class="align-items-center text-center">
+                                                                <h6 class="transition-none fs--2p-1 ps-0 text-center rounded-1 h-100 d-flex justify-content-center align-items-center"
+                                                                    ng-click="openModalDataRAM('s',item_d,'action',item_d.id_ram,false)"
+                                                                    style="width: 20px;">
                                                                     {{item_d.ram_action_security}}
-                                                                </p>
+                                                                </h6>
                                                             </div>
 
-                                                            <div class="align-items-center ">
-                                                                <p class="transition-none btn-reveal fs--2p-1 ps-0 text-center rounded-1 cursor-pointer"
-                                                                   ng-click="openModalDataRAM('l',item_d,'action',item_d.id_ram,false)" style="width: 20px; height:20px">
+                                                            <div class="align-items-center text-center">
+                                                                <h6 class="transition-none fs--2p-1 ps-0 text-center rounded-1 h-100 d-flex justify-content-center align-items-center"
+                                                                    ng-click="openModalDataRAM('l',item_d,'action',item_d.id_ram,false)"
+                                                                    style="width: 20px;">
                                                                     {{item_d.ram_action_likelihood}}
-                                                                </p>
+                                                                </h6>
                                                             </div>
-
-                                                            <div class="align-items-center text-end mt-1" style=" width: 30px;">
-                                                                <button ng-style=" { 'background-color' : ((item.ram_after_risk == 'H') ? 'red' : ((item.ram_after_risk == 'M') ? 'yellow' : ((item.ram_after_risk == 'L') ? 'green' : '#D3D3D3')) ) }"
-                                                                        class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end"
-                                                                        type="button" 
-                                                                        ng-click="openModalDataRAM('r',item_d,'action',item_d.id_ram,false)"
-                                                                        style="width: 30px;">
-                                                                    <div class="d-flex text-center" style=" width: 25px;">
-                                                                        <h6 class="me-1 text-center" style=" width: 30px;">{{item_d.ram_action_risk}}</h6>
-                                                                        <span class="fas fa-pencil-alt fa-sm " style=" width: 8px;"></span>
+                                                            <div class="align-items-center text-end mt-1"
+                                                                style=" width: 30px;">
+                                                                <button
+                                                                    ng-style=" { 'background-color' : ((item_d.ram_action_risk == 'H') ? 'red' : ((item_d.ram_action_risk == 'M') ? 'yellow' : ((item_d.ram_action_risk == 'L') ? 'green' : '#D3D3D3')) ) }"
+                                                                    class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end"
+                                                                    type="button"
+                                                                    ng-click="openModalDataRAM('r',item_d,'action',item_d.id_ram,false)"
+                                                                    style="width: 30px;">
+                                                                    <div class="d-flex text-center"
+                                                                        style=" width: 25px;">
+                                                                        <h6 class="me-1 text-center"
+                                                                            style=" width: 30px;">
+                                                                            {{item_d.ram_action_risk}}</h6>
+                                                                        <span class="fas fa-pencil-alt fa-sm "
+                                                                            style=" width: 8px;"></span>
                                                                     </div>
                                                                 </button>
-                                                            </div>    
+                                                            </div>
                                                         </div>
                                                     </td>
 
                                                     @* Implement 13 *@
-                                                    <td class="align-top  px-0" ng-if="flow_status != 14">
-                                                        <div class="ms-3">
-                                                            <input type="checkbox"
-                                                                ng-model="item_d.implement"
+                                                    <td class="align-top px-0" ng-if="flow_status != 14"
+                                                        style="min-width: 50px; max-width: 70px !important;">
+                                                        <div class="m-auto">
+                                                            <input type="checkbox" ng-model="item_d.implement"
                                                                 ng-click="actionImplement(item_d)"
-                                                                style="cursor: pointer;width:20px; height:20px;">
+                                                                style="cursor: pointer; width: 20px; height: 20px;">
                                                         </div>
-                                                    </td> 
+                                                    </td>
 
                                                     <td class="align-top  px-0" style=" min-width:200px;">
                                                         <textarea class="form-control form-control-sm rounded-1 p-0 mt-1 w-100 border border-end-0 border-top-0"
@@ -660,28 +676,31 @@
 
     @* Modal RAM Start *@
     <div class="modal fade modal-xl shadow-sm p-3 mb-5  rounded" id="modalRAM" tabindex="-1"
-         aria-labelledby="modalRAMLabel" aria-hidden="true" style="display: none;">
+        aria-labelledby="modalRAMLabel" aria-hidden="true" style="display: none;">
         <div class="modal-dialog modal-dialog-centered">
 
             <div class="modal-content">
                 <div class="modal-header">
 
-                    <h5 class="modal-title" id="modalRAMLabel">Risk Assessment Matrix (RAM){{(selectedDataNodeWorksheetRamType =='s'?' : Security':(selectedDataNodeWorksheetRamType =='l'?' : Likelihood':''))}}</h5>
+                    <h5 class="modal-title" id="modalRAMLabel">Risk Assessment Matrix
+                        (RAM){{(selectedDataNodeWorksheetRamType =='s'?' : Security':(selectedDataNodeWorksheetRamType
+                        =='l'?' : Likelihood':''))}}</h5>
 
 
                     <div class="col-auto ms-auto" style="zoom:1.5">
                         <b class="pe-1 me-1"> Security : {{cal_ram_action_security}}</b>
                         <b class="pe-1 me-1"> Likelihood : {{cal_ram_action_likelihood}}</b>
-                        <b class="pe-1 me-1">  Risk : </b>
+                        <b class="pe-1 me-1"> Risk : </b>
                         <label class="pe-1 me-1 text-center" style="width:100px"
-                               ng-style=" { 'background-color' : ((cal_ram_action_risk == 'H') ? 'red' : ((cal_ram_action_risk == 'M') ? 'yellow' : ((cal_ram_action_risk == 'L') ? 'green' : '#D3D3D3')) ) }">{{cal_ram_action_risk}}</label>
+                            ng-style=" { 'background-color' : ((cal_ram_action_risk == 'H') ? 'red' : ((cal_ram_action_risk == 'M') ? 'yellow' : ((cal_ram_action_risk == 'L') ? 'green' : '#D3D3D3')) ) }">{{cal_ram_action_risk}}</label>
                     </div>
 
                     <button class="btn p-1" type="button" data-bs-dismiss="modal" aria-label="Close">
-                        <svg class="svg-inline--fa fa-xmark fs--1" aria-hidden="true" focusable="false" data-prefix="fas"
-                             data-icon="xmark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"
-                             data-fa-i2svg="">
-                            <path fill="currentColor" d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z">
+                        <svg class="svg-inline--fa fa-xmark fs--1" aria-hidden="true" focusable="false"
+                            data-prefix="fas" data-icon="xmark" role="img" xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 320 512" data-fa-i2svg="">
+                            <path fill="currentColor"
+                                d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z">
                             </path>
                         </svg>
                     </button>
@@ -695,39 +714,38 @@
                             <div class="col-1"></div>
                             <div class="col-5 d-flex justify-content-start gap-10">
                                 <span class="mx-1 d-flex pt-5">
-                                    <a class="m-1 text-info cursor-pointer"
-                                       href="{{y.document_definition_file_path}}" target="_blank"
-                                       ng-repeat="y in master_ram | filter:{id: data_details[0].id_ram}">Definition Consequence Rating<span class="fas fa-file-pdf fa-lg ms-1"></span></a>
+                                    <a class="m-1 text-info cursor-pointer" href="{{y.document_definition_file_path}}"
+                                        target="_blank"
+                                        ng-repeat="y in master_ram | filter:{id: data_details[0].id_ram}">Definition
+                                        Consequence Rating<span class="fas fa-file-pdf fa-lg ms-1"></span></a>
                                 </span>
                             </div>
                             <div class="col-5 d-flex justify-content-center" style="padding: 10px 10px;gap: 65px;">
                                 <div class="d-flex justify-content-end align-items-center flex-column"
-                                     ng-repeat="item_ram in master_likelihood_level | filter:{id_ram:data_details[0].id_ram,columns_level:item_ram.columns_level}">
+                                    ng-repeat="item_ram in master_likelihood_level | filter:{id_ram:data_details[0].id_ram,columns_level:item_ram.columns_level}">
                                     <label for="likelihood"><b>{{item_ram.likelihood_level}}</b></label>
-                                    <input type="radio"
-                                           id="likelihood"
-                                           name="likelihood"
-                                           ng-click="selectDataRAM('l',item_ram.likelihood_level)"
-                                           style="cursor: pointer; width:25px; height:25px;">
+                                    <input type="radio" id="likelihood" name="likelihood"
+                                        ng-click="selectDataRAM('l',item_ram.likelihood_level)"
+                                        style="cursor: pointer; width:25px; height:25px;">
                                 </div>
                             </div>
                             <div class="col-1 d-flex justify-content-end"></div>
                         </div>
 
-                        <div class="col-1 d-flex flex-column justify-content-end" style="gap: 40px; padding: 0px;  padding-bottom: 20px;">
+                        <div class="col-1 d-flex flex-column justify-content-end"
+                            style="gap: 40px; padding: 0px;  padding-bottom: 20px;">
                             <div class="d-flex justify-content-end align-items-center gap-2"
-                                 ng-repeat="item_ram in master_security_level | filter:{id_ram:data_details[0].id_ram,category_type:item_ram.category_type}">
+                                ng-repeat="item_ram in master_security_level | filter:{id_ram:data_details[0].id_ram,category_type:item_ram.category_type}">
                                 <label for="security_level"><b>{{item_ram.security_level}}</b></label>
-                                <input type="radio"
-                                       id="security_level"
-                                       name="security_level"
-                                       ng-click="selectDataRAM('s',item_ram.security_level)"
-                                       style="cursor: pointer; width:25px; height:25px;">
+                                <input type="radio" id="security_level" name="security_level"
+                                    ng-click="selectDataRAM('s',item_ram.security_level)"
+                                    style="cursor: pointer; width:25px; height:25px;">
                             </div>
                         </div>
 
                         <div class="col-11">
-                            <div class="cursor-pointer " ng-repeat="itemRam in master_ram | filter:{id: data_details[0].id_ram}">
+                            <div class="cursor-pointer "
+                                ng-repeat="itemRam in master_ram | filter:{id: data_details[0].id_ram}">
                                 <img src="{{itemRam.document_file_path}}" style="width:100%;" />
                             </div>
                         </div>
@@ -736,33 +754,34 @@
                         <div class="row">
                             <div class="col-4 d-flex justify-content-end gap-10">
                             </div>
-                            <div class="col-8 d-flex justify-content-center" style="padding: 20px 20px 20px 50px; gap: 160px">
+                            <div class="col-8 d-flex justify-content-center"
+                                style="padding: 20px 20px 20px 50px; gap: 160px">
                                 <div class="d-flex justify-content-end align-items-center flex-column"
-                                     ng-repeat="item_ram in master_likelihood_level | filter:{id_ram:data_details[0].id_ram,columns_level:item_ram.columns_level}">
+                                    ng-repeat="item_ram in master_likelihood_level | filter:{id_ram:data_details[0].id_ram,columns_level:item_ram.columns_level}">
                                     <label for="likelihood"><b>{{item_ram.likelihood_level}}</b></label>
-                                    <input type="radio"
-                                           id="likelihood" checked="{{cal_ram_action_likelihood == item_ram.likelihood_level}}"
-                                           name="likelihood"
-                                           ng-click="selectDataRAM('l',item_ram.likelihood_level)"
-                                           style="cursor: pointer;width:30px; height:30px;">
+                                    <input type="radio" id="likelihood"
+                                        checked="{{cal_ram_action_likelihood == item_ram.likelihood_level}}"
+                                        name="likelihood" ng-click="selectDataRAM('l',item_ram.likelihood_level)"
+                                        style="cursor: pointer;width:30px; height:30px;">
                                 </div>
                             </div>
                         </div>
 
-                        <div class="col-1 d-flex flex-column justify-content-end" style="gap: 63px; padding-bottom: 20px;">
+                        <div class="col-1 d-flex flex-column justify-content-end"
+                            style="gap: 63px; padding-bottom: 20px;">
                             <div class="d-flex justify-content-end align-items-center gap-2"
-                                 ng-repeat="item_ram in master_security_level | filter:{id_ram:data_details[0].id_ram,category_type:item_ram.category_type}">
+                                ng-repeat="item_ram in master_security_level | filter:{id_ram:data_details[0].id_ram,category_type:item_ram.category_type}">
                                 <label for="security_level"><b>{{item_ram.security_level}}</b></label>
-                                <input type="radio"
-                                       id="security_level" checked="{{cal_ram_action_security == item_ram.security_level}}"
-                                       name="security_level"
-                                       ng-click="selectDataRAM('s',item_ram.security_level)"
-                                       style="cursor: pointer;width:30px; height:30px;">
+                                <input type="radio" id="security_level"
+                                    checked="{{cal_ram_action_security == item_ram.security_level}}"
+                                    name="security_level" ng-click="selectDataRAM('s',item_ram.security_level)"
+                                    style="cursor: pointer;width:30px; height:30px;">
                             </div>
                         </div>
 
                         <div class="col-11">
-                            <div class="cursor-pointer " ng-repeat="itemRam in master_ram | filter:{id: data_details[0].id_ram}">
+                            <div class="cursor-pointer "
+                                ng-repeat="itemRam in master_ram | filter:{id: data_details[0].id_ram}">
                                 <img src="{{itemRam.document_file_path}}" style="width:100%;" />
                             </div>
                         </div>
@@ -775,7 +794,6 @@
         </div>
     </div>
     @* Modal RAM End *@
-
 
 
     <div class="modal fade" id="modalMsgConfirm" tabindex="-1" aria-labelledby="modalMsgConfirmLabel" aria-hidden="true"
