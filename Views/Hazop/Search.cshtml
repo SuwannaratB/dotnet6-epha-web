@@ -790,7 +790,7 @@
                                                                                 <span class="fa-solid fa-ban fa-lg"></span>
                                                                             </button>
                                                                         </span>
-                                                                        <span class="mx-1" ng-if="item_h.pha_status == 13">
+                                                                        <span class="mx-1" ng-if="item_h.pha_status == 13 && (flow_role_type == 'admin' || flow_role_type == 'originator')">
                                                                             <button class="btn btn-outline text-secondery p-1 ms-1" 
                                                                                     title="Edit PHA"
                                                                                     ng-click="editDoc(item_h)">

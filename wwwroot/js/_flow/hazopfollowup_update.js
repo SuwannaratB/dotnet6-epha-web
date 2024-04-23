@@ -326,21 +326,30 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         //var del = document.getElementById('del-' + seq);
         //del.style.display = "none";
 
-
-        var arr = $filter('filter')($scope.data_drawingworksheet, function (item) { return (item.seq == seq); });
-        if (arr.length > 0) {
-            arr[0].document_file_name = null;
-            arr[0].document_file_size = 0;
-            arr[0].document_file_path = null;
-            arr[0].action_type = 'delete';
-            arr[0].action_change = 1;
-            apply();
+        if ($scope.data_drawingworksheet.length > 1) {
+            var arr = $filter('filter')($scope.data_drawingworksheet, function (item) { 
+                return (item.seq != seq); 
+            });
+            $scope.data_drawingworksheet = arr;
         }
 
-        var arr = $filter('filter')($scope.data_drawingworksheet, function (item) { return (item.seq == seq && !(item.action_type == 'delete')); });
-        if (arr.length == 0) {
-            $scope.addDataWorksheetDrawing(item_draw, seq_nodeworksheet);
-        }
+        // var arr = $filter('filter')($scope.data_drawingworksheet, function (item) { return (item.seq == seq); });
+        // if (arr.length > 0) {
+        //     arr[0].document_file_name = null;
+        //     arr[0].document_file_size = 0;
+        //     arr[0].document_file_path = null;
+        //     arr[0].action_type = 'delete';
+        //     arr[0].action_change = 1;
+        //     apply();
+        // }
+
+        // var arr = $filter('filter')($scope.data_drawingworksheet, function (item) { 
+        //     return (item.seq == seq && !(item.action_type == 'delete')); 
+        // });
+
+        // if (arr.length == 0) {
+        //     $scope.addDataWorksheetDrawing(item_draw, seq_nodeworksheet);
+        // }
 
         clear_form_valid();
 

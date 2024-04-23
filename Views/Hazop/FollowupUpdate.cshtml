@@ -488,13 +488,14 @@
                                                                             <span class="fas fa-copy"></span>
                                                                             Add
                                                                         </a>
-                                                                        <div class="dropdown-divider"></div><a class="dropdown-item text-danger"
-                                                                                                               ng-click=removeDataWorksheetDrawing(item_x,item_d.seq)>
-                                                                            <span class="fas fa-times-circle"></span> Remove
+                                                                        <div class="dropdown-divider"></div>
+                                                                        <a class="dropdown-item text-danger" ng-click=removeDataWorksheetDrawing(item_x,item_d.seq)>
+                                                                            <span class="fas fa-times-circle"></span> 
+                                                                            Remove
                                                                         </a>
                                                                     </div>
                                                                 </div>
-                                                                <div class="align-items-center">
+                                                                <div class="align-items-center" style="width: 280px">
                                                                     <div class="uploadbox ">
                                                                         <span class="nametext ms-3 filename-text me-2" 
                                                                             id="filename{{item_x.seq}}">
@@ -502,7 +503,7 @@
                                                                         </span>
                                                                         <label class="uploadfile dz-message-text text-info fw-bold p-2" 
                                                                                 for="attfile-{{item_x.seq}}"
-                                                                               style="cursor: pointer;">
+                                                                               style="cursor: pointer; min-width: 100px;">
                                                                             <i class="fa-solid fa-arrow-up-from-bracket fa-xl me-1"></i>
                                                                             <span class="upload-text d-none d-lg-inline">Upload File</span>
                                                                         </label>

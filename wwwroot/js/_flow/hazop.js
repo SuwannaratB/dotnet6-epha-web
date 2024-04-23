@@ -1010,6 +1010,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
 
     function save_data_create(action, action_def) {
+        console.log('save ==> ',$scope.data_nodeworksheet)
         if ($scope.action_part != 4) { set_data_managerecom(); }
 
         check_data_general();
@@ -1044,7 +1045,19 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         var json_ram_master = check_master_ram();
 
         //submit, submit_without, submit_complete
-        var flow_action = (action == 'submit_complete' ? 'submit' : action);
+        // var flow_action = (action == 'submit_complete' ? 'submit' : action);
+        var flow_action = '';
+
+        if(action == 'submit_complete'){
+            flow_action = 'submit_complete'
+        }else if(action == 'change_action_owner'){
+            flow_action = 'change_action_owner'
+        }else if(action == 'submit'){
+            flow_action = action
+        }else {
+            flow_action = action
+        }
+
         $.ajax({
             url: url_ws + "Flow/set_hazop",
             data: '{"user_name":"' + user_name + '","token_doc":"' + token_doc + '","pha_status":"' + pha_status + '","pha_version":"' + pha_version + '","action_part":"' + action_part + '"'
@@ -1079,7 +1092,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             success: function (data) {
 
                 var arr = data;
-                console.log(arr);
                 if (arr[0].status == 'true') {
                     $scope.pha_type_doc = 'update';
                     if (action == 'save' || action == 'submit_moc'
@@ -1172,7 +1184,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     else {
 
                         set_alert('Success', 'Data has been successfully submitted.');
-                        window.open('hazop/search', "_top");
+                        // window.open('hazop/search', "_top");
                         return;
                     }
                 }
@@ -1311,6 +1323,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         var user_name = conFig.user_name();
         call_api_load(false, action_submit, user_name, pha_seq);
     }
+
     function call_api_load(page_load, action_submit, user_name, pha_seq) {
 
         var type_doc = $scope.pha_type_doc;//review_document
@@ -1328,7 +1341,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 $('#divLoading').hide();
             },
             success: function (data) {
-                console.log(data);
+                console.log('=> ',data);
 
                 var action_part_befor = $scope.action_part;//(page_load == false ? $scope.action_part : 0);
                 var tabs_befor = (page_load == false ? $scope.tabs : null);
@@ -1422,6 +1435,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     }
 
                     $scope.data_nodeworksheet = arr.nodeworksheet;
+                    // formatEstimatedDate
+                    // formatEstimatedDate();
                     $scope.data_nodeworksheet_def = clone_arr_newrow(arr.nodeworksheet);
 
                     $scope.data_drawing_approver = arr.drawing_approver;
@@ -1433,7 +1448,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     set_data_nodeguidwords();
                     set_data_nodeworksheet();
                     set_master_ram_likelihood('');
-                    console.log('node',$scope.data_nodeworksheet)
                     //get recommendations_no in node worksheet
                     if ($scope.data_nodeworksheet.length > 0) {
                         var arr_copy_def = angular.copy($scope.data_nodeworksheet, arr_copy_def);
@@ -4663,7 +4677,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     $scope.confirmEdit = function () {
         $('#modalEditConfirm').modal('hide');
         setTimeout(function() {
-            save_data_create('save', 'save');
+            save_data_create('change_action_owner', 'save');
         }, 200); 
     }
 
