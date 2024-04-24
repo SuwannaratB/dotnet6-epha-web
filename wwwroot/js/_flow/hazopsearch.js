@@ -339,7 +339,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             success: function (data) {
                 // var arr = data;
                 // window.open(data.page, "_top");
-                window.open(`${data.page}?data=` + encodeURIComponent(editPage), '_top');
+                if (editPage) {
+                    return window.open(`${data.page}?data=` + encodeURIComponent(editPage), '_top');
+                }
+                return window.open(data.page, "_top");
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 if (jqXHR.status == 500) {
