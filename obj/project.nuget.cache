@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "iyJoy+C5Cl+xIsBwtH5WrYnm0Bjm0ZGTPt+vkW7+swrINRM652V/IkGtQccTTBzWaIWy9WJhJgzP0ZcFDgw9rQ==",
+  "dgSpecHash": "yXFmxh4sd5f2otV15ozvxJ51OKIj3OIDFDzc+lG2PcEWPoB9+nmZL/jKjiEJBOCmm99Ot6u7mqJNTkpR+xVYcg==",
   "success": true,
   "projectFilePath": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\dotnet6-epha-web.csproj",
   "expectedPackageFiles": [
@@ -24,11 +24,7 @@
     "C:\\Users\\ADB\\.nuget\\packages\\system.security.cryptography.pkcs\\6.0.3\\system.security.cryptography.pkcs.6.0.3.nupkg.sha512",
     "C:\\Users\\ADB\\.nuget\\packages\\system.text.encoding.codepages\\6.0.0\\system.text.encoding.codepages.6.0.0.nupkg.sha512",
     "C:\\Users\\ADB\\.nuget\\packages\\system.text.encodings.web\\6.0.0\\system.text.encodings.web.6.0.0.nupkg.sha512",
-    "C:\\Users\\ADB\\.nuget\\packages\\system.text.json\\6.0.0\\system.text.json.6.0.0.nupkg.sha512",
-    "C:\\Users\\ADB\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\6.0.28\\microsoft.windowsdesktop.app.ref.6.0.28.nupkg.sha512",
-    "C:\\Users\\ADB\\.nuget\\packages\\microsoft.netcore.app.ref\\6.0.28\\microsoft.netcore.app.ref.6.0.28.nupkg.sha512",
-    "C:\\Users\\ADB\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\6.0.28\\microsoft.aspnetcore.app.ref.6.0.28.nupkg.sha512",
-    "C:\\Users\\ADB\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\6.0.28\\microsoft.netcore.app.host.win-x64.6.0.28.nupkg.sha512"
+    "C:\\Users\\ADB\\.nuget\\packages\\system.text.json\\6.0.0\\system.text.json.6.0.0.nupkg.sha512"
   ],
   "logs": []
 }

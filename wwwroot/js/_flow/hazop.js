@@ -94,7 +94,7 @@ AppMenuPage.filter('SearchGuideWordsFieldFilter', function () {
 });
 
 AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) {
-     
+
     //search list function
     $scope.autoComplete = function (DataFilter, idinput) {
 
@@ -143,21 +143,21 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
     };
 });
 
-AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, $document, $interval) { 
+AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, $document, $interval) {
 
     function startTimer() {
         $scope.counter = 1800; // 1800 วินาทีเท่ากับ 30 นาที
         var interval = $interval(function () {
             var minutes = Math.floor($scope.counter / 60); // หานาทีที่เหลืออยู่
             var seconds = $scope.counter % 60; // หาวินาทีที่เหลืออยู่
-    
+
             // แสดงเวลาที่เหลืออยู่ในรูปแบบนาทีและวินาที
             $scope.counterText = minutes + ' min. ' + seconds + ' sec.';
             $scope.minutes = minutes
-    
+
             // ลดเวลาลงทีละหนึ่งวินาที
             $scope.counter--;
-    
+
             if ($scope.counter == 0) {
                 // เมื่อเวลาครบ 0 ให้แสดงแจ้งเตือน
                 set_alert("Warning", "Please save the information.")
@@ -165,12 +165,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 startTimer(); // เริ่มนับใหม่
             }
         }, 1000);
-    
+
         $scope.stopTimer = function () {
             $interval.cancel(interval);
         };
     }
-    
+
     $scope.startTimer = startTimer;
 
     $scope.formatTo24Hour = function (_time) {
@@ -4617,21 +4617,28 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.data_session[i].id = $scope.data_session[i].seq;
             $scope.data_session[i].id_pha = pha_seq;
             try {
-                $scope.data_session[0].meeting_date = $scope.data_session[0].meeting_date.toISOString().split('T')[0];
+                //Kuluwat 20240409 1112 convert format date to string
+                //$scope.data_session[i].meeting_date = $scope.data_session[i].meeting_date.toISOString().split('T')[0];
+                var meetingDate = $scope.data_session[i].meeting_date;
+                var formattedDate = meetingDate.getFullYear() + '-' +
+                    ('0' + (meetingDate.getMonth() + 1)).slice(-2) + '-' +
+                    ('0' + meetingDate.getDate()).slice(-2);
+                $scope.data_session[0].meeting_date = formattedDate; 
             } catch { }
-            if ($scope.data_session[i].meeting_start_time !== null) {
+            try {
                 //12/31/1969 7:55:00 PM 
                 var hh = $scope.data_session[i].meeting_start_time_hh; var mm = $scope.data_session[i].meeting_start_time_mm;
                 var valtime = "1970-01-01T" + (hh).substring(hh.length - 2) + ":" + (mm).substring(mm.length - 2) + ":00.000Z";
 
                 $scope.data_session[i].meeting_start_time = new Date(valtime);
-            }
-            if ($scope.data_session[i].meeting_end_time !== null) {
+            } catch { }
+
+            try {
                 //12/31/1969 7:55:00 PM
                 var hh = $scope.data_session[i].meeting_end_time_hh; var mm = $scope.data_session[i].meeting_end_time_mm;
                 var valtime = "1970-01-01T" + (hh).substring(hh.length - 2) + ":" + (mm).substring(mm.length - 2) + ":00.000Z";
                 $scope.data_session[i].meeting_end_time = new Date(valtime);
-            }
+            } catch { }
         }
 
         var arr_active = [];
@@ -4878,7 +4885,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 try {
                     var date_value = $scope.data_nodeworksheet[i].responder_action_date.toISOString().split('T');
                     if (date_value.length > 0) { $scope.data_nodeworksheet[i].responder_action_date = date_value[0]; }
-                } catch { } 
+                } catch { }
             }
 
         }
@@ -5043,7 +5050,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             // สร้างสตริง "DD MMM YYYY"
             var formattedDate = day + ' ' + month + ' ' + year;
-             
+
 
             if (_arr.implement == 0) {
 
@@ -5149,7 +5156,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             arr = $scope.data_all.his_recommendations;
         }
 
-        var count = 0; 
+        var count = 0;
         for (var i = 0; i < arr.length; i++) {
             var result = arr[i];
             if (result.name.toLowerCase().startsWith(fieldText.toLowerCase())) {
@@ -5158,7 +5165,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
 
             if (count >= 10) {
-                break; 
+                break;
             }
         }
 
