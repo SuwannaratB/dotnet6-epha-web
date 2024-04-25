@@ -1023,7 +1023,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         var pha_version = $scope.data_header[0].pha_version;
         var pha_seq = $scope.data_header[0].seq;
         token_doc = pha_seq;
-        flow_action = 'submit'
 
 
         var json_header = angular.toJson($scope.data_header);
@@ -1050,7 +1049,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         var flow_action = '';
 
         if(action == 'submit_complete'){
-            flow_action = 'submit_complete'
+            flow_action = 'submit'
         }else if(action == 'change_action_owner'){
             flow_action = 'change_action_owner'
         }else if(action == 'submit'){
