@@ -98,7 +98,33 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
     };
 
 });
-AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, $document, $element) {
+AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, $document, $element,$rootScope,$window) {
+
+    //var unsavedChanges = false;
+
+    // Track location changes
+    $rootScope.$on('$locationChangeStart', function(event, next, current) {
+        console.log('Location is changing from:', current, 'to:', next);
+
+        if (unsavedChanges) {
+            var confirmLeave = $window.confirm("You have unsaved changes. Are you sure you want to leave?");
+            if (!confirmLeave) {
+                event.preventDefault();
+            }
+        }
+    });
+
+    // close tab / browser window
+    $window.addEventListener('beforeunload', function(event) {
+        console.log("Trigger Ec=vent",event)
+        if (unsavedChanges) {
+            var confirmationMessage = 'You have unsaved changes. Are you sure you want to leave?';
+    
+            event.preventDefault();
+            event.returnValue = confirmationMessage;
+            return confirmationMessage;
+        }
+    });
 
     //All
     if (true) {
@@ -990,6 +1016,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         $scope.data_workers = arr.workers;
                         $scope.data_workers_def = clone_arr_newrow(arr.workers);
                         $scope.data_workers_old = (arr.workers);
+
+
+                        //defualt
                     }
 
                     //HRA Worksheet
@@ -1862,9 +1891,15 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         //work or tasks
         $scope.addDataWork = function (item){
 
+            if (!item.work_or_task) {
+                $scope.MaxSeqdataTasks = Number($scope.MaxSeqdataTasks);
+                var xValues = $scope.MaxSeqdataTasks;
+
+                item.work_or_task = [{...item, seq: xValues,id: xValues}];
+            }
+
             $scope.MaxSeqdataTasks = Number($scope.MaxSeqdataTasks) + 1;
             var xValues = $scope.MaxSeqdataTasks;
-
             var seq = item.seq;
             var arr = $filter('filter')($scope.data_tasks, function (item) { return (item.seq == seq); });
             var iNo = item.no
@@ -1890,6 +1925,23 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             apply();
         }
+        $scope.removeDataWork = function (item_no, seq) {
+            const Data_Groups = $scope.data_tasks.find(groups => groups.no === item_no);
+            if (!Data_Groups) {
+                console.log("No Groups found with the specified 'no' value.");
+                return;
+            }
+
+            const data_work = Data_Groups['work_or_task'].findIndex(item => item.seq === seq);
+            if (data_work === -1) {
+                console.log("No Groups found with the specified 'seq' value.");
+                return;
+            }
+
+            Data_Groups['work_or_task'].splice(data_work, 1);
+
+            console.log(`Removed task with seq '${seq}' from data ${item_no}.`);            
+        };
 
         //complex array  //use same no. as above 
         function set_work(item) {
@@ -1911,8 +1963,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             console.log($scope.data_tasks);
         }
         
-    
-
         function set_tasks_type_other() {
             //set tasks_type_other = 1, no = 99 
             var arrTaskTypeOther = $filter('filter')($scope.data_tasks, function (item) {
@@ -3100,6 +3150,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
         function action_type_changed(_arr, _seq) {
 
+            console.log(_arr)
             if (_seq == undefined) { _seq = 1; }
             if (_arr.seq == _seq && _arr.action_type == '') {
                 _arr.action_type = 'update';
@@ -3143,12 +3194,21 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             else if (fieldName == 'recommendations') {
                 arr = $scope.data_all.his_recommendations;
             }
+            //เพิ่มfor work or task
+            else if (fieldName == 'work_or_task') {
+                arr = $scope.data_all.his_work_or_task;
+            }
 
-            for (var i = 0; i < arr.length; i++) {
-                var result = arr[i];
-                if (result.name.toLowerCase().startsWith(fieldText.toLowerCase())) {
-                    $scope.filteredResults.push({ "field": fieldName, "name": result.name });
-                }
+            var count = 0;
+
+            if (Array.isArray(arr)) { 
+                arr.some(function(result) {
+                    if (result.name.toLowerCase().startsWith(fieldText.toLowerCase())) {
+                        $scope.filteredResults.push({ "field": fieldName, "name": result.name });
+                        count++;
+                    }
+                    return count >= 10; 
+                });
             }
 
             $scope.showResults = $scope.filteredResults.length > 0;
