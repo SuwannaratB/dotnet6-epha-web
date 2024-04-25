@@ -1804,7 +1804,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     //List of Worker Groups and Description of Tasks
     if (true) {
+        
         $scope.addDataTasks = function (item, index) {
+
             $scope.MaxSeqdataTasks = Number($scope.MaxSeqdataTasks) + 1;
             var xValues = $scope.MaxSeqdataTasks;
 
@@ -1856,6 +1858,61 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             apply();
         };
+        
+        //work or tasks
+        $scope.addDataWork = function (item){
+
+            $scope.MaxSeqdataTasks = Number($scope.MaxSeqdataTasks) + 1;
+            var xValues = $scope.MaxSeqdataTasks;
+
+            var seq = item.seq;
+            var arr = $filter('filter')($scope.data_tasks, function (item) { return (item.seq == seq); });
+            var iNo = item.no
+
+            var newInput = clone_arr_newrow($scope.data_tasks_def)[0];
+            newInput.seq = xValues;
+            newInput.id = xValues;
+            newInput.no = iNo;
+            newInput.action_type = 'insert';
+            newInput.action_change = 0;
+            newInput.action_new_row = 0;
+
+            newInput.tasks_type_other = 0;
+
+            //running_no_level1_lv1($scope.data_tasks, iNo, index, newInput);
+
+            //$scope.data_tasks.push(newInput)
+            set_work(newInput)
+            $scope.selectdata_tasks = xValues;
+
+            //set tasks_type_other = 1, no = 99 
+            set_tasks_type_other();
+
+            apply();
+        }
+
+        //complex array  //use same no. as above 
+        function set_work(item) {
+            var newItem = item;
+        
+            var task_items = $scope.data_tasks.filter(function(task) {
+                console.log(task.no,newItem.no)
+                return task.no === newItem.no;
+            });
+            
+            // Push the new item into each task_item's 'work_or_task' array
+            task_items.forEach(function(task) {
+                if (!task.work_or_task) {
+                    task.work_or_task = []; 
+                }
+                task.work_or_task.push(newItem);
+            });
+
+            console.log($scope.data_tasks);
+        }
+        
+    
+
         function set_tasks_type_other() {
             //set tasks_type_other = 1, no = 99 
             var arrTaskTypeOther = $filter('filter')($scope.data_tasks, function (item) {

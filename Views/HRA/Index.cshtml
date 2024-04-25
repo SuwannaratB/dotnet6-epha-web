@@ -1001,15 +1001,15 @@
 
                                         <tbody class="list" id="customer-rating-table-body">
 
-                                            <tr class="hover-actions-trigger btn-reveal-trigger position-static"
+                                            <tr class="hover-actions-trigger btn-reveal-trigger position-static" 
                                                 ng-repeat="item in data_tasks" ng-if="item.tasks_type_other == 0">
-
-                                                <td class="align-top rating white-space-nowrap px-1" style="width: 150px;"
-                                                    rowspan="{{data_workers.length}}" ng-if="$index == 0">
+                                                <td class="align-top rating white-space-nowrap px-1" style="width: 150px;" 
+                                                    rowspan="{{data_tasks.length}}" ng-if="$index == 0"> 
                                                     <p class="text-1100 fw-bold" ng-if="$index == 0">{{selectedBusiness_Unit}}</p>
                                                 </td>
 
-                                                <td class="align-top rating white-space-nowrap px-1" style="width: 250px;">
+                                                <!----span work lenght rowspan=""----->
+                                                <td class="align-top rating white-space-nowrap px-1" style="width: 250px;" > 
 
                                                     <div class="d-flex align-items-center mx-1 p-1">
                                                         <div class="">
@@ -1057,7 +1057,7 @@
                                                     </div>
                                                 </td>
 
-
+                                                <!----span work/task lenght rowspan=""----->
                                                 <td class="align-top rating px-1 d-flex flex-column align-items-center justify-content-start">
                                                     <div class="d-flex justify-content-start w-100 ps-2"
                                                          ng-repeat="workers in data_workers | filter:{id_tasks:item.id} | orderBy:'no'">
@@ -1065,21 +1065,103 @@
                                                     </div>
                                                 </td>
 
-
-                                                <td class="align-top status text-center px-1" style="width: 50px;">
+                                                <!----span work/task lenght rowspan=""----->
+                                                <td class="align-top status text-center px-1" style="width: 50px;"><!----span same id work group? same no. ----->
                                                     <p><b>{{ (data_workers | filter:{id_tasks:item.id}).length }}</b></p>
                                                 </td>
 
-                                                <td class="align-top pt-1">
+                                                <!----- work or task ==> can be add------->
+                                                <td class="align-top pt-1" >
+                                                    <div class="d-flex align-items-center mx-1 p-1"  ng-if="$first || data_tasks[$index - 1].no !== item.no">
+                                                            <div class="">
+                                                                <div class="align-top ">
+                                                                    <div class="font-sans-serif btn-reveal-trigger position-static ">
+                                                                        <span class="px-1"></span>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="font-sans-serif btn-reveal-trigger position-static"
+                                                                    ng-class="{'d-none': !(tab_general_active)}"
+                                                                    ng-if="item.tasks_type_other == 0">
+                                                                    <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 p-1"
+                                                                            type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true"
+                                                                            aria-expanded="false" data-bs-reference="parent">
+                                                                        <span class="fas fa-cog text-info"></span>
+                                                                    </button>
+                                                                    <div class="dropdown-menu dropdown-menu-end py-2">
+                                                                        <a class="dropdown-item text-success"
+                                                                        ng-click="addDataWork(item)">
+                                                                            <span class="fas fa-copy"></span>
+                                                                            Add
+                                                                        </a>
+                                                                        <div class="dropdown-divider" ng-if="!(item.no == 1)"></div>
+                                                                        <a class="dropdown-item text-danger" ng-if="!(item.no == 1)"
+                                                                        ng-click="removeDataWork(item.no,$index)"><span class="fas fa-times-circle"></span> Remove</a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
 
-                                                    <textarea class="form-control rounded-1" ng-class="{'disabled-link':(!tab_general_active)}"
-                                                              id="work_or_task" name="work_or_task"
-                                                              placeholder="Work or Task" style="height: 100px"
-                                                              ng-model="item.work_or_task"></textarea>
+                                                            <input class="form-control rounded-1" ng-class="{'disabled-link':(!tab_general_active)}"
+                                                                type="text" placeholder="Work or Task"
+                                                                name="work_or_task"
+                                                                ng-model="tasks.work_or_task"> <!----ng-keyup="filterResultGeneral(item.pha_request_name, 'pha_request_name')"--->
+                                                            <ul class="list-group mt-2 w-25" style="position: absolute;" ng-show="showResults">
+                                                                <li class="list-group-item ">
+                                                                    <!---------
+                                                                    ng-repeat="result in filteredResults | filter:{field:'pha_request_name'}"
+                                                                    ng-click="selectResult(result,item,'pha_request_name')"
+                                                                    ----------->
+                                                                    {{ }}
+                                                                </li>
+                                                            </ul>    
 
-                                                </td>
+                                                    </div>        
 
+                                                    <div class="d-flex align-items-center mx-1 p-1" ng-repeat="tasks in item.work_or_task" 
+                                                        ng-if="item.work_or_task && item.work_or_task.length > 0">
+                                                        <div class="">
+                                                            <div class="align-top ">
+                                                                <div class="font-sans-serif btn-reveal-trigger position-static ">
+                                                                    <span class="px-1"></span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="font-sans-serif btn-reveal-trigger position-static"
+                                                                 ng-class="{'d-none': !(tab_general_active)}"
+                                                                 ng-if="item.tasks_type_other == 0">
+                                                                <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 p-1"
+                                                                        type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true"
+                                                                        aria-expanded="false" data-bs-reference="parent">
+                                                                    <span class="fas fa-cog text-info"></span>
+                                                                </button>
+                                                                <div class="dropdown-menu dropdown-menu-end py-2">
+                                                                    <a class="dropdown-item text-success"
+                                                                       ng-click="addDataWork(item)">
+                                                                        <span class="fas fa-copy"></span>
+                                                                        Add
+                                                                    </a>
+                                                                    <div class="dropdown-divider" ng-if="!(item.no == 1)"></div>
+                                                                    <a class="dropdown-item text-danger" ng-if="!(item.no == 1)"
+                                                                       ng-click="removeDataWork(item.no,$index)"><span class="fas fa-times-circle"></span> Remove</a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
 
+                                                        <input class="form-control rounded-1" ng-class="{'disabled-link':(!tab_general_active)}"
+                                                            type="text" placeholder="Work or Task"
+                                                            name="work_or_task"
+                                                            ng-model="tasks.work_or_task"> <!----ng-keyup="filterResultGeneral(item.pha_request_name, 'pha_request_name')"--->
+                                                        <ul class="list-group mt-2 w-25" style="position: absolute;" ng-show="showResults">
+                                                            <li class="list-group-item ">
+                                                                <!---------
+                                                                ng-repeat="result in filteredResults | filter:{field:'pha_request_name'}"
+                                                                ng-click="selectResult(result,item,'pha_request_name')"
+                                                                ----------->
+                                                                {{tasks.work_or_task }}
+                                                            </li>
+                                                        </ul>    
+
+                                                    </div>                                                       
+                                                </td>                                               
+                                                                                           
                                             </tr>
 
                                         </tbody>
@@ -2388,7 +2470,7 @@
                             <table class="table table-sm fs--1 mb-0 col-auto ">
                                 <thead class="bg-light-primary">
                                     <tr>
-                                        <td rowspan="3" class="text-center"></td>
+                                        <td  class="text-center"></td>
                                         <th rowspan="2" colspan="3" ng-if="select_columns_level != 5">Likelihood</th>
                                         <th rowspan="2" colspan="5" ng-if="select_columns_level == 5">Likelihood</th>
                                     </tr>
