@@ -27,6 +27,8 @@
 
     <link rel="stylesheet" href="~/css/scollbar.css">
 
+    <link rel="stylesheet" href="~/css/myStyles.css">
+
     <script src="~/assets/js/all.min.js"></script>
 
 }
@@ -169,11 +171,11 @@
                                                 ng-class="{'disabled-link':(!tab_general_active)}"
                                                 data-choices="data-choices"
                                                 data-options='{"removeItemButton":true,"placeholder":true}'
-                                                @* ng-change="actionChange(item,item.seq,'')" 
-                                                ng-model="item.id_department" *@
-                                                >
+                                                @* ng-change="actionChange(item,item.seq,'')"  *@
+                                                ng-model="item.id_department">
+                                            <option value="">Please select</option>
                                             <option ng-repeat="item2 in data_departments" 
-                                                    ng-value="item2.departments">
+                                                    ng-value="item2.id">
                                                 {{item2.departments}}
                                             </option>
                                         </select>
@@ -201,6 +203,7 @@
                                                 @* ng-change="actionChange(item,item.seq,'')" 
                                                 ng-model="" *@
                                                 >
+                                            <option value="">Please select</option>
                                             <option ng-repeat="item2 in data_sections" 
                                                 ng-value="item2.sections">
                                                 {{item2.sections}}
@@ -902,7 +905,9 @@
                                                                 ng-change="actionChange(item,item.seq,'sub_area')"
                                                                 ng-model="item.id_sub_area"
                                                                 ng-if="tab_general_active">
-                                                            <option ng-repeat="item_m in master_subarea" ng-value="item_m.id">
+                                                            <option value="" disabled>Please select</option>
+                                                            <option ng-repeat="item_m in master_subarea" 
+                                                                    ng-value="item_m.id">
                                                                 {{item_m.name}}
                                                             </option>
                                                         </select>
@@ -961,6 +966,7 @@
                                                             ng-change="actionChange(item_list,item_list.seq,'type_hazard')"
                                                             ng-model="item_list.id_type_hazard"
                                                             ng-if="tab_general_active">
+                                                            <option value="" disabled>Please select</option>
                                                             <option ng-repeat="item_m in master_hazard_type" ng-value="item_m.id">
                                                                 {{item_m.name}}
                                                             </option>
@@ -971,23 +977,45 @@
                                                             ng-change="actionChange(item_list,item_list.seq,'health_hazard')"
                                                             ng-model="item_list.id_health_hazard"
                                                             ng-if="tab_general_active">
-                                                            <option ng-repeat="item_m in master_hazard_riskfactors" ng-value="item_m.id">
-                                                                {{item_m.name}}
+                                                            <option value="" disabled>Please select</option>
+                                                            <option ng-repeat="item_m in master_hazard_riskfactors | orderBy:'name'" ng-value="item_m.id">
+                                                                {{ item_m.name }}
                                                             </option>
                                                         </select>
                                                         @* health_effect_rating *@
-                                                        <div class="d-flex align-items-center justify-content-center" style="width: 850px; cursor: not-allowed;">
-                                                            <div style="padding: 2px 8px;
-                                                                    background: red;
-                                                                    color: white;
-                                                                    font-weight: bold;
-                                                                    font-size: 16px;
-                                                                    border-radius: 6px;
-                                                                    display: flex;
-                                                                    align-items: center;
-                                                                    justify-content: center;"
-                                                                    ng-if="item_list.health_effect_rating">
+                                                        <div class="d-flex align-items-center justify-content-center gap-2" style="width: 850px;">
+                                                            @* rating *@
+                                                            <div class="effect-rating" ng-if="item_list.health_effect_rating">
                                                                 {{item_list.health_effect_rating}}
+                                                            </div>
+                                                            @* icon *@
+                                                            <div class="font-sans-serif btn-reveal-trigger position-static" ng-class="{'d-none': !(tab_general_active)}">
+                                                                <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 p-1"
+                                                                        type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true"
+                                                                        aria-expanded="false" data-bs-reference="parent">
+                                                                    <span class="fas fa-cog text-info"></span>
+                                                                </button>
+                                                                <div class="dropdown-menu dropdown-menu-end py-2">
+                                                                    <div class="d-flex align-items-center justify-content-center gap-2">
+                                                                        <div class="d-flex align-items-center justify-content-center">
+                                                                            <div class="effect-rating bg-danger">
+                                                                                5
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="dropdown-divider"></div>
+                                                                        <div class="d-flex align-items-center justify-content-center">
+                                                                            <div class="effect-rating bg-warning">
+                                                                                3
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="dropdown-divider"></div>
+                                                                        <div class="d-flex align-items-center justify-content-center">
+                                                                            <div class="effect-rating bg-success">
+                                                                                1
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>

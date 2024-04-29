@@ -960,6 +960,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         $scope.master_subarea = JSON.parse(replace_hashKey_arr(arr.subarea));
                         $scope.master_hazard_type = JSON.parse(replace_hashKey_arr(arr.hazard_type));
                         $scope.master_hazard_riskfactors = JSON.parse(replace_hashKey_arr(arr.hazard_riskfactors));
+                        // moc master_hazard_riskfactors
+                        moc_master_hazard_riskfactors();
+                        console.log('master_hazard_riskfactors => ',$scope.master_hazard_riskfactors)
+                        console.log('master_subarea => ',$scope.master_subarea)
+
                         $scope.master_worker_group = JSON.parse(replace_hashKey_arr(arr.worker_group));
                         $scope.master_worker_list = JSON.parse(replace_hashKey_arr(arr.worker_list));
                         $scope.master_activities = JSON.parse(replace_hashKey_arr(arr.activities));
@@ -997,7 +1002,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         $scope.data_drawing_def = clone_arr_newrow(arr.drawing);
 
                         $scope.data_departments = arr.departments.slice(1);
+                        $scope.data_departments.forEach(element => {
+                            element.id = element.departments
+                        });
                         $scope.data_sections = arr.sections.slice(1);
+                        $scope.data_sections.forEach(element => {
+                            element.id = element.sections
+                        });
                         console.log(  $scope.data_departments)
                         console.log(  $scope.data_sections)
                     }
@@ -1203,6 +1214,66 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         });
 
+    }
+
+    function moc_master_hazard_riskfactors() {
+        const moc_data = [
+            {
+                "id_hazard_type": 1,
+                "id": 11,
+                "name": "Benzene",
+                "field_check": "benzene",
+                "hazards_rating": "4",
+            },
+            {
+                "id_hazard_type": 1,
+                "id": 12,
+                "name": "H2S",
+                "field_check": "h2s",
+                "hazards_rating": "4",
+            },
+            {
+                "id_hazard_type": 1,
+                "id": 13,
+                "name": "Noise",
+                "field_check": "noise",
+                "hazards_rating": "4",
+            },
+            {
+                "id_hazard_type": 1,
+                "id": 14,
+                "name": "Chromic acid, lead (2+) salt (1:1) ",
+                "field_check": "chromic acid, lead (2+) salt (1:1) ",
+                "hazards_rating": "4",
+            },
+            {
+                "id_hazard_type": 1,
+                "id": 15,
+                "name": "Lead Arsenate",
+                "field_check": "lead arsenate",
+                "hazards_rating": "4",
+            },
+            {
+                "id_hazard_type": 1,
+                "id": 16,
+                "name": "Lead Arsenate",
+                "field_check": "lead arsenate",
+                "hazards_rating": "4",
+            }
+        ]
+
+        if ($scope.master_hazard_riskfactors.length > 0) {
+            const maxId = $scope.master_hazard_riskfactors.reduce((max, item) => {
+                return item.id > max ? item.id : max;
+            }, $scope.master_hazard_riskfactors[0].id); 
+
+            $scope.master_hazard_riskfactors = [...$scope.master_hazard_riskfactors, ...moc_data]
+            // เรียงลำดับข้อมูลตาม name
+            // $scope.master_hazard_riskfactors.sort((a, b) => a.name.localeCompare(b.name));
+
+        } else {
+            console.log("Array is empty");
+        }
     }
 
     function set_form_action(action_part_befor, action_save, page_load) {
@@ -3401,7 +3472,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
         function action_type_changed(_arr, _seq) {
 
-            console.log(_arr)
             if (_seq == undefined) { _seq = 1; }
             if (_arr.seq == _seq && _arr.action_type == '') {
                 _arr.action_type = 'update';
