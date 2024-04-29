@@ -995,6 +995,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                         $scope.data_drawing = arr.drawing;
                         $scope.data_drawing_def = clone_arr_newrow(arr.drawing);
+
+                        $scope.data_departments = arr.departments.slice(1);
+                        $scope.data_sections = arr.sections.slice(1);
+                        console.log(  $scope.data_departments)
+                        console.log(  $scope.data_sections)
                     }
 
                     //List of Areas to Be Assessed and Health Hazards or Risk Factors
@@ -3069,7 +3074,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 $scope.data_hazard_delete[i].action_type = 'delete';
                 arr_json.push($scope.data_hazard_delete[i]);
             }
-            console.log('arr => ',(arr_json))
+            console.log('arr hazard json => ',(arr_json))
             return angular.toJson(arr_json);
         }
 
@@ -3258,12 +3263,15 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     return (item.id == _arr.id_sub_area);
                 });
                 if (arrText.length > 0) {
-                    _arr.work_of_task = arrText[0].descriptions;
+                    // _arr.work_of_task = arrText[0].descriptions;
+                    _arr.sub_area = arrText[0].descriptions;
                     _arr.action_change = 1;
                     // set no_subareas for children hazard
                     for (let i = 0; i < _arr.hazard.length; i++) {
+                        _arr.hazard[i].action_change = 1;
                         _arr.hazard[i].id_subareas = _arr.id_sub_area;
-                        _arr.hazard[i].sub_area = _arr.work_of_task;
+                        _arr.hazard[i].sub_area = _arr.sub_area;
+                        // _arr.hazard[i].sub_area = _arr.work_of_task;
                     }
                 }
             }
@@ -3330,6 +3338,16 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             apply();
         }
+
+        $scope.actionChangeSubArae = function (item) {
+            console.log(item)
+            item.hazard.forEach(element => {
+                element.sub_area = item.sub_area;
+                element.action_change = 1;
+                element.action_type = 'update';
+            });
+        }
+
         $scope.actionChangeWorksheet = function (_arr, _seq, type_text) {
 
             //if (_arr.recommendations == null || _arr.recommendations == '') {
