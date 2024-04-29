@@ -638,7 +638,7 @@
 
                                         <div class="d-flex align-items-center jujustify-content-end py-4 text-primary" style="cursor: pointer;">
                                             <span class="fa-solid far fa-file-pdf text-danger p-2" ng-click="openModalTempletes()"></span>
-                                            <a ng-click="openModalTempletes()">Please attach HAZOP Recommendation worksheet (QMTS-SFR-25) with line manager/MOC focal point signature</a>
+                                            <a ng-click="openModalTempletes('pdf')">Please attach HAZOP Recommendation worksheet (QMTS-SFR-25) with line manager/MOC focal point signature</a>
                                         </div>
                                     </div>
 
@@ -1028,17 +1028,12 @@
                     </button>
                 </div>
                 <div class="modal-body">
-
                     <div class="bg-white position-relative top-1">
-
-                        <a href="#" id="templates" name="templates" target="_blank">
-                            HAZOP RECOMMENDATION RESPONSE SHEET
+                        <a href="{{exportfile[0].DownloadPath}}" id="templates" name="templates" target="_blank">
+                            {{exportfile[0].Name}}
                         </a>
-
                     </div>
-
                 </div>
-
             </div>
         </div>
     </div>
