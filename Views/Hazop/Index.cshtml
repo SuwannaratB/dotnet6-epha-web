@@ -510,7 +510,7 @@
 
                             <!-- Target Date -->
                             <div class="col-md-7 p-1">
-
+{{}}
                                 <div class="row g-0 align-items-center">
                                     <div class="col-md-3 p-1">
                                         <label class="form-label ps-0" for="tgs_date">Target Start Date</label>
@@ -519,10 +519,12 @@
                                                data-bs-placement="top" title=" Target Start Date :  " data-bs-html="true"></a>
                                         </label>
                                         <input type="date" ng-model="item.target_start_date"
-                                               ng-keyup="actionChange(item,item.seq,'')"
-                                               class="form-control rounded-1 datetimepicker"
-                                               ng-class="{'disabled-link':(!tab_general_active)}"
-                                               placeholder="dd/mm/yyyy">
+                                            ng-keyup="actionChange(item,item.seq,'')"
+                                            class="form-control rounded-1 datetimepicker"
+                                            ng-class="{'disabled-link':(!tab_general_active)}"
+                                            placeholder="dd/mm/yyyy">
+                                        <!-- Display formatted date -->
+                                        <div>{{ item.target_start_date | date: 'dd/MM/yyyy' }}</div>
                                     </div>
 
                                     <div class="col-md-auto p-1">
@@ -532,10 +534,13 @@
                                                data-bs-placement="top" title=" Complete Date :  " data-bs-html="true"></a>
                                         </label>
                                         <input type="date" name="te_date" ng-model="item.target_end_date"
-                                               ng-keyup="actionChange(item,item.seq,'')"
-                                               class="form-control rounded-1 datetimepicker" ng-class="{'disabled-link':(!tab_general_active)}"
-                                               id="tgs_date"
-                                               placeholder="dd/mm/yyyy">
+                                        <input type="date" ng-model="item.target_end_date"
+                                            ng-keyup="actionChange(item,item.seq,'')"
+                                            class="form-control rounded-1 datetimepicker"
+                                            ng-class="{'disabled-link':(!tab_general_active)}"
+                                            placeholder="dd/mm/yyyy">
+                                        <!-- Display formatted date -->
+                                        <div>{{ item.target_end_date | date: 'dd/MM/yyyy' }}</div>
                                     </div>
 
                                 </div>

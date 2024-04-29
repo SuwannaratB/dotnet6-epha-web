@@ -1393,6 +1393,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     }
 
                     $scope.data_general = arr.general;
+                    console.log($scope.data_general)
 
                     //set id to 5 
                     $scope.data_general.forEach(function (item) { item.id_ram = (item.id_ram == null ? 5 : item.id_ram); });
@@ -1985,21 +1986,28 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.data_general[0].id_ram = 5;
         }
 
+        console.log("before set ", $scope.data_general[0].target_start_date);
+        console.log("before set ", $scope.data_general[0].target_end_date);
+        
         if ($scope.data_general[0].target_start_date !== null) {
-            const x = ($scope.data_general[0].target_start_date.split('T')[0]).split("-");
-            $scope.data_general[0].target_start_date = new Date(x[0], x[1], x[2]);
+            const x = $scope.data_general[0].target_start_date.split('T')[0].split("-");
+            $scope.data_general[0].target_start_date = new Date(x[0], x[1] - 1, x[2]);
         }
         if ($scope.data_general[0].target_end_date !== null) {
-            const x = ($scope.data_general[0].target_end_date.split('T')[0]).split("-");
-            $scope.data_general[0].target_end_date = new Date(x[0], x[1], x[2]);
+            const x = $scope.data_general[0].target_end_date.split('T')[0].split("-");
+            $scope.data_general[0].target_end_date = new Date(x[0], x[1] - 1, x[2]);
         }
+        
+        console.log("After set ", $scope.data_general[0].target_start_date);
+        console.log("After set ", $scope.data_general[0].target_end_date);
+        
         if ($scope.data_general[0].actual_start_date !== null) {
             const x = ($scope.data_general[0].actual_start_date.split('T')[0]).split("-");
-            $scope.data_general[0].actual_start_date = new Date(x[0], x[1], x[2]);
+            $scope.data_general[0].actual_start_date = new Date(x[0], x[1] - 1, x[2]);
         }
         if ($scope.data_general[0].actual_end_date !== null) {
             const x = ($scope.data_general[0].actual_end_date.split('T')[0]).split("-");
-            $scope.data_general[0].actual_end_date = new Date(x[0], x[1], x[2]);
+            $scope.data_general[0].actual_end_date = new Date(x[0], x[1] - 1, x[2]);
         }
 
         for (let i = 0; i < $scope.data_session.length; i++) {
@@ -2007,7 +2015,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             if ($scope.data_session[i].meeting_date !== null) {
                 const x = ($scope.data_session[i].meeting_date.split('T')[0]).split("-");
-                $scope.data_session[i].meeting_date = new Date(x[0], x[1], x[2]);
+                $scope.data_session[i].meeting_date = new Date(x[0], x[1] - 1, x[2]);
             }
 
             if ($scope.data_session[i].meeting_start_time !== null) {
@@ -2339,7 +2347,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     if (arr_worksheet[w].estimated_start_date !== null) {
                         const x = (arr_worksheet[w].estimated_start_date.split('T')[0]).split("-");
                         if (x[0] > 2000) {
-                            arr_worksheet[w].estimated_start_date = new Date(x[0], x[1], x[2]);
+                            arr_worksheet[w].estimated_start_date = new Date(x[0], x[1] - 1, x[2]);
                         }
                     }
                 } catch { }
@@ -2347,7 +2355,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     if (arr_worksheet[w].estimated_end_date !== null) {
                         const x = (arr_worksheet[w].estimated_end_date.split('T')[0]).split("-");
                         if (x[0] > 2000) {
-                            arr_worksheet[w].estimated_end_date = new Date(x[0], x[1], x[2]);
+                            arr_worksheet[w].estimated_end_date = new Date(x[0], x[1] - 1, x[2]);
                         }
                     }
                 } catch { }
@@ -4768,17 +4776,26 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         //แปลง date to yyyyMMdd
         //แปลง time to hh:mm
         try {
-            $scope.data_general[0].target_start_date = $scope.data_general[0].target_start_date.toISOString().split('T')[0];
-        } catch { }
+            var startDate = $scope.data_general[0].target_start_date;
+            $scope.data_general[0].target_start_date = startDate.getFullYear() + "-" + ("0" + (startDate.getMonth() + 1)).slice(-2) + "-" + ("0" + startDate.getDate()).slice(-2);
+        } catch {}
+        
         try {
-            $scope.data_general[0].target_end_date = $scope.data_general[0].target_end_date.toISOString().split('T')[0];
-        } catch { }
+            var endDate = $scope.data_general[0].target_end_date;
+            $scope.data_general[0].target_end_date = endDate.getFullYear() + "-" + ("0" + (endDate.getMonth() + 1)).slice(-2) + "-" + ("0" + endDate.getDate()).slice(-2);
+        } catch {}
+        
         try {
-            $scope.data_general[0].actual_start_date = $scope.data_general[0].actual_start_date.toISOString().split('T')[0];
-        } catch { }
+            var actualStartDate = $scope.data_general[0].actual_start_date;
+            $scope.data_general[0].actual_start_date = actualStartDate.getFullYear() + "-" + ("0" + (actualStartDate.getMonth() + 1)).slice(-2) + "-" + ("0" + actualStartDate.getDate()).slice(-2);
+        } catch {}
+        
         try {
-            $scope.data_general[0].actual_end_date = $scope.data_general[0].actual_end_date.toISOString().split('T')[0];
-        } catch { }
+            var actualEndDate = $scope.data_general[0].actual_end_date;
+            $scope.data_general[0].actual_end_date = actualEndDate.getFullYear() + "-" + ("0" + (actualEndDate.getMonth() + 1)).slice(-2) + "-" + ("0" + actualEndDate.getDate()).slice(-2);
+        } catch {}
+        
+        console.log("show date to sent to back $scope.data_general");            
     }
 
     function check_master_ram() {
@@ -4826,8 +4843,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.data_session[i].id = $scope.data_session[i].seq;
             $scope.data_session[i].id_pha = pha_seq;
             try {
-                $scope.data_session[0].meeting_date = $scope.data_session[0].meeting_date.toISOString().split('T')[0];
-            } catch { }
+                var meetingStartDate = $scope.data_session[0].meeting_date;
+                $scope.data_session[0].meeting_date = meetingStartDate.getFullYear() + "-" + ("0" + (meetingStartDate.getMonth() + 1)).slice(-2) + "-" + ("0" + meetingStartDate.getDate()).slice(-2);
+            } catch {} 
+     
             try {
                 //12/31/1969 7:55:00 PM 
                 var hh = $scope.data_session[i].meeting_start_time_hh; var mm = $scope.data_session[i].meeting_start_time_mm;
@@ -5070,6 +5089,15 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 if (date_value.length > 0) { $scope.data_nodeworksheet[i].estimated_end_date = date_value[0]; }
             } catch { }
 
+            console.log("check before save",)
+            /*try {
+                var date_value = $scope.data_nodeworksheet[i].estimated_start_date;
+                if (date_value.length > 0) { $scope.data_nodeworksheet[i].estimated_end_date = date_value[0]; }
+                $scope.data_session[0].meeting_date = meetingStartDate.getFullYear() + "-" + ("0" + (meetingStartDate.getMonth() + 1)).slice(-2) + "-" + ("0" + meetingStartDate.getDate()).slice(-2);
+            } catch {} */
+
+
+
 
             // try {
             //     var date_value = $scope.data_nodeworksheet[i].estimated_start_date.toISOString().split('T');
@@ -5178,9 +5206,25 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     //start Update Action Type null to Update 
     $scope.actionChange = function (_arr, _seq, type_text) {
-        console.log("Test unsave ")
-
+        console.log(_arr, _seq, type_text)
         action_type_changed(_arr, _seq);
+
+        // Adjust to local timezone before sending to backend
+        /*if (_arr.target_start_date) {
+            var startDate = new Date(_arr.target_start_date);
+            var startOffset = startDate.getTimezoneOffset() * 60000; 
+            var adjustedStartDate = new Date(startDate.getTime() - startOffset);
+            _arr.target_start_date = adjustedStartDate.toISOString().substring(0, 10);
+        }
+        if (_arr.target_end_date) {
+            var endDate = new Date(_arr.target_end_date);
+            var endOffset = endDate.getTimezoneOffset() * 60000;
+            var adjustedEndDate = new Date(endDate.getTime() - endOffset);
+            _arr.target_end_date = adjustedEndDate.toISOString().substring(0, 10);
+        }*/
+
+        //console.log( "start",_arr.target_start_date,"end",_arr.target_end_date)
+
 
         var arr_submit = $filter('filter')($scope.data_node, function (item) {
             return ((item.action_type !== '' || item.action_type !== null));
@@ -5199,12 +5243,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.selectedItemNodeView = _seq;
         }
 
+
         unsavedChanges = true;
         apply();
     }
 
     $scope.actionChangeNodeDrawing = function (_arr, _seq) {
-        console.log("test unssave")
         action_type_changed(_arr, _seq);
 
         var arr_submit = $filter('filter')($scope.data_node, function (item) {
