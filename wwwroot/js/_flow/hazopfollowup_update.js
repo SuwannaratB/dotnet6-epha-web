@@ -1027,10 +1027,18 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
 
         apply();
 
-        $('#modalRAM').modal('show');
-    }
+        $('#modalRAM').modal({
+            backdrop: 'static',
+            keyboard: false 
+        }).modal('show');
+        
+    };
 
-
+    $scope.closeModalDataRAM_Worksheet = function() {
+        $scope.cal_ram_action_security = null;
+        $scope.cal_ram_action_likelihood = null;
+        $scope.cal_ram_action_risk = null; 
+    };
 
     /*$scope.openModalDataRAM = function (ram_type, _item, ram_type_action, id_ram, preview) {
         var seq = _item.seq;

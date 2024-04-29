@@ -3791,7 +3791,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
 
     $scope.openModalDataRAM_Worksheet = function (_item, ram_type, seq, ram_type_action) {
-
+        console.log(_item, ram_type, seq, ram_type_action)
         $scope.selectdata_nodeworksheet = seq;
         $scope.selectedDataNodeWorksheetRamType = ram_type;
         $scope.selectedDataRamTypeAction = ram_type_action;
@@ -3812,14 +3812,29 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         $scope.previewRam = (ram_type == 'r' ? true : false);
 
-
         $scope.cal_ram_action_security = ($scope.cal_ram_action_security == null ? 'N/A' : $scope.cal_ram_action_security);
         $scope.cal_ram_action_likelihood = ($scope.cal_ram_action_likelihood == null ? 'N/A' : $scope.cal_ram_action_likelihood);
         $scope.cal_ram_action_risk = ($scope.cal_ram_action_risk == null ? 'N/A' : $scope.cal_ram_action_risk);
 
-
-        $('#modalRAM').modal('show');
+        $('#modalRAM').modal({
+            backdrop: 'static',
+            keyboard: false 
+        }).modal('show');
+        
     }
+
+    $scope.closeModalDataRAM_Worksheet = function() {
+        $scope.cal_ram_action_security = null;
+        $scope.cal_ram_action_likelihood = null;
+        $scope.cal_ram_action_risk = null; 
+    };
+    
+    // Listen for the modal's hidden.bs.modal event and call closeModalDataRAM_Worksheet
+    $('#modalRAM').on('hidden.bs.modal', function () {
+        $scope.$apply(function() {
+            $scope.closeModalDataRAM_Worksheet();
+        });
+    });
 
     $scope.openModalDataRAM = function (_item, ram_type, seq, ram_type_action) {
 

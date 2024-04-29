@@ -3595,8 +3595,19 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.cal_ram_action_risk = ($scope.cal_ram_action_risk == null ? 'N/A' : $scope.cal_ram_action_risk);
 
 
-        $('#modalRAM').modal('show');
-    }
+        $('#modalRAM').modal({
+            backdrop: 'static',
+            keyboard: false 
+        }).modal('show');
+        
+    };
+
+    $scope.closeModalDataRAM_Worksheet = function() {
+        $scope.cal_ram_action_security = null;
+        $scope.cal_ram_action_likelihood = null;
+        $scope.cal_ram_action_risk = null; 
+    };
+
     $scope.openModalDataRAM_Recommendations = function (_item, ram_type, seq, ram_type_action) {
 
         $scope.display_selected_ram = $scope.tab_managerecom_active;
