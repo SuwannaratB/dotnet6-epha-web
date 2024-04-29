@@ -1050,28 +1050,30 @@
                                                     </ng-container>
 
                                                     <script type="text/ng-template" id="workTaskInputTemplate">
-                                                        <div class="align-top">
-                                                            <div class="font-sans-serif btn-reveal-trigger position-static" ng-class="{'d-none': !(tab_general_active && item.tasks_type_other == 0)}">
-                                                                <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 p-1" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent">
-                                                                    <span class="fas fa-cog text-info"></span>
-                                                                </button>
-                                                                <div class="dropdown-menu dropdown-menu-end py-2">
-                                                                    <a class="dropdown-item text-success" ng-click="addDataWork(item)">
-                                                                        <span class="fas fa-copy"></span>
-                                                                        Add
-                                                                    </a>
-                                                                    <div class="dropdown-divider" ng-if="!(item.no == 1)"></div>
-                                                                    <a class="dropdown-item text-danger" ng-if="!(item.no == 1)" ng-click="removeDataWork(item.no, $index)">
-                                                                        <span class="fas fa-times-circle"></span> Remove
-                                                                    </a>
-                                                                </div>
-                                                            </div>
-                                                        </div>
+                                                  
 
                                                         <div class="d-flex align-items-center mx-1 p-1">
                                                             <div>
                                                                 <div class="font-sans-serif btn-reveal-trigger position-static">
-                                                                    <span class="px-1"></span>
+                                                                    <span class="px-1">
+                                                                        <div class="align-top">
+                                                                            <div class="font-sans-serif btn-reveal-trigger position-static" ng-class="{'d-none': !(tab_general_active && item.tasks_type_other == 0)}">
+                                                                                <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 p-1" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent">
+                                                                                    <span class="fas fa-cog text-info"></span>
+                                                                                </button>
+                                                                                <div class="dropdown-menu dropdown-menu-end py-2">
+                                                                                    <a class="dropdown-item text-success" ng-click="addDataWork(item)">
+                                                                                        <span class="fas fa-copy"></span>
+                                                                                        Add
+                                                                                    </a>
+                                                                                    <div class="dropdown-divider" ng-if="!(item.no == 1)"></div>
+                                                                                    <a class="dropdown-item text-danger" ng-if="!(item.no == 1)" ng-click="removeDataWork(item.no, $index)">
+                                                                                        <span class="fas fa-times-circle"></span> Remove
+                                                                                    </a>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </span>
                                                                 </div>
                                                             </div>
                                                             <input class="form-control rounded-1" ng-class="{'disabled-link':(!tab_general_active)}" 
