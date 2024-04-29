@@ -1227,7 +1227,50 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
         $('#modalExportReviewerFile').modal('show');
     }
 
-    $scope.openModalTempletes = function () {
-        $('#modalTemplates').modal('show');
+    $scope.openModalTempletes = function (data_type) {
+        var user_name = $scope.data_details[0].responder_user_name;
+        var seq = $scope.data_details[0].id_pha;
+        var sub_software = $scope.data_details[0].pha_sub_software;
+
+        $.ajax({
+            url: url_ws + "Flow/export_recommendation_by_action_owner",
+            data: '{"sub_software":"' + sub_software + 
+                    '","user_name":"' + user_name + 
+                    '","seq":"' + seq + 
+                    '","export_type":"' + data_type + 
+                    '"}',
+            type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+            beforeSend: function () {
+                $('#modalExportFile').modal('hide');
+                $('#divLoading').show();
+            },
+            complete: function () {
+                $('#divLoading').hide();
+            },
+            success: function (data) {
+                var arr = data;
+
+                if (arr.length > 0) {
+                    if (arr[0].ATTACHED_FILE_NAME != '') {
+                        var path = (url_ws).replace('/api/', '') + arr[0].ATTACHED_FILE_PATH;
+                        var name = arr[0].ATTACHED_FILE_NAME;
+                        $scope.exportfile[0].DownloadPath = path;
+                        $scope.exportfile[0].Name = name;
+                        $('#modalTemplates').modal('show');
+                        apply();
+                    }
+                } else {
+                    set_alert('Error', arr[0].IMPORT_DATA_MSG);
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                if (jqXHR.status == 500) {
+                    alert('Internal error: ' + jqXHR.responseText);
+                } else {
+                    alert('Unexpected ' + textStatus);
+                }
+            }
+
+        });
     }
 });
