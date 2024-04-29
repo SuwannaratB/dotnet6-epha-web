@@ -52,8 +52,6 @@ AppMenuPage.filter('ApproverMultiFieldFilter', function () {
         });
     };
 });
-
-
 AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) {
     //search list function
     $scope.autoComplete = function (DataFilter, idinput) {
@@ -98,6 +96,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
     };
 
 });
+
 AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, $document, $element,$rootScope,$window) {
 
     //var unsavedChanges = false;
@@ -542,14 +541,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         });
         selectedTab.isActive = true;
 
-        try {
-            document.getElementById(selectedTab.name + "-tab").addEventListener("click", function (event) {
-                ev = event.target
-            });
+        // try {
+        //     document.getElementById(selectedTab.name + "-tab").addEventListener("click", function (event) {
+        //         ev = event.target
+        //     });
 
-            var tabElement = angular.element(ev);
-            tabElement[0].focus();
-        } catch (error) { }
+        //     var tabElement = angular.element(ev);
+        //     tabElement[0].focus();
+        // } catch (error) { }
 
         check_tab(selectedTab.name);
 
@@ -655,8 +654,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         var json_approver = check_data_approver();
         var json_drawing = check_data_drawing();
 
-        var json_subareas = check_data_subareas();
-        var json_hazard = check_data_hazard();
+        // var json_subareas = check_data_subareas();
+        // var json_hazard = check_data_hazard();
+        var json_subareas = check_data_subareas_list();
+        var json_hazard = check_data_hazardList();
         var json_tasks = check_data_tasks();
         var json_workers = check_data_workers();
         var json_worksheet = check_data_worksheet();
@@ -672,7 +673,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 + ',"json_memberteam":' + JSON.stringify(json_memberteam)
                 + ',"json_approver":' + JSON.stringify(json_approver)
                 + ',"json_drawing":' + JSON.stringify(json_drawing)
-                + ',"json_subareas":' + JSON.stringify(json_subareas)
+                // + ',"json_subareas":' + JSON.stringify(json_subareas)
                 + ',"json_hazard":' + JSON.stringify(json_hazard)
                 + ',"json_tasks":' + JSON.stringify(json_tasks)
                 + ',"json_workers":' + JSON.stringify(json_workers)
@@ -1005,6 +1006,20 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         $scope.data_hazard = arr.hazard;
                         $scope.data_hazard_def = clone_arr_newrow(arr.hazard);
                         $scope.data_hazard_old = (arr.hazard);
+
+                        // set 
+                        $scope.data_subareas_list = arr.subareas;
+                        $scope.data_subareas_list[0].hazard = arr.hazard;
+                        $scope.data_subareas_list[0].hazard[0].no_subareas = 1;
+                        // backup
+                        $scope.data_subareas_default = arr.subareas;
+                        $scope.data_hazard_default = arr.hazard;
+                        
+                        var groupedArea = groupHazardList(arr.hazard);
+                        $scope.data_subareas_list = groupedArea;
+
+                        console.log('groupedArea',groupedArea)
+                        console.log('data_subareas_list',$scope.data_subareas_list)
                     }
 
                     //List of Worker Groups and Description of Tasks
@@ -1552,6 +1567,39 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         }
 
+        function groupHazardList (arr_hazard) {
+            var groupedData = [];
+            var groupedArea = [];
+            var mocData = angular.copy($scope.data_subareas_list);
+            // ใช้ reduce เพื่อแบ่งข้อมูลเป็นกลุ่มโดยใช้ id_subareas เป็นกุญแจ
+            arr_hazard.reduce(function(acc, curr) {
+                // หากกลุ่มนี้ยังไม่มีใน groupedData ให้สร้างอาร์เรย์เปล่าให้กับกลุ่มนี้
+                if (!acc[curr.no_subareas]) {
+                    acc[curr.no_subareas] = [];
+                }
+                // เพิ่มข้อมูลลงในกลุ่มที่เหมาะสม
+                acc[curr.no_subareas].push(curr);
+                // ส่งคืน acc สำหรับการใช้งานในรอบถัดไปของการลูป
+                return acc;
+            }, groupedData);
+
+            var filteredData = groupedData.filter(function(item) {
+                return Array.isArray(item);
+            })
+
+            for (let i = 0; i < filteredData.length; i++) {
+                groupedArea.push({ ...mocData[0], hazard: [...filteredData[i]] });
+                groupedArea[i].no = i + 1;
+                groupedArea[i].index_rows = i + 1;
+                groupedArea[i].id_sub_area = groupedArea[i].hazard[0].id_subareas;
+                groupedArea[i].sub_area = groupedArea[i].hazard[0].sub_area;
+                groupedArea[i].work_of_task = groupedArea[i].hazard[0].sub_area;
+                groupedArea[i].hazard.sort((a, b) => a.no - b.no);
+            }
+
+            return groupedArea;
+        }
+
         $scope.addDataSession = function (seq, index) {
             $scope.MaxSeqDataSession = Number($scope.MaxSeqDataSession) + 1;
             var xValues = $scope.MaxSeqDataSession;
@@ -1741,6 +1789,140 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     //List of Areas to Be Assessed and Health Hazards or Risk Factors
     if (true) {
+        $scope.addDataSubAreasList = function (item, index) {
+            $scope.MaxSeqdataSubareas = Number($scope.MaxSeqdataSubareas) + 1;
+            var xValues = $scope.MaxSeqdataSubareas;
+            var newInput = clone_arr_newrow($scope.data_subareas_default)[0];
+            console.log('first',item)
+            newInput.seq = xValues;
+            newInput.id = xValues;
+            newInput.no = (item.no + 1);
+            newInput.action_type = 'insert';
+            newInput.action_change = 0;
+            newInput.action_new_row = 0;
+
+            $scope.MaxSeqdataHazard = Number($scope.MaxSeqdataHazard) + 1;
+            var xValues2 = $scope.MaxSeqdataSubareas;
+            var newHazard = clone_arr_newrow($scope.data_hazard_default);
+            newInput.hazard = newHazard;
+            newInput.hazard[0].seq = xValues2;
+            newInput.hazard[0].id = xValues2;
+            // newInput.hazard.no = (item_hazard.no + 1);
+            newInput.hazard[0].action_type = 'insert';
+            newInput.hazard[0].no = 1;
+            newInput.hazard[0].action_change = 0;
+            newInput.hazard[0].action_new_row = 0;
+            newInput.hazard[0].no_subareas = (item.no + 1);
+            
+            var parent = angular.copy($scope.data_subareas_list);
+
+            var index_push = parent.length;
+            var index_current = index;
+            var isSort = false;
+
+            if (index_current + 1 != index_push  ) {
+                index_push = index_current + 1;
+                isSort = true;
+            }
+            // add
+            parent.splice(index_push, 0, newInput);
+            // sort number
+            if (isSort) {
+                for (let i = 0; i < parent.length; i++) {
+                    parent[i].no = i + 1;
+                }
+            }
+            $scope.data_subareas_list = parent;
+            console.log('all ',$scope.data_subareas_list)
+
+            $scope.selectdata_subareas = xValues;
+
+            apply();
+        }
+
+        $scope.removeDataSubAreasList = function (item_area, index) {
+            console.log('del index ', index)
+            console.log('del data ', $scope.data_subareas_delete)
+            // remove
+            var delItem = $filter('filter')($scope.data_subareas_list, function (item,idx) {
+                return (idx == index);
+            })[0];
+
+            if (delItem) {
+                $scope.data_subareas_delete.push(delItem);
+                $scope.data_subareas_list = $filter('filter')($scope.data_subareas_list, function (item,idx) {
+                    return (idx != index);
+                });
+                // sort number
+                for (let i = 0; i < $scope.data_subareas_list.length; i++) {
+                    $scope.data_subareas_list[i].no = i + 1;
+                }
+            }
+        };
+
+        $scope.addDataHazardList = function (item_area, item_hazard, last_number_seq) {
+            $scope.MaxSeqdataHazard = Number($scope.MaxSeqdataHazard) + 1;
+            var xValues = $scope.MaxSeqdataHazard;
+            var newInput = clone_arr_newrow($scope.data_hazard_default)[0];
+
+            newInput.seq = xValues;
+            newInput.id = xValues;
+            newInput.no = (item_hazard.no + 1);
+            newInput.index_rows = item_area.no;
+            newInput.id_subareas = item_area.id_sub_area;
+            newInput.id_pha = $scope.data_header[0].seq;
+            newInput.sub_area = item_area.sub_area;
+            newInput.no_subareas = item_area.no;
+            newInput.action_type = 'insert';
+            newInput.action_change = 0;
+            newInput.action_new_row = 0;
+            console.log('new ', newInput)
+            // add
+            var parent = angular.copy($scope.data_subareas_list[item_area.no - 1]);
+
+            var index_push = parent.hazard.length;
+            var index_current = item_hazard.no - 1;
+            var isSort = false;
+
+            if (index_current + 1 != index_push  ) {
+                index_push = index_current + 1;
+                isSort = true;
+            }
+            // add
+            parent.hazard.splice(index_push, 0, newInput);
+            // sort number
+            if (isSort) {
+                for (let i = 0; i < parent.hazard.length; i++) {
+                    parent.hazard[i].no = i + 1;
+                }
+            }
+            $scope.data_subareas_list[item_area.no - 1] = parent;
+            console.log('all ',$scope.data_subareas_list)
+
+            $scope.selectdata_hazard = xValues;
+            apply();
+        }
+
+        $scope.removeDataHazardList = function (item_area, item_hazard, index) {
+            console.log('del index ', index)
+            console.log('del data ', $scope.data_hazard_delete)
+            // remove
+            var delItem = $filter('filter')(item_area.hazard, function (item, idx) {
+                return (idx == index);
+            })[0];
+            
+            if (delItem) {
+                $scope.data_hazard_delete.push(delItem);
+                item_area.hazard = $filter('filter')(item_area.hazard, function (item, idx) {
+                    return (idx != index);
+                });
+                // sort number
+                for (let i = 0; i < item_area.hazard.length; i++) {
+                    item_area.hazard[i].no = i + 1;
+                }
+            }
+        };
+
         $scope.addDataSubAreas = function (item, index) {
             $scope.MaxSeqdataSubareas = Number($scope.MaxSeqdataSubareas) + 1;
             var xValues = $scope.MaxSeqdataSubareas;
@@ -1782,7 +1964,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             running_no_level1($scope.data_subareas, null, index, null);
             apply();
         };
-
         $scope.addDataHazard = function (item, index) {
             $scope.MaxSeqdataHazard = Number($scope.MaxSeqdataHazard) + 1;
             var xValues = $scope.MaxSeqdataHazard;
@@ -2844,6 +3025,54 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             return angular.toJson(arr_json);
         }
+
+        function check_data_subareas_list() {
+
+            // delete
+            for (var i = 0; i < $scope.data_subareas_delete.length; i++) {
+                $scope.data_subareas_delete[i].action_type = 'delete';
+
+                for (let j = 0; j < $scope.data_subareas_delete[i].hazard.length; j++) {
+                    $scope.data_hazard_delete.push($scope.data_subareas_delete[i].hazard[j]);
+                }
+                // arr_json.push($scope.data_subareas_delete[i]);
+            }
+
+            var arr_json = $filter('filter')($scope.data_subareas_list, function (item) {
+                return ((item.action_type == 'update' && item.action_change == 1) || item.action_type == 'insert');
+            });
+
+            console.log('arr => ',(arr_json))
+            // console.log('del save => ',$scope.data_subareas_delete)
+            return angular.toJson(arr_json);
+        }
+        
+        function check_data_hazardList() {
+            var hazardList = [];
+
+            for (var i = 0; i < $scope.data_subareas_list.length; i++) {
+                for (let j = 0; j < $scope.data_subareas_list[i].hazard.length; j++) {
+                    if ($scope.data_subareas_list[i].hazard[j].id_subareas &&
+                        $scope.data_subareas_list[i].hazard[j].id_type_hazard &&
+                        $scope.data_subareas_list[i].hazard[j].id_health_hazard 
+                    ) {
+                        hazardList.push($scope.data_subareas_list[i].hazard[j])
+                    }
+                }
+            }
+
+            var arr_json = $filter('filter')(hazardList, function (item) {
+                return ((item.action_type == 'update' && item.action_change == 1) || item.action_type == 'insert');
+            });
+            // delete
+            for (var i = 0; i < $scope.data_hazard_delete.length; i++) {
+                $scope.data_hazard_delete[i].action_type = 'delete';
+                arr_json.push($scope.data_hazard_delete[i]);
+            }
+            console.log('arr => ',(arr_json))
+            return angular.toJson(arr_json);
+        }
+
         function check_data_hazard() {
 
             var pha_seq = $scope.data_header[0].seq;
@@ -3031,7 +3260,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 if (arrText.length > 0) {
                     _arr.work_of_task = arrText[0].descriptions;
                     _arr.action_change = 1;
-
+                    // set no_subareas for children hazard
+                    for (let i = 0; i < _arr.hazard.length; i++) {
+                        _arr.hazard[i].id_subareas = _arr.id_sub_area;
+                        _arr.hazard[i].sub_area = _arr.work_of_task;
+                    }
                 }
             }
             if (type_text == "type_hazard") {
