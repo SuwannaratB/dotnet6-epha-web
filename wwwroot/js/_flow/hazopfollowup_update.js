@@ -463,15 +463,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                 $scope.data_drawingworksheet_reviewer = arr.drawingworksheet_reviewer;
                 $scope.selected_ram_img = (url_ws.replace('/api/', '/')) + 'AttachedFileTemp/rma-img-' + $scope.select_rows_level + 'x' + $scope.select_columns_level + '.png';
 
-                console.log("show detail",$scope.data_details)
+                console.log("show detail",$scope.data_pha_doc)
                 // add key implement def true for status 13 
                 $scope.data_details.forEach(function(_item) {
-                    if (_item.flow_status != 14 ) {
+                    if ($scope.data_pha_doc != 14 ) {
                         _item.implement = true;
-                    }else{
-                        _item.implement = 1 ? true : false
                     }
-
                 });
 
                 console.log("show detail",$scope.data_details) 
