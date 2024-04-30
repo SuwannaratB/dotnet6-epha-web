@@ -464,10 +464,17 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                 $scope.selected_ram_img = (url_ws.replace('/api/', '/')) + 'AttachedFileTemp/rma-img-' + $scope.select_rows_level + 'x' + $scope.select_columns_level + '.png';
 
                 console.log("show detail",$scope.data_details)
-                // add key implement
-                $scope.data_details.forEach(function (_item) {
-                    _item.implement = false;
+                // add key implement def true for status 13 
+                $scope.data_details.forEach(function(_item) {
+                    if (_item.flow_status != 14 ) {
+                        _item.implement = true;
+                    }else{
+                        _item.implement = 1 ? true : false
+                    }
+
                 });
+
+                console.log("show detail",$scope.data_details) 
 
                 if (true) {
                     $scope.MaxSeqdata_drawing_worksheet = 0;

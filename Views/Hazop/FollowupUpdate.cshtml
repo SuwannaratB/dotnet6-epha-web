@@ -116,9 +116,9 @@
                                                         Action Owner
                                                     </th>
       
-                                                    @*<th class="sort align-middle " colspan="1" rowspan="3">
+                                                    <th class="sort align-middle " colspan="1" rowspan="3" ng-if="flow_status != 14">
                                                         Recommendations
-                                                    </th>*@
+                                                    </th>
 
                                                     <th class="sort align-middle" colspan="2" rowspan="1" scope="col">
                                                         Risk Assessment Matrix
@@ -327,7 +327,7 @@
                                                             <a class="nametext ms-3 filename-text me-2" ng-if="flow_status == 14" ng-click="downloadFileOwner(item_d)">
                                                                 <i class="far fa-file-pdf text-danger"></i> Document File
                                                             </a>
-                                                            <p>{{item_d.recommendations}}</p>
+                                                            <p>{{item_d.responder_comment}}</p>
                                                         </div>
                                                     </td>
 
@@ -375,13 +375,13 @@
                                                         </div>
                                                     </td>
 
-                                                    @*<td class="align-top  px-1">
+                                                    <td class="align-top  px-1" ng-if="flow_status != 14">
                                                         <div class="d-flex text-start">
                                                             <p class="mb-0 ms-3 fw-bold" style="width: 120px;" rows="3">
                                                                 {{item_d.recommendations}}
                                                             </p>
                                                         </div>
-                                                    </td>*@
+                                                    </td>
 
                                                     @*Before action*@
                                                     <td class="align-top  px-1">
