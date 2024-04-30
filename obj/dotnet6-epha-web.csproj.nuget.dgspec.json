@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\dotnet6-epha-web.csproj": {}
+    "C:\\Develop Drive\\dotnet6-epha-web - Copy\\dotnet6-epha-web\\dotnet6-epha-web.csproj": {}
   },
   "projects": {
-    "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\dotnet6-epha-web.csproj": {
+    "C:\\Develop Drive\\dotnet6-epha-web - Copy\\dotnet6-epha-web\\dotnet6-epha-web.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\dotnet6-epha-web.csproj",
+        "projectUniqueName": "C:\\Develop Drive\\dotnet6-epha-web - Copy\\dotnet6-epha-web\\dotnet6-epha-web.csproj",
         "projectName": "dotnet6-epha-web",
-        "projectPath": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\dotnet6-epha-web.csproj",
+        "projectPath": "C:\\Develop Drive\\dotnet6-epha-web - Copy\\dotnet6-epha-web\\dotnet6-epha-web.csproj",
         "packagesPath": "C:\\Users\\ADB\\.nuget\\packages\\",
-        "outputPath": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\obj\\",
+        "outputPath": "C:\\Develop Drive\\dotnet6-epha-web - Copy\\dotnet6-epha-web\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -78,7 +78,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.200\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204\\RuntimeIdentifierGraph.json"
         }
       }
     }
