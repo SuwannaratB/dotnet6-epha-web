@@ -1002,15 +1002,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         $scope.data_drawing_def = clone_arr_newrow(arr.drawing);
 
                         $scope.data_departments = arr.departments.slice(1);
-                        $scope.data_departments.forEach(element => {
-                            element.id = element.departments
-                        });
                         $scope.data_sections = arr.sections.slice(1);
-                        $scope.data_sections.forEach(element => {
-                            element.id = element.sections
-                        });
-                        console.log(  $scope.data_departments)
-                        console.log(  $scope.data_sections)
                     }
 
                     //List of Areas to Be Assessed and Health Hazards or Risk Factors

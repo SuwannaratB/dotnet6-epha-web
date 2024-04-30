@@ -172,7 +172,7 @@
                                                 data-choices="data-choices"
                                                 data-options='{"removeItemButton":true,"placeholder":true}'
                                                 @* ng-change="actionChange(item,item.seq,'')"  *@
-                                                ng-model="item.id_department">
+                                                ng-model="item.id_departments">
                                             <option value="">Please select</option>
                                             <option ng-repeat="item2 in data_departments" 
                                                     ng-value="item2.id">
@@ -200,8 +200,8 @@
                                                 ng-class="{'disabled-link':(!tab_general_active)}"
                                                 data-choices="data-choices"
                                                 data-options='{"removeItemButton":true,"placeholder":true}'
-                                                @* ng-change="actionChange(item,item.seq,'')" 
-                                                ng-model="" *@
+                                                @* ng-change="actionChange(item,item.seq,'')"  *@
+                                                ng-model="item.id_sections"
                                                 >
                                             <option value="">Please select</option>
                                             <option ng-repeat="item2 in data_sections" 
