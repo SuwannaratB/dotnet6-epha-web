@@ -9,163 +9,163 @@ build_property.EnforceExtendedAnalyzerRules =
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = dotnet6_epha_web
 build_property.RootNamespace = dotnet6_epha_web
-build_property.ProjectDir = C:\Develop Drive\dotnet6-epha-web\dotnet6-epha-web\
+build_property.ProjectDir = C:\Develop Drive\dotnet6-epha-web\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 6.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = C:\Develop Drive\dotnet6-epha-web\dotnet6-epha-web
+build_property.MSBuildProjectDirectory = C:\Develop Drive\dotnet6-epha-web
 build_property._RazorSourceGeneratorDebug = 
 
-[C:/Develop Drive/dotnet6-epha-web/dotnet6-epha-web/Pages/Error.cshtml]
+[C:/Develop Drive/dotnet6-epha-web/Pages/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRXJyb3IuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Develop Drive/dotnet6-epha-web/dotnet6-epha-web/Pages/Index.cshtml]
+[C:/Develop Drive/dotnet6-epha-web/Pages/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Develop Drive/dotnet6-epha-web/dotnet6-epha-web/Pages/Privacy.cshtml]
+[C:/Develop Drive/dotnet6-epha-web/Pages/Privacy.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHJpdmFjeS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Develop Drive/dotnet6-epha-web/dotnet6-epha-web/Pages/Shared/_ValidationScriptsPartial.cshtml]
+[C:/Develop Drive/dotnet6-epha-web/Pages/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Develop Drive/dotnet6-epha-web/dotnet6-epha-web/Pages/_ViewImports.cshtml]
+[C:/Develop Drive/dotnet6-epha-web/Pages/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Develop Drive/dotnet6-epha-web/dotnet6-epha-web/Pages/_ViewStart.cshtml]
+[C:/Develop Drive/dotnet6-epha-web/Pages/_ViewStart.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Develop Drive/dotnet6-epha-web/dotnet6-epha-web/Views/Hazop/Approve.cshtml]
+[C:/Develop Drive/dotnet6-epha-web/Views/Hazop/Approve.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSGF6b3BcQXBwcm92ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Develop Drive/dotnet6-epha-web/dotnet6-epha-web/Views/Hazop/Followup.cshtml]
+[C:/Develop Drive/dotnet6-epha-web/Views/Hazop/Followup.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSGF6b3BcRm9sbG93dXAuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Develop Drive/dotnet6-epha-web/dotnet6-epha-web/Views/Hazop/FollowupUpdate.cshtml]
+[C:/Develop Drive/dotnet6-epha-web/Views/Hazop/FollowupUpdate.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSGF6b3BcRm9sbG93dXBVcGRhdGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Develop Drive/dotnet6-epha-web/dotnet6-epha-web/Views/Hazop/Index.cshtml]
+[C:/Develop Drive/dotnet6-epha-web/Views/Hazop/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSGF6b3BcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Develop Drive/dotnet6-epha-web/dotnet6-epha-web/Views/Hazop/Notification.cshtml]
+[C:/Develop Drive/dotnet6-epha-web/Views/Hazop/Notification.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSGF6b3BcTm90aWZpY2F0aW9uLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Develop Drive/dotnet6-epha-web/dotnet6-epha-web/Views/Hazop/Search.cshtml]
+[C:/Develop Drive/dotnet6-epha-web/Views/Hazop/Search.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSGF6b3BcU2VhcmNoLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Develop Drive/dotnet6-epha-web/dotnet6-epha-web/Views/Home/HomeTasks.cshtml]
+[C:/Develop Drive/dotnet6-epha-web/Views/Home/HomeTasks.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxIb21lVGFza3MuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Develop Drive/dotnet6-epha-web/dotnet6-epha-web/Views/Home/Index.cshtml]
+[C:/Develop Drive/dotnet6-epha-web/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Develop Drive/dotnet6-epha-web/dotnet6-epha-web/Views/Home/Info.cshtml]
+[C:/Develop Drive/dotnet6-epha-web/Views/Home/Info.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmZvLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Develop Drive/dotnet6-epha-web/dotnet6-epha-web/Views/Home/Portal.cshtml]
+[C:/Develop Drive/dotnet6-epha-web/Views/Home/Portal.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQb3J0YWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Develop Drive/dotnet6-epha-web/dotnet6-epha-web/Views/Home/Privacy.cshtml]
+[C:/Develop Drive/dotnet6-epha-web/Views/Home/Privacy.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Develop Drive/dotnet6-epha-web/dotnet6-epha-web/Views/HRA/Index.cshtml]
+[C:/Develop Drive/dotnet6-epha-web/Views/HRA/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSFJBXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Develop Drive/dotnet6-epha-web/dotnet6-epha-web/Views/Jsea/Followup.cshtml]
+[C:/Develop Drive/dotnet6-epha-web/Views/Jsea/Followup.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSnNlYVxGb2xsb3d1cC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Develop Drive/dotnet6-epha-web/dotnet6-epha-web/Views/Jsea/Index.cshtml]
+[C:/Develop Drive/dotnet6-epha-web/Views/Jsea/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSnNlYVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Develop Drive/dotnet6-epha-web/dotnet6-epha-web/Views/Login/Dummy.cshtml]
+[C:/Develop Drive/dotnet6-epha-web/Views/Login/Dummy.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9naW5cRHVtbXkuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Develop Drive/dotnet6-epha-web/dotnet6-epha-web/Views/Login/Index.cshtml]
+[C:/Develop Drive/dotnet6-epha-web/Views/Login/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9naW5cSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Develop Drive/dotnet6-epha-web/dotnet6-epha-web/Views/Login/RegisterAccount.cshtml]
+[C:/Develop Drive/dotnet6-epha-web/Views/Login/RegisterAccount.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9naW5cUmVnaXN0ZXJBY2NvdW50LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Develop Drive/dotnet6-epha-web/dotnet6-epha-web/Views/Login/Signout.cshtml]
+[C:/Develop Drive/dotnet6-epha-web/Views/Login/Signout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9naW5cU2lnbm91dC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Develop Drive/dotnet6-epha-web/dotnet6-epha-web/Views/Login/Signup.cshtml]
+[C:/Develop Drive/dotnet6-epha-web/Views/Login/Signup.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9naW5cU2lnbnVwLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Develop Drive/dotnet6-epha-web/dotnet6-epha-web/Views/Master/Hazop/Index.cshtml]
+[C:/Develop Drive/dotnet6-epha-web/Views/Master/Hazop/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWFzdGVyXEhhem9wXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Develop Drive/dotnet6-epha-web/dotnet6-epha-web/Views/Shared/Error.cshtml]
+[C:/Develop Drive/dotnet6-epha-web/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Develop Drive/dotnet6-epha-web/dotnet6-epha-web/Views/Shared/_GobalScript.cshtml]
+[C:/Develop Drive/dotnet6-epha-web/Views/Shared/_GobalScript.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9Hb2JhbFNjcmlwdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Develop Drive/dotnet6-epha-web/dotnet6-epha-web/Views/Shared/_ValidationScriptsPartial.cshtml]
+[C:/Develop Drive/dotnet6-epha-web/Views/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Develop Drive/dotnet6-epha-web/dotnet6-epha-web/Views/Whatif/Followup.cshtml]
+[C:/Develop Drive/dotnet6-epha-web/Views/Whatif/Followup.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcV2hhdGlmXEZvbGxvd3VwLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Develop Drive/dotnet6-epha-web/dotnet6-epha-web/Views/Whatif/Index.cshtml]
+[C:/Develop Drive/dotnet6-epha-web/Views/Whatif/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcV2hhdGlmXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Develop Drive/dotnet6-epha-web/dotnet6-epha-web/Views/_ViewImports.cshtml]
+[C:/Develop Drive/dotnet6-epha-web/Views/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Develop Drive/dotnet6-epha-web/dotnet6-epha-web/Views/_ViewStart.cshtml]
+[C:/Develop Drive/dotnet6-epha-web/Views/_ViewStart.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Develop Drive/dotnet6-epha-web/dotnet6-epha-web/Pages/Shared/_Layout.cshtml]
+[C:/Develop Drive/dotnet6-epha-web/Pages/Shared/_Layout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcU2hhcmVkXF9MYXlvdXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = b-9nwdtsknvf
 
-[C:/Develop Drive/dotnet6-epha-web/dotnet6-epha-web/Views/Shared/_Layout.cshtml]
+[C:/Develop Drive/dotnet6-epha-web/Views/Shared/_Layout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = b-3z7z28lou7
 
-[C:/Develop Drive/dotnet6-epha-web/dotnet6-epha-web/Views/Shared/_LayoutAdmin.cshtml]
+[C:/Develop Drive/dotnet6-epha-web/Views/Shared/_LayoutAdmin.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXRBZG1pbi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = b-4vvfwuvnod
 
-[C:/Develop Drive/dotnet6-epha-web/dotnet6-epha-web/Views/Shared/_LayoutLogin.cshtml]
+[C:/Develop Drive/dotnet6-epha-web/Views/Shared/_LayoutLogin.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXRMb2dpbi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = b-rme9dc3dnh
 
-[C:/Develop Drive/dotnet6-epha-web/dotnet6-epha-web/Views/Shared/_LayoutWeb.cshtml]
+[C:/Develop Drive/dotnet6-epha-web/Views/Shared/_LayoutWeb.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXRXZWIuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = b-vqjnqe9fck

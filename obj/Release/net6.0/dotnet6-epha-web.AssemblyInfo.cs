@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("dotnet6-epha-web")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+90992d61c8d855482277af28a352d65eb63f8a73")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+61c3c59db74c934a6c57e776e3843d14c7a6e55c")]
 [assembly: System.Reflection.AssemblyProductAttribute("dotnet6-epha-web")]
 [assembly: System.Reflection.AssemblyTitleAttribute("dotnet6-epha-web")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

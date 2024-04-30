@@ -1,3 +1,4 @@
+ 
 
 AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) {
     $('#divLoading').hide();
@@ -23,9 +24,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         }
     };
 
-    //var url_ws = "https://localhost:7098/api/";
     var url_ws = conFig.service_api_url();
-    //https://localhost:7098/api/Login/check_authorization
 
 
     function apply() {
@@ -59,6 +58,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         $scope.flow_status = 0;
 
         $scope.exportfile = [{ DownloadPath: '', Name: '' }];
+
+        $scope.pha_status_comment = '';
     }
     function replace_hashKey_arr(_arr) {
         var json = JSON.stringify(_arr, function (key, value) {
@@ -85,8 +86,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                 sub_software = $scope.data_conditions[0].pha_sub_software;
             }
         } catch { }
-
-        //alert((sub_software == 'WHAT\'S IF' ? 'WHATIF' : sub_software));
 
         $.ajax({
             url: url_ws + "Flow/load_page_search_details",
@@ -225,6 +224,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         get_data(false, false);
 
     }
+
     $scope.selectDoc = function (item) {
 
         var controller_text = item.pha_sub_software;
@@ -236,31 +236,43 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
         next_page(controller_text, conFig.pha_status);
     }
+
+    $scope.editDoc = function (item) {
+
+        var controller_text = item.pha_sub_software;
+
+        conFig.pha_seq = item.seq;
+        conFig.pha_type_doc = 'edit';
+        conFig.pha_status = item.pha_status;
+        conFig.pha_sub_software = item.pha_sub_software;
+
+        next_page(controller_text, conFig.pha_status, conFig.pha_type_doc);
+    }
     $scope.actionChange = function (item) {
 
         try {
             var arr_search =
                 $filter('filter')($scope.data_results_def, function (_item) {
                     return (
-                        (item.pha_sub_software == null ? 'x' : _item.pha_sub_software).toLowerCase() 
+                        (item.pha_sub_software == null ? 'x' : _item.pha_sub_software).toLowerCase()
                         == (item.pha_sub_software == null ? 'x' : item.pha_sub_software).toLowerCase()
 
-                        && (item.expense_type == null ? 'x' : _item.expense_type).toLowerCase() 
+                        && (item.expense_type == null ? 'x' : _item.expense_type).toLowerCase()
                         == (item.expense_type == null ? 'x' : item.expense_type).toLowerCase()
 
-                        && (item.sub_expense_type == null ? 'x' : _item.sub_expense_type ?_item.sub_expense_type.toLowerCase() :_item.sub_expense_type) 
-                        == (item.sub_expense_type == null ? 'x' : item.sub_expense_type ?item.sub_expense_type.toLowerCase() :item.sub_expense_type)
-                        
-                        && (_item.reference_moc == null || item.reference_moc == ''  ? 'x' : _item.reference_moc.toLowerCase())
-                        .includes((item.reference_moc == null || item.reference_moc == '' ? 'x' : item.reference_moc.toLowerCase()))
+                        && (item.sub_expense_type == null ? 'x' : _item.sub_expense_type ? _item.sub_expense_type.toLowerCase() : _item.sub_expense_type)
+                        == (item.sub_expense_type == null ? 'x' : item.sub_expense_type ? item.sub_expense_type.toLowerCase() : item.sub_expense_type)
 
-                        && (_item.pha_request_name == null || item.pha_request_name == ''  ? 'x' : _item.pha_request_name.toLowerCase())
-                        .includes((item.pha_request_name == null || item.pha_request_name == '' ? 'x' : item.pha_request_name.toLowerCase()))
+                        && (_item.reference_moc == null || item.reference_moc == '' ? 'x' : _item.reference_moc.toLowerCase())
+                            .includes((item.reference_moc == null || item.reference_moc == '' ? 'x' : item.reference_moc.toLowerCase()))
 
-                        && (item.project_no == null  ? 'x' : _item.pha_no.toLowerCase())
-                        .includes((item.project_no == null ? 'x' : item.project_no.toLowerCase()))
+                        && (_item.pha_request_name == null || item.pha_request_name == '' ? 'x' : _item.pha_request_name.toLowerCase())
+                            .includes((item.pha_request_name == null || item.pha_request_name == '' ? 'x' : item.pha_request_name.toLowerCase()))
 
-                        && (item.create_date == null ?true  :formatDate(item.create_date, _item.create_date))
+                        && (item.project_no == null ? 'x' : _item.pha_no.toLowerCase())
+                            .includes((item.project_no == null ? 'x' : item.project_no.toLowerCase()))
+
+                        && (item.create_date == null ? true : formatDate(item.create_date, _item.create_date))
 
                         && (item.id_apu == null ? true : _item.id_apu == item.id_apu)
                         && (item.functional_location == null ? true : _item.functional_location == item.functional_location)
@@ -270,20 +282,34 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                         && (item.id_toc == null ? true : parseInt(_item.id_toc) == parseInt(item.id_toc))
                         && (item.id_tagid == null ? true : parseInt(_item.id_tagid) == parseInt(item.id_tagid))
                         && (item.id_company == null ? true : parseInt(_item.id_company) == parseInt(item.id_company))
-                        
+
                         && (item.expense_type == 'CAPEX' && item.sub_expense_type == 'Normal' ?
                             (item.approver_user_name == null ? 'x' : _item.approver_user_name)
                             == (item.approver_user_name == null ? 'x' : item.approver_user_name) : true)
-                        && (item.emp_active_search == null ? 'x' : _item.emp_active_search).includes((item.emp_active_search == null ? 'x' : item.emp_active_search))
+
+                        //&& (item.emp_active_search == null ? true : 
+
+                        //    (item.emp_active_search == null ? 'x' : _item.emp_active_search.toLowerCase())
+                        //        .includes((item.emp_active_search == null ? 'x' : item.emp_active_search.toLowerCase()))
+                        
+                        //) 
                     );
                 });
-            $scope.data_results = arr_search;
+
+            arr_search =
+                $filter('filter')(arr_search, function (_item) {
+                    return (
+                        (item.emp_active_search == null ? 'x' : _item.emp_active_search.toLowerCase())
+                            .includes((item.emp_active_search == null ? 'x' : item.emp_active_search.toLowerCase()))
+                    );
+                });
+            $scope.data_results = arr_search ;
             apply();
         } catch {
 
-         }
+        }
     }
-    
+
     $scope.confirmCancle = function () {
         var page = 'home/Portal';
         window.open(page, "_top")
@@ -295,12 +321,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
         get_data(true, false);
     }
-    function next_page(controller_text, pha_status) {
+    function next_page(controller_text, pha_status, editPage) {
         controller_text = controller_text.toLowerCase();
-        console.log('controller_text',controller_text)
-        console.log('conFig.pha_seq',conFig.pha_seq)
-        console.log('conFig.pha_type_do',conFig.pha_type_doc)
-        console.log('pha_status',pha_status)
 
         $.ajax({
             url: controller_text + "/next_page",
@@ -317,8 +339,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                 $('#divLoading').hide();
             },
             success: function (data) {
-                var arr = data;
-                window.open(data.page, "_top");
+                // var arr = data;
+                // window.open(data.page, "_top");
+                if (editPage) {
+                    return window.open(`${data.page}?data=` + encodeURIComponent(editPage), '_top');
+                }
+                return window.open(data.page, "_top");
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 if (jqXHR.status == 500) {
@@ -342,7 +368,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
         if (datePickerDate.getTime() !== createDate.getTime()) {
             return false;
-        } 
+        }
 
         return true;
     }
@@ -423,6 +449,115 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             }
 
         });
+    }
+
+    $scope.selectManageDocument = function (item, action_type) {
+
+        $scope.user_name_select = $scope.user_name;
+        $scope.sub_software_select = item.pha_sub_software;
+        $scope.pha_no_select = item.pha_no;
+        $scope.pha_seq_select = item.seq;
+        $scope.manage_document_type = action_type;
+
+
+        $('#modalManageDocumentConfirm').modal('show');
+        $('#divLoading').hide();
+    }
+    $scope.confirmManageDocument = function () {
+         
+        var action_type = $scope.manage_document_type;
+        var user_name = $scope.user_name_select;
+        var sub_software = $scope.sub_software_select;
+        var pha_no = $scope.pha_no_select;
+        var pha_seq = $scope.pha_seq_select;
+        var pha_status_comment = $scope.pha_status_comment;
+
+        sub_software = (sub_software == 'WHAT\'S IF' ? 'WHATIF' : sub_software).toLowerCase();
+
+        if (action_type == 'copy') {
+            //copy and open doc
+            $('#modalManageDocumentConfirm').modal('hide');
+            $.ajax({
+                url: url_ws + "Flow/manage_document_copy",
+                data: '{"user_name":"' + user_name + '","sub_software":"' + sub_software + '"' +
+                    ',"pha_no":"' + pha_no + '","pha_seq":"' + pha_seq + '"}',
+                type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+                beforeSend: function () {
+                    $('#divLoading').show();
+                },
+                complete: function () {
+                    $('#divLoading').hide();
+                },
+                success: function (data) {
+
+                    var arr = data;
+                    console.log(arr);
+                    if (arr[0].status == 'true') {
+
+                        var controller_text = 'HAZOP'; //เนื่องจากไม่ได้แยกตาม module ให้ชี้ไป hazop ที่เดียว
+                        conFig.pha_type_doc = 'edit';
+                        conFig.pha_sub_software = sub_software;
+                        conFig.pha_seq = arr[0].seq_new;
+                        conFig.pha_status = arr[0].pha_status;
+
+                        next_page(controller_text, conFig.pha_status);
+
+                    } else {
+                        alert(arr[0].status + ',msg error: ' + arr[0].remark);
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    if (jqXHR.status == 500) {
+                        alert('Internal error: ' + jqXHR.responseText);
+                    } else {
+                        alert('Unexpected ' + textStatus);
+                    }
+                }
+
+            });
+
+
+        }
+        else if (action_type == 'cancel') {
+            //copy and open doc
+            if (pha_status_comment) {
+                    $('#modalManageDocumentConfirm').modal('hide');
+                $.ajax({
+                    url: url_ws + "Flow/manage_document_cancel",
+                    data: '{"user_name":"' + user_name + '","sub_software":"' + sub_software + '"' + ',"pha_status_comment":"' + pha_status_comment + '"' +
+                    ',"pha_no":"' + pha_no + '","pha_seq":"' + pha_seq + '"}',
+                    type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+                    beforeSend: function () {
+                        $('#divLoading').show();
+                    },
+                    complete: function () {
+                        $('#divLoading').hide();
+                    },
+                    success: function (data) {
+                        var arr = data;
+                        console.log(arr);
+                        if (arr[0].status == 'true') {
+                            $scope.SubSoftwateChange();
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        if (jqXHR.status == 500) {
+                            alert('Internal error: ' + jqXHR.responseText);
+                        } else {
+                            alert('Unexpected ' + textStatus);
+                        }
+                    }
+
+                });
+            }
+
+ 
+        }
+
+    }
+
+    $scope.cancelManageDocument = function () {
+        $('#modalManageDocumentConfirm').modal('hide');
     }
 
     $(document).ready(function () {

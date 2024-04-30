@@ -1,12 +1,12 @@
 
-AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$rootScope,$window) {
+AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, $rootScope, $window) {
     $('#divLoading').hide();
 
 
     var unsavedChanges = false;
 
     // Track location changes
-    $rootScope.$on('$locationChangeStart', function(event, next, current) {
+    $rootScope.$on('$locationChangeStart', function (event, next, current) {
         console.log('Location is changing from:', current, 'to:', next);
 
         if (unsavedChanges) {
@@ -18,11 +18,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
     });
 
     // close tab / browser window
-    $window.addEventListener('beforeunload', function(event) {
-        console.log("Trigger Ec=vent",event)
+    $window.addEventListener('beforeunload', function (event) {
+        console.log("Trigger Ec=vent", event)
         if (unsavedChanges) {
             var confirmationMessage = 'You have unsaved changes. Are you sure you want to leave?';
-    
+
             event.preventDefault();
             event.returnValue = confirmationMessage;
             return confirmationMessage;
@@ -64,7 +64,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
             const fileSize = Math.round(file.size / 1024);
             fileInfoSpan.textContent = `${fileName} (${fileSize} KB)`;
             $scope.fileInfoSpan = `${fileName} (${fileSize} KB)`;
-            
+
             var file_path = uploadFile(file, fileSeq, fileName, fileSize);
 
         } else {
@@ -85,7 +85,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
             //const request = new XMLHttpRequest();
             //request.open("POST", url_ws + 'Flow/uploadfile_data_followup');
             //request.send(fd);
-             
+
             //var arr = $filter('filter')($scope.data_drawingworksheet, function (item) { return (item.seq == seq); });
             //if (arr.length > 0) {
             //    arr[0].document_file_name = file_name;
@@ -121,7 +121,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                                 arr[0].document_file_path = (url_ws.replace('/api/', '')) + file_path;// (url_ws.replace('/api/', '/')) + 'AttachedFileTemp/Hazop/' + file_name;
                                 arr[0].document_module = $scope.document_module;
                                 arr[0].action_change = 1;
-                                clear_valid_items('upload_file-'+ $scope.seqUpload);
+                                clear_valid_items('upload_file-' + $scope.seqUpload);
                                 $scope.seqUpload = null;
                                 apply();
 
@@ -193,7 +193,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
     }
 
     function arr_def() {
-     
+
         $scope.selectViewTypeFollowup = true;
         $scope.action_part = 1;
         $scope.user_name = conFig.user_name();
@@ -274,7 +274,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
     $scope.selectDocPreview = function () {
 
         //open document 
-        var controller_text =  'hazop';//item.pha_sub_software;
+        var controller_text = 'hazop';//item.pha_sub_software;
         var pha_sub_software = conFig.pha_sub_software().toLowerCase()//'hazop';//item.pha_sub_software;
         var pha_status = $scope.flow_status;
 
@@ -356,8 +356,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
         //del.style.display = "none";
 
         if ($scope.data_drawingworksheet.length > 1) {
-            var arr = $filter('filter')($scope.data_drawingworksheet, function (item) { 
-                return (item.seq != seq); 
+            var arr = $filter('filter')($scope.data_drawingworksheet, function (item) {
+                return (item.seq != seq);
             });
             $scope.data_drawingworksheet = arr;
         }
@@ -386,7 +386,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
 
     function next_page(controller_text, pha_status) {
         controller_text = controller_text.toLowerCase();
-   
+
         $.ajax({
             url: controller_text + "/next_page",
             data: '{"pha_seq":"' + conFig.pha_seq + '","pha_type_doc":"' + conFig.pha_type_doc + '"'
@@ -419,7 +419,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
         var token_doc = conFig.pha_seq();
         var responder_user_name = conFig.responder_user_name();
         var sub_software = conFig.pha_sub_software().toLowerCase(); //'hazop';
-        
+
         if (responder_user_name == "undefined") {
             responder_user_name = "";
         }
@@ -463,15 +463,15 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                 $scope.data_drawingworksheet_reviewer = arr.drawingworksheet_reviewer;
                 $scope.selected_ram_img = (url_ws.replace('/api/', '/')) + 'AttachedFileTemp/rma-img-' + $scope.select_rows_level + 'x' + $scope.select_columns_level + '.png';
 
-                console.log("show detail",$scope.data_pha_doc)
+                console.log("show detail", $scope.data_pha_doc)
                 // add key implement def true for status 13 
-                $scope.data_details.forEach(function(_item) {
-                    if ($scope.data_pha_doc != 14 ) {
-                        _item.implement = true;
-                    }
-                });
+                //$scope.data_details.forEach(function (_item) {
+                //    if ($scope.data_pha_doc != 14) {
+                //        _item.implement = true;
+                //    }
+                //});
 
-                console.log("show detail",$scope.data_details) 
+                console.log("show detail", $scope.data_details)
 
                 if (true) {
                     $scope.MaxSeqdata_drawing_worksheet = 0;
@@ -488,7 +488,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                         arr.ram[i].document_definition_file_path = (url_ws.replace('/api/', '/')) + arr.ram[i].document_definition_file_path;
                     }
 
-                    
+
                     //ram,ram_level,ram_color,security_level,likelihood_level
                     $scope.master_ram = arr.ram;
                     $scope.master_ram_level = arr.ram_level;
@@ -500,10 +500,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                     $scope.master_no = [{ id: 4, name: 4 }, { id: 5, name: 5 }, { id: 6, name: 6 }, { id: 7, name: 7 }, { id: 8, name: 8 }, { id: 9, name: 9 }, { id: 10, name: 10 }];
                     $scope.ram_rows_level = 5;
                     $scope.ram_columns_level = 5;
-                    
-                }   
 
-                console.log("will show master ram",$scope.master_ram)
+                }
+
+                console.log("will show master ram", $scope.master_ram)
 
                 console.log($scope);
 
@@ -524,9 +524,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
 
         });
     }
- 
+
     $scope.confirmFollowBackSearch = function () {
-        var page = conFig.controller_action_befor(); 
+        var page = conFig.controller_action_befor();
         window.open(page, "_top");
     }
     $scope.confirmFollowBack = function () {
@@ -544,24 +544,24 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
         if ($scope.flow_status == 13) {
             item.action_change = 1;
 
-            if (item.implement) {
+            if (item.implement == 1) {
                 // const validRemark = set_valid_items(item.responder_comment, 'remark-'+ item.seq);
-                const validUploadFile = set_valid_items($scope.fileInfoSpan, 'upload_file-'+ item.seq);
+                const validUploadFile = set_valid_items($scope.fileInfoSpan, 'upload_file-' + item.seq);
 
                 if (!validUploadFile) {
                     console.log('im save')
                     $scope.confirmSaveFollowup('save', item);
                 }
-            }else {
+            } else {
                 var docfiles = $filter('filter')($scope.data_drawingworksheet, function (_item) {
-                    return (_item.id_worksheet == item.seq && 
-                            _item.action_type != 'delete' 
+                    return (_item.id_worksheet == item.seq &&
+                        _item.action_type != 'delete'
                     );
                 })[0];
 
-                const validRemark = set_valid_items(item.responder_comment, 'remark-'+ item.seq);
-                const validUploadFile = set_valid_items(docfiles.document_file_name, 'upload_file-'+ item.seq);
-                const validComment= set_valid_items(item.reviewer_comment, 'comment-'+ item.seq);
+                const validRemark = set_valid_items(item.responder_comment, 'remark-' + item.seq);
+                const validUploadFile = set_valid_items(docfiles.document_file_name, 'upload_file-' + item.seq);
+                const validComment = set_valid_items(item.reviewer_comment, 'comment-' + item.seq);
                 if (!validRemark && !validUploadFile && !validComment) {
                     console.log('save')
                     $scope.confirmSaveFollowup('save', item);
@@ -573,9 +573,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
 
             if (item.action_status == 'Close with condition') {
                 console.log(item.reviewer_comment)
-                const validComment = set_valid_items(item.reviewer_comment, 'comment-'+ item.seq);
+                const validComment = set_valid_items(item.reviewer_comment, 'comment-' + item.seq);
 
-                if(validComment) return
+                if (validComment) return
             }
             $scope.confirmSaveReviewFollowup('save', item);
         }
@@ -584,30 +584,42 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
 
     $scope.actionImplement = function (item) {
         var docfiles = $filter('filter')($scope.data_drawingworksheet, function (_item) {
-            return (_item.id_worksheet == item.seq && 
-                    _item.action_type != 'delete' &&
-                    _item.document_file_name != null
+            return (_item.id_worksheet == item.seq &&
+                _item.action_type != 'delete' &&
+                _item.document_file_name != null
             );
         });
 
         if (docfiles.length > 0) {
             $scope.fileInfoSpan = docfiles[0].document_file_name;
-        }else {
+        } else {
             $scope.fileInfoSpan = '';
         }
 
         $scope.data_details.forEach(function (_item) {
             if (item.seq == _item.seq) {
-                _item.implement = !_item.implement;
+                //_item.implement = !_item.implement;
 
-                if (!_item.implement) {
+                //if (!_item.implement) {
+                //    // set_valid_items(_item.responder_comment, 'remark-'+_item.seq);
+                //    set_valid_items($scope.fileInfoSpan, 'upload_file-'+_item.seq);
+                //}else {
+                //    clear_valid_items('remark-'+_item.seq);
+                //    clear_valid_items('upload_file-'+_item.seq);
+                //}
+
+                alert(_item.implement);
+                if (_item.implement == 0) { _item.implement = 1; } else { _item.implement = 0; }
+                
+                if (_item.implement == 0) {
                     // set_valid_items(_item.responder_comment, 'remark-'+_item.seq);
-                    set_valid_items($scope.fileInfoSpan, 'upload_file-'+_item.seq);
-                }else {
-                    clear_valid_items('remark-'+_item.seq);
-                    clear_valid_items('upload_file-'+_item.seq);
+                    set_valid_items($scope.fileInfoSpan, 'upload_file-' + _item.seq);
+                } else {
+                    clear_valid_items('remark-' + _item.seq);
+                    clear_valid_items('upload_file-' + _item.seq);
                 }
-             
+
+
             }
         });
         unsavedChanges = true;
@@ -617,7 +629,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
         $scope.data_details.forEach(function (_item) {
             if (item.seq == _item.seq && !item.implement) {
                 // const field = 'remark-'+_item.seq
-                set_valid_items(_item.responder_comment, 'remark-'+_item.seq);
+                set_valid_items(_item.responder_comment, 'remark-' + _item.seq);
                 // set_valid_items(_item.responder_comment, 'upload_file-'+_item.seq);
             }
         });
@@ -636,9 +648,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                 id_valid.className = "feedback text-danger";
                 id_valid.focus();
                 return true;
-            } else { 
-                id_valid.className = "invalid-feedback text-danger"; 
-                return false; 
+            } else {
+                id_valid.className = "invalid-feedback text-danger";
+                return false;
             }
 
         } catch (ex) { }
@@ -668,23 +680,23 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
             // }
 
             // check implement
-            if (item.implement) {
+            if (item.implement ==1) {
                 // const validRemark = set_valid_items(item.responder_comment, 'remark-'+ item.seq);
-                const validUploadFile = set_valid_items($scope.fileInfoSpan, 'upload_file-'+ item.seq);
+                const validUploadFile = set_valid_items($scope.fileInfoSpan, 'upload_file-' + item.seq);
 
                 if (validUploadFile) {
                     console.log('im save')
                     return;
                 }
-            }else {
+            } else {
                 var docfiles = $filter('filter')($scope.data_drawingworksheet, function (_item) {
-                    return (_item.id_worksheet == item.seq && 
-                            _item.action_type != 'delete' 
+                    return (_item.id_worksheet == item.seq &&
+                        _item.action_type != 'delete'
                     );
                 })[0];
 
-                const validRemark = set_valid_items(item.responder_comment, 'remark-'+ item.seq);
-                const validUploadFile = set_valid_items(docfiles.document_file_name, 'upload_file-'+ item.seq);
+                const validRemark = set_valid_items(item.responder_comment, 'remark-' + item.seq);
+                const validUploadFile = set_valid_items(docfiles.document_file_name, 'upload_file-' + item.seq);
                 if (validRemark || validUploadFile) {
                     return
                 }
@@ -704,7 +716,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                 // item.reviewer_action_type
                 var arr_active = [];
                 angular.copy($scope.data_details, arr_active);
-                 
+
                 var arr_json = $filter('filter')(arr_active, function (item) {
                     return (item.reviewer_action_type == null
                         || item.reviewer_action_type < 2);
@@ -806,7 +818,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
         var token_doc = _item.ID_PHA;
 
         //alert(url_ws + "Flow/set_follow_up");
-        var sub_software = conFig.pha_sub_software().toLowerCase(); 
+        var sub_software = conFig.pha_sub_software().toLowerCase();
 
         $.ajax({
             url: url_ws + "Flow/set_follow_up",
@@ -863,7 +875,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
 
                         if (arr.length == $scope.data_details.length) {
                             window.open("Home/Portal", "_top");
-                        } else { 
+                        } else {
                             $('#modalMsg').modal('show');
                         }
                     }
@@ -883,7 +895,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
         });
     }
     $scope.confirmSaveReviewFollowup = function (action, _item) {
-          
+
         var json_drawingworksheet = check_data_drawingworksheet(_item.seq);
 
         var arr_active = [];
@@ -913,7 +925,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
         var user_name = $scope.user_name;
         var flow_action = action;
         var token_doc = conFig.pha_seq();
-        var sub_software = conFig.pha_sub_software().toLowerCase() 
+        var sub_software = conFig.pha_sub_software().toLowerCase()
 
         $.ajax({
             url: url_ws + "Flow/set_follow_up_review",
@@ -956,7 +968,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                         $scope.Action_Msg_Detail = 'Data has been successfully saved.';
                     } else {
                         $scope.Action_Msg_Header = 'Success';
-                        $scope.Action_Msg_Detail = 'Data has been successfully submitted.'; 
+                        $scope.Action_Msg_Detail = 'Data has been successfully submitted.';
                     }
                     apply();
 
@@ -967,7 +979,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
 
                         if (arr.length == $scope.data_details.length) {
                             window.open("Home/Portal", "_top");
-                        } else { 
+                        } else {
                             $('#modalMsg').modal('show');
                         }
                     }
@@ -1007,7 +1019,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
             $scope.cal_ram_action_risk = _item.ram_action_risk;
         }
         $scope.cal_ram_action_security = ($scope.cal_ram_action_security == null ? 'N/A' : $scope.cal_ram_action_security);
-        $scope.cal_ram_action_likelihood = ($scope.cal_ram_action_likelihood == null ? 'N/A' : $scope.cal_ram_action_likelihood); 
+        $scope.cal_ram_action_likelihood = ($scope.cal_ram_action_likelihood == null ? 'N/A' : $scope.cal_ram_action_likelihood);
         $scope.cal_ram_action_risk = ($scope.cal_ram_action_risk == null ? 'N/A' : $scope.cal_ram_action_risk);
 
         var arr_items = $filter('filter')($scope.master_ram_level, function (item) { return (item.id_ram == id_ram); });
@@ -1034,15 +1046,15 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
 
         $('#modalRAM').modal({
             backdrop: 'static',
-            keyboard: false 
+            keyboard: false
         }).modal('show');
-        
+
     };
 
-    $scope.closeModalDataRAM_Worksheet = function() {
+    $scope.closeModalDataRAM_Worksheet = function () {
         $scope.cal_ram_action_security = null;
         $scope.cal_ram_action_likelihood = null;
-        $scope.cal_ram_action_risk = null; 
+        $scope.cal_ram_action_risk = null;
     };
 
     /*$scope.openModalDataRAM = function (ram_type, _item, ram_type_action, id_ram, preview) {
@@ -1130,13 +1142,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
 
                 var safety_critical_equipment = 'N';
                 var id_ram = ($scope.data_general[0].id_ram === undefined || $scope.data_general[0].id_ram === null) ? '5' : $scope.data_general[0].id_ram;
-                console.log(id_ram,"show",$scope.master_ram_level,"ram_likelihood",ram_likelihood,"ram_security",ram_security)
+                console.log(id_ram, "show", $scope.master_ram_level, "ram_likelihood", ram_likelihood, "ram_security", ram_security)
 
                 var arr_items = $filter('filter')($scope.master_ram_level, function (item) {
                     return (item.id_ram == id_ram && item.security_level == ram_security);
                 });
 
-                console.log(arr_items,"ram_likelihood",ram_likelihood,"ram_security",ram_security)
+                console.log(arr_items, "ram_likelihood", ram_likelihood, "ram_security", ram_security)
                 if (arr_items.length > 0) {
                     //check ram_likelihood ว่าตก columns ไหน เพื่อหา ram1_priority
                     if (ram_likelihood == arr_items[0].likelihood1_level) { ram_risk = arr_items[0].ram1_priority; safety_critical_equipment = arr_items[0].likelihood1_criterion; }
@@ -1204,7 +1216,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
     }
 
     $scope.downloadFile = function (item) {
-          
+
         if (item.document_file_name != '') {
             //var path = (url_ws).replace('/api/', '') + item.document_file_path;
             var path = item.document_file_path;
@@ -1239,11 +1251,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
 
         $.ajax({
             url: url_ws + "Flow/export_recommendation_by_action_owner",
-            data: '{"sub_software":"' + sub_software + 
-                    '","user_name":"' + user_name + 
-                    '","seq":"' + seq + 
-                    '","export_type":"' + data_type + 
-                    '"}',
+            data: '{"sub_software":"' + sub_software +
+                '","user_name":"' + user_name +
+                '","seq":"' + seq +
+                '","export_type":"' + data_type +
+                '"}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
             beforeSend: function () {
                 $('#modalExportFile').modal('hide');

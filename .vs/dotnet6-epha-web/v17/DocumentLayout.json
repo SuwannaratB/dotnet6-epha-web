@@ -1,14 +1,18 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\",
+  "WorkspaceRootPath": "C:\\Develop Drive\\dotnet6-epha-web\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{61C78411-B1F3-4F4C-9684-BB0AF4D5DBFB}|dotnet6-epha-web.csproj|c:\\develop drive\\dotnet6-epha-web\\dotnet6-epha-web\\wwwroot\\js\\_flow\\hazopsearch.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
-      "RelativeMoniker": "D:0:0:{61C78411-B1F3-4F4C-9684-BB0AF4D5DBFB}|dotnet6-epha-web.csproj|solutionrelative:wwwroot\\js\\_flow\\hazopsearch.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+      "AbsoluteMoniker": "D:0:0:{61C78411-B1F3-4F4C-9684-BB0AF4D5DBFB}|dotnet6-epha-web.csproj|c:\\develop drive\\dotnet6-epha-web\\wwwroot\\js\\_flow\\hazopfollowup_update.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{61C78411-B1F3-4F4C-9684-BB0AF4D5DBFB}|dotnet6-epha-web.csproj|solutionrelative:wwwroot\\js\\_flow\\hazopfollowup_update.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{61C78411-B1F3-4F4C-9684-BB0AF4D5DBFB}|dotnet6-epha-web.csproj|c:\\develop drive\\dotnet6-epha-web\\dotnet6-epha-web\\views\\hazop\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{61C78411-B1F3-4F4C-9684-BB0AF4D5DBFB}|dotnet6-epha-web.csproj|solutionrelative:views\\hazop\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{61C78411-B1F3-4F4C-9684-BB0AF4D5DBFB}|dotnet6-epha-web.csproj|c:\\develop drive\\dotnet6-epha-web\\views\\hazop\\followupupdate.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{61C78411-B1F3-4F4C-9684-BB0AF4D5DBFB}|dotnet6-epha-web.csproj|solutionrelative:views\\hazop\\followupupdate.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{61C78411-B1F3-4F4C-9684-BB0AF4D5DBFB}|dotnet6-epha-web.csproj|c:\\develop drive\\dotnet6-epha-web\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{61C78411-B1F3-4F4C-9684-BB0AF4D5DBFB}|dotnet6-epha-web.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     }
   ],
   "DocumentGroupContainers": [
@@ -17,8 +21,8 @@
       "VerticalTabListWidth": 256,
       "DocumentGroups": [
         {
-          "DockedWidth": 43,
-          "SelectedChildIndex": 4,
+          "DockedWidth": 78,
+          "SelectedChildIndex": 5,
           "Children": [
             {
               "$type": "Bookmark",
@@ -33,29 +37,46 @@
               "Name": "ST:129:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
             },
             {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "Index.cshtml",
-              "DocumentMoniker": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\Views\\Hazop\\Index.cshtml",
-              "RelativeDocumentMoniker": "Views\\Hazop\\Index.cshtml",
-              "ToolTip": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\Views\\Hazop\\Index.cshtml",
-              "RelativeToolTip": "Views\\Hazop\\Index.cshtml",
-              "ViewState": "AQIAAJIBAAAAAAAAAAAAAKQBAAARAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-03-29T02:16:20.057Z",
+              "DocumentIndex": 2,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Develop Drive\\dotnet6-epha-web\\appsettings.json",
+              "RelativeDocumentMoniker": "appsettings.json",
+              "ToolTip": "C:\\Develop Drive\\dotnet6-epha-web\\appsettings.json",
+              "RelativeToolTip": "appsettings.json",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABUAAAAqAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2024-04-30T05:45:59.286Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "hazopsearch.js",
-              "DocumentMoniker": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\wwwroot\\js\\_flow\\hazopsearch.js",
-              "RelativeDocumentMoniker": "wwwroot\\js\\_flow\\hazopsearch.js",
-              "ToolTip": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\wwwroot\\js\\_flow\\hazopsearch.js",
-              "RelativeToolTip": "wwwroot\\js\\_flow\\hazopsearch.js",
-              "ViewState": "AQIAANkAAAAAAAAAAAAowOAAAAAfAAAA",
+              "Title": "hazopfollowup_update.js",
+              "DocumentMoniker": "C:\\Develop Drive\\dotnet6-epha-web\\wwwroot\\js\\_flow\\hazopfollowup_update.js",
+              "RelativeDocumentMoniker": "wwwroot\\js\\_flow\\hazopfollowup_update.js",
+              "ToolTip": "C:\\Develop Drive\\dotnet6-epha-web\\wwwroot\\js\\_flow\\hazopfollowup_update.js",
+              "RelativeToolTip": "wwwroot\\js\\_flow\\hazopfollowup_update.js",
+              "ViewState": "AQIAAE8CAAAAAAAAAAAtwFYCAAA2AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2024-03-29T01:52:08.984Z",
+              "WhenOpened": "2024-04-30T05:45:28.793Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "FollowupUpdate.cshtml",
+              "DocumentMoniker": "C:\\Develop Drive\\dotnet6-epha-web\\Views\\Hazop\\FollowupUpdate.cshtml",
+              "RelativeDocumentMoniker": "Views\\Hazop\\FollowupUpdate.cshtml",
+              "ToolTip": "C:\\Develop Drive\\dotnet6-epha-web\\Views\\Hazop\\FollowupUpdate.cshtml",
+              "RelativeToolTip": "Views\\Hazop\\FollowupUpdate.cshtml",
+              "ViewState": "AQIAAMgBAAAAAAAAAIAwwNcBAABtAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-04-30T05:30:44.282Z",
               "EditorCaption": ""
             }
           ]
