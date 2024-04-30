@@ -976,6 +976,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         $scope.data_subareas_def = clone_arr_newrow(arr.subareas);
                         $scope.data_subareas_old = (arr.subareas);
 
+                        for (var i = 0; i < arr.hazard.length; i++) {
+                            arr.hazard[i].id_subareas = 8;
+                        }
                         $scope.data_hazard = arr.hazard;
                         $scope.data_hazard_def = clone_arr_newrow(arr.hazard);
                         $scope.data_hazard_old = (arr.hazard);
@@ -1770,6 +1773,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             newInput.action_type = 'insert';
             newInput.action_change = 0;
             newInput.action_new_row = 0;
+
+            newInput.id_subareas = 11;
 
             running_no_level1_lv1($scope.data_hazard, iNo, index, newInput);
 

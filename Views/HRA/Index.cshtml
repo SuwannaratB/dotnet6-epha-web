@@ -777,6 +777,49 @@
 
                                 <p><b>NAME OF AREA : {{selectedBusiness_Unit}}</b></p>
 
+                                <table class="table fs--2 mb-0 table-bordered">
+
+                                    <thead class=" text-uppercase  text-center bg-soft">
+                                        <tr>
+                                            <th class="sort align-middle text-center px-0" colspan="1" rowspan="2">
+                                                m-1
+                                            </th>
+
+                                            <th class="sort align-middle text-center px-0" colspan="1" rowspan="2">
+                                                m-2
+                                            </th>
+
+
+                                            <th class="sort align-middle text-center px-0" colspan="1" rowspan="2">
+                                                s-1
+                                            </th>
+                                            <th class="sort align-middle text-center px-0" colspan="1" rowspan="2">
+                                                s-2
+                                            </th>
+                                        </tr>
+
+                                    </thead>
+
+                                    <tbody class="list">
+                                        <tr class="hover-actions-trigger btn-reveal-trigger position-static p-0"
+                                            ng-repeat="subarea in data_subareas">
+                                            <td><span class="px-1">{{ subarea.no }}x</span></td>
+                                            <td><span class="px-1">{{ subarea.id }}x</span></td>
+                                        </tr>
+                                        <tr class="hover-actions-trigger btn-reveal-trigger position-static p-0"
+                                            ng-repeat="hazard in data_hazard" ng-if="hazard.id_subarea == subarea.id">
+                                            <td></td> <!-- เพิ่ม column ว่าง -->
+                                            <td></td> <!-- เพิ่ม column ว่าง -->
+                                            <!-- แทนที่ตำแหน่งที่ต้องการแสดงข้อมูลในแต่ละ column ตามความเหมาะสม -->
+                                            <td><span class="px-1">{{ hazard.no }}t</span></td>
+                                            <td><span class="px-1">{{ hazard.id_subarea }}t</span></td>
+                                        </tr>
+                                    </tbody>
+
+
+                                </table>
+
+
                                 <!------ NAME OF SUB AREA :------>
                                 <div class="table-responsive scrollbar mb-3" id="table-container">
 
@@ -1416,7 +1459,7 @@
                                             <th class=" align-middle" colspan="1" rowspan="2">Type of Hazard</th>
                                             <th class=" align-middle" colspan="1" rowspan="2">Exposure Indicator</th>
                                             <th class=" align-middle" colspan="1" rowspan="2" ng-if="data_header[0].pha_status >12">Document File</th>
-                                        @*     <th class=" align-middle text-start" colspan="1" rowspan="2">Hierarchy of Control</th>
+                                            @*     <th class=" align-middle text-start" colspan="1" rowspan="2">Hierarchy of Control</th>
                                             <th class=" align-middle text-start" colspan="1" rowspan="2">Residual Risk Ranking</th> *@
                                             <th class=" align-middle text-start" colspan="1" rowspan="2">Recommendation</th>
                                             <th class=" align-middle text-center" colspan="1" rowspan="2">Action<br />Status<br />(Items)</th>
@@ -1426,20 +1469,20 @@
                                             <th class=" align-middle" colspan="1" rowspan="2">Action Close Date</th>
                                         </tr>
                                         <tr>
-                                            <th class=" align-middle" scope="col" >Start Date</th>
-                                            <th class=" align-middle" scope="col" >End Date</th>
+                                            <th class=" align-middle" scope="col">Start Date</th>
+                                            <th class=" align-middle" scope="col">End Date</th>
                                         </tr>
 
                                     </thead>
 
                                     <tbody class="list" id="customer-rating-table-body">
-                                        <tr ng-repeat="item in data_worksheet | orderBy:['index_rows']" 
+                                        <tr ng-repeat="item in data_worksheet | orderBy:['index_rows']"
                                             class="hover-actions-trigger btn-reveal-trigger position-static text-center">
 
                                             <td class="align-top rating white-space-nowrap text-start">
                                                 <div class="ms-3">
                                                     <label>
-                                                        {{item.recommendations_no}} 
+                                                        {{item.recommendations_no}}
                                                     </label>
                                                 </div>
                                             </td>
@@ -1477,7 +1520,7 @@
                                             <td class="align-top rating white-space-nowrap">
                                                 <div class="ms-3">
                                                     <label>
-                                                        {{item.responder_user_displayname}} 
+                                                        {{item.responder_user_displayname}}
                                                     </label>
                                                 </div>
                                             </td>
@@ -1513,26 +1556,26 @@
                                             </td>
 
 
-                                          @*   <td class="align-top rating white-space-nowrap">
-                                                <div class="d-flex align-items-center">
-                                                    <div class="mx-1">
-                                                        <textarea class="form-control form-control-sm" rows="3" type="text" style="width: 200px;"
-                                                                  placeholder="Hierarchy of Control (ALARP)" ng-disabled="item.initial_risk_rating === 'Low'"
-                                                                  ng-style="{'background-color': item.initial_risk_rating === 'Low' ? '#f2f2f2' : 'inherit'}"
-                                                                  ng-model="item.hierarchy_of_control"></textarea>
-                                                    </div>
-                                                </div>
+                                            @*   <td class="align-top rating white-space-nowrap">
+                                            <div class="d-flex align-items-center">
+                                            <div class="mx-1">
+                                            <textarea class="form-control form-control-sm" rows="3" type="text" style="width: 200px;"
+                                            placeholder="Hierarchy of Control (ALARP)" ng-disabled="item.initial_risk_rating === 'Low'"
+                                            ng-style="{'background-color': item.initial_risk_rating === 'Low' ? '#f2f2f2' : 'inherit'}"
+                                            ng-model="item.hierarchy_of_control"></textarea>
+                                            </div>
+                                            </div>
                                             </td>
-                                          
+
                                             <td class="align-top rating white-space-nowrap">
-                                                <div class="d-flex align-items-center">
-                                                    <div class="mx-1">
-                                                        <textarea class="form-control form-control-sm" rows="3" type="text" style="width: 200px;"
-                                                                  placeholder="Residual Risk Rating" ng-disabled="item.initial_risk_rating === 'Low'"
-                                                                  ng-style="{'background-color': item.initial_risk_rating === 'Low' ? '#f2f2f2' : 'inherit'}"
-                                                                  ng-model="item.residual_risk_rating"></textarea>
-                                                    </div>
-                                                </div>
+                                            <div class="d-flex align-items-center">
+                                            <div class="mx-1">
+                                            <textarea class="form-control form-control-sm" rows="3" type="text" style="width: 200px;"
+                                            placeholder="Residual Risk Rating" ng-disabled="item.initial_risk_rating === 'Low'"
+                                            ng-style="{'background-color': item.initial_risk_rating === 'Low' ? '#f2f2f2' : 'inherit'}"
+                                            ng-model="item.residual_risk_rating"></textarea>
+                                            </div>
+                                            </div>
                                             </td> *@
                                             <td class="align-top rating white-space-nowrap">
                                                 <div class="d-flex align-items-center">
@@ -1897,7 +1940,7 @@
 
     <div class="modal fade modal-xl" id="modalMatrix_Exposure_Rating" tabindex="-1" aria-labelledby="modalMatrix_Exposure_RatingLabel"
          aria-hidden="true" style="display: none;">
-        <div class="modal-dialog modal-dialog-centered"  >
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="text-900 mb-0" data-anchor="data-anchor" id="modalMatrix_Exposure_RatingLabel">
