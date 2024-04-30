@@ -526,8 +526,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
         window.open(page, "_top");
     }
     $scope.confirmFollowBack = function () {
-        var page = conFig.controller_action_befor();
-        window.open(page, "_top")
+        window.open('Hazop/Followup', "_top")
+        // var page = conFig.controller_action_befor();
+        // window.open(page, "_top")
     }
     $scope.confirmCancle = function () {
         var page = conFig.controller_action_befor();
