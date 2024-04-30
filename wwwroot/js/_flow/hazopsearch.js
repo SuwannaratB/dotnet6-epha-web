@@ -58,6 +58,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         $scope.flow_status = 0;
 
         $scope.exportfile = [{ DownloadPath: '', Name: '' }];
+
+        $scope.pha_status_comment = '';
     }
     function replace_hashKey_arr(_arr) {
         var json = JSON.stringify(_arr, function (key, value) {
@@ -462,20 +464,19 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         $('#divLoading').hide();
     }
     $scope.confirmManageDocument = function () {
-
-        $('#modalManageDocumentConfirm').modal('hide');
          
         var action_type = $scope.manage_document_type;
         var user_name = $scope.user_name_select;
         var sub_software = $scope.sub_software_select;
         var pha_no = $scope.pha_no_select;
         var pha_seq = $scope.pha_seq_select;
+        var pha_status_comment = $scope.pha_status_comment;
 
         sub_software = (sub_software == 'WHAT\'S IF' ? 'WHATIF' : sub_software).toLowerCase();
 
         if (action_type == 'copy') {
             //copy and open doc
-
+            $('#modalManageDocumentConfirm').modal('hide');
             $.ajax({
                 url: url_ws + "Flow/manage_document_copy",
                 data: '{"user_name":"' + user_name + '","sub_software":"' + sub_software + '"' +
@@ -488,6 +489,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                     $('#divLoading').hide();
                 },
                 success: function (data) {
+
                     var arr = data;
                     console.log(arr);
                     if (arr[0].status == 'true') {
@@ -518,36 +520,44 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         }
         else if (action_type == 'cancel') {
             //copy and open doc
-
-            $.ajax({
-                url: url_ws + "Flow/manage_document_cancel",
-                data: '{"user_name":"' + user_name + '","sub_software":"' + sub_software + '"' +
+            if (pha_status_comment) {
+                    $('#modalManageDocumentConfirm').modal('hide');
+                $.ajax({
+                    url: url_ws + "Flow/manage_document_cancel",
+                    data: '{"user_name":"' + user_name + '","sub_software":"' + sub_software + '"' + ',"pha_status_comment":"' + pha_status_comment + '"' +
                     ',"pha_no":"' + pha_no + '","pha_seq":"' + pha_seq + '"}',
-                type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
-                beforeSend: function () {
-                    $('#divLoading').show();
-                },
-                complete: function () {
-                    $('#divLoading').hide();
-                },
-                success: function (data) {
-                    var arr = data;
-                    console.log(arr);
-                    if (arr[0].status == 'true') {
-                        $scope.SubSoftwateChange();
+                    type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+                    beforeSend: function () {
+                        $('#divLoading').show();
+                    },
+                    complete: function () {
+                        $('#divLoading').hide();
+                    },
+                    success: function (data) {
+                        var arr = data;
+                        console.log(arr);
+                        if (arr[0].status == 'true') {
+                            $scope.SubSoftwateChange();
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        if (jqXHR.status == 500) {
+                            alert('Internal error: ' + jqXHR.responseText);
+                        } else {
+                            alert('Unexpected ' + textStatus);
+                        }
                     }
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    if (jqXHR.status == 500) {
-                        alert('Internal error: ' + jqXHR.responseText);
-                    } else {
-                        alert('Unexpected ' + textStatus);
-                    }
-                }
 
-            });
+                });
+            }
+
+ 
         }
 
+    }
+
+    $scope.cancelManageDocument = function () {
+        $('#modalManageDocumentConfirm').modal('hide');
     }
 
     $(document).ready(function () {
