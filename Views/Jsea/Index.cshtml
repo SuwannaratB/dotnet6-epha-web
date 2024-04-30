@@ -29,9 +29,12 @@
 
     <script src="~/assets/js/all.min.js"></script>
 
+    <link rel="stylesheet" href="~/css/myStyles.css">
 }
 
-<div class="content mt-1" style="font-size: 12px; min-height: auto !important; overflow-x:hidden;" id="divPage" ng-controller="ctrlAppPage">
+<div class="content mt-1" style="font-size: 12px; min-height: auto !important; overflow-x:hidden;" id="divPage"
+     ng-controller="ctrlAppPage"
+     ng-click="toggleResultsVisibility()">
 
 
     <div class="row g-0">
@@ -39,30 +42,33 @@
         <div class="col-6">
             <div class="card shadow-sm p-2 mb-3 bg-light rounded">
                 <div class="card-body p-2">
+                   <div class="row justify-content-between">
+                        <div class="col-auto d-flex gap-4 ">
+                             <div class="col-auto">
+                                <b>PHA No.:</b> <br>
+                                <span class="text-uppercase">{{ ( data_header[0].action_type =='update' ? data_header[0].pha_no : data_header[0].pha_sub_software + '-2023-00000XX')}}</span>
+                            </div>
+                            <div class="col-auto">
+                                <b>Revision :</b> <br>
+                                <span ng-if="data_header[0].pha_version>0 "> {{data_header[0].pha_version_text + '(' + data_header[0].pha_version_desc  +  ')'}}</span>
+                                <span ng-if="data_header[0].pha_version==0 "> - </span>
 
-                    <div class="row">
-                        <div class="col-auto">
-                            <b>PHA No.:</b> <br>
-                            <span class="text-uppercase">{{ ( data_header[0].action_type =='update' ? data_header[0].pha_no : data_header[0].pha_sub_software + '-2023-00000XX')}}</span>
-
+                            </div>
+                            <div class="col-auto">
+                                <b>Request By :</b> <br>
+                                <span>{{data_header[0].request_user_displayname}}</span>
+                            </div>
+                            <div class="col-auto">
+                                <b>Request Status :</b> <br>
+                                <span> {{data_header[0].pha_status_displayname}}</span>
+                            </div>
                         </div>
-                        <div class="col-auto">
-                            <b>Revision :</b> <br>
-                            <span ng-if="data_header[0].pha_version>0 "> {{data_header[0].pha_version_text + '(' + data_header[0].pha_version_desc  +  ')'}}</span>
-                            <span ng-if="data_header[0].pha_version==0 "> - </span>
-
-                        </div>
-
-                        <div class="col-auto">
-                            <b>Request By :</b> <br>
-                            <span>{{data_header[0].request_user_displayname}}</span>
-                        </div>
-
-                        <div class="col-auto">
-                            <b>Request Status :</b> <br>
-                            <span> {{data_header[0].pha_status_displayname}}</span>
-                        </div>
-
+                        <div class="col-auto" ng-class="{ 'd-none': (minutes > 9) }">
+                            <div class="col-auto">
+                                <b>Expire Within :</b> <br>
+                                <span ng-class="{ 'blinking-text': (minutes <= 10) }">{{counterText}} </span>
+                            </div>
+                       </div>
                     </div>
 
                     <div class="row">
@@ -128,7 +134,21 @@
 
                 <div class="card-header mb-0 pb-0 border border-bottom-0 ">
 
-                    <ul class="nav nav-underline border-3 border-primary border-bottom " id="myTab" role="tablist">
+                 @*    <ul class="nav nav-underline border-3 border-primary border-bottom " id="myTab" role="tablist">
+
+                        <li ng-repeat="tab in tabs" class="mx-2 " ng-if="tab.isShow || true">
+                            <a ng-click="changeTab(tab)"
+                               class="btn btn-outline-primary border border-0 "
+                               ng-class="{'btn btn-outline-primary border border-0 active': (tab.isActive==true),'btn btn-outline-primary border border-0 ': (tab.isActive==false) }"
+                               style="border-radius: 10px 10px 0px 0px !important;"
+                               id="{{tab.name}}-tab" name="{{tab.name}}-tab"
+                               data-bs-toggle="tab" href="#tab-{{tab.name}}" role="tab"
+                               aria-controls="tab-{{tab.name}}"
+                               aria-selected="tab.isActive">{{ tab.title }}</a>
+                        </li>
+                    </ul> *@
+
+                    <ul class="nav nav-underline border-3 border-primary border-bottom " id="myTab" role="tablist" style="position: relative;">
 
                         <li ng-repeat="tab in tabs" class="mx-2 " ng-if="tab.isShow || true">
                             <a ng-click="changeTab(tab)"
@@ -154,9 +174,9 @@
                         <div class="m-3 row  gx-0 align-items-center ">
                             <div class="card border-0">
                                 <div class="mx-1 row g-3 align-items-center" ng-repeat="item in data_general ">
+
                                     <!-- company -->
                                     <div class="col-md-2 ">
-
                                         <label class="form-label ps-0" for="expense_type">
                                             <b class="text-danger d-none"> * </b>Company
                                         </label>
@@ -164,7 +184,6 @@
                                             <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
                                                data-bs-placement="top" name="company" title="" data-bs-html="true"></a>
                                         </label>
-
                                         <select class="form-control js-choice-company "
                                                 ng-class="{'disabled-link':(!tab_general_active)}"
                                                 data-choices="data-choices"
@@ -174,14 +193,12 @@
                                                 {{item2.name}}
                                             </option>
                                         </select>
-
                                     </div>
-                                    <!-- company -->
+ 
                                     <!-- area -->
                                     <div class="col-md-auto p-1 " ng-if="item.id_company != '9999' ">
                                         <div class="row g-0 align-items-center">
                                             <div class="col-12 p-1  ">
-
                                                 <label class="form-label ps-0" for="area"><b class="text-danger d-none"> * </b>Area Process Unit </label>
                                                 <label class="form-label ps-0" ng-if="select_history_tracking_record">
                                                     <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
@@ -189,7 +206,7 @@
                                                 </label>
                                                 <label class="form-label ps-0" for="area"></label>
                                                 <select class="form-control js-choice-apu"
-                                                        ng-class="{'disabled-link':(!tab_general_active)}"
+                                                        ng-class="{'disabled-\link':(!tab_general_active)}"
                                                         data-choices="data-choices"
                                                         data-options='{"removeItemButton":true,"placeholder":true}'
                                                         ng-change="actionChange(item,item.seq,'')" ng-model="item.id_apu">
@@ -202,12 +219,11 @@
 
                                         </div>
                                     </div>
-                                    <!-- area -->
+
                                     <!-- toc -->
                                     <div class="col-md-auto p-1" ng-if="item.id_company != '9999' ">
                                         <div class="row g-0 align-items-center">
                                             <div class="col-12 p-1  ">
-
                                                 <label class="form-label ps-0" for="toc"><b class="text-danger d-none"> * </b>Thaioil Complex </label>
                                                 <label class="form-label ps-0" ng-if="select_history_tracking_record">
                                                     <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
@@ -232,10 +248,9 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <!-- toc -->
+              
                                     <!-- Unit No -->
                                     <div class="col-md-3 p-1 align-items-top" ng-if="item.id_company != '9999' ">
-
                                         <label class="form-label ps-0" for="unit"><b class="text-danger d-none"> * </b>Unit No </label><spand class="text-danger" style="font-size:10px;">(กรณีที่ไม่มี Unit No ต้องเลือก TAG ID )</spand>
                                         <label class="form-label ps-0" ng-if="select_history_tracking_record">
                                             <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
@@ -255,10 +270,9 @@
                                         </select>
 
                                     </div>
-                                    <!-- Unit No -->
+                                
                                     <!-- Tag ID -->
                                     <div class="col-md-auto p-1 align-items-top" ng-if="item.id_company != '9999' ">
-
                                         <label class="form-label ps-0" for="tagid"><b class="text-danger d-none"> * </b>Tag ID/ Equipment </label>
                                         <label class="form-label ps-0" ng-if="select_history_tracking_record">
                                             <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
@@ -277,7 +291,7 @@
                                         </select>
 
                                     </div>
-                                    <!-- Tag ID -->
+                                  
                                     <!-- Tag ID Audition => tagid_audition -->
                                     <div class="col-md-auto p-1 align-items-top">
                                         <label class="form-label ps-0" for="tagid_audition">Tag ID/ Equipment Audition</label>
@@ -295,7 +309,7 @@
                                                 ng-model="item.tagid_audition"
                                                 ng-change="actionChange(item,item.seq,'')"
                                                 ng-if="tab_general_active">
-                                            <option value=""></option>
+                                                 <option value="" disabled selected hidden>Please select</option>
                                             <option ng-repeat="item2 in master_tagid"
                                                     ng-selected="item.tagid_audition == item2.name"
                                                     value="{{item2.name}}">
@@ -310,6 +324,7 @@
                                                ng-model="item.tagid_audition" />
 
                                     </div>
+
                                     <!-- description -->
                                     <div class="col-md-auto p-1 align-items-top" ng-if="item.id_company == '9999' ">
                                         <label class="form-label ps-0">Description</label>
@@ -322,10 +337,49 @@
                                                   id="description_general" name="description_general"
                                                   placeholder="Description" style="height: 30px; width:150%;"></textarea>
                                     </div>
+
                                 </div>
                                 <!-- Tag ID Audition-->
                                 <div class="mx-2 row g-3 align-items-center" ng-repeat="item in data_general"
                                      ng-class="{'disabled-link':(!tab_general_active)}">
+
+                                    <!-- department -->
+                                    <div class="col-1 p-1">
+                                        <label class="form-label ps-0" for="departments">
+                                            <b class="text-danger d-none"> * </b>
+                                            Departments 
+                                        </label>
+                                        <select class="form-control js-choice-tagid"
+                                                data-choices="data-choices-department"
+                                                data-options='{"removeItemButton":true,"placeholder":true}'
+                                                ng-change="actionChange(item,item.seq,'')" 
+                                                ng-model="item.id_department">
+                                            <option value="" disabled selected hidden>Please select</option>
+                                            <option ng-selected="item.id_department == item.id"
+                                                    ng-repeat="item in data_departments" 
+                                                    ng-value="item.id">
+                                                {{item.name}}
+                                            </option>
+                                            
+                                        </select>
+                                    </div>
+
+                                    <!-- Task Type -->
+                                    <div class="col-1 p-1">
+                                        <label class="form-label ps-0" for="tagid"><b class="text-danger d-none"> * </b>Task Type </label>
+                                        <select class="form-control js-choice-tagid"
+                                                data-choices="data-choices"
+                                                data-options='{"removeItemButton":true,"placeholder":true}'
+                                                ng-change="actionChange(item,item.seq,'')" 
+                                                ng-model="item.id_request_type">
+                                            <option value="" disabled selected hidden>Please select</option>
+                                            <option ng-selected="item.id_request_type == item.id"
+                                                    ng-repeat="item in data_request_type" 
+                                                    ng-value="item.id">
+                                                {{item.name}}
+                                            </option>
+                                        </select>
+                                    </div>
 
                                     <!-- Task Name -->
                                     <div class="col-md-4 p-1">
@@ -335,14 +389,13 @@
                                                data-bs-placement="top"
                                                data-bs-html="true"></a>
                                         </label>
-
                                         <input class="form-control rounded-1 ps-1"
                                                ng-class="{'disabled-link':(!tab_general_active)}"
                                                type="text" placeholder="Task Name"
                                                name="pha_request_name"
                                                ng-model="item.pha_request_name"
                                                ng-keyup="filterResultGeneral(item.pha_request_name, 'pha_request_name')">
-                                        <ul class="list-group mt-2 w-25" style="position: absolute;" ng-show="showResults">
+                                        <ul class="list-group mt-2 w-25" style="position: absolute; z-index: 999" ng-show="showResults">
                                             <li class="list-group-item "
                                                 ng-repeat="result in filteredResults | filter:{field:'pha_request_name'}"
                                                 ng-click="selectResult(result,item,'pha_request_name')">
@@ -397,7 +450,7 @@
                                                     <div class="btn btn-phoenix ps-3  ">
 
                                                         <span class="mr-3 nametext text-primary" id="filename-template-{{item.seq}}"
-                                                              ng-click="downloadFileUpload(item)">
+                                                              ng-click="downloadFile(item)">
                                                             <b>{{(item.file_upload_size>0? item.file_upload_name + '('+  item.file_upload_size + 'KB)' : '')}}</b>
                                                         </span>
                                                         <br ng-if="!(item.file_upload_name =='' || item.file_upload_name == null)">
@@ -407,7 +460,7 @@
                                                         </label>
                                                         <input type="file" id="uploadfile-{{item.seq}}"
                                                                name="uploadfile{{item.seq}}"
-                                                               onchange="angular.element(this).scope().fileUploadSelect(this)"
+                                                               onchange="angular.element(this).scope().fileUploadSelectTemplate(this)"
                                                                style="display:none" />
 
                                                         <button id="deluploadfile-{{item.seq}}" class="btn btn-link text-danger"
@@ -426,37 +479,65 @@
                                     </div>
                                 </div>
 
-                                <div class="mx-2 row  gx-0 align-items-center" ng-repeat="item in data_general"
+                                <div class="mx-2 row  gx-0 " ng-repeat="item in data_general"
                                      ng-class="{'disabled-link':(!tab_general_active)}">
 
                                     <div class="col-5 p-1 d-none">
-
                                         <label class="form-label ps-0" for="description_general">Study Objective and Work Scope :</label>
                                         <label class="form-label ps-0" ng-if="select_history_tracking_record">
-                                            <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
-                                               data-bs-placement="top" title="Study Objective and Work Scope :  " data-bs-html="true"></a>
+                                            <a class="form-label far fa-comment-alt text-warning cursor-pointer" 
+                                                data-bs-toggle="tooltip"
+                                                data-bs-placement="top" 
+                                                title="Study Objective and Work Scope :  " 
+                                                data-bs-html="true">
+                                            </a>
                                         </label>
-
-                                        <textarea class="form-control rounded-1" ng-class="{'disabled-link':(!tab_general_active)}"
-                                                  id="work_scope" name="work_scope"
-                                                  placeholder="Study Objective and Work Scope" style="height: 100px"
-                                                  ng-model="item.work_scope"></textarea>
-
+                                        <textarea class="form-control rounded-1" 
+                                                ng-class="{'disabled-link':(!tab_general_active)}"
+                                                id="work_scope"
+                                                name="work_scope"
+                                                placeholder="Study Objective and Work Scope" 
+                                                style="height: 100px"
+                                                ng-model="item.work_scope">
+                                        </textarea>
                                     </div>
 
-                                    <div class="col-5 p-1">
+                                     <div class="col-5 p-1 mt-4 text-primary" style="border-right: 1px solid #e8e8e8;">
+                                        <h6>Note : </h6>
+                                        <p>1. จะต้องได้รับใบอนุญาตการทำงานและต้องจัดให้มีการทำ Toolbox talk เพื่อแจ้งให้ผู้ทำงานทุกฝ่ายที่ข้องเกี่ยวกับอันตรายและข้อควรระวังด้านความปลอดภัย ได้รับทราบ</p>
+                                        <p>2. ต้องสวมใส่อุปกรณ์ป้องกันภัยส่วนบุคคล เช่น หมวกนิรภัย แว่นตานิรภัย รองเท้านิรภัย ถุงมือ กางเกงขายาว และเสื้อแขนยาว ผ้า cotton 100% อย่างหนา หรือเป็นผ้าทนไฟ</p>
+                                        <p>3. สถานที่ปฏิบัติงานต้องได้รับการดูแลให้อยู่ในสภาพที่ปลอดภัยและเป็นระเบียบอยู่เสมอ มีผู้ควบคุมงานอยู่ตลอดเวลา</p>
+                                        <p>4. อุปกรณ์ เครื่องมือ หรืออุปกรณ์ที่เกี่ยวข้องกับงานยก ทั้งหมดต้องมั่นใจว่าสภาพดีและมีใบรับรองที่ถูกต้อง</p>
+                                     </div>
 
-                                        <label class="form-label ps-0" for="description_general">Description/Remark :</label>
+                                    <div class="col-5 p-1 mt-4">
+                                         <div class="form-check form-switch ">
+                                            <input class="form-check-input" 
+                                                    id="flexSwitchCheckChecked" 
+                                                    type="checkbox" 
+                                                    ng-model="isChecDescription" 
+                                                    ng-change="toggleDescription()"/>
+
+                                             <label class="form-check-label" for="description_general">Description/Remark</label>
+                                        </div>
+                                       
                                         <label class="form-label ps-0" ng-if="select_history_tracking_record">
-                                            <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
-                                               data-bs-placement="top" title=" Description/Remark :  " data-bs-html="true"></a>
+                                            <a class="form-label far fa-comment-alt text-warning cursor-pointer" 
+                                                data-bs-toggle="tooltip"
+                                                data-bs-placement="top" 
+                                                title=" Description/Remark :  " 
+                                                data-bs-html="true">
+                                            </a>
                                         </label>
-
-                                        <textarea class="form-control rounded-1" ng-class="{'disabled-link':(!tab_general_active)}"
-                                                  id="description_general" name="description_general"
-                                                  placeholder="Description/Remark" style="height: 100px"
-                                                  ng-model="item.descriptions"></textarea>
-
+                                        <textarea class="form-control rounded-1" 
+                                                ng-class="{'disabled-link':(!tab_general_active)}"
+                                                id="description_general" 
+                                                name="description_general"
+                                                placeholder="Description/Remark" 
+                                                style="height: 100px"
+                                                ng-model="item.descriptions"
+                                                ng-if="isChecDescription">
+                                        </textarea>
                                     </div>
                                 </div>
 
@@ -519,79 +600,112 @@
                                                         <div class="row d-flex">
                                                             <div class="col-6">
                                                                 <div class="row" ng-class="{'d-none':(!tab_general_active)}">
-
-                                                                    <button class="btn btn-outline-secondary p-0 cursor-pointer col-auto" style="color: #2445fc; background-color: #f1f2f4; border-color: #f1f2f4;"
+                                                                    <button class="btn btn-outline-secondary p-0 cursor-pointer col-auto" 
+                                                                            style="color: #2445fc; background-color: #f1f2f4; border-color: #f1f2f4;"
                                                                             ng-click="openDataEmployeeAdd(item,'member')">
-                                                                        <span class="far fa-address-book fa-lg pe-1"></span>Add Member Team/Attendees
+                                                                        <span class="far fa-address-book fa-lg pe-1"></span>
+                                                                        Add Member Team/Attendees
                                                                     </button>
-
                                                                 </div>
-
-                                                                <div class="row" ng-repeat="item2 in data_memberteam | filter:{id_session:item.seq }">
-
+                                                                <div class="row" ng-repeat="item2 in data_memberteam ">
                                                                     <div class="row align-items-center  p-1">
                                                                         <label class="mb-0 text-1100 fw-bold"
-                                                                               style="width:80%;border-color: #f1f2f4;">{{ item2.user_displayname}}</label>
-
+                                                                               style="width:80%;border-color: #f1f2f4;">
+                                                                               {{ item2.user_displayname}}
+                                                                        </label>
                                                                     </div>
                                                                 </div>
                                                             </div>
-
                                                             <div class="col-6">
                                                                 <div class="row" ng-class="{'d-none':(!tab_general_active)}">
-                                                                    <button class="btn btn-outline-secondary p-0 cursor-pointer col-auto" style="color: #2445fc; background-color: #f1f2f4; border-color: #f1f2f4;"
-                                                                            ng-click="openDataEmployeeAdd(item,'approver')" title="ผู้ทบทวนหลัก">
-                                                                        <span class="far fa-address-book fa-lg"></span>Add Safety Reviewer
+                                                                    <button class="btn btn-outline-secondary p-0 cursor-pointer col-auto" 
+                                                                            style="color: #2445fc; background-color: #f1f2f4; border-color: #f1f2f4;"
+                                                                            ng-click="openDataEmployeeAdd(item,'approver')" 
+                                                                            title="ผู้ทบทวนหลัก">
+                                                                        <span class="far fa-address-book fa-lg"></span>
+                                                                        Add Safety Reviewer
+                                                                    </button>
+
+                                                                <div class="row" ng-repeat="item2 in data_approver"> 
+                                                                    <div class="row align-items-center  p-1">
+                                                                        <label class="mb-0 text-1100 fw-bold" 
+                                                                                style="width:80%;border-color: #f1f2f4;"
+                                                                                ng-if=" (item2.approver_type === 'approver')">
+                                                                               {{ '(Main)' + item2.user_displayname}}
+                                                                        </label>
+                                                                        <label class="mb-0 text-1100 fw-bold" 
+                                                                                style="width:80%;border-color: #f1f2f4;"
+                                                                                ng-if="!(item2.approver_type === 'safety')">
+                                                                                {{ item2.user_displayname}}
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            @* <b class="p-0 text-danger"> Note:This JSEA will be approved by AE or AGSI via Safety Permit</b> *@
+                                                        </div>
+
+                                                        <div class="row d-flex mt-4">
+                                                             <div class="col-6 ">
+                                                                <div class="row" ng-class="{'d-none':(!tab_general_active)}">
+                                                                    <button class="btn btn-outline-secondary p-0 cursor-pointer col-auto" 
+                                                                            style="color: #2445fc; background-color: #f1f2f4; border-color: #f1f2f4;"
+                                                                            ng-click="openDataEmployeeAdd(item,'specialist')">
+                                                                        <span class="far fa-address-book fa-lg pe-1"></span>
+                                                                        Add ผู้เชี่ยวชาญเฉพาะด้าน (ถ้ามี):
                                                                     </button>
                                                                 </div>
-                                                                <div class="row" ng-repeat="item2 in data_approver | filter:{id_session:item.seq }">
-
+                                                                <div class="row" ng-repeat="item2 in data_relatedpeople | filter:{id_session:item.seq, user_type:'specialist'}">
                                                                     <div class="row align-items-center  p-1">
-                                                                        <label class="mb-0 text-1100 fw-bold" style="width:80%;border-color: #f1f2f4;"
-                                                                               ng-if=" (item2.approver_type=='approver')">{{ '(Main)' + item2.user_displayname}}</label>
-
-                                                                        <label class="mb-0 text-1100 fw-bold" style="width:80%;border-color: #f1f2f4;"
-                                                                               ng-if="!(item2.approver_type=='approver')">{{ item2.user_displayname}}</label>
-
+                                                                        <label class="mb-0 text-1100 fw-bold" 
+                                                                                style="width:80%;border-color: #f1f2f4;">
+                                                                            {{ item2.user_displayname}}
+                                                                        </label>
                                                                     </div>
                                                                 </div>
 
+                                                                <div class="row" ng-repeat="item2 in data_relatedpeople_outsider"><!------ | filter:{id_session:item.seq, user_type:'specialist'}----->
+                                                                    <div class="row align-items-center  p-1">
+                                                                        <label class="mb-0 text-1100 fw-bold"
+                                                                               style="width:80%;border-color: #f1f2f4;">
+                                                                               {{ item2.user_displayname}}
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
                                                             </div>
+                                                            
+                                                            <b class="p-0 text-danger"> Note:This JSEA will be approved by AE or AGSI via Safety Permit</b>
                                                         </div>
 
                                                         <div class="row d-flex pt-2 d-none" style="background-color:#F8F8F8; zoom:0.8;">
-
                                                             <div class="col-6  mt-1">
                                                                 <div class="row" ng-class="{'d-none':(!tab_general_active)}">
-
-                                                                    <button class="btn btn-outline-secondary p-0 cursor-pointer col-auto" style="color: #2445fc; background-color: #f1f2f4; border-color: #f1f2f4;"
-                                                                            ng-click="openDataEmployeeAdd(item,'attendees')" title=" ผู้จัดทำ">
-                                                                        <span class="far fa-address-book fa-lg pe-1"></span>Add Attendees:
+                                                                    <button class="btn btn-outline-secondary p-0 cursor-pointer col-auto" 
+                                                                            style="color: #2445fc; background-color: #f1f2f4; border-color: #f1f2f4;"
+                                                                            ng-click="openDataEmployeeAdd(item,'attendees')" 
+                                                                            title=" ผู้จัดทำ">
+                                                                        <span class="far fa-address-book fa-lg pe-1"></span>
+                                                                        Add Attendees:
                                                                     </button>
-
                                                                 </div>
-
                                                                 <div class="row" ng-repeat="item2 in data_relatedpeople | filter:{id_session:item.seq, user_type:'attendees'}">
-
                                                                     <div class="row align-items-center  p-1">
                                                                         <label class="mb-0 text-1100 fw-bold"
-                                                                               style="width:80%;border-color: #f1f2f4;">{{ item2.user_displayname}}</label>
-
+                                                                               style="width:80%;border-color: #f1f2f4;">{
+                                                                            { item2.user_displayname}}
+                                                                        </label>
                                                                     </div>
                                                                 </div>
                                                                 <div class="row" ng-repeat="item2 in data_relatedpeople_outsider | filter:{id_session:item.seq, user_type:'attendees'}">
-
                                                                     <div class="row align-items-center  p-1">
                                                                         <label class="mb-0 text-1100 fw-bold"
-                                                                               style="width:80%;border-color: #f1f2f4;">{{ item2.user_displayname}}</label>
-
+                                                                               style="width:80%;border-color: #f1f2f4;">
+                                                                            {{ item2.user_displayname}}
+                                                                        </label>
                                                                     </div>
                                                                 </div>
-
                                                             </div>
 
                                                             <div class="col-6  mt-1 d-none">
-
                                                                 <div class="row" ng-class="{'d-none':(!tab_general_active)}">
                                                                     <button class="btn btn-outline-secondary p-0 cursor-pointer col-auto" style="color: #2445fc; background-color: #f1f2f4; border-color: #f1f2f4;"
                                                                             ng-click="openDataEmployeeAdd(item,'reviewer')">
@@ -599,42 +713,43 @@
                                                                     </button>
                                                                 </div>
                                                                 <div class="row" ng-repeat="item2 in data_relatedpeople | filter:{id_session:item.seq, user_type:'reviewer'}">
-
                                                                     <div class="row align-items-center  p-1">
                                                                         <label class="mb-0 text-1100 fw-bold"
-                                                                               style="width:80%;border-color: #f1f2f4;">{{ item2.user_displayname}}</label>
-
+                                                                               style="width:80%;border-color: #f1f2f4;">
+                                                                               {{ item2.user_displayname}}
+                                                                        </label>
                                                                     </div>
                                                                 </div>
 
                                                             </div>
+
                                                             <div class="col-6  mt-1">
                                                                 <div class="row" ng-class="{'d-none':(!tab_general_active)}">
-                                                                    <button class="btn btn-outline-secondary p-0 cursor-pointer col-auto" style="color: #2445fc; background-color: #f1f2f4; border-color: #f1f2f4;"
+                                                                    <button class="btn btn-outline-secondary p-0 cursor-pointer col-auto" 
+                                                                            style="color: #2445fc; background-color: #f1f2f4; border-color: #f1f2f4;"
                                                                             ng-click="openDataEmployeeAdd(item,'specialist')">
-                                                                        <span class="far fa-address-book fa-lg pe-1"></span>Add ผู้เชี่ยวชาญเฉพาะด้าน (ถ้ามี):
+                                                                        <span class="far fa-address-book fa-lg pe-1"></span>
+                                                                        Add ผู้เชี่ยวชาญเฉพาะด้าน (ถ้ามี):
                                                                     </button>
                                                                 </div>
                                                                 <div class="row" ng-repeat="item2 in data_relatedpeople | filter:{id_session:item.seq, user_type:'specialist'}">
-
                                                                     <div class="row align-items-center  p-1">
-                                                                        <label class="mb-0 text-1100 fw-bold"
-                                                                               style="width:80%;border-color: #f1f2f4;">{{ item2.user_displayname}}</label>
-
+                                                                        <label class="mb-0 text-1100 fw-bold" 
+                                                                                style="width:80%;border-color: #f1f2f4;">
+                                                                            {{ item2.user_displayname}}
+                                                                        </label>
                                                                     </div>
                                                                 </div>
                                                                 <div class="row" ng-repeat="item2 in data_relatedpeople_outsider | filter:{id_session:item.seq, user_type:'specialist'}">
-
                                                                     <div class="row align-items-center  p-1">
                                                                         <label class="mb-0 text-1100 fw-bold"
-                                                                               style="width:80%;border-color: #f1f2f4;">{{ item2.user_displayname}}</label>
-
+                                                                               style="width:80%;border-color: #f1f2f4;">
+                                                                               {{ item2.user_displayname}}
+                                                                        </label>
                                                                     </div>
                                                                 </div>
-
                                                             </div>
 
-                                                            <b class="p-0 text-danger"> Note:This JSEA will be approved by AE or AGSI via Safety Permit</b>
                                                         </div>
                                                     </td>
 
@@ -714,28 +829,44 @@
                                                         <div class="col-12" style="width: 158px;">
                                                             <div class="float-end">
                                                                 <span class="mx-1">
-                                                                    <button class="btn btn-outline-secondary p-2" style="color: #ff2828; background-color: #f1f2f4; border-color: #ff2828;"
+                                                                    <button class="btn btn-outline-secondary p-2" 
+                                                                            style="color: #ff2828; background-color: #f1f2f4; border-color: #ff2828;"
+                                                                            data-toggle="tooltip" 
+                                                                            data-placement="top" 
+                                                                            title="Remove"
                                                                             ng-click=removeDataSession(item.seq,$index)>
                                                                         <span class="fa-regular fa-trash-can fa-lg"></span>
                                                                     </button>
                                                                 </span>
 
                                                                 <span class="mx-1">
-                                                                    <button class="btn btn-outline-secondary p-2" style="color: #2445fc; background-color: #f1f2f4; border-color: #2445fc;"
+                                                                    <button class="btn btn-outline-secondary p-2" 
+                                                                            style="color: #2445fc; background-color: #f1f2f4; border-color: #2445fc;"
+                                                                            data-toggle="tooltip" 
+                                                                            data-placement="top" 
+                                                                            title="Copy"
                                                                             ng-click=copyDataSession(item.seq,$index)>
                                                                         <span class="fas fa-copy fa-lg"></span>
                                                                     </button>
                                                                 </span>
 
                                                                 <span class="mx-1 d-none">
-                                                                    <button class="btn btn-outline-secondary p-2" style="color: #1336fc; background-color: #f1f2f4; border-color: #a8a8a8;"
+                                                                    <button class="btn btn-outline-secondary p-2" 
+                                                                            style="color: #1336fc; background-color: #f1f2f4; border-color: #a8a8a8;"
+                                                                            data-toggle="tooltip" 
+                                                                            data-placement="top" 
+                                                                            title="Copy"
                                                                             ng-click=copyDataSession(item.seq,$index)>
                                                                         <span class="fas fa-copy fa-lg"></span>
                                                                     </button>
                                                                 </span>
 
                                                                 <span class="mx-1">
-                                                                    <button class="btn btn-outline-secondary p-2" style="color: #0abe0a; background-color: #f1f2f4; border-color: #0abe0a;"
+                                                                    <button class="btn btn-outline-secondary p-2" 
+                                                                            style="color: #0abe0a; background-color: #f1f2f4; border-color: #0abe0a;"
+                                                                            data-toggle="tooltip" 
+                                                                            data-placement="top" 
+                                                                            title="Add"
                                                                             ng-click=addDataSession(item.seq,$index)>
                                                                         <span class="fas fa-square-plus fa-lg"></span>
                                                                     </button>
@@ -794,31 +925,36 @@
                                                             <h6 class="fw-semi-bold">{{item.no}}</h6>
                                                         </div>
                                                     </td>
+
                                                     <td class="align-middle white-space-nowrap ">
-                                                        <textarea ng-keyup="actionChange(item,item.seq,'')" ng-model="item.document_name"
-                                                                  class="form-control form-control-sm  rounded-1 shadow-sm  bg-body-tertiary"
-                                                                  ng-class="{'disabled-link':(!tab_general_active)}"
-                                                                  placeholder="Document Name"
-                                                                  style="font-size: 10px;"></textarea>
+                                                        <textarea ng-keyup="actionChange(item,item.seq,'')" 
+                                                                ng-model="item.document_name"
+                                                                class="form-control form-control-sm  rounded-1 shadow-sm  bg-body-tertiary"
+                                                                ng-class="{'disabled-link':(!tab_general_active)}"
+                                                                placeholder="Document Name"
+                                                                style="font-size: 10px;">
+                                                        </textarea>
                                                     </td>
+
                                                     <td class="align-middle white-space-nowrap d-none">
-
-                                                        <textarea ng-keyup="actionChange(item,item.seq,'')" ng-model="item.document_no"
-                                                                  class="form-control form-control-sm  rounded-1 shadow-sm  bg-body-tertiary"
-                                                                  ng-class="{'disabled-link':(!tab_general_active)}"
-                                                                  placeholder="Drawing No"
-                                                                  style="font-size: 10px;"></textarea>
-
+                                                        <textarea ng-keyup="actionChange(item,item.seq,'')" 
+                                                                ng-model="item.document_no"
+                                                                class="form-control form-control-sm  rounded-1 shadow-sm  bg-body-tertiary"
+                                                                ng-class="{'disabled-link':(!tab_general_active)}"
+                                                                placeholder="Drawing No"
+                                                                style="font-size: 10px;">
+                                                        </textarea>
                                                     </td>
 
-                                                    <td class="align-middle white-space-nowrap col-3">
-
-
+                                                    <td class="align-middle col-3">
                                                         <div class="d-flex align-items-center d-none ">
-                                                            <input type="file" id="file-upload-1" ng-click="showFileName(1)" hidden />
+                                                            <input type="file" 
+                                                                id="file-upload-1" 
+                                                                ng-click="showFileName(1)" 
+                                                                hidden />
                                                             <span id="fileNameDisplay-1"></span>
-
-                                                            <button id="del1" class="btn btn-sm transition-none btn-reveal fs--2 p-1"
+                                                            <button id="del1"
+                                                                    class="btn btn-sm transition-none btn-reveal fs--2 p-1"
                                                                     ng-class="{'disabled-link':(!tab_general_active)}"
                                                                     style="display: none;"
                                                                     ng-click="clearFileName(item.seq)">
@@ -826,18 +962,15 @@
                                                                     <span class="fas fa-times"></span>
                                                                 </a>
                                                             </button>
-
-
                                                         </div>
-
-                                                        <div class="uploadbox align-items-center cursor-pointer" ng-if="tab_general_active">
+                                                        <div class="row uploadbox align-items-center cursor-pointer" ng-if="tab_general_active">
                                                             <div class=" align-items-center p-1 cursor-pointer ">
-
                                                                 <span class="mr-3 nametext text-primary"
-                                                                      id="filename{{item.seq}}" ng-class="{'d-none':(!tab_general_active)}"
+                                                                      id="filename{{item.seq}}" 
+                                                                      ng-class="{'d-none':(!tab_general_active)}"
                                                                       ng-click="downloadFile(item)"
                                                                       ng-if="item.document_file_size>0">
-                                                                    <b>{{(item.document_file_size>0? item.document_file_name + '('+  item.document_file_size + 'KB)' : '')}}</b>
+                                                                    <b style="font-size:x-small;">{{(item.document_file_size>0? item.document_file_name + '('+  item.document_file_size + 'KB)' : '')}}</b>
                                                                 </span>
                                                                 <br ng-if="item.document_file_size>0">
                                                                 <label class="dz-message-text text-primary fw-bold cursor-pointer"
@@ -848,7 +981,6 @@
                                                                        name="file{{item.seq}}"
                                                                        onchange="angular.element(this).scope().fileSelect(this,'drawing')"
                                                                        style="display:none" />
-
                                                                 <button id="del-{{item.seq}}" class="btn btn-link text-danger"
                                                                         ng-class="{'d-none':(!tab_general_active)}"
                                                                         ng-click="clearFileName(item.seq)"
@@ -859,25 +991,23 @@
                                                                 <a class="nametext ms-3 filename-text me-2"
                                                                    ng-class="{'d-none':(tab_general_active)}"
                                                                    ng-click="downloadFile(item)">
-                                                                    <i class="far fa-file-pdf text-danger"></i> {{(item.document_file_size>0? item.document_file_name + '('+  item.document_file_size + 'KB)' : '')}}
+                                                                    <i class="far fa-file-pdf text-danger"></i> 
+                                                                    {{(item.document_file_size>0? item.document_file_name + '('+  item.document_file_size + 'KB)' : '')}}
                                                                 </a>
                                                             </div>
-
                                                         </div>
                                                         <div class=" align-items-center p-1 cursor-pointer " ng-if="!tab_general_active">
                                                             <a class="nametext ms-3 filename-text me-2"
                                                                ng-class="{'d-none':(tab_general_active)}"
                                                                ng-click="downloadFile(item)">
-                                                                <i class="far fa-file-pdf text-danger"></i> {{(item.document_file_size>0? item.document_file_name + '('+  item.document_file_size + 'KB)' : '')}}
+                                                                <i class="far fa-file-pdf text-danger"></i> 
+                                                                {{(item.document_file_size>0? item.document_file_name + '('+  item.document_file_size + 'KB)' : '')}}
                                                             </a>
                                                         </div>
-
                                                         <div id="drawing-document-file-{{item.seq}}"
                                                              class="invalid-feedback text-danger">
                                                             Please provide a valid Drawing.(Max size 10mb)
                                                         </div>
-
-
                                                     </td>
 
                                                     <td class="align-middle ">
@@ -887,41 +1017,47 @@
                                                                       ng-keyup="actionChange(item,item.seq,'')"
                                                                       ng-model="item.descriptions"
                                                                       placeholder="Comment"
-                                                                      style="font-size: 10px;"></textarea>
+                                                                      style="font-size: 10px;">
+                                                            </textarea>
                                                         </div>
-
                                                     </td>
+
                                                     <td class="align-middle " style="width: 158px;" ng-class="{'d-none': (!tab_general_active)}">
                                                         <div class="col-12" style="width: 158px;">
                                                             <div class="float-end ">
-
                                                                 <span class="mx-1">
-                                                                    <button class="btn btn-outline-secondary p-2" style="color: #ff2828; background-color: #f1f2f4; border-color: #ff2828;"
-                                                                            ng-click=removeDrawingDoc(item.seq,$index-1)>
+                                                                    <button class="btn btn-outline-secondary p-2" 
+                                                                            style="color: #ff2828; background-color: #f1f2f4; border-color: #ff2828;"
+                                                                            ng-click=removeDrawingDoc(item.seq,$index-1)
+                                                                            data-toggle="tooltip" 
+                                                                            data-placement="top" 
+                                                                            title="Remove">
                                                                         <span class="fa-regular fa-trash-can fa-lg"></span>
                                                                     </button>
                                                                 </span>
-
                                                                 <span class="mx-1 d-none">
-                                                                    <button class="btn btn-outline-secondary p-2" style="color: #1336fc; background-color: #f1f2f4; border-color: #a8a8a8;"
-                                                                            ng-click=copyDrawingDoc(item.seq,$index)>
+                                                                    <button class="btn btn-outline-secondary p-2" 
+                                                                            style="color: #1336fc; background-color: #f1f2f4; border-color: #a8a8a8;"
+                                                                            ng-click=copyDrawingDoc(item.seq,$index)
+                                                                            data-toggle="tooltip" 
+                                                                            data-placement="top" 
+                                                                            title="Copy">
                                                                         <span class="fas fa-copy fa-lg"></span>
                                                                     </button>
                                                                 </span>
-
                                                                 <span class="mx-1">
-                                                                    <button class="btn btn-outline-secondary p-2" style="color: #0abe0a; background-color: #f1f2f4; border-color: #0abe0a;"
-                                                                            ng-click=addDrawingDoc(item.seq,$index)>
+                                                                    <button class="btn btn-outline-secondary p-2" 
+                                                                            style="color: #0abe0a; background-color: #f1f2f4; border-color: #0abe0a;"
+                                                                            ng-click=addDrawingDoc(item.seq,$index)
+                                                                            data-toggle="tooltip" 
+                                                                            data-placement="top" 
+                                                                            title="Add">
                                                                         <span class="fas fa-square-plus fa-lg"></span>
                                                                     </button>
                                                                 </span>
-
-
                                                             </div>
                                                         </div>
                                                     </td>
-
-
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -937,27 +1073,39 @@
                     <div class="" ng-class="{'tab-pane fade show active':(action_part==2),'tab-pane fade':(action_part!==2)}"
                          id="tab-ram" role="tabpanel" aria-labelledby="ram-tab">
 
-
                         <div class="m-3 row  gx-0 align-items-center">
 
-                            <div class="card px-2 pb-2 ">
+                            <div class="card px-2 pb-2" style="height: 100vh;">
                                 <div class="row g-3 justify-content-between align-items-center pt-2 pb-3">
-                                    <div class="col-12 col-md">
-                                        <h5 class="text-900 mb-0"> <span class=" me-2 text-primary"><B>|</B></span><b class="text-danger"> * </b> Risk Assessment Matrix</h5>
+                                    <div class="col-10">
+                                        <h5 class="text-900 mb-0"> <span class=" me-2 text-primary"><B>|</B></span><b class="text-danger"> * </b> Risk Assessment Matrix 5X5</h5>
+                                    </div>
+                                     <div class="col-2">
+                                        <span class="mx-1 d-flex" style="float:right;">
+                                            <a class="m-1 text-info cursor-pointer"
+                                               href="{{y.document_definition_file_path}}" target="_blank"
+                                               ng-repeat="y in master_ram | filter:{id: data_general[0].id_ram}">Definition Consequence Rating<span class="fas fa-file-pdf fa-lg ms-1"></span></a>
+                                        </span>
                                     </div>
                                 </div>
                                 <div class="col-sm-12 col-md mx-1 pb-2  ">
-                                    <div class="row ">
+                                    @* <div class="row ">
                                         <div class="d-flex flex-wrap">
                                             <div class="col-md-2 col-lg-1" ng-repeat="item in data_general">
-                                                <select id="ddl-ram" class="form-control form-control-sm" ng-class="{'disabled-link':(!tab_general_active)}"
-                                                        ng-change="actionChange(item,item.seq,'ChangeRAM')" ng-model="item.id_ram">
+                                                <select id="ddl-ram" 
+                                                        class="form-control form-control-sm" 
+                                                        ng-class="{'disabled-link':(!tab_general_active)}"
+                                                        ng-change="actionChange(item,item.seq,'ChangeRAM')" 
+                                                        ng-model="item.id_ram"
+                                                        disabled>
                                                     <option ng-selected="item.id_ram == item2.id"
-                                                            ng-repeat="item2 in master_ram" ng-value="item2.id">
+                                                            ng-repeat="item2 in master_ram" 
+                                                            ng-value="item2.id">
                                                         {{ item2.name }}
                                                     </option>
                                                 </select>
                                             </div>
+
                                             <div class="col-md-10 col-lg-11" ng-if="(!tab_general_active)">
                                                 <h5 class="text-900 mb-0">
                                                     <a ng-click="openModalNewRAM()" style="font-size:10px;"
@@ -966,18 +1114,22 @@
                                                     </a>
                                                 </h5>
                                             </div>
-
                                         </div>
-                                    </div>
-                                    <div class="row ps-2 mt-2">
-                                        <div class="col-5 mt-4" style="background-color : #F8F8F8 ; height:350px;"
-                                             ng-repeat="itemRam in master_ram | filter:{id: data_general[0].id_ram}">
+                                    </div> *@
 
-                                            <div class="row ">
+                                    <div class="row ps-2 mt-2">
+                                        <div class="col-12 mt-4"
+                                             ng-repeat="itemRam in master_ram | filter:{id: data_general[0].id_ram}">
+                                                  <div class="row">
+                                                    <div class="col-12 d-flex justify-content-center">
+                                                        <div class="row" style="background-color : #F8F8F8 ; width:75%;">
+                                                            <img src="{{itemRam.document_file_path}}" class="cursor-pointer" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @* <div class="row">
                                                 <div class="col-12">
                                                     <div class="p-0 cursor-pointer " ng-class="{'d-none':(!tab_node_active)}">
-
-
 
                                                         <div ng-if="!((select_rows_level==4 && select_columns_level==4) || (select_rows_level==5 && select_columns_level==5))">
                                                             <br>
@@ -1002,11 +1154,14 @@
 
                                                     </div>
                                                 </div>
-                                                <div class="col-12 align-items-center">
-                                                    <img src="{{itemRam.document_file_path}}" style="width: 400px;  height:300px;" />
+                                                <div class="row">
+                                                    <div class="col-12 d-flex justify-content-center">
+                                                        <div class="row" style="background-color : #F8F8F8 ; width:75%;">
+                                                            <img src="{{itemRam.document_file_path}}" class="cursor-pointer" />
+                                                        </div>
+                                                    </div>
                                                 </div>
-
-                                            </div>
+                                            </div> *@
                                         </div>
 
                                         <div class="col-6 mt-4" style="background-color : #F8F8F8;  height:350px;"
@@ -1118,6 +1273,7 @@
                                                             <td class="align-middle text-center" style="width:150px;">
                                                                 <b>{{item_ram.security_level}}</b>
                                                             </td>
+                                                            
                                                             <td class="align-top text-center">
                                                                 <input class="form-control " type="text" ng-model="item_ram.ram1_text" placeholder="RAM">
 
@@ -1153,6 +1309,7 @@
                                                                 </div>
 
                                                             </td>
+
                                                             <td class="align-top text-center">
                                                                 <input class="form-control " type="text" ng-model="item_ram.ram2_text" placeholder="RAM">
 
@@ -1189,6 +1346,7 @@
                                                                 </div>
 
                                                             </td>
+
                                                             <td class="align-top text-center">
                                                                 <input class="form-control " type="text" ng-model="item_ram.ram3_text" placeholder="RAM">
 
@@ -1224,6 +1382,7 @@
                                                                 </div>
 
                                                             </td>
+
                                                             <td class="align-top text-center">
                                                                 <input class="form-control " type="text" ng-model="item_ram.ram4_text" placeholder="RAM">
 
@@ -1258,6 +1417,7 @@
                                                                     </div>
                                                                 </div>
                                                             </td>
+
                                                             <td class="align-top text-center" ng-if="select_columns_level >= 5 ">
                                                                 <input class="form-control " type="text" ng-model="item_ram.ram5_text" placeholder="RAM">
 
@@ -1292,6 +1452,7 @@
                                                                     </div>
                                                                 </div>
                                                             </td>
+
                                                             <td class="align-top text-center" ng-if="select_columns_level >= 6 ">
                                                                 <input class="form-control " type="text" ng-model="item_ram.ram6_text" placeholder="RAM">
 
@@ -1328,6 +1489,7 @@
                                                                     </div>
                                                                 </div>
                                                             </td>
+
                                                             <td class="align-top text-center" ng-if="select_columns_level >= 7 ">
                                                                 <input class="form-control " type="text" ng-model="item_ram.ram7_text" placeholder="RAM">
 
@@ -1363,6 +1525,7 @@
                                                                     </div>
                                                                 </div>
                                                             </td>
+
                                                             <td class="align-top text-center" ng-if="select_columns_level >= 8 ">
                                                                 <input class="form-control " type="text" ng-model="item_ram.ram8_text" placeholder="RAM">
 
@@ -1492,40 +1655,27 @@
                          id="tab-worksheet" role="tabpanel" aria-labelledby="worksheet-tab">
 
                         <div style="background-color: #ffffff;">
-
-                            <div class="mx-3 row  g-3 align-items-top ">
-
-
-                                <div class="col-md-5 ">
-
+                            <div class="mx-3 row  g-3 align-items-top mb-4">
+                                <div class="col-md-7">
                                     <div class="col-md-12">
                                         <div class="row">
                                             <div class=" col-auto pe-0 me-0">
                                                 <p class="form-label m-2 ps-0" style="min-width:200px;"><b>Task Name: </b>{{data_general[0].pha_request_name}}</p>
                                             </div>
-                                            <div class=" col-auto pe-0 me-0">
-                                                <p class="form-label m-2 ps-0"><b>Date:</b></p>
-                                            </div>
-                                            <div class=" col-auto p-0 m-0 ps-1">
+                                            <div class="d-flex col-auto p-0 m-0 ps-1">
                                                 <p class="form-label m-2 ps-0" ng-if="tab_worksheet_active"><b>Date:</b></p>
-
                                                 <input type="date" class="form-control rounded-1  p-1 datetimepicker"
-                                                       ng-if="(!tab_worksheet_active)"
                                                        id="target_start_date"
                                                        name="target_start_date"
                                                        ng-change="actionChange(data_general[0],data_general[0].seq,'')"
                                                        ng-model="data_general[0].target_start_date" placeholder="dd/mm/yyyy" />
-
-
                                             </div>
                                         </div>
                                     </div>
-
                                 </div>
-                                <div class="col-7">
 
+                                <div class="col-5">
                                     <div class="col-12 float-end align-top text-end ">
-
                                         <!-- ส่วนที่มีอยู่แล้ว -->
                                         <div class=" align-top text-end">
                                             <button class="float-end btn btn-outline btn-sm p-1 m-1" ng-click="toggleFullscreen()">
@@ -1533,7 +1683,7 @@
                                             </button>
                                         </div>
 
-                                        <div class=" align-top text-end mt-3 " style="zoom:0.7;">
+                                        <div class=" align-top text-end mt-0" style="zoom:0.7;">
                                             <p class="form-label m-1 align-bottom text-end">
                                                 <svg class="svg-inline--fa fa-lightbulb text-warning" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="lightbulb" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" data-fa-i2svg=""><path fill="currentColor" d="M112.1 454.3c0 6.297 1.816 12.44 5.284 17.69l17.14 25.69c5.25 7.875 17.17 14.28 26.64 14.28h61.67c9.438 0 21.36-6.401 26.61-14.28l17.08-25.68c2.938-4.438 5.348-12.37 5.348-17.7L272 415.1h-160L112.1 454.3zM191.4 .0132C89.44 .3257 16 82.97 16 175.1c0 44.38 16.44 84.84 43.56 115.8c16.53 18.84 42.34 58.23 52.22 91.45c.0313 .25 .0938 .5166 .125 .7823h160.2c.0313-.2656 .0938-.5166 .125-.7823c9.875-33.22 35.69-72.61 52.22-91.45C351.6 260.8 368 220.4 368 175.1C368 78.61 288.9-.2837 191.4 .0132zM192 96.01c-44.13 0-80 35.89-80 79.1C112 184.8 104.8 192 96 192S80 184.8 80 176c0-61.76 50.25-111.1 112-111.1c8.844 0 16 7.159 16 16S200.8 96.01 192 96.01z"></path></svg><!-- <span class="fas fa-lightbulb text-warning"></span> Font Awesome fontawesome.com -->
                                                 P=People/ E=Environment/ R=Reputation/ A=Asset
@@ -1548,63 +1698,62 @@
 
                                 </div>
                             </div>
-                            <div class="row ">
-                            </div>
 
                             <div class="border-bottom" id="fullscreenzone" style="background-color: #ffffff;">
-
                                 <div class="table-responsive scrollbar tableFixHead" style="min-height:400px">
                                     <table class="table fs--2 mb-0 table-bordered" cellpadding="0" cellspacing="0">
                                         <thead class="text-uppercase  text-center py-8 bg-soft" style="font-size: 10px;" id="myHeader">
                                             <tr class="">
-                                                <th class="align-middle mx-0" colspan="1" rowspan="2" style="padding: 0 !important; width: 200px; max-width:300px;"
+                                                <th class="align-middle mx-0" colspan="1" rowspan="2" style="padding: 0 !important; width: 8%;"
                                                     data-tooltip="ลำดับขั้นตอนหลัก" data-bs-placement="top" data-bs-toggle="tooltip">ลำดับขั้นตอนหลัก<br />(Work step)</th>
-                                                <th class=" align-middle   mx-0" colspan="1" rowspan="2" style="padding: 0 !important; width: 200px; max-width:300px;"
+                                                <th class=" align-middle   mx-0" colspan="1" rowspan="2" style="padding: 0 !important; width: 8%;"
                                                     data-tooltip="ลักษณะ/กิจกรรมการทำงาน">ลักษณะ/กิจกรรมการทำงาน<br />(Task description)</th>
-                                                <th class=" align-middle   mx-0" colspan="1" rowspan="2" style="padding: 0 !important; width: 200px; max-width:300px;"
+                                                <th class=" align-middle   mx-0" colspan="1" rowspan="2" style="padding: 0 !important; width: 22%;"
                                                     data-tooltip="อันตรายที่อาจเกิดขึ้น และอาจเกิดผลกระทบต่อ คน สิ่งแวดล้อม ชื่อเสียง หรือทรัพย์สิน">อันตรายที่อาจเกิดขึ้น และอาจเกิดผลกระทบต่อ คน สิ่งแวดล้อม ชื่อเสียง หรือทรัพย์สิน<br />(Potential Hazard and Consequence to PERA)</th>
-                                                <th class=" align-middle   mx-0" colspan="1" rowspan="2" style="padding: 0 !important; width: 200px; max-width:300px;"
+                                                <th class=" align-middle   mx-0" colspan="1" rowspan="2" style="padding: 0 !important; width: 22%;"
                                                     data-tooltip="อะไรคือสาเหตุที่ทำให้อันตราย อาจก่อให้เกิดผลกระทบต่อ คน สิ่งแวดล้อม ชื่อเสียง หรือทรัพย์สิน เช่นอาจเกิดจาก คน อุปกรณ์ วิธีการ หรือสภาพแวดล้อม เป็นต้น">
                                                     อะไรคือสาเหตุที่ทำให้อันตราย อาจก่อให้เกิดผลกระทบต่อ คน สิ่งแวดล้อม ชื่อเสียง หรือทรัพย์สิน เช่นอาจเกิดจาก คน อุปกรณ์ วิธีการ หรือสภาพแวดล้อม เป็นต้น<br />(Possible cause to release <br> the hazard and produce an incident)
                                                 </th>
-                                                <th class=" align-middle   mx-0" colspan="1" rowspan="2" style="padding: 0 !important;"
-                                                    ng-if="select_columns_level != '4' ">CAT<br>(P/A/E/R/Q) </th>
-                                                <th class=" align-middle   mx-0" colspan="3" rowspan="1" style="padding: 0 !important;">Risk<br>Assessment Matrix</th>
-                                                <th class=" align-middle   mx-0" colspan="1" rowspan="2" style="padding: 0 !important; width: 200px; max-width:450px;"
+                                                @* <th class=" align-middle   mx-0" colspan="1" rowspan="2" style="padding: 0 !important;"
+                                                    ng-if="select_columns_level != '4' ">CAT<br>(P/A/E/R/Q) </th> *@
+                                                <th class=" align-middle   mx-0" colspan="2" rowspan="1" style="padding: 0 !important; width: 5%;">Initial<br>risk</th>
+                                                <th class=" align-middle   mx-0" colspan="1" rowspan="2" style="padding: 0 !important; width: 22%;"
                                                     data-tooltip="ข้อปฏิบัติเพื่อลดผลกระทบจากอันตรายที่อาจเกิดขึ้น">ข้อปฏิบัติเพื่อลดผลกระทบจากอันตรายที่อาจเกิดขึ้น<br />(Recommendations)</th>
-                                                <th class=" align-middle   mx-0" colspan="1" rowspan="2" style="padding: 0 !important; width: 200px; max-width:350px;"
+                                                <th class=" align-middle   mx-0" colspan="1" rowspan="2" style="padding: 0 !important; width: 8%;"
                                                     data-tooltip="ผู้รับผิดชอบ">ผู้รับผิดชอบ<br />(Action by)</th>
-                                                <th class=" align-middle   mx-0" colspan="3" rowspan="1" style="padding: 0 !important;">Residual Risk<br>Assessment Matrix</th>
+                                                <th class=" align-middle   mx-0" colspan="3" rowspan="1" style="padding: 0 !important; width: 5%;">Residual<br>risk</th>
                                             </tr>
                                             <tr>
-                                                <th class=" align-middle  mx-0" style="padding: 0 !important;">S</th>
-                                                <th class=" align-middle  mx-0" style="padding: 0 !important;">L</th>
+                                                @* <th class=" align-middle  mx-0" style="padding: 0 !important;">S</th> *@
+                                                <th class=" align-middle  mx-0" style="padding: 0 !important;">S/L</th>
                                                 <th class=" align-middle  mx-0" style="padding: 0 !important;">IR</th>
-                                                <th class=" align-middle  mx-0" style="padding: 0 !important;">S</th>
-                                                <th class=" align-middle  mx-0" style="padding: 0 !important;">L</th>
+                                                @* <th class=" align-middle  mx-0" style="padding: 0 !important;">S</th> *@
+                                                <th class=" align-middle  mx-0" style="padding: 0 !important;">S/L</th>
                                                 <th class=" align-middle  mx-0" style="padding: 0 !important;">RR</th>
                                             </tr>
                                         </thead>
-
-
                                         <tbody class="">
                                             <tr class="rowwork border border-dashed"
                                                 ng-repeat="item in data_listworksheet | orderBy:'no'">
 
                                                 @* workstep *@
-                                                <td class="align-top border border-light border-end-0  border-start-0  border-top-0 "
-                                                    style="padding: 0 !important; width: 200px; max-width:300px;">
-
+                                                <td class="align-top border border-light border-end-0  border-start-0  border-top-0 "style="padding: 0 !important; width: 200px; max-width:300px;">
                                                     <div class="d-flex align-items-top w-100" ng-if="item.row_type =='workstep' ">
                                                         <div>
                                                             <p class="p-0 m-0 me-1 text-end">{{item.workstep_no +'.'}}</p>
                                                             <div class="" ng-class="{'d-none': !(tab_worksheet_active)}">
                                                                 <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 text-align-end p-1"
-                                                                        type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true"
-                                                                        aria-expanded="false" data-bs-reference="parent">
+                                                                        type="button" 
+                                                                        data-bs-toggle="dropdown" 
+                                                                        data-boundary="window" 
+                                                                        aria-haspopup="true"
+                                                                        aria-expanded="false" 
+                                                                        data-bs-reference="parent"
+                                                                        data-toggle="tooltip" 
+                                                                        data-placement="top" 
+                                                                        title="Options">
                                                                     <span class="fas fa-cog text-info align-top"></span>
                                                                 </button>
-
                                                                 <div class="dropdown-menu dropdown-menu-end py-2 align-top">
                                                                     <a class="dropdown-item text-success" ng-click="adddata_listworksheet_lv1('workstep',item,$index)">
                                                                         <span class="fas fa-copy"></span>
@@ -1623,13 +1772,16 @@
                                                         <div class="autocomplete-container" style=" width: 100%; " ng-class="{'disabled-link':(!tab_worksheet_active)}">
                                                             <textarea class="form-control form-control-sm rounded-1 p-0 m-0 w-100 border border-end-0 border-top-0"
                                                                       style=" width: 100vh; font-size: 10px;"
-                                                                      id="workstep_worksheet_{{item.seq}}" name="workstep_worksheet_{{item.seq}}"
-                                                                      placeholder="Work Step" rows="3"
+                                                                      id="workstep_worksheet_{{item.seq}}" 
+                                                                      name="workstep_worksheet_{{item.seq}}"
+                                                                      placeholder="Work Step" 
+                                                                      rows="3"
                                                                       ng-model="item.workstep"
                                                                       ng-keyup="filterResultHistory(item.workstep, 'workstep', 'workstep_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'');
                                                                                 (contentModified && item.workstep.trim() !== '') ? updateWorksheetChanges(item, item.seq, '') : null"
-                                                                      ng-mouseenter="showTooltip = true" ng-mouseleave="showTooltip = false"></textarea>
-
+                                                                      ng-mouseenter="showTooltip = true" 
+                                                                      ng-mouseleave="showTooltip = false">
+                                                            </textarea>
                                                             <div class="autocomplete-dropdown" style="position: absolute;"
                                                                  ng-class="{'ng-show' : (filteredArr[0].fieldID == ('workstep_worksheet_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('workstep_worksheet_'+item.seq)) }">
                                                                 <div class="autocomplete-option"
@@ -1646,24 +1798,26 @@
                                                             <span class="fa-regular fa-lightbulb fa-lg"></span>
                                                         </div>
                                                     </div>
-
-
                                                 </td>
 
                                                 @* taskdesc *@
-                                                <td class="align-top border border-light border-end-0  border-start-0  border-top-0 "
-                                                    style="padding: 0 !important; width: 200px; max-width:300px;">
-
+                                                <td class="align-top border border-light border-end-0  border-start-0  border-top-0 " style="padding: 0 !important; width: 200px; max-width:300px;">
                                                     <div class="d-flex align-items-top w-100" ng-if="item.row_type =='workstep' || item.row_type =='taskdesc'">
                                                         <div>
                                                             <p class="p-0 m-0 me-1 text-end">{{item.workstep_no +'.'+item.taskdesc_no +'.'}}</p>
                                                             <div class="" ng-class="{'d-none':(!tab_worksheet_active)}">
                                                                 <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 text-align-end p-1"
-                                                                        type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true"
-                                                                        aria-expanded="false" data-bs-reference="parent">
+                                                                        type="button" 
+                                                                        data-bs-toggle="dropdown" 
+                                                                        data-boundary="window" 
+                                                                        aria-haspopup="true"
+                                                                        aria-expanded="false" 
+                                                                        data-bs-reference="parent"
+                                                                        data-toggle="tooltip" 
+                                                                        data-placement="top" 
+                                                                        title="Options">
                                                                     <span class="fas fa-cog text-info align-top"></span>
                                                                 </button>
-
                                                                 <div class="dropdown-menu dropdown-menu-end py-2 align-top">
                                                                     <a class="dropdown-item text-success"
                                                                        ng-click="adddata_listworksheet_lv1('taskdesc',item,$index)">
@@ -1679,15 +1833,16 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-
                                                         <div class="autocomplete-container" style=" width: 100%; " ng-class="{'disabled-link':(!tab_worksheet_active)}">
                                                             <textarea class="form-control form-control-sm rounded-1 p-0 m-0 w-100 border border-end-0 border-top-0"
                                                                       style=" width: 200px; font-size: 10px;"
-                                                                      id="taskdesc_worksheet_{{item.seq}}" name="taskdesc_worksheet_{{item.seq}}"
-                                                                      placeholder="taskdesc" rows="3"
+                                                                      id="taskdesc_worksheet_{{item.seq}}" 
+                                                                      name="taskdesc_worksheet_{{item.seq}}"
+                                                                      placeholder="taskdesc" 
+                                                                      rows="3"
                                                                       ng-model="item.taskdesc"
-                                                                      ng-keyup="filterResultHistory(item.taskdesc, 'taskdesc', 'taskdesc_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')"></textarea>
-
+                                                                      ng-keyup="filterResultHistory(item.taskdesc, 'taskdesc', 'taskdesc_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')">
+                                                            </textarea>
                                                             <div class="autocomplete-dropdown" style="position: absolute;"
                                                                  ng-class="{'ng-show' : (filteredArr[0].fieldID == ('taskdesc_worksheet_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('taskdesc_worksheet_'+item.seq)) }">
                                                                 <div class="autocomplete-option"
@@ -1706,19 +1861,23 @@
                                                 </td>
 
                                                 @* potentailhazard *@
-                                                <td class="align-top border border-light border-end-0  border-start-0  border-top-0 "
-                                                    style="padding: 0 !important; width: 200px; max-width:300px;">
-
+                                                <td class="align-top border border-light border-end-0  border-start-0  border-top-0 " style="padding: 0 !important; width: 200px; max-width:300px;">
                                                     <div class="d-flex align-items-top w-100" ng-if="item.row_type =='workstep' || item.row_type =='taskdesc' || item.row_type =='potentailhazard'">
                                                         <div>
                                                             <p class="p-0 m-0 me-1 text-end">{{item.workstep_no  + '.'+item.taskdesc_no + '.'+item.potentailhazard_no +'.'}}</p>
                                                             <div class="" ng-class="{'d-none':(!tab_worksheet_active)}">
                                                                 <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 text-align-end p-1"
-                                                                        type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true"
-                                                                        aria-expanded="false" data-bs-reference="parent">
+                                                                        type="button" 
+                                                                        data-bs-toggle="dropdown" 
+                                                                        data-boundary="window" 
+                                                                        aria-haspopup="true"
+                                                                        aria-expanded="false" 
+                                                                        data-bs-reference="parent"
+                                                                        data-toggle="tooltip" 
+                                                                        data-placement="top" 
+                                                                        title="Options">
                                                                     <span class="fas fa-cog text-info align-top"></span>
                                                                 </button>
-
                                                                 <div class="dropdown-menu dropdown-menu-end py-2 align-top">
                                                                     <a class="dropdown-item text-success"
                                                                        ng-click="adddata_listworksheet_lv1('potentailhazard',item,$index)">
@@ -1734,15 +1893,16 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-
                                                         <div class="autocomplete-container" style=" width: 100%; " ng-class="{'disabled-link':(!tab_worksheet_active)}">
                                                             <textarea class="form-control form-control-sm rounded-1 p-0 m-0 w-100 border border-end-0 border-top-0"
                                                                       style=" width: 200px; font-size: 10px;"
-                                                                      id="potentailhazard_worksheet_{{item.seq}}" name="potentailhazard_worksheet_{{item.seq}}"
-                                                                      placeholder="potentailhazard" rows="3"
+                                                                      id="potentailhazard_worksheet_{{item.seq}}" 
+                                                                      name="potentailhazard_worksheet_{{item.seq}}"
+                                                                      placeholder="potentailhazard" 
+                                                                      rows="3"
                                                                       ng-model="item.potentailhazard"
-                                                                      ng-keyup="filterResultHistory(item.potentailhazard, 'potentailhazard', 'potentailhazard_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')"></textarea>
-
+                                                                      ng-keyup="filterResultHistory(item.potentailhazard, 'potentailhazard', 'potentailhazard_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')">
+                                                            </textarea>
                                                             <div class="autocomplete-dropdown" style="position: absolute;"
                                                                  ng-class="{'ng-show' : (filteredArr[0].fieldID == ('potentailhazard_worksheet_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('potentailhazard_worksheet_'+item.seq)) }">
                                                                 <div class="autocomplete-option"
@@ -1752,28 +1912,34 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="ms-2 mt-1 pe-auto ps-2" style="cursor: pointer;" ng-show="showHistory"
-                                                             data-tooltip-location="right"
-                                                             data-tooltip="This is the tooltip content ">
+                                                        <div class="ms-2 mt-1 pe-auto ps-2" 
+                                                            style="cursor: pointer;" 
+                                                            ng-show="showHistory"
+                                                            data-tooltip-location="right"
+                                                            data-tooltip="This is the tooltip content ">
                                                             <span class="fa-regular fa-lightbulb fa-lg"></span>
                                                         </div>
                                                     </div>
                                                 </td>
 
                                                 @* possiblecase *@
-                                                <td class="align-top border border-light border-end-0  border-start-0  border-top-0 "
-                                                    style="padding: 0 !important; width: 200px; max-width:300px;">
-
+                                                <td class="align-top border border-light border-end-0  border-start-0  border-top-0 " style="padding: 0 !important; width: 200px; max-width:300px;">
                                                     <div class="d-flex align-items-top w-100" ng-if="item.row_type =='workstep' || item.row_type =='taskdesc' || item.row_type =='potentailhazard' || item.row_type =='possiblecase'">
                                                         <div>
                                                             <p class="p-0 m-0 me-1 text-end">{{item.workstep_no  + '.'+item.taskdesc_no + '.'+item.potentailhazard_no + '.' + item.possiblecase_no +'.'}}</p>
                                                             <div class="" ng-class="{'d-none':(!tab_worksheet_active)}">
                                                                 <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 text-align-end p-1"
-                                                                        type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true"
-                                                                        aria-expanded="false" data-bs-reference="parent">
+                                                                        type="button" 
+                                                                        data-bs-toggle="dropdown" 
+                                                                        data-boundary="window" 
+                                                                        aria-haspopup="true"
+                                                                        aria-expanded="false" 
+                                                                        data-bs-reference="parent"
+                                                                        data-toggle="tooltip" 
+                                                                        data-placement="top" 
+                                                                        title="Options">
                                                                     <span class="fas fa-cog text-info align-top"></span>
                                                                 </button>
-
                                                                 <div class="dropdown-menu dropdown-menu-end py-2 align-top">
                                                                     <a class="dropdown-item text-success"
                                                                        ng-click="adddata_listworksheet_lv1('possiblecase',item,$index)">
@@ -1789,15 +1955,16 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-
                                                         <div class="autocomplete-container" style=" width: 100%; " ng-class="{'disabled-link':(!tab_worksheet_active)}">
                                                             <textarea class="form-control form-control-sm rounded-1 p-0 m-0 w-100 border border-end-0 border-top-0"
                                                                       style=" width: 200px; font-size: 10px;"
-                                                                      id="possiblecase_worksheet_{{item.seq}}" name="possiblecase_worksheet_{{item.seq}}"
-                                                                      placeholder="possiblecase" rows="3"
+                                                                      id="possiblecase_worksheet_{{item.seq}}" 
+                                                                      name="possiblecase_worksheet_{{item.seq}}"
+                                                                      placeholder="possiblecase" 
+                                                                      rows="3"
                                                                       ng-model="item.possiblecase"
-                                                                      ng-keyup="filterResultHistory(item.possiblecase, 'possiblecase', 'possiblecase_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')"></textarea>
-
+                                                                      ng-keyup="filterResultHistory(item.possiblecase, 'possiblecase', 'possiblecase_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')">
+                                                            </textarea>
                                                             <div class="autocomplete-dropdown" style="position: absolute;"
                                                                  ng-class="{'ng-show' : (filteredArr[0].fieldID == ('possiblecase_worksheet_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('possiblecase_worksheet_'+item.seq)) }">
                                                                 <div class="autocomplete-option"
@@ -1816,7 +1983,7 @@
                                                 </td>
 
                                                 @* cat *@
-                                                <td class="align-top border border-light border-end-0  border-start-0  border-top-0 "
+                                                @* <td class="align-top border border-light border-end-0  border-start-0  border-top-0 "
                                                     style="padding: 0 !important; width: 70px;" ng-if="select_columns_level != '4' ">
 
                                                     <div class="d-flex align-items-top px-0" style="width: 70px;">
@@ -1856,9 +2023,9 @@
                                                             </option>
                                                         </select>
                                                     </div>
-                                                </td>
+                                                </td> *@
 
-                                                <td class="align-top border border-light border-end-0  border-start-0  border-top-0 "
+                                                @* <td class="align-top border border-light border-end-0  border-start-0  border-top-0 "
                                                     style="padding: 0 !important; width: 20px;">
                                                     <div class="align-items-center text-end mt-1" style=" width: 20px;"
                                                          ng-class="{'disabled-link':(!tab_worksheet_active)}">
@@ -1867,28 +2034,42 @@
                                                             <div class="d-flex"><h6 class="me-1">{{item.ram_befor_security}}</h6> <span class="fas fa-pencil-alt fa-sm" style=" width: 8px;"></span> </div>
                                                         </button>
                                                     </div>
-                                                </td>
+                                                </td> *@
 
                                                 <td class="align-top border border-light border-end-0  border-start-0  border-top-0 "
                                                     style="padding: 0 !important; width: 20px;">
                                                     <div class="align-items-center text-end mt-1" style=" width: 20px;"
                                                          ng-class="{'disabled-link':(!tab_worksheet_active)}">
                                                         <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end"
-                                                                type="button" ng-click="openModalDataRAM_Worksheet(item,'l',item.seq,'befor')">
-                                                            <div class="d-flex"><h6 class="me-1">{{item.ram_befor_likelihood}}</h6> <span class="fas fa-pencil-alt fa-sm" style=" width: 8px;"></span> </div>
+                                                                type="button" 
+                                                                ng-click="openModalDataRAM_Worksheet(item,'l',item.seq,'befor')">
+                                                            <div class="d-flex">
+                                                                <h6 class="me-1"  style="font-size: 10px !important;">
+                                                                    {{item.ram_befor_security}} 
+                                                                    <span ng-if="item.ram_befor_security && item.ram_befor_likelihood">/</span> 
+                                                                    {{item.ram_befor_likelihood}}
+                                                                </h6> 
+                                                                <span class="fas fa-pencil-alt fa-sm" style=" width: 8px;"></span> 
+                                                            </div>
                                                         </button>
                                                     </div>
                                                 </td>
+
                                                 <td class="align-top border border-light border-end-0  border-start-0  border-top-0 "
                                                     style="padding: 0 !important; width: 25px;">
                                                     <div class="align-items-center text-end mt-1" style=" width: 25px;">
                                                         <button ng-style=" { 'background-color' : ((item.ram_befor_risk == 'H') ? 'red' : ((item.ram_befor_risk == 'M') ? 'yellow' : ((item.ram_befor_risk == 'L') ? 'green' : '#D3D3D3')) ) }"
                                                                 class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end"
-                                                                type="button" ng-click="openModalDataRAM_Worksheet(item,'r',item.seq,'befor')" style="width: 25px;">
-                                                            <div class="text-center" style=" width: 25px;"><h6 class="me-1 text-center" style=" width: 25px;">{{item.ram_befor_risk}}</h6></div>
+                                                                type="button" 
+                                                                ng-click="openModalDataRAM_Worksheet(item,'r',item.seq,'befor')" 
+                                                                style="width: 25px;">
+                                                            <div class="text-center" style=" width: 25px;">
+                                                                <h6 class="me-1 text-center" style=" width: 25px;">{{item.ram_befor_risk}}</h6>
+                                                            </div>
                                                         </button>
                                                     </div>
                                                 </td>
+                                                
                                                 @* recommendations *@
                                                 <td class="align-top border border-light border-end-0  border-start-0  border-top-0 "
                                                     style="padding: 0 !important; width: 200px; max-width:400px;">
@@ -1926,6 +2107,7 @@
                                                         </div>
                                                     </div>
                                                 </td>
+
                                                 @* responder *@
                                                 <td class="align-top border border-light border-end-0  border-start-0  border-top-0 "
                                                     style="padding: 0 !important; width: 200px; max-width:400px;">
@@ -1956,7 +2138,8 @@
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td class="align-top border border-light border-end-0  border-start-0  border-top-0 "
+
+                                                @* <td class="align-top border border-light border-end-0  border-start-0  border-top-0 "
                                                     style="padding: 0 !important; width: 20px;">
                                                     <div class="align-items-center text-end mt-1" style=" width: 20px;" ng-class="{'disabled-link':(!tab_worksheet_active)}">
                                                         <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end"
@@ -1964,16 +2147,25 @@
                                                             <div class="d-flex"><h6 class="me-1">{{item.ram_after_security}}</h6> <span class="fas fa-pencil-alt fa-sm" style=" width: 8px;"></span> </div>
                                                         </button>
                                                     </div>
-                                                </td>
+                                                </td> *@
+
                                                 <td class="align-top border border-light border-end-0  border-start-0  border-top-0 "
                                                     style="padding: 0 !important; width: 20px;">
                                                     <div class="align-items-center text-end mt-1" style=" width: 20px;" ng-class="{'disabled-link':(!tab_worksheet_active)}">
                                                         <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end"
                                                                 type="button" ng-click="openModalDataRAM_Worksheet(item,'l',item.seq,'after')">
-                                                            <div class="d-flex"><h6 class="me-1">{{item.ram_after_likelihood}}</h6> <span class="fas fa-pencil-alt fa-sm" style=" width: 8px;"></span> </div>
+                                                            <div class="d-flex">
+                                                                <h6 class="me-1" style="font-size: 10px !important;">
+                                                                    {{item.ram_after_security}}
+                                                                    <span ng-if="item.ram_after_security && item.ram_after_likelihood">/</span>
+                                                                     {{item.ram_after_likelihood}}
+                                                                </h6> 
+                                                                <span class="fas fa-pencil-alt fa-sm" style=" width: 8px;"></span> 
+                                                            </div>
                                                         </button>
                                                     </div>
                                                 </td>
+
                                                 <td class="align-top border border-light border-end-0  border-start-0  border-top-0 "
                                                     style="padding: 0 !important; width: 25px;">
                                                     <div class="align-items-center text-end mt-1" style=" width: 25px;">
@@ -2040,7 +2232,8 @@
                                                 <td class="align-top white-space-nowrap  text-start">
                                                     <div class="col-md-12 p-1 ps-3 text-start" ng-if="!(item.approver_action_type == 2 || data_header[0].pha_status != 21)   ">
                                                         <div class="form-check form-check-inline cursor-pointer p-0">
-                                                            <span class="fa-solid far fa-file-pdf text-danger" style="font-size:15px;" ng-click="confirmExport('jsea_report','pdf')"></span>
+                                                            <span class="fa-solid far fa-file-pdf text-danger" style="font-size:15px;"
+                                                                  ng-click="confirmExport('jsea_report','pdf')"></span>
                                                             <b>
                                                                 JSEA Report
                                                             </b>
@@ -2062,10 +2255,19 @@
                                                         </div>
                                                     </div>
 
-                                                    <div class="col-md-12 p-1 text-center" ng-if="(item.approver_action_type == 2 || data_header[0].pha_status != 21)">
-                                                        <label class="text-1100 fw-bold ">
-                                                            {{item.action_status =='approve' ? 'Approve' : 'Send back with Comment' }}
-                                                        </label>
+                                                    <div class="col-md-12 p-1 text-start" ng-if="(item.approver_action_type == 2 || data_header[0].pha_status != 21)">
+                                                        <div class="form-check form-check-inline cursor-pointer p-0">
+                                                            <span class="fa-solid far fa-file-pdf text-danger" style="font-size:15px;"
+                                                                  ng-click="confirmExport('jsea_report','pdf')"></span>
+                                                            <b>
+                                                                JSEA Report
+                                                            </b>
+                                                        </div><br />
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" disabled checked />
+                                                            <label class="form-check-label">  {{item.action_status =='approve' ? 'Approve' : 'Send back with Comment' }}</label>
+                                                        </div>
+
                                                     </div>
 
                                                 </td>
@@ -2074,7 +2276,7 @@
                                                     <div class="col-md-12 p-1 ps-3" ng-if="!(item.approver_action_type == 2 || data_header[0].pha_status != 21)">
                                                         <textarea class="form-control rounded-1" id="floatingTextarea2" placeholder="Enter your comment"
                                                                   ng-model="item.comment">  </textarea>
-                                                                   
+
                                                         <div id="valid-approver-comment-{{item.seq}}" class="invalid-feedback text-danger">
                                                             Please select a valid comment.
                                                         </div>
@@ -2086,7 +2288,10 @@
                                                     </div>
                                                 </td>
                                                 <td class="align-top px-1 text-start" style="min-width:200px;">
-                                              
+                                                    <div class=" p-0 cursor-pointer "
+                                                         ng-repeat="item_x in data_drawing_approver  | filter:{id_approver : item.seq}  ">
+                                                        @* {{item_x.document_file_size}} xx {{item_x.document_file_name}}   *@
+                                                    </div>
                                                     <div class=" p-0 cursor-pointer "
                                                          ng-repeat="item_x in data_drawing_approver  | filter:{id_approver : item.seq}  ">
 
@@ -2126,7 +2331,7 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        @* {{item_x.document_file_size}} *@
+
                                                         <div class="text-start p-0 cursor-pointer d-flex flex-nowrap" ng-if="item_x.document_file_size>0 ">
                                                             <a class="nametext ms-3 filename-text me-2" ng-click="downloadFile(item_x)">
                                                                 <i class="far fa-file-pdf text-danger"></i> {{(item_x.document_file_size>0? item_x.document_file_name + '('+  item_x.document_file_size + 'KB)' : '')}}
@@ -2234,9 +2439,9 @@
                                                 <td class="fs--1 align-middle ps-0 py-3">
 
                                                     <div class="cursor-pointer">
-                                                        <span class="fa-solid far fa-file-excel text-success p-2" ng-click="confirmExport('hazop_ram','excel')"></span>
-                                                        <span class="fa-solid far fa-file-pdf text-danger p-2" ng-click="confirmExport('hazop_ram','pdf')"></span>
-                                                        <span class="fa-solid far fa-file-word text-secondary p-2 d-none" ng-click="confirmExport('hazop_ram','word')"></span>
+                                                        <span class="fa-solid far fa-file-excel text-success p-2" ng-click="confirmExport('jsea_ram','excel')"></span>
+                                                        <span class="fa-solid far fa-file-pdf text-danger p-2" ng-click="confirmExport('jsea_ram','pdf')"></span>
+                                                        <span class="fa-solid far fa-file-word text-secondary p-2 d-none" ng-click="confirmExport('jsea_ram','word')"></span>
                                                     </div>
                                                 </td>
                                                 <td class="email align-middle white-space-nowrap text-1000 pe-5">
@@ -2288,42 +2493,43 @@
          aria-hidden="true" style="display: none;">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header" ng-if="selectDatFormType != 'specialist'">
                     <h5 class="text-900 mb-0" data-anchor="data-anchor" id="modalEmployeeCheckLabel">
                         <span class=" me-2 text-primary"><B>|</B></span> Search Employee/Contract
                     </h5>
-
-                    <button class="btn p-1" type="button" data-bs-dismiss="modal" aria-label="Close">
-                        <svg class="svg-inline--fa fa-xmark fs--1" aria-hidden="true" focusable="false" data-prefix="fas"
-                             data-icon="xmark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"
-                             data-fa-i2svg="">
+                    <button class="btn p-1" 
+                            type="button" 
+                            data-bs-dismiss="modal" 
+                            aria-label="Close">
+                        <svg class="svg-inline--fa fa-xmark fs--1" 
+                            aria-hidden="true" 
+                            focusable="false" 
+                            data-prefix="fas"
+                            data-icon="xmark" 
+                            role="img" 
+                            xmlns="http://www.w3.org/2000/svg" 
+                            viewBox="0 0 320 512"
+                            data-fa-i2svg="">
                             <path fill="currentColor"
                                   d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z">
                             </path>
                         </svg>
                     </button>
-
                 </div>
-                <div class="modal-body">
 
+                <div class="modal-body" ng-class="{'d-none':(selectDatFormType == 'specialist')}">
                     <div class="mb-4">
-
                         <div class="row g-3">
-
                             <div class="col-auto">
-
                                 <div class="search-box position-relative">
-
                                     <input class="form-control search-input search"
-                                           ng-model="searchText" placeholder="Search"
+                                           ng-model="searchText" 
+                                           placeholder="Search"
                                            ng-change="fillterDataEmployeeAdd()" />
                                     <span class="fas fa-search search-box-icon"></span>
                                 </div>
-
                             </div>
-
                         </div>
-
                     </div>
 
                     @* start แสดงข้อมูลที่ ค้นหาตาม textsearch*@
@@ -2334,45 +2540,44 @@
                                     <tr class="text-center">
                                         <th class=""> </th>
                                         <th class="pe-5" scope="col">Employee</th>
+                                        <th class="pe-5" scope="col">Indicator</th>
                                         <th class="pe-5" scope="col">E-Mail</th>
                                         <th class="pe-5" scope="col">Employee Type</th>
 
                                     </tr>
                                 </thead>
-                                <tbody class=" list">
-
-                                    <tr class="hover-actions-trigger btn-reveal-trigger position-static text-center"
-                                        ng-repeat="item in employeelist_show">
-
-                                        <td class="">
-                                            <a class="dropdown-item text-primary"
-                                               ng-click="choosDataEmployee(item)">
-                                                Add
-                                            </a>
-                                        </td>
-
-                                        <td class="">
-                                            <a class=" text-decoration-none d-flex align-items-center">
-                                                <div class="avatar avatar-m" style="height: 20px; width: 20px;">
-                                                    <img ng-if="item.employee_img" class="rounded-circle" ng-src="../../{{ item.employee_img }}" alt="">
-                                                </div>
-                                                <p class="mb-0 ms-3 text-1100 fw-bold"> ({{item.employee_id}}){{item.employee_displayname}} </p>
-                                            </a>
-                                        </td>
-
-                                        <td class="">{{item.employee_email}} </td>
-
-                                        <td class="">{{item.employee_type}}</td>
-
-                                    </tr>
-                                </tbody>
+                                    <tbody class="list">
+                                        <!-- Check if employeelist_show is not empty and the first item in the array is not null -->
+                                        <tr ng-if="employeelist_show.length > 0 && employeelist_show[0].employee_displayname !== null" ng-repeat="item in employeelist_show">
+                                            <td class="">
+                                                <a class="dropdown-item text-primary" ng-click="choosDataEmployee(item)">
+                                                    Add
+                                                </a>
+                                            </td>
+                                            <td class="">
+                                                <a class="text-decoration-none d-flex align-items-center">
+                                                    <div class="avatar avatar-m" style="height: 20px; width: 20px;">
+                                                        <img ng-if="item.employee_img" class="rounded-circle" ng-src="../../{{ item.employee_img }}" alt="">
+                                                    </div>
+                                                    <p class="mb-0 ms-3 text-1100 fw-bold"> ({{item.employee_id}}){{item.employee_displayname}} </p>
+                                                </a>
+                                            </td>
+                                            <td class="">{{item.employee_position}} </td>
+                                            <td class="">{{item.employee_email}} </td>
+                                            <td class="">{{item.employee_type}}</td>
+                                        </tr>
+                                        <!-- Show "Not Found" message when employeelist_show is empty or the first item is null -->
+                                        <tr ng-if="employeelist_show[0].employee_displayname === null">
+                                            <td colspan="5">
+                                                <p class="mb-0 ms-3 text-1100 fw-bold text-center"> Not Found </p>
+                                            </td>
+                                        </tr>
+                                    </tbody>
                             </table>
 
                         </div>
                     </div>
                     @* end แสดงข้อมูลที่ ค้นหาตาม textsearch*@
-
-
                 </div>
 
                 <div class="modal-header bg-soft" ng-if="!(selectDatFormType =='owner' )">
@@ -2573,9 +2778,9 @@
          aria-hidden="true" style="display: none;">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content" style="width: 100%; min-height: 300px;">
-                <div class="modal-header bg-warning">
+                <div class="modal-header bg-primary">
                     <h5 class="text-900 mb-0" data-anchor="data-anchor" id="modalMsgFileLabel">
-                        <span class=" me-2"><B>|</B></span>Warning
+                        <span class=" me-2"><B>|</B></span>Upload Successful
                     </h5>
                     <button class="btn p-1" type="button" data-bs-dismiss="modal" aria-label="Close">
                         <svg class="svg-inline--fa fa-xmark fs--1" aria-hidden="true" focusable="false" data-prefix="fas"
@@ -2788,13 +2993,16 @@
     <!--Modal RAM Start-->
     <div class="modal fade modal-xl shadow-sm p-3 mb-5  rounded" id="modalRAM" tabindex="-1"
          aria-labelledby="modalRAMLabel" aria-hidden="true" style="display: none;">
-        <div class="modal-dialog modal-dialog-centered"
-             ng-style=" { 'width' :  (select_columns_level !=5 && (selectedDataNodeWorksheetRamType == 's' || selectedDataNodeWorksheetRamType == 'l')  ) ?'500px' :  '100%' }">
+        <div class="modal-dialog modal-dialog-centered">
 
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="modalRAMLabel">Risk Assessment Matrix (RAM){{(selectedDataNodeWorksheetRamType =='s'?' : Security':(selectedDataNodeWorksheetRamType =='l'?' : Likelihood':''))}}</h5>
-
+                        <span class="mx-1 d-flex">
+                            <a class="m-1 text-info cursor-pointer"
+                                href="{{y.document_definition_file_path}}" target="_blank"
+                                ng-repeat="y in master_ram | filter:{id: data_general[0].id_ram}">Definition Consequence Rating<span class="fas fa-file-pdf fa-lg ms-1"></span></a>
+                        </span>
 
                     <div class="col-auto ms-auto" style="zoom:1.5">
                         <b class="pe-1 me-1"> Security : {{cal_ram_action_security}}</b>
@@ -2815,109 +3023,43 @@
                 </div>
 
                 <div class="modal-body">
-
                     <div class="row">
-                        @*
-                        <div class="col-12 mb-1">
-                        <b class="pe-1 me-1"> Security : {{cal_ram_action_security}}</b>
-                        <b class="pe-1 me-1"> Likelihood : {{cal_ram_action_likelihood}}</b>
-                        <b class="pe-1 me-1">  Risk : </b>
-                        <label class="pe-1 me-1 text-center" style="width:200px"
-                        ng-style=" { 'background-color' : ((cal_ram_action_risk == 'H') ? 'red' : ((cal_ram_action_risk == 'M') ? 'yellow' : ((cal_ram_action_risk == 'L') ? 'green' : '#D3D3D3')) ) }">{{cal_ram_action_risk}}</label>
-                        </div> *@
-
-                        <div class="col-6" ng-if="!previewRam">
-
-                            <table class="table table-sm fs--1 mb-0 col-auto ">
-                                <thead class="bg-light-primary">
-                                    <tr>
-                                        <td rowspan="2" class="text-center"></td>
-                                        <th rowspan="1" colspan="3" class="text-center" ng-if="select_columns_level != 5">Security</th>
-                                        <th rowspan="1" colspan="6" class="text-center" ng-if="select_columns_level == 5">Security</th>
-                                    </tr>
-                                    <tr ng-if="select_columns_level != 5">
-                                        <td class="text-center">Level</td>
-                                        <td>Description</td>
-                                    </tr>
-                                    <tr ng-if="select_columns_level == 5">
-                                        <td class="text-center">Level</td>
-                                        <td>People</td>
-                                        <td>Assets</td>
-                                        <td>Enhancement</td>
-                                        <td>Reputation</td>
-                                        <td>Product Quality</td>
-                                    </tr>
-                                </thead>
-
-                                <tbody class=" align-top text-start">
-                                    <tr class="hover-actions-trigger btn-reveal-trigger position-static "
-                                        ng-repeat="item_ram in master_security_level | filter:{id_ram:data_general[0].id_ram,category_type:item_ram.category_type}">
-                                        <td class=" text-end" style="width: 80px;">
-                                            <a class="pointer" ng-click="selectDataRAM('s',item_ram.security_level)"
-                                               aria-label="Close">Select</a>
-                                        </td>
-                                        <td class="text-center">{{item_ram.security_level}}</td>
-                                        <td ng-if="item_ram.category_type !== 5">{{item_ram.security_text}}</td>
-                                        <td ng-if="item_ram.category_type == 5">{{item_ram.people_text}}</td>
-                                        <td ng-if="item_ram.category_type == 5">{{item_ram.assets_text}}</td>
-                                        <td ng-if="item_ram.category_type == 5">{{item_ram.enhancement_text}}</td>
-                                        <td ng-if="item_ram.category_type == 5">{{item_ram.reputation_text}}</td>
-                                        <td ng-if="item_ram.category_type == 5">{{item_ram.product_quality_text}}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-
-
-                        </div>
-                        <div class="col-6" ng-if="!previewRam">
-
-                            <table class="table table-sm fs--1 mb-0 col-auto ">
-                                <thead class="bg-light-primary">
-                                    <tr>
-                                        <td rowspan="3" class="text-center"></td>
-                                        <th rowspan="2" colspan="3" ng-if="select_columns_level != 5">Likelihood</th>
-                                        <th rowspan="2" colspan="5" ng-if="select_columns_level == 5">Likelihood</th>
-                                    </tr>
-                                    <tr ng-if="select_columns_level != 5">
-                                        <td class="text-center">Level</td>
-                                        <td>Description</td>
-                                    </tr>
-                                    <tr ng-if="select_columns_level == 5">
-                                        <td class="text-center">Level</td>
-                                        <td>Description</td>
-                                        <td>Description(2)</td>
-                                        <td>Criterion</td>
-                                    </tr>
-                                </thead>
-
-                                <tbody class=" align-top text-start">
-                                    <tr class="hover-actions-trigger btn-reveal-trigger position-static "
-                                        ng-repeat="item_ram in master_likelihood_level | filter:{id_ram:data_general[0].id_ram,columns_level:item_ram.columns_level}">
-                                        <td class="text-end pointer" style="width: 80px;">
-                                            <a class="pointer" ng-click="selectDataRAM('l',item_ram.likelihood_level)"
-                                               aria-label="Close">Select</a>
-                                        </td>
-                                        <td class="text-center">{{item_ram.likelihood_level}}</td>
-                                        <td ng-if="item_ram.columns_level !== 5">{{item_ram.likelihood_show}}</td>
-
-                                        <td ng-if="item_ram.columns_level == 5">{{item_ram.likelihood_text}}</td>
-                                        <td ng-if="item_ram.columns_level == 5">{{item_ram.likelihood_desc}}</td>
-                                        <td ng-if="item_ram.columns_level == 5">{{item_ram.likelihood_criterion}}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-
-                        </div>
-
-                        <div class="col-12 mt-1 pt-1" style="zoom:0.7;">
-
-                            <div class="text-center cursor-pointer " ng-repeat="itemRam in master_ram | filter:{id: data_general[0].id_ram}">
-                                <img src="{{itemRam.document_file_path}}" style="width: 400px;  height:300px;" />
+                        <div class="row">
+                            <div class="col-6 d-flex justify-content-center gap-10">
                             </div>
+                            <div class="col-6 d-flex justify-content-end" 
+                              ng-class="{'ram-l-5': (data_general[0].id_ram == 5) ,'ram-l-4': (data_general[0].id_ram == 4)}">
+                                <div class="d-flex justify-content-end align-items-center flex-column" 
+                                    ng-repeat="item_ram in master_likelihood_level | filter:{id_ram:data_general[0].id_ram,columns_level:item_ram.columns_level}">
+                                    <label for="likelihood"><b>{{item_ram.likelihood_level}}</b></label>
+                                    <input type="radio" 
+                                            id="likelihood" 
+                                            name="likelihood" 
+                                            ng-click="selectDataRAM('l',item_ram.likelihood_level)"
+                                            style="cursor: pointer; width: 30px; height: 30px;">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-1 d-flex flex-column justify-content-end"  
+                            ng-class="{'ram-s-5': (data_general[0].id_ram == 5) ,'ram-s-4': (data_general[0].id_ram == 4)}">
+                            <div class="d-flex justify-content-end align-items-center gap-2" 
+                                ng-repeat="item_ram in master_security_level | filter:{id_ram:data_general[0].id_ram,category_type:item_ram.category_type}">
+                                <label for="security_level"><b>{{item_ram.security_level}}</b></label>
+                                <input type="radio" 
+                                        id="security_level" 
+                                        name="security_level"  
+                                        ng-click="selectDataRAM('s',item_ram.security_level)"
+                                       style="cursor: pointer; width: 30px; height: 30px;">
+                            </div>
+                        </div>
 
+                        <div class="col-11">
+                            <div class="cursor-pointer " ng-repeat="itemRam in master_ram | filter:{id: data_general[0].id_ram}">
+                                <img src="{{itemRam.document_file_path}}" style="width: 100%;  height:100%;" />
+                            </div>
                         </div>
                     </div>
-
                 </div>
 
                 <div class="modal-body d-none">
@@ -3192,13 +3334,10 @@
                     </button>
                 </div>
                 <div class="modal-body">
-
                     <div class="bg-white position-relative top-1">
-
                         <a href="{{exportfile[0].DownloadPath}}" id="exportfile" name="exportfile" target="_blank">
                             {{exportfile[0].Name}}
                         </a>
-
                     </div>
 
                 </div>
@@ -3372,7 +3511,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="d-flex justify-content-center align-items-center mb-5">
-                        <h4 class="modal-title mb-0 text-center" id="modalSendMailTeamLabel" style="font-size: 40px; font-weight: bold;">
+                        <h4 class="modal-title mb-0 text-center" id="modalSendMailTeamLabel" style="font-size: 30px; font-weight: bold;">
                             Confirm send email to member review?
                         </h4>
                     </div>

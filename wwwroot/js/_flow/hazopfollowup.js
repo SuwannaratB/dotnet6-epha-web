@@ -427,8 +427,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             responder_user_name = ''; //_arrcheck[0].responder_user_name;
         }
 
-
-
         $.ajax({
             url: controller_text + "/next_page",
             data: '{"pha_sub_software":"' + pha_sub_software + '","pha_seq":"' + pha_seq + '","pha_no":"' + pha_no + '","pha_type_doc":"' + pha_type_doc + '","responder_user_name":"' + responder_user_name + '"'
@@ -488,8 +486,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
     }
 
     $scope.confirmCancle = function () {
-        var page = conFig.controller_action_befor();
-        window.open(page, "_top")
+        //var page = conFig.controller_action_befor();
+        //window.open(page, "_top")
+        window.open('Home/Portal', "_top")
+
     }
     $scope.confirmCreate = function () {
 

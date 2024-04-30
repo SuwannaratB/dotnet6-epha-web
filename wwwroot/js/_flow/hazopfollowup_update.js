@@ -1,6 +1,34 @@
 
-AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) {
+AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$rootScope,$window) {
     $('#divLoading').hide();
+
+
+    var unsavedChanges = false;
+
+    // Track location changes
+    $rootScope.$on('$locationChangeStart', function(event, next, current) {
+        console.log('Location is changing from:', current, 'to:', next);
+
+        if (unsavedChanges) {
+            var confirmLeave = $window.confirm("You have unsaved changes. Are you sure you want to leave?");
+            if (!confirmLeave) {
+                event.preventDefault();
+            }
+        }
+    });
+
+    // close tab / browser window
+    $window.addEventListener('beforeunload', function(event) {
+        console.log("Trigger Ec=vent",event)
+        if (unsavedChanges) {
+            var confirmationMessage = 'You have unsaved changes. Are you sure you want to leave?';
+    
+            event.preventDefault();
+            event.returnValue = confirmationMessage;
+            return confirmationMessage;
+        }
+    });
+
 
     //  add file 
     $scope.clearFileName = function (inputId) {
@@ -30,15 +58,18 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         const fileInfoSpan = document.getElementById('filename' + fileSeq);
 
         if (fileInput.files.length > 0) {
+            console.log('if')
             const file = fileInput.files[0];
             const fileName = file.name;
             const fileSize = Math.round(file.size / 1024);
             fileInfoSpan.textContent = `${fileName} (${fileSize} KB)`;
-
+            $scope.fileInfoSpan = `${fileName} (${fileSize} KB)`;
+            
             var file_path = uploadFile(file, fileSeq, fileName, fileSize);
 
         } else {
             fileInfoSpan.textContent = "";
+            $scope.fileInfoSpan = '';
         }
     }
     function uploadFile(file_obj, seq, file_name, file_size) {
@@ -90,6 +121,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                                 arr[0].document_file_path = (url_ws.replace('/api/', '')) + file_path;// (url_ws.replace('/api/', '/')) + 'AttachedFileTemp/Hazop/' + file_name;
                                 arr[0].document_module = $scope.document_module;
                                 arr[0].action_change = 1;
+                                clear_valid_items('upload_file-'+ $scope.seqUpload);
+                                $scope.seqUpload = null;
                                 apply();
 
                             }
@@ -106,6 +139,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
         } catch (ex) { alert(ex); }
 
+        unsavedChanges = true;
     }
 
 
@@ -164,7 +198,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         $scope.action_part = 1;
         $scope.user_name = conFig.user_name();
 
-        $scope.pha_sub_software = conFig.pha_sub_software()
+        $scope.pha_sub_software = conFig.pha_sub_software().toLowerCase()
 
         $scope.data_all = [];
 
@@ -186,8 +220,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         $scope.select_history_tracking_record = false;
         $scope.selectedDataRamType = null;
 
+        $scope.select_rows_level = 5;
+        $scope.select_columns_level = 5;
+        $scope.selected_ram_img = (url_ws.replace('/api/', '/')) + 'AttachedFileTemp/rma-img-' + $scope.select_rows_level + 'x' + $scope.select_columns_level + '.png';
+
 
         $scope.employeelist = [];
+        $scope.implementItem = [];
+        $scope.fileInfoSpan = '';
 
         // ล้างช่องข้อมูลหลังจากเพิ่มข้อความ
         $scope.employee_id = '';
@@ -235,7 +275,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
         //open document 
         var controller_text =  'hazop';//item.pha_sub_software;
-        var pha_sub_software = conFig.pha_sub_software(); //'hazop';//item.pha_sub_software;
+        var pha_sub_software = conFig.pha_sub_software().toLowerCase()//'hazop';//item.pha_sub_software;
         var pha_status = $scope.flow_status;
 
         conFig.pha_seq = $scope.data_details[0].seq;
@@ -266,7 +306,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
         });
     }
-
 
     //add Drawing
     $scope.addDataWorksheetDrawing = function (item_draw, seq_nodeworksheet) {
@@ -316,16 +355,31 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         //var del = document.getElementById('del-' + seq);
         //del.style.display = "none";
 
-
-        var arr = $filter('filter')($scope.data_drawingworksheet, function (item) { return (item.seq == seq); });
-        if (arr.length > 0) {
-            arr[0].document_file_name = null;
-            arr[0].document_file_size = 0;
-            arr[0].document_file_path = null;
-            arr[0].action_type = 'delete';
-            arr[0].action_change = 1;
-            apply();
+        if ($scope.data_drawingworksheet.length > 1) {
+            var arr = $filter('filter')($scope.data_drawingworksheet, function (item) { 
+                return (item.seq != seq); 
+            });
+            $scope.data_drawingworksheet = arr;
         }
+
+        // var arr = $filter('filter')($scope.data_drawingworksheet, function (item) { return (item.seq == seq); });
+        // if (arr.length > 0) {
+        //     arr[0].document_file_name = null;
+        //     arr[0].document_file_size = 0;
+        //     arr[0].document_file_path = null;
+        //     arr[0].action_type = 'delete';
+        //     arr[0].action_change = 1;
+        //     apply();
+        // }
+
+        // var arr = $filter('filter')($scope.data_drawingworksheet, function (item) { 
+        //     return (item.seq == seq && !(item.action_type == 'delete')); 
+        // });
+
+        // if (arr.length == 0) {
+        //     $scope.addDataWorksheetDrawing(item_draw, seq_nodeworksheet);
+        // }
+
         clear_form_valid();
 
     }
@@ -364,7 +418,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         var pha_no = conFig.pha_no();
         var token_doc = conFig.pha_seq();
         var responder_user_name = conFig.responder_user_name();
-        var sub_software = conFig.pha_sub_software(); //'hazop';
+        var sub_software = conFig.pha_sub_software().toLowerCase(); //'hazop';
+        
+        if (responder_user_name == "undefined") {
+            responder_user_name = "";
+        }
 
         //alert($scope.flow_role_type);
         if ($scope.flow_role_type != 'admin') {
@@ -403,6 +461,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                 $scope.data_drawingworksheet = arr.drawingworksheet;
                 $scope.data_drawingworksheet_responder = arr.drawingworksheet_responder;
                 $scope.data_drawingworksheet_reviewer = arr.drawingworksheet_reviewer;
+                $scope.selected_ram_img = (url_ws.replace('/api/', '/')) + 'AttachedFileTemp/rma-img-' + $scope.select_rows_level + 'x' + $scope.select_columns_level + '.png';
+
+                console.log("show detail",$scope.data_details)
+                // add key implement
+                $scope.data_details.forEach(function (_item) {
+                    _item.implement = false;
+                });
 
                 if (true) {
                     $scope.MaxSeqdata_drawing_worksheet = 0;
@@ -413,6 +478,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
                 //เพิ่มแสดงข้อมูล RAM
                 if (true) {
+
+                    for (let i = 0; i < arr.ram.length; i++) {
+                        arr.ram[i].document_file_path = (url_ws.replace('/api/', '/')) + arr.ram[i].document_file_path;
+                        arr.ram[i].document_definition_file_path = (url_ws.replace('/api/', '/')) + arr.ram[i].document_definition_file_path;
+                    }
+
+                    
                     //ram,ram_level,ram_color,security_level,likelihood_level
                     $scope.master_ram = arr.ram;
                     $scope.master_ram_level = arr.ram_level;
@@ -424,7 +496,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                     $scope.master_no = [{ id: 4, name: 4 }, { id: 5, name: 5 }, { id: 6, name: 6 }, { id: 7, name: 7 }, { id: 8, name: 8 }, { id: 9, name: 9 }, { id: 10, name: 10 }];
                     $scope.ram_rows_level = 5;
                     $scope.ram_columns_level = 5;
-                }
+                    
+                }   
+
+                console.log("will show master ram",$scope.master_ram)
 
                 console.log($scope);
 
@@ -451,8 +526,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         window.open(page, "_top");
     }
     $scope.confirmFollowBack = function () {
-        var page = conFig.controller_action_befor();
-        window.open(page, "_top")
+        window.open('Hazop/Followup', "_top")
+        // var page = conFig.controller_action_befor();
+        // window.open(page, "_top")
     }
     $scope.confirmCancle = function () {
         var page = conFig.controller_action_befor();
@@ -463,20 +539,117 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
         if ($scope.flow_status == 13) {
             item.action_change = 1;
-            $scope.confirmSaveFollowup('save', item);
+
+            if (item.implement) {
+                // const validRemark = set_valid_items(item.responder_comment, 'remark-'+ item.seq);
+                const validUploadFile = set_valid_items($scope.fileInfoSpan, 'upload_file-'+ item.seq);
+
+                if (!validUploadFile) {
+                    console.log('im save')
+                    $scope.confirmSaveFollowup('save', item);
+                }
+            }else {
+                var docfiles = $filter('filter')($scope.data_drawingworksheet, function (_item) {
+                    return (_item.id_worksheet == item.seq && 
+                            _item.action_type != 'delete' 
+                    );
+                })[0];
+
+                const validRemark = set_valid_items(item.responder_comment, 'remark-'+ item.seq);
+                const validUploadFile = set_valid_items(docfiles.document_file_name, 'upload_file-'+ item.seq);
+                const validComment= set_valid_items(item.reviewer_comment, 'comment-'+ item.seq);
+                if (!validRemark && !validUploadFile && !validComment) {
+                    console.log('save')
+                    $scope.confirmSaveFollowup('save', item);
+                }
+            }
 
         } else if ($scope.flow_status == 14) {
-
             item.action_change = 1;
+
+            if (item.action_status == 'Close with condition') {
+                console.log(item.reviewer_comment)
+                const validComment = set_valid_items(item.reviewer_comment, 'comment-'+ item.seq);
+
+                if(validComment) return
+            }
             $scope.confirmSaveReviewFollowup('save', item);
         }
-
+        unsavedChanges = false;
     };
+
+    $scope.actionImplement = function (item) {
+        var docfiles = $filter('filter')($scope.data_drawingworksheet, function (_item) {
+            return (_item.id_worksheet == item.seq && 
+                    _item.action_type != 'delete' &&
+                    _item.document_file_name != null
+            );
+        });
+
+        if (docfiles.length > 0) {
+            $scope.fileInfoSpan = docfiles[0].document_file_name;
+        }else {
+            $scope.fileInfoSpan = '';
+        }
+
+        $scope.data_details.forEach(function (_item) {
+            if (item.seq == _item.seq) {
+                _item.implement = !_item.implement;
+
+                if (!_item.implement) {
+                    // set_valid_items(_item.responder_comment, 'remark-'+_item.seq);
+                    set_valid_items($scope.fileInfoSpan, 'upload_file-'+_item.seq);
+                }else {
+                    clear_valid_items('remark-'+_item.seq);
+                    clear_valid_items('upload_file-'+_item.seq);
+                }
+             
+            }
+        });
+        unsavedChanges = true;
+    }
+
+    $scope.actionInput = function (item) {
+        $scope.data_details.forEach(function (_item) {
+            if (item.seq == _item.seq && !item.implement) {
+                // const field = 'remark-'+_item.seq
+                set_valid_items(_item.responder_comment, 'remark-'+_item.seq);
+                // set_valid_items(_item.responder_comment, 'upload_file-'+_item.seq);
+            }
+        });
+
+        unsavedChanges = true;
+    }
+
+    $scope.setSeqUpload = function (seq) {
+        $scope.seqUpload = seq;
+    }
+
+    function set_valid_items(_item, field) {
+        try {
+            var id_valid = document.getElementById('valid-' + field);
+            if (_item == '' || _item == null) {
+                id_valid.className = "feedback text-danger";
+                id_valid.focus();
+                return true;
+            } else { 
+                id_valid.className = "invalid-feedback text-danger"; 
+                return false; 
+            }
+
+        } catch (ex) { }
+    }
+
+    function clear_valid_items(field) {
+        var id_valid = document.getElementById('valid-' + field);
+        id_valid.className = "invalid-feedback text-danger";
+    }
+
     $scope.showConfirmDialogSubmit = function (item, action) {
         clear_form_valid();
 
         if (action == 'submit') {
-
+            unsavedChanges = false;
             //เนื่องจากย้ายมาในระดับ row
             $scope.id_worksheet_select = item.seq;
             //if (item.document_file_size == 0 || item.document_file_size == null) {
@@ -484,7 +657,35 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             //    return;
             //}
             //var fileUploadOwner = document.getElementById('attfile-owner-' + inputId);
-            if ($scope.data_drawingworksheet == null) { $scope.form_valid.valid_document_file = true; return; }
+
+            // if ($scope.data_drawingworksheet == null) { 
+            //     $scope.form_valid.valid_document_file = true; 
+            //     return; 
+            // }
+
+            // check implement
+            if (item.implement) {
+                // const validRemark = set_valid_items(item.responder_comment, 'remark-'+ item.seq);
+                const validUploadFile = set_valid_items($scope.fileInfoSpan, 'upload_file-'+ item.seq);
+
+                if (validUploadFile) {
+                    console.log('im save')
+                    return;
+                }
+            }else {
+                var docfiles = $filter('filter')($scope.data_drawingworksheet, function (_item) {
+                    return (_item.id_worksheet == item.seq && 
+                            _item.action_type != 'delete' 
+                    );
+                })[0];
+
+                const validRemark = set_valid_items(item.responder_comment, 'remark-'+ item.seq);
+                const validUploadFile = set_valid_items(docfiles.document_file_name, 'upload_file-'+ item.seq);
+                if (validRemark || validUploadFile) {
+                    return
+                }
+            }
+
             if ($scope.data_drawingworksheet.length > 0) {
                 var arr_drawing = $filter('filter')($scope.data_drawingworksheet, function (item) {
                     return (item.id_worksheet == $scope.id_worksheet_select && item.document_file_name != null);
@@ -601,7 +802,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         var token_doc = _item.ID_PHA;
 
         //alert(url_ws + "Flow/set_follow_up");
-        var sub_software = conFig.pha_sub_software(); 
+        var sub_software = conFig.pha_sub_software().toLowerCase(); 
 
         $.ajax({
             url: url_ws + "Flow/set_follow_up",
@@ -708,7 +909,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         var user_name = $scope.user_name;
         var flow_action = action;
         var token_doc = conFig.pha_seq();
-        var sub_software = conFig.pha_sub_software(); 
+        var sub_software = conFig.pha_sub_software().toLowerCase() 
 
         $.ajax({
             url: url_ws + "Flow/set_follow_up_review",
@@ -806,6 +1007,68 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         $scope.cal_ram_action_risk = ($scope.cal_ram_action_risk == null ? 'N/A' : $scope.cal_ram_action_risk);
 
         var arr_items = $filter('filter')($scope.master_ram_level, function (item) { return (item.id_ram == id_ram); });
+        if (arr_items.length > 0) {
+
+            //$scope.select_rows_level = arr_items[0].rows_level;
+            //$scope.select_columns_level = arr_items[0].columns_level;
+        }
+        var category_type = Number(arr_items[0].category_type);
+        $scope.selectedDataRamType = category_type;
+
+        $scope.previewRam = (preview == true ? true : false);
+        if ($scope.data_details.length > 0) {
+
+            if (($scope.flow_status == 14 ? _item.reviewer_action_type : _item.responder_action_type) == 2) {
+                $scope.previewRam = true;
+            }
+
+        }
+
+
+
+        apply();
+
+        $('#modalRAM').modal({
+            backdrop: 'static',
+            keyboard: false 
+        }).modal('show');
+        
+    };
+
+    $scope.closeModalDataRAM_Worksheet = function() {
+        $scope.cal_ram_action_security = null;
+        $scope.cal_ram_action_likelihood = null;
+        $scope.cal_ram_action_risk = null; 
+    };
+
+    /*$scope.openModalDataRAM = function (ram_type, _item, ram_type_action, id_ram, preview) {
+        var seq = _item.seq;
+
+        $scope.selectdata_nodeworksheet = seq;
+        $scope.selectedDataNodeWorksheetRamType = ram_type;
+        $scope.selectedDataRamTypeAction = ram_type_action;
+
+        $scope.selectedDataID_Ram = id_ram;
+        if (ram_type_action == 'after') {
+            $scope.cal_ram_action_security = _item.ram_after_security;
+            $scope.cal_ram_action_likelihood = _item.ram_after_likelihood;
+            $scope.cal_ram_action_risk = _item.ram_after_risk;
+        } else {
+            $scope.cal_ram_action_security = _item.ram_action_security;
+            $scope.cal_ram_action_likelihood = _item.ram_action_likelihood;
+            $scope.cal_ram_action_risk = _item.ram_action_risk;
+        }
+        $scope.cal_ram_action_security = ($scope.cal_ram_action_security == null ? 'N/A' : $scope.cal_ram_action_security);
+        $scope.cal_ram_action_likelihood = ($scope.cal_ram_action_likelihood == null ? 'N/A' : $scope.cal_ram_action_likelihood); 
+        $scope.cal_ram_action_risk = ($scope.cal_ram_action_risk == null ? 'N/A' : $scope.cal_ram_action_risk);
+
+        var arr_items = $filter('filter')($scope.master_ram_level, function (item) { return (item.id_ram == id_ram); });
+        if (arr_items.length > 0) {
+
+            //$scope.select_rows_level = arr_items[0].rows_level;
+            //$scope.select_columns_level = arr_items[0].columns_level;
+            $scope.selected_ram_img = (url_ws.replace('/api/', '/')) + arr_items[0].document_file_path;
+        }
         var category_type = Number(arr_items[0].category_type);
         $scope.selectedDataRamType = category_type;
 
@@ -822,7 +1085,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         apply();
 
         $('#modalRAM').modal('show');
-    }
+    }*/
     $scope.selectDataRAM = function (ram_type, id_select) {
 
         var xseq = $scope.selectdata_nodeworksheet;
@@ -833,53 +1096,96 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
                 if ($scope.data_details[i].seq !== xseq) { continue; }
 
-                if (xbefor === "action" && ram_type === "s") { $scope.data_details[i].ram_action_security = id_select; }
-                if (xbefor === "action" && ram_type === "l") { $scope.data_details[i].ram_action_likelihood = id_select; }
+                if (xbefor == "befor" && ram_type == "s") { $scope.data_details[i].ram_befor_security = id_select; }
+                if (xbefor == "befor" && ram_type == "l") { $scope.data_details[i].ram_befor_likelihood = id_select; }
 
-                var ram_security = $scope.data_details[i].ram_action_security + "";
-                var ram_likelihood = $scope.data_details[i].ram_action_likelihood + "";
+                if (xbefor == "after" && ram_type == "s") { $scope.data_details[i].ram_after_security = id_select; }
+                if (xbefor == "after" && ram_type == "l") { $scope.data_details[i].ram_after_likelihood = id_select; }
+
+                if (xbefor == "action" && ram_type == "s") { $scope.data_details[i].ram_action_security = id_select; }
+                if (xbefor == "action" && ram_type == "l") { $scope.data_details[i].ram_action_likelihood = id_select; }
+
+                var ram_security = $scope.data_details[i].ram_befor_security + "";
+                var ram_likelihood = $scope.data_details[i].ram_befor_likelihood + "";
                 var ram_risk = "";
-
+                if (xbefor == "after") {
+                    ram_security = $scope.data_details[i].ram_after_security + "";
+                    ram_likelihood = $scope.data_details[i].ram_after_likelihood + "";
+                }
+                if (xbefor == "action") {
+                    ram_security = $scope.data_details[i].ram_action_security + "";
+                    ram_likelihood = $scope.data_details[i].ram_action_likelihood + "";
+                }
                 if (ram_security == "" || ram_likelihood == "") {
-                    $scope.data_details[i].ram_action_risk = "";
-                    $scope.cal_ram_action_risk = '';
-
-                    $('#modalRAM').modal('show');
+                    if (xbefor == "befor") { $scope.data_details[i].ram_befor_risk = ""; }
+                    else if (xbefor == "after") { $scope.data_details[i].ram_after_risk = ""; }
+                    else if (xbefor == "action") { $scope.data_details[i].ram_action_risk = ""; }
                     break;
                 }
 
-                var id_ram = $scope.selectedDataID_Ram;
+
+                var safety_critical_equipment = 'N';
+                var id_ram = ($scope.data_general[0].id_ram === undefined || $scope.data_general[0].id_ram === null) ? '5' : $scope.data_general[0].id_ram;
+                console.log(id_ram,"show",$scope.master_ram_level,"ram_likelihood",ram_likelihood,"ram_security",ram_security)
+
                 var arr_items = $filter('filter')($scope.master_ram_level, function (item) {
                     return (item.id_ram == id_ram && item.security_level == ram_security);
                 });
+
+                console.log(arr_items,"ram_likelihood",ram_likelihood,"ram_security",ram_security)
                 if (arr_items.length > 0) {
                     //check ram_likelihood ว่าตก columns ไหน เพื่อหา ram1_priority
-                    if (ram_likelihood == arr_items[0].likelihood1_level) { ram_risk = arr_items[0].ram1_priority; }
-                    else if (ram_likelihood == arr_items[0].likelihood2_level) { ram_risk = arr_items[0].ram2_priority; }
-                    else if (ram_likelihood == arr_items[0].likelihood3_level) { ram_risk = arr_items[0].ram3_priority; }
-                    else if (ram_likelihood == arr_items[0].likelihood4_level) { ram_risk = arr_items[0].ram4_priority; }
-                    else if (ram_likelihood == arr_items[0].likelihood5_level) { ram_risk = arr_items[0].ram5_priority; }
-                    else if (ram_likelihood == arr_items[0].likelihood6_level) { ram_risk = arr_items[0].ram6_priority; }
-                    else if (ram_likelihood == arr_items[0].likelihood7_level) { ram_risk = arr_items[0].ram7_priority; }
+                    if (ram_likelihood == arr_items[0].likelihood1_level) { ram_risk = arr_items[0].ram1_priority; safety_critical_equipment = arr_items[0].likelihood1_criterion; }
+                    else if (ram_likelihood == arr_items[0].likelihood2_level) { ram_risk = arr_items[0].ram2_priority; safety_critical_equipment = arr_items[0].likelihood2_criterion; }
+                    else if (ram_likelihood == arr_items[0].likelihood3_level) { ram_risk = arr_items[0].ram3_priority; safety_critical_equipment = arr_items[0].likelihood3_criterion; }
+                    else if (ram_likelihood == arr_items[0].likelihood4_level) { ram_risk = arr_items[0].ram4_priority; safety_critical_equipment = arr_items[0].likelihood4_criterion; }
+                    else if (ram_likelihood == arr_items[0].likelihood5_level) { ram_risk = arr_items[0].ram5_priority; safety_critical_equipment = arr_items[0].likelihood5_criterion; }
+                    else if (ram_likelihood == arr_items[0].likelihood6_level) { ram_risk = arr_items[0].ram6_priority; safety_critical_equipment = arr_items[0].likelihood6_criterion; }
+                    else if (ram_likelihood == arr_items[0].likelihood7_level) { ram_risk = arr_items[0].ram7_priority; safety_critical_equipment = arr_items[0].likelihood7_criterion; }
+                    else if (ram_likelihood == arr_items[0].likelihood8_level) { ram_risk = arr_items[0].ram8_priority; safety_critical_equipment = arr_items[0].likelihood8_criterion; }
+                    else if (ram_likelihood == arr_items[0].likelihood9_level) { ram_risk = arr_items[0].ram9_priority; safety_critical_equipment = arr_items[0].likelihood9_criterion; }
+                    else if (ram_likelihood == arr_items[0].likelihood10_level) { ram_risk = arr_items[0].ram10_priority; safety_critical_equipment = arr_items[0].likelihood10_criterion; }
                 }
 
-                $scope.data_details[i].ram_action_risk = ram_risk
+                if (xbefor == "befor" && (ram_type == "s" || ram_type == "l")) {
+                    $scope.data_details[i].safety_critical_equipment = safety_critical_equipment;
+                }
 
-                $scope.cal_ram_action_security = ram_security;
-                $scope.cal_ram_action_likelihood = ram_likelihood;
-                $scope.cal_ram_action_risk = ram_risk;
+                if (xbefor == "befor") { $scope.data_details[i].ram_befor_risk = ram_risk; }
+                else if (xbefor == "after") { $scope.data_details[i].ram_after_risk = ram_risk; }
+                else if (xbefor == "action") { $scope.data_details[i].ram_action_risk = ram_risk; }
 
                 if ($scope.data_details[i].action_type == 'update') {
                     $scope.data_details[i].action_change = 1;
                 }
-                $scope.action_type_changed($scope.data_details[i], $scope.data_details[i].seq);
+
+                var ram_type_action = $scope.selectedDataRamTypeAction;
+                if (ram_type_action == 'after') {
+                    $scope.cal_ram_action_security = $scope.data_details[i].ram_after_security;
+                    $scope.cal_ram_action_likelihood = $scope.data_details[i].ram_after_likelihood;
+                    $scope.cal_ram_action_risk = $scope.data_details[i].ram_after_risk;
+                } else if (ram_type_action == 'befor') {
+                    $scope.cal_ram_action_security = $scope.data_details[i].ram_befor_security;
+                    $scope.cal_ram_action_likelihood = $scope.data_details[i].ram_befor_likelihood;
+                    $scope.cal_ram_action_risk = $scope.data_details[i].ram_befor_risk;
+                } else if (ram_type_action == 'action') {
+                    $scope.cal_ram_action_security = $scope.data_details[i].ram_action_security;
+                    $scope.cal_ram_action_likelihood = $scope.data_details[i].ram_action_likelihood;
+                    $scope.cal_ram_action_risk = $scope.data_details[i].ram_action_risk;
+                }
+                action_type_changed($scope.data_details[i], $scope.data_details[i].seq);
+
                 break;
 
             } catch (e) { }
         }
 
+        unsavedChanges = true;
+        apply();
+
         $('#modalRAM').modal('show');
     }
+
     function action_type_changed(_arr, _seq) {
         if (_seq == undefined) { _seq = 1; }
         if (_arr.seq == _seq && _arr.action_type == '') {
@@ -920,5 +1226,52 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         $scope.id_worksheet_select = item.seq;
 
         $('#modalExportReviewerFile').modal('show');
+    }
+
+    $scope.openModalTempletes = function (data_type) {
+        var user_name = $scope.data_details[0].responder_user_name;
+        var seq = $scope.data_details[0].id_pha;
+        var sub_software = $scope.data_details[0].pha_sub_software;
+
+        $.ajax({
+            url: url_ws + "Flow/export_recommendation_by_action_owner",
+            data: '{"sub_software":"' + sub_software + 
+                    '","user_name":"' + user_name + 
+                    '","seq":"' + seq + 
+                    '","export_type":"' + data_type + 
+                    '"}',
+            type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+            beforeSend: function () {
+                $('#modalExportFile').modal('hide');
+                $('#divLoading').show();
+            },
+            complete: function () {
+                $('#divLoading').hide();
+            },
+            success: function (data) {
+                var arr = data;
+
+                if (arr.length > 0) {
+                    if (arr[0].ATTACHED_FILE_NAME != '') {
+                        var path = (url_ws).replace('/api/', '') + arr[0].ATTACHED_FILE_PATH;
+                        var name = arr[0].ATTACHED_FILE_NAME;
+                        $scope.exportfile[0].DownloadPath = path;
+                        $scope.exportfile[0].Name = name;
+                        $('#modalTemplates').modal('show');
+                        apply();
+                    }
+                } else {
+                    set_alert('Error', arr[0].IMPORT_DATA_MSG);
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                if (jqXHR.status == 500) {
+                    alert('Internal error: ' + jqXHR.responseText);
+                } else {
+                    alert('Unexpected ' + textStatus);
+                }
+            }
+
+        });
     }
 });

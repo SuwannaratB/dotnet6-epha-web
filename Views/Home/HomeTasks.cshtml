@@ -180,13 +180,37 @@
                                     </div>
                                 </div>
 
-                                <div class="row g-3 justify-content-between align-items-center pt-2">
+                                <div class="row g-3 align-items-center pt-2">
                                     <div class="col-auto d-none">
                                         <!-- ใช้ ms-auto เพื่อชิดขวา -->
                                         <h6 class="fw-semi-bold text-primary ng-binding"><b>Total : {{data_resultes.length}} Tasks.</b></h6>
                                     </div>
-                                    <div class="col-auto">
-
+                                    <div class="col-md-2 align-items-center">
+                                        <div class="row g-0 align-items-center">
+                                            <div class="col-12">
+                                                <label class="form-label ps-0">
+                                                    Sub-Software
+                                                </label>
+                                                <label class="form-label ps-0" ng-if="select_history_tracking_record">
+                                                    <a class="form-label far fa-comment-alt text-warning cursor-pointer " 
+                                                        data-bs-toggle="tooltip"
+                                                        data-bs-html="true">
+                                                    </a>
+                                                </label>
+                                                <div class="d-flex me-3">
+                                                    <select class="form-control"
+                                                            ng-model="select_pha_type" 
+                                                            ng-change="subSoftwateChange()">
+                                                        <option values="hazop" ng-selected="select_pha_type == 'hazop'">HAZOP</option>
+                                                        <option values="jsea" ng-selected="select_pha_type == 'jsea'">JSEA</option>
+                                                        <option values="whatif" ng-selected="select_pha_type == 'whatif'">WHATIF</option>
+                                                        <option values="hra" ng-selected="select_pha_type == 'hra'">HRA</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-auto pt-3">
                                         <div class="search-box position-relative">
                                             <input class="form-control search-input search"
                                                    ng-model="searchText" placeholder="Search Document Number" />
@@ -202,7 +226,6 @@
                                         <table class="table fs--2 mb-0 " cellpadding="0" cellspacing="0" ng-if="!(item.action_required=='Approver')">
                                             <thead class=" text-uppercase  text-center  bg-soft " style="font-size: 10px;" id="myHeader">
                                                 <tr>
-                                                    @* <td style='padding: 15px;' ng-if="item.pha_status== 21">Approver <br />Review</td> *@
                                                     <td style='padding: 15px;'>
                                                         <h6 class="fw-semi-bold text-primary"><b class="fw-semi-bold text-primary">Total : {{data_resultes.length}} Tasks.</b></h6>
 
@@ -230,19 +253,22 @@
 
                                             <tbody class="customer-rating-table-body">
                                                 <tr class="hover-actions-trigger btn-reveal-trigger position-static rowwork"
-                                                    ng-repeat="item in data_resultes | MultiFieldFilter: searchText | orderBy: due_date_sort_by">
-
+                                                    ng-repeat="item in data_resultes 
+                                                    | MultiFieldFilter: searchText 
+                                                    | orderBy: due_date_sort_by">
 
                                                     <td class="align-top text-center">
                                                         <div class="p-1 ">
                                                             <h6 class="fw-semi-bold">{{item.task}}</h6>
                                                         </div>
                                                     </td>
+
                                                     <td class="align-top text-center">
                                                         <div class="p-1 ">
                                                             <h6 class="fw-semi-bold"> {{item.pha_type =='WHATIF'? "What's If" :item.pha_type  }}</h6>
                                                         </div>
                                                     </td>
+
                                                     <td class="align-top text-center">
                                                         <div class="p-1 ">
                                                             <h6 class="fw-semi-bold cursor-pointer text-primary" title="Action Owner followup items."
@@ -280,36 +306,43 @@
 
                                                         </div>
                                                     </td>
+
                                                     <td class="align-top text-center">
                                                         <div class="p-1 ">
                                                             <h6 class="fw-semi-bold">{{item.document_number}}</h6>
                                                         </div>
                                                     </td>
+
                                                     <td class="align-top text-center">
                                                         <div class="p-1 ">
                                                             <h6 class="fw-semi-bold">{{item.document_title}}</h6>
                                                         </div>
                                                     </td>
+
                                                     <td class="align-top text-center">
                                                         <div class="p-1 ">
                                                             <h6 class="fw-semi-bold">{{item.rev}}</h6>
                                                         </div>
                                                     </td>
+
                                                     <td class="align-top text-center">
                                                         <div class="p-1 ">
                                                             <h6 class="fw-semi-bold">{{item.originator}}</h6>
                                                         </div>
                                                     </td>
+
                                                     <td class="align-top text-center">
                                                         <div class="p-1 ">
                                                             <h6 class="fw-semi-bold">{{item.receivesd}}</h6>
                                                         </div>
                                                     </td>
+                                                    
                                                     <td class="due_date align-top text-center">
                                                         <div class="p-1 ">
                                                             <h6 class="fw-semi-bold">{{item.due_date}}</h6>
                                                         </div>
                                                     </td>
+
                                                     <td class="align-top text-center">
                                                         <div class="p-1 " style="background-color: green;color:red" ng-if="item.remaining >3">
                                                             <h6 class="fw-semi-bold">{{item.remaining}}</h6>
@@ -321,11 +354,13 @@
                                                             <h6 class="fw-semi-bold">{{item.remaining}}</h6>
                                                         </div>
                                                     </td>
+
                                                     <td class="align-top text-center">
                                                         <div class="p-1 ">
                                                             <h6 class="fw-semi-bold">{{item.consolidator}}</h6>
                                                         </div>
                                                     </td>
+
                                                     <td class="align-top text-end">
                                                         <div class="p-0 m-0 text-center">
 
@@ -358,18 +393,12 @@
 
                                                     </td>
                                                 </tr>
-
-
-
                                             </tbody>
-
                                         </table>
-
 
                                         <table class="table fs--2 mb-0 " cellpadding="0" cellspacing="0" ng-if="(item.action_required=='Approver')">
                                             <thead class=" text-uppercase  text-center  bg-soft " style="font-size: 10px;" id="myHeader">
                                                 <tr>
-                                                    @* <td style='padding: 15px;' ng-if="item.pha_status== 21">Approver <br />Review</td> *@
                                                     <td style='padding: 15px;'>
                                                         <h6 class="fw-semi-bold text-primary"><b class="fw-semi-bold text-primary">Total : {{data_resultes.length}} Tasks.</b></h6>
 
@@ -481,9 +510,6 @@
 
                                                     </td>
                                                 </tr>
-
-
-
                                             </tbody>
 
                                         </table>

@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "8eYSAM5QDXuupSpLcEcbKmf3vlQBvn5h7fioIVuflbw=",
+  "Hash": "WZ3gktKtFr4795UCtnFE2TXUAgQ7B6XfEEpAjoquS+8=",
   "Source": "dotnet6-epha-web",
   "BasePath": "_content/dotnet6-epha-web",
   "Mode": "Default",
@@ -4062,6 +4062,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\assets\\img\\e-commerce\\whooping_banner_shape_2.png"
+    },
+    {
+      "Identity": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\wwwroot\\assets\\img\\exposure_rating.png",
+      "SourceId": "dotnet6-epha-web",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\wwwroot\\",
+      "BasePath": "_content/dotnet6-epha-web",
+      "RelativePath": "assets/img/exposure_rating.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\assets\\img\\exposure_rating.png"
     },
     {
       "Identity": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\wwwroot\\assets\\img\\favicons\\android-chrome-192x192.png",
@@ -11700,6 +11719,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\assets\\img\\products\\thumb-4.png"
+    },
+    {
+      "Identity": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\wwwroot\\assets\\img\\risk_rating.png",
+      "SourceId": "dotnet6-epha-web",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\wwwroot\\",
+      "BasePath": "_content/dotnet6-epha-web",
+      "RelativePath": "assets/img/risk_rating.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\assets\\img\\risk_rating.png"
     },
     {
       "Identity": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\wwwroot\\assets\\img\\sections\\1.webp",
@@ -28137,6 +28175,25 @@
       "OriginalItemSpec": "wwwroot\\css\\button.css"
     },
     {
+      "Identity": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\wwwroot\\css\\myStyles.css",
+      "SourceId": "dotnet6-epha-web",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\wwwroot\\",
+      "BasePath": "_content/dotnet6-epha-web",
+      "RelativePath": "css/myStyles.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\css\\myStyles.css"
+    },
+    {
       "Identity": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\wwwroot\\css\\scollbar.css",
       "SourceId": "dotnet6-epha-web",
       "SourceType": "Discovered",
@@ -28610,6 +28667,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\js\\_flow\\whatif-fern.zip"
+    },
+    {
+      "Identity": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\wwwroot\\js\\_flow\\whatiffollowup.js",
+      "SourceId": "dotnet6-epha-web",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\wwwroot\\",
+      "BasePath": "_content/dotnet6-epha-web",
+      "RelativePath": "js/_flow/whatiffollowup.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\js\\_flow\\whatiffollowup.js"
     },
     {
       "Identity": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\wwwroot\\js\\angular.min.js",

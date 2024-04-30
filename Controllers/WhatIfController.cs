@@ -81,11 +81,19 @@ namespace dotnet6_epha_web.Controllers
                         string vectorBase64 = "";
                         string[] xSplit = QueryText.Split('&');
 
-                        if (xSplit.Length > 0)
+                        try
                         {
-                            cipherText = xSplit[0];
-                            keyBase64 = xSplit[1];
-                            vectorBase64 = xSplit[2];
+                            if (xSplit.Length > 0)
+                            {
+                                cipherText = xSplit[0];
+                                keyBase64 = xSplit[1];
+                                vectorBase64 = xSplit[2];
+                            }
+                        }
+                        catch (System.Exception)
+                        {
+                            
+                            return;
                         }
 
                         string token = DecryptDataWithAes(cipherText, keyBase64, vectorBase64);
@@ -340,6 +348,18 @@ namespace dotnet6_epha_web.Controllers
             _sessionAuthen.pha_no = model.pha_no;
             _sessionAuthen.pha_status = model.pha_status;
             _sessionAuthen.pha_type_doc = model.pha_type_doc;
+
+
+            ViewData["user_display"] = _sessionAuthen.user_display;
+            ViewData["user_name"] = _sessionAuthen.user_name;
+            ViewData["role_type"] = _sessionAuthen.role_type;
+
+            ViewData["pha_seq"] = _sessionAuthen.pha_seq;
+            ViewData["pha_no"] = _sessionAuthen.pha_no;
+            ViewData["pha_status"] = _sessionAuthen.pha_status;
+            ViewData["pha_type_doc"] = _sessionAuthen.pha_type_doc;
+            ViewData["controller_action_befor"] = _sessionAuthen.controller_action_befor;
+            ViewData["service_api_url"] = _sessionAuthen.service_api_url;
 
             LoginViewModel res_page = new LoginViewModel();
             res_page.msg = "";

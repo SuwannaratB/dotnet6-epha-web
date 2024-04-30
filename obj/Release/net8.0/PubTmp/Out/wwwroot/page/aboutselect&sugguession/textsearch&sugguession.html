@@ -1,0 +1,82 @@
+
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+    <link href="css/theme.min.css" type="text/css" rel="stylesheet" id="style-default">
+
+
+  </head>
+  <body ng-controller="myController">
+
+
+    <div class="container m-3" style="font-size: 10px;">
+
+      <div class="row">
+        
+        <div class="col-4">          
+            
+            <div class="position-relative">
+
+             
+                <label class="form-label ps-0" for="unit">Project Name 1</label>
+
+                <input class="form-control rounded-1" type="text" placeholder="Project Name"  value="" name="project_name" ng-model="searchText" ng-keyup="filterResults('projectname')" >
+
+                <ul class="list-group mt-2  z-3 position-absolute w-100"ng-show="showResults" >
+                    <li class="list-group-item " ng-repeat="result in filteredResults | limitTo: resultLimit" ng-click="selectResult(result,'projectname')">
+                        {{ result.name  }}
+                    </li>
+                    <li class="list-group-item" ng-show="showResults && resultLimit < filteredResults.length" ng-click="showAllResults('projectname')">ดูทั้งหมด</li>
+                </ul>
+                
+              </div>
+
+
+        </div>
+
+        <div class="col-4">          
+            
+            <div class="position-relative">
+
+             
+                <label class="form-label ps-0" for="unit">search 1</label>
+
+                <input class="form-control rounded-1" type="text" placeholder="Project Name"  value="" name="project_name" ng-keyup="filterResults('projectname1')" ng-model="searchName">
+
+                <ul class="list-group mt-2  z-3 position-absolute w-100"ng-show="showResults1" >
+                    <li class="list-group-item " ng-repeat="result in filteredResults1 | limitTo: resultLimit" ng-click="selectResult(result,'projectname1')">
+                        {{ result.name  }}
+                    </li>
+                    <li class="list-group-item" ng-show="showResults1 && resultLimit < filteredResults1.length" ng-click="showAllResults('projectname1')">ดูทั้งหมด</li>
+                </ul>
+                
+              </div>
+
+
+        </div>
+  
+
+      </div>
+
+    </div>
+
+
+    <script src="js/angular.min.js"></script>
+    <script src="js/suggestion.js"></script>
+
+
+
+
+  </body>
+</html>
+
+
+
+
+
+

@@ -1,0 +1,16 @@
+C:\Develop Drive\dotnet6-epha-web\dotnet6-epha-web\obj\Release\net8.0\PubTmp\Out\dotnet6-epha-web.exe
+C:\Develop Drive\dotnet6-epha-web\dotnet6-epha-web\obj\Release\net8.0\PubTmp\Out\appsettings.Development.json
+C:\Develop Drive\dotnet6-epha-web\dotnet6-epha-web\obj\Release\net8.0\PubTmp\Out\appsettings.json
+C:\Develop Drive\dotnet6-epha-web\dotnet6-epha-web\obj\Release\net8.0\PubTmp\Out\dotnet6-epha-web.dll
+C:\Develop Drive\dotnet6-epha-web\dotnet6-epha-web\obj\Release\net8.0\PubTmp\Out\dotnet6-epha-web.deps.json
+C:\Develop Drive\dotnet6-epha-web\dotnet6-epha-web\obj\Release\net8.0\PubTmp\Out\dotnet6-epha-web.runtimeconfig.json
+C:\Develop Drive\dotnet6-epha-web\dotnet6-epha-web\obj\Release\net8.0\PubTmp\Out\dotnet6-epha-web.pdb
+C:\Develop Drive\dotnet6-epha-web\dotnet6-epha-web\obj\Release\net8.0\PubTmp\Out\EPPlus.dll
+C:\Develop Drive\dotnet6-epha-web\dotnet6-epha-web\obj\Release\net8.0\PubTmp\Out\EPPlus.Interfaces.dll
+C:\Develop Drive\dotnet6-epha-web\dotnet6-epha-web\obj\Release\net8.0\PubTmp\Out\EPPlus.System.Drawing.dll
+C:\Develop Drive\dotnet6-epha-web\dotnet6-epha-web\obj\Release\net8.0\PubTmp\Out\Microsoft.IO.RecyclableMemoryStream.dll
+C:\Develop Drive\dotnet6-epha-web\dotnet6-epha-web\obj\Release\net8.0\PubTmp\Out\Microsoft.Win32.SystemEvents.dll
+C:\Develop Drive\dotnet6-epha-web\dotnet6-epha-web\obj\Release\net8.0\PubTmp\Out\Newtonsoft.Json.dll
+C:\Develop Drive\dotnet6-epha-web\dotnet6-epha-web\obj\Release\net8.0\PubTmp\Out\System.Drawing.Common.dll
+C:\Develop Drive\dotnet6-epha-web\dotnet6-epha-web\obj\Release\net8.0\PubTmp\Out\runtimes\win\lib\net7.0\Microsoft.Win32.SystemEvents.dll
+C:\Develop Drive\dotnet6-epha-web\dotnet6-epha-web\obj\Release\net8.0\PubTmp\Out\runtimes\win\lib\net7.0\System.Drawing.Common.dll

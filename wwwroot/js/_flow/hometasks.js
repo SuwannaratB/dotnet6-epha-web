@@ -18,6 +18,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
     $('#divLoading').hide();
 
 
+    $scope.subSoftwateChange = function () {
+        $scope.data_resultes = $filter('filter')($scope.data , function(item) { 
+            return ( item.pha_type == $scope.select_pha_type )
+        });
+    }
+
     //  scroll  table header freezer 
     $scope.handleScroll = function () {
         const tableContainer = angular.element(document.querySelector('#table-container'));
@@ -97,7 +103,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             },
             success: function (data) {
                 var arr = data;
-                console.log(arr);
 
                 $scope.data_all = arr;
                 arr.resultes = $filter('orderBy')(arr.resultes, 'due_date');
@@ -106,10 +111,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                     arr.resultes[i].task = (iNoNew);
                     iNoNew++;
                 };
-                $scope.data_resultes = arr.resultes;
+                // $scope.data_resultes = arr.resultes;
+                $scope.data = arr.resultes;
+
+                // Assuming pha_type_filter is the variable storing the pha_type you want to filter
+                $scope.select_pha_type = 'HAZOP';
+                $scope.subSoftwateChange();
 
                 apply();
-                console.log($scope);
 
             },
             error: function (jqXHR, textStatus, errorThrown) {
@@ -236,7 +245,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
     }
     function next_page(sub_software, pha_status, responder_user_name) {
 
-        controller_text = controller_text.toLowerCase();
+        //controller_text = controller_text.toLowerCase();
         var pha_seq = $scope.pha_seq;
         var pha_type_doc = $scope.pha_type_doc;
 

@@ -1,0 +1,73 @@
+
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+  <link href="css/theme.min.css" type="text/css" rel="stylesheet" id="style-default">
+  <script src="js/all.min.js"></script>
+
+  <script src="js/angular.min.js"></script>
+
+  
+
+  </head>
+  <body ng-controller="myController">
+
+
+    <div class="container">
+
+      <table class="mx-3 table fs--1 mb-0 table-borderles w-25" >
+        <thead class="text-uppercase border-bottom">
+          <tr>
+            <th class="align-middle" scope="col" style="font-size: 10px;;" >Document File</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="align-middle">
+  
+  
+              <div class="d-flex align-items-center  ">
+                  <!-- เอาไปใช้ได้เลย  -->
+                  <!-- {{'file-upload-'+$index}} -->
+                  <label for="file-upload-1" class="text-primary fw-bold" ><i class="fa-solid fa-arrow-up-from-bracket fa-xl me-3"></i>Upload</label> 
+        
+                                                                      <!-- $index -->
+                  <input type="file" id="file-upload-1" ng-click="showFileName(1)" hidden />
+                  
+                  <br>
+                            <!-- แสดง ไฟล์ ตรงนี้   -->
+                        <!-- {{'fileNameDisplay-'+$index}} -->
+                  <span id="fileNameDisplay-1"></span>
+                        
+                    <!-- {{'del'+$index}} -->                                                                                       <!-- $index -->
+                  <button  id="del1" class="btn btn-sm transition-none btn-reveal fs--2 p-1" style="display: none;"  ng-click="clearFileName(1)">
+                      <a class="text-decoration-none text-danger" href="#!">
+                      <span class="fas fa-times"></span>
+                      </a>
+                  </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+
+
+
+
+    <script src="js/upload.js"></script>
+    
+
+  </body>
+</html>
+
+
+
+
+
+

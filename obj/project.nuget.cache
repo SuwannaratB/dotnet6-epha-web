@@ -1,6 +1,10 @@
 {
   "version": 2,
+<<<<<<< HEAD
   "dgSpecHash": "I3iR7CX3Nv7pSQA7bLZfQeiBruWd9ydCvCg/hIZiRaicLZD6BastfiVB9Hjr/z/9ABygZAohUm5g4PJY9VcGXQ==",
+=======
+  "dgSpecHash": "yXFmxh4sd5f2otV15ozvxJ51OKIj3OIDFDzc+lG2PcEWPoB9+nmZL/jKjiEJBOCmm99Ot6u7mqJNTkpR+xVYcg==",
+>>>>>>> 949fa4f87f6735eba527d4c481d4393982c18028
   "success": true,
   "projectFilePath": "C:\\Develop Drive\\dotnet6-epha-web - Copy\\dotnet6-epha-web\\dotnet6-epha-web.csproj",
   "expectedPackageFiles": [

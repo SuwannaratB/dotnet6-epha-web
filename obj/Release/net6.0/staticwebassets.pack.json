@@ -849,6 +849,10 @@
       "PackagePath": "staticwebassets\\assets\\img\\e-commerce\\whooping_banner_shape_2.png"
     },
     {
+      "Id": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\wwwroot\\assets\\img\\exposure_rating.png",
+      "PackagePath": "staticwebassets\\assets\\img\\exposure_rating.png"
+    },
+    {
       "Id": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\wwwroot\\assets\\img\\favicons\\android-chrome-192x192.png",
       "PackagePath": "staticwebassets\\assets\\img\\favicons\\android-chrome-192x192.png"
     },
@@ -2455,6 +2459,10 @@
     {
       "Id": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\wwwroot\\assets\\img\\products\\thumb-4.png",
       "PackagePath": "staticwebassets\\assets\\img\\products\\thumb-4.png"
+    },
+    {
+      "Id": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\wwwroot\\assets\\img\\risk_rating.png",
+      "PackagePath": "staticwebassets\\assets\\img\\risk_rating.png"
     },
     {
       "Id": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\wwwroot\\assets\\img\\sections\\1.webp",
@@ -5917,6 +5925,10 @@
       "PackagePath": "staticwebassets\\css\\button.css"
     },
     {
+      "Id": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\wwwroot\\css\\myStyles.css",
+      "PackagePath": "staticwebassets\\css\\myStyles.css"
+    },
+    {
       "Id": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\wwwroot\\css\\scollbar.css",
       "PackagePath": "staticwebassets\\css\\scollbar.css"
     },
@@ -6015,6 +6027,10 @@
     {
       "Id": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\wwwroot\\js\\_flow\\whatif.js",
       "PackagePath": "staticwebassets\\js\\_flow\\whatif.js"
+    },
+    {
+      "Id": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\wwwroot\\js\\_flow\\whatiffollowup.js",
+      "PackagePath": "staticwebassets\\js\\_flow\\whatiffollowup.js"
     },
     {
       "Id": "C:\\Develop Drive\\dotnet6-epha-web\\dotnet6-epha-web\\wwwroot\\js\\angular.min.js",

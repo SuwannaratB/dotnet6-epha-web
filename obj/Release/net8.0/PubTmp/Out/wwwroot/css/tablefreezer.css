@@ -1,0 +1,25 @@
+#table-container {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+thead {
+position: sticky;
+top: 0;
+z-index: 1;
+} 
+  .rowwork .showcase{
+    display: none;
+  }
+
+  .rowwork:hover .showcase{
+    display: block;
+  }
+
+  .uprightTbl * {
+  /* border: none; */
+  border-collapse: collapse;
+  padding: 0 !important;
+  margin: 0 !important;
+  }
+

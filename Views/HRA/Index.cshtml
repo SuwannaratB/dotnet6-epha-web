@@ -27,6 +27,8 @@
 
     <link rel="stylesheet" href="~/css/scollbar.css">
 
+    <link rel="stylesheet" href="~/css/myStyles.css">
+
     <script src="~/assets/js/all.min.js"></script>
 
 }
@@ -146,10 +148,71 @@
                     <!-- general information start -->
                     <div class="" ng-class="{'tab-pane fade show active':(action_part==1),'tab-pane fade':(action_part!==1)}"
                          id="tab-general" role="tabpanel" aria-labelledby="general-tab">
-
                         @* General Start*@
                         <div class="m-3 row  gx-0 align-items-center ">
                             <div class="card border-0">
+                                <div class="mx-1 row g-3 align-items-center" ng-repeat="item in data_general ">
+                                    <!-- company -->
+                                    <div class="col-md-2 ">
+                                        <label class="form-label ps-0" for="expense_type">
+                                            <b class="text-danger d-none"> * </b>
+                                            departments
+                                        </label>
+                                        <label class="form-label ps-0" ng-if="select_history_tracking_record">
+                                            <a class="form-label far fa-comment-alt text-warning cursor-pointer" 
+                                                data-bs-toggle="tooltip"
+                                               data-bs-placement="top" 
+                                               name="departments" 
+                                               title="" 
+                                               data-bs-html="true">
+                                            </a>
+                                        </label>
+                                        <select class="form-control"
+                                                ng-class="{'disabled-link':(!tab_general_active)}"
+                                                data-choices="data-choices"
+                                                data-options='{"removeItemButton":true,"placeholder":true}'
+                                                @* ng-change="actionChange(item,item.seq,'')"  *@
+                                                ng-model="item.id_departments">
+                                            <option value="">Please select</option>
+                                            <option ng-repeat="item2 in data_departments" 
+                                                    ng-value="item2.id">
+                                                {{item2.departments}}
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <!-- company -->
+                                    <!-- sections -->
+                                    <div class="col-md-2 ">
+                                        <label class="form-label ps-0" for="expense_type">
+                                            <b class="text-danger d-none"> * </b>
+                                            sections
+                                        </label>
+                                        <label class="form-label ps-0" ng-if="select_history_tracking_record">
+                                            <a class="form-label far fa-comment-alt text-warning cursor-pointer" 
+                                                data-bs-toggle="tooltip"
+                                               data-bs-placement="top" 
+                                               name="sections" 
+                                               title="" 
+                                               data-bs-html="true">
+                                            </a>
+                                        </label>
+                                        <select class="form-control"
+                                                ng-class="{'disabled-link':(!tab_general_active)}"
+                                                data-choices="data-choices"
+                                                data-options='{"removeItemButton":true,"placeholder":true}'
+                                                @* ng-change="actionChange(item,item.seq,'')"  *@
+                                                ng-model="item.id_sections"
+                                                >
+                                            <option value="">Please select</option>
+                                            <option ng-repeat="item2 in data_sections" 
+                                                ng-value="item2.sections">
+                                                {{item2.sections}}
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <!-- sections -->
+                                </div>
+
                                 <div class="mx-1 row g-3 align-items-center" ng-repeat="item in data_general ">
 
                                     <!-- company -->
@@ -179,7 +242,6 @@
                                     <div class="col-md-auto p-1 " ng-if="item.id_company != '9999' ">
                                         <div class="row g-0 align-items-center">
                                             <div class="col-12 p-1  ">
-
                                                 <label class="form-label ps-0" for="area"><b class="text-danger d-none"> * </b>Area Process Unit </label>
                                                 <label class="form-label ps-0" ng-if="select_history_tracking_record">
                                                     <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
@@ -375,7 +437,8 @@
                                         <textarea class="form-control rounded-1" ng-class="{'disabled-link':(!tab_general_active)}"
                                                   id="description_general" name="description_general"
                                                   placeholder="Description/Remark" style="height: 100px"
-                                                  ng-model="item.descriptions"></textarea>
+                                                  ng-model="item.descriptions">
+                                        </textarea>
 
                                     </div>
                                 </div>
@@ -383,7 +446,6 @@
                             </div>
                         </div>
                         @* General End*@
-
 
                         @* Session Start*@
                         <div class="m-3 row gx-0 align-items-center ">
@@ -777,31 +839,75 @@
 
                                 <p><b>NAME OF AREA : {{selectedBusiness_Unit}}</b></p>
 
+                                <table class="table fs--2 mb-0 table-bordered">
+
+                                    <thead class=" text-uppercase  text-center bg-soft">
+                                        <tr>
+                                            <th class="sort align-middle text-center px-0" colspan="1" rowspan="2">
+                                                m-1
+                                            </th>
+
+                                            <th class="sort align-middle text-center px-0" colspan="1" rowspan="2">
+                                                m-2
+                                            </th>
+
+
+                                            <th class="sort align-middle text-center px-0" colspan="1" rowspan="2">
+                                                s-1
+                                            </th>
+                                            <th class="sort align-middle text-center px-0" colspan="1" rowspan="2">
+                                                s-2
+                                            </th>
+                                        </tr>
+
+                                    </thead>
+
+                                    <tbody class="list">
+                                        <tr class="hover-actions-trigger btn-reveal-trigger position-static p-0"
+                                            ng-repeat="subarea in data_subareas">
+                                            <td><span class="px-1">{{ subarea.no }}x</span></td>
+                                            <td><span class="px-1">{{ subarea.id }}x</span></td>
+                                        </tr>
+                                        <tr class="hover-actions-trigger btn-reveal-trigger position-static p-0"
+                                            ng-repeat="hazard in data_hazard" ng-if="hazard.id_subarea == subarea.id">
+                                            <td></td> <!-- เพิ่ม column ว่าง -->
+                                            <td></td> <!-- เพิ่ม column ว่าง -->
+                                            <!-- แทนที่ตำแหน่งที่ต้องการแสดงข้อมูลในแต่ละ column ตามความเหมาะสม -->
+                                            <td><span class="px-1">{{ hazard.no }}t</span></td>
+                                            <td><span class="px-1">{{ hazard.id_subarea }}t</span></td>
+                                        </tr>
+                                    </tbody>
+
+
+                                </table>
+
+
                                 <!------ NAME OF SUB AREA :------>
                                 <div class="table-responsive scrollbar mb-3" id="table-container">
 
                                     <table class="table fs--2 mb-0 table-bordered">
-
                                         <thead class=" text-uppercase  text-center bg-soft">
                                             <tr>
                                                 <th class="sort align-middle text-center px-0" colspan="1" rowspan="2">
 
                                                 </th>
-                                                <th class="sort align-middle text-start px-1" colspan="1" rowspan="2">
+                                                <th class="sort align-middle text-start px-1" colspan="1" rowspan="2" style="width: 40%;">
                                                     NAME OF SUB AREA
                                                 </th>
-                                                <th class="sort align-middle px-0" colspan="1" rowspan="1">
-                                                    DESCRIPTION OF WORK OR TASK
+                                                <th class="sort align-middle px-0" style="width: 22%;">
+                                                    TYPE OF HAZARD
+                                                </th>
+                                                <th class="sort align-middle px-0" style="width: 20%;">
+                                                    HEALTH HAZARDS OR RISK FACTOR
+                                                </th>
+                                                <th class="sort align-middle px-0" style="width: 18%;">
+                                                    HEALTH EFFECT RATING
                                                 </th>
                                             </tr>
-
                                         </thead>
-
                                         <tbody class="list">
-
                                             <tr class="hover-actions-trigger btn-reveal-trigger position-static p-0"
-                                                ng-repeat="item in data_subareas">
-
+                                                ng-repeat="item in data_subareas_list">
                                                 <td class="align-top text-center px-0" style="width: 40px;">
 
                                                     <div class="p-1">
@@ -819,151 +925,158 @@
                                                             </button>
                                                             <div class="dropdown-menu dropdown-menu-end py-2">
                                                                 <a class="dropdown-item text-success"
-                                                                   ng-click="addDataSubAreas(item,$index)">
+                                                                   ng-click="addDataSubAreasList(item,$index)">
                                                                     <span class="fas fa-copy"></span>
                                                                     Add
                                                                 </a>
                                                                 <div class="dropdown-divider" ng-if="!(item.no == 1)"></div>
                                                                 <a class="dropdown-item text-danger" ng-if="!(item.no == 1)"
-                                                                   ng-click="removeDataSubAreas(item.seq,$index)"><span class="fas fa-times-circle"></span> Remove</a>
+                                                                   ng-click="removeDataSubAreasList(item, $index)">
+                                                                   <span class="fas fa-times-circle"></span> 
+                                                                   Remove
+                                                                </a>
                                                             </div>
                                                         </div>
                                                     </div>
 
                                                 </td>
 
-                                                <td class="align-top px-1 py-0" style="width: 200px;">
-                                                    <div class="p-1">
+                                                <td class="align-top px-1 text-center" style="width: 400px;">
+                                                    <div class="py-2">
                                                         <select class="form-control"
                                                                 ng-class="{'disabled-link':(!tab_general_active || !(tab_general_active && data_header[0].pha_status<=12 ))}"
                                                                 ng-change="actionChange(item,item.seq,'sub_area')"
                                                                 ng-model="item.id_sub_area"
                                                                 ng-if="tab_general_active">
-                                                            <option ng-repeat="item_m in master_subarea" ng-value="item_m.id">
+                                                            <option value="" disabled>Please select</option>
+                                                            <option ng-repeat="item_m in master_subarea" 
+                                                                    ng-value="item_m.id">
                                                                 {{item_m.name}}
                                                             </option>
                                                         </select>
                                                     </div>
+                                                    <textarea class="form-control rounded-1" 
+                                                            ng-class="{'disabled-link':(!tab_general_active) || !item.sub_area}"
+                                                            id="description_general" 
+                                                            name="description_general"
+                                                            placeholder="Sub Area" 
+                                                            style="height: 100px"
+                                                            ng-change="actionChangeSubArae(item)"
+                                                            ng-model="item.sub_area">
+                                                    </textarea>
+                                                    @* <b class="p-2 d-flex align-items-start text-start px-">{{item.work_of_task}}</b> *@
                                                 </td>
-                                                <td class="d-flex align-items-start text-start px-1">
-                                                    <b class="d-flex align-items-start text-start px-">{{item.work_of_task}}</b>
-                                                </td>
 
-                                            </tr>
+                                                <td class="align-top text-center px-1" colspan="3">
+                                                    <div class="d-flex gap-4 py-2" ng-repeat="item_list in item.hazard">
+                                                        @* number *@
+                                                        <div class="" style="padding-left: 4px;">
+                                                            <div class="align-top ">
+                                                                <div class="font-sans-serif btn-reveal-trigger position-static ">
+                                                                    <span class="px-1">{{item_list.no_subareas}}.{{ item_list.no }}</span>
+                                                                </div>
+                                                            </div>
 
-
-                                        </tbody>
-
-
-                                    </table>
-
-                                </div>
-
-                            </div>
-                            <div class="mx-3 row  g-3 align-items-top ">
-
-                                <!------ HAZARD------>
-                                <div class="table-responsive scrollbar" id="table-container">
-
-                                    <table class="table fs--2 mb-0 table-bordered">
-
-                                        <thead class=" text-uppercase  text-center bg-soft">
-                                            <tr>
-                                                <th class="sort align-middle text-center px-0">
-
-                                                </th>
-                                                <th class="align-middle text-center px-0">
-                                                    TYPE OF HAZARD
-                                                </th>
-                                                <th class="align-middle text-center px-0">
-                                                    HEALTH HAZARDS OR RISK FACTOR
-                                                </th>
-                                                <th class="align-middle text-center px-0">
-                                                    HEALTH EFFECT RATING
-                                                </th>
-                                            </tr>
-                                        </thead>
-
-                                        <tbody class="list">
-
-                                            <tr class="hover-actions-trigger btn-reveal-trigger position-static p-0" ng-repeat="item in data_hazard">
-
-                                                <td class="align-top text-center px-0" style="width: 40px;">
-
-                                                    <div class="">
-                                                        <div class="align-top ">
-                                                            <div class="font-sans-serif btn-reveal-trigger position-static ">
-                                                                <span class="px-1">{{ item.no }}</span>
+                                                            <div class="font-sans-serif btn-reveal-trigger position-static" ng-class="{'d-none': !(tab_general_active)}">
+                                                                <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 p-1"
+                                                                        type="button" 
+                                                                        data-bs-toggle="dropdown" 
+                                                                        data-boundary="window" 
+                                                                        aria-haspopup="true"
+                                                                        aria-expanded="false" 
+                                                                        data-bs-reference="parent">
+                                                                    <span class="fas fa-cog text-info"></span>
+                                                                </button>
+                                                                <div class="dropdown-menu dropdown-menu-end py-2">
+                                                                    <a class="dropdown-item text-success" 
+                                                                        ng-click="addDataHazardList(item, item_list, MaxSeqdataSubareas)">
+                                                                        <span class="fas fa-copy"></span>
+                                                                        Add
+                                                                    </a>
+                                                                    <div class="dropdown-divider" ng-if="!(item_list.no == 1)"></div>
+                                                                    <a class="dropdown-item text-danger" 
+                                                                        ng-if="!(item_list.no == 1)"
+                                                                        ng-click="removeDataHazardList(item, item_list, $index)">
+                                                                        <span class="fas fa-times-circle"></span>
+                                                                        Remove
+                                                                    </a>
+                                                                </div>
                                                             </div>
                                                         </div>
-
-                                                        <div class="font-sans-serif btn-reveal-trigger position-static" ng-class="{'d-none': !(tab_general_active)}">
-                                                            <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 p-1"
-                                                                    type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true"
-                                                                    aria-expanded="false" data-bs-reference="parent">
-                                                                <span class="fas fa-cog text-info"></span>
-                                                            </button>
-                                                            <div class="dropdown-menu dropdown-menu-end py-2">
-                                                                <a class="dropdown-item text-success"
-                                                                   ng-click="addDataHazard(item,$index)">
-                                                                    <span class="fas fa-copy"></span>
-                                                                    Add
-                                                                </a>
-                                                                <div class="dropdown-divider" ng-if="!(item.no == 1)"></div>
-                                                                <a class="dropdown-item text-danger" ng-if="!(item.no == 1)"
-                                                                   ng-click="removeDataHazard(item.seq,$index)"><span class="fas fa-times-circle"></span> Remove</a>
+                                                        @* master_hazard_type *@
+                                                        <select class="form-control"
+                                                            ng-class="{'disabled-link':(!tab_general_active || !(tab_general_active && data_header[0].pha_status<=12 ))}"
+                                                            ng-change="actionChange(item_list,item_list.seq,'type_hazard')"
+                                                            ng-model="item_list.id_type_hazard"
+                                                            ng-if="tab_general_active">
+                                                            <option value="" disabled>Please select</option>
+                                                            <option ng-repeat="item_m in master_hazard_type" ng-value="item_m.id">
+                                                                {{item_m.name}}
+                                                            </option>
+                                                        </select> 
+                                                        @* master_hazard_riskfactors *@
+                                                        <select class="form-control"
+                                                            ng-class="{'disabled-link':(!tab_general_active || !(tab_general_active && data_header[0].pha_status<=12 ))}"
+                                                            ng-change="actionChange(item_list,item_list.seq,'health_hazard')"
+                                                            ng-model="item_list.id_health_hazard"
+                                                            ng-if="tab_general_active">
+                                                            <option value="" disabled>Please select</option>
+                                                            <option ng-repeat="item_m in master_hazard_riskfactors | orderBy:'name'" ng-value="item_m.id">
+                                                                {{ item_m.name }}
+                                                            </option>
+                                                        </select>
+                                                        @* health_effect_rating *@
+                                                        <div class="d-flex align-items-center justify-content-center gap-2" style="width: 850px;">
+                                                            @* rating *@
+                                                            <div class="effect-rating" ng-if="item_list.health_effect_rating">
+                                                                {{item_list.health_effect_rating}}
+                                                            </div>
+                                                            @* icon *@
+                                                            <div class="font-sans-serif btn-reveal-trigger position-static" 
+                                                                ng-class="{'d-none': !(tab_general_active)}"
+                                                                ng-if="item_list.health_effect_rating">
+                                                                <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 p-1"
+                                                                        type="button" 
+                                                                        data-bs-toggle="dropdown" 
+                                                                        data-boundary="window" 
+                                                                        aria-haspopup="true"
+                                                                        aria-expanded="false" 
+                                                                        data-bs-reference="parent">
+                                                                    <span class="fas fa-cog text-info"></span>
+                                                                </button>
+                                                                <div class="dropdown-menu dropdown-menu-end py-2">
+                                                                    <div class="d-flex align-items-center justify-content-center gap-2">
+                                                                        <div class="d-flex align-items-center justify-content-center">
+                                                                            <div class="effect-rating bg-danger">
+                                                                                5
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="dropdown-divider"></div>
+                                                                        <div class="d-flex align-items-center justify-content-center">
+                                                                            <div class="effect-rating bg-warning">
+                                                                                3
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="dropdown-divider"></div>
+                                                                        <div class="d-flex align-items-center justify-content-center">
+                                                                            <div class="effect-rating bg-success">
+                                                                                1
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
-
                                                     </div>
-
                                                 </td>
-
-                                                <td class="align-top text-center px-1">
-                                                    <select class="form-control"
-                                                            ng-class="{'disabled-link':(!tab_general_active || !(tab_general_active && data_header[0].pha_status<=12 ))}"
-                                                            ng-change="actionChange(item,item.seq,'type_hazard')"
-                                                            ng-model="item.id_type_hazard"
-                                                            ng-if="tab_general_active">
-                                                        <option ng-repeat="item_m in master_hazard_type" ng-value="item_m.id">
-                                                            {{item_m.name}}
-                                                        </option>
-                                                    </select>
-                                                </td>
-
-                                                <td class="align-top text-center px-1">
-                                                    <select class="form-control"
-                                                            ng-class="{'disabled-link':(!tab_general_active || !(tab_general_active && data_header[0].pha_status<=12 ))}"
-                                                            ng-change="actionChange(item,item.seq,'health_hazard')"
-                                                            ng-model="item.id_health_hazard"
-                                                            ng-if="tab_general_active">
-                                                        <option ng-repeat="item_m in master_hazard_riskfactors" ng-value="item_m.id">
-                                                            {{item_m.name}}
-                                                        </option>
-                                                    </select>
-                                                </td>
-
-                                                <td class="align-top  text-center px-0 col-auto">
-                                                    <b class="align-items-center px-">{{item.health_effect_rating}}</b>
-                                                </td>
-
                                             </tr>
-
                                         </tbody>
-
-
                                     </table>
 
                                 </div>
 
-
-
                             </div>
-
-
                         </div>
-
-
                     </div>
 
                     @* List of Areas to Be Assessed and Health Hazards or Risk Factors end*@
@@ -1001,15 +1114,15 @@
 
                                         <tbody class="list" id="customer-rating-table-body">
 
-                                            <tr class="hover-actions-trigger btn-reveal-trigger position-static"
+                                            <tr class="hover-actions-trigger btn-reveal-trigger position-static" 
                                                 ng-repeat="item in data_tasks" ng-if="item.tasks_type_other == 0">
-
-                                                <td class="align-top rating white-space-nowrap px-1" style="width: 150px;"
-                                                    rowspan="{{data_workers.length}}" ng-if="$index == 0">
+                                                <td class="align-top rating white-space-nowrap px-1" style="width: 150px;" 
+                                                    rowspan="{{data_tasks.length}}" ng-if="$index == 0"> 
                                                     <p class="text-1100 fw-bold" ng-if="$index == 0">{{selectedBusiness_Unit}}</p>
                                                 </td>
 
-                                                <td class="align-top rating white-space-nowrap px-1" style="width: 250px;">
+                                                <!----span work lenght rowspan=""----->
+                                                <td class="align-top rating white-space-nowrap px-1" style="width: 250px;" > 
 
                                                     <div class="d-flex align-items-center mx-1 p-1">
                                                         <div class="">
@@ -1057,7 +1170,7 @@
                                                     </div>
                                                 </td>
 
-
+                                                <!----span work/task lenght rowspan=""----->
                                                 <td class="align-top rating px-1 d-flex flex-column align-items-center justify-content-start">
                                                     <div class="d-flex justify-content-start w-100 ps-2"
                                                          ng-repeat="workers in data_workers | filter:{id_tasks:item.id} | orderBy:'no'">
@@ -1065,21 +1178,62 @@
                                                     </div>
                                                 </td>
 
-
-                                                <td class="align-top status text-center px-1" style="width: 50px;">
+                                                <!----span work/task lenght rowspan=""----->
+                                                <td class="align-top status text-center px-1" style="width: 50px;"><!----span same id work group? same no. ----->
                                                     <p><b>{{ (data_workers | filter:{id_tasks:item.id}).length }}</b></p>
                                                 </td>
 
+                                                <!----- work or task ==> can be add------->
                                                 <td class="align-top pt-1">
+                                                    <ng-container ng-if="item.work_or_task">
+                                                        <div ng-repeat="task in item.work_or_task">
+                                                            <ng-container ng-include="'workTaskInputTemplate'"></ng-container>
+                                                        </div>
+                                                    </ng-container>
+                                                    <ng-container ng-if="!item.work_or_task">
+                                                        <ng-container ng-include="'workTaskInputTemplate'"></ng-container>
+                                                    </ng-container>
 
-                                                    <textarea class="form-control rounded-1" ng-class="{'disabled-link':(!tab_general_active)}"
-                                                              id="work_or_task" name="work_or_task"
-                                                              placeholder="Work or Task" style="height: 100px"
-                                                              ng-model="item.work_or_task"></textarea>
+                                                    <script type="text/ng-template" id="workTaskInputTemplate">
+                                                  
 
+                                                        <div class="d-flex align-items-center mx-1 p-1">
+                                                            <div>
+                                                                <div class="font-sans-serif btn-reveal-trigger position-static">
+                                                                    <span class="px-1">
+                                                                        <div class="align-top">
+                                                                            <div class="font-sans-serif btn-reveal-trigger position-static" ng-class="{'d-none': !(tab_general_active && item.tasks_type_other == 0)}">
+                                                                                <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 p-1" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent">
+                                                                                    <span class="fas fa-cog text-info"></span>
+                                                                                </button>
+                                                                                <div class="dropdown-menu dropdown-menu-end py-2">
+                                                                                    <a class="dropdown-item text-success" ng-click="addDataWork(item)">
+                                                                                        <span class="fas fa-copy"></span>
+                                                                                        Add
+                                                                                    </a>
+                                                                                    <div class="dropdown-divider" ng-if="!(item.no == 1)"></div>
+                                                                                    <a class="dropdown-item text-danger" ng-if="!(item.no == 1)" ng-click="removeDataWork(item.no, $index)">
+                                                                                        <span class="fas fa-times-circle"></span> Remove
+                                                                                    </a>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                            <input class="form-control rounded-1" ng-class="{'disabled-link':(!tab_general_active)}" 
+                                                                type="text" placeholder="Work or Task" 
+                                                                ng-model="task.work_or_task" 
+                                                                ng-keyup="filterResultGeneral(task.work_or_task, 'work_or_task')">
+                                                            <ul class="list-group mt-2 w-25" style="position: absolute;" ng-show="(showResults && tab_general_active)">
+                                                                <li class="list-group-item" ng-repeat="result in filteredResults | filter:{field:'work_or_task'}" ng-click="selectResult(result, task, 'work_or_taske')">
+                                                                    {{ result.name }}
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </script>
                                                 </td>
-
-
+                                      
                                             </tr>
 
                                         </tbody>
@@ -1416,7 +1570,7 @@
                                             <th class=" align-middle" colspan="1" rowspan="2">Type of Hazard</th>
                                             <th class=" align-middle" colspan="1" rowspan="2">Exposure Indicator</th>
                                             <th class=" align-middle" colspan="1" rowspan="2" ng-if="data_header[0].pha_status >12">Document File</th>
-                                        @*     <th class=" align-middle text-start" colspan="1" rowspan="2">Hierarchy of Control</th>
+                                            @*     <th class=" align-middle text-start" colspan="1" rowspan="2">Hierarchy of Control</th>
                                             <th class=" align-middle text-start" colspan="1" rowspan="2">Residual Risk Ranking</th> *@
                                             <th class=" align-middle text-start" colspan="1" rowspan="2">Recommendation</th>
                                             <th class=" align-middle text-center" colspan="1" rowspan="2">Action<br />Status<br />(Items)</th>
@@ -1426,20 +1580,20 @@
                                             <th class=" align-middle" colspan="1" rowspan="2">Action Close Date</th>
                                         </tr>
                                         <tr>
-                                            <th class=" align-middle" scope="col" >Start Date</th>
-                                            <th class=" align-middle" scope="col" >End Date</th>
+                                            <th class=" align-middle" scope="col">Start Date</th>
+                                            <th class=" align-middle" scope="col">End Date</th>
                                         </tr>
 
                                     </thead>
 
                                     <tbody class="list" id="customer-rating-table-body">
-                                        <tr ng-repeat="item in data_worksheet | orderBy:['index_rows']" 
+                                        <tr ng-repeat="item in data_worksheet | orderBy:['index_rows']"
                                             class="hover-actions-trigger btn-reveal-trigger position-static text-center">
 
                                             <td class="align-top rating white-space-nowrap text-start">
                                                 <div class="ms-3">
                                                     <label>
-                                                        {{item.recommendations_no}} 
+                                                        {{item.recommendations_no}}
                                                     </label>
                                                 </div>
                                             </td>
@@ -1477,7 +1631,7 @@
                                             <td class="align-top rating white-space-nowrap">
                                                 <div class="ms-3">
                                                     <label>
-                                                        {{item.responder_user_displayname}} 
+                                                        {{item.responder_user_displayname}}
                                                     </label>
                                                 </div>
                                             </td>
@@ -1513,26 +1667,26 @@
                                             </td>
 
 
-                                          @*   <td class="align-top rating white-space-nowrap">
-                                                <div class="d-flex align-items-center">
-                                                    <div class="mx-1">
-                                                        <textarea class="form-control form-control-sm" rows="3" type="text" style="width: 200px;"
-                                                                  placeholder="Hierarchy of Control (ALARP)" ng-disabled="item.initial_risk_rating === 'Low'"
-                                                                  ng-style="{'background-color': item.initial_risk_rating === 'Low' ? '#f2f2f2' : 'inherit'}"
-                                                                  ng-model="item.hierarchy_of_control"></textarea>
-                                                    </div>
-                                                </div>
+                                            @*   <td class="align-top rating white-space-nowrap">
+                                            <div class="d-flex align-items-center">
+                                            <div class="mx-1">
+                                            <textarea class="form-control form-control-sm" rows="3" type="text" style="width: 200px;"
+                                            placeholder="Hierarchy of Control (ALARP)" ng-disabled="item.initial_risk_rating === 'Low'"
+                                            ng-style="{'background-color': item.initial_risk_rating === 'Low' ? '#f2f2f2' : 'inherit'}"
+                                            ng-model="item.hierarchy_of_control"></textarea>
+                                            </div>
+                                            </div>
                                             </td>
-                                          
+
                                             <td class="align-top rating white-space-nowrap">
-                                                <div class="d-flex align-items-center">
-                                                    <div class="mx-1">
-                                                        <textarea class="form-control form-control-sm" rows="3" type="text" style="width: 200px;"
-                                                                  placeholder="Residual Risk Rating" ng-disabled="item.initial_risk_rating === 'Low'"
-                                                                  ng-style="{'background-color': item.initial_risk_rating === 'Low' ? '#f2f2f2' : 'inherit'}"
-                                                                  ng-model="item.residual_risk_rating"></textarea>
-                                                    </div>
-                                                </div>
+                                            <div class="d-flex align-items-center">
+                                            <div class="mx-1">
+                                            <textarea class="form-control form-control-sm" rows="3" type="text" style="width: 200px;"
+                                            placeholder="Residual Risk Rating" ng-disabled="item.initial_risk_rating === 'Low'"
+                                            ng-style="{'background-color': item.initial_risk_rating === 'Low' ? '#f2f2f2' : 'inherit'}"
+                                            ng-model="item.residual_risk_rating"></textarea>
+                                            </div>
+                                            </div>
                                             </td> *@
                                             <td class="align-top rating white-space-nowrap">
                                                 <div class="d-flex align-items-center">
@@ -1897,7 +2051,7 @@
 
     <div class="modal fade modal-xl" id="modalMatrix_Exposure_Rating" tabindex="-1" aria-labelledby="modalMatrix_Exposure_RatingLabel"
          aria-hidden="true" style="display: none;">
-        <div class="modal-dialog modal-dialog-centered"  >
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="text-900 mb-0" data-anchor="data-anchor" id="modalMatrix_Exposure_RatingLabel">
@@ -2388,7 +2542,7 @@
                             <table class="table table-sm fs--1 mb-0 col-auto ">
                                 <thead class="bg-light-primary">
                                     <tr>
-                                        <td rowspan="3" class="text-center"></td>
+                                        <td  class="text-center"></td>
                                         <th rowspan="2" colspan="3" ng-if="select_columns_level != 5">Likelihood</th>
                                         <th rowspan="2" colspan="5" ng-if="select_columns_level == 5">Likelihood</th>
                                     </tr>

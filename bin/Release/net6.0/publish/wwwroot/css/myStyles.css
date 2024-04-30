@@ -1,0 +1,23 @@
+﻿ 
+@keyframes blink {
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+.blinking-text {
+    color: red;
+    animation: blink 1s infinite;
+}
+
+.d-none {
+    display: none;
+}
