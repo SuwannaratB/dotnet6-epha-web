@@ -1053,7 +1053,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         var flow_action = '';
 
         if(action == 'submit_complete'){
-            flow_action = 'submit_complete'
+            flow_action = 'submit'
         }else if(action == 'change_action_owner'){
             flow_action = 'change_action_owner'
         }else if(action == 'submit'){
@@ -1397,6 +1397,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     }
 
                     $scope.data_general = arr.general;
+                    console.log($scope.data_general)
 
                     //set id to 5 
                     $scope.data_general.forEach(function (item) { item.id_ram = (item.id_ram == null ? 5 : item.id_ram); });
@@ -1989,21 +1990,28 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.data_general[0].id_ram = 5;
         }
 
+        console.log("before set ", $scope.data_general[0].target_start_date);
+        console.log("before set ", $scope.data_general[0].target_end_date);
+        
         if ($scope.data_general[0].target_start_date !== null) {
-            const x = ($scope.data_general[0].target_start_date.split('T')[0]).split("-");
-            $scope.data_general[0].target_start_date = new Date(x[0], x[1], x[2]);
+            const x = $scope.data_general[0].target_start_date.split('T')[0].split("-");
+            $scope.data_general[0].target_start_date = new Date(x[0], x[1] - 1, x[2]);
         }
         if ($scope.data_general[0].target_end_date !== null) {
-            const x = ($scope.data_general[0].target_end_date.split('T')[0]).split("-");
-            $scope.data_general[0].target_end_date = new Date(x[0], x[1], x[2]);
+            const x = $scope.data_general[0].target_end_date.split('T')[0].split("-");
+            $scope.data_general[0].target_end_date = new Date(x[0], x[1] - 1, x[2]);
         }
+        
+        console.log("After set ", $scope.data_general[0].target_start_date);
+        console.log("After set ", $scope.data_general[0].target_end_date);
+        
         if ($scope.data_general[0].actual_start_date !== null) {
             const x = ($scope.data_general[0].actual_start_date.split('T')[0]).split("-");
-            $scope.data_general[0].actual_start_date = new Date(x[0], x[1], x[2]);
+            $scope.data_general[0].actual_start_date = new Date(x[0], x[1] - 1, x[2]);
         }
         if ($scope.data_general[0].actual_end_date !== null) {
             const x = ($scope.data_general[0].actual_end_date.split('T')[0]).split("-");
-            $scope.data_general[0].actual_end_date = new Date(x[0], x[1], x[2]);
+            $scope.data_general[0].actual_end_date = new Date(x[0], x[1] - 1, x[2]);
         }
 
         for (let i = 0; i < $scope.data_session.length; i++) {
@@ -2011,7 +2019,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             if ($scope.data_session[i].meeting_date !== null) {
                 const x = ($scope.data_session[i].meeting_date.split('T')[0]).split("-");
-                $scope.data_session[i].meeting_date = new Date(x[0], x[1], x[2]);
+                $scope.data_session[i].meeting_date = new Date(x[0], x[1] - 1, x[2]);
             }
 
             if ($scope.data_session[i].meeting_start_time !== null) {
@@ -2343,7 +2351,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     if (arr_worksheet[w].estimated_start_date !== null) {
                         const x = (arr_worksheet[w].estimated_start_date.split('T')[0]).split("-");
                         if (x[0] > 2000) {
-                            arr_worksheet[w].estimated_start_date = new Date(x[0], x[1], x[2]);
+                            arr_worksheet[w].estimated_start_date = new Date(x[0], x[1] - 1, x[2]);
                         }
                     }
                 } catch { }
@@ -2351,7 +2359,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     if (arr_worksheet[w].estimated_end_date !== null) {
                         const x = (arr_worksheet[w].estimated_end_date.split('T')[0]).split("-");
                         if (x[0] > 2000) {
-                            arr_worksheet[w].estimated_end_date = new Date(x[0], x[1], x[2]);
+                            arr_worksheet[w].estimated_end_date = new Date(x[0], x[1] - 1, x[2]);
                         }
                     }
                 } catch { }
@@ -3795,7 +3803,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
 
     $scope.openModalDataRAM_Worksheet = function (_item, ram_type, seq, ram_type_action) {
-
+        console.log(_item, ram_type, seq, ram_type_action)
         $scope.selectdata_nodeworksheet = seq;
         $scope.selectedDataNodeWorksheetRamType = ram_type;
         $scope.selectedDataRamTypeAction = ram_type_action;
@@ -3816,14 +3824,29 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         $scope.previewRam = (ram_type == 'r' ? true : false);
 
-
         $scope.cal_ram_action_security = ($scope.cal_ram_action_security == null ? 'N/A' : $scope.cal_ram_action_security);
         $scope.cal_ram_action_likelihood = ($scope.cal_ram_action_likelihood == null ? 'N/A' : $scope.cal_ram_action_likelihood);
         $scope.cal_ram_action_risk = ($scope.cal_ram_action_risk == null ? 'N/A' : $scope.cal_ram_action_risk);
 
-
-        $('#modalRAM').modal('show');
+        $('#modalRAM').modal({
+            backdrop: 'static',
+            keyboard: false 
+        }).modal('show');
+        
     }
+
+    $scope.closeModalDataRAM_Worksheet = function() {
+        $scope.cal_ram_action_security = null;
+        $scope.cal_ram_action_likelihood = null;
+        $scope.cal_ram_action_risk = null; 
+    };
+    
+    // Listen for the modal's hidden.bs.modal event and call closeModalDataRAM_Worksheet
+    $('#modalRAM').on('hidden.bs.modal', function () {
+        $scope.$apply(function() {
+            $scope.closeModalDataRAM_Worksheet();
+        });
+    });
 
     $scope.openModalDataRAM = function (_item, ram_type, seq, ram_type_action) {
 
@@ -4756,18 +4779,33 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     function check_data_general() {
         //แปลง date to yyyyMMdd
         //แปลง time to hh:mm
+        //set timezone offset
         try {
-            $scope.data_general[0].target_start_date = $scope.data_general[0].target_start_date.toISOString().split('T')[0];
-        } catch { }
+            var target_start_date = new Date($scope.data_general[0].target_start_date);
+            var target_start_date_utc = new Date(Date.UTC(target_start_date.getFullYear(), target_start_date.getMonth(), target_start_date.getDate()));
+            $scope.data_general[0].target_start_date = target_start_date_utc.toISOString().split('T')[0];
+        } catch (error) {}
+        
         try {
-            $scope.data_general[0].target_end_date = $scope.data_general[0].target_end_date.toISOString().split('T')[0];
-        } catch { }
+            var target_end_date = new Date($scope.data_general[0].target_end_date);
+            var target_end_date_utc = new Date(Date.UTC(target_end_date.getFullYear(), target_end_date.getMonth(), target_end_date.getDate()));
+            $scope.data_general[0].target_end_date = target_end_date_utc.toISOString().split('T')[0];
+        } catch (error) {}
+        
         try {
-            $scope.data_general[0].actual_start_date = $scope.data_general[0].actual_start_date.toISOString().split('T')[0];
-        } catch { }
+            var actual_start_date = new Date($scope.data_general[0].actual_start_date);
+            var actual_start_date_utc = new Date(Date.UTC(actual_start_date.getFullYear(), actual_start_date.getMonth(), actual_start_date.getDate()));
+            $scope.data_general[0].actual_start_date = actual_start_date_utc.toISOString().split('T')[0];
+        } catch (error) {}
+        
         try {
-            $scope.data_general[0].actual_end_date = $scope.data_general[0].actual_end_date.toISOString().split('T')[0];
-        } catch { }
+            var actual_end_date = new Date($scope.data_general[0].actual_end_date);
+            var actual_end_date_utc = new Date(Date.UTC(actual_end_date.getFullYear(), actual_end_date.getMonth(), actual_end_date.getDate()));
+            $scope.data_general[0].actual_end_date = actual_end_date_utc.toISOString().split('T')[0];
+        } catch (error) {}
+        
+        
+        console.log("show date to sent to back $scope.data_general");            
     }
 
     function check_master_ram() {
@@ -4815,6 +4853,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.data_session[i].id = $scope.data_session[i].seq;
             $scope.data_session[i].id_pha = pha_seq;
             try {
+<<<<<<< HEAD
                 //Kuluwat 20240409 1112 convert format date to string
                 //$scope.data_session[i].meeting_date = $scope.data_session[i].meeting_date.toISOString().split('T')[0];
                 var meetingDate = $scope.data_session[i].meeting_date;
@@ -4823,6 +4862,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     ('0' + meetingDate.getDate()).slice(-2);
                 $scope.data_session[0].meeting_date = formattedDate; 
             } catch { }
+=======
+                var meeting_date = new Date($scope.data_session[0].meeting_date);
+                var meeting_date_utc = new Date(Date.UTC(meeting_date.getFullYear(), meeting_date.getMonth(), meeting_date.getDate()));
+                $scope.data_session[0].meeting_date = meeting_date_utc.toISOString().split('T')[0];
+            } catch {} 
+     
+>>>>>>> 13cdc20e5f1e0097b2e87cf8eedfe818fcebf758
             try {
                 //12/31/1969 7:55:00 PM 
                 var hh = $scope.data_session[i].meeting_start_time_hh; var mm = $scope.data_session[i].meeting_start_time_mm;
@@ -5060,26 +5106,22 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
          
             //ram_action_security, ram_action_likelihood, ram_action_risk, estimated_start_date, estimated_end_date, document_file_path, document_file_name, action_status, responder_action_type, responder_user_name, responder_user_displayname
             try {
-                var date_value = $scope.data_nodeworksheet[i].estimated_start_date.toISOString().split('T');
-                if (date_value.length > 0) { $scope.data_nodeworksheet[i].estimated_start_date = date_value[0]; }
-            } catch { }
-         
+                var start_date = new Date($scope.data_nodeworksheet[i].estimated_start_date);
+                if (!isNaN(start_date.getTime())) {
+                    var start_date_utc = new Date(Date.UTC(start_date.getFullYear(), start_date.getMonth(), start_date.getDate()));
+                    $scope.data_nodeworksheet[i].estimated_start_date = start_date_utc.toISOString().split('T')[0];
+                }
+            } catch (error) {}
+            
             try {
-                var date_value = $scope.data_nodeworksheet[i].estimated_end_date.toISOString().split('T');
-                if (date_value.length > 0) { $scope.data_nodeworksheet[i].estimated_end_date = date_value[0]; }
-            } catch { }
-
-
-            // try {
-            //     var date_value = $scope.data_nodeworksheet[i].estimated_start_date.toISOString().split('T');
-            //     if (date_value.length > 0) { $scope.data_nodeworksheet[i].estimated_start_date = date_value[0]; }
-            // } catch { }
-
-            // try {
-            //     var date_value = $scope.data_nodeworksheet[i].estimated_end_date.toISOString().split('T');
-            //     if (date_value.length > 0) { $scope.data_nodeworksheet[i].estimated_end_date = date_value[0]; }
-            // } catch { }
-
+                var end_date = new Date($scope.data_nodeworksheet[i].estimated_end_date);
+                if (!isNaN(end_date.getTime())) { 
+                    var end_date_utc = new Date(Date.UTC(end_date.getFullYear(), end_date.getMonth(), end_date.getDate()));
+                    $scope.data_nodeworksheet[i].estimated_end_date = end_date_utc.toISOString().split('T')[0];
+                }
+            } catch (error) {}
+            
+            
 
             if (pha_status == "11" || pha_status == "12" || pha_status == "22") {
                 try {
@@ -5177,9 +5219,25 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     //start Update Action Type null to Update 
     $scope.actionChange = function (_arr, _seq, type_text) {
-        console.log("Test unsave ")
-
+        console.log(_arr, _seq, type_text)
         action_type_changed(_arr, _seq);
+
+        // Adjust to local timezone before sending to backend
+        /*if (_arr.target_start_date) {
+            var startDate = new Date(_arr.target_start_date);
+            var startOffset = startDate.getTimezoneOffset() * 60000; 
+            var adjustedStartDate = new Date(startDate.getTime() - startOffset);
+            _arr.target_start_date = adjustedStartDate.toISOString().substring(0, 10);
+        }
+        if (_arr.target_end_date) {
+            var endDate = new Date(_arr.target_end_date);
+            var endOffset = endDate.getTimezoneOffset() * 60000;
+            var adjustedEndDate = new Date(endDate.getTime() - endOffset);
+            _arr.target_end_date = adjustedEndDate.toISOString().substring(0, 10);
+        }*/
+
+        //console.log( "start",_arr.target_start_date,"end",_arr.target_end_date)
+
 
         var arr_submit = $filter('filter')($scope.data_node, function (item) {
             return ((item.action_type !== '' || item.action_type !== null));
@@ -5198,12 +5256,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.selectedItemNodeView = _seq;
         }
 
+
         unsavedChanges = true;
         apply();
     }
 
     $scope.actionChangeNodeDrawing = function (_arr, _seq) {
-        console.log("test unssave")
         action_type_changed(_arr, _seq);
 
         var arr_submit = $filter('filter')($scope.data_node, function (item) {
@@ -5812,7 +5870,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             create_by: user_name,
             update_by: null,
             action_change: 0,
-            action_type: "insert",
+            action_type: "new", //"insert"
             descriptions: null,
             document_file_name: null,
             document_file_path: null,
@@ -5840,24 +5898,39 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         var user_name = $scope.user_name;
         var seq = item_draw.seq;
         var fileUpload = document.getElementById('attfile-' + seq);
-        var fileNameDisplay = document.getElementById('filename' + seq);
-
-        fileUpload.value = ''; // ล้างค่าใน input file
-        fileNameDisplay.textContent = ''; // ล้างข้อความที่แสดงชื่อไฟล์
-
-        var arr = $filter('filter')($scope.data_drawing_approver, function (item) { return (item.seq == seq); });
-        if (arr.length > 0) {
-            arr[0].document_file_name = null;
-            arr[0].document_file_size = 0;
-            arr[0].document_file_path = null;
-            arr[0].action_type = 'delete';
-            arr[0].action_change = 1;
-            arr[0].update_by = user_name;
-            apply();
+        var fileNameDisplay = document.getElementById('filename-approver-' + seq);
+    
+        // Clear file input
+        if (fileUpload) {
+            fileUpload.value = '';
         }
+    
+        // Clear file name display
+        if (fileNameDisplay) {
+            fileNameDisplay.textContent = '';
+        }
+    
+        // Find and update data in $scope.data_drawing_approver
+        var index = $scope.data_drawing_approver.findIndex(function(item) {
+            return item.seq === seq;
+        });
+    
+        if (index !== -1) {
+            if ($scope.data_drawing_approver[index].action_type === "new") {
+                $scope.data_drawing_approver.splice(index, 1);
+            } else {
+                $scope.data_drawing_approver[index].document_file_name = null;
+                $scope.data_drawing_approver[index].document_file_size = 0;
+                $scope.data_drawing_approver[index].document_file_path = null;
+                $scope.data_drawing_approver[index].action_type = 'delete';
+                $scope.data_drawing_approver[index].action_change = 1;
+                $scope.data_drawing_approver[index].update_by = user_name;
+            }
+        }
+    
         clear_form_valid();
-
-    }
+    };
+    
 
     function clear_form_valid() {
         $scope.id_approver_select = null;

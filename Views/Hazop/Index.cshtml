@@ -510,7 +510,7 @@
 
                             <!-- Target Date -->
                             <div class="col-md-7 p-1">
-
+{{}}
                                 <div class="row g-0 align-items-center">
                                     <div class="col-md-3 p-1">
                                         <label class="form-label ps-0" for="tgs_date">Target Start Date</label>
@@ -519,10 +519,10 @@
                                                data-bs-placement="top" title=" Target Start Date :  " data-bs-html="true"></a>
                                         </label>
                                         <input type="date" ng-model="item.target_start_date"
-                                               ng-keyup="actionChange(item,item.seq,'')"
-                                               class="form-control rounded-1 datetimepicker"
-                                               ng-class="{'disabled-link':(!tab_general_active)}"
-                                               placeholder="dd/mm/yyyy">
+                                            ng-keyup="actionChange(item,item.seq,'')"
+                                            class="form-control rounded-1 datetimepicker"
+                                            ng-class="{'disabled-link':(!tab_general_active)}"
+                                            placeholder="dd/mm/yyyy">
                                     </div>
 
                                     <div class="col-md-auto p-1">
@@ -532,10 +532,11 @@
                                                data-bs-placement="top" title=" Complete Date :  " data-bs-html="true"></a>
                                         </label>
                                         <input type="date" name="te_date" ng-model="item.target_end_date"
-                                               ng-keyup="actionChange(item,item.seq,'')"
-                                               class="form-control rounded-1 datetimepicker" ng-class="{'disabled-link':(!tab_general_active)}"
-                                               id="tgs_date"
-                                               placeholder="dd/mm/yyyy">
+                                        <input type="date" ng-model="item.target_end_date"
+                                            ng-keyup="actionChange(item,item.seq,'')"
+                                            class="form-control rounded-1 datetimepicker"
+                                            ng-class="{'disabled-link':(!tab_general_active)}"
+                                            placeholder="dd/mm/yyyy">
                                     </div>
 
                                 </div>
@@ -3245,7 +3246,6 @@
                                                     @* {{item.seq}} *@
                                                     <div class=" p-0 cursor-pointer "
                                                          ng-repeat="item_x in data_drawing_approver  | filter:{id_approver : item.seq}  ">
-
                                                         <div class="d-flex flex-nowrap" ng-if="!(item.approver_action_type == 2 || data_header[0].pha_status != 21)">
                                                             <div class="font-sans-serif btn-reveal-trigger position-static me-1">
                                                                 <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 p-1"
@@ -3269,8 +3269,10 @@
                                                             </div>
                                                             <div class="align-items-center">
                                                                 <div class="uploadbox ">
-                                                                    <span class="nametext ms-3 filename-text me-2" id="filename-approver-{{item_x.seq}}">
-                                                                        {{(item_x.document_file_size>0? item_x.document_file_name + '('+  item_x.document_file_size + 'KB)' : '')}}
+                                                                    <span class="nametext ms-3 filename-text me-2" id="filename-approver-{{item_x.seq}}" >
+                                                                        <p >
+                                                                            {{(item_x.document_file_size>0? item_x.document_file_name + '('+  item_x.document_file_size + 'KB)' : '')}}
+                                                                        </p>
                                                                     </span>
                                                                     <label class="uploadfile dz-message-text text-info fw-bold p-2" for="attfile-{{item_x.seq}}"
                                                                            style="cursor: pointer;">
@@ -4284,7 +4286,7 @@
 
     @* Modal RAM Start *@
     <div class="modal fade modal-xl shadow-sm p-3 mb-5  rounded" id="modalRAM" tabindex="-1"
-         aria-labelledby="modalRAMLabel" aria-hidden="true" style="display: none;">
+         aria-labelledby="modalRAMLabel" aria-hidden="true" style="display: none;" >
         <div class="modal-dialog modal-dialog-centered">
 
             <div class="modal-content">
@@ -4301,10 +4303,10 @@
                                ng-style=" { 'background-color' : ((cal_ram_action_risk == 'H') ? 'red' : ((cal_ram_action_risk == 'M') ? 'yellow' : ((cal_ram_action_risk == 'L') ? 'green' : '#D3D3D3')) ) }">{{cal_ram_action_risk}}</label>
                     </div>
 
-                    <button class="btn p-1" type="button" data-bs-dismiss="modal" aria-label="Close">
+                    <button class="btn p-1" type="button" data-bs-dismiss="modal" aria-label="Close" ng-click="closeModalDataRAM_Worksheet()">
                         <svg class="svg-inline--fa fa-xmark fs--1" aria-hidden="true" focusable="false" data-prefix="fas"
-                             data-icon="xmark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"
-                             data-fa-i2svg="">
+                            data-icon="xmark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"
+                            data-fa-i2svg="">
                             <path fill="currentColor" d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z">
                             </path>
                         </svg>
@@ -4331,6 +4333,7 @@
                                     <input type="radio"
                                            id="likelihood"
                                            name="likelihood"
+                                           ng-checked="cal_ram_action_likelihood == item_ram.likelihood_level"
                                            ng-click="selectDataRAM('l',item_ram.likelihood_level)"
                                            style="cursor: pointer; width:25px; height:25px;">
                                 </div>
@@ -4345,6 +4348,7 @@
                                 <input type="radio"
                                        id="security_level"
                                        name="security_level"
+                                       ng-checked="cal_ram_action_security == item_ram.security_level"
                                        ng-click="selectDataRAM('s',item_ram.security_level)"
                                        style="cursor: pointer; width:25px; height:25px;">
                             </div>
@@ -4365,8 +4369,9 @@
                                      ng-repeat="item_ram in master_likelihood_level | filter:{id_ram:data_general[0].id_ram,columns_level:item_ram.columns_level}">
                                     <label for="likelihood"><b>{{item_ram.likelihood_level}}</b></label>
                                     <input type="radio"
-                                           id="likelihood" checked="{{cal_ram_action_likelihood == item_ram.likelihood_level}}"
+                                           id="likelihood" 
                                            name="likelihood"
+                                           ng-checked="cal_ram_action_likelihood == item_ram.likelihood_level"
                                            ng-click="selectDataRAM('l',item_ram.likelihood_level)"
                                            style="cursor: pointer;width:30px; height:30px;">
                                 </div>
@@ -4378,7 +4383,8 @@
                                  ng-repeat="item_ram in master_security_level | filter:{id_ram:data_general[0].id_ram,category_type:item_ram.category_type}">
                                 <label for="security_level"><b>{{item_ram.security_level}}</b></label>
                                 <input type="radio"
-                                       id="security_level" checked="{{cal_ram_action_security == item_ram.security_level}}"
+                                       id="security_level" 
+                                       ng-checked="cal_ram_action_security == item_ram.security_level"
                                        name="security_level"
                                        ng-click="selectDataRAM('s',item_ram.security_level)"
                                        style="cursor: pointer;width:30px; height:30px;">

@@ -21,3 +21,16 @@
 .d-none {
     display: none;
 }
+
+.effect-rating {
+    padding: 2px 8px;
+    background: red;
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}

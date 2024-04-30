@@ -65,7 +65,7 @@
                                     <div class="d-flex align-items-center py-2  justify-content-end">
                                         <span class="mx-2" ng-if="cancle_type">
                                             <button class="btn btn-outline-secondary btn-sm" style="width: 100px;"
-                                                    ng-click="confirmFollowBackSearch()">
+                                                    ng-click="confirmFollowBack()">
                                                 Back
                                             </button>
                                         </span>
@@ -638,7 +638,7 @@
 
                                         <div class="d-flex align-items-center jujustify-content-end py-4 text-primary" style="cursor: pointer;">
                                             <span class="fa-solid far fa-file-pdf text-danger p-2" ng-click="openModalTempletes()"></span>
-                                            <a ng-click="openModalTempletes()">Please attach HAZOP Recommendation worksheet (QMTS-SFR-25) with line manager/MOC focal point signature</a>
+                                            <a ng-click="openModalTempletes('pdf')">Please attach HAZOP Recommendation worksheet (QMTS-SFR-25) with line manager/MOC focal point signature</a>
                                         </div>
                                     </div>
 
@@ -695,12 +695,11 @@
                             ng-style=" { 'background-color' : ((cal_ram_action_risk == 'H') ? 'red' : ((cal_ram_action_risk == 'M') ? 'yellow' : ((cal_ram_action_risk == 'L') ? 'green' : '#D3D3D3')) ) }">{{cal_ram_action_risk}}</label>
                     </div>
 
-                    <button class="btn p-1" type="button" data-bs-dismiss="modal" aria-label="Close">
-                        <svg class="svg-inline--fa fa-xmark fs--1" aria-hidden="true" focusable="false"
-                            data-prefix="fas" data-icon="xmark" role="img" xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 320 512" data-fa-i2svg="">
-                            <path fill="currentColor"
-                                d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z">
+                    <button class="btn p-1" type="button" data-bs-dismiss="modal" aria-label="Close" ng-click="closeModalDataRAM_Worksheet()">
+                        <svg class="svg-inline--fa fa-xmark fs--1" aria-hidden="true" focusable="false" data-prefix="fas"
+                            data-icon="xmark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"
+                            data-fa-i2svg="">
+                            <path fill="currentColor" d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z">
                             </path>
                         </svg>
                     </button>
@@ -724,9 +723,12 @@
                                 <div class="d-flex justify-content-end align-items-center flex-column"
                                     ng-repeat="item_ram in master_likelihood_level | filter:{id_ram:data_details[0].id_ram,columns_level:item_ram.columns_level}">
                                     <label for="likelihood"><b>{{item_ram.likelihood_level}}</b></label>
-                                    <input type="radio" id="likelihood" name="likelihood"
-                                        ng-click="selectDataRAM('l',item_ram.likelihood_level)"
-                                        style="cursor: pointer; width:25px; height:25px;">
+                                    <input type="radio"
+                                           id="likelihood"
+                                           name="likelihood"
+                                           ng-checked="cal_ram_action_likelihood == item_ram.likelihood_level"
+                                           ng-click="selectDataRAM('l',item_ram.likelihood_level)"
+                                           style="cursor: pointer; width:25px; height:25px;">
                                 </div>
                             </div>
                             <div class="col-1 d-flex justify-content-end"></div>
@@ -737,9 +739,12 @@
                             <div class="d-flex justify-content-end align-items-center gap-2"
                                 ng-repeat="item_ram in master_security_level | filter:{id_ram:data_details[0].id_ram,category_type:item_ram.category_type}">
                                 <label for="security_level"><b>{{item_ram.security_level}}</b></label>
-                                <input type="radio" id="security_level" name="security_level"
-                                    ng-click="selectDataRAM('s',item_ram.security_level)"
-                                    style="cursor: pointer; width:25px; height:25px;">
+                                <input type="radio"
+                                       id="security_level"
+                                       name="security_level"
+                                       ng-checked="cal_ram_action_security == item_ram.security_level"
+                                       ng-click="selectDataRAM('s',item_ram.security_level)"
+                                       style="cursor: pointer; width:25px; height:25px;">
                             </div>
                         </div>
 
@@ -1028,17 +1033,12 @@
                     </button>
                 </div>
                 <div class="modal-body">
-
                     <div class="bg-white position-relative top-1">
-
-                        <a href="#" id="templates" name="templates" target="_blank">
-                            HAZOP RECOMMENDATION RESPONSE SHEET
+                        <a href="{{exportfile[0].DownloadPath}}" id="templates" name="templates" target="_blank">
+                            {{exportfile[0].Name}}
                         </a>
-
                     </div>
-
                 </div>
-
             </div>
         </div>
     </div>

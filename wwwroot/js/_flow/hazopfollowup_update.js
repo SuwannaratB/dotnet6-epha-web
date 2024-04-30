@@ -526,8 +526,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
         window.open(page, "_top");
     }
     $scope.confirmFollowBack = function () {
-        var page = conFig.controller_action_befor();
-        window.open(page, "_top")
+        window.open('Hazop/Followup', "_top")
+        // var page = conFig.controller_action_befor();
+        // window.open(page, "_top")
     }
     $scope.confirmCancle = function () {
         var page = conFig.controller_action_befor();
@@ -1027,10 +1028,18 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
 
         apply();
 
-        $('#modalRAM').modal('show');
-    }
+        $('#modalRAM').modal({
+            backdrop: 'static',
+            keyboard: false 
+        }).modal('show');
+        
+    };
 
-
+    $scope.closeModalDataRAM_Worksheet = function() {
+        $scope.cal_ram_action_security = null;
+        $scope.cal_ram_action_likelihood = null;
+        $scope.cal_ram_action_risk = null; 
+    };
 
     /*$scope.openModalDataRAM = function (ram_type, _item, ram_type_action, id_ram, preview) {
         var seq = _item.seq;
@@ -1219,7 +1228,50 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
         $('#modalExportReviewerFile').modal('show');
     }
 
-    $scope.openModalTempletes = function () {
-        $('#modalTemplates').modal('show');
+    $scope.openModalTempletes = function (data_type) {
+        var user_name = $scope.data_details[0].responder_user_name;
+        var seq = $scope.data_details[0].id_pha;
+        var sub_software = $scope.data_details[0].pha_sub_software;
+
+        $.ajax({
+            url: url_ws + "Flow/export_recommendation_by_action_owner",
+            data: '{"sub_software":"' + sub_software + 
+                    '","user_name":"' + user_name + 
+                    '","seq":"' + seq + 
+                    '","export_type":"' + data_type + 
+                    '"}',
+            type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+            beforeSend: function () {
+                $('#modalExportFile').modal('hide');
+                $('#divLoading').show();
+            },
+            complete: function () {
+                $('#divLoading').hide();
+            },
+            success: function (data) {
+                var arr = data;
+
+                if (arr.length > 0) {
+                    if (arr[0].ATTACHED_FILE_NAME != '') {
+                        var path = (url_ws).replace('/api/', '') + arr[0].ATTACHED_FILE_PATH;
+                        var name = arr[0].ATTACHED_FILE_NAME;
+                        $scope.exportfile[0].DownloadPath = path;
+                        $scope.exportfile[0].Name = name;
+                        $('#modalTemplates').modal('show');
+                        apply();
+                    }
+                } else {
+                    set_alert('Error', arr[0].IMPORT_DATA_MSG);
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                if (jqXHR.status == 500) {
+                    alert('Internal error: ' + jqXHR.responseText);
+                } else {
+                    alert('Unexpected ' + textStatus);
+                }
+            }
+
+        });
     }
 });
