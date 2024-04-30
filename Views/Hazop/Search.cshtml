@@ -62,7 +62,14 @@
                     <h5 class="text-900 mb-0" data-anchor="data-anchor" id="modalManageDocumentConfirmLabel">
                         <span class=" me-2 text-primary"><B>|</B></span> Do you want to {{manage_document_type}} document?
                     </h5>
-
+                    @* <textarea class="form-control form-control-sm rounded-1 p-0 m-0 w-100 border border-end-0 border-top-0"
+                            style=" width: 400px; font-size: 10px;"
+                            name="existing_safeguards_worksheet_{{item.seq}}"
+                            placeholder=" Protection/Mitigation Barriers" 
+                            rows="3"
+                            ng-model="item.existing_safeguards"
+                            ng-keyup="filterResultHistory(item.existing_safeguards, 'existing_safeguards', 'existing_safeguards_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')">
+                    </textarea> *@
                     <button class="btn p-1" type="button" data-bs-dismiss="modal" aria-label="Close">
                         <svg class="svg-inline--fa fa-xmark fs--1" aria-hidden="true" focusable="false"
                              data-prefix="fas" data-icon="xmark" role="img" xmlns="http://www.w3.org/2000/svg"
@@ -75,9 +82,29 @@
 
                 </div>
                 <div class="modal-body">
+                    <textarea class="form-control form-control-sm rounded-1 w-100 border border-end-0 border-top-0" 
+                        name="" 
+                        id="" 
+                        placeholder="Commnets"
+                        rows="3"
+                        ng-model="pha_status_comment"
+                        ng-if="manage_document_type == 'cancel'">
+                    </textarea>
+                    {{manage_document_type == 'cancel'}}
+                    <br>
                     <div class="col-auto" style="float:right">
-                        <button style="width:100px;" class="btn btn-success me-1 mb-1" type="button" ng-click="confirmManageDocument()">Yes</button>
-                        <button style="width:100px;" class="btn btn-outline-secondary me-1 mb-1" type="button">Cancel</button>
+                        <button style="width:100px;" 
+                            class="btn btn-success me-1 mb-1" 
+                            type="button" 
+                            ng-click="confirmManageDocument()">
+                            Yes
+                        </button>
+                        <button style="width:100px;" 
+                            class="btn btn-outline-secondary me-1 mb-1" 
+                            type="button"
+                            ng-click="cancelManageDocument()">
+                            Cancel
+                        </button>
                     </div>
                 </div>
             </div>

@@ -3862,10 +3862,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
 
     $scope.selectDataRAM = function (ram_type, id_select) {
-
         var xseq = $scope.selectdata_nodeworksheet;
         var xbefor = $scope.selectedDataRamTypeAction;
-
+        console.log(xseq)
+        console.log(xbefor)
         for (let i = 0; i < $scope.data_nodeworksheet.length; i++) {
             try {
 
@@ -3945,6 +3945,15 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     $scope.cal_ram_action_risk = $scope.data_nodeworksheet[i].ram_action_risk;
                 }
                 $scope.actionChangeWorksheet($scope.data_nodeworksheet[i], $scope.data_nodeworksheet[i].seq);
+
+                // set
+                if ($scope.data_nodeworksheet[i].ram_befor_security && $scope.data_nodeworksheet[i].ram_befor_likelihood ) {
+                    if ($scope.data_nodeworksheet[i].ram_befor_risk == "H") {
+                        $scope.data_nodeworksheet[i].major_accident_event = "Y";
+                    } else {
+                        $scope.data_nodeworksheet[i].major_accident_event = "N";
+                    }
+                }
 
                 break;
 
@@ -5907,7 +5916,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     
         clear_form_valid();
     };
-    
 
     function clear_form_valid() {
         $scope.id_approver_select = null;
