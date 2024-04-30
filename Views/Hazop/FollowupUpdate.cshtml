@@ -116,9 +116,9 @@
                                                         Action Owner
                                                     </th>
       
-                                                    <th class="sort align-middle " colspan="1" rowspan="3">
+                                                    @*<th class="sort align-middle " colspan="1" rowspan="3">
                                                         Recommendations
-                                                    </th>
+                                                    </th>*@
 
                                                     <th class="sort align-middle" colspan="2" rowspan="1" scope="col">
                                                         Risk Assessment Matrix
@@ -327,6 +327,7 @@
                                                             <a class="nametext ms-3 filename-text me-2" ng-if="flow_status == 14" ng-click="downloadFileOwner(item_d)">
                                                                 <i class="far fa-file-pdf text-danger"></i> Document File
                                                             </a>
+                                                            <p>{{item_d.recommendations}}</p>
                                                         </div>
                                                     </td>
 
@@ -374,13 +375,13 @@
                                                         </div>
                                                     </td>
 
-                                                    <td class="align-top  px-1">
+                                                    @*<td class="align-top  px-1">
                                                         <div class="d-flex text-start">
                                                             <p class="mb-0 ms-3 fw-bold" style="width: 120px;" rows="3">
                                                                 {{item_d.recommendations}}
                                                             </p>
                                                         </div>
-                                                    </td>
+                                                    </td>*@
 
                                                     @*Before action*@
                                                     <td class="align-top  px-1">
@@ -937,12 +938,13 @@
                     </button>
                 </div>
                 <div class="modal-body">
-
                     <div class="bg-white position-relative top-1"
-                         ng-repeat="item_x in data_drawingworksheet_responder | filter:{id_worksheet:id_worksheet_select}">
-                        <a href="{{item_x.document_file_path}}" target="_blank">
-                            {{item_x.document_file_name}}
-                        </a>
+                        ng-repeat="item_x in filteredData = (data_drawingworksheet_responder | filter:{id_worksheet:id_worksheet_select})">
+                        <div ng-if="$index === 0 || item_x.id_worksheet !== filteredData[$index - 1].id_worksheet">
+                            <a href="{{item_x.document_file_path}}" target="_blank">
+                                {{item_x.document_file_name}}
+                            </a>
+                        </div>
                     </div>
 
                 </div>
