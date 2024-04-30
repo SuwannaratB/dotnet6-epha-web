@@ -1,3 +1,3 @@
 ﻿<Project>
-  <Import Project="..\buildMultiTargeting\dotnet6-epha-web.props" />
+  <Import Project="../buildMultiTargeting/dotnet6-epha-web.props" />
 </Project>

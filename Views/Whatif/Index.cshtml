@@ -154,9 +154,6 @@
                                aria-controls="tab-{{tab.name}}"
                                aria-selected="tab.isActive">{{ tab.title }}</a>
                         </li>
-                        <div style="display:flex; align-items: center; gap: 10px; position: absolute; bottom:4px; right: 0">
-                            Save data before <b style="font-size: 18px;" ng-class="{ 'blinking-text': (counter < 600) }">{{counter/60 | number:0}}</b> minutes
-                        </div>
                     </ul>
                 </div>
 
@@ -1237,7 +1234,7 @@
                     <div class="" ng-class="{'tab-pane fade show active':(action_part==4),'tab-pane fade':(action_part!==4)}"
                          id="tab-ram" role="tabpanel" aria-labelledby="ram-tab">
 
-                        <div class="m-3 row  gx-0 align-items-center">
+                        <div class="m-3 row  gx-0 align-items-center" ng-if="flow_role_type == 'admin' && tab_worksheet_active ">
 
                             <div class="card px-2 pb-2 ">
                                 <div class="row g-3 justify-content-between align-items-center pt-2 pb-3">
@@ -1793,7 +1790,32 @@
                             </div>
                         </div>
 
+                        <div class="m-3 row  gx-0 align-items-center" ng-if="!(flow_role_type == 'admin') || !tab_worksheet_active">
+                            <div class="card px-2 pb-2 " ng-repeat="itemRam in master_ram | filter:{id: data_general[0].id_ram}">
+                                <div class="row g-3 justify-content-between align-items-center pt-2 pb-3">
+                                    <div class="col-10">
+                                        <h5 class="text-900 mb-0"> <span class=" me-2 text-primary"><B>|</B></span><b class="text-danger"> * </b> Risk Assessment Matrix {{itemRam.name}}</h5>
+                                    </div>
 
+                                    <div class="col-auto">
+                                        <span class="mx-1 d-flex" style="float:right;">
+                                            <a class="m-1 text-info cursor-pointer"
+                                               href="{{y.document_definition_file_path}}" target="_blank"
+                                               ng-repeat="y in master_ram | filter:{id: data_general[0].id_ram}">Definition Consequence Rating<span class="fas fa-file-pdf fa-lg ms-1"></span></a>
+                                        </span>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-12 d-flex justify-content-center">
+                                        <div class="row" style="background-color : #F8F8F8 ; width:75%;">
+                                            <img src="{{itemRam.document_file_path}}" class="cursor-pointer" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
 
                     </div>
                     <!-- RAM end-->
@@ -1899,19 +1921,119 @@
                                     <table class="table fs--2 mb-0 table-bordered " cellpadding="0" cellspacing="0">
                                         <thead class=" text-uppercase  text-center  bg-soft  test" style="font-size: 10px;" id="myHeader">
                                             <tr>
-                                                <th class=" align-middle   mx-0" colspan="1" rowspan="2" style="padding: 0 !important; width: 200px;">List System</th>
-                                                <th class=" align-middle   mx-0" colspan="1" rowspan="2" style="padding: 0 !important; width: 200px;">List Sub System</th>
-                                                <th class=" align-middle   mx-0" colspan="1" rowspan="2" style="padding: 0 !important; width: 200px;">What If (cause)</th>
-                                                <th class=" align-middle   mx-0" colspan="1" rowspan="2" style="padding: 0 !important; width: 200px;">Consequence</th>
-                                                <th class=" align-middle   mx-0" colspan="1" rowspan="2" style="padding: 0 !important;"
-                                                    ng-if="select_columns_level == 5">CAT<br>(P/A/E/R/Q) </th>
-                                                <th class=" align-middle   mx-0" colspan="3" rowspan="1" scope="col" style="padding: 0 !important;"> Risk<br>Assessment</th>
-                                                <th class=" align-middle   mx-0" colspan="1" rowspan="2" scope="col" style="padding: 0 !important; width:100px;"> Safeguard / Mitigation</th>
-                                                <th class=" align-middle   mx-0" colspan="3" rowspan="1" style="padding: 0 !important;">Residual Risk </th>
-                                                <th class=" align-middle   mx-0" colspan="1" rowspan="2" scope="col" style="padding: 0 !important; width: 50px;"> Action<br />No</th>
-                                                <th class=" align-middle   mx-0" colspan="1" rowspan="2" style="padding: 0 !important; width: 200px;">Recommendations</th>
-                                                <th class=" align-middle   mx-0" colspan="1" rowspan="2" style="padding: 0 !important;">Responder</th>
-                                                <th class=" align-middle   mx-0" colspan="1" rowspan="2" scope="col" style="padding: 0 !important;">Action<br>Status</th>
+                                                <th class=" align-middle   mx-0" 
+                                                    colspan="1" 
+                                                    rowspan="2" 
+                                                    style="padding: 0 !important; width: 200px;"
+                                                    data-toggle="tooltip" 
+                                                    data-placement="top" 
+                                                    title="{{data_tooltip[0].title_th}}  {{data_tooltip[0].title_en}}">
+                                                    List System
+                                                </th>
+                                                <th class=" align-middle   mx-0" 
+                                                    colspan="1" 
+                                                    rowspan="2" 
+                                                    style="padding: 0 !important; width: 200px;"
+                                                    data-toggle="tooltip" 
+                                                    data-placement="top" 
+                                                    title="{{data_tooltip[1].title_th}}  {{data_tooltip[1].title_en}}">
+                                                    List Sub System
+                                                </th>
+                                                <th class=" align-middle   mx-0" 
+                                                    colspan="1" 
+                                                    rowspan="2" 
+                                                    style="padding: 0 !important; width: 200px;"
+                                                    data-toggle="tooltip" 
+                                                    data-placement="top" 
+                                                    title="{{data_tooltip[2].title_th}}  {{data_tooltip[2].title_en}}">
+                                                    What If (cause)
+                                                </th>
+                                                <th class=" align-middle   mx-0" 
+                                                    colspan="1" 
+                                                    rowspan="2" 
+                                                    style="padding: 0 !important; width: 200px;"
+                                                    data-toggle="tooltip" 
+                                                    data-placement="top" 
+                                                    title="{{data_tooltip[3].title_th}}  {{data_tooltip[3].title_en}}">
+                                                    Consequence
+                                                </th>
+                                                <th class=" align-middle   mx-0" 
+                                                    colspan="1" 
+                                                    rowspan="2" 
+                                                    style="padding: 0 !important;"
+                                                    ng-if="select_columns_level == 5"
+                                                    data-toggle="tooltip" 
+                                                    data-placement="top" 
+                                                    title="{{data_tooltip[4].title_th}}  {{data_tooltip[4].title_en}}">
+                                                    CAT<br>(P/A/E/R/Q) 
+                                                </th>
+                                                <th class=" align-middle   mx-0" 
+                                                    colspan="3" 
+                                                    rowspan="1" 
+                                                    scope="col" 
+                                                    style="padding: 0 !important;"
+                                                    data-toggle="tooltip" 
+                                                    data-placement="top" 
+                                                    title="{{data_tooltip[5].title_th}}  {{data_tooltip[5].title_en}}">
+                                                    Risk<br>Assessment
+                                                </th>
+                                                <th class=" align-middle   mx-0" 
+                                                    colspan="1" 
+                                                    rowspan="2" 
+                                                    scope="col" 
+                                                    style="padding: 0 !important; width:100px;"
+                                                    data-toggle="tooltip" 
+                                                    data-placement="top" 
+                                                    title="{{data_tooltip[6].title_th}}  {{data_tooltip[6].title_en}}"> 
+                                                    Safeguard / Mitigation
+                                                </th>
+                                                <th class=" align-middle   mx-0" 
+                                                    colspan="3" 
+                                                    rowspan="1" 
+                                                    style="padding: 0 !important;"
+                                                    data-toggle="tooltip" 
+                                                    data-placement="top" 
+                                                    title="{{data_tooltip[7].title_th}}  {{data_tooltip[7].title_en}}">
+                                                    Residual Risk 
+                                                </th>
+                                                <th class=" align-middle   mx-0" 
+                                                    colspan="1" 
+                                                    rowspan="2" 
+                                                    scope="col" 
+                                                    style="padding: 0 !important; width: 50px;"
+                                                    data-toggle="tooltip" 
+                                                    data-placement="top" 
+                                                    title="{{data_tooltip[8].title_th}}  {{data_tooltip[8].title_en}}"> 
+                                                    Action<br />No
+                                                </th>
+                                                <th class=" align-middle   mx-0" 
+                                                    colspan="1" 
+                                                    rowspan="2" 
+                                                    style="padding: 0 !important; width: 200px;"
+                                                    data-toggle="tooltip" 
+                                                    data-placement="top" 
+                                                    title="{{data_tooltip[9].title_th}}  {{data_tooltip[9].title_en}}">
+                                                    Recommendations
+                                                </th>
+                                                <th class=" align-middle   mx-0" 
+                                                    colspan="1" 
+                                                    rowspan="2" 
+                                                    style="padding: 0 !important;"
+                                                    data-toggle="tooltip" 
+                                                    data-placement="top" 
+                                                    title="{{data_tooltip[10].title_th}}  {{data_tooltip[10].title_en}}">
+                                                    Responder
+                                                </th>
+                                                <th class=" align-middle   mx-0" 
+                                                    colspan="1" 
+                                                    rowspan="2" 
+                                                    scope="col" 
+                                                    style="padding: 0 !important;"
+                                                    data-toggle="tooltip" 
+                                                    data-placement="top" 
+                                                    title="{{data_tooltip[11].title_th}}  {{data_tooltip[11].title_en}}">
+                                                    Action<br>Status
+                                                </th>
                                             </tr>
                                             <tr>
                                                 <th class=" align-middle  mx-0" scope="col" style="padding: 0 !important;">S</th>
@@ -1951,6 +2073,16 @@
                                                                         <span class="fas fa-copy"></span>
                                                                         Add
                                                                     </a>
+                                                                    <div class="dropdown-divider"></div>        
+                                                                    <a class="dropdown-item text-primary" ng-click="copyList('list_system',item.seq)">
+                                                                        <span class="fas fa-copy"></span>
+                                                                        Copy
+                                                                    </a>
+                                                                    <div class="dropdown-divider" ng-if="data_copy"></div>        
+                                                                    <a class="dropdown-item" ng-if="data_copy" ng-click="pasteList('list_system',item.seq)">
+                                                                        <span class="fas fa-copy"></span>
+                                                                        Paste
+                                                                    </a>                                                                    
                                                                     <div class="dropdown-divider " ng-if="!(item.list_system_no == 1)"></div>
                                                                     <a class="dropdown-item text-danger" ng-if="!(item.list_system_no == 1)"
                                                                        ng-click="remove_listworksheet('list_system',item,$index)">
@@ -2254,7 +2386,7 @@
                                                                       style=" width: 400px; font-size: 10px;"
                                                                       id="safeguards_worksheet_{{item.seq}}" 
                                                                       name="safeguards_worksheet_{{item.seq}}"
-                                                                      placeholder="Existing Safeguards" 
+                                                                      placeholder="PROTECTION/MITIGATION BARRIERS" 
                                                                       rows="3"
                                                                       ng-model="item.existing_safeguards"
                                                                       ng-keyup="filterResultHistory(item.existing_safeguards, 'safeguards', 'safeguards_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')">
@@ -2803,32 +2935,33 @@
                                                 </div>
 
                                             </td>
+
                                             <td class="align-top rating white-space-nowrap ">
                                                 <div class="d-flex align-items-center text-end ">
                                                     <div class="align-items-center ">
                                                         <p class="transition-none fs--2p-1 ps-0 text-center rounded-1 cursor-pointer"
-                                                           ng-click="openModalDataRAM_Recommendations(item,'s',item.seq,'after',item.id_ram)" style="width: 20px; height:20px">
-                                                            {{item.ram_after_security}}
+                                                           ng-click="openModalDataRAM_Recommendations(item,'s',item.seq,'befor',item.id_ram)" style="width: 20px; height:20px">
+                                                            {{item.ram_befor_security}}
                                                         </p>
                                                     </div>
 
                                                     <div class="align-items-center ">
                                                         <p class="transition-none fs--2p-1 ps-0 text-center rounded-1 cursor-pointer"
-                                                           ng-click="openModalDataRAM_Recommendations(item,'l',item.seq,'after',item.id_ram)" style="width: 20px; height:20px">
-                                                            {{item.ram_after_likelihood}}
+                                                           ng-click="openModalDataRAM_Recommendations(item,'l',item.seq,'befor',item.id_ram)" style="width: 20px; height:20px">
+                                                            {{item.ram_befor_likelihood}}
                                                         </p>
                                                     </div>
 
                                                     <div class="align-items-center ">
-                                                        <p ng-style=" {'color': item.ram_after_risk === 'L' ? 'white' : 'black','background-color' : ((item.ram_after_risk == 'H') ? 'red' : ((item.ram_after_risk == 'M') ? 'yellow' : ((item.ram_after_risk == 'L') ? 'green' : '#D3D3D3')) )}"
+                                                        <p ng-style=" { 'background-color' : ((item.ram_befor_risk == 'H') ? 'red' : ((item.ram_befor_risk == 'M') ? 'yellow' : ((item.ram_befor_risk == 'L') ? 'green' : '#D3D3D3')) ) }"
                                                            class="transition-none fs--2p-1 ps-0 text-center rounded-1 cursor-pointer"
-                                                           ng-click="openModalDataRAM_Recommendations(item,'r',item.seq,'after',item.id_ram)" style="width: 20px; height:20px;">
-                                                            {{item.ram_after_risk}}
+                                                           ng-click="openModalDataRAM_Recommendations(item,'r',item.seq,'befor',item.id_ram)" style="width: 20px; height:20px">
+                                                            {{item.ram_befor_risk}}
                                                         </p>
                                                     </div>
                                                 </div>
-
                                             </td>
+
                                             <td class="align-top rating white-space-nowrap ">
                                                 <div class="d-flex align-items-center text-end ">
                                                     <div class="align-items-center ">
@@ -2846,13 +2979,14 @@
                                                     </div>
 
                                                     <div class="align-items-center ">
-                                                        <p ng-style=" { 'background-color' : ((item.ram_action_risk == 'H') ? 'red' : ((item.ram_action_risk == 'M') ? 'yellow' : ((item.ram_action_risk == 'L') ? 'green' : '#D3D3D3')) ) }"
+                                                        <p ng-style=" {'color': item.ram_action_risk === 'L' ? 'white' : 'black','background-color' : ((item.ram_action_risk == 'H') ? 'red' : ((item.ram_action_risk == 'M') ? 'yellow' : ((item.ram_action_risk == 'L') ? 'green' : '#D3D3D3')) )}"
                                                            class="transition-none fs--2p-1 ps-0 text-center rounded-1 cursor-pointer"
-                                                           ng-click="openModalDataRAM_Recommendations(item,'r',item.seq,'action',item.id_ram)" style="width: 20px; height:20px">
+                                                           ng-click="openModalDataRAM_Recommendations(item,'r',item.seq,'action',item.id_ram)" style="width: 20px; height:20px;">
                                                             {{item.ram_action_risk}}
                                                         </p>
                                                     </div>
                                                 </div>
+
                                             </td>
 
                                             <td class="align-top rating white-space-nowrap">
@@ -3237,10 +3371,11 @@
                                 <tbody class=" list">
 
                                     <tr class="hover-actions-trigger btn-reveal-trigger position-static text-center"
+                                        ng-if="employeelist_show.length > 0 && employeelist_show[0].employee_displayname !== null" ng-repeat="item in employeelist_show"
                                         ng-repeat="item in employeelist_show">
 
                                         <td class="">
-                                            <a class="dropdown-item text-primary"
+                                            <a class="dropdown-item text-primary cursor-pointer"
                                                ng-click="choosDataEmployee(item)">
                                                 Add
                                             </a>
@@ -3262,6 +3397,12 @@
                                         <td class="">{{item.employee_type}}</td>
 
                                     </tr>
+                                    <!-- Show "Not Found" message when employeelist_show is empty or the first item is null -->
+                                    <tr ng-if="employeelist_show[0].employee_displayname === null">
+                                        <td colspan="5">
+                                            <p class="mb-0 ms-3 text-1100 fw-bold text-center"> Not Found </p>
+                                        </td>
+                                    </tr>                                    
                                 </tbody>
                             </table>
 

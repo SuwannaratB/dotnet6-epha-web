@@ -81,11 +81,19 @@ namespace dotnet6_epha_web.Controllers
                         string vectorBase64 = "";
                         string[] xSplit = QueryText.Split('&');
 
-                        if (xSplit.Length > 0)
+                        try
                         {
-                            cipherText = xSplit[0];
-                            keyBase64 = xSplit[1];
-                            vectorBase64 = xSplit[2];
+                            if (xSplit.Length > 0)
+                            {
+                                cipherText = xSplit[0];
+                                keyBase64 = xSplit[1];
+                                vectorBase64 = xSplit[2];
+                            }
+                        }
+                        catch (System.Exception)
+                        {
+                            
+                            return;
                         }
 
                         string token = DecryptDataWithAes(cipherText, keyBase64, vectorBase64);

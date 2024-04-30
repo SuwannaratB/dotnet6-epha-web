@@ -100,7 +100,49 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
 });
 
-AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, $document, $interval) {
+
+AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, $document, $interval, $rootScope, $window) {
+
+    $scope.data_tooltip = [
+        { id:1, title_th: '', title_en: 'List System' },
+        { id:2, title_th: '', title_en: 'List Sub System' },
+        { id:3, title_th: '', title_en: 'What If (cause)' },
+        { id:4, title_th: '', title_en: 'Consequence' },
+        { id:5, title_th: '', title_en: 'CAT (P/A/E/R/Q)' },
+        { id:6, title_th: '', title_en: 'Risk Assessment' },
+        { id:7, title_th: '', title_en: 'Safeguard / Mitigation' },
+        { id:8, title_th: '', title_en: 'Residual Risk' },
+        { id:9, title_th: '', title_en: 'Action No' },
+        { id:10, title_th: '', title_en: 'Recommendations' },
+        { id:11, title_th: '', title_en: 'Responder' },
+        { id:12, title_th: '', title_en: 'Action Status' },
+    ]
+
+    var unsavedChanges = false;
+
+    // Track location changes
+    $rootScope.$on('$locationChangeStart', function(event, next, current) {
+        console.log('Location is changing from:', current, 'to:', next);
+
+        if (unsavedChanges) {
+            var confirmLeave = $window.confirm("You have unsaved changes. Are you sure you want to leave?");
+            if (!confirmLeave) {
+                event.preventDefault();
+            }
+        }
+    });
+
+    // close tab / browser window
+    $window.addEventListener('beforeunload', function(event) {
+        console.log("Trigger Ec=vent",event)
+        if (unsavedChanges) {
+            var confirmationMessage = 'You have unsaved changes. Are you sure you want to leave?';
+    
+            event.preventDefault();
+            event.returnValue = confirmationMessage;
+            return confirmationMessage;
+        }
+    });
 
     function startTimer() {
         $scope.counter = 1800; // 1800 วินาทีเท่ากับ 30 นาที
@@ -302,7 +344,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             if (fileName.toLowerCase().indexOf('.pdf') == -1) {
                 fileInfoSpan.textContent = "";
-                set_alert("Warning", "Please select a PDF file.");
+                set_alert_warning('Warning', 'Please select a PDF file.');
                 if ($scope.previousFile) {
                     input = $scope.previousFile;
                     document.getElementById('filename' + fileSeq).textContent = $scope.prevIileInfoSpan;
@@ -517,7 +559,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         return "";
     }
 
-    function set_alert(header, detail) {
+    /*function set_alert(header, detail) {
         try {
             $scope.$apply(function () {
                 $scope.Action_Msg_Header = header;
@@ -527,6 +569,20 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.Action_Msg_Header = header;
             $scope.Action_Msg_Detail = detail;
         }
+        $('#modalMsg').modal('show');
+    }*/
+
+    function set_alert(header, detail) {
+        $scope.Action_Msg_Header = header;
+        $scope.Action_Msg_Detail = detail;
+        $('#modalMsg').modal('show');
+    }
+
+    function set_alert_warning(header, detail) {
+        $scope.$apply(function () {
+            $scope.Action_Msg_Header = header;
+            $scope.Action_Msg_Detail = detail;
+        });
         $('#modalMsg').modal('show');
     }
 
@@ -1254,6 +1310,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     //แก้ไขเบื้องต้น เนื่องจาก path file ผิดต้องเป็น folder whatif
                     for (let i = 0; i < arr.ram.length; i++) {
                         arr.ram[i].document_file_path = (url_ws.replace('/api/', '/')) + arr.ram[i].document_file_path;
+                        arr.ram[i].document_definition_file_path = (url_ws.replace('/api/', '/')) + arr.ram[i].document_definition_file_path;
                     }
 
                     $scope.master_ram = arr.ram;
@@ -2133,6 +2190,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             iNoNew++;
         };
         if (newInput !== null && newInput.action_type == 'insert') { arr_items.push(newInput); }
+        // Set 1st alway 1
+        if (arr_items.length > 0) {arr_items[0].no = 1;}
         arr_items.sort((a, b) => a.no - b.no);
 
     }
@@ -2887,6 +2946,20 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     );
                 });
 
+                // after reset no
+                const list_system_no = item.list_system_no;
+                const list_sub_system_no = item.list_sub_system_no;
+                /*const list_system_no = item.list_system_no;
+                const causes_no = item.causes_no;
+                const consequences_no = item.consequences_no;*/
+                $scope.data_listworksheet.forEach(function(item) {
+                    if ( item.list_system_no == list_system_no) {
+                        if (item.list_sub_system_no > list_sub_system_no ) {
+                            item.list_sub_system_no = item.list_sub_system_no - 1;
+                        }
+                    }
+                });
+
             } else if (row_type == "causes") {
 
 
@@ -2905,6 +2978,20 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     );
                 });
 
+                // after reset no
+                const list_system_no = item.list_system_no;
+                const list_sub_system_no = item.list_sub_system_no;
+                const causes_no = item.causes_no;
+                /*const causes_no = item.causes_no;
+                const consequences_no = item.consequences_no;*/
+                $scope.data_listworksheet.forEach(function(item) {
+                    if ( item.list_system_no == list_system_no && item.list_sub_system_no == list_sub_system_no) {
+                        if (item.causes_no > causes_no ) {
+                            item.causes_no = item.causes_no - 1;
+                        }
+                    }
+                });
+
             } else if (row_type == "consequences") {
 
                 //เก็บค่า Delete 
@@ -2921,6 +3008,20 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         || (item.seq_consequences == seq_consequences && item.seq_causes == seq_causes && item.seq_list_sub_system == seq_list_sub_system && item.seq_list_system == seq_list_system))
                     );
                 });
+
+
+                // after reset no
+                const list_system_no = item.list_system_no;
+                const list_sub_system_no = item.list_sub_system_no;
+                const causes_no = item.causes_no;
+                const consequences_no = item.consequences_no;
+                $scope.data_listworksheet.forEach(function(item) {
+                    if ( item.list_system_no == list_system_no && item.list_sub_system_no == list_sub_system_no && item.causes_no == causes_no) {
+                        if (item.consequences_no > consequences_no ) {
+                            item.consequences_no = item.consequences_no - 1;
+                        }
+                    }
+                });                
 
 
             } else if (row_type == 'category') {
@@ -2948,8 +3049,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         running_index_worksheet('');
         running_no_level1_lv1($scope.data_listworksheet, 1, 0, null);
-        //running_no_format_2($scope.data_listworksheet, 1, 0, null);
-
 
         if (row_type == "list_system") {
             running_no_list();
@@ -3199,6 +3298,46 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         apply();
 
+    }
+    $scope.copyList = function (level, seq) {
+        if (level && seq) {
+            $scope.data_copy = $scope.data_listworksheet.filter(function(item) {
+                return item.seq === seq;
+            });
+        }
+        console.log("show copy",$scope.data_copy)
+    }
+
+    $scope.pasteList = function (level, seq) {
+        if ($scope.data_copy && level && seq) {
+            $scope.data_listworksheet.forEach(element => {
+                if (element.seq === seq) {
+                   element.action_change = 1;
+                   element.list_system = $scope.data_copy[0].list_system
+                   element.list_sub_system = $scope.data_copy[0].list_sub_system;
+                   element.causes = $scope.data_copy[0].causes;
+                   element.consequences = $scope.data_copy[0].consequences;
+                   element.category_type = $scope.data_copy[0].category_type;
+                   element.ram_befor_risk = $scope.data_copy[0].ram_befor_risk;
+                   element.ram_befor_security = $scope.data_copy[0].ram_befor_security;
+                   element.ram_befor_likelihood = $scope.data_copy[0].ram_befor_likelihood;
+                   element.major_accident_event = $scope.data_copy[0].major_accident_event;
+                   element.existing_safeguards = $scope.data_copy[0].existing_safeguards;
+                    //element.recommendations_no = $scope.data_copy[0].recommendations_no;
+                   element.ram_after_risk = $scope.data_copy[0].ram_after_risk;
+                   element.ram_after_security = $scope.data_copy[0].ram_after_security;
+                   element.ram_after_likelihood = $scope.data_copy[0].ram_after_likelihood;
+                   element.recommendations = $scope.data_copy[0].recommendations;
+                   element.safety_critical_equipment_tag = $scope.data_copy[0].safety_critical_equipment_tag;
+                   element.responder_user_id = $scope.data_copy[0].responder_user_id;
+                   element.responder_user_name = $scope.data_copy[0].responder_user_name;
+                   element.responder_user_displayname = $scope.data_copy[0].responder_user_displayname;
+                   element.responder_user_email = $scope.data_copy[0].responder_user_email;
+                   element.responder_user_img = $scope.data_copy[0].responder_user_img;
+                }
+            });
+            apply();
+        }
     }
 
     $scope.newdata_worksheet_lv1 = function (row_type, item, index) {
@@ -3964,7 +4103,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         set_alert_confirm('Confirm canceling the PHA No.', '');
     }
     $scope.confirmSave = function (action) {
-
+        unsavedChanges = false;
         //check required field 
         var pha_status = $scope.data_header[0].pha_status;
         //11	DF	Draft
@@ -3977,13 +4116,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         //91	CL	Closed
         //81	CN	Cancle
 
-
         //call required field
         if (true) {
             var bCheckRequiredField = false;
 
             if (action == 'submit_register' || action == 'submit_conduct' || action == 'submit_genarate') {
-
+                console.log("now it",pha_status)
                 var bCheckValid = false;
                 var arr_chk = $scope.data_general;
                 if (pha_status == "11") {
@@ -3991,13 +4129,15 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     if (arr_chk[0].sub_expense_type == '' || arr_chk[0].sub_expense_type == null) { set_alert('Warning', 'Please select a valid Sub-Expense Type'); return; }
                     if (arr_chk[0].id_apu == '' || arr_chk[0].id_apu == null) { set_alert('Warning', 'Please select a valid Area Process Unit'); return; }
 
+                    console.log($scope.data_memberteam)
 
                     arr_chk = $scope.data_memberteam;
+                    
                     if (arr_chk.length == 0) { set_alert('Warning', 'Please provide a valid Session List'); return; }
                   
                 }
                 else if (pha_status == "12") {
-
+                    
                     var bCheckValid_Session = false;
                     var bCheckValid_Node = false;
                     var bCheckValid_Worksheet = false;
@@ -4008,10 +4148,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     if (arr_chk[0].id_apu == '' || arr_chk[0].id_apu == null) { set_alert('Warning', 'Please select a valid Area Process Unit'); return; }
 
                     if (true) {
+                        console.log("so will check",$scope.data_memberteam)
                         arr_chk = $scope.data_memberteam;
                         if (arr_chk.length == 0) { set_alert('Warning', 'Please provide a valid Session List'); return; }
                         else {
                             var irows_last = arr_chk.length - 1;
+                            console.log(arr_chk,irows_last,arr_chk[irows_last].user_name)
                             if (arr_chk[irows_last].user_name == null) { set_alert('Warning', 'Please provide a valid Session List'); return; }
                         }
 
@@ -4653,7 +4795,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     //start Update Action Type null to Update 
     $scope.actionChange = function (_arr, _seq, type_text) {
-
+        unsavedChanges = true;
         action_type_changed(_arr, _seq);
 
         var arr_submit = $filter('filter')($scope.data_tasklist, function (item) {
@@ -4672,10 +4814,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         if (type_text == "task") {
             $scope.selectedItemListView = _seq;
         }
+
+        unsavedChanges = true;
         apply();
     }
 
     $scope.actionChangeTaskDrawing = function (_arr, _seq) {
+        unsavedChanges = true;
         action_type_changed(_arr, _seq);
 
         var arr_submit = $filter('filter')($scope.data_tasklist, function (item) {
@@ -4700,10 +4845,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 apply();
             }
         }
+        unsavedChanges = true;
     }
 
     $scope.actionChangeWorksheet = function (_arr, _seq, type_text) {
-
+        unsavedChanges = true;
         if (_arr.recommendations == null || _arr.recommendations == '') {
             if (_arr.recommendations_no == null || _arr.recommendations_no == '') {
                 //recommendations != '' ให้ running action no  
@@ -4720,6 +4866,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         });
 
         if (arr_submit.length > 0) { $scope.submit_type = true; } else { $scope.submit_type = false; }
+
+        unsavedChanges = true;
 
     }
     function action_type_changed(_arr, _seq) {
@@ -4786,10 +4934,16 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             arr = $scope.data_all.his_recommendations;
         }
 
+        var count = 0; 
         for (var i = 0; i < arr.length; i++) {
             var result = arr[i];
             if (result.name.toLowerCase().startsWith(fieldText.toLowerCase())) {
                 $scope.filteredResults.push({ "field": fieldName, "name": result.name });
+                count++;
+            }
+
+            if (count >= 10) {
+                break; 
             }
         }
 

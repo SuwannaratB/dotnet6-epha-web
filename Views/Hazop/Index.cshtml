@@ -74,7 +74,6 @@
         </div>
 
         <div class="col-6 ">
-
             <div class="d-flex align-items-center py-2  justify-content-end">
                 <span class="mx-2">
                     <button class="btn btn-outline-secondary btn-sm" style="width: 100px;" ng-click="confirmBack()">BACK</button>
@@ -85,8 +84,27 @@
                 <span class="mx-2" ng-if="export_type && false">
                     <button class="btn text-light btn-sm" style="background-color: #e90f8b;" ng-click="clickExportReport()">EXPORT/IMPORT</button>
                 </span>
+                @* <span class="mx-2" >
+                    <button class="btn btn-warning btn-sm" 
+                        style="width: 100px;" 
+                        ng-if="params == 'edit' && data_header[0].pha_status == 13 && action_part == 5 && (flow_role_type == 'admin' || flow_role_type == 'originator')"
+                        ng-click="editWorksheet(tab_worksheet_active)">
+                         EDIT
+                    </button>
+                </span> *@
                 <span class="mx-2" ng-if="save_type">
-                    <button class="btn btn-primary btn-sm" style="width: 100px;" ng-click="confirmSave('save')">SAVE</button>
+                    <button class="btn btn-primary btn-sm" 
+                        style="width: 100px;" 
+                        ng-click="confirmSave('save')">
+                        SAVE
+                    </button>
+                </span>
+                <span class="mx-2" ng-if="params == 'edit' && data_header[0].pha_status == 13 && action_part == 5">
+                    <button class="btn btn-primary btn-sm" 
+                        style="width: 100px;" 
+                        ng-click="confirmSave('save')">
+                        CHANGE
+                    </button>
                 </span>
                 <span class="mx-2" ng-if="action_to_review_type">
                     <button class="btn btn-warning btn-sm" style="width: 200px;"
@@ -371,24 +389,31 @@
                             <!-- functional location -->
                             <div class="col-md-7 p-1 align-items-top">
                                 <div class="row g-0 align-items-top">
-
                                     <div class="col-5 p-1">
                                         <label class="form-label ps-0" for="organizerSingle">
                                             Functional Location
                                         </label>
-
-                                        <label class="form-label ps-0" ng-if="select_history_tracking_record"><a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip" data-bs-placement="top" title=" Functional Location : TPX-76-LICSA-002-TX" data-bs-html="true"></a></label>
-
+                                        <label class="form-label ps-0" ng-if="select_history_tracking_record">
+                                            <a class="form-label far fa-comment-alt text-warning cursor-pointer" 
+                                                data-bs-toggle="tooltip" 
+                                                data-bs-placement="top" 
+                                                title=" Functional Location : TPX-76-LICSA-002-TX" 
+                                                data-bs-html="true">
+                                            </a>
+                                        </label>
                                         <div ng-if="!(item.expense_type=='CAPEX' && (item.sub_expense_type=='Study' || item.sub_expense_type=='Internal Study'))">
                                             <select class="form-control js-choice-functional"
                                                     ng-class="{'disabled-link':(!tab_general_active || !(tab_general_active && data_header[0].pha_status<=12 ))}"
                                                     data-choices="data-choices"
                                                     data-options='{"removeItemButton":true,"placeholder":true}'
-                                                    ng-change="actionChange(item,item.seq,'')" ng-model='item.functional_location'
+                                                    ng-change="actionChange(item,item.seq,'')" 
+                                                    ng-model='item.functional_location'
                                                     ng-if="tab_general_active && !(item.expense_type=='CAPEX' && (item.sub_expense_type=='Study' || item.sub_expense_type=='Internal Study'))">
-                                                <option ng-repeat="item2 in master_functional" ng-value="item2.id">{{item2.name}}</option>
+                                                <option disabled ng-value="null">Please select</option>
+                                                <option ng-repeat="item2 in master_functional" 
+                                                        ng-value="item2.id">{{item2.name}}
+                                                </option>
                                             </select>
-
                                             <select class="form-control disabled-link"
                                                     ng-model='item.functional_location'
                                                     ng-if="!tab_general_active && !(item.expense_type=='CAPEX' && (item.sub_expense_type=='Study' || item.sub_expense_type=='Internal Study'))">
@@ -398,9 +423,12 @@
                                         </div>
 
                                         <div ng-if="(item.expense_type=='CAPEX' && (item.sub_expense_type=='Study' || item.sub_expense_type=='Internal Study'))">
-                                            <input class="form-control rounded-1" ng-class="{'disabled-link':(!tab_general_active)}"
-                                                   type="text" placeholder="Functional Location"
-                                                   name="other_functional_location" ng-model="item.other_functional_location" />
+                                            <input class="form-control rounded-1" 
+                                                    ng-class="{'disabled-link':(!tab_general_active)}"
+                                                   type="text" 
+                                                   placeholder="Functional Location"
+                                                   name="other_functional_location" 
+                                                   ng-model="item.other_functional_location" />
                                         </div>
 
 
@@ -680,13 +708,13 @@
                                                                            type="time" placeholder="hour : minute" />
 
                                                                     <select class="form-select rounded-1  me-1 p-1" ng-model="item.meeting_end_time_hh"
-                                                                            style="width:60px">
+                                                                            style="width:60px" ng-change="actionChange(item,item.seq,'')">
                                                                         <option ng-repeat="item2 in master_hours" ng-value="item2.id">
                                                                             {{item2.name}}
                                                                         </option>
                                                                     </select>
                                                                     <select class="form-select rounded-1  me-1 p-1" ng-model="item.meeting_end_time_mm"
-                                                                            style="width:60px">
+                                                                            style="width:60px" ng-change="actionChange(item,item.seq,'')">
                                                                         <option ng-repeat="item2 in master_minutes" ng-value="item2.id">
                                                                             {{item2.name}}
                                                                         </option>
@@ -1233,6 +1261,7 @@
                     <div class="" ng-class="{'tab-pane fade show active':(action_part==4),'tab-pane fade':(action_part!==4)}"
                          id="tab-ram" role="tabpanel" aria-labelledby="ram-tab">
 
+                        <!------&& tab_worksheet_active---->
                         <div class="m-3 row  gx-0 align-items-center" ng-if="flow_role_type == 'admin' && tab_worksheet_active">
                             <div class="card px-2 pb-2 ">
                                 <div class="row g-3 justify-content-between align-items-center pt-2 pb-3">
@@ -1930,30 +1959,167 @@
                                     <table class="table fs--2 mb-0 table-bordered " style="min-height:400px;" cellpadding="0" cellspacing="0">
                                         <thead class=" text-uppercase  text-center  bg-soft  test" style="font-size: 10px;" id="myHeader">
                                             <tr>
-                                                <th title="" class=" align-middle   mx-0" colspan="1" rowspan="2" style="padding: 0 !important;  width: 80px;">Guide Word </th>
-                                                <th title="" class=" align-middle   mx-0 d-none" colspan="1" rowspan="2" scope="col" style="padding: 0 !important; width: 80px;">Deviations</th>
-                                                <th title="" class=" align-middle   mx-0" colspan="1" rowspan="2" scope="col" style="padding: 0 !important; width: 200px;">Causes</th>
-                                                <th title="" class=" align-middle   mx-0" colspan="1" rowspan="2" scope="col" style="padding: 0 !important; width: 200px;">Consequences</th>
-
-                                                <th title="" class=" align-middle   mx-0" colspan="1" rowspan="2" scope="col" style="padding: 0 !important;" ng-if="select_columns_level == 5">CAT<br>(P/A/E/R/Q) </th>
-                                                <th title="" class=" align-middle   mx-0" colspan="3" rowspan="1" scope="col" style="padding: 0 !important;"> Unmitigated Risk<br>Assessment Matrix</th>
-                                                <th title="" class=" align-middle   mx-0" colspan="1" rowspan="2" scope="col" style="padding: 0 !important;">Major <br>Accident<br>Event<br>(Y/N)</th>
-                                                <th title="" class=" align-middle   mx-0" colspan="1" rowspan="2" scope="col" style="padding: 0 !important;" ng-if="data_header[0].safety_critical_equipment_show==1">Safety<br>Critical<br>Equipment<br>(Y/N)</th>
-                                                <th title="" class=" align-middle   mx-0" colspan="1" rowspan="2" scope="col" style="padding: 0 !important; width: 150px;"> Existing Safeguards</th>
-                                                <th title="" class=" align-middle   mx-0" colspan="3" rowspan="1" scope="col" style="padding: 0 !important;"> Mitigated Risk<br>Assessment Matrix</th>
-                                                <th title="" class=" align-middle   mx-0" colspan="1" rowspan="2" scope="col" style="padding: 0 !important; width: 50px;"> Action<br />No</th>
-                                                <th title="" class=" align-middle   mx-0" colspan="1" rowspan="2" scope="col" style="padding: 0 !important; width: 200px;"> Recommendations</th>
-                                                <th title="" class=" align-middle   mx-0" colspan="1" rowspan="2" scope="col" style="padding: 0 !important; width: 200px;" ng-if="data_header[0].safety_critical_equipment_show==1"> Equipment Tag. No.</th>
-                                                <th title="" class=" align-middle   mx-0" colspan="1" rowspan="2" scope="col" style="padding: 0 !important;">Action Owner</th>
-                                                <th title="" class=" align-middle   mx-0" colspan="1" rowspan="2" scope="col" style="padding: 0 !important;">Action<br>Status</th>
+                                                <th class=" align-middle mx-0" 
+                                                    colspan="1" 
+                                                    rowspan="2" 
+                                                    data-toggle="tooltip" 
+                                                    data-placement="top" 
+                                                    title="{{data_tooltip[0].title_th}}  {{data_tooltip[0].title_en}}"
+                                                    style="padding: 0 !important;  width: 80px;">
+                                                    Guide Word 
+                                                </th>
+                                                <th class=" align-middle mx-0 d-none" 
+                                                    colspan="1" 
+                                                    rowspan="2" 
+                                                    scope="col" 
+                                                    data-toggle="tooltip" 
+                                                    data-placement="top" 
+                                                    title="{{data_tooltip[1].title_th}}  {{data_tooltip[1].title_en}}"
+                                                    style="padding: 0 !important; width: 80px;">
+                                                    Deviations
+                                                </th>
+                                                <th class=" align-middle mx-0" 
+                                                    colspan="1" 
+                                                    rowspan="2" 
+                                                    scope="col" 
+                                                    data-toggle="tooltip" 
+                                                    data-placement="top" 
+                                                    title="{{data_tooltip[2].title_th}}  {{data_tooltip[2].title_en}}"
+                                                    style="padding: 0 !important; width: 200px;">
+                                                    Causes
+                                                </th>
+                                                <th class=" align-middle mx-0" 
+                                                    colspan="1" 
+                                                    rowspan="2" 
+                                                    scope="col" 
+                                                    data-toggle="tooltip" 
+                                                    data-placement="top" 
+                                                    title="{{data_tooltip[3].title_th}}  {{data_tooltip[3].title_en}}"
+                                                    style="padding: 0 !important; width: 200px;">
+                                                    Consequences
+                                                </th>
+                                                <th class=" align-middle mx-0" 
+                                                    colspan="1" 
+                                                    rowspan="2" 
+                                                    scope="col" 
+                                                    data-toggle="tooltip" 
+                                                    data-placement="top" 
+                                                    title="P - People&#10;A - Asset&#10;E - Environment&#10;R - Reputation&#10;Q - Quality"
+                                                    style="padding: 0 !important;" 
+                                                    ng-if="select_columns_level == 5">
+                                                    CAT<br>(P/A/E/R/Q) 
+                                                </th>
+                                                <th class=" align-middle mx-0" 
+                                                    colspan="3" 
+                                                    rowspan="1" 
+                                                    scope="col"
+                                                    data-toggle="tooltip" 
+                                                    data-placement="top" 
+                                                    title="{{data_tooltip[5].title_th}}  {{data_tooltip[5].title_en}}" 
+                                                    style="padding: 0 !important;"> 
+                                                    Unmitigated Risk<br>Assessment Matrix
+                                                </th>
+                                                <th class=" align-middle mx-0" 
+                                                    colspan="1" 
+                                                    rowspan="2" 
+                                                    scope="col" 
+                                                    data-toggle="tooltip" 
+                                                    data-placement="top" 
+                                                    title="{{data_tooltip[6].title_th}}  {{data_tooltip[6].title_en}}"
+                                                    style="padding: 0 !important;">
+                                                    Major <br>Accident<br>Event<br>(Y/N)
+                                                </th>
+                                                <th class=" align-middle mx-0" 
+                                                    colspan="1" 
+                                                    rowspan="2" 
+                                                    scope="col"
+                                                    data-toggle="tooltip" 
+                                                    data-placement="top" 
+                                                    title="{{data_tooltip[7].title_th}}  {{data_tooltip[7].title_en}}"
+                                                    style="padding: 0 !important;" 
+                                                    ng-if="data_header[0].safety_critical_equipment_show==1">
+                                                    Safety<br>Critical<br>Equipment<br>(Y/N)
+                                                </th>
+                                                <th class=" align-middle mx-0" 
+                                                    colspan="1" 
+                                                    rowspan="2" 
+                                                    scope="col" 
+                                                    data-toggle="tooltip" 
+                                                    data-placement="top" 
+                                                    title="{{data_tooltip[8].title_th}}  {{data_tooltip[8].title_en}}" 
+                                                    style="padding: 0 !important; width: 150px;"> 
+                                                     Protection/Mitigation Barriers
+                                                </th>
+                                                <th class=" align-middle mx-0" 
+                                                    colspan="3" 
+                                                    rowspan="1" 
+                                                    scope="col"
+                                                    data-toggle="tooltip" 
+                                                    data-placement="top" 
+                                                    title="{{data_tooltip[9].title_th}}  {{data_tooltip[9].title_en}}"
+                                                    style="padding: 0 !important;"> 
+                                                    Mitigated Risk<br>Assessment Matrix
+                                                </th>
+                                                <th class=" align-middle mx-0" 
+                                                    colspan="1" 
+                                                    rowspan="2" 
+                                                    scope="col"
+                                                    data-toggle="tooltip" 
+                                                    data-placement="top" 
+                                                    title="{{data_tooltip[10].title_th}}  {{data_tooltip[10].title_en}}"  
+                                                    style="padding: 0 !important; width: 50px;"> 
+                                                    Action<br />No
+                                                </th>
+                                                <th class=" align-middle mx-0" 
+                                                    colspan="1" 
+                                                    rowspan="2" 
+                                                    scope="col" 
+                                                    data-toggle="tooltip" 
+                                                    data-placement="top" 
+                                                    title="{{data_tooltip[11].title_th}}  {{data_tooltip[11].title_en}}"  
+                                                    style="padding: 0 !important; width: 200px;"> 
+                                                    Recommendations
+                                                </th>
+                                                <th class=" align-middle mx-0" 
+                                                    colspan="1" 
+                                                    rowspan="2" 
+                                                    scope="col" 
+                                                    data-toggle="tooltip" 
+                                                    data-placement="top" 
+                                                    title="{{data_tooltip[12].title_th}}  {{data_tooltip[12].title_en}}"  
+                                                    style="padding: 0 !important; width: 200px;" 
+                                                    ng-if="data_header[0].safety_critical_equipment_show==1"> 
+                                                    Equipment Tag. No.
+                                                </th>
+                                                <th class=" align-middle mx-0" 
+                                                    colspan="1" 
+                                                    rowspan="2" 
+                                                    scope="col" 
+                                                    data-toggle="tooltip" 
+                                                    data-placement="top" 
+                                                    title="{{data_tooltip[13].title_th}}  {{data_tooltip[13].title_en}}"  
+                                                    style="padding: 0 !important;">
+                                                    Action Owner
+                                                </th>
+                                                <th class=" align-middle mx-0" 
+                                                    colspan="1" 
+                                                    rowspan="2" 
+                                                    scope="col" 
+                                                    data-toggle="tooltip" 
+                                                    data-placement="top" 
+                                                    title="{{data_tooltip[14].title_th}}  {{data_tooltip[14].title_en}}"  
+                                                    style="padding: 0 !important;">
+                                                    Action<br>Status
+                                                </th>
                                             </tr>
+
                                             <tr>
-                                                <th title="" class=" align-middle  mx-0" scope="col" style="padding: 0 !important;">S</th>
-                                                <th title="" class=" align-middle  mx-0" scope="col" style="padding: 0 !important;">L</th>
-                                                <th title="" class=" align-middle  mx-0" scope="col" style="padding: 0 !important;">R</th>
-                                                <th title="" class=" align-middle  mx-0" scope="col" style="padding: 0 !important;">S</th>
-                                                <th title="" class=" align-middle  mx-0" scope="col" style="padding: 0 !important;">L</th>
-                                                <th title="" class=" align-middle  mx-0" scope="col" style="padding: 0 !important;">R</th>
+                                                <th title="Severity" class=" align-middle  mx-0 cursor-pointer" scope="col" style="padding: 0 !important;">S</th>
+                                                <th title="Likelihood" class=" align-middle  mx-0 cursor-pointer" scope="col" style="padding: 0 !important;">L</th>
+                                                <th title="Risk" class=" align-middle  mx-0 cursor-pointer" scope="col" style="padding: 0 !important;">R</th>
+                                                <th title="Severity" class=" align-middle  mx-0 cursor-pointer" scope="col" style="padding: 0 !important;">S</th>
+                                                <th title="Likelihood" class=" align-middle  mx-0 cursor-pointer" scope="col" style="padding: 0 !important;">L</th>
+                                                <th title="Risk" class=" align-middle  mx-0 cursor-pointer" scope="col" style="padding: 0 !important;">R</th>
                                             </tr>
                                         </thead>
 
@@ -1993,11 +2159,22 @@
                                                                         <span class="fas fa-copy"></span>
                                                                         Add
                                                                     </a>
+                                                                    <div class="dropdown-divider"></div>        
+                                                                    <a class="dropdown-item text-primary" ng-click="copyNodeList('causes',item.seq)">
+                                                                        <span class="fas fa-copy"></span>
+                                                                        Copy
+                                                                    </a>
+                                                                    <div class="dropdown-divider" ng-if="data_copy"></div>        
+                                                                    <a class="dropdown-item" ng-if="data_copy" ng-click="pasteNodeList('causes',item.seq)">
+                                                                        <span class="fas fa-copy"></span>
+                                                                        Paste
+                                                                    </a>
                                                                     <div class="dropdown-divider " ng-if="!(item.causes_no == 1)"></div>
                                                                     <a class="dropdown-item text-danger"
                                                                        ng-if="!(item.causes_no == 1)"
                                                                        ng-click="removeDataNodeWorksheet('causes',item,$index)">
-                                                                        <span class="fas fa-times-circle"></span> Remove
+                                                                        <span class="fas fa-times-circle"></span> 
+                                                                        Remove
                                                                     </a>
                                                                 </div>
                                                                 <br>
@@ -2009,13 +2186,15 @@
                                                             </div>
                                                         </div>
                                                         <div class="autocomplete-container" style=" width: 100%; " ng-class="{'disabled-link':(!tab_worksheet_active)}">
-                                                            <textarea class="form-control form-control-sm rounded-1 p-0 m-0 w-100 border border-end-0 border-top-0"
+                                                            <textarea class="form-control form-control-sm rounded-1 p-0 m-0 w-100 border border-end-0 border-top-0" 
                                                                       style=" width: 100vh; font-size: 10px;"
-                                                                      id="causes_worksheet_{{item.seq}}" name="causes_worksheet_{{item.seq}}"
-                                                                      placeholder="Causes" rows="3"
+                                                                      id="causes_worksheet_{{item.seq}}" 
+                                                                      name="causes_worksheet_{{item.seq}}"
+                                                                      placeholder="Causes" 
+                                                                      rows="3"
                                                                       ng-model="item.causes"
-                                                                      ng-keyup="filterResultHistory(item.causes, 'causes', 'causes_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')"></textarea>
-
+                                                                      ng-keyup="filterResultHistory(item.causes, 'causes', 'causes_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')">
+                                                            </textarea>
                                                             <div class="autocomplete-dropdown" style="position: absolute;" ng-show="isShow == 'causes_worksheet_'+ item.seq"
                                                                  ng-class="{'ng-show' : (filteredArr[0].fieldID == ('causes_worksheet_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('causes_worksheet_'+item.seq)) }">
                                                                 <div class="autocomplete-option"
@@ -2030,7 +2209,6 @@
                                                          class="invalid-feedback text-danger">
                                                         Please provide a valid Causes.
                                                     </div>
-
                                                 </td>
 
                                                 @* consequences *@
@@ -2057,11 +2235,24 @@
                                                                         <span class="fas fa-copy"></span>
                                                                         Add
                                                                     </a>
-                                                                    <div class="dropdown-divider " ng-if="!(item.consequences_no  == 1)"></div>
+                                                                   <div class="dropdown-divider " ng-if="!(item.consequences_no  == 1)"></div> 
+                                                                    <a class="dropdown-item text-primary" 
+                                                                        ng-click="copyNodeList('causes',item.seq)"
+                                                                        ng-if="item.consequences_no > 1">
+                                                                        <span class="fas fa-copy"></span>
+                                                                        Copy
+                                                                    </a>
+                                                                    <div class="dropdown-divider" ng-if="data_copy"></div>        
+                                                                    <a class="dropdown-item" ng-if="data_copy && item.consequences_no > 1" ng-click="pasteNodeList('causes',item.seq)">
+                                                                        <span class="fas fa-copy"></span>
+                                                                        Paste
+                                                                    </a>
+                                                                    <div class="dropdown-divider" ng-if="item.consequences_no  > 1"></div> 
                                                                     <a class="dropdown-item text-danger"
                                                                         ng-if="!(item.consequences_no == 1)"
                                                                         ng-click="removeDataNodeWorksheet('consequences',item,$index)">
-                                                                        <span class="fas fa-times-circle"></span> Remove
+                                                                        <span class="fas fa-times-circle"></span> 
+                                                                        Remove
                                                                     </a>
                                                                 </div>
                                                                 <br>
@@ -2071,15 +2262,16 @@
                                                                 </button>
                                                             </div>
                                                         </div>
-
                                                         <div class="autocomplete-container" style=" width: 100%; " ng-class="{'disabled-link':(!tab_worksheet_active)}">
                                                             <textarea class="form-control form-control-sm rounded-1 p-0 m-0 w-100 border border-end-0 border-top-0"
                                                                       style=" width: 200px; font-size: 10px;"
-                                                                      id="consequences_worksheet_{{item.seq}}" name="consequences_worksheet_{{item.seq}}"
-                                                                      placeholder="Consequences" rows="3"
+                                                                      id="consequences_worksheet_{{item.seq}}" 
+                                                                      name="consequences_worksheet_{{item.seq}}"
+                                                                      placeholder="Consequences" 
+                                                                      rows="3"
                                                                       ng-model="item.consequences"
-                                                                      ng-keyup="filterResultHistory(item.consequences, 'consequences', 'consequences_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')"></textarea>
-
+                                                                      ng-keyup="filterResultHistory(item.consequences, 'consequences', 'consequences_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')">
+                                                            </textarea>
                                                             <div class="autocomplete-dropdown" style="position: absolute;" ng-show="isShow == 'consequences_worksheet_'+ item.seq"
                                                                  ng-class="{'ng-show' : (filteredArr[0].fieldID == ('consequences_worksheet_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('consequences_worksheet_'+item.seq)) }">
                                                                 <div class="autocomplete-option"
@@ -2089,7 +2281,6 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-
                                                     </div>
                                                     <div id="valid-nodeworksheet-consequences-{{item.seq}}"
                                                          class="invalid-feedback text-danger">
@@ -2101,41 +2292,49 @@
                                                     style="padding: 0 !important; width: 70px;"
                                                     ng-if="select_columns_level == 5">
                                                     <div class="d-flex align-items-top px-0" style="width: 70px;">
-
                                                         <div class="align-top font-sans-serif btn-reveal-trigger position-static pt-1 mx-0 px-0" style="width: 20px;">
                                                             <p class="p-0 m-0 me-1 text-end d-none">
                                                                 {{item.seq_category}}
                                                             </p>
                                                             <div class="" ng-class="{'d-none':(!tab_worksheet_active)}">
                                                                 <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 p-1 mx-1 border border-end-0 border-top-0 text-center"
-                                                                        type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true"
-                                                                        aria-expanded="false" data-bs-reference="parent">
+                                                                        type="button" 
+                                                                        data-bs-toggle="dropdown" 
+                                                                        data-boundary="window" 
+                                                                        aria-haspopup="true"
+                                                                        aria-expanded="false" 
+                                                                        data-bs-reference="parent">
                                                                     <span class="fas fa-cog text-info align-top"></span>
                                                                 </button>
-
                                                                 <div class="dropdown-menu dropdown-menu-end py-2 align-top">
                                                                     <a class="dropdown-item text-success" ng-click="adddata_nodeworksheet_lv1('category',item)">
                                                                         <span class="fas fa-copy"></span>
                                                                         Add
                                                                     </a>
                                                                     <div class="dropdown-divider " ng-if="!(item.category_no == 1)"></div>
-
                                                                     <a class="dropdown-item text-danger"
                                                                        ng-if="!(item.category_no == 1)"
-                                                                       ng-click="removeDataNodeWorksheet('category',item,$index)"><span class="fas fa-times-circle"></span> Remove</a>
+                                                                       ng-click="removeDataNodeWorksheet('category',item,$index)">
+                                                                       <span class="fas fa-times-circle"></span> 
+                                                                       Remove
+                                                                    </a>
                                                                 </div>
-
                                                             </div>
-
                                                         </div>
                                                         <select class="form-select rounded-1 mx-1 p-1  border-start-0  border-end-0 border-top-0 "
                                                                 ng-class="{'disabled-link':(!tab_worksheet_active)}"
-                                                                ng-change="actionChangeWorksheet(item,item.seq,'')" ng-model="item.category_type">
+                                                                ng-change="actionChangeWorksheet(item,item.seq,'')" 
+                                                                ng-model="item.category_type">
                                                             <option ng-selected="item.category_type == item2.id"
-                                                                    ng-repeat="item2 in DataCategory" ng-value="item2.id">
+                                                                    ng-repeat="item2 in DataCategory" 
+                                                                    ng-value="item2.id">
                                                                 {{item2.name}}
                                                             </option>
                                                         </select>
+                                                    </div>
+                                                    <div id="valid-nodeworksheet-category_type-{{item.seq}}"
+                                                        class="invalid-feedback text-danger" style="margin-top: 17px;">
+                                                        Please a valid.
                                                     </div>
                                                 </td>
 
@@ -2155,8 +2354,12 @@
                                                     <div class="align-items-center text-end mt-1" style=" width: 20px;"
                                                          ng-class="{'disabled-link':(!tab_worksheet_active)}">
                                                         <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end"
-                                                                type="button" ng-click="openModalDataRAM_Worksheet(item,'l',item.seq,'befor')">
-                                                            <div class="d-flex"><h6 class="me-1">{{item.ram_befor_likelihood}}</h6> <span class="fas fa-pencil-alt fa-sm d-none" style=" width: 8px;"></span> </div>
+                                                                type="button" 
+                                                                ng-click="openModalDataRAM_Worksheet(item,'l',item.seq,'befor')">
+                                                            <div class="d-flex">
+                                                                <h6 class="me-1">{{item.ram_befor_likelihood}}</h6> 
+                                                                <span class="fas fa-pencil-alt fa-sm d-none" style=" width: 8px;"></span> 
+                                                            </div>
                                                         </button>
                                                     </div>
                                                 </td>
@@ -2166,7 +2369,9 @@
                                                     <div class="align-items-center text-end mt-1" style=" width: 30px;">
                                                         <button ng-style=" { 'background-color' : ((item.ram_befor_risk == 'H') ? 'red' : ((item.ram_befor_risk == 'M') ? 'yellow' : ((item.ram_befor_risk == 'L') ? 'green' : '#D3D3D3')) ) }"
                                                                 class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end"
-                                                                type="button" ng-click="openModalDataRAM_Worksheet(item,'r',item.seq,'befor')" style="width: 30px;">
+                                                                type="button" 
+                                                                ng-click="openModalDataRAM_Worksheet(item,'r',item.seq,'befor')" 
+                                                                style="width: 30px;">
                                                             <div class="d-flex text-center" style=" width: 20px;">
                                                                 <h6 class="me-1 text-center" style=" width: 20px;">{{item.ram_befor_risk}}</h6>
                                                                 <span class="fas fa-pencil-alt fa-sm " style=" width: 8px;"></span>
@@ -2178,21 +2383,32 @@
                                                 <td class="align-top border border-light border-end-0  border-start-0  border-top-0 " style="padding: 0 !important; width: 40px;">
                                                     <div class="d-flex align-items-center text-end mt-1"
                                                          ng-class="{'disabled-link':(!tab_worksheet_active)}">
-                                                        <select class="form-select rounded-1 mx-1 p-1  border-start-0  border-end-0 border-top-0 " style="width: 50px;"
-                                                                ng-change="actionChangeWorksheet(item,item.seq,'')" ng-model="item.major_accident_event">
-                                                            <option value="Y" ng-selected="item.major_accident_event">Y</option>
+                                                        <select class="form-select rounded-1 mx-1 p-1  border-start-0  border-end-0 border-top-0 " 
+                                                                style="width: 50px;"
+                                                                ng-change="actionChangeWorksheet(item,item.seq,'')" 
+                                                                ng-model="item.major_accident_event"
+                                                                ng-selected="item.major_accident_event">
+                                                            <option value="Y" >Y</option>
                                                             <option value="N">N</option>
                                                         </select>
                                                     </div>
+                                                    <div id="valid-nodeworksheet-major_accident_event-{{item.seq}}"
+                                                        class="invalid-feedback text-danger" style="margin-top: 17px;">
+                                                        Please a valid.
+                                                    </div>
                                                 </td>
 
-                                                <td class="align-top border border-light border-end-0  border-start-0  border-top-0 " style="padding: 0 !important; width: 40px;"
+                                                <td class="align-top border border-light border-end-0  border-start-0  border-top-0 " 
+                                                    style="padding: 0 !important; width: 40px;"
                                                     ng-if="data_header[0].safety_critical_equipment_show==1">
                                                     <div class="d-flex align-items-center text-end mt-1"
                                                          ng-class="{'disabled-link':(!tab_worksheet_active)}">
-                                                        <select class="form-select rounded-1 mx-1 p-1  border-start-0  border-end-0 border-top-0 " style="width: 50px;"
-                                                                ng-change="actionChangeWorksheet(item,item.seq,'')" ng-model="item.safety_critical_equipment">
-                                                            <option value="Y" ng-selected="item.safety_critical_equipment">Y</option>
+                                                        <select class="form-select rounded-1 mx-1 p-1  border-start-0  border-end-0 border-top-0 " 
+                                                                style="width: 50px;"
+                                                                ng-change="actionChangeWorksheet(item,item.seq,'')" 
+                                                                ng-model="item.safety_critical_equipment"
+                                                                ng-selected="item.safety_critical_equipment">
+                                                            <option value="Y" >Y</option>
                                                             <option value="N">N</option>
                                                         </select>
                                                     </div>
@@ -2206,7 +2422,7 @@
                                                                     style=" width: 400px; font-size: 10px;"
                                                                     id="existing_safeguards_worksheet_{{item.seq}}" 
                                                                     name="existing_safeguards_worksheet_{{item.seq}}"
-                                                                    placeholder="Existing Safeguards" 
+                                                                    placeholder=" Protection/Mitigation Barriers" 
                                                                     rows="3"
                                                                     ng-model="item.existing_safeguards"
                                                                     ng-keyup="filterResultHistory(item.existing_safeguards, 'existing_safeguards', 'existing_safeguards_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')">
@@ -2223,14 +2439,22 @@
                                                             </div>
                                                         </div>
                                                     </div>
+                                                     <div id="valid-nodeworksheet-existing_safeguards-{{item.seq}}"
+                                                        class="invalid-feedback text-danger">
+                                                        Please provide a valid Existing Safeguards.
+                                                    </div>
                                                 </td>
 
                                                 <td class="align-top border border-light border-end-0  border-start-0  border-top-0 "
                                                     style="padding: 0 !important; width: 20px;">
                                                     <div class="align-items-center text-end mt-1" style=" width: 20px;" ng-class="{'disabled-link':(!tab_worksheet_active)}">
                                                         <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end"
-                                                                type="button" ng-click="openModalDataRAM_Worksheet(item,'s',item.seq,'after')">
-                                                            <div class="d-flex"><h6 class="me-1">{{item.ram_after_security}}</h6> <span class="fas fa-pencil-alt fa-sm d-none" style=" width: 8px;"></span> </div>
+                                                                type="button" 
+                                                                ng-click="openModalDataRAM_Worksheet(item,'s',item.seq,'after')">
+                                                            <div class="d-flex">
+                                                                <h6 class="me-1">{{item.ram_after_security}}</h6> 
+                                                                <span class="fas fa-pencil-alt fa-sm d-none" style=" width: 8px;"></span> 
+                                                            </div>
                                                         </button>
                                                     </div>
                                                 </td>
@@ -2239,8 +2463,12 @@
                                                     style="padding: 0 !important; width: 20px;">
                                                     <div class="align-items-center text-end mt-1" style=" width: 20px;" ng-class="{'disabled-link':(!tab_worksheet_active)}">
                                                         <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end"
-                                                                type="button" ng-click="openModalDataRAM_Worksheet(item,'l',item.seq,'after')">
-                                                            <div class="d-flex"><h6 class="me-1">{{item.ram_after_likelihood}}</h6> <span class="fas fa-pencil-alt fa-sm d-none" style=" width: 8px;"></span> </div>
+                                                                type="button" 
+                                                                ng-click="openModalDataRAM_Worksheet(item,'l',item.seq,'after')">
+                                                            <div class="d-flex">
+                                                                <h6 class="me-1">{{item.ram_after_likelihood}}</h6> 
+                                                                <span class="fas fa-pencil-alt fa-sm d-none" style=" width: 8px;"></span> 
+                                                            </div>
                                                         </button>
                                                     </div>
                                                 </td>
@@ -2250,51 +2478,55 @@
                                                     <div class="align-items-center text-end mt-1" style=" width: 30px;">
                                                         <button ng-style=" { 'background-color' : ((item.ram_after_risk == 'H') ? 'red' : ((item.ram_after_risk == 'M') ? 'yellow' : ((item.ram_after_risk == 'L') ? 'green' : '#D3D3D3')) ) }"
                                                                 class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end"
-                                                                type="button" ng-click="openModalDataRAM_Worksheet(item,'r',item.seq,'after')" style="width: 30px;">
-                                                            <div class="d-flex text-center" style=" width: 25px;"><h6 class="me-1 text-center" style=" width: 30px;">{{item.ram_after_risk}}</h6><span class="fas fa-pencil-alt fa-sm " style=" width: 8px;"></span></div>
+                                                                type="button" 
+                                                                ng-click="openModalDataRAM_Worksheet(item,'r',item.seq,'after')" 
+                                                                style="width: 30px;">
+                                                            <div class="d-flex text-center" style=" width: 25px;">
+                                                                <h6 class="me-1 text-center" style=" width: 30px;">{{item.ram_after_risk}}</h6>
+                                                                <span class="fas fa-pencil-alt fa-sm " style=" width: 8px;"></span>
+                                                            </div>
                                                         </button>
                                                     </div>
                                                 </td>
 
                                                 <td class="align-top border border-light border-end-0  border-start-0  border-top-0 " style="padding: 0 !important;">
-
                                                     <div class="d-flex align-items-top w-100">
-
-                                                        <div class="autocomplete-container" style=" width: 100%; " ng-class="{'disabled-link':(!tab_worksheet_active)}"
-                                                             ng-if="item.recommendations!=''">
-
+                                                        <div class="autocomplete-container" 
+                                                            style=" width: 100%; " 
+                                                            ng-class="{'disabled-link':(!tab_worksheet_active)}"
+                                                            ng-if="item.recommendations!=''">
                                                             <textarea class="form-control form-control-sm rounded-1 p-0 m-0 w-100 border border-end-0 border-top-0 text-center"
                                                                       style=" width: 50px; font-size: 10px;"
-                                                                      placeholder="No" rows="1"
+                                                                      placeholder="No" 
+                                                                      rows="1"
                                                                       ng-model="item.recommendations_no"
-                                                                      ng-keyup="actionChangeWorksheet(item,item.seq,'')"></textarea>
-
+                                                                      ng-keyup="actionChangeWorksheet(item,item.seq,'')">
+                                                            </textarea>
                                                         </div>
-
                                                     </div>
-
                                                 </td>
 
                                                 <td class="align-top border border-light border-end-0  border-start-0  border-top-0 " style="padding: 0 !important;">
-
                                                     <div class="d-flex align-items-top w-100">
-
                                                         <span class=" font-sans-serif btn-reveal-trigger position-static pt-1 disabled-link  d-none" ng-class="{'d-none':(!tab_worksheet_active)}">
-
-                                                            <button data-bs-toggle="modal" data-bs-target="#modalSuggestionRecommendations"
+                                                            <button data-bs-toggle="modal" 
+                                                                    data-bs-target="#modalSuggestionRecommendations"
                                                                     class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 text-align-end p-1">
                                                                 <span class="fas fa-lightbulb text-warning align-top"></span>
                                                             </button>
                                                         </span>
-
                                                         <div class="autocomplete-container" style=" width: 100%; " ng-class="{'disabled-link':(!tab_worksheet_active)}">
                                                             <textarea class="form-control form-control-sm rounded-1 p-0 m-0 w-100 border border-end-0 border-top-0"
                                                                       style=" width: 400px; font-size: 10px;"
-                                                                      id="recommendations_worksheet_{{item.seq}}" name="recommendations_worksheet_{{item.seq}}"
-                                                                      placeholder="Recommendations" rows="3"
+                                                                      id="recommendations_worksheet_{{item.seq}}" 
+                                                                      name="recommendations_worksheet_{{item.seq}}"
+                                                                      placeholder="Recommendations" 
+                                                                      rows="3"
                                                                       ng-model="item.recommendations"
-                                                                      ng-keyup="filterResultHistory(item.recommendations, 'recommendations', 'recommendations_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')"></textarea>
-
+                                                                      ng-change="recommentAction($index)"
+                                                                      ng-keyup="
+                                                                      filterResultHistory(item.recommendations, 'recommendations', 'recommendations_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')">
+                                                            </textarea>
                                                             <div class="autocomplete-dropdown" style="position: absolute;" ng-show="isShow == 'recommendations_worksheet_'+ item.seq"
                                                                  ng-class="{'ng-show' : (filteredArr[0].fieldID == ('recommendations_worksheet_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('recommendations_worksheet_'+item.seq)) }">
                                                                 <div class="autocomplete-option"
@@ -2304,23 +2536,22 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-
                                                     </div>
-
                                                 </td>
 
                                                 <td class="align-top border border-light border-end-0  border-start-0  border-top-0 " style="padding: 0 !important;"
                                                     ng-if="data_header[0].safety_critical_equipment_show==1">
                                                     <div class="d-flex align-items-top w-100">
-
                                                         <div class="autocomplete-container" style=" width: 100%; " ng-class="{'disabled-link':(!tab_worksheet_active)}">
                                                             <textarea class="form-control form-control-sm rounded-1 p-0 m-0 w-100 border border-end-0 border-top-0"
                                                                       style=" width: 400px; font-size: 10px;"
-                                                                      id="safety_critical_equipment_tag_worksheet_{{item.seq}}" name="safety_critical_equipment_tag_worksheet_{{item.seq}}"
-                                                                      placeholder="EquipmentTagNo" rows="3"
+                                                                      id="safety_critical_equipment_tag_worksheet_{{item.seq}}" 
+                                                                      name="safety_critical_equipment_tag_worksheet_{{item.seq}}"
+                                                                      placeholder="EquipmentTagNo" 
+                                                                      rows="3"
                                                                       ng-model="item.safety_critical_equipment_tag"
-                                                                      ng-keyup="filterResultHistory(item.safety_critical_equipment_tag, 'safety_critical_equipment_tag', 'safety_critical_equipment_tag'+ item.seq);actionChangeWorksheet(item,item.seq,'')"></textarea>
-
+                                                                      ng-keyup="filterResultHistory(item.safety_critical_equipment_tag, 'safety_critical_equipment_tag', 'safety_critical_equipment_tag'+ item.seq);actionChangeWorksheet(item,item.seq,'')">
+                                                            </textarea>
                                                             <div class="autocomplete-dropdown" style="position: absolute;" ng-show="showResults"
                                                                  ng-class="{'ng-show' : (filteredArr[0].fieldID == ('safety_critical_equipment_tag_worksheet_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('safety_critical_equipment_tag_worksheet_'+item.seq)) }">
                                                                 <div class="autocomplete-option"
@@ -2337,15 +2568,17 @@
 
                                                 <td class="align-top border border-light border-end-0  border-start-0  border-top-0 " style="padding: 0 !important; width: 120px;">
                                                     <div class="d-flex align-items-center ">
-                                                        <div class="" ng-class="{'disabled-link':(!tab_worksheet_active)}">
-                                                            <button ng-click="openDataEmployeeAdd(item,'owner')" 
+                                                        <div class="" ng-class="{'disabled-link':(!action_owner_active)}">
+                                                            <button ng-click="
+                                                                    openDataEmployeeAdd(item,'owner'); 
+                                                                    recommentAction_valid(item);" 
                                                                     class="btn btn-link px-0 mx-1"
                                                                     data-toggle="tooltip" 
-                                                                    data-placement="top" 
                                                                     title="Add Employee">
                                                                 <span class="far fa-address-book"></span>
                                                             </button>
-                                                            <button class="btn btn-sm transition-none btn-reveal fs--2 p-1 " type="button"
+                                                            <button class="btn btn-sm transition-none btn-reveal fs--2 p-1 " 
+                                                                    type="button"
                                                                     ng-click="removeDataEmpWorkSheet('worksheet',item.seq)"
                                                                     ng-if="item.responder_id>0">
                                                                 <span class="fas fa-times text-danger"></span>
@@ -2356,7 +2589,7 @@
                                                         </p>
                                                     </div>
                                                     <div id="valid-nodeworksheet-responder-{{item.seq}}"
-                                                         class="invalid-feedback text-danger">
+                                                         class="invalid-feedback text-danger ">
                                                         Please provide a valid Responder.
                                                     </div>
                                                 </td>
@@ -2663,9 +2896,9 @@
                                             <th class=" align-middle" colspan="1" rowspan="3">Casuse No.</th>
                                             <th class=" align-middle text-start" colspan="1" rowspan="3">Recommendations</th>
                                             <th class=" align-middle" colspan="1" rowspan="3">Action Owner</th>
-                                            <th class=" align-middle" colspan="1" rowspan="3" ng-if="data_header[0].pha_status >12">Document File</th>
+                                            <th class=" align-middle" colspan="1" rowspan="3" ng-if="data_header[0].pha_status >12"> hazop recommendations responded sheet</th>
 
-                                            <th class=" align-middle" colspan="1" rowspan="3">implement</th>
+                                            <!-- <th class=" align-middle" colspan="1" rowspan="3">implement</th>  -->
 
                                             <th class=" align-middle " colspan="2" rowspan="1">
                                                 <b class="text-danger"> * </b>Recommendations Close Plan
@@ -2740,6 +2973,7 @@
                                                     </label>
                                                 </div>
                                             </td>
+
                                             <td class="align-top rating white-space-nowrap">
                                                 <div class="ms-3">
                                                     <label>
@@ -2747,6 +2981,7 @@
                                                     </label>
                                                 </div>
                                             </td>
+
                                             <td class="align-top rating white-space-nowrap">
                                                 <div class="ms-3">
                                                     <label>
@@ -2754,6 +2989,7 @@
                                                     </label>
                                                 </div>
                                             </td>
+
                                             <td class="align-top rating white-space-nowrap text-start">
                                                 <div class="ms-3">
                                                     <label>
@@ -2761,6 +2997,7 @@
                                                     </label>
                                                 </div>
                                             </td>
+
                                             <td class="align-top rating white-space-nowrap">
                                                 <div class="ms-3">
                                                     <label>
@@ -2768,6 +3005,7 @@
                                                     </label>
                                                 </div>
                                             </td>
+
                                             <td class="align-top rating white-space-nowrap" ng-if="data_header[0].pha_status >12">
                                                 <div class="ms-3 text-start d-none">
                                                     <a class="nametext ms-3 filename-text me-2 cursor-pointer" ng-click="downloadFileOwner(item)"
@@ -2798,7 +3036,8 @@
                                                 </div>
 
                                             </td>
-                                            <td class="align-top rating white-space-nowrap">
+
+                                            <!-- <td class="align-top rating white-space-nowrap">
                                                 <div class="ms-3">
 
                                                     <input type="checkbox" ng-if="(item.implement==1)" checked
@@ -2809,21 +3048,25 @@
                                                            ng-click="actionChangeWorksheet(item,item.seq,'implement_check')"
                                                            style="cursor: pointer;width:20px; height:20px;">
                                                 </div>
-                                            </td>
+                                            </td> -->
+
                                             <td class="align-top rating white-space-nowrap">
-                                                <input type="date" class="form-control datetimepicker rounded-1" ng-class="{'disabled-link':(!tab_managerecom_active)}"
+                                                <input type="date" 
+                                                        class="form-control datetimepicker rounded-1" 
+                                                        ng-class="{'disabled-link':(!tab_managerecom_active)}"
                                                        placeholder="Start Date dd/mm/yyyy"
                                                        ng-model="item.estimated_start_date"
                                                        ng-change="actionChangeWorksheet(item,item.seq,'')">
-
-
                                                 <div id="valid-nodeworksheet-estimated-start-{{item.seq}}"
                                                      class="invalid-feedback text-danger">
                                                     Please provide a valid Responder.
                                                 </div>
                                             </td>
+
                                             <td class="align-top rating white-space-nowrap">
-                                                <input type="date" class="form-control  datetimepicker rounded-1" ng-class="{'disabled-link':(!tab_managerecom_active)}"
+                                                <input type="date" 
+                                                        class="form-control  datetimepicker rounded-1" 
+                                                        ng-class="{'disabled-link':(!tab_managerecom_active)}"
                                                        placeholder="End Date dd/mm/yyyy"
                                                        ng-model="item.estimated_end_date"
                                                        ng-change="actionChangeWorksheet(item,item.seq,'')">
@@ -2832,27 +3075,28 @@
                                                     Please provide a valid Responder.
                                                 </div>
                                             </td>
+
                                             <td class="align-top rating white-space-nowrap ">
                                                 <div class="d-flex align-items-center text-end ">
                                                     <div class="align-items-center ">
                                                         <p class="transition-none fs--2p-1 ps-0 text-center rounded-1 cursor-pointer"
-                                                           ng-click="openModalDataRAM_Worksheet(item,'s',item.seq,'action',item.id_ram)" style="width: 20px; height:20px">
-                                                            {{item.ram_action_security}}
+                                                           style="width: 20px; height:20px">
+                                                            {{item.ram_befor_security}}
                                                         </p>
                                                     </div>
 
                                                     <div class="align-items-center ">
                                                         <p class="transition-none fs--2p-1 ps-0 text-center rounded-1 cursor-pointer"
-                                                           ng-click="openModalDataRAM_Worksheet(item,'l',item.seq,'action',item.id_ram)" style="width: 20px; height:20px">
-                                                            {{item.ram_action_likelihood}}
+                                                           style="width: 20px; height:20px">
+                                                            {{item.ram_befor_likelihood}}
                                                         </p>
                                                     </div>
 
                                                     <div class="align-items-center ">
-                                                        <p ng-style=" { 'background-color' : ((item.ram_action_risk == 'H') ? 'red' : ((item.ram_action_risk == 'M') ? 'yellow' : ((item.ram_action_risk == 'L') ? 'green' : '#D3D3D3')) ) }"
+                                                        <p ng-style=" { 'background-color' : ((item.ram_befor_risk == 'H') ? 'red' : ((item.ram_befor_risk == 'M') ? 'yellow' : ((item.ram_befor_risk == 'L') ? 'green' : '#D3D3D3')) ) }"
                                                            class="transition-none fs--2p-1 ps-0 text-center rounded-1 cursor-pointer"
-                                                           ng-click="openModalDataRAM_Worksheet(item,'r',item.seq,'action',item.id_ram)" style="width: 20px; height:20px">
-                                                            {{item.ram_action_risk}}
+                                                           style="width: 20px; height:20px">
+                                                            {{item.ram_befor_risk}}
                                                         </p>
                                                     </div>
                                                 </div>
@@ -2863,27 +3107,30 @@
                                                     <div class="align-items-center ">
                                                         <p class="transition-none fs--2p-1 ps-0 text-center rounded-1 cursor-pointer"
                                                            ng-click="openModalDataRAM_Worksheet(item,'s',item.seq,'after',item.id_ram)" style="width: 20px; height:20px">
-                                                            {{item.ram_after_security}}
+                                                            {{item.ram_action_security}}
                                                         </p>
                                                     </div>
 
                                                     <div class="align-items-center ">
                                                         <p class="transition-none fs--2p-1 ps-0 text-center rounded-1 cursor-pointer"
-                                                           ng-click="openModalDataRAM_Worksheet(item,'l',item.seq,'after',item.id_ram)" style="width: 20px; height:20px">
-                                                            {{item.ram_after_likelihood}}
+                                                            ng-click="openModalDataRAM_Worksheet(item,'r',item.seq,'action',item.id_ram)"
+                                                            style="width: 20px; height:20px">
+                                                            {{item.ram_action_likelihood}}
                                                         </p>
                                                     </div>
 
                                                     <div class="align-items-center ">
-                                                        <p ng-style=" {'color': item.ram_after_risk === 'L' ? 'white' : 'black','background-color' : ((item.ram_after_risk == 'H') ? 'red' : ((item.ram_after_risk == 'M') ? 'yellow' : ((item.ram_after_risk == 'L') ? 'green' : '#D3D3D3')) )}"
-                                                           class="transition-none fs--2p-1 ps-0 text-center rounded-1 cursor-pointer"
-                                                           ng-click="openModalDataRAM_Worksheet(item,'r',item.seq,'after',item.id_ram)" style="width: 20px; height:20px;">
-                                                            {{item.ram_after_risk}}
+                                                        <p ng-style=" { 'background-color' : ((item.ram_action_risk == 'H') ? 'red' : ((item.ram_action_risk == 'M') ? 'yellow' : ((item.ram_action_risk == 'L') ? 'green' : '#D3D3D3')) ) }"
+                                                            class="transition-none fs--2p-1 ps-0 text-center rounded-1 cursor-pointer"
+                                                            ng-click="openModalDataRAM_Worksheet(item,'r',item.seq,'action',item.id_ram)"
+                                                            style="width: 20px; height:20px;">
+                                                            {{item.ram_action_risk}}
                                                         </p>
                                                     </div>
                                                 </div>
 
                                             </td>
+                                            
                                             <td class="align-top rating white-space-nowrap">
                                                 <div class="ms-3">
                                                     <label>
@@ -2891,6 +3138,7 @@
                                                     </label>
                                                 </div>
                                             </td>
+
                                             <td class="align-top  px-0" style=" width: 80px;">
                                                 <div class="align-items-center ">
                                                     <p><b>{{item.reviewer_date}}</b></p>
@@ -3258,11 +3506,12 @@
                                 <tbody class=" list">
 
                                     <tr class="hover-actions-trigger btn-reveal-trigger position-static text-center"
-                                        ng-repeat="item in employeelist_show">
+                                        ng-if="employeelist_show.length > 0 && employeelist_show[0].employee_displayname !== null" ng-repeat="item in employeelist_show">
 
                                         <td class="">
                                             <a class="dropdown-item text-primary"
-                                               ng-click="choosDataEmployee(item)">
+                                               ng-click="choosDataEmployee(item)"
+                                               style="cursor: pointer;">
                                                 @* <span class="fas fa-check"></span> *@
                                                 Add
                                             </a>
@@ -3284,6 +3533,12 @@
 
                                         <td class="">{{item.employee_type}}</td>
 
+                                    </tr>
+                                    <!-- Show "Not Found" message when employeelist_show is empty or the first item is null -->
+                                    <tr ng-if="employeelist_show[0].employee_displayname === null">
+                                        <td colspan="5">
+                                            <p class="mb-0 ms-3 text-1100 fw-bold text-center"> Not Found </p>
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -4720,6 +4975,39 @@
         </div>
     </div>
     <!--Modal Export File Reviewer End-->
+    @* Modal Confirm *@
+    <div class="modal fade" id="modalEditConfirm" tabindex="-1" aria-labelledby="modalEditConfirm" aria-hidden="true"
+         style="display: none;">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="text-900 mb-0" data-anchor="data-anchor" id="modalEditConfirm">
+                        <span class=" me-2 text-primary"><B>|</B></span> Do you want to confirm to change?
+                    </h5>
+
+                    <button class="btn p-1" type="button" data-bs-dismiss="modal" aria-label="Close">
+                        <svg class="svg-inline--fa fa-xmark fs--1" aria-hidden="true" focusable="false"
+                             data-prefix="fas" data-icon="xmark" role="img" xmlns="http://www.w3.org/2000/svg"
+                             viewBox="0 0 320 512" data-fa-i2svg="">
+                            <path fill="currentColor"
+                                  d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 
+                                  301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 
+                                  0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 
+                                  210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z">
+                            </path>
+                        </svg>
+                    </button>
+
+                </div>
+                <div class="modal-body">
+                    <div class="col-auto" style="float:right">
+                        <button style="width:100px;" class="btn btn-success me-1 mb-1" type="button" ng-click="confirmEdit()">Yes</button>
+                        <button style="width:100px;" class="btn btn-outline-secondary me-1 mb-1" ng-click="cancelEdit()" type="button">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </div>
 
