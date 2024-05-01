@@ -71,6 +71,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
             fileInfoSpan.textContent = "";
             $scope.fileInfoSpan = '';
         }
+
     }
     function uploadFile(file_obj, seq, file_name, file_size) {
 
@@ -352,15 +353,33 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
         fileUpload.value = ''; // ล้างค่าใน input file
         fileNameDisplay.textContent = ''; // ล้างข้อความที่แสดงชื่อไฟล์
 
+        //หา same  id_worksheet if > 1 splice item_draw , if === 1 set null
+        var item_draw_worksheet = $scope.data_drawingworksheet.filter(function(item) {
+            return item.id_worksheet === item_draw.id_worksheet;
+        });
+    
+        if (item_draw_worksheet.length === 1) {
+            item_draw.document_file_name = "";
+            item_draw.document_file_path = "";
+            item_draw.document_file_size = 0;
+        } else {
+            var del_item_draw = $scope.data_drawingworksheet.findIndex(function(item) {
+                return item.seq === item_draw.seq;
+            });
+            if (del_item_draw !== -1) {
+                $scope.data_drawingworksheet.splice(del_item_draw, 1);
+            }
+        }
+
         //var del = document.getElementById('del-' + seq);
         //del.style.display = "none";
 
-        if ($scope.data_drawingworksheet.length > 1) {
+        /*if ($scope.data_drawingworksheet.length > 1) {
             var arr = $filter('filter')($scope.data_drawingworksheet, function (item) { 
                 return (item.seq != seq); 
             });
             $scope.data_drawingworksheet = arr;
-        }
+        }*/
 
         // var arr = $filter('filter')($scope.data_drawingworksheet, function (item) { return (item.seq == seq); });
         // if (arr.length > 0) {
@@ -446,6 +465,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                 $("#divLoading").hide();
             },
             success: function (data) {
+
                 var arr = data;
 
                 var iNoNew = 1;
@@ -453,6 +473,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                     arr.details[i].no = (iNoNew);
                     iNoNew++;
                 };
+
+                // implement to numbers
+                for (let i = 0; i < arr.details.length; i++) {
+                    arr.details[i].implement = parseInt(arr.details[i].implement);
+                    // set true false 
+                    arr.details[i].implement = arr.details[i].implement === 1;
+                }
 
                 $scope.data_pha_doc = arr.pha_doc;//pha_status,pha_no
                 $scope.data_header = arr.general;
@@ -463,15 +490,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                 $scope.data_drawingworksheet_reviewer = arr.drawingworksheet_reviewer;
                 $scope.selected_ram_img = (url_ws.replace('/api/', '/')) + 'AttachedFileTemp/rma-img-' + $scope.select_rows_level + 'x' + $scope.select_columns_level + '.png';
 
-                console.log("show detail",$scope.data_pha_doc)
                 // add key implement def true for status 13 
                 $scope.data_details.forEach(function(_item) {
-                    if ($scope.data_pha_doc != 14 ) {
+                    if ($scope.data_pha_doc != 14 && _item.responder_comment === null) {
                         _item.implement = true;
-                    }
+                    } 
                 });
-
-                console.log("show detail",$scope.data_details) 
 
                 if (true) {
                     $scope.MaxSeqdata_drawing_worksheet = 0;
@@ -579,6 +603,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
             }
             $scope.confirmSaveReviewFollowup('save', item);
         }
+
         unsavedChanges = false;
     };
 
@@ -676,6 +701,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                     console.log('im save')
                     return;
                 }
+
             }else {
                 var docfiles = $filter('filter')($scope.data_drawingworksheet, function (_item) {
                     return (_item.id_worksheet == item.seq && 
@@ -689,6 +715,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                     return
                 }
             }
+
 
             if ($scope.data_drawingworksheet.length > 0) {
                 var arr_drawing = $filter('filter')($scope.data_drawingworksheet, function (item) {
@@ -716,6 +743,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                 }
 
             }
+
+            console.log(item, action)
+
+            //item$scope.isSelectFile = true;
 
             $('#modalConfirmSubmit').modal('show');
             $scope.seq_select = item.seq;
@@ -783,7 +814,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
     }
 
     $scope.confirmSaveFollowup = function (action, _item) {
-
         var arr_active = [];
         angular.copy($scope.data_details, arr_active);
 
@@ -797,6 +827,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                 return (item.seq == _item.seq);
             });
         }
+
+        // Set item.implement bfor save
+        for (let i = 0; i < arr_json.length; i++) {
+            arr_json[i].implement = arr_json[i].implement === true ? 1 : 0;
+        }        
 
         var json_managerecom = angular.toJson(arr_json);
         var json_drawingworksheet = check_data_drawingworksheet(_item.seq);
@@ -884,6 +919,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
     }
     $scope.confirmSaveReviewFollowup = function (action, _item) {
           
+        console.log(action, _item)
         var json_drawingworksheet = check_data_drawingworksheet(_item.seq);
 
         var arr_active = [];
@@ -907,8 +943,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                 };
             }
         }
-        var json_managerecom = angular.toJson(arr_json);
 
+        // Set item.implement bfor save
+        for (let i = 0; i < arr_json.length; i++) {
+            arr_json[i].implement = arr_json[i].implement === true ? 1 : 0;
+        }  
+
+        var json_managerecom = angular.toJson(arr_json);
 
         var user_name = $scope.user_name;
         var flow_action = action;
@@ -951,6 +992,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                             }
                         }
                     }
+
                     if (action == 'save') {
                         $scope.Action_Msg_Header = 'Success';
                         $scope.Action_Msg_Detail = 'Data has been successfully saved.';

@@ -259,8 +259,8 @@
                                                                             <span class="fas fa-copy"></span>
                                                                             Add
                                                                         </a>
-                                                                        <div class="dropdown-divider"></div><a class="dropdown-item text-danger"
-                                                                                                               ng-click=removeDataWorksheetDrawing(item_x,item_d.seq)>
+                                                                        <div class="dropdown-divider"></div>
+                                                                        <a class="dropdown-item text-danger"ng-click=removeDataWorksheetDrawing(item_x,item_d.seq)>
                                                                             <span class="fas fa-times-circle"></span> Remove
                                                                         </a>
                                                                     </div>
@@ -290,13 +290,19 @@
                                                                 </div>
                                                             </div>
 
-                                                            <div class="text-start p-0 cursor-pointer d-flex flex-nowrap" ng-if="isSelectFile">
-                                                                <a class="nametext ms-3 filename-text me-2" ng-if="flow_status == 13 && item_x.document_file_size>0" ng-click="downloadFile(item_x)">
-                                                                    <i class="far fa-file-pdf text-danger" ng-if="item_x.document_file_size>0"></i> {{(item_x.document_file_size>0? item_x.document_file_name + '('+  item_x.document_file_size + 'KB)' : '')}}
-                                                                </a>
-                                                                <a class="nametext ms-3 filename-text me-2" ng-if="flow_status == 14 && item_x.document_file_size>0" ng-click="downloadFile(item_x)">
-                                                                    <i class="far fa-file-pdf text-danger" ng-if="item_x.document_file_size>0"></i> {{(item_x.document_file_size>0? item_x.document_file_name + '('+  item_x.document_file_size + 'KB)' : '')}}
-                                                                </a>
+                                                            <div class="text-start p-0 cursor-pointer d-flex flex-nowrap" ng-if="item_d.data_drawingworksheet_reviewer === 2">
+                                                                @*<a class="nametext ms-3 filename-text me-2" ng-if="flow_status == 13 && item_x.document_file_size > 0 && item_x.id === data_drawingworksheet_responder.id_worksheet" ng-click="downloadFile(item_x)">
+                                                                    <i class="far fa-file-pdf text-danger"></i> {{ data_drawingworksheet_responder.document_file_name }} ({{ data_drawingworksheet_responder.document_file_size }}KB)
+                                                                </a>*@
+                                                                <div ng-repeat="reviewer in data_drawingworksheet_reviewer">
+                                                                    <a class="nametext ms-3 filename-text me-2" ng-if="flow_status == 14 && item_x.document_file_size > 0 && item_d.id === reviewer.id_worksheet" ng-click="downloadFile(item_x)">
+                                                                        <i class="far fa-file-pdf text-danger"></i> {{ item_x.document_file_name }} ({{ item_x.document_file_size }}KB)
+                                                                    </a>
+                                                                </div>
+
+                                                                @*<a class="nametext ms-3 filename-text me-2" ng-if="flow_status == 13 && item_x.document_file_size > 0 && item_x.id === data_drawingworksheet_responder.id_worksheet" ng-click="downloadFile(item_x)">
+                                                                    <i class="far fa-file-pdf text-danger"></i> {{ data_drawingworksheet_responder.document_file_name }} ({{ data_drawingworksheet_responder.document_file_size }}KB)
+                                                                </a>*@
                                                             </div>
 
                                                         </div>
@@ -536,14 +542,16 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-
-                                                            <div class="text-start p-0 cursor-pointer d-flex flex-nowrap" ng-if="isSelectFile">
-                                                                <a class="nametext ms-3 filename-text me-2" ng-if="flow_status == 13 && item_x.document_file_size>0" ng-click="downloadFile(item_x)">
-                                                                    <i class="far fa-file-pdf text-danger" ng-if="item_x.document_file_size>0"></i> {{(item_x.document_file_size>0? item_x.document_file_name + '('+  item_x.document_file_size + 'KB)' : '')}}
-                                                                </a>
-                                                                <a class="nametext ms-3 filename-text me-2" ng-if="flow_status == 14 && item_x.document_file_size>0" ng-click="downloadFile(item_x)">
-                                                                    <i class="far fa-file-pdf text-danger" ng-if="item_x.document_file_size>0"></i> {{(item_x.document_file_size>0? item_x.document_file_name + '('+  item_x.document_file_size + 'KB)' : '')}}
-                                                                </a>
+                                                            
+                                                            <div class="text-start p-0 cursor-pointer d-flex flex-nowrap" ng-if="item_d.responder_action_type === 2">
+                                                                <div ng-repeat="responder in data_drawingworksheet_responder">
+                                                                    <a class="nametext ms-3 filename-text me-2" ng-if="flow_status == 13 && item_x.document_file_size > 0 && item_d.id === responder.id_worksheet" ng-click="downloadFile(item_x)">
+                                                                        <i class="far fa-file-pdf text-danger"></i> {{ item_x.document_file_name }} ({{ item_x.document_file_size }}KB)
+                                                                    </a>
+                                                                </div>
+                                                                @*<a class="nametext ms-3 filename-text me-2" ng-if="flow_status == 14 && item_x.document_file_size > 0 && item_x.id === data_drawingworksheet_reviewer.id_worksheet" ng-click="downloadFile(item_x)">
+                                                                    <i class="far fa-file-pdf text-danger"></i> {{ data_drawingworksheet_reviewer.document_file_name }} ({{ data_drawingworksheet_reviewer.document_file_size }}KB)
+                                                                </a>*@
                                                             </div>
 
                                                         </div>

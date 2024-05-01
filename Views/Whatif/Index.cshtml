@@ -250,7 +250,8 @@
                                                 data-choices="data-choices"
                                                 data-options='{"removeItemButton":true,"placeholder":true}'
                                                 ng-change="actionChange(item,item.seq,'area')" ng-model="item.id_apu"
-                                                ng-if="tab_general_active">
+                                                ng-if="tab_general_active"
+                                                hide-placeholder-option>
                                             <option ng-repeat="item2 in master_apu" ng-value="item2.id">
                                                 {{item2.name}}
                                             </option>
@@ -379,8 +380,9 @@
                                                     data-choices="data-choices"
                                                     data-options='{"removeItemButton":true,"placeholder":true}'
                                                     ng-change="actionChange(item,item.seq,'')" ng-model='item.functional_location'
-                                                    ng-if="tab_general_active && !(item.expense_type=='CAPEX' && !(item.sub_expense_type=='Normal'))">
-                                                <option ng-repeat="item2 in master_functional" ng-value="item2.id">{{item2.name}}</option>
+                                                    ng-if="tab_general_active && !(item.expense_type=='CAPEX' && !(item.sub_expense_type=='Normal'))"
+                                                    hide-placeholder-option>
+                                                <option value="" selected ng-if="!placeholderHidden">Please select</option>
                                             </select>
 
                                             <select class="form-control disabled-link"

@@ -143,6 +143,34 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
     };
 });
 
+//to hide please selected
+AppMenuPage.directive('hidePlaceholderOption', function() {
+    return {
+      link: function(scope, element, attrs) {
+  
+        // Hide 
+        element.on('showDropdown', function(event) {
+            var placeholderItem = document.querySelector('.is-open .is-active .choices__list .is-selected'); //choices__placeholder
+            if (placeholderItem) {placeholderItem.classList.add('ng-hide');}
+
+          });
+  
+        // Show 
+        element.on('hideDropdown', function(event) {
+          console.log("Dropdown closed");
+          var placeholderItem = document.querySelector('.is-open .is-active .choices__list .is-selected'); //choices__placeholder
+          if (placeholderItem) {placeholderItem.removeClass('ng-hide');}
+        });
+
+        if (!scope.item.functional_location) {
+          console.log("No selection, hiding placeholder");
+        }
+      }
+    };
+  });
+  
+  
+
 AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, $document, $interval,$rootScope,$window) { 
 
     var unsavedChanges = false;
@@ -1986,9 +2014,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.data_general[0].id_ram = 5;
         }
 
-        console.log("before set ", $scope.data_general[0].target_start_date);
-        console.log("before set ", $scope.data_general[0].target_end_date);
-        
+
         if ($scope.data_general[0].target_start_date !== null) {
             const x = $scope.data_general[0].target_start_date.split('T')[0].split("-");
             $scope.data_general[0].target_start_date = new Date(x[0], x[1] - 1, x[2]);
@@ -1997,10 +2023,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             const x = $scope.data_general[0].target_end_date.split('T')[0].split("-");
             $scope.data_general[0].target_end_date = new Date(x[0], x[1] - 1, x[2]);
         }
-        
-        console.log("After set ", $scope.data_general[0].target_start_date);
-        console.log("After set ", $scope.data_general[0].target_end_date);
-        
+              
         if ($scope.data_general[0].actual_start_date !== null) {
             const x = ($scope.data_general[0].actual_start_date.split('T')[0]).split("-");
             $scope.data_general[0].actual_start_date = new Date(x[0], x[1] - 1, x[2]);
@@ -3578,7 +3601,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
 
     $scope.removeDataNodeWorksheet = function (row_type, item, index) {
-        console.log('default => ',item)
         var seq_node = item.seq_node;
         var seq_guide_word = (item.seq_guide_word == null ? item.id_guide_word : item.seq_guide_word);
         var seq = item.seq;
@@ -3694,6 +3716,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     }
                 });
 
+                console.log("show after del node at consequences",$scope.data_nodeworksheet)
+
             } else if (row_type == "category") {
                 //เก็บค่า Delete 
                 var arrdelete = $filter('filter')($scope.data_nodeworksheet, function (item) {
@@ -3708,6 +3732,19 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     return !((item.seq == seq
                         || (item.seq_category == seq_category && item.seq_consequences == seq_consequences && item.seq_causes == seq_causes))
                     );
+                });
+
+                // after reset no
+                const guidewords_no = item.guidewords_no;
+                const causes_no = item.causes_no;
+                const consequences_no = item.consequences_no;
+                const category_no = item.category_no;
+                $scope.data_nodeworksheet.forEach(function(item) {
+                    if ( item.guidewords_no == guidewords_no && item.causes_no == causes_no && item.consequences_no == consequences_no) {
+                        if (item.category_no > category_no ) {
+                            item.category_no = item.category_no - 1;
+                        }
+                    }
                 });
 
             }
@@ -3799,7 +3836,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
 
     $scope.openModalDataRAM_Worksheet = function (_item, ram_type, seq, ram_type_action) {
-        console.log(_item, ram_type, seq, ram_type_action)
         $scope.selectdata_nodeworksheet = seq;
         $scope.selectedDataNodeWorksheetRamType = ram_type;
         $scope.selectedDataRamTypeAction = ram_type_action;
@@ -4478,6 +4514,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         set_alert_confirm('Confirm canceling the PHA No.', '');
     }
 
+
     $scope.confirmSave = function (action) {
 
         //check required field 
@@ -4504,11 +4541,21 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 var arr_chk = $scope.data_general;
                 if (pha_status == "11") {
 
-                    if (!arr_chk[0].expense_type ||
-                        !arr_chk[0].sub_expense_type ||
-                        !arr_chk[0].id_apu
-                    ) return set_alert('Warning', 'Please select a valid General Information');
-
+                    var requiredFields = [
+                        { field: 'expense_type', errorId: 'expense_type_error' },
+                        { field: 'sub_expense_type', errorId: 'sub_expense_type_error' },
+                        { field: 'id_apu', errorId: 'id_apu_error' }
+                    ];
+                
+                    var invalidFieldFound = false;
+                    requiredFields.forEach(function (item) {
+                        if (!arr_chk[0][item.field]) {
+                            set_alert('Warning', 'Please select a valid General Information');
+                            validateSelect(item.field, item.errorId);
+                            invalidFieldFound = true; 
+                        }
+                    });
+                    
                 }
                 else if (pha_status == "12") {
 
@@ -4590,8 +4637,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
 
         }
-
-
 
         //call function confirm ให้เลือก Ok หรือ Cancle
         if (true) {
@@ -4679,11 +4724,26 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         } else if (action == 'save') {
 
             var arr_chk = $scope.data_general;
+
             if (pha_status == "11") {
-                if (arr_chk[0].expense_type == '' || arr_chk[0].expense_type == null) { set_alert('Warning', 'Please select a valid Expense Type'); return; }
-                if (arr_chk[0].sub_expense_type == '' || arr_chk[0].sub_expense_type == null) { set_alert('Warning', 'Please select a valid Sub-Expense Type'); return; }
-                if (arr_chk[0].id_apu == '' || arr_chk[0].id_apu == null) { set_alert('Warning', 'Please select a valid Area Process Unit'); return; }
-            }
+                console.log("wil call to open modal alert")
+                var fieldValidations = [
+                    { field: 'expense_type', message: 'Please select a valid Expense Type' },
+                    { field: 'sub_expense_type', message: 'Please select a valid Sub-Expense Type' },
+                    { field: 'id_apu', message: 'Please select a valid Area Process Unit' }
+                ];
+            
+                fieldValidations.forEach(function (validation) {
+                    if (!arr_chk[0][validation.field]) {
+                        set_alert('Warning', validation.message);
+                        validateSelect(validation.field, validation.field + '_error');
+                    }
+                });
+            
+                if (fieldValidations.some(function (validation) { return !arr_chk[0][validation.field]; })) {
+                    return;
+                }
+            }  
         }
         else {
             if ($scope.Action_Msg_Confirm == true) {
@@ -4705,6 +4765,29 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         save_data_create(action, action_def);
 
     }
+
+    function validateSelect(field, errorId) {
+        var element = '.form-label .' + field + ' .choices'
+        var selectElement = document.querySelector('element');
+        var selectElement2 = document.querySelector('.form-label .id_apu .choices');
+        var errorDiv = document.getElementById(errorId);
+        console.log('.form-label .' + field + ' .choices')
+        console.log(selectElement)
+        console.log(selectElement2)
+    
+        if (selectElement) {
+            selectElement.classList.add('is-invalid mb-0');
+            var fieldName = (field === 'id_apu') ? 'Area Process Unit' : field;
+
+            errorDiv.innerText = 'Please select a valid ' + fieldName + '.';
+            errorDiv.style.display = 'block';
+
+        } else if (errorDiv) {
+            errorDiv.style.display = 'none';
+        }
+    }
+    
+    
 
     $scope.confirmEdit = function () {
         $('#modalEditConfirm').modal('hide');
@@ -4809,8 +4892,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.data_general[0].actual_end_date = actual_end_date_utc.toISOString().split('T')[0];
         } catch (error) {}
         
-        
-        console.log("show date to sent to back $scope.data_general");            
+          
     }
 
     function check_master_ram() {
@@ -5115,13 +5197,20 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             if (pha_status == "11" || pha_status == "12" || pha_status == "22") {
                 try {
-                    var date_value = $scope.data_nodeworksheet[i].reviewer_action_date.toISOString().split('T');
-                    if (date_value.length > 0) { $scope.data_nodeworksheet[i].reviewer_action_date = date_value[0]; }
-                } catch { }
+                    var reviewer_date = new Date($scope.data_nodeworksheet[i].reviewer_action_date);
+                    if (!isNaN(reviewer_date.getTime())) {
+                        var reviewer_date_utc = new Date(Date.UTC(reviewer_date.getFullYear(), reviewer_date.getMonth(), reviewer_date.getDate()));
+                        $scope.data_nodeworksheet[i].reviewer_action_date = reviewer_date_utc.toISOString().split('T')[0];
+                    }
+                } catch (error) {}
+                
                 try {
-                    var date_value = $scope.data_nodeworksheet[i].responder_action_date.toISOString().split('T');
-                    if (date_value.length > 0) { $scope.data_nodeworksheet[i].responder_action_date = date_value[0]; }
-                } catch { } 
+                    var responder_date = new Date($scope.data_nodeworksheet[i].responder_action_date);
+                    if (!isNaN(responder_date.getTime())) { 
+                        var responder_date_utc = new Date(Date.UTC(responder_date.getFullYear(), responder_date.getMonth(), responder_date.getDate()));
+                        $scope.data_nodeworksheet[i].responder_action_date = responder_date_utc.toISOString().split('T')[0];
+                    }
+                } catch (error) {}
             }
 
         }
@@ -5835,8 +5924,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         $('#modalExportReviewerFile').modal('show');
     }
-
-
 
     //add Drawing
     $scope.addDataApproverDrawing = function (item_draw, seq_approver, id_session) {

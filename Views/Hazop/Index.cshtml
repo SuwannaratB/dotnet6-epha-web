@@ -207,7 +207,6 @@
                                     <option id="OPEX">OPEX</option>
                                     <option id="CAPEX">CAPEX</option>
                                 </select>
-
                             </div>
                             <div class="col-md-2 ">
 
@@ -229,7 +228,6 @@
                                     <option id="Normal">Normal</option>
                                     <option id="Study">Internal Study</option>
                                 </select>
-
                             </div>
 
                             <div class="col-md-3 ">
@@ -258,7 +256,7 @@
                             <!-- area -->
                             <div class="col-md-2 p-1 ">
                                 <div class="row g-0 align-items-center">
-                                    <div class="col-10 p-1  ">
+                                    <div class="col-10 p-1 id_apu" >
 
                                         <label class="form-label ps-0" for="area"><b class="text-danger"> * </b>Area Process Unit </label>
                                         <label class="form-label ps-0" ng-if="select_history_tracking_record">
@@ -266,25 +264,31 @@
                                                data-bs-placement="top" title=" Area Process Unit : A" data-bs-html="true"></a>
                                         </label>
                                         <label class="form-label ps-0" for="area"></label>
-                                        <select class="form-control js-choice-apu"
+                                        <select class="form-control js-choice-apu mb-0" id="id_apu"
                                                 ng-class="{'disabled-link':(!tab_general_active || !(tab_general_active && data_header[0].pha_status<=12 ))}"
                                                 data-choices="data-choices"
                                                 data-options='{"removeItemButton":true,"placeholder":true}'
                                                 ng-change="actionChange(item,item.seq,'area')"
                                                 ng-model="item.id_apu"
-                                                ng-if="tab_general_active">
-                                            <option ng-repeat="item2 in master_apu" ng-value="item2.id">
+                                                ng-if="tab_general_active"
+                                                hide-placeholder-option>
+                                            @*<option value="" selected ng-if="!placeholderHidden">Please select</option>*@
+                                            <option ng-repeat="item2 in master_apu" ng-value="item2.id" >
                                                 {{item2.name}}
                                             </option>
                                         </select>
 
-                                        <select class="form-select rounded-1 disabled-link" ng-if="!tab_general_active"
+                                        @*<select class="form-select rounded-1 disabled-link" ng-if="!tab_general_active"
                                                 ng-model="item.id_apu">
                                             <option ng-selected="item.id_apu == item2.id"
                                                     ng-repeat="item2 in master_apu" ng-value="item2.id">
                                                 {{item2.name}}
                                             </option>
-                                        </select>
+                                        </select>*@
+
+                                        <div class="invalid-feedback" id="id_apu_error">
+                                            <div ng-message="required">Please select an Area Process Unit.</div>
+                                        </div>
 
                                     </div>
 
@@ -366,14 +370,14 @@
                                             </option>
                                         </select>
 
-                                        <select class="form-control disabled-link" ng-model="item.id_unit_no"
+                                        @*<select class="form-control disabled-link" ng-model="item.id_unit_no"
                                                 ng-if="!tab_general_active && !(item.expense_type=='CAPEX' && (item.sub_expense_type=='Study' || item.sub_expense_type=='Internal Study'))">
                                             <option ng-selected="item.id_unit_no == item2.id"
                                                     ng-repeat="item2 in master_unit_no" ng-value="item2.id"
                                                     ng-if="item2.id_apu == item.id_apu">
                                                 {{item2.name}}
                                             </option>
-                                        </select>
+                                        </select>*@
                                     </div>
 
                                     <div ng-if="(item.expense_type=='CAPEX' && (item.sub_expense_type=='Study' || item.sub_expense_type=='Internal Study'))">
@@ -382,9 +386,9 @@
                                                name="other_unit_no" ng-model="item.other_unit_no" />
                                     </div>
 
+
                                 </div>
                             </div>
-
 
                             <!-- functional location -->
                             <div class="col-md-7 p-1 align-items-top">
@@ -408,17 +412,18 @@
                                                     data-options='{"removeItemButton":true,"placeholder":true}'
                                                     ng-change="actionChange(item,item.seq,'')" 
                                                     ng-model='item.functional_location'
-                                                    ng-if="tab_general_active && !(item.expense_type=='CAPEX' && (item.sub_expense_type=='Study' || item.sub_expense_type=='Internal Study'))">
-                                                <option disabled ng-value="null">Please select</option>
+                                                    ng-if="tab_general_active && !(item.expense_type=='CAPEX' && (item.sub_expense_type=='Study' || item.sub_expense_type=='Internal Study'))"
+                                                    hide-placeholder-option>
+                                                <option value="" selected ng-if="!placeholderHidden">Please select</option>
                                                 <option ng-repeat="item2 in master_functional" 
                                                         ng-value="item2.id">{{item2.name}}
                                                 </option>
                                             </select>
-                                            <select class="form-control disabled-link"
+                                            @*<select class="form-control disabled-link"
                                                     ng-model='item.functional_location'
                                                     ng-if="!tab_general_active && !(item.expense_type=='CAPEX' && (item.sub_expense_type=='Study' || item.sub_expense_type=='Internal Study'))">
                                                 <option ng-repeat="item2 in master_functional" ng-value="item2.id">{{item2.name}}</option>
-                                            </select>
+                                            </select>*@
 
                                         </div>
 
@@ -452,7 +457,7 @@
                                                 name="functional_location_audition"
                                                 ng-model="item.functional_location_audition"
                                                 ng-change="actionChange(item,item.seq,'')"
-                                                ng-if="tab_general_active">
+                                                ng-if="tab_general_active" data-allow-clear="true">
                                             @* <option value=""></option> *@
                                             <option ng-repeat="item2 in master_functional_audition"
                                                     ng-selected="item.functional_location_audition == item2.name"
@@ -510,7 +515,6 @@
 
                             <!-- Target Date -->
                             <div class="col-md-7 p-1">
-{{}}
                                 <div class="row g-0 align-items-center">
                                     <div class="col-md-3 p-1">
                                         <label class="form-label ps-0" for="tgs_date">Target Start Date</label>
@@ -3082,22 +3086,22 @@
                                                     <div class="align-items-center ">
                                                         <p class="transition-none fs--2p-1 ps-0 text-center rounded-1 cursor-pointer"
                                                            style="width: 20px; height:20px">
-                                                            {{item.ram_befor_security}}
+                                                            {{item.ram_after_security}}
                                                         </p>
                                                     </div>
 
                                                     <div class="align-items-center ">
                                                         <p class="transition-none fs--2p-1 ps-0 text-center rounded-1 cursor-pointer"
                                                            style="width: 20px; height:20px">
-                                                            {{item.ram_befor_likelihood}}
+                                                            {{item.ram_after_likelihood}}
                                                         </p>
                                                     </div>
 
                                                     <div class="align-items-center ">
-                                                        <p ng-style=" { 'background-color' : ((item.ram_befor_risk == 'H') ? 'red' : ((item.ram_befor_risk == 'M') ? 'yellow' : ((item.ram_befor_risk == 'L') ? 'green' : '#D3D3D3')) ) }"
+                                                        <p ng-style=" { 'background-color' : ((item.ram_after_risk == 'H') ? 'red' : ((item.ram_after_risk == 'M') ? 'yellow' : ((item.ram_after_risk == 'L') ? 'green' : '#D3D3D3')) ) }"
                                                            class="transition-none fs--2p-1 ps-0 text-center rounded-1 cursor-pointer"
                                                            style="width: 20px; height:20px">
-                                                            {{item.ram_befor_risk}}
+                                                            {{item.ram_after_risk}}
                                                         </p>
                                                     </div>
                                                 </div>
