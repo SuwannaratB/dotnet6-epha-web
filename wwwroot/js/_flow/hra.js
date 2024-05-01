@@ -939,8 +939,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 $('#divLoading').hide();
             },
             success: function (data) {
-                console.log(data);
-
+                console.log('data ==> ',data.hazard);
                 var action_part_befor = $scope.action_part;
                 var tabs_befor = (page_load == false ? $scope.tabs : null);
 
@@ -961,9 +960,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         $scope.master_hazard_type = JSON.parse(replace_hashKey_arr(arr.hazard_type));
                         $scope.master_hazard_riskfactors = JSON.parse(replace_hashKey_arr(arr.hazard_riskfactors));
                         // moc master_hazard_riskfactors
-                        moc_master_hazard_riskfactors();
-                        console.log('master_hazard_riskfactors => ',$scope.master_hazard_riskfactors)
-                        console.log('master_subarea => ',$scope.master_subarea)
+                        $scope.filter_hazard_riskfactors = setup_master_hazard_riskfactors();
 
                         $scope.master_worker_group = JSON.parse(replace_hashKey_arr(arr.worker_group));
                         $scope.master_worker_list = JSON.parse(replace_hashKey_arr(arr.worker_list));
@@ -1007,6 +1004,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                     //List of Areas to Be Assessed and Health Hazards or Risk Factors
                     if (true) {
+                        // add key count_riskfactors
+                        arr.hazard = setup_hazard(arr.hazard);
+
                         $scope.data_subareas = arr.subareas;
                         $scope.data_subareas_def = clone_arr_newrow(arr.subareas);
                         $scope.data_subareas_old = (arr.subareas);
@@ -1019,14 +1019,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         $scope.data_subareas_list = arr.subareas;
                         $scope.data_subareas_list[0].hazard = arr.hazard;
                         $scope.data_subareas_list[0].hazard[0].no_subareas = 1;
+                        $scope.data_subareas_list[0].hazard[0].no_subareas = 1;
                         // backup
                         $scope.data_subareas_default = arr.subareas;
                         $scope.data_hazard_default = arr.hazard;
-                        
-                        var groupedArea = groupHazardList(arr.hazard);
-                        $scope.data_subareas_list = groupedArea;
-
-                        console.log('groupedArea',groupedArea)
+                        $scope.data_subareas_list = groupHazardList(arr.hazard);
                         console.log('data_subareas_list',$scope.data_subareas_list)
                     }
 
@@ -1208,15 +1205,15 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     }
 
-    function moc_master_hazard_riskfactors() {
+    function setup_master_hazard_riskfactors() {
         const moc_data = [
-            {
-                "id_hazard_type": 1,
-                "id": 11,
-                "name": "Benzene",
-                "field_check": "benzene",
-                "hazards_rating": "4",
-            },
+            // {
+            //     "id_hazard_type": 1,
+            //     "id": 11,
+            //     "name": "Benzene",
+            //     "field_check": "benzene",
+            //     "hazards_rating": "4",
+            // },
             {
                 "id_hazard_type": 1,
                 "id": 12,
@@ -1251,7 +1248,42 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 "name": "Lead Arsenate",
                 "field_check": "lead arsenate",
                 "hazards_rating": "4",
-            }
+            },
+            {
+                "id_hazard_type": 1,
+                "id": 17,
+                "name": "Lead Arsenate",
+                "field_check": "lead arsenate",
+                "hazards_rating": "5",
+            },
+            {
+                "id_hazard_type": 1,
+                "id": 18,
+                "name": "Lead Arsenate",
+                "field_check": "lead arsenate",
+                "hazards_rating": "4",
+            },
+            {
+                "id_hazard_type": 1,
+                "id": 19,
+                "name": "Lead Arsenate",
+                "field_check": "lead arsenate",
+                "hazards_rating": "3",
+            },
+            {
+                "id_hazard_type": 1,
+                "id": 20,
+                "name": "Lead Arsenate",
+                "field_check": "lead arsenate",
+                "hazards_rating": "2",
+            },
+            {
+                "id_hazard_type": 1,
+                "id": 21,
+                "name": "Lead Arsenate",
+                "field_check": "lead arsenate",
+                "hazards_rating": "1",
+            },
         ]
 
         if ($scope.master_hazard_riskfactors.length > 0) {
@@ -1260,12 +1292,111 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }, $scope.master_hazard_riskfactors[0].id); 
 
             $scope.master_hazard_riskfactors = [...$scope.master_hazard_riskfactors, ...moc_data]
-            // เรียงลำดับข้อมูลตาม name
-            // $scope.master_hazard_riskfactors.sort((a, b) => a.name.localeCompare(b.name));
+            // เรียงลำดับข้อมูลตาม id
+            // $scope.master_hazard_riskfactors.sort((a, b) => a.id - b.id);
 
+            // $scope.master_hazard_riskfactors.forEach(item => {
+            //     item.name = `${item.name} (${item.id})`
+            // });
+            // หาข้อมูลที่ซ้ำ
+            var risk_duplicates = [];
+            var uniqueRiskFilter = $scope.master_hazard_riskfactors.reduce(function (accumulator, currentItem) {
+                // ตรวจสอบว่า currentItem.field_check ซ้ำกับข้อมูลใดใน accumulator หรือไม่
+                var isDuplicated = accumulator.some(function (existingItem) {
+                    return existingItem.field_check === currentItem.field_check;
+                });
+                // ถ้า currentItem.field_check ไม่ซ้ำกับข้อมูลใดใน accumulator ให้เพิ่ม currentItem เข้าไป
+                if (!isDuplicated) {
+                    accumulator.push(currentItem);
+                } else {
+                    // ถ้าซ้ำกันให้เพิ่มข้อมูลที่ซ้ำไว้ในอาร์เรย์ใหม่
+                    // accumulator.duplicates = accumulator.duplicates || [];
+                    risk_duplicates.push(currentItem);
+                }
+                return accumulator;
+            }, []);
+            // console.log('risk ==> ',uniqueRiskFilter);
+            // console.log('risk_duplicates ==> ',risk_duplicates); // ข้อมูลที่ซ้ำกัน
+            return uniqueRiskFilter;
         } else {
-            console.log("Array is empty");
+            // console.log("Array is empty");
+            return null;
         }
+    }
+
+    function setup_hazard(hazard) {
+        hazard.forEach(item => {
+            item.count_riskfactors = 1;
+            item.sort_health_hazard  = false;
+            item.health_hazard_list  =  $scope.filter_hazard_riskfactors;
+
+            if (item.id_health_hazard) {
+                $scope.chooseRiskRating(item);
+                // set dropdown not id 
+                var newRisk = $filter('filter')($scope.master_hazard_riskfactors, function (risk) {
+                    return (item.id_health_hazard == risk.id);
+                })[0];
+
+                if (newRisk) {
+                    $scope.changeRiskRating(item,newRisk);
+                    // var index = $scope.filter_hazard_riskfactors.findIndex(function(risk) {
+                    //     return (newRisk.name.toLowerCase() == risk.name.toLowerCase());
+                    // });
+
+                    // if (index !== -1) {
+                    //     item.health_hazard_list[index] = newRisk;
+                    // } 
+                }
+            }
+            console.log('setup_hazard ==> ',item);
+        });
+        return hazard;
+    }
+
+    $scope.chooseRiskRating = function (hazard) {
+        console.log(hazard)
+        $scope.sub_hazard_riskfactors = $filter('filter')($scope.master_hazard_riskfactors, function (item) {
+            return (item.name.toLowerCase() == hazard.health_hazard.toLowerCase());
+        });
+        hazard.count_riskfactors = $scope.sub_hazard_riskfactors.length
+    }
+
+    $scope.changeRiskRating = function (hazard, riskfactor) {
+        var hazard_health_hazard_list_copy = angular.copy(hazard.health_hazard_list);
+        // set hazard
+        hazard.action_change = 1;
+        hazard.id_health_hazard = riskfactor.id;
+        hazard.health_hazard = riskfactor.name;
+        hazard.health_effect_rating = riskfactor.hazards_rating;
+
+        var index = hazard.health_hazard_list.findIndex(function(item) {
+            return item.name.toLowerCase() === riskfactor.name.toLowerCase();
+        });
+
+        if (index !== -1) {
+            var newData = riskfactor
+            hazard_health_hazard_list_copy[index] = newData;
+            hazard.health_hazard_list = hazard_health_hazard_list_copy;
+        } 
+
+        console.log('data_subareas_list  ==> ', $scope.data_subareas_list)
+    }
+
+    $scope.changeHealthHazard= function (hazard) {
+        var hazardFilter = $filter('filter')(hazard.health_hazard_list, function (item) {
+            return (item.id == hazard.id_health_hazard);
+        })[0];
+
+        if (!hazardFilter) {
+            return console.log('Hazard filter not found')
+        }
+
+        hazard.health_hazard = hazardFilter.name;
+        hazard.health_effect_rating = hazardFilter.hazards_rating;
+        hazard.tlv_std = hazardFilter.tlv_standard;
+        hazard.action_change = 1;
+
+        $scope.chooseRiskRating(hazard);
     }
 
     function set_form_action(action_part_befor, action_save, page_load) {
@@ -1641,13 +1772,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             var mocData = angular.copy($scope.data_subareas_list);
             // ใช้ reduce เพื่อแบ่งข้อมูลเป็นกลุ่มโดยใช้ id_subareas เป็นกุญแจ
             arr_hazard.reduce(function(acc, curr) {
-                // หากกลุ่มนี้ยังไม่มีใน groupedData ให้สร้างอาร์เรย์เปล่าให้กับกลุ่มนี้
                 if (!acc[curr.no_subareas]) {
                     acc[curr.no_subareas] = [];
                 }
-                // เพิ่มข้อมูลลงในกลุ่มที่เหมาะสม
                 acc[curr.no_subareas].push(curr);
-                // ส่งคืน acc สำหรับการใช้งานในรอบถัดไปของการลูป
                 return acc;
             }, groupedData);
 
@@ -1870,7 +1998,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             newInput.action_new_row = 0;
 
             $scope.MaxSeqdataHazard = Number($scope.MaxSeqdataHazard) + 1;
-            var xValues2 = $scope.MaxSeqdataSubareas;
+            var xValues2 = $scope.MaxSeqdataHazard;
             var newHazard = clone_arr_newrow($scope.data_hazard_default);
             newInput.hazard = newHazard;
             newInput.hazard[0].seq = xValues2;
@@ -1881,6 +2009,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             newInput.hazard[0].action_change = 0;
             newInput.hazard[0].action_new_row = 0;
             newInput.hazard[0].no_subareas = (item.no + 1);
+            newInput.hazard[0].health_hazard_list  =  $scope.filter_hazard_riskfactors;
             
             var parent = angular.copy($scope.data_subareas_list);
 
@@ -1944,6 +2073,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             newInput.action_type = 'insert';
             newInput.action_change = 0;
             newInput.action_new_row = 0;
+            newInput.health_hazard_list  =  $scope.filter_hazard_riskfactors;
             console.log('new ', newInput)
             // add
             var parent = angular.copy($scope.data_subareas_list[item_area.no - 1]);
@@ -3357,6 +3487,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     _arr.tlv_std = arrText[0].tlv_standard;
                     _arr.action_change = 1;
                 }
+                $scope.chooseRiskRating(_arr);
             } 
 
             if (type_text == "worker_group") {
