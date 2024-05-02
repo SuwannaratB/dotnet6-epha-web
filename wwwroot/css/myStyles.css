@@ -22,6 +22,14 @@
     display: none;
 }
 
+.my-text {
+    color: black;
+}
+
+.my-subtext{
+    color: rgb(173 173 173);
+}
+
 .effect-rating {
     padding: 2px 8px;
     background: red;

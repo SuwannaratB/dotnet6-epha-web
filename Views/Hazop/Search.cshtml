@@ -21,6 +21,8 @@
 
     <link rel="stylesheet" href="~/css/autocomplete.css">
 
+    <link rel="stylesheet" href="~/css/myStyles.css">
+
     <script src="~/assets/js/all.min.js"></script>
 
 }
@@ -745,6 +747,7 @@
                                                         <tbody class="customer-rating-table-body">
                                                             <tr class="hover-actions-trigger btn-reveal-trigger position-static rowwork"
                                                                 ng-repeat="item_h in data_results">
+
                                                                 <td class="align-top text-end">
                                                                     @* {{item_h.pha_status}} *@
                                                                     <div class="d-flex p-1" ng-if="!(item_h.pha_no == null || item_h.pha_no =='')">
@@ -784,6 +787,7 @@
                                                                 <td class="align-top text-center">
                                                                     <div class="p-1 ">
                                                                         <h6 class="fw-semi-bold">{{item_h.pha_status_displayname}}</h6>
+                                                                        <h6 class="fw-semi-bold my-subtext">{{item_h.pha_status_comment}}</h6>
                                                                     </div>
                                                                 </td>
 
