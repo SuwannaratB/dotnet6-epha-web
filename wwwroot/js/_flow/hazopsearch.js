@@ -59,7 +59,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
         $scope.exportfile = [{ DownloadPath: '', Name: '' }];
 
-        $scope.pha_status_comment = '';
+        $scope.pha_status_comment = [
+            {id:1, data:''}
+        ];
     }
     function replace_hashKey_arr(_arr) {
         var json = JSON.stringify(_arr, function (key, value) {
@@ -470,7 +472,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         var sub_software = $scope.sub_software_select;
         var pha_no = $scope.pha_no_select;
         var pha_seq = $scope.pha_seq_select;
-        var pha_status_comment = $scope.pha_status_comment;
+        var pha_status_comment = $scope.pha_status_comment[0].data;
 
         sub_software = (sub_software == 'WHAT\'S IF' ? 'WHATIF' : sub_software).toLowerCase();
 
@@ -519,9 +521,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
         }
         else if (action_type == 'cancel') {
-            //copy and open doc
             if (pha_status_comment) {
-                    $('#modalManageDocumentConfirm').modal('hide');
                 $.ajax({
                     url: url_ws + "Flow/manage_document_cancel",
                     data: '{"user_name":"' + user_name + '","sub_software":"' + sub_software + '"' + ',"pha_status_comment":"' + pha_status_comment + '"' +
@@ -532,6 +532,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                     },
                     complete: function () {
                         $('#divLoading').hide();
+                        $('#modalManageDocumentConfirm').modal('hide');
                     },
                     success: function (data) {
                         var arr = data;
@@ -539,6 +540,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                         if (arr[0].status == 'true') {
                             $scope.SubSoftwateChange();
                         }
+                        $scope.pha_status_comment[0].data = '';
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
                         if (jqXHR.status == 500) {
@@ -547,13 +549,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                             alert('Unexpected ' + textStatus);
                         }
                     }
-
                 });
             }
-
- 
         }
-
     }
 
     $scope.cancelManageDocument = function () {

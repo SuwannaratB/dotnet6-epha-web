@@ -35,6 +35,10 @@
     cursor: pointer;
 }
 
+.mr-27 {
+    margin-right: 27px;
+}
+
 .is-invalid {
     border: 1px solid red;
     position: relative;
