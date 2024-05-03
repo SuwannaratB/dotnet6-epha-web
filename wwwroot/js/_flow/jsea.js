@@ -3047,7 +3047,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 // after reset no
                 const workstep_no = item.workstep_no;
                 const taskdesc_no = item.taskdesc_no;
-                $scope.data_nodeworksheet.forEach(function(item) {
+                $scope.data_listworksheet.forEach(function(item) {
                     if ( item.workstep_no == workstep_no) {
                         if (item.taskdesc_no > taskdesc_no ) {
                             item.taskdesc_no = item.taskdesc_no - 1;
@@ -3076,7 +3076,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 const workstep_no = item.workstep_no;
                 const taskdesc_no = item.taskdesc_no;
                 const potentailhazard_no = item.potentailhazard_no;
-                $scope.data_nodeworksheet.forEach(function(item) {
+                $scope.data_listworksheet.forEach(function(item) {
                     if ( item.workstep_no == workstep_no && item.taskdesc_no == taskdesc_no) {
                         if (item.potentailhazard_no > potentailhazard_no ) {
                             item.potentailhazard_no = item.potentailhazard_no - 1;
@@ -3108,14 +3108,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 const taskdesc_no = item.taskdesc_no;
                 const potentailhazard_no = item.potentailhazard_no;
                 const possiblecase_no = item.possiblecase_no;
-                $scope.data_nodeworksheet.forEach(function(item) {
+                $scope.data_listworksheet.forEach(function(item) {
                     if ( item.workstep_no == workstep_no && item.taskdesc_no == taskdesc_no && item.potentailhazard_no == potentailhazard_no) {
                         if (item.possiblecase_no > possiblecase_no ) {
                             item.possiblecase_no = item.possiblecase_no - 1;
                         }
                     }
-                });                
-
+                });     
+                
             } else if (row_type == "category") {
                 //เก็บค่า Delete 
                 var arrdelete = $filter('filter')($scope.data_listworksheet, function (item) {
@@ -3974,7 +3974,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         //แปลง date to yyyyMMdd
         //แปลง time to hh:mm
-        console.log("show date", $scope.data_general[0].target_start_date);
 
         try {
             if (!$scope.data_general[0].target_start_date) {
@@ -4050,10 +4049,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         for (var i = 0; i < $scope.data_session.length; i++) {
             $scope.data_session[i].id = $scope.data_session[i].seq;
             $scope.data_session[i].id_pha = pha_seq;
+
             try {
-                var meeting_date = new Date($scope.data_session[0].meeting_date);
-                var meeting_date_utc = new Date(Date.UTC(meeting_date.getFullYear(), meeting_date.getMonth(), meeting_date.getDate()));
-                $scope.data_session[0].meeting_date = meeting_date_utc.toISOString().split('T')[0];
+                if($scope.data_session[0].meeting_date ){
+                    var meeting_date = new Date($scope.data_session[0].meeting_date);
+                    var meeting_date_utc = new Date(Date.UTC(meeting_date.getFullYear(), meeting_date.getMonth(), meeting_date.getDate()));
+                    $scope.data_session[0].meeting_date = meeting_date_utc.toISOString().split('T')[0];
+                }
             } catch {} 
             try {
                 //12/31/1969 7:55:00 PM 
