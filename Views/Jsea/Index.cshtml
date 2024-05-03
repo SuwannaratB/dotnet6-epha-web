@@ -205,15 +205,18 @@
                                                        data-bs-placement="top" title=" Area Process Unit : A" data-bs-html="true"></a>
                                                 </label>
                                                 <label class="form-label ps-0" for="area"></label>
-                                                <select class="form-control js-choice-apu"
-                                                        ng-class="{'disabled-\link':(!tab_general_active)}"
+                                                <select class="form-control js-choice-apu" id="id_apu"
+                                                        ng-class="{'disabled-link':(!tab_general_active)}"
                                                         data-choices="data-choices"
                                                         data-options='{"removeItemButton":true,"placeholder":true}'
-                                                        ng-change="actionChange(item,item.seq,'')" ng-model="item.id_apu">
+                                                        ng-change="actionChange(item,item.seq,'')"
+                                                        ng-model="item.id_apu"
+                                                        hide-placeholder-option><!----------ng-if="tab_general_active"--------->
+                                                    <option value="" selected ng-if="!placeholderHidden">Please select</option>    
                                                     <option ng-repeat="item2 in master_apu" ng-value="item2.id">
                                                         {{item2.name}}
                                                     </option>
-                                                </select>
+                                                </select>                                                
 
                                             </div>
 
@@ -283,7 +286,8 @@
                                                 ng-class="{'disabled-link':(!tab_general_active)}"
                                                 data-choices="data-choices"
                                                 data-options='{"removeItemButton":true,"placeholder":true}'
-                                                ng-change="actionChange(item,item.seq,'')" ng-model="item.id_tagid">
+                                                ng-change="actionChange(item,item.seq,'')" ng-model="item.id_tagid"
+                                                hide-placeholder-option>
                                             <option ng-selected="item.id_tagid == item2.id"
                                                     ng-repeat="item2 in master_tagid" ng-value="item2.id">
                                                 {{item2.name}}
@@ -308,8 +312,9 @@
                                                 multiple="multiple"
                                                 ng-model="item.tagid_audition"
                                                 ng-change="actionChange(item,item.seq,'')"
-                                                ng-if="tab_general_active">
-                                                 <option value="" disabled selected hidden>Please select</option>
+                                                ng-if="tab_general_active"
+                                                hide-placeholder-option>
+                                            <option value="" selected ng-if="!placeholderHidden">Please select</option>
                                             <option ng-repeat="item2 in master_tagid"
                                                     ng-selected="item.tagid_audition == item2.name"
                                                     value="{{item2.name}}">

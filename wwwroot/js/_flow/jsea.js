@@ -52,6 +52,31 @@ AppMenuPage.filter('ApproverMultiFieldFilter', function () {
         });
     };
 });
+//to hide please selected
+AppMenuPage.directive('hidePlaceholderOption', function() {
+    return {
+      link: function(scope, element, attrs) {
+  
+        // Hide 
+        element.on('showDropdown', function(event) {
+            var placeholderItem = document.querySelector('.is-open .is-active .choices__list .is-selected'); //choices__placeholder
+            if (placeholderItem) {placeholderItem.classList.add('ng-hide');}
+
+          });
+  
+        // Show 
+        element.on('hideDropdown', function(event) {
+          console.log("Dropdown closed");
+          var placeholderItem = document.querySelector('.is-open .is-active .choices__list .is-selected'); //choices__placeholder
+          if (placeholderItem) {placeholderItem.removeClass('ng-hide');}
+        });
+
+        if (!scope.item.functional_location) {
+          console.log("No selection, hiding placeholder");
+        }
+      }
+    };
+});
 
 
 AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) {
@@ -1754,8 +1779,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         selected_type: 0,
         }
 
-        $scope.MaxSeqDataMemberteam = 2;
-        $scope.selectdata_session = 138;
+        //$scope.MaxSeqDataMemberteam = 2;
+        //$scope.selectdata_session = 138;
         $scope.selectDatFormType= 'member';
         $scope.setDefualt = true;
         $scope.choosDataEmployee(data)
