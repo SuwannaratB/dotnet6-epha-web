@@ -484,7 +484,7 @@
                                                        placeholder="คนที่เกี่ยวข้องทั้งหมด (Owner, Member Team, Safety Reviewer, Attendees, ผู้เชี่ยวชาญเฉพาะด้าน)" autocomplete="off"
                                                        ng-model="item_m.emp_active_search"
                                                        ng-keyup="actionChange(item_m)">
-                                            </div>
+                                            </div>                                        
 
                                         </div>
 
@@ -687,6 +687,17 @@
                                                        ng-model="item_m.emp_active_search"
                                                        ng-keyup="actionChange(item_m)">
                                             </div>
+
+                                            <!-- Worksheet -->
+                                            <div class="col-md-3 p-1">
+                                                <label class="form-label ps-0">Worksheet search</label>
+                                                <input type="text"
+                                                       name="worksheet_search"
+                                                       class="form-control rounded-1"
+                                                       placeholder="POTENTIAL HAZARD ,POSSIBLE CAUSE" autocomplete="off"
+                                                       ng-model="item_m.worksheet_active_search"
+                                                       ng-keyup="actionChange(item_m)">
+                                            </div>                                                
 
                                         </div>
 

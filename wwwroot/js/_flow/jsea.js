@@ -315,8 +315,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
 
     $scope.fileUploadSelectTemplate = function (input) {
-        console.log("here this where recieve input",input)
-
         var file_doc = $scope.data_header[0].pha_no;
         const fileInput = input;
         const fileSeq = fileInput.id.split('-')[1];
@@ -360,6 +358,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                             const array = JSON.parse(responseFromService);
 
                             if (true) {
+
+                                console.log(array)
                                 var file_name = array.msg[0].ATTACHED_FILE_NAME;
                                 var file_path = array.msg[0].ATTACHED_FILE_PATH;
 
@@ -367,6 +367,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                                 $scope.data_general[0].file_upload_size = fileSize;
                                 $scope.data_general[0].file_upload_path = (url_ws.replace('/api/', '')) + file_path;
                                 $scope.data_general[0].action_change = 1;
+                                
+                                set_data_general()
+
+                                console.log("data_general", $scope.data_general)
                             }
 
                             if (array.max) {
@@ -453,8 +457,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                                 }
                             } 
-
-                            console.log("after set all data",array)
                             unsavedChanges = true;
                             apply();
 
@@ -1527,8 +1529,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     $scope.data_general.forEach(function (item) {
                         item.id_ram = (item.id_ram == null ? 4 : item.id_ram);
                     });
-
-
 
                     $scope.data_tagid_audition = arr.tagid_audition;
 
@@ -2790,6 +2790,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 iNo = arr[arr.length - 1].no;
                 index_rows = arr[arr.length - 1].index_rows;
             }
+
         } else if (row_type == "taskdesc") {
             var arr = $filter('filter')(arr_def, function (_item) {
                 return (_item.no >= no && _item.seq_workstep == seq_workstep && _item.seq_taskdesc == seq_taskdesc);
@@ -2834,6 +2835,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.MaxSeqdata_listworksheetworkstep = Number($scope.MaxSeqdata_listworksheetworkstep) + 1;
             seq_workstep = $scope.MaxSeqdata_listworksheetworkstep;
 
+            console.log("now click at ",row_type)
             seq_workstep = xseq;
 
             //กรณีที่เป็น workstep ให้ +1 
@@ -2857,6 +2859,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             category_no = 1;
         }
         if (row_type == "potentailhazard") {
+            console.log("now click at ",row_type)
+            
             $scope.MaxSeqdata_listworksheetpotentailhazard = Number($scope.MaxSeqdata_listworksheetpotentailhazard) + 1;
             seq_potentailhazard = $scope.MaxSeqdata_listworksheetpotentailhazard;
 
@@ -4893,6 +4897,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 $scope.MaxSeqdata_approver = Number($scope.MaxSeqdata_approver) + 1
 
             }
+
+            console.log("user add new approver",$scope.data_approver)
 
         }
         else if (xformtype == "reviewer") {

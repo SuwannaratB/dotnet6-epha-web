@@ -626,7 +626,6 @@
                                                                         <span class="far fa-address-book fa-lg"></span>
                                                                         Add Safety Reviewer
                                                                     </button>
-
                                                                 <div class="row" ng-repeat="item2 in data_approver"> 
                                                                     <div class="row align-items-center  p-1">
                                                                         <label class="mb-0 text-1100 fw-bold" 
@@ -636,7 +635,7 @@
                                                                         </label>
                                                                         <label class="mb-0 text-1100 fw-bold" 
                                                                                 style="width:80%;border-color: #f1f2f4;"
-                                                                                ng-if="!(item2.approver_type === 'safety')">
+                                                                                ng-show="item2.approver_type === 'safety'">
                                                                                 {{ item2.user_displayname}}
                                                                         </label>
                                                                     </div>

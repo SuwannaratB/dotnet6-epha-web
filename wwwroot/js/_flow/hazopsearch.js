@@ -305,6 +305,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                             .includes((item.emp_active_search == null ? 'x' : item.emp_active_search.toLowerCase()))
                     );
                 });
+
+            arr_search =
+                $filter('filter')(arr_search, function (_item) {
+                    return (
+                        (item.worksheet_active_search == null ? 'x' : _item.worksheet_active_search.toLowerCase())
+                            .includes((item.worksheet_active_search == null ? 'x' : item.worksheet_active_search.toLowerCase()))
+                    );
+                });    
             $scope.data_results = arr_search ;
             apply();
         } catch {
