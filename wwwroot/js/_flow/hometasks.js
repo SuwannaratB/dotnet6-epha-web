@@ -24,6 +24,19 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         });
     }
 
+    $scope.actionReqChange = function () {
+        $scope.data_resultes = $filter('filter')($scope.data, function(item) {
+            
+            if ($scope.select_actionReq_type === 'all') {
+                return true; // Return true for all items
+            } else {
+                var matches = item.action_required === $scope.select_actionReq_type;
+                return matches;
+            }
+        });
+    }
+    
+
     //  scroll  table header freezer 
     $scope.handleScroll = function () {
         const tableContainer = angular.element(document.querySelector('#table-container'));
@@ -116,6 +129,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
                 // Assuming pha_type_filter is the variable storing the pha_type you want to filter
                 $scope.select_pha_type = 'HAZOP';
+                $scope.select_actionReq_type ='all'
                 $scope.subSoftwateChange();
 
                 apply();

@@ -179,7 +179,7 @@
                                         </div>
                                     </div>
                                 </div>
-
+                                @*sub software*@
                                 <div class="row g-3 align-items-center pt-2">
                                     <div class="col-auto d-none">
                                         <!-- ใช้ ms-auto เพื่อชิดขวา -->
@@ -198,7 +198,7 @@
                                                     </a>
                                                 </label>
                                                 <div class="d-flex me-3">
-                                                    <select class="form-control"
+                                                    <select class="form-control cursor-pointer"
                                                             ng-model="select_pha_type" 
                                                             ng-change="subSoftwateChange()">
                                                         <option values="hazop" ng-selected="select_pha_type == 'hazop'">HAZOP</option>
@@ -206,6 +206,36 @@
                                                         <option values="whatif" ng-selected="select_pha_type == 'whatif'">WHATIF</option>
                                                         <option values="hra" ng-selected="select_pha_type == 'hra'">HRA</option>
                                                     </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    @*action req*@
+                                    <div class="col-md-2 align-items-center">
+                                        <div class="row g-0 align-items-center">
+                                            <div class="col-12">
+                                                <label class="form-label ps-0">
+                                                    ACTION REQUIRED
+                                                </label>
+                                                <label class="form-label ps-0" ng-if="select_history_tracking_record">
+                                                    <a class="form-label far fa-comment-alt text-warning cursor-pointer " 
+                                                        data-bs-toggle="tooltip"
+                                                        data-bs-html="true">
+                                                    </a>
+                                                </label>
+                                                <div class="d-flex me-3">
+                                                <select class="form-control cursor-pointer"
+                                                        ng-model="select_actionReq_type" 
+                                                        ng-change="actionReqChange()">
+                                                    <option value="all" ng-selected="select_actionReq_type === 'all'">All</option>
+                                                    <option value="Recommendation Closing" ng-selected="select_actionReq_type === 'Recommendation Closing'">Recommendation Closing</option>
+                                                    <option value="Reviewer" ng-selected="select_actionReq_type === 'Reviewer'">Reviewer</option>
+                                                    <option value="Approve" ng-selected="select_actionReq_type === 'Approve'">Approve</option>
+                                                    <option value="Review & Approve" ng-selected="select_actionReq_type === 'Review & Approve'">Review & Approve</option>
+                                                    <option value="Approver" ng-selected="select_actionReq_type === 'Approver'">Approver</option>
+                                                    <option value="For Info" ng-selected="select_actionReq_type === 'For Info'">For Info</option>
+                                                </select>
                                                 </div>
                                             </div>
                                         </div>
