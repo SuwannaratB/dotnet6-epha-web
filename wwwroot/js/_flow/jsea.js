@@ -64,9 +64,8 @@ AppMenuPage.directive('hidePlaceholderOption', function() {
             var placeholderItem = document.querySelector('.is-open .is-active .choices__list .is-selected'); //choices__placeholder
             console.log(placeholderItem);
             if (!placeholderItem) {
-                var placeholderList = document.querySelector('.is-open .is-active .choices__list');
-                placeholderList.setAttribute('data-value', 'Please select');
-                placeholderList.classList.add('ng-hide');
+                var placeholderList = document.querySelector('.is-open .is-active .choices__list[data-value="Please select"]');                console.log(placeholderList)
+                if (placeholderList) {placeholderList.add('ng-hide')};
             }
             if (placeholderItem) {
                 placeholderItem.classList.add('ng-hide');
@@ -78,7 +77,7 @@ AppMenuPage.directive('hidePlaceholderOption', function() {
         element.on('hideDropdown', function(event) {
           console.log("Dropdown closed");
           var placeholderItem = $('.is-open .is-active .choices__list .is-selected'); //choices__placeholder
-          if (placeholderItem.length) {placeholderItem.removeClass('ng-hide');}
+          if (placeholderItem) {placeholderItem.remove('ng-hide');}
         });
 
         if (!scope.item.functional_location) {
