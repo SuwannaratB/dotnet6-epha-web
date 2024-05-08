@@ -52,6 +52,7 @@ AppMenuPage.filter('ApproverMultiFieldFilter', function () {
         });
     };
 });
+
 //to hide please selected
 AppMenuPage.directive('hidePlaceholderOption', function() {
     return {
@@ -59,16 +60,25 @@ AppMenuPage.directive('hidePlaceholderOption', function() {
   
         // Hide 
         element.on('showDropdown', function(event) {
-            var placeholderItem = document.querySelector('.is-open .is-active .choices__list .is-selected'); //choices__placeholder
-            if (placeholderItem) {placeholderItem.classList.add('ng-hide');}
 
-          });
+            var placeholderItem = document.querySelector('.is-open .is-active .choices__list .is-selected'); //choices__placeholder
+            console.log(placeholderItem);
+            if (!placeholderItem) {
+                var placeholderList = document.querySelector('.is-open .is-active .choices__list');
+                placeholderList.setAttribute('data-value', 'Please select');
+                placeholderList.classList.add('ng-hide');
+            }
+            if (placeholderItem) {
+                placeholderItem.classList.add('ng-hide');
+            }
+
+        });
   
         // Show 
         element.on('hideDropdown', function(event) {
           console.log("Dropdown closed");
-          var placeholderItem = document.querySelector('.is-open .is-active .choices__list .is-selected'); //choices__placeholder
-          if (placeholderItem) {placeholderItem.removeClass('ng-hide');}
+          var placeholderItem = $('.is-open .is-active .choices__list .is-selected'); //choices__placeholder
+          if (placeholderItem.length) {placeholderItem.removeClass('ng-hide');}
         });
 
         if (!scope.item.functional_location) {
@@ -3300,10 +3310,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         arr_items.sort((a, b) => a.category_no - b.category_no);
     }
     $scope.openModalDataRAM_Worksheet = function (_item, ram_type, seq, ram_type_action) {
-
-        $scope.selectdata_listworksheet = seq;
-        $scope.selectedDataListworksheetRamType = ram_type;
+        $scope.selectdata_nodeworksheet = seq;
+        $scope.selectedDataNodeWorksheetRamType = ram_type;
         $scope.selectedDataRamTypeAction = ram_type_action;
+        
 
         if (ram_type_action == 'after') {
             $scope.cal_ram_action_security = _item.ram_after_security;
@@ -3320,7 +3330,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
 
         $scope.previewRam = (ram_type == 'r' ? true : false);
-
 
         $scope.cal_ram_action_security = ($scope.cal_ram_action_security == null ? 'N/A' : $scope.cal_ram_action_security);
         $scope.cal_ram_action_likelihood = ($scope.cal_ram_action_likelihood == null ? 'N/A' : $scope.cal_ram_action_likelihood);
@@ -3339,9 +3348,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.cal_ram_action_risk = null; 
     };
     
-    $scope.openModalDataNotification = function (item) {
-        $('#modalNotification').modal('show');
-    }
+    // Listen for the modal's hidden.bs.modal event and call closeModalDataRAM_Worksheet
+    $('#modalRAM').on('hidden.bs.modal', function () {
+    $scope.$apply(function() {
+            $scope.closeModalDataRAM_Worksheet();
+        });
+    });
+    
     $scope.selectDataRAM = function (ram_type, id_select) {
 
         var xseq = $scope.selectdata_listworksheet;
@@ -4846,6 +4859,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
         else if (xformtype == "approver") {
 
+            console.log("user add new approver",item)
             var arr_items_all = $filter('filter')($scope.data_approver, function (item) {
                 return (item.id_session == seq_session && item.user_displayname != null);
             });

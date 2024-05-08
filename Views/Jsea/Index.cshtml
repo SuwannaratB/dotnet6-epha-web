@@ -195,6 +195,7 @@
                                         </select>
                                     </div>
  
+
                                     <!-- area -->
                                     <div class="col-md-auto p-1 " ng-if="item.id_company != '9999' ">
                                         <div class="row g-0 align-items-center">
@@ -205,18 +206,15 @@
                                                        data-bs-placement="top" title=" Area Process Unit : A" data-bs-html="true"></a>
                                                 </label>
                                                 <label class="form-label ps-0" for="area"></label>
-                                                <select class="form-control js-choice-apu" id="id_apu"
-                                                        ng-class="{'disabled-link':(!tab_general_active)}"
+                                                <select class="form-control js-choice-apu"
+                                                        ng-class="{'disabled-\link':(!tab_general_active)}"
                                                         data-choices="data-choices"
                                                         data-options='{"removeItemButton":true,"placeholder":true}'
-                                                        ng-change="actionChange(item,item.seq,'')"
-                                                        ng-model="item.id_apu"
-                                                        hide-placeholder-option><!----------ng-if="tab_general_active"--------->
-                                                    <option value="" selected ng-if="!placeholderHidden">Please select</option>    
+                                                        ng-change="actionChange(item,item.seq,'')" ng-model="item.id_apu">
                                                     <option ng-repeat="item2 in master_apu" ng-value="item2.id">
                                                         {{item2.name}}
                                                     </option>
-                                                </select>                                                
+                                                </select>
 
                                             </div>
 
@@ -408,7 +406,6 @@
                                             </li>
                                         </ul>
                                     </div>
-
                                     <!-- Input Type -->
                                     <div class="col-auto p-1">
 
@@ -437,7 +434,6 @@
 
                                     </div>
                                     <div class="col-auto p-1">
-
                                         <!-- upload file -->
                                         @* ii.	ผานการ Upload Excel file 1.	กรอกชื่อ Task และ Unit ก่อน upload *@
                                         <div class="row g-0 align-items-center" ng-if="selectInputTypeForm=='option2'">
@@ -452,7 +448,7 @@
                                                             Download Excel Template
                                                         </span>
                                                     </button>
-                                                    <div class="btn btn-phoenix ps-3  ">
+                                                    <div class="btn btn-phoenix ps-3  " style="width: 280px;">
 
                                                         <span class="mr-3 nametext text-primary" id="filename-template-{{item.seq}}"
                                                               ng-click="downloadFile(item)">
@@ -2997,9 +2993,8 @@
 
     <!--Modal RAM Start-->
     <div class="modal fade modal-xl shadow-sm p-3 mb-5  rounded" id="modalRAM" tabindex="-1"
-         aria-labelledby="modalRAMLabel" aria-hidden="true" style="display: none;">
+         aria-labelledby="modalRAMLabel" aria-hidden="true" style="display: none;" >
         <div class="modal-dialog modal-dialog-centered">
-
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="modalRAMLabel">
@@ -3034,157 +3029,91 @@
                         </svg>
                     </button>
                 </div>
-
-                <div class="modal-body">
-                    <div class="row">
+                <div class="modal-body  ">
+                    <div class="row" ng-if="data_general[0].id_ram==5">
                         <div class="row">
-                            <div class="col-6 d-flex justify-content-center gap-10">
+                            <div class="col-1"></div>
+                            <div class="col-5 d-flex justify-content-start gap-10">
+                                <span class="mx-1 d-flex pt-5">
+                                    <a class="m-1 text-info cursor-pointer"
+                                       href="{{y.document_definition_file_path}}" 
+                                       target="_blank"
+                                       ng-repeat="y in master_ram | filter:{id: data_general[0].id_ram}">
+                                       Definition Consequence Rating
+                                       <span class="fas fa-file-pdf fa-lg ms-1"></span>
+                                    </a>
+                                </span>
                             </div>
-                            <div class="col-6 d-flex justify-content-end" 
-                              ng-class="{'ram-l-5': (data_general[0].id_ram == 5) ,'ram-l-4': (data_general[0].id_ram == 4)}">
-                                <div class="d-flex justify-content-end align-items-center flex-column" 
-                                    ng-repeat="item_ram in master_likelihood_level | filter:{id_ram:data_general[0].id_ram,columns_level:item_ram.columns_level}">
+                            <div class="col-5 d-flex justify-content-center" style="padding: 10px 10px;gap: 65px;">
+                                <div class="d-flex justify-content-end align-items-center flex-column"
+                                     ng-repeat="item_ram in master_likelihood_level | filter:{id_ram:data_general[0].id_ram,columns_level:item_ram.columns_level}">
                                     <label for="likelihood"><b>{{item_ram.likelihood_level}}</b></label>
-                                    <input type="radio" 
-                                            id="likelihood" 
-                                            name="likelihood" 
-                                            ng-click="selectDataRAM('l',item_ram.likelihood_level)"
-                                            style="cursor: pointer; width: 30px; height: 30px;">
+                                    <input type="radio"
+                                           id="likelihood"
+                                           name="likelihood"
+                                           ng-checked="cal_ram_action_likelihood == item_ram.likelihood_level"
+                                           ng-click="selectDataRAM('l',item_ram.likelihood_level)"
+                                           style="cursor: pointer; width:25px; height:25px;">
+                                </div>
+                            </div>
+                            <div class="col-1 d-flex justify-content-end"></div>
+                        </div>
+                        <div class="col-1 d-flex flex-column justify-content-end" style="gap: 40px; padding: 0px;  padding-bottom: 20px;">
+                            <div class="d-flex justify-content-end align-items-center gap-2"
+                                 ng-repeat="item_ram in master_security_level | filter:{id_ram:data_general[0].id_ram,category_type:item_ram.category_type}">
+                                <label for="security_level"><b>{{item_ram.security_level}}</b></label>
+                                <input type="radio"
+                                       id="security_level"
+                                       name="security_level"
+                                       ng-checked="cal_ram_action_security == item_ram.security_level"
+                                       ng-click="selectDataRAM('s',item_ram.security_level)"
+                                       style="cursor: pointer; width:25px; height:25px;">
+                            </div>
+                        </div>
+                        <div class="col-11">
+                            <div class="cursor-pointer " ng-repeat="itemRam in master_ram | filter:{id: data_general[0].id_ram}">
+                                <img src="{{itemRam.document_file_path}}" style="width:100%;" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" ng-if="!(data_general[0].id_ram==5)">
+                        <div class="row">
+                            <div class="col-4 d-flex justify-content-end gap-10">
+                            </div>
+                            <div class="col-8 d-flex justify-content-center" style="padding: 20px 20px 20px 50px; gap: 160px">
+                                <div class="d-flex justify-content-end align-items-center flex-column"
+                                     ng-repeat="item_ram in master_likelihood_level | filter:{id_ram:data_general[0].id_ram,columns_level:item_ram.columns_level}">
+                                    <label for="likelihood"><b>{{item_ram.likelihood_level}}</b></label>
+                                    <input type="radio"
+                                           id="likelihood" 
+                                           name="likelihood"
+                                           ng-checked="cal_ram_action_likelihood == item_ram.likelihood_level"
+                                           ng-click="selectDataRAM('l',item_ram.likelihood_level)"
+                                           style="cursor: pointer;width:30px; height:30px;">
                                 </div>
                             </div>
                         </div>
-                        
-                        <div class="col-1 d-flex flex-column justify-content-end"  
-                            ng-class="{'ram-s-5': (data_general[0].id_ram == 5) ,'ram-s-4': (data_general[0].id_ram == 4)}">
-                            <div class="d-flex justify-content-end align-items-center gap-2" 
-                                ng-repeat="item_ram in master_security_level | filter:{id_ram:data_general[0].id_ram,category_type:item_ram.category_type}">
+                        <div class="col-1 d-flex flex-column justify-content-end" style="gap: 63px; padding-bottom: 20px;">
+                            <div class="d-flex justify-content-end align-items-center gap-2"
+                                 ng-repeat="item_ram in master_security_level | filter:{id_ram:data_general[0].id_ram,category_type:item_ram.category_type}">
                                 <label for="security_level"><b>{{item_ram.security_level}}</b></label>
-                                <input type="radio" 
-                                        id="security_level" 
-                                        name="security_level"  
-                                        ng-click="selectDataRAM('s',item_ram.security_level)"
-                                       style="cursor: pointer; width: 30px; height: 30px;">
+                                <input type="radio"
+                                       id="security_level" 
+                                       ng-checked="cal_ram_action_security == item_ram.security_level"
+                                       name="security_level"
+                                       ng-click="selectDataRAM('s',item_ram.security_level)"
+                                       style="cursor: pointer;width:30px; height:30px;">
                             </div>
                         </div>
 
                         <div class="col-11">
                             <div class="cursor-pointer " ng-repeat="itemRam in master_ram | filter:{id: data_general[0].id_ram}">
-                                <img src="{{itemRam.document_file_path}}" style="width: 100%;  height:100%;" />
+                                <img src="{{itemRam.document_file_path}}" style="width:100%;" />
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <div class="modal-body d-none">
-                    <div class="row">
-
-                        <div class="col-12 mb-1">
-                            <b class="pe-1 me-1"> Security : {{cal_ram_action_security}}</b>
-                            <b class="pe-1 me-1"> Likelihood : {{cal_ram_action_likelihood}}</b>
-                            <b class="pe-1 me-1">  Risk : </b>
-                            <label class="pe-1 me-1 text-center" style="width:200px"
-                                   ng-style=" { 'background-color' : ((cal_ram_action_risk == 'H') ? 'red' : ((cal_ram_action_risk == 'M') ? 'yellow' : ((cal_ram_action_risk == 'L') ? 'green' : '#D3D3D3')) ) }">{{cal_ram_action_risk}}</label>
-                        </div>
-
-
-                    </div>
-
-
-                    <div ng-if="(selectedDataNodeWorksheetRamType == 'r' || selectedDataNodeWorksheetRamType == 'ram')">
-
-
-                        <div class="text-center cursor-pointer " ng-repeat="itemRam in master_ram | filter:{id: data_general[0].id_ram}">
-                            <img src="{{itemRam.document_file_path}}" style="width: 400px;  height:300px;" />
-                        </div>
-
-
-                    </div>
-                    <div ng-if="selectedDataNodeWorksheetRamType == 's'">
-
-                        <table class="table table-sm fs--1 mb-0 col-auto ">
-                            <thead class="bg-light-primary">
-                                <tr>
-                                    <td rowspan="2" class="text-center"></td>
-                                    <th rowspan="1" colspan="3" class="text-center" ng-if="select_columns_level != 5">Security</th>
-                                    <th rowspan="1" colspan="6" class="text-center" ng-if="select_columns_level == 5">Security</th>
-                                </tr>
-                                <tr ng-if="select_columns_level != 5">
-                                    <td class="text-center">Level</td>
-                                    <td>Description</td>
-                                </tr>
-                                <tr ng-if="select_columns_level == 5">
-                                    <td class="text-center">Level</td>
-                                    <td>People</td>
-                                    <td>Assets</td>
-                                    <td>Enhancement</td>
-                                    <td>Reputation</td>
-                                    <td>Product Quality</td>
-                                </tr>
-                            </thead>
-
-                            <tbody class=" align-top text-start">
-                                <tr class="hover-actions-trigger btn-reveal-trigger position-static "
-                                    ng-repeat="item_ram in master_security_level | filter:{id_ram:data_general[0].id_ram,category_type:item_ram.category_type}">
-                                    <td class=" text-end" style="width: 80px;">
-                                        <a class="pointer" ng-click="selectDataRAM('s',item_ram.security_level)"
-                                           data-bs-dismiss="modal" aria-label="Close">Select</a>
-                                    </td>
-                                    <td class="text-center">{{item_ram.security_level}}</td>
-                                    <td ng-if="item_ram.category_type !== 5">{{item_ram.security_text}}</td>
-                                    <td ng-if="item_ram.category_type == 5">{{item_ram.people_text}}</td>
-                                    <td ng-if="item_ram.category_type == 5">{{item_ram.assets_text}}</td>
-                                    <td ng-if="item_ram.category_type == 5">{{item_ram.enhancement_text}}</td>
-                                    <td ng-if="item_ram.category_type == 5">{{item_ram.reputation_text}}</td>
-                                    <td ng-if="item_ram.category_type == 5">{{item_ram.product_quality_text}}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-
-                    </div>
-                    <div ng-if="selectedDataNodeWorksheetRamType == 'l'">
-
-                        <table class="table table-sm fs--1 mb-0 col-auto ">
-                            <thead class="bg-light-primary">
-                                <tr>
-                                    <td rowspan="2" class="text-center"></td>
-                                    <th rowspan="1" colspan="3" ng-if="select_columns_level != 5">Likelihood</th>
-                                    <th rowspan="1" colspan="5" ng-if="select_columns_level == 5">Likelihood</th>
-                                </tr>
-                                <tr ng-if="select_columns_level != 5">
-                                    <td class="text-center">Level</td>
-                                    <td>Description</td>
-                                </tr>
-                                <tr ng-if="select_columns_level == 5">
-                                    <td class="text-center">Level</td>
-                                    <td>Description</td>
-                                    <td>Description(2)</td>
-                                    <td>Criterion</td>
-                                </tr>
-                            </thead>
-
-                            <tbody class=" align-top text-start">
-                                <tr class="hover-actions-trigger btn-reveal-trigger position-static "
-                                    ng-repeat="item_ram in master_likelihood_level | filter:{id_ram:data_general[0].id_ram,columns_level:item_ram.columns_level}">
-                                    <td class="text-end pointer" style="width: 80px;">
-                                        <a class="pointer" ng-click="selectDataRAM('l',item_ram.likelihood_level)"
-                                           data-bs-dismiss="modal" aria-label="Close">Select</a>
-                                    </td>
-                                    <td class="text-center">{{item_ram.likelihood_level}}</td>
-                                    <td ng-if="item_ram.columns_level !== 5">{{item_ram.likelihood_show}}</td>
-
-                                    <td ng-if="item_ram.columns_level == 5">{{item_ram.likelihood_text}}</td>
-                                    <td ng-if="item_ram.columns_level == 5">{{item_ram.likelihood_desc}}</td>
-                                    <td ng-if="item_ram.columns_level == 5">{{item_ram.likelihood_criterion}}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-
-                    </div>
-
-                </div>
-
             </div>
-
         </div>
     </div>
     <!--Modal RAM End-->
