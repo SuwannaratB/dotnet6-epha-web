@@ -2519,9 +2519,20 @@
                     <div class="mb-4">
                         <div class="row g-3">
                             <div class="col-auto">
+                                <label for="" style="font-size: 14px; font-weight: bold; padding-left: 4px;">Employee</label>
                                 <div class="search-box position-relative">
                                     <input class="form-control search-input search"
                                            ng-model="searchText" 
+                                           placeholder="Search"
+                                           ng-change="fillterDataEmployeeAdd()" />
+                                    <span class="fas fa-search search-box-icon"></span>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <label for="" style="font-size: 14px; font-weight: bold; padding-left: 4px;">Indicator</label>
+                                <div class="search-box position-relative">
+                                    <input class="form-control search-input search"
+                                           ng-model="searchIndicator.text" 
                                            placeholder="Search"
                                            ng-change="fillterDataEmployeeAdd()" />
                                     <span class="fas fa-search search-box-icon"></span>
@@ -2546,9 +2557,11 @@
                                 </thead>
                                     <tbody class="list">
                                         <!-- Check if employeelist_show is not empty and the first item in the array is not null -->
-                                        <tr ng-if="employeelist_show.length > 0 && employeelist_show[0].employee_displayname !== null" ng-repeat="item in employeelist_show">
+                                        <tr ng-if="employeelist_show.length > 0 && employeelist_show[0].employee_displayname !== null" 
+                                            ng-repeat="item in employeelist_show">
                                             <td class="">
-                                                <a class="dropdown-item text-primary" ng-click="choosDataEmployee(item)">
+                                                <a class="dropdown-item text-primary cursor-pointer" 
+                                                    ng-click="choosDataEmployee(item)">
                                                     Add
                                                 </a>
                                             </td>

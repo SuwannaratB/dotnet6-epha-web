@@ -989,6 +989,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.searchdataResponder = '';
         $scope.searchdataApprover = '';
 
+        $scope.searchIndicator = {
+            text: ''
+        }
+
         // สร้างชั่วโมง (0-23)
         $scope.master_hours = [];
         for (var i = 0; i < 24; i++) {
@@ -4768,30 +4772,25 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     $scope.fillterDataEmployeeAdd = function () {
         $scope.employeelist_show = [];
         var searchText = $scope.searchText;
-        if (!searchText) { return; }
+        var searchIndicator = $scope.searchIndicator.text;
+        if (!searchText && !searchIndicator) { return; }
        
-     var items = angular.copy($scope.employeelist_def, items);
-        // console.log(items)
-        // searchText = searchText.toLowerCase();
-    
-        if (searchText.length < 3) { return items; }
+        var items = angular.copy($scope.employeelist_def, items);
+
+        if (searchText.length < 3 && searchIndicator.length < 3) { return items; }
        
-        getEmployees(searchText, function(data) {
+        getEmployees(searchText,searchIndicator, function(data) {
             $scope.employeelist_show = data.employee
-            // return (
-            //     item.employee_id.toLowerCase().includes(searchText.toLowerCase()) ||
-            //     item.employee_displayname.toLowerCase().includes(searchText.toLowerCase()) ||
-            //     item.employee_email.toLowerCase().includes(searchText.toLowerCase())
-            // )}).slice(0, 10);
             apply();
             $('#modalEmployeeAdd').modal('show');
         });
     };
 
-    function getEmployees(keywords, callback){
+    function getEmployees(keywords, indicator, callback){
         $.ajax({
             url: url_ws + "Flow/employees_search",
             data: '{"user_filter_text":"' + keywords + '"'
+                + ',"user_indicator":"' + indicator + '"'
                 + ',"max_rows":"10"'
                 + '}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
