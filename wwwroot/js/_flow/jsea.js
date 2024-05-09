@@ -3445,6 +3445,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     $scope.cal_ram_action_likelihood = $scope.data_listworksheet[i].ram_action_likelihood;
                     $scope.cal_ram_action_risk = $scope.data_listworksheet[i].ram_action_risk;
                 }
+
                 $scope.actionChangeWorksheet($scope.data_listworksheet[i], $scope.data_listworksheet[i].seq);
 
                 break;
@@ -3742,7 +3743,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         set_alert_confirm('Confirm canceling the PHA No.', '');
     }
     $scope.confirmSave = function (action) {
-
         //check required field 
         var pha_status = $scope.data_header[0].pha_status;
         //11	DF	Draft
@@ -3815,9 +3815,19 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         //call function confirm ให้เลือก Ok หรือ Cancle
         if (true) {
             $scope.Action_Msg_Confirm = false;
+
+            // check risk 'H'
+            $scope.check_ram_after_risk = false;
+            for (let i = 0; i < $scope.data_listworksheet.length; i++) {
+                if ($scope.data_listworksheet[i].ram_after_risk == 'H') {
+                    $scope.check_ram_after_risk = true;
+                }
+            }
+
+
             if (action == 'submit_register') {
                 $scope.Action_Msg_Confirm = true;
-
+                
                 $('#modalSendMailRegister').modal('show');
                 return;
             } else if (action == 'submit_conduct') {
