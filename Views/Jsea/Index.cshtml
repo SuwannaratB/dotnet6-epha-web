@@ -195,7 +195,6 @@
                                         </select>
                                     </div>
  
-
                                     <!-- area -->
                                     <div class="col-md-auto p-1 " ng-if="item.id_company != '9999' ">
                                         <div class="row g-0 align-items-center">
@@ -265,11 +264,10 @@
                                                 ng-change="actionChange(item,item.seq,'')" ng-model="item.id_unit_no">
                                             <option ng-selected="item.id_unit_no == item2.id"
                                                     ng-repeat="item2 in master_unit_no" ng-value="item2.id"
-                                                    ng-if="item2.id_company == item.id_company && item2.id_area == item.id_apu">
+                                                    ng-if="item2.id_company == item.id_company && item2.id_apu == item.id_apu">
                                                 {{item2.name}}
                                             </option>
                                         </select>
-
                                     </div>
                                 
                                     <!-- Tag ID -->
