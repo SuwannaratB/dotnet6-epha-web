@@ -195,7 +195,6 @@
                                         </select>
                                     </div>
  
-
                                     <!-- area -->
                                     <div class="col-md-auto p-1 " ng-if="item.id_company != '9999' ">
                                         <div class="row g-0 align-items-center">
@@ -265,11 +264,10 @@
                                                 ng-change="actionChange(item,item.seq,'')" ng-model="item.id_unit_no">
                                             <option ng-selected="item.id_unit_no == item2.id"
                                                     ng-repeat="item2 in master_unit_no" ng-value="item2.id"
-                                                    ng-if="item2.id_company == item.id_company && item2.id_area == item.id_apu">
+                                                    ng-if="item2.id_company == item.id_company && item2.id_apu == item.id_apu">
                                                 {{item2.name}}
                                             </option>
                                         </select>
-
                                     </div>
                                 
                                     <!-- Tag ID -->
@@ -361,7 +359,7 @@
                                             <option ng-selected="item.id_department == item.id"
                                                     ng-repeat="item in data_departments" 
                                                     ng-value="item.id">
-                                                {{item.name}}
+                                                {{item.id}}
                                             </option>
                                             
                                         </select>
@@ -2171,8 +2169,14 @@
                                                     <div class="align-items-center text-end mt-1" style=" width: 25px;">
                                                         <button ng-style=" { 'background-color' : ((item.ram_after_risk == 'H') ? 'red' : ((item.ram_after_risk == 'M') ? 'yellow' : ((item.ram_after_risk == 'L') ? 'green' : '#D3D3D3')) ) }"
                                                                 class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end"
-                                                                type="button" ng-click="openModalDataRAM_Worksheet(item,'r',item.seq,'after')" style="width: 25px;">
-                                                            <div class="text-center" style=" width: 25px;"><h6 class="me-1 text-center" style=" width: 25px;">{{item.ram_after_risk}}</h6></div>
+                                                                type="button" 
+                                                                ng-click="openModalDataRAM_Worksheet(item,'r',item.seq,'after')" 
+                                                                style="width: 25px;">
+                                                            <div class="text-center" style=" width: 25px;">
+                                                                <h6 class="me-1 text-center" style=" width: 25px;">
+                                                                    {{item.ram_after_risk}}
+                                                                </h6>
+                                                            </div>
                                                         </button>
                                                     </div>
                                                 </td>
@@ -2521,9 +2525,20 @@
                     <div class="mb-4">
                         <div class="row g-3">
                             <div class="col-auto">
+                                <label for="" style="font-size: 14px; font-weight: bold; padding-left: 4px;">Employee</label>
                                 <div class="search-box position-relative">
                                     <input class="form-control search-input search"
                                            ng-model="searchText" 
+                                           placeholder="Search"
+                                           ng-change="fillterDataEmployeeAdd()" />
+                                    <span class="fas fa-search search-box-icon"></span>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <label for="" style="font-size: 14px; font-weight: bold; padding-left: 4px;">Indicator</label>
+                                <div class="search-box position-relative">
+                                    <input class="form-control search-input search"
+                                           ng-model="searchIndicator.text" 
                                            placeholder="Search"
                                            ng-change="fillterDataEmployeeAdd()" />
                                     <span class="fas fa-search search-box-icon"></span>
@@ -2548,9 +2563,11 @@
                                 </thead>
                                     <tbody class="list">
                                         <!-- Check if employeelist_show is not empty and the first item in the array is not null -->
-                                        <tr ng-if="employeelist_show.length > 0 && employeelist_show[0].employee_displayname !== null" ng-repeat="item in employeelist_show">
+                                        <tr ng-if="employeelist_show.length > 0 && employeelist_show[0].employee_displayname !== null" 
+                                            ng-repeat="item in employeelist_show">
                                             <td class="">
-                                                <a class="dropdown-item text-primary" ng-click="choosDataEmployee(item)">
+                                                <a class="dropdown-item text-primary cursor-pointer" 
+                                                    ng-click="choosDataEmployee(item)">
                                                     Add
                                                 </a>
                                             </td>
@@ -3404,20 +3421,25 @@
                             Complete JSEA Worksheet for all sessions?
                         </h6>
                     </div>
+                    <p ng-if="check_ram_after_risk"
+                        class="text-danger" 
+                        style="text-align: center; font-weight: bold;" >
+                        *** กิจกรรมนี้ยังมีความเสี่ยงสูง (High) โปรดดำเนินการทบทวนเพื่อลดความเสี่ยง ให้อยู่ใน Acceptable Risk.
+                    </p>
                     <div class="justify-content-center align-items-center mb-5" ng-if=" data_header[0].pha_status == 22">
-
                         <label class="form-label ps-0" for="expense_type">Note to Approver</label>
-                        <textarea class="form-control rounded-1" placeholder="Note"
-                                  ng-repeat="item in data_node | filter:{id:selectedItemNodeView}"
-                                  ng-model="item.descriptions"
-                                  ng-if=" data_header[0].pha_status == 22"
-                                  style="height: 50px"></textarea>
+                        <textarea class="form-control rounded-1" 
+                                placeholder="Note"
+                                ng-repeat="item in data_node | filter:{id:selectedItemNodeView}"
+                                ng-model="item.descriptions"
+                                ng-if=" data_header[0].pha_status == 22"
+                                style="height: 50px">
+                        </textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <div class="row g-3 flex-center">
                         <div class="d-flex flex-center">
-
                             <span class="mx-2" ng-if="save_type">
                                 <button class="btn btn-success btn-sm col-auto"
                                         ng-click="confirmSave('confirm_submit_complete')">

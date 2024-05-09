@@ -989,6 +989,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.searchdataResponder = '';
         $scope.searchdataApprover = '';
 
+        $scope.searchIndicator = {
+            text: ''
+        }
+
         // สร้างชั่วโมง (0-23)
         $scope.master_hours = [];
         for (var i = 0; i < 24; i++) {
@@ -3441,6 +3445,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     $scope.cal_ram_action_likelihood = $scope.data_listworksheet[i].ram_action_likelihood;
                     $scope.cal_ram_action_risk = $scope.data_listworksheet[i].ram_action_risk;
                 }
+
                 $scope.actionChangeWorksheet($scope.data_listworksheet[i], $scope.data_listworksheet[i].seq);
 
                 break;
@@ -3738,7 +3743,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         set_alert_confirm('Confirm canceling the PHA No.', '');
     }
     $scope.confirmSave = function (action) {
-
         //check required field 
         var pha_status = $scope.data_header[0].pha_status;
         //11	DF	Draft
@@ -3811,9 +3815,19 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         //call function confirm ให้เลือก Ok หรือ Cancle
         if (true) {
             $scope.Action_Msg_Confirm = false;
+
+            // check risk 'H'
+            $scope.check_ram_after_risk = false;
+            for (let i = 0; i < $scope.data_listworksheet.length; i++) {
+                if ($scope.data_listworksheet[i].ram_after_risk == 'H') {
+                    $scope.check_ram_after_risk = true;
+                }
+            }
+
+
             if (action == 'submit_register') {
                 $scope.Action_Msg_Confirm = true;
-
+                
                 $('#modalSendMailRegister').modal('show');
                 return;
             } else if (action == 'submit_conduct') {
@@ -4768,30 +4782,25 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     $scope.fillterDataEmployeeAdd = function () {
         $scope.employeelist_show = [];
         var searchText = $scope.searchText;
-        if (!searchText) { return; }
+        var searchIndicator = $scope.searchIndicator.text;
+        if (!searchText && !searchIndicator) { return; }
        
-     var items = angular.copy($scope.employeelist_def, items);
-        // console.log(items)
-        // searchText = searchText.toLowerCase();
-    
-        if (searchText.length < 3) { return items; }
+        var items = angular.copy($scope.employeelist_def, items);
+
+        if (searchText.length < 3 && searchIndicator.length < 3) { return items; }
        
-        getEmployees(searchText, function(data) {
+        getEmployees(searchText,searchIndicator, function(data) {
             $scope.employeelist_show = data.employee
-            // return (
-            //     item.employee_id.toLowerCase().includes(searchText.toLowerCase()) ||
-            //     item.employee_displayname.toLowerCase().includes(searchText.toLowerCase()) ||
-            //     item.employee_email.toLowerCase().includes(searchText.toLowerCase())
-            // )}).slice(0, 10);
             apply();
             $('#modalEmployeeAdd').modal('show');
         });
     };
 
-    function getEmployees(keywords, callback){
+    function getEmployees(keywords, indicator, callback){
         $.ajax({
             url: url_ws + "Flow/employees_search",
             data: '{"user_filter_text":"' + keywords + '"'
+                + ',"user_indicator":"' + indicator + '"'
                 + ',"max_rows":"10"'
                 + '}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
