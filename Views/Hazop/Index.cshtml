@@ -284,6 +284,7 @@
                                                     ng-repeat="item2 in master_apu" ng-value="item2.id">
                                                 {{item2.name}}
                                             </option>
+                                            <i class="fa-solid fa-triangle-exclamation"></i>
                                         </select>*@
 
                                         <div class="invalid-feedback" id="id_apu_error">
@@ -606,7 +607,18 @@
                                             <thead class="  text-uppercase text-start border-bottom">
                                                 <tr>
                                                     <th class="align-middle text-center" style="font-size: 10px;" rowspan="2">No</th>
-                                                    <th class="align-middle text-center" style="font-size: 10px;" rowspan="2">Member team {{(data_general[0].expense_type=='CAPEX' && data_general[0].sub_expense_type=='Normal')?' and Approver':''}}</th>
+                                                    <th class="align-middle text-center" style="font-size: 10px;" rowspan="2">
+                                                        Member team {{(data_general[0].expense_type=='CAPEX' && data_general[0].sub_expense_type=='Normal')?' and Approver':''}}
+                                                        <span class="fa-stack fa-lg cursor-pointer" 
+                                                            data-toggle="tooltip" 
+                                                            data-placement="top" 
+                                                            title="" 
+                                                            ng-if="data_general[0].expense_type=='CAPEX' && data_general[0].sub_expense_type=='Normal'"
+                                                            ng-click="openModalMatrix()"
+                                                            style="display: inline-block; text-align: center;">
+                                                            <i class="fa-solid fa-circle-info fa-lg" style="color: #2445fc; background-color: #f1f2f4;"></i>
+                                                        </span>
+                                                    </th>    
                                                     <th class="align-middle text-center" style="font-size: 10px;" rowspan="2">Session Date Time </th>
                                                     <th class="align-middle text-center" style="font-size: 10px;" rowspan="2"></th>
                                                 </tr>
@@ -1971,7 +1983,7 @@
                                                     data-placement="top" 
                                                     title="{{data_tooltip[0].title_th}}  {{data_tooltip[0].title_en}}"
                                                     style="padding: 0 !important;  width: 80px;">
-                                                    Guide Word 
+                                                    Deviations
                                                 </th>
                                                 <th class=" align-middle mx-0 d-none" 
                                                     colspan="1" 
@@ -2131,10 +2143,13 @@
 
                                         <tbody class="">
                                             <tr class="rowwork border border-dashed" ng-if="( data_node.length == 1 ? (data_node[0].node == null ? false : true) : true) "
-                                                ng-repeat="item in data_nodeworksheet | filter:{id_node : selectedItemNodeView} | orderBy:'no'">
+                                                ng-repeat="item in data_nodeworksheet | filter:{id_node : selectedItemNodeView} | sortNodeworksheet"> <!-----no---->
                                                 <td class="align-top border border-light border-end-0  border-start-0  border-top-0 d-flex " style="padding: 0 !important; width: 80px;">
                                                     @* {{item.index_rows}} *@
-                                                    <p class=" mx-1 ms-0  text-1100 fw-bold max-w-100 " ng-if="( item.causes_no == 1 && item.consequences_no == 1) && item.row_type == 'causes' ">{{item.guidewords_no +'.'+  (item.deviations == null? item.guidewords : item.deviations +' '+ item.guidewords  )   }}  </p>
+                                                    @*<p class=" mx-1 ms-0  text-1100 fw-bold max-w-100 " ng-if="( item.causes_no == 1 && item.consequences_no == 1) && item.row_type == 'causes' ">{{item.guidewords_no +'.'+  (item.deviations == null? item.guidewords : item.deviations +' '+ item.guidewords  )   }}  </p>*@
+                                                    <p class=" mx-1 ms-0  text-1100 fw-bold max-w-100 " ng-if="( item.causes_no == 1 && item.consequences_no == 1) && item.row_type == 'causes' ">
+                                                        {{ item.deviations }}
+                                                    </p>
                                                 </td>
 
                                                 <td class="align-top border border-light border-end-0  border-start-0  border-top-0 d-none" style="padding: 0 !important; width: 80px;">
@@ -2589,9 +2604,10 @@
                                                                 <span class="fas fa-times text-danger"></span>
                                                             </button>
                                                         </div>
-                                                        <p class="m-0  text-1100 fw-bold" style="width: 115px;">
-                                                            {{ item.responder_user_displayname}}
-                                                        </p>
+                                                        {{item.action_project_team}}
+                                                        <p class="m-0 text-1100 fw-bold" style="width: 115px;">
+                                                            {{ item.action_project_team === false ? item.responder_user_displayname : item.project_team_text }}
+                                                        </p>                                                     
                                                     </div>
                                                     <div id="valid-nodeworksheet-responder-{{item.seq}}"
                                                          class="invalid-feedback text-danger ">
@@ -2601,14 +2617,19 @@
 
                                                 <td class="align-top border border-light border-end-0  border-start-0  border-top-0 "
                                                     style="padding: 0 !important; width: 50px;">
-
-                                                    <div class="align-items-center text-end mt-1" style=" width: 50px;">
-                                                        <button ng-style=" { 'background-color' : ( item.action_status == 'Closed' ? 'success' : 'secondary' ) }"
+                                                    <div class="align-items-center text-end mt-1" style="width: 50px;" ng-if="!item.action_project_team">
+                                                        <button ng-style="{ 'background-color': (item.action_status === 'Closed' ? 'success' : 'secondary') }"
                                                                 class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end" type="button">
-                                                            <div class="text-center" style=" width: 50px;"><h6 class="me-1 text-center" style=" width: 50px;">{{ item.action_status}}</h6></div>
+                                                            <div class="text-center" style="width: 50px;">
+                                                                <h6 class="me-1 text-center" style="width: 50px;">{{ item.action_status }}</h6>
+                                                            </div>
                                                         </button>
                                                     </div>
 
+                                                    <select class="form-control" ng-if="item.action_project_team" ng-model="item.action_status">
+                                                        <option value="N/A">N/A</option>
+                                                        <option value="wait_for_design">waiting for detail design</option>
+                                                    </select>
                                                 </td>
 
                                             </tr>
@@ -2968,7 +2989,7 @@
 
                                     <tbody class="list" id="customer-rating-table-body">
                                         <tr ng-repeat="item in data_nodeworksheet | orderBy:['node_no','no_guide_word','no']"
-                                            ng-if="( !(item.recommendations == null || item.responder_user_name == null )) == true  "
+                                            ng-if="( !(item.recommendations == null)) == true  "
                                             class="hover-actions-trigger btn-reveal-trigger position-static text-center">
 
                                             <td class="align-top rating white-space-nowrap text-start">
@@ -3002,11 +3023,11 @@
                                                     </label>
                                                 </div>
                                             </td>
-
+                                            {{item.action_project_team}}
                                             <td class="align-top rating white-space-nowrap">
                                                 <div class="ms-3">
                                                     <label>
-                                                        {{item.responder_user_displayname}}
+                                                        {{item.action_project_team === false ? item.responder_user_displayname : item.project_team_text}}
                                                     </label>
                                                 </div>
                                             </td>
@@ -3139,7 +3160,7 @@
                                             <td class="align-top rating white-space-nowrap">
                                                 <div class="ms-3">
                                                     <label>
-                                                        {{item.action_status}}
+                                                        {{item.action_status === 'wait_for_design' ? 'waiting for detail design' : item.action_status}}
                                                     </label>
                                                 </div>
                                             </td>
@@ -3167,6 +3188,8 @@
 
                             <div class=" border-bottom border-200 my-0" id="ApproverTable">
                                 <div class="table-responsive scrollbar">
+                                    {{user_name}}
+                                    {{data_approver}}
                                     <table class="table fs--2 mb-0">
                                         <thead class=" text-uppercase text-center">
                                             <tr>
@@ -3182,10 +3205,10 @@
                                         </thead>
 
                                         <tbody class="list" id="customer-rating-table-body">
-                                            <tr ng-repeat="item in data_approver | orderBy:['no']"
-                                                ng-if="(item.user_name == user_name ) || (flow_role_type == 'admin')"
+                                            <tr ng-repeat="item in data_approver | orderBy:['no']" 
+                                                ng-class="{ '': canAccess(item), '': !canAccess(item) }"
                                                 class="hover-actions-trigger btn-reveal-trigger position-static text-center">
-
+                                                <!---------ng-if="(item.user_name == user_name ) || (flow_role_type == 'admin')"---------->
                                                 <td class="align-top white-space-nowrap">
                                                     <div class="col-md-12 p-1 ps-3">
                                                         <label class="text-1100 fw-bold ">
@@ -3201,22 +3224,23 @@
                                                     </div>
                                                 </td>
                                                 <td class="align-top white-space-nowrap">
-                                                    <div class="col-md-12 p-1 ps-3 text-start" ng-if="!(item.approver_action_type == 2 || data_header[0].pha_status != 21)   ">
+                                                    <div class="col-md-12 p-1 ps-3 text-start" ng-if="!(item.approver_action_type == 2 || data_header[0].pha_status != 21)" >
                                                         <div class="form-check form-check-inline cursor-pointer p-0">
                                                             <span class="fa-solid far fa-file-pdf text-danger" style="font-size:15px;" ng-click="confirmExport('hazop_report','pdf')"></span>
                                                             <b>
                                                                 HAZOP Report
                                                             </b>
                                                         </div><br />
-                                                        <div class="form-check form-check-inline cursor-pointer">
+                                                        <div class="form-check form-check-inline" ng-class="{ 'no-drop': !canAccess(item), 'cursor-pointer': canAccess(item) }">
                                                             <input class="form-check-input" id="inlineRadio-{{item.seq}}" type="radio"
-                                                                   name="inlineRadioOptions-{{item.seq}}"
+                                                                   name="inlineRadioOptions-{{item.seq}}" 
+                                                                   ng-class="{ 'cant-Access': !canAccess(item) }"
                                                                    value="approve" checked ng-model="item.action_status" />
                                                             <label class="form-check-label" for="inlineRadioApprove-{{item.seq}}"> Approve</label>
                                                         </div>
-                                                        <div class="form-check form-check-inline cursor-pointer">
+                                                        <div class="form-check form-check-inline"  ng-class="{ 'no-drop': !canAccess(item), 'cursor-pointer': canAccess(item) }">
                                                             <input class="form-check-input" id="inlineRadioOptions-{{item.seq}}" type="radio"
-                                                                   name="inlineRadioOptions-{{item.seq}}"
+                                                                   name="inlineRadioOptions-{{item.seq}}" ng-class="{ 'cant-Access': !canAccess(item) }"
                                                                    value="reject" ng-model="item.action_status" />
                                                             <label class="form-check-label" for="inlineRadioReject-{{item.seq}}"> Send back with Comment</label>
                                                         </div>
@@ -3232,8 +3256,11 @@
                                                 </td>
                                                 <td class="align-top white-space-nowrap text-start">
 
-                                                    <div class="col-md-12 p-1 ps-3" ng-if="!(item.approver_action_type == 2 || data_header[0].pha_status != 21)">
+                                                    <div class="col-md-12 p-1 ps-3" ng-if="!(item.approver_action_type == 2 || data_header[0].pha_status != 21)" 
+                                                         ng-disabled="!canAccess(item)"
+                                                         ng-class="{ 'no-drop': !canAccess(item) }">
                                                         <textarea class="form-control rounded-1" id="floatingTextarea2" placeholder="Enter your comment"
+                                                                  ng-class="{ 'cant-Access': !canAccess(item) }"
                                                                   ng-model="item.comment">  </textarea>
 
 
@@ -3248,11 +3275,13 @@
                                                 </td>
                                                 <td class="align-top px-1" style="min-width:200px;">
                                                     @* {{item.seq}} *@
-                                                    <div class=" p-0 cursor-pointer "
+                                                    <div class=" p-0 cursor-pointer " 
                                                          ng-repeat="item_x in data_drawing_approver  | filter:{id_approver : item.seq}  ">
-                                                        <div class="d-flex flex-nowrap" ng-if="!(item.approver_action_type == 2 || data_header[0].pha_status != 21)">
+                                                        <div class="d-flex flex-nowrap" ng-if="!(item.approver_action_type == 2 || data_header[0].pha_status != 21)" 
+                                                             ng-class="{ 'no-drop': !canAccess(item) }">
                                                             <div class="font-sans-serif btn-reveal-trigger position-static me-1">
                                                                 <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 p-1"
+                                                                        ng-class="{ 'cant-Access': !canAccess(item) }"
                                                                         type="button" data-bs-toggle="dropdown" data-boundary="window"
                                                                         aria-haspopup="true" aria-expanded="false" data-bs-reference="parent">
                                                                     <span class="fas fa-cog text-info"></span>
@@ -3271,7 +3300,7 @@
                                                                     </a>
                                                                 </div>
                                                             </div>
-                                                            <div class="align-items-center">
+                                                            <div class="align-items-center" ng-class="{ 'cant-Access': !canAccess(item) }">
                                                                 <div class="uploadbox ">
                                                                     <span class="nametext ms-3 filename-text me-2" id="filename-approver-{{item_x.seq}}" >
                                                                         <p >
@@ -3310,11 +3339,13 @@
                                                     </div>
                                                 </td>
                                                 <td class="align-top px-0 pt-0 ">
-                                                    <div class="d-flex">
+                                                    <div class="d-flex"                                                          
+                                                         ng-class="{ 'no-drop': !canAccess(item), 'cursor-pointer': canAccess(item) }">
 
                                                         <button class="btn btn-outline text-primary  p-1 m-2 me-0" 
                                                                 style=" background-color: #f1f2f4; width:50px;"
                                                                 ng-click="confirmDialogApprover(item,'save')"
+                                                                ng-class="{ 'cant-Access': !canAccess(item)}"
                                                                 ng-if="!(item.approver_action_type == 2 || data_header[0].pha_status != 21)">
                                                             <span class="fa fa-save text-primary fa-lg"></span><br />
                                                             <span style="font-size:8px">Save</span>
@@ -3323,6 +3354,7 @@
                                                         <button class="btn btn-outline text-success  p-1 m-2 ms-1"
                                                                 style="background-color: #f1f2f4; width:80px; "
                                                                 ng-click="confirmDialogApprover(item,'submit')"
+                                                                ng-class="{ 'cant-Access': !canAccess(item)}"
                                                                 ng-if="!(item.approver_action_type == 2 || data_header[0].pha_status != 21)">
                                                             <span class="fa fa-save text-success fa-lg"></span><br />
                                                             <span style="font-size:8px">Submit</span>
@@ -3450,154 +3482,165 @@
     </div>
 
 
-    @* ************************************************************** *@
-
     <!--Modal Employee Add Start-->
     <div class="modal fade modal-xl" id="modalEmployeeAdd" tabindex="-1" aria-labelledby="modalEmployeeAddLabel"
          aria-hidden="true" style="display: none;">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="text-900 mb-0" data-anchor="data-anchor" id="modalEmployeeCheckLabel">
-                        <span class=" me-2 text-primary"><B>|</B></span> Search Employee/Contract
-                    </h5>
+                    <!-- For form_type === 'member' or 'approver' -->
+                    <div ng-if="selectDatFormType === 'member' || selectDatFormType === 'approver'">
+                        <h5 class="text-900 mb-0" data-anchor="data-anchor" id="modalEmployeeCheckLabel">
+                            <span class="me-2 text-primary"><B>|</B></span> Search Employee/Contract
+                        </h5>
+                    </div>
+                    <!-- For form_type === 'owner' -->
+                    <div ng-if="selectDatFormType === 'owner'">
+                        <nav class="navbar navbar-expand-lg navbar-light bg-light ps-0">
+                            <div class="container-fluid">
+                                <ul class="nav nav-underline border-3 border-primary border-bottom" id="myTab"
+                                    role="tablist" style="position: relative;">
+                                    <li class="mx-2" ng-if="tab.isShow || true">
+                                        <a ng-click="selectTab('employee')"
+                                           class="btn btn-outline-primary border border-0 "
+                                           ng-class="{'btn btn-outline-primary border border-0 active': (owner_status === 'employee'),'btn btn-outline-primary border border-0 ': (owner_status === 'teams') }"
+                                           style="border-radius: 10px 10px 0px 0px !important;"
+                                           aria-selected="tab.isActive">Search Employee/Contract</a>
+                                    </li>
+                                    <li class="mx-2" ng-if="tab.isShow || true">
+                                        <a ng-click="selectTab('teams')"
+                                           class="btn btn-outline-primary border border-0 "
+                                           ng-class="{'btn btn-outline-primary border border-0 active': (owner_status === 'teams'),'btn btn-outline-primary border border-0 ': (owner_status === 'employee') }"
+                                           style="border-radius: 10px 10px 0px 0px !important;"
+                                           aria-selected="tab.isActive">Add Teams</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </nav>
+                    </div>
 
                     <button class="btn p-1" type="button" data-bs-dismiss="modal" aria-label="Close">
                         <svg class="svg-inline--fa fa-xmark fs--1" aria-hidden="true" focusable="false" data-prefix="fas"
-                             data-icon="xmark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"
-                             data-fa-i2svg="">
+                                data-icon="xmark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"
+                                data-fa-i2svg="">
                             <path fill="currentColor"
-                                  d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z">
+                                    d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z">
                             </path>
                         </svg>
                     </button>
-
                 </div>
-                <div class="modal-body">
-
-                    <div class="mb-4">
-
-                        <div class="row g-3">
-
-                            <div class="col-auto">
-
-                                <div class="search-box position-relative">
-
-                                    <input class="form-control search-input search"
-                                           ng-model="searchText" placeholder="Search"
-                                           ng-change="fillterDataEmployeeAdd()" />
-                                    <span class="fas fa-search search-box-icon"></span>
+                <div class="modal-body" >
+                    <h6 class="text-1200 mb-2" style="font-size: 1.2rem;" >
+                        <span class="me-2 text-primary"><B>|</B></span> 
+                        {{owner_status === 'employee'  ? 'Employee/Contract' : 'Teams'}}
+                    </h6>  
+                    <div ng-show="selectDatFormType && owner_status !== 'teams'">
+                        <div class="mb-4">
+                            <div class="row g-3">
+                                <div class="col-auto">
+                                    <div class="search-box position-relative">
+                                        <input class="form-control search-input search"
+                                            ng-model="searchText" placeholder="Search"
+                                            ng-change="fillterDataEmployeeAdd()" />
+                                        <span class="fas fa-search search-box-icon"></span>
+                                    </div>
                                 </div>
-
                             </div>
-
                         </div>
 
+                        @* start แสดงข้อมูลที่ ค้นหาตาม textsearch*@
+                        <div class="bg-white border-top border-bottom border-200 position-relative top-1" >
+                                <div class="table-responsive scrollbar-overlay mx-n1 px-1">
+                                    <table class="table table-sm fs--1 mb-0">
+                                        <thead class=" text-uppercase">
+                                            <tr class="text-center">
+                                                <th class=""> </th>
+                                                    <th class="pe-5" scope="col">Employee</th>
+                                                    <th class="pe-5" scope="col">Indicator</th>
+                                                    <th class="pe-5" scope="col">E-Mail</th>
+                                                    <th class="pe-5" scope="col">Employee Type</th>
+                                                </tr>
+                                        </thead>
+                                        <tbody class=" list">
+
+                                                <tr class="hover-actions-trigger btn-reveal-trigger position-static text-center"
+                                                    ng-if="employeelist_show.length > 0 && employeelist_show[0].employee_displayname !== null" ng-repeat="item in employeelist_show"
+                                                    ng-repeat="item in employeelist_show">
+
+                                                    <td class="">
+                                                        <a class="dropdown-item text-primary cursor-pointer"
+                                                        ng-click="choosDataEmployee(item)">
+                                                            Add
+                                                        </a>
+                                                    </td>
+
+                                                    <td class="">
+                                                        <a class=" text-decoration-none d-flex align-items-center">
+                                                            <div class="avatar avatar-m" style="height: 20px; width: 20px;">
+                                                                <img ng-if="item.employee_img" class="rounded-circle" ng-src="../../{{ item.employee_img }}" alt="">
+                                                            </div>
+                                                            <p class="mb-0 ms-3 text-1100 fw-bold"> ({{item.employee_id}}){{item.employee_displayname}} </p>
+                                                        </a>
+                                                    </td>
+
+                                                    <td class="">{{item.employee_position}} </td>
+
+                                                    <td class="">{{item.employee_email}} </td>
+
+                                                    <td class="">{{item.employee_type}}</td>
+
+                                                </tr>
+                                                <!-- Show "Not Found" message when employeelist_show is empty or the first item is null -->
+                                                <tr ng-if="employeelist_show[0].employee_displayname === null">
+                                                    <td colspan="5">
+                                                        <p class="mb-0 ms-3 text-1100 fw-bold text-center"> Not Found </p>
+                                                    </td>
+                                                </tr>                                    
+                                        </tbody>
+                                    </table>
+                                </div>
+                        </div>
+                        @* end แสดงข้อมูลที่ ค้นหาตาม textsearch*@
+        
                     </div>
 
-                    @* start แสดงข้อมูลที่ ค้นหาตาม textsearch*@
-                    <div class="bg-white border-top border-bottom border-200 position-relative top-1">
-                        <div class="table-responsive scrollbar-overlay mx-n1 px-1">
-                            <table class="table table-sm fs--1 mb-0">
-                                <thead class=" text-uppercase">
-                                    <tr class="text-center">
-                                        <th class=""> </th>
-                                        <th class="pe-5" scope="col">Employee</th>
-                                        <th class="pe-5" scope="col">Indicator</th>
-                                        <th class="pe-5" scope="col">E-Mail</th>
-                                        <th class="pe-5" scope="col">Employee Type</th>
-
-                                    </tr>
-                                </thead>
-                                <tbody class=" list">
-
-                                    <tr class="hover-actions-trigger btn-reveal-trigger position-static text-center"
-                                        ng-if="employeelist_show.length > 0 && employeelist_show[0].employee_displayname !== null" ng-repeat="item in employeelist_show">
-
-                                        <td class="">
-                                            <a class="dropdown-item text-primary"
-                                               ng-click="choosDataEmployee(item)"
-                                               style="cursor: pointer;">
-                                                @* <span class="fas fa-check"></span> *@
-                                                Add
-                                            </a>
-                                        </td>
-
-                                        <td class="">
-                                            <a class=" text-decoration-none d-flex align-items-center">
-                                                <div class="avatar avatar-m" style="height: 20px; width: 20px;">
-                                                    <img ng-if="item.employee_img" class="rounded-circle" ng-src="../../{{ item.employee_img }}" alt="">
-                                                </div>
-                                                <p class="mb-0 ms-3 text-1100 fw-bold"> ({{item.employee_id}}){{item.employee_displayname}} </p>
-                                            </a>
-                                        </td>
-
-
-                                        <td class="">{{item.employee_position}} </td>
-
-                                        <td class="">{{item.employee_email}} </td>
-
-                                        <td class="">{{item.employee_type}}</td>
-
-                                    </tr>
-                                    <!-- Show "Not Found" message when employeelist_show is empty or the first item is null -->
-                                    <tr ng-if="employeelist_show[0].employee_displayname === null">
-                                        <td colspan="5">
-                                            <p class="mb-0 ms-3 text-1100 fw-bold text-center"> Not Found </p>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-
+                    <div ng-show="selectDatFormType === 'owner' && owner_status === 'teams'">
+                        <!-- For form_type === 'owner'  action_project_team if teams ==== 1-->
+                        <div>                    
+                            <div class="mb-3">
+                                <input type="text" class="form-control" id="employee_position" ng-model="owner_teams">
+                            </div>
+                            <button type="button" class="btn btn-primary" ng-click="choosDataEmployee()">Apply</button>                        
                         </div>
                     </div>
-                    @* end แสดงข้อมูลที่ ค้นหาตาม textsearch*@
-
-
                 </div>
-                <div class="modal-header bg-soft" ng-if="!(selectDatFormType =='owner')">
+
+                <!------------show name after add   --------------->
+                <div class="modal-header bg-soft" ng-if="selectDatFormType !== 'owner'">
                     <h5 class="text-900 mb-0">
-                        <span class=" me-2 text-primary"><B>|</B></span> {{selectDatFormType =='member' ? 'Member Team' : 'Approver'}}
+                        <span class="me-2 text-primary"><B>|</B></span> {{ selectDatFormType === 'member' ? 'Member Team' : 'Approver' }}
                     </h5>
                 </div>
-                <div class="modal-body" ng-if="selectDatFormType =='member'">
-                    <div class="col-auto" ng-repeat="item2 in data_memberteam | filter:{id_session: selectdata_session }"
-                         ng-if="!(item2.user_displayname == '' || item2.user_displayname == null)">
+
+                <div class="modal-body">
+                    <div class="col-auto" ng-repeat="item2 in (selectDatFormType === 'member' ? data_memberteam : data_approver) | filter:{id_session: selectdata_session }"
+                        ng-if="!(item2.user_displayname == '' || item2.user_displayname == null)">
                         <div class="d-flex align-items-center p-1" style="height: 20px;">
-                            <button id="del-{{item2.seq}}" class="btn btn-link text-danger"
-                                    ng-class="{'d-none':(!tab_general_active)}"
+                            <button id="del-{{item2.seq}}" class="btn btn-link text-danger" ng-class="{'d-none': (!tab_general_active)}"
                                     ng-click="removeDataEmployee(item2.seq, selectdata_session)">
                                 Remove
                             </button>
-                            <label class="mb-0 ms-3 text-1100 fw-bold"
-                                   style="width:80%;border-color: #f1f2f4;">{{ item2.user_displayname}}</label>
-
+                            <label class="mb-0 ms-3 text-1100 fw-bold" style="width: 80%; border-color: #f1f2f4;">{{ item2.user_displayname }}</label>
                         </div>
                     </div>
-
                 </div>
-                <div class="modal-body" ng-if="selectDatFormType =='approver'">
-                    @* start ข้อมูลเดียวกันกับตรง session Approver*@
-                    <div class="col-auto" ng-repeat="item2 in data_approver | filter:{id_session: selectdata_session }"
-                         ng-if="!(item2.user_displayname == '' || item2.user_displayname == null)">
-                        <div class="d-flex align-items-center p-1" style="height: 20px;">
-                            <button id="del-{{item2.seq}}" class="btn btn-link text-danger"
-                                    ng-class="{'d-none':(!tab_general_active)}"
-                                    ng-click="removeDataEmployee(item2.seq, selectdata_session)">
-                                Remove
-                            </button>
-                            <label class="mb-0 ms-3 text-1100 fw-bold"
-                                   style="width:80%;border-color: #f1f2f4;">{{ item2.user_displayname}}</label>
 
-                        </div>
-                    </div>
-                    @* end ข้อมูลเดียวกันกับตรง session*@
-                </div>
 
             </div>
         </div>
     </div>
     <!--Modal Employee Check End-->
+
     <!--Modal Save Start-->
     <div class="modal fade" id="modalMsg" tabindex="-1" aria-labelledby="modalMsgLabel"
          aria-hidden="true" style="display: none;">
@@ -5024,7 +5067,41 @@
         </div>
     </div>
 
+    @* Modal matrix *@
+    <div class="modal fade" id="modalMatrix" tabindex="-1" aria-labelledby="modalMatrix"
+         aria-hidden="true" style="display: none;">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalMatrix">CAPEX Technical Review Matrix</h5>
+                    <button class="btn p-1" type="button" data-bs-dismiss="modal" aria-label="Close">
+                        <svg class="svg-inline--fa fa-xmark fs--1" aria-hidden="true" focusable="false" data-prefix="fas"
+                             data-icon="xmark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"
+                             data-fa-i2svg="">
+                            <path fill="currentColor"
+                                  d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z">
+                            </path>
+                        </svg>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="row g-3 flex-center">
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+    @* Modal New RAM *@
+
+
+
 </div>
+
+
 
 @section Scripts {
 

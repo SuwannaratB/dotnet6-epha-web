@@ -74,6 +74,17 @@
                             </div>
 
                             <div class="row g-3 justify-content-between align-items-center pt-0 pb-0">
+                                <div class="float-end align-top pt-2 ms-1 d-none">
+                                    <div class="float-end pe-3">
+                                        <div class="form-check form-switch cursor-pointer">
+                                            <input class="form-check-input cursor-pointer" name="" id=""
+                                                    type="checkbox"
+                                                    ng-click="toggleTasksView()" />
+                                            <label class="form-check-label cursor-pointer" for="" style="color:#a1a1a6">Show </label>
+                                        </div>
+                                    </div>
+                                </div>                                                              
+
                                 <div class="col-12 col-md mx-1 ">
 
                                     <div class="table-responsive scrollbar tableFixHead ">
@@ -216,7 +227,8 @@
                                             </thead>
                                             <tbody class="list" id="customer-rating-table-body text-1100 ">
 
-                                                <tr ng-repeat="item_d in data_details"
+                                                <tr ng-repeat="item_d in data_details"  
+                                                    ng-class="{ 'disabled-row': !canAccess(item_d) && showOwnTasks }"
                                                     class="hover-actions-trigger btn-reveal-trigger position-static px-0 text-center">
 
                                                     <td class="align-top  px-1">

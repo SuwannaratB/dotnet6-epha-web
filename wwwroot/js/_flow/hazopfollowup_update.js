@@ -468,6 +468,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
 
                 var arr = data;
 
+                console.log($scope.flow_role_type,$scope.user_name)
+
                 var iNoNew = 1;
                 for (let i = 0; i < arr.details.length; i++) {
                     arr.details[i].no = (iNoNew);
@@ -819,7 +821,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
 
         if (action == 'save') {
             var arr_json = $filter('filter')(arr_active, function (item) {
-                return ((item.seq == _item.seq && item.action_type == 'update' && item.action_change == 1)
+                return ((item.seq == _item.seq && item.action_type == 'update' && item.action_change == 1 && item.responder_active_row !== 0)
                     || item.action_type == 'insert');
             });
         } else {
@@ -1320,4 +1322,29 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
 
         });
     }
+
+    //toggle to show own or all 
+    $scope.showOwnTasks = false;
+
+    $scope.toggleTasksView = function() {
+        $scope.showOwnTasks = !$scope.showOwnTasks;
+    };
+
+    //access each role
+    $scope.canAccess = function(task) {
+        console.log("users role",$scope.flow_role_type,"will check this task",task)
+        //now  flow role type === admin, employee
+        // Originator can't assess any task
+        if (task.responder_active_row === 0) //admin orinator
+            return false; 
+        // Action owner can assess their own task
+        if (task.responder_active_row === 1) 
+            return !($scope.showOwnTasks && task.responder_user_name !== $scope.user_name);// return to disable or not 
+        // Approver can assess their own task 
+        if ($scope.flow_role_type === 'Approver') 
+            return !($scope.showOwnTasks && task.approver !== $scope.user_name); 
+        return true; // Admin can access all tasks
+    };
+
+    
 });
