@@ -914,6 +914,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.searchdataMemberTeam = '';
         $scope.searchdataResponder = '';
         $scope.searchdataApprover = '';
+        $scope.searchIndicator = {
+            text: ''
+        }
 
         $scope.searchDeviationsText = '';
         $scope.searchGuideWordsText = '';
@@ -5292,7 +5295,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 if (!$scope.data_nodeworksheet[i].estimated_start_date) {
                     var today = new Date();
                     var start_date_utc = new Date(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()));
-                    $scope.data_general[0].estimated_start_date = start_date_utc.toISOString().split('T')[0];
+                    $scope.data_nodeworksheet[0].estimated_start_date = start_date_utc.toISOString().split('T')[0];
                 } else {
                     var start_date = new Date($scope.data_nodeworksheet[i].estimated_start_date);
                     if (!isNaN(start_date.getTime())) {
@@ -5758,14 +5761,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     page_load();
 
     $scope.openDataEmployeeAdd = function (item, form_type) {
-        console.log(item, form_type)
         $scope.selectedData = item;
         $scope.selectdata_session = item.seq;
         $scope.selectDatFormType = form_type;//member, approver, owner
         $scope.employeelist_show = [];
         $scope.searchText = '';
         $scope.owner_status = '';
-        $scope.owner_teams = ''
 
         if (form_type === 'owner') {
             $scope.owner_status = 'employee'; //1 for em || 2 for teams to sent to p'kul
@@ -5773,7 +5774,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         apply();
         //alert($scope.selectDatFormType);
-        $('#modalEmployeeAdd').modal('show');
+        $('#modalEmployeeAdd').modal({
+            backdrop: 'static',
+            keyboard: false 
+        }).modal('show');
     };
 
     $scope.selectTab = function(tab) {
@@ -5781,43 +5785,29 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
 
     $scope.fillterDataEmployeeAdd = function () {
-        console.log("Function called");
-        console.log("Search text:", $scope.searchText);
-        if ($scope.searchText.trim() !== '') {
-            console.log($scope.searchText);
-        } else {
-            console.log("No text entered.");
-        }
         $scope.employeelist_show = [];
         var searchText = $scope.searchText;
-        if (!searchText) { 
-            console.log("No search text provided");
-            return; 
-        }
-
+        var searchIndicator = $scope.searchIndicator.text;
+        if (!searchText && !searchIndicator) { return; }
+       
         var items = angular.copy($scope.employeelist_def, items);
-        // console.log(items)
-        // searchText = searchText.toLowerCase();
 
-        if (searchText.length < 3) { return items; }
-
-        getEmployees(searchText, function (data) {
-            console.log("Data received from getEmployees:", data); 
-            $scope.employeelist_show = data.employee;
-            console.log("employeelist_show:", $scope.employeelist_show);   
-            // return (
-            //     item.employee_id.toLowerCase().includes(searchText.toLowerCase()) ||
-            //     item.employee_displayname.toLowerCase().includes(searchText.toLowerCase()) ||
-            //     item.employee_email.toLowerCase().includes(searchText.toLowerCase())
-            // )}).slice(0, 10);
+        if (searchText.length < 3 && searchIndicator.length < 3) { return items; }
+       
+        getEmployees(searchText,searchIndicator, function(data) {
+            $scope.employeelist_show = data.employee
             apply();
-            $('#modalEmployeeAdd').modal('show');
+            $('#modalEmployeeAdd').modal({
+                backdrop: 'static',
+                keyboard: false 
+            }).modal('show');
         });
     };
-    function getEmployees(keywords, callback) {
+    function getEmployees(keywords,indicator, callback) {
         $.ajax({
             url: url_ws + "Flow/employees_search",
             data: '{"user_filter_text":"' + keywords + '"'
+                + ',"user_indicator":"' + indicator + '"'
                 + ',"max_rows":"10"'
                 + '}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",

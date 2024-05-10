@@ -1332,18 +1332,16 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
 
     //access each role
     $scope.canAccess = function(task) {
-        console.log("users role",$scope.flow_role_type,"will check this task",task)
-        //now  flow role type === admin, employee
-        // Originator can't assess any task
-        if (task.responder_active_row === 0) //admin orinator
-            return false; 
-        // Action owner can assess their own task
-        if (task.responder_active_row === 1) 
-            return !($scope.showOwnTasks && task.responder_user_name !== $scope.user_name);// return to disable or not 
-        // Approver can assess their own task 
-        if ($scope.flow_role_type === 'Approver') 
-            return !($scope.showOwnTasks && task.approver !== $scope.user_name); 
-        return true; // Admin can access all tasks
+        // If user is an admin, allow access
+        if ($scope.flow_role_type === 'admin') {
+            return true;
+        }
+        // If user is an employee and the task belongs to them, allow access
+        if ($scope.flow_role_type === 'employee' && $scope.user_name === task.user_name) {
+            return true;
+        }
+        //originator cant edit?
+        return false;
     };
 
     
