@@ -62,7 +62,6 @@ AppMenuPage.directive('hidePlaceholderOption', function() {
         element.on('showDropdown', function(event) {
 
             var placeholderItem = document.querySelector('.is-open .is-active .choices__list .is-selected'); //choices__placeholder
-            console.log(placeholderItem);
             if (!placeholderItem) {
                 var placeholderList = document.querySelector('.is-open .is-active .choices__list[data-value="Please select"]');                console.log(placeholderList)
                 if (placeholderList) {placeholderList.add('ng-hide')};
@@ -5257,6 +5256,67 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.isChecDescription = !$scope.isChecDescription;
         apply();
     };
+
+    $scope.changeUnitNo = function(unit_no) {
+        $scope.data_general[0].id_unit_no = unit_no.id;
+        $scope.data_general[0].unit_no_name = unit_no.name;
+        console.log($scope.data_general)
+    };
+
+    $scope.openSearchDropdown = function(id) {
+        // var dropdown = document.getElementById(id);
+        // if (dropdown) {
+        //     dropdown.classList.toggle("show");
+        // }
+        // apply();
+        // console.log(id);
+    };
+
+    $document.on('click', function(event) {
+        const targetElement = event.target;
+        const id = targetElement.getAttribute('id');
+        var id_dropdown = '';
+
+        if (id) {
+            id_dropdown = id.substring(0, id.indexOf('_'));
+        }
+        // click button
+        if (id_dropdown == 'dropdown') {
+            var id_list = id.substring(id.indexOf("_") + 1); 
+            console.log(id_list)
+            document.getElementById(id_list).classList.toggle("show");
+            return;
+        }
+        // click input text
+        if (id == 'dropdown_input') {
+            return
+        }
+
+        document.getElementById('unit_no').classList.remove("show");
+        // document.getElementById('unit_no1').classList.remove("show");
+
+        // out
+        // const dropdown = document.getElementById("myDropdown");
+        // if (targetElement.getAttribute('ng-click') != 'openSearchDropdown()' &&
+        //     targetElement.getAttribute('onkeyup') != 'filterFunction()'
+        // ) {
+            // dropdown.classList.remove("show");
+        // }
+    });
+    //   function filterFunction() {
+    //     const input = document.getElementById("myInput");
+    //     const filter = input.value.toUpperCase();
+    //     const div = document.getElementById("myDropdown");
+    //     const a = div.getElementsByTagName("a");
+    //     for (let i = 0; i < a.length; i++) {
+    //       txtValue = a[i].textContent || a[i].innerText;
+    //       if (txtValue.toUpperCase().indexOf(filter) > -1) {
+    //         a[i].style.display = "";
+    //       } else {
+    //         a[i].style.display = "none";
+    //       }
+    //     }
+    //   }
 
 
 });

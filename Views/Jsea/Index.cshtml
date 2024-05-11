@@ -30,6 +30,7 @@
     <script src="~/assets/js/all.min.js"></script>
 
     <link rel="stylesheet" href="~/css/myStyles.css">
+    
 }
 
 <div class="content mt-1" style="font-size: 12px; min-height: auto !important; overflow-x:hidden;" id="divPage"
@@ -250,7 +251,48 @@
                                     </div>
               
                                     <!-- Unit No -->
-                                    <div class="col-md-3 p-1 align-items-top" ng-if="item.id_company != '9999' ">
+                                    @* <div class="col-md-3 p-1 align-items-top" 
+                                        style="position: relative;"
+                                        ng-if="item.id_company != '9999' ">
+                                        <div class="dropdown">
+                                            <button id="dropdown_unit_no" class="dropbtn">Dropdown</button>
+                                            <div id="unit_no" class="dropdown-content">
+                                                <input id="dropdown_input" class="dropdown_input" type="text" placeholder="Search.." onkeyup="filterFunction()">
+                                                <a value="1">About</a>
+                                                <a >Base</a>
+                                                <a >Blog</a>
+                                                <a >Contact</a>
+                                                <a >Custom</a>
+                                            </div>
+                                        </div>
+                                    </div> *@
+                                    <!-- Unit No -->
+                                    <div class="col-md-3 p-1 align-items-top" ng-if="item.id_company != '9999' "
+                                        style="display: flex; flex-direction: column; padding-top: 2px;">
+                                        <label class="form-label ps-0 py-1" for="unit">
+                                            <b class="text-danger d-none"> * </b>
+                                            Unit No 
+                                             <span class="text-danger" style="font-size:10px;">(กรณีที่ไม่มี Unit No ต้องเลือก TAG ID )</span>
+                                        </label>
+                                        <div class="dropdown">
+                                            <button id="dropdown_unit_no" class="dropbtn">{{item.unit_no_name}}</button>
+                                            <div id="unit_no" class="dropdown-content">
+                                                <input id="dropdown_input" class="dropdown_input" type="text" placeholder="Search.." onkeyup="filterFunction()">
+                                                <a  ng-repeat="item2 in master_unit_no" 
+                                                    ng-if="item2.id_company == item.id_company && item2.id_apu == item.id_apu"
+                                                    ng-click="changeUnitNo(item2)"
+                                                    value="item2.id" >
+                                                    {{item2.name}}
+                                                </a>
+                                                <a  ng-if="item2.id_company != item.id_company && item2.id_apu != item.id_apu"
+                                                    value="" >
+                                                    Not Found
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                     <!-- Unit No -->
+                                    @* <div class="col-md-3 p-1 align-items-top" ng-if="item.id_company != '9999' ">
                                         <label class="form-label ps-0" for="unit"><b class="text-danger d-none"> * </b>Unit No </label><spand class="text-danger" style="font-size:10px;">(กรณีที่ไม่มี Unit No ต้องเลือก TAG ID )</spand>
                                         <label class="form-label ps-0" ng-if="select_history_tracking_record">
                                             <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
@@ -268,7 +310,7 @@
                                                 {{item2.name}}
                                             </option>
                                         </select>
-                                    </div>
+                                    </div> *@
                                 
                                     <!-- Tag ID -->
                                     <div class="col-md-auto p-1 align-items-top" ng-if="item.id_company != '9999' ">
