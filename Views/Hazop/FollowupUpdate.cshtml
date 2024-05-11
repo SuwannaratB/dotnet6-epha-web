@@ -226,11 +226,9 @@
 
                                             </thead>
                                             <tbody class="list" id="customer-rating-table-body text-1100 ">
-
                                                 <tr ng-repeat="item_d in data_details"  
-                                                    ng-class="{ 'disabled-row': !canAccess(item_d) && showOwnTasks }"
+                                                    ng-class="{ '': canAccess(item_d), '': !canAccess(item_d) }"
                                                     class="hover-actions-trigger btn-reveal-trigger position-static px-0 text-center">
-
                                                     <td class="align-top  px-1">
                                                         <div class="text-center">
                                                             <p class="mb-0 ms-3 fw-bold" style="width: 30px;" rows="3">
@@ -406,25 +404,25 @@
                                                         <div class="d-flex ">
                                                             <div class="align-items-center">
                                                                 <h6 class="transition-none fs--2p-1 ps-0 text-center rounded-1 h-100 d-flex justify-content-center align-items-center"
-                                                                    ng-click="openModalDataRAM('s',item_d,'after',item_d.id_ram,true)"
                                                                     style="width: 20px;">
                                                                     {{item_d.ram_after_security}}
-                                                                </h6>
+                                                                </h6><!--------------ng-click="openModalDataRAM('s',item_d,'after',item_d.id_ram,true)"-------------->
                                                             </div>
 
                                                             <div class="align-items-center">
                                                                 <h6 class="transition-none fs--2p-1 ps-0 text-center rounded-1 h-100 d-flex justify-content-center align-items-center"
-                                                                    ng-click="openModalDataRAM('l',item_d,'after',item_d.id_ram,true)"
                                                                     style="width: 20px;">
                                                                     {{item_d.ram_after_likelihood}}
-                                                                </h6>
+                                                                </h6><!------- ng-click="openModalDataRAM('l',item_d,'after',item_d.id_ram,true)"-------->
                                                             </div>
 
                                                             <div class="align-items-center text-end mt-1"
+                                                                ng-class="{ 'no-drop': !canAccess(item_d), 'cursor-pointer': canAccess(item_d) }"
                                                                 style=" width: 30px;">
                                                                 <button
                                                                     ng-style=" { 'background-color' : ((item_d.ram_after_risk == 'H') ? 'red' : ((item_d.ram_after_risk == 'M') ? 'yellow' : ((item_d.ram_after_risk == 'L') ? 'green' : '#D3D3D3')) ) }"
                                                                     class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end"
+                                                                    ng-class="{ 'cant-Access': !canAccess(item_d) }"
                                                                     type="button"
                                                                     ng-click="openModalDataRAM('r',item_d,'after',item_d.id_ram,true)"
                                                                     style="width: 30px;">
@@ -459,11 +457,13 @@
                                                                     {{item_d.ram_action_likelihood}}
                                                                 </h6>
                                                             </div>
-                                                            <div class="align-items-center text-end mt-1"
-                                                                style=" width: 30px;">
+                                                            <div class="align-items-center text-end mt-1" 
+                                                                 ng-class="{ 'no-drop': !canAccess(item_d), 'cursor-pointer': canAccess(item_d) }"
+                                                                 style=" width: 30px;">
                                                                 <button
                                                                     ng-style=" { 'background-color' : ((item_d.ram_action_risk == 'H') ? 'red' : ((item_d.ram_action_risk == 'M') ? 'yellow' : ((item_d.ram_action_risk == 'L') ? 'green' : '#D3D3D3')) ) }"
                                                                     class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end"
+                                                                    ng-class="{ 'cant-Access': !canAccess(item_d) }"
                                                                     type="button"
                                                                     ng-click="openModalDataRAM('r',item_d,'action',item_d.id_ram,false)"
                                                                     style="width: 30px;">
@@ -483,25 +483,29 @@
                                                     @* Implement 13 *@
                                                     <td class="align-top px-0" ng-if="flow_status != 14"
                                                         style="min-width: 50px; max-width: 70px !important;">
-                                                        <div class="m-auto">
+                                                        <div class="m-auto" ng-class="{ 'no-drop': !canAccess(item_d), 'cursor-pointer': canAccess(item_d) }">
                                                             <input type="checkbox" ng-model="item_d.implement"
+                                                                ng-class="{ 'cant-Access': !canAccess(item_d)}"
                                                                 ng-click="actionImplement(item_d)"
                                                                 style="cursor: pointer; width: 20px; height: 20px;">
                                                         </div>
                                                     </td>
 
-                                                    <td class="align-top  px-0" style=" min-width:200px;">
-                                                        <textarea class="form-control form-control-sm rounded-1 p-0 mt-1 w-100 border border-end-0 border-top-0"
-                                                                style=" width: 100vh; font-size: 10px;"
-                                                                placeholder="Remark" 
-                                                                rows="1"
-                                                                ng-change="actionInput(item_d)"
-                                                                ng-model="item_d.responder_comment"
-                                                                >
-                                                        </textarea>
-                                                        <div id="valid-remark-{{item_d.seq}}"
-                                                            class="invalid-feedback text-danger">
-                                                            Please provide a valid Remark.
+                                                    <td class="align-top  px-0" style=" min-width:200px;" >
+                                                        <div ng-class="{ 'no-drop': !canAccess(item_d), 'cursor-pointer': canAccess(item_d) }">
+                                                            <textarea class="form-control form-control-sm rounded-1 p-0 mt-1 w-100 border border-end-0 border-top-0"
+                                                                    style=" width: 100vh; font-size: 10px;"
+                                                                    ng-class="{ 'cant-Access': !canAccess(item_d)}"
+                                                                    placeholder="Remark" 
+                                                                    rows="1"
+                                                                    ng-change="actionInput(item_d)"
+                                                                    ng-model="item_d.responder_comment"
+                                                                    >
+                                                            </textarea>
+                                                            <div id="valid-remark-{{item_d.seq}}"
+                                                                class="invalid-feedback text-danger">
+                                                                Please provide a valid Remark.
+                                                            </div>
                                                         </div>
                                                     </td>
 
@@ -510,9 +514,11 @@
                                                         <div class=" p-0 cursor-pointer " 
                                                              ng-repeat="item_x in data_drawingworksheet | filter:{id_worksheet:item_d.seq, action_type : '!delete'}">
                                                             <div class="d-flex flex-nowrap"
+                                                                 ng-class="{ 'no-drop': !canAccess(item_d), 'cursor-pointer': canAccess(item_d) }"
                                                                  ng-if="!((flow_status == 14 ? item_d.reviewer_action_type : item_d.responder_action_type) == 2)">
                                                                 <div class="font-sans-serif btn-reveal-trigger position-static me-1">
                                                                     <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 p-1"
+                                                                            ng-class="{ 'cant-Access': !canAccess(item_d) }"
                                                                             type="button" data-bs-toggle="dropdown" data-boundary="window"
                                                                             aria-haspopup="true" aria-expanded="false" data-bs-reference="parent">
                                                                         <span class="fas fa-cog text-info"></span>
@@ -632,8 +638,9 @@
                                                     </td>
 
                                                     <td class="align-top px-0 pt-0 ">
-                                                        <div class="d-flex">
+                                                        <div class="d-flex" ng-class="{ 'no-drop': !canAccess(item_d), 'cursor-pointer': canAccess(item_d) }">
                                                             <button class="btn btn-outline text-primary  p-1 m-2 me-0" 
+                                                                    ng-class="{ 'cant-Access': !canAccess(item_d)}"
                                                                     style=" background-color: #f1f2f4; width:50px;"
                                                                     ng-click="actionSave(item_d)"
                                                                     ng-if="!((flow_status == 14 ? item_d.reviewer_action_type : item_d.responder_action_type) == 2)">
@@ -642,6 +649,7 @@
                                                             </button>
 
                                                             <button class="btn btn-outline text-success  p-1 m-2 ms-1"
+                                                                    ng-class="{ 'cant-Access': !canAccess(item_d)}"
                                                                     style="background-color: #f1f2f4; width:80px; "
                                                                     ng-click="showConfirmDialogSubmit(item_d,'submit')"
                                                                     ng-if="!((flow_status == 14 ? item_d.reviewer_action_type : item_d.responder_action_type) == 2)">

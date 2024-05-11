@@ -306,22 +306,25 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     }
                 }
             }
+            // default start date recommendations
+
+            if (selectedTab.action_part == 6) {
+                $scope.data_listworksheet.forEach(_item => {
+                    if (_item.recommendations && _item.responder_user_displayname && !_item.estimated_start_date) {
+                        _item.estimated_start_date = new Date();
+                        $scope.actionChangeWorksheet(_item, _item.seq, '');
+                    }
+                });
+            }
+
+
         } catch (error) { }
 
         angular.forEach($scope.tabs, function (tab) {
             tab.isActive = false;
         });
+
         selectedTab.isActive = true;
-
-        // try {
-        //     document.getElementById(selectedTab.name + "-tab").addEventListener("click", function (event) {
-        //         ev = event.target
-        //     });
-
-        //     var tabElement = angular.element(ev);
-        //     tabElement[0].focus();
-        //     console.log("tabElement",tabElement[0])
-        // } catch (error) { }
 
         check_tab(selectedTab.name);
 
@@ -845,7 +848,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.searchdataMemberTeam = '';
         $scope.searchdataResponder = '';
         $scope.searchdataApprover = '';
-
+        $scope.searchIndicator = {
+            text: ''
+        }
 
 
         // สร้างชั่วโมง (0-23)
@@ -888,6 +893,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         var arr_tab = $filter('filter')($scope.tabs, function (item) { return (item.name == val); });
         if (arr_tab.length > 0) { $scope.action_part = Number(arr_tab[0].action_part); }
         if (val == 'worksheet') { $scope.viewDataTaskList($scope.selectedItemListView); }
+        if (val === 'approver') { $scope.canAccess($scope.data_approver)}
     }
 
     function get_max_id() {
@@ -1004,6 +1010,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     function save_data_create(action, action_def) {
 
+        console.log('save ==> ',$scope.data_listworksheet)
+
         if ($scope.action_part != 4) { set_data_managerecom(); }
 
         check_data_general();
@@ -1034,6 +1042,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         var json_listworksheet = check_data_listworksheet();
         var json_managerecom = "";
 
+        console.log("json_listworksheet",json_listworksheet)
         //EPHA_M_RAM_LEVEL
         var json_ram_level = check_data_ram_level();
         var json_ram_master = check_master_ram();
@@ -1412,6 +1421,17 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                             });
                         });
                     }
+
+                    //set action_project_team will set to 0 if that data null? 
+                    try{
+
+                        for (let i = 0; i < arr.listworksheet.length; i++) {
+                            if (arr.listworksheet[i].action_project_team !== null) {
+                                arr.listworksheet[i].action_project_team = arr.listworksheet[i].action_project_team === 1 ;                           
+                            }
+                        }
+                    }catch{}
+
 
                     $scope.data_listworksheet = arr.listworksheet;
                     $scope.data_listworksheet_def = clone_arr_newrow(arr.listworksheet);
@@ -3311,7 +3331,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         index = index_rows;
 
         console.clear();
-        console.log($scope.data_listworksheet);
 
         running_index_level1_lv1($scope.data_listworksheet, iNo, index, newInput);
 
@@ -3330,8 +3349,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.data_copy = $scope.data_listworksheet.filter(function(item) {
                 return item.seq === seq;
             });
-        }
-        console.log("show copy",$scope.data_copy)
+        }        
     }
 
     $scope.pasteList = function (level, seq) {
@@ -4157,13 +4175,24 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             var bCheckRequiredField = false;
 
             if (action == 'submit_register' || action == 'submit_conduct' || action == 'submit_genarate') {
-                console.log("now it",pha_status)
                 var bCheckValid = false;
                 var arr_chk = $scope.data_general;
                 if (pha_status == "11") {
-                    if (arr_chk[0].expense_type == '' || arr_chk[0].expense_type == null) { set_alert('Warning', 'Please select a valid Expense Type'); return; }
-                    if (arr_chk[0].sub_expense_type == '' || arr_chk[0].sub_expense_type == null) { set_alert('Warning', 'Please select a valid Sub-Expense Type'); return; }
-                    if (arr_chk[0].id_apu == '' || arr_chk[0].id_apu == null) { set_alert('Warning', 'Please select a valid Area Process Unit'); return; }
+
+                    var requiredFields = [
+                        { field: 'expense_type', errorId: 'expense_type_error' ,errorText:'Please select a valid Expense Type'},
+                        { field: 'sub_expense_type', errorId: 'sub_expense_type_error', errorText:'Please select a valid Sub-Expense Type' },
+                        { field: 'id_apu', errorId: 'id_apu_error' , errorText: 'Please select a valid Area Process Unit'}
+                    ];
+                
+                    var invalidFieldFound = false;
+                    requiredFields.forEach(function (item) {
+                        if (!arr_chk[0][item.field]) {
+                            set_alert('Warning', errorText);
+                            //validateSelect(item.field, item.errorId);
+                            invalidFieldFound = true; 
+                        }
+                    });
 
                     console.log($scope.data_memberteam)
 
@@ -4184,7 +4213,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     if (arr_chk[0].id_apu == '' || arr_chk[0].id_apu == null) { set_alert('Warning', 'Please select a valid Area Process Unit'); return; }
 
                     if (true) {
-                        console.log("so will check",$scope.data_memberteam)
                         arr_chk = $scope.data_memberteam;
                         if (arr_chk.length == 0) { set_alert('Warning', 'Please provide a valid Session List'); return; }
                         else {
@@ -4777,29 +4805,44 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.data_listworksheet[i].id = Number($scope.data_listworksheet[i].seq);
             $scope.data_listworksheet[i].id_pha = pha_seq;
 
+            // action_project_team
+            if($scope.data_listworksheet[i].action_project_team){
+                $scope.data_listworksheet[i].action_project_team = $scope.data_listworksheet[i].action_project_team === true ? 1 : 0;           
+            }
+
             //ram_action_security, ram_action_likelihood, ram_action_risk, estimated_start_date, estimated_end_date, document_file_path, document_file_name, action_status, responder_action_type, responder_user_name, responder_user_displayname
             try {
-                var start_date = new Date($scope.data_listworksheet[i].estimated_start_date);
-                if (!isNaN(start_date.getTime())) {
-                    var start_date_utc = new Date(Date.UTC(start_date.getFullYear(), start_date.getMonth(), start_date.getDate()));
-                    $scope.data_listworksheet[i].estimated_start_date = start_date_utc.toISOString().split('T')[0];
+                if (!$scope.data_listworksheet[i].estimated_start_date) {
+                    var today = new Date();
+                    var start_date_utc = new Date(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()));
+                    $scope.data_listworksheet[0].estimated_start_date = start_date_utc.toISOString().split('T')[0];
+                } else {
+                    var start_date = new Date($scope.data_listworksheet[i].estimated_start_date);
+                    if (!isNaN(start_date.getTime())) {
+                        var start_date_utc = new Date(Date.UTC(start_date.getFullYear(), start_date.getMonth(), start_date.getDate()));
+                        $scope.data_listworksheet[i].estimated_start_date = start_date_utc.toISOString().split('T')[0];
+                    }
                 }
-            } catch (error) {}
-            
+            } catch (error) {} 
             try {
-                var end_date = new Date($scope.data_listworksheet[i].estimated_end_date);
-                if (!isNaN(end_date.getTime())) {
-                    var end_date_utc = new Date(Date.UTC(end_date.getFullYear(), end_date.getMonth(), end_date.getDate()));
-                    $scope.data_listworksheet[i].estimated_end_date = end_date_utc.toISOString().split('T')[0];
-                }
-            } catch (error) {}
+                if ($scope.data_listworksheet[i].estimated_start_date) {
+                    var end_date = new Date($scope.data_listworksheet[i].estimated_end_date);
+                    if (!isNaN(end_date.getTime())) { 
+                        var end_date_utc = new Date(Date.UTC(end_date.getFullYear(), end_date.getMonth(), end_date.getDate()));
+                        $scope.data_listworksheet[i].estimated_end_date = end_date_utc.toISOString().split('T')[0];
+                    }
+                } else {}
+            } catch (error) {}              
         }
+
+        
 
         var arr_active = [];
         angular.copy($scope.data_listworksheet, arr_active);
         var arr_json = $filter('filter')(arr_active, function (item) {
-            return ((item.action_type == 'update' && item.action_change == 1) || item.action_type == 'insert');
-        });
+            return ((item.action_type == 'update' && item.action_change == 1) || item.action_type == 'insert' );
+        });        
+
         for (var i = 0; i < $scope.data_listworksheet_delete.length; i++) {
             $scope.data_listworksheet_delete[i].action_type = 'delete';
             arr_json.push($scope.data_listworksheet_delete[i]);
@@ -5127,48 +5170,55 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
 
     $scope.openDataEmployeeAdd = function (item, form_type) {
-
         $scope.selectedData = item;
         $scope.selectdata_session = item.seq;
         $scope.selectDatFormType = form_type;//member, approver, owner
         $scope.employeelist_show = [];
         $scope.searchText = '';
+        $scope.owner_status = '';
 
         if (form_type == 'attendees' || form_type == 'specialist') {
             add_relatedpeople_outsider(form_type, item.seq);
         }
+        if (form_type === 'owner') {
+            $scope.owner_status = 'employee'; //1 for em || 2 for teams to sent to p'kul
+        }
 
         apply();
-
-        $('#modalEmployeeAdd').modal('show');
+        //alert($scope.selectDatFormType);
+        $('#modalEmployeeAdd').modal({
+            backdrop: 'static',
+            keyboard: false 
+        }).modal('show');
     };
+    $scope.selectTab = function(tab) {
+        $scope.owner_status = tab;
+    }
+
     $scope.fillterDataEmployeeAdd = function () {
         $scope.employeelist_show = [];
         var searchText = $scope.searchText;
-        if (!searchText) { return; }
-
+        var searchIndicator = $scope.searchIndicator.text;
+        if (!searchText && !searchIndicator) { return; }
+       
         var items = angular.copy($scope.employeelist_def, items);
-        // console.log(items)
-        // searchText = searchText.toLowerCase();
 
-        if (searchText.length < 3) { return items; }
-
-        getEmployees(searchText, function (data) {
+        if (searchText.length < 3 && searchIndicator.length < 3) { return items; }
+       
+        getEmployees(searchText,searchIndicator, function(data) {
             $scope.employeelist_show = data.employee
-            // return (
-            //     item.employee_id.toLowerCase().includes(searchText.toLowerCase()) ||
-            //     item.employee_displayname.toLowerCase().includes(searchText.toLowerCase()) ||
-            //     item.employee_email.toLowerCase().includes(searchText.toLowerCase())
-            // )}).slice(0, 10);
             apply();
-            $('#modalEmployeeAdd').modal('show');
+            $('#modalEmployeeAdd').modal({
+                backdrop: 'static',
+                keyboard: false 
+            }).modal('show');
         });
     };
-
-    function getEmployees(keywords, callback) {
+    function getEmployees(keywords,indicator, callback) {
         $.ajax({
             url: url_ws + "Flow/employees_search",
             data: '{"user_filter_text":"' + keywords + '"'
+                + ',"user_indicator":"' + indicator + '"'
                 + ',"max_rows":"10"'
                 + '}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
@@ -5231,11 +5281,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
     $scope.choosDataEmployee = function (item) {
 
-        var id = item.id;
-        var employee_name = item.employee_name;
-        var employee_displayname = item.employee_displayname;
-        var employee_email = item.employee_email;
-        var employee_img = item.employee_img;
+        if(item) {
+            var id = item.id;
+            var employee_name = item.employee_name;
+            var employee_displayname = item.employee_displayname;
+            var employee_email = item.employee_email;
+            var employee_img = item.employee_img;
+            var employee_position = item.employee_position
+        }
 
         var seq_session = $scope.selectdata_session;
         var xformtype = $scope.selectDatFormType;
@@ -5315,10 +5368,23 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             arr_items.responder_user_email = employee_email;
             arr_items.responder_user_img = employee_img;
 
-            if (arr_items.action_type == 'insert') {
+            /*if (arr_items.action_type == 'insert') {
                 arr_items.action_type = 'edit';
-            }
+            }*/
             arr_items.action_change = 1;
+
+            //set sent 1 for if choose employees
+            //set 0 for if choose teams
+            if ($scope.owner_status === 'teams') {
+                arr_items.project_team_text =  $scope.owner_teams;
+                arr_items.action_project_team = true;
+                arr_items.action_status = 'N/A'
+                
+            } else {
+                arr_items.responder_user_displayname = employee_position + '-' + employee_displayname.split(" ")[0];
+                arr_items.action_project_team = false;
+                arr_items.action_status = 'Open'
+            }
 
         }
         else if (xformtype == "attendees" || xformtype == "specialist") {
@@ -5356,6 +5422,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         }
 
+        clear_valid_items($scope.recomment_clear_valid);
+        $scope.recomment_clear_valid = '';
 
         apply();
 
@@ -5601,5 +5669,20 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.id_approver_select = null;
         $scope.form_valid = { valid_document_file: false };
     }
+
+    $scope.canAccess = function(task) {
+        // If user is an admin, allow access
+        if ($scope.flow_role_type === 'admin') {
+            return true;
+        }
+        
+        // If user is an employee and the task belongs to them, allow access
+        if ($scope.flow_role_type === 'employee' && $scope.user_name === task.user_name) {
+            return true;
+        }
+        
+        //originator cant edit?
+        return false;
+    };    
 
 });

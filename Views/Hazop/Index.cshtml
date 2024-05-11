@@ -3203,7 +3203,7 @@
                                         <tbody class="list" id="customer-rating-table-body">
                                             <tr ng-repeat="item in data_approver | orderBy:['no']" 
                                                 ng-class="{ '': canAccess(item), '': !canAccess(item) }"
-                                                class="hover-actions-trigger btn-reveal-trigger position-static text-center">
+                                                class="hover-actions-trigger btn-reveal-trigger position-static text-center">@*will more grey if can't access*@
                                                 <!---------ng-if="(item.user_name == user_name ) || (flow_role_type == 'admin')"---------->
                                                 <td class="align-top white-space-nowrap">
                                                     <div class="col-md-12 p-1 ps-3">
@@ -3225,7 +3225,6 @@
                                                             <span class="fa-solid far fa-file-pdf text-danger" style="font-size:15px;" ng-click="confirmExport('hazop_report','pdf')"></span>
                                                             <b>
                                                                 HAZOP Report
-                                                                {{canAccess(item)}}
                                                             </b>
                                                         </div><br />
                                                         <div class="form-check form-check-inline" ng-class="{ 'no-drop': !canAccess(item), 'cursor-pointer': canAccess(item) }">
@@ -3254,7 +3253,6 @@
                                                 <td class="align-top white-space-nowrap text-start">
 
                                                     <div class="col-md-12 p-1 ps-3" ng-if="!(item.approver_action_type == 2 || data_header[0].pha_status != 21)" 
-                                                         ng-disabled="!canAccess(item)"
                                                          ng-class="{ 'no-drop': !canAccess(item) }">
                                                         <textarea class="form-control rounded-1" id="floatingTextarea2" placeholder="Enter your comment"
                                                                   ng-class="{ 'cant-Access': !canAccess(item) }"
