@@ -468,8 +468,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
 
                 var arr = data;
 
-                console.log($scope.flow_role_type,$scope.user_name)
-
                 var iNoNew = 1;
                 for (let i = 0; i < arr.details.length; i++) {
                     arr.details[i].no = (iNoNew);
@@ -487,6 +485,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                 $scope.data_header = arr.general;
                 $scope.data_general = arr.general;
                 $scope.data_details = arr.details;
+
+                //call to check who can Access
+                /*console.log($scope.data_details[0].responder_user_name)
+                if($scope.data_details){
+                    $scope.canAccess($scope.data_details)
+                }*/
+
                 $scope.data_drawingworksheet = arr.drawingworksheet;
                 $scope.data_drawingworksheet_responder = arr.drawingworksheet_responder;
                 $scope.data_drawingworksheet_reviewer = arr.drawingworksheet_reviewer;
@@ -528,9 +533,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                     $scope.ram_columns_level = 5;
                     
                 }   
-
-                console.log("will show master ram",$scope.master_ram)
-
+                
                 console.log($scope);
 
                 // a.seq, a.pha_no, a.pha_version, a.pha_status, ms.descriptions
@@ -1336,11 +1339,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
         if ($scope.flow_role_type === 'admin') {
             return true;
         }
+        
         // If user is an employee and the task belongs to them, allow access
-        if ($scope.flow_role_type === 'employee' && $scope.user_name === task.user_name) {
+        if ($scope.flow_role_type === 'employee' && $scope.user_name === task.responder_user_name) {
             return true;
         }
-        //originator cant edit?
+        
+        // Originator can't edit?
         return false;
     };
 

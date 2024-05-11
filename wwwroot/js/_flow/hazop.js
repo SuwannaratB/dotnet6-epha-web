@@ -1571,7 +1571,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 }
 
                 $scope.data_header = JSON.parse(replace_hashKey_arr(arr.header));
-
                 set_form_action(action_part_befor, !action_submit, page_load);
 
                 // if($scope.params == 'edit')  $scope.action_owner_active = true;
@@ -3574,13 +3573,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         else if (row_type == "consequences") {
             newInput.causes = item.causes;
 
-            console.log(newInput.causes)
-
         } else if (row_type == "category") {
             newInput.causes = item.causes;
             newInput.consequences = item.consequences;
-
-            console.log(newInput.causes,newInput.consequences)
         }
 
 
@@ -5286,7 +5281,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.data_nodeworksheet[i].id_pha = pha_seq;
 
             // action_project_team
-            $scope.data_nodeworksheet[i].action_project_team = $scope.data_nodeworksheet[i].action_project_team === true ? 1 : 0;
+            if($scope.data_nodeworksheet[i].action_project_team){
+                $scope.data_nodeworksheet[i].action_project_team = $scope.data_nodeworksheet[i].action_project_team === true ? 1 : 0;
+            }
+            
         
 
             //ram_action_security, ram_action_likelihood, ram_action_risk, estimated_start_date, estimated_end_date, document_file_path, document_file_name, action_status, responder_action_type, responder_user_name, responder_user_displayname
@@ -5913,14 +5911,16 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             var arr_items = $filter('filter')($scope.data_nodeworksheet,
                 function (item) { return (item.seq == seq_worksheet); })[0];
 
-            arr_items.responder_user_id = id;
-            arr_items.responder_user_name = employee_name;
-            arr_items.responder_user_email = employee_email;
-            arr_items.responder_user_img = employee_img;
+                arr_items.responder_user_id = id;
+                arr_items.responder_user_name = employee_name;
+                arr_items.responder_user_displayname = employee_displayname;
+                arr_items.responder_user_email = employee_email;
+                arr_items.responder_user_img = employee_img;
+    
 
-            if (arr_items.action_type == 'insert') {
+            /*if (arr_items.action_type == 'insert') {
                 arr_items.action_type = 'edit';
-            }
+            }*/
 
             //set sent 1 for if choose employees
             //set 0 for if choose teams
