@@ -92,7 +92,7 @@
 /* dropdown */
 .dropbtn {
     width: 100%;
-    min-height: 36px;
+    min-height: 39px;
     background: transparent;
     /* color: white; */
     text-align: start;
@@ -100,6 +100,7 @@
     font-size: 13px;
     border: 1px solid rgb(203, 208, 221);
     border-radius: 6px;
+    margin-top: 2px;
     cursor: pointer;
   }
   
