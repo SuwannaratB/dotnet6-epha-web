@@ -597,6 +597,7 @@
                                                     @* Member Team *@
                                                     <td class="align-top col-auto" style="min-width: 420px;">
                                                         <div class="row d-flex">
+                                                            <!-- Member Team/Attendees Section -->
                                                             <div class="col-6">
                                                                 <div class="row" ng-class="{'d-none':(!tab_general_active)}">
                                                                     <button class="btn btn-outline-secondary p-0 cursor-pointer col-auto" 
@@ -606,15 +607,25 @@
                                                                         Add Member Team/Attendees
                                                                     </button>
                                                                 </div>
-                                                                <div class="row" ng-repeat="item2 in data_memberteam ">
+                                                                <div class="row" ng-repeat="item2 in data_memberteam" ng-if="data_memberteam.user_name !== null">
                                                                     <div class="row align-items-center  p-1">
                                                                         <label class="mb-0 text-1100 fw-bold"
-                                                                               style="width:80%;border-color: #f1f2f4;">
-                                                                               {{ item2.user_displayname}}
+                                                                                style="width:80%;border-color: #f1f2f4;">
+                                                                                {{ item2.user_displayname}}
                                                                         </label>
                                                                     </div>
                                                                 </div>
+                                                                <!-- Specialist from data_relatedpeople_outsider -->
+                                                                <div class="row" ng-repeat="item2 in data_relatedpeople_outsider | filter:{id_session: selectdata_session, user_type: 'member'}" >
+                                                                    <div class="row align-items-center  p-1">
+                                                                        <label class="mb-0 text-1100 fw-bold"
+                                                                            style="width:80%;border-color: #f1f2f4;">
+                                                                            {{ item2.user_displayname}}
+                                                                        </label>
+                                                                    </div>
+                                                                </div>                                                                
                                                             </div>
+                                                            <!-- Safety Reviewer Section -->
                                                             <div class="col-6">
                                                                 <div class="row" ng-class="{'d-none':(!tab_general_active)}">
                                                                     <button class="btn btn-outline-secondary p-0 cursor-pointer col-auto" 
@@ -624,12 +635,13 @@
                                                                         <span class="far fa-address-book fa-lg"></span>
                                                                         Add Safety Reviewer
                                                                     </button>
-                                                                <div class="row" ng-repeat="item2 in data_approver"> 
+                                                                </div>
+                                                                <div class="row" ng-repeat="item2 in data_approver" ng-if="data_approver.user_name !== null"> 
                                                                     <div class="row align-items-center  p-1">
                                                                         <label class="mb-0 text-1100 fw-bold" 
                                                                                 style="width:80%;border-color: #f1f2f4;"
                                                                                 ng-if=" (item2.approver_type === 'approver')">
-                                                                               {{ '(Main)' + item2.user_displayname}}
+                                                                                {{ '(Main)' + item2.user_displayname}}
                                                                         </label>
                                                                         <label class="mb-0 text-1100 fw-bold" 
                                                                                 style="width:80%;border-color: #f1f2f4;"
@@ -639,7 +651,6 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            @* <b class="p-0 text-danger"> Note:This JSEA will be approved by AE or AGSI via Safety Permit</b> *@
                                                         </div>
 
                                                         <div class="row d-flex mt-4">
@@ -652,6 +663,7 @@
                                                                         Add ผู้เชี่ยวชาญเฉพาะด้าน (ถ้ามี):
                                                                     </button>
                                                                 </div>
+                                                                <!-- Specialist from data_relatedpeople -->
                                                                 <div class="row" ng-repeat="item2 in data_relatedpeople | filter:{id_session:item.seq, user_type:'specialist'}">
                                                                     <div class="row align-items-center  p-1">
                                                                         <label class="mb-0 text-1100 fw-bold" 
@@ -660,12 +672,12 @@
                                                                         </label>
                                                                     </div>
                                                                 </div>
-
-                                                                <div class="row" ng-repeat="item2 in data_relatedpeople_outsider"><!------ | filter:{id_session:item.seq, user_type:'specialist'}----->
+                                                                <!-- Specialist from data_relatedpeople_outsider -->
+                                                                <div class="row" ng-repeat="item2 in data_relatedpeople_outsider | filter:{id_session: selectdata_session, user_type:'specialist'}" >
                                                                     <div class="row align-items-center  p-1">
                                                                         <label class="mb-0 text-1100 fw-bold"
-                                                                               style="width:80%;border-color: #f1f2f4;">
-                                                                               {{ item2.user_displayname}}
+                                                                            style="width:80%;border-color: #f1f2f4;">
+                                                                            {{ item2.user_displayname}}
                                                                         </label>
                                                                     </div>
                                                                 </div>
@@ -1664,7 +1676,7 @@
                                                 <p class="form-label m-2 ps-0" ng-if="tab_worksheet_active"><b>Date:</b></p>
                                                 <input type="date" class="form-control rounded-1  p-1 datetimepicker"
                                                        id="target_start_date"
-                                                       name="target_start_date"
+                                                       name="target_start_date" 
                                                        ng-change="actionChange(data_general[0],data_general[0].seq,'')"
                                                        ng-model="data_general[0].target_start_date" placeholder="dd/mm/yyyy" />
                                             </div>
@@ -2493,35 +2505,25 @@
     @* ************************************************************** *@
 
     <!--Modal Employee Add Start-->
-    <div class="modal fade modal-xl" id="modalEmployeeAdd" tabindex="-1" aria-labelledby="modalEmployeeAddLabel"
-         aria-hidden="true" style="display: none;">
+    <div class="modal fade modal-xl" id="modalEmployeeAdd" tabindex="-1" aria-labelledby="modalEmployeeAddLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <div class="modal-header" ng-if="selectDatFormType != 'specialist'">
+                <div class="modal-header"><!-------- ng-if="selectDatFormType != 'specialist'"------->
                     <h5 class="text-900 mb-0" data-anchor="data-anchor" id="modalEmployeeCheckLabel">
                         <span class=" me-2 text-primary"><B>|</B></span> Search Employee/Contract
                     </h5>
-                    <button class="btn p-1" 
-                            type="button" 
-                            data-bs-dismiss="modal" 
-                            aria-label="Close">
-                        <svg class="svg-inline--fa fa-xmark fs--1" 
-                            aria-hidden="true" 
-                            focusable="false" 
-                            data-prefix="fas"
-                            data-icon="xmark" 
-                            role="img" 
-                            xmlns="http://www.w3.org/2000/svg" 
-                            viewBox="0 0 320 512"
-                            data-fa-i2svg="">
+                    <button class="btn p-1" type="button" data-bs-dismiss="modal" aria-label="Close" ng-click="clearFormData()">
+                        <svg class="svg-inline--fa fa-xmark fs--1" aria-hidden="true" focusable="false" data-prefix="fas"
+                                data-icon="xmark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"
+                                data-fa-i2svg="">
                             <path fill="currentColor"
-                                  d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z">
+                                    d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z">
                             </path>
                         </svg>
                     </button>
                 </div>
 
-                <div class="modal-body" ng-class="{'d-none':(selectDatFormType == 'specialist')}">
+                <div class="modal-body"> <!----------------- ng-class="{'d-none':(selectDatFormType == 'specialist')}"------------------->
                     <div class="mb-4">
                         <div class="row g-3">
                             <div class="col-auto">
@@ -2597,116 +2599,79 @@
                     @* end แสดงข้อมูลที่ ค้นหาตาม textsearch*@
                 </div>
 
-                <div class="modal-header bg-soft" ng-if="!(selectDatFormType =='owner' )">
-
-                    <h5 class="text-900 mb-0" ng-if="selectDatFormType =='member'"> <span class=" me-2 text-primary"><B>|</B></span>Member Team</h5>
-                    <h5 class="text-900 mb-0" ng-if="selectDatFormType =='approver'"> <span class=" me-2 text-primary"><B>|</B></span>Safety Reviewer</h5>
-                    <h5 class="text-900 mb-0" ng-if="selectDatFormType =='reviewer'"> <span class=" me-2 text-primary"><B>|</B></span>Approver AE or AGSI</h5>
-                    <h5 class="text-900 mb-0" ng-if="selectDatFormType =='attendees'"> <span class=" me-2 text-primary"><B>|</B></span>ผู้จัดทำ (Attendees)</h5>
-                    <h5 class="text-900 mb-0" ng-if="selectDatFormType =='specialist'"> <span class=" me-2 text-primary"><B>|</B></span>ผู้เชี่ยวชาญเฉพาะด้าน (ถ้ามี)</h5>
-
+            <!-------------- Show b=name after add------------------------------->
+                <div class="modal-header bg-soft" ng-if="!(selectDatFormType =='owner')">
+                    <!-------------- Show b=name after add------------------------------->
+                    <h5 class="text-900 mb-0" >
+                        <span class=" me-2 text-primary"><B>|</B></span>
+                        <span ng-switch="selectDatFormType">
+                            <span ng-switch-when="member">Member Team</span>
+                            <span ng-switch-when="approver">Safety Reviewer</span>
+                            <span ng-switch-when="reviewer">Approver AE or AGSI</span>
+                            <span ng-switch-when="attendees">ผู้จัดทำ (Attendees)</span>
+                            <span ng-switch-when="specialist">ผู้เชี่ยวชาญเฉพาะด้าน (ถ้ามี)</span>
+                        </span>
+                    </h5>
                 </div>
 
-                @* member *@
-                <div class="modal-body" ng-if="selectDatFormType =='member'">
-                    <div class="col-auto" ng-repeat="item2 in data_memberteam | filter:{id_session: selectdata_session }"
-                         ng-if="!(item2.user_displayname ==''  || item2.user_displayname == null)">
+                <div class="modal-body" ng-if="!(selectDatFormType =='owner' && formData.length > 0)"><!---------------ng-if="!(selectDatFormType =='approver'|| selectDatFormType =='reviewer')"----------->
+                    <div class="col-auto" ng-repeat="item2 in formData | filter:{id_session: selectdata_session }" 
+                        ng-if="item2.user_displayname">
+                        
                         <div class="d-flex align-items-center p-1" style="height: 20px;">
-                            <button id="del-{{item2.seq}}" class="btn btn-link text-danger"
-                                    ng-class="{'d-none':(!tab_general_active)}"
-                                    ng-click="removeDataEmployee(item2.seq, selectdata_session)">
+                            <button id="del-{{item2.seq}}" class="btn btn-link text-danger" 
+                                ng-class="{'d-none':(!tab_general_active)}" 
+                                ng-click="removeData(item2.seq, selectdata_session, selectDatFormType)">
                                 Remove
                             </button>
-                            <label class="mb-0 ms-3 text-1100 fw-bold"
-                                   style="width:80%;border-color: #f1f2f4;">{{ item2.user_displayname}}</label>
-
-                        </div>
-                    </div>
-
-                </div>
-
-                @* approver *@
-                <div class="modal-body" ng-if="selectDatFormType =='approver'">
-                    @* start ข้อมูลเดียวกันกับตรง session Approver*@
-                    <div class="col-auto" ng-repeat="item2 in data_approver | filter:{id_session: selectdata_session }"
-                         ng-if="!(item2.user_displayname ==''  || item2.user_displayname == null)">
-                        <div class="d-flex align-items-center p-1" style="height: 20px;">
-                            <button id="del-{{item2.seq}}" class="btn btn-link text-danger"
-                                    ng-class="{'d-none':(!tab_general_active)}"
-                                    ng-click="removeDataApprover(item2.seq, selectdata_session)">
-                                Remove
-                            </button>
-                            <div class="form-check mt-1 mb-0 text-1100 fw-bold">
-                                <input class="form-check-input disabled-link" type="checkbox"
-                                       ng-if="item2.approver_type =='approver'" checked
-                                       ng-click="actionChangeSafety(item2,item2.seq)">
-                                <input class="form-check-input" type="checkbox"
-                                       ng-if="!(item2.approver_type =='approver')"
-                                       ng-click="actionChangeSafetyUnCheck(item2,item2.seq)">
-                                <label class="form-check-label fw-bold" for="approver_safety">
-                                    (Main)
-                                </label>
+                            <div class="form-check mt-1 mb-0 text-1100 fw-bold" ng-if="selectDatFormType == 'approver'">
+                                <input class="form-check-input disabled-link" type="checkbox" ng-if="item2.approver_type =='approver'" checked 
+                                    ng-click="actionChangeSafety(item2, item2.seq)">
+                                <input class="form-check-input" type="checkbox" ng-if="!(item2.approver_type =='approver')" 
+                                    ng-click="actionChangeSafetyUnCheck(item2, item2.seq)">
+                                <label class="form-check-label fw-bold" for="approver_safety">(Main)</label>
                             </div>
-                            <label class="mb-0 ms-3 text-1100 fw-bold"
-                                   style="width:80%;border-color: #f1f2f4;">{{ item2.user_displayname}}</label>
-
-
-                        </div>
-                    </div>
-                    @* end ข้อมูลเดียวกันกับตรง session*@
-                </div>
-
-                @* reviewer *@
-                <div class="modal-body" ng-if="selectDatFormType =='reviewer' ">
-                    <div class="col-auto" ng-repeat="item2 in data_relatedpeople | filter:{id_session: selectdata_session ,user_type:'reviewer'}"
-                         ng-if="!(item2.user_displayname ==''  || item2.user_displayname == null)">
-                        <div class="d-flex align-items-center p-1" style="height: 20px;">
-                            <button id="del-{{item2.seq}}" class="btn btn-link text-danger"
-                                    ng-class="{'d-none':(!tab_general_active)}"
-                                    ng-click="removeDataRelatedpeople(item2.seq, selectdata_session)">
-                                Remove
-                            </button>
-                            <label class="mb-0 ms-3 text-1100 fw-bold"
-                                   style="width:80%;border-color: #f1f2f4;">{{ item2.user_displayname}}</label>
-
+                            <label class="mb-0 ms-3 text-1100 fw-bold" style="width:80%;border-color: #f1f2f4;">{{ item2.user_displayname}}</label>
                         </div>
                     </div>
                 </div>
 
-                @* relatedpeople group *@
-                <div class="modal-body" ng-if="!(selectDatFormType =='member' || selectDatFormType =='approver'|| selectDatFormType =='reviewer')">
+                <!------------contractor/out source-------------->
+                <div class="modal-header bg-soft" ng-if="!(selectDatFormType =='approver'|| selectDatFormType =='reviewer')">
+                    <h5 class="text-900 mb-0"> 
+                        <span class=" me-2 text-primary"><B>|</B></span>Contracter/Outsouce (if concern)
+                    </h5>
+                </div>
+                <div class="modal-body" ng-show="selectDatFormType == 'attendees'|| selectDatFormType =='specialist' || selectDatFormType == 'member'">
                     <div class="bg-white border-top border-bottom border-200 position-relative top-1">
                         <div class="table-responsive scrollbar-overlay mx-n1 px-1">
                             <table class="table table-sm fs--1 mb-0">
-                                <thead class=" text-uppercase">
-                                    <tr class="">
-                                        <th class="" style="width:150px;"> </th>
+                                <thead class="text-uppercase">
+                                    <tr>
+                                        <th style="width:150px;"></th>
                                         <th class="pe-5">Name (ชื่อ-นามสกุล)</th>
                                         <th class="pe-5">Title (ตำแหน่ง)</th>
                                     </tr>
                                 </thead>
-                                <tbody class=" list">
-                                    <tr class="hover-actions-trigger btn-reveal-trigger position-static"
-                                        ng-repeat="itemRel in data_relatedpeople | filter:{id_session:selectdata_session, user_type:selectDatFormType}"
-                                        ng-if="!(itemRel.user_displayname ==''  || itemRel.user_displayname == null)">
-                                        <td class="">
-                                            <button id="del-{{item2.seq}}" class="btn btn-link text-danger p-0 text-end" style="width:140px;"
-                                                    ng-class="{'d-none':(!tab_general_active)}"
-                                                    ng-click="removeDataRelatedpeople(itemRel.seq)">
+                                <tbody class="list">
+                                    <tr ng-repeat="outsource in formData_outsider">
+                                        <td>
+                                            <button class="btn btn-link text-danger p-0 text-end" style="width:140px;"
+                                                ng-class="{'d-none':(!tab_general_active)}"
+                                                ng-click="removeDataRelatedpeople(outsource.seq)">
                                                 Remove
                                             </button>
                                         </td>
-                                        <td class="">
-                                            <b>{{itemRel.user_displayname}}</b>
+                                        <td>
+                                            <b>{{ outsource.user_displayname }}</b>
                                         </td>
-                                        <td class="">
-                                            <b>{{itemRel.user_title}}</b>
+                                        <td>
+                                            <b>{{ outsource.user_title }}</b>
                                         </td>
-
                                     </tr>
                                     @*Free text*@
                                     <tr class="hover-actions-trigger btn-reveal-trigger position-static"
-                                        ng-repeat="itemRel in data_relatedpeople_outsider | filter:{id_session:selectdata_session, user_type:selectDatFormType}">
+                                        ng-repeat="itemRel in data_relatedpeople_outsider | filter:{id_session: selectdata_session, user_type: selectDatFormType}"> <!--------------------, user_type:selectDatFormType--------->
                                         <td class="">
                                             <button id="del-{{item2.seq}}" class="btn btn-link text-danger p-0 text-end" style="width:140px;"
                                                     ng-class="{'d-none':(!tab_general_active)}"
@@ -2722,28 +2687,26 @@
                                         </td>
                                         <td class="">
                                             <input type="text" class="form-control form-control-sm" placeholder="Name"
-                                                   style="width: 100%;"
-                                                   ng-model="itemRel.user_displayname"
-                                                   ng-change="actionChange(itemRel,itemRel.seq,'')">
+                                                style="width: 100%;"
+                                                ng-model="itemRel.user_displayname"
+                                                ng-change="actionChange(itemRel,itemRel.seq,'')">
                                         </td>
                                         <td class="">
                                             <input type="text" class="form-control form-control-sm" placeholder="Title"
-                                                   style="width: 100%;"
-                                                   ng-model="itemRel.user_title"
-                                                   ng-change="actionChange(itemRel,itemRel.seq,'')">
+                                                    style="width: 100%;"
+                                                    ng-model="itemRel.user_title"
+                                                    ng-change="actionChange(itemRel,itemRel.seq,'')">
                                         </td>
-
-                                    </tr>
+                                    </tr>                                    
                                 </tbody>
                             </table>
-
                         </div>
                     </div>
                 </div>
 
                 <div class="d-none">
                     @* attendees *@
-                    <div class="modal-body" ng-if="selectDatFormType =='attendees'">
+                    <div class="modal-body" ng-if="selectDatFormType =='member'">
                         <div class="col-auto d-none" ng-repeat="item2 in data_relatedpeople | filter:{id_session: selectdata_session ,user_type:'attendees'}"
                              ng-if="!(item2.user_displayname)">
                             <div class="d-flex align-items-center p-1" style="height: 20px;">
@@ -2779,7 +2742,6 @@
                     </div>
 
                 </div>
-
 
             </div>
         </div>

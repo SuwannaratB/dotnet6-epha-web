@@ -64,7 +64,7 @@ AppMenuPage.directive('hidePlaceholderOption', function() {
             var placeholderItem = document.querySelector('.is-open .is-active .choices__list .is-selected'); //choices__placeholder
             console.log(placeholderItem);
             if (!placeholderItem) {
-                var placeholderList = document.querySelector('.is-open .is-active .choices__list[data-value="Please select"]');                console.log(placeholderList)
+                var placeholderList = document.querySelector('.is-open .is-active .choices__list[data-value="Please select"]');            
                 if (placeholderList) {placeholderList.add('ng-hide')};
             }
             if (placeholderItem) {
@@ -1534,6 +1534,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         item.id_ram = (item.id_ram == null ? 4 : item.id_ram);
                     });
 
+
                     $scope.data_tagid_audition = arr.tagid_audition;
 
                     $scope.data_session = arr.session;
@@ -1554,6 +1555,15 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     $scope.data_relatedpeople_outsider = arr.relatedpeople_outsider;
                     $scope.data_relatedpeople_outsider_def = clone_arr_newrow(arr.relatedpeople_outsider);
                     $scope.data_relatedpeople_outsider_old = (arr.relatedpeople_outsider);
+
+                    
+                    $scope.data_relatedpeople_outsider.forEach(function(item) {
+                        if (item.user_type === 'attendees') {
+                            item.user_type = 'member';
+                        }
+                    });
+                    
+                    console.log($scope.data_relatedpeople_outsider)
 
                     $scope.data_drawing = arr.drawing;
                     $scope.data_drawing_def = clone_arr_newrow(arr.drawing);
@@ -4686,6 +4696,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             value.approver_type = 'safety';
         }
         item.approver_type = 'approver';
+
+        $scope.data_approver.sort(function(a, b) {
+            if (a.approver_type === "approver") return -1;
+            if (b.approver_type === "approver") return 1;
+            return 0;
+        });
         apply();
     }
 
@@ -4733,13 +4749,20 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.employeelist_show = [];
         $scope.searchText = '';
     
-        if (form_type == 'attendees' || form_type == 'specialist') {
+        /*if (form_type == 'attendees' || form_type == 'specialist') {
             add_relatedpeople_outsider(form_type, item.seq);
-        }
+        }*/
+
+        //$scope.getFormData()
+        $scope.formData = $scope.getFormData();
+        $scope.formData_outsider = $scope.getOutsourceFormData();
 
         apply();
 
-        $('#modalEmployeeAdd').modal('show');
+        $('#modalEmployeeAdd').modal({
+            backdrop: 'static',
+            keyboard: false 
+        }).modal('show');
     };
 
     function add_relatedpeople_outsider(xformtype, seq_session) {
@@ -4792,7 +4815,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         getEmployees(searchText,searchIndicator, function(data) {
             $scope.employeelist_show = data.employee
             apply();
-            $('#modalEmployeeAdd').modal('show');
+            $('#modalEmployeeAdd').modal({
+                backdrop: 'static',
+                keyboard: false 
+            }).modal('show');
         });
     };
 
@@ -4825,9 +4851,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
 
     $scope.choosDataEmployee = function (item) {
-        console.log('item ',item)
-        console.log('selectDatFormType ',$scope.selectDatFormType)
-        console.log('selectdata_session ',$scope.selectdata_session)
         var id = item.id;
         var employee_name = item.employee_name;
         var employee_displayname = item.employee_displayname;
@@ -4847,7 +4870,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                 //add new employee 
                 var seq = $scope.MaxSeqDataMemberteam;
-                console.log('MaxSeqDataMemberteam ', $scope.MaxSeqDataMemberteam)
+                //console.log('MaxSeqDataMemberteam ', $scope.MaxSeqDataMemberteam)
                 var newInput = clone_arr_newrow($scope.data_memberteam_def)[0];
                 newInput.seq = seq;
                 newInput.id = seq;
@@ -4865,13 +4888,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 running_no_level1($scope.data_memberteam, null, null);
 
                 $scope.MaxSeqDataMemberteam = Number($scope.MaxSeqDataMemberteam) + 1
-                console.log('data_memberteam ', $scope.data_memberteam)
             }
 
         }
         else if (xformtype == "approver") {
 
-            console.log("user add new approver",item)
             var arr_items_all = $filter('filter')($scope.data_approver, function (item) {
                 return (item.id_session == seq_session && item.user_displayname != null);
             });
@@ -4906,8 +4927,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 $scope.MaxSeqdata_approver = Number($scope.MaxSeqdata_approver) + 1
 
             }
-
-            console.log("user add new approver",$scope.data_approver)
 
         }
         else if (xformtype == "reviewer") {
@@ -5006,7 +5025,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
 
         }
+        
 
+        //$scope.getFormData()
+        $scope.formData = $scope.getFormData();
+        $scope.formData_outsider = $scope.getOutsourceFormData();
 
         apply();
 
@@ -5016,6 +5039,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         else {
             $('#modalEmployeeAdd').modal('show');
         }
+    };
+
+    $scope.clearFormData = function() {
+        $scope.formData = [];
+        $scope.formData_outsider = [];
     };
 
     $scope.removeDataEmployee = function (seq, seq_session) {
@@ -5044,6 +5072,52 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         running_no_level1($scope.data_memberteam, null, null);
         apply();
     };
+
+    $scope.getFormData = function() {
+        switch ($scope.selectDatFormType) {
+            case 'member':
+                console.log("$scope.data_memberteam:", $scope.data_memberteam,$scope.user_name);
+                $scope.data_memberteam.sort(function(a, b) {
+                    if (a.user_name === $scope.user_name) return -1;
+                    if (b.user_name === $scope.user_name) return 1;
+                    return 0;
+                });                
+                return $scope.data_memberteam;
+            case 'approver':
+                console.log("$scope.data_approver:", $scope.data_approver);
+                $scope.data_approver.sort(function(a, b) {
+                    if (a.approver_type === "approver") return -1;
+                    if (b.approver_type === "approver") return 1;
+                    return 0;
+                });
+                
+                return $scope.data_approver;
+            case 'reviewer':
+                console.log("$scope.data_relatedpeople:", $scope.data_relatedpeople);
+                return $scope.data_relatedpeople;
+            case 'specialist':
+                var specialist = $scope.data_relatedpeople.filter(item => item.user_type === "specialist")
+                return specialist;
+            default:
+                return [];
+        }
+    };
+
+    $scope.getOutsourceFormData = function(){
+        switch ($scope.selectDatFormType) {
+            case 'member':
+            case 'attendees':
+                var member_outsider = $scope.data_relatedpeople_outsider.filter(item => (item.user_type === "attendees" || item.user_type === "member") && item.user_name !== null)
+                return member_outsider;
+            case 'specialist':
+                var specialist_outsider = $scope.data_relatedpeople_outsider.filter(item => item.user_type === "specialist" && item.user_name !== null)
+                return specialist_outsider;
+            default:
+                return [];
+        }
+    };      
+     
+    
 
     $scope.applyDataEmployeeAdd = function () {
 
