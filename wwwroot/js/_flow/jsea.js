@@ -5375,15 +5375,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         // set default list
         $scope.searchUnitNo.text = '';
         $scope.master_unit_no_list =  $scope.master_unit_no;
-        // document.getElementById('unit_no1').classList.remove("show");
-
-        // out
-        // const dropdown = document.getElementById("myDropdown");
-        // if (targetElement.getAttribute('ng-click') != 'openSearchDropdown()' &&
-        //     targetElement.getAttribute('onkeyup') != 'filterFunction()'
-        // ) {
-            // dropdown.classList.remove("show");
-        // }
     });
 
      $scope.filterFunction = function () {
@@ -5394,6 +5385,5 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             return itemName.includes(searchText);
         });
       }
-
 
 });

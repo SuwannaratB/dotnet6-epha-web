@@ -2602,9 +2602,9 @@
                                     <tr class="text-center">
                                         <th class=""> </th>
                                         <th class="pe-5" scope="col">Employee</th>
-                                        <th class="pe-5" scope="col">Indicator</th>
-                                        <th class="pe-5" scope="col">E-Mail</th>
-                                        <th class="pe-5" scope="col">Employee Type</th>
+                                        <th class="" scope="col">Indicator</th>
+                                        <th class="" scope="col">E-Mail</th>
+                                        <th class="" scope="col">Employee Type</th>
 
                                     </tr>
                                 </thead>
@@ -2626,9 +2626,9 @@
                                                     <p class="mb-0 ms-3 text-1100 fw-bold">{{item.employee_displayname}} </p>
                                                 </a>
                                             </td>
-                                            <td class="">{{item.employee_position}} </td>
-                                            <td class="">{{item.employee_email}} </td>
-                                            <td class="">{{item.employee_type}}</td>
+                                            <td class="text-center">{{item.employee_position}} </td>
+                                            <td class="text-center">{{item.employee_email}} </td>
+                                            <td class="text-center">{{item.employee_type}}</td>
                                         </tr>
                                         <!-- Show "Not Found" message when employeelist_show is empty or the first item is null -->
                                         <tr ng-if="employeelist_show[0].employee_displayname === null">
@@ -2646,7 +2646,6 @@
 
             <!-------------- Show b=name after add------------------------------->
                 <div class="modal-header bg-soft" ng-if="!(selectDatFormType =='owner')">
-                    <!-------------- Show b=name after add------------------------------->
                     <h5 class="text-900 mb-0" >
                         <span class=" me-2 text-primary"><B>|</B></span>
                         <span ng-switch="selectDatFormType">
@@ -2660,14 +2659,23 @@
                 </div>
 
                 <div class="modal-body" ng-if="!(selectDatFormType =='owner' && formData.length > 0)"><!---------------ng-if="!(selectDatFormType =='approver'|| selectDatFormType =='reviewer')"----------->
-                    <div class="col-auto" ng-repeat="item2 in formData | filter:{id_session: selectdata_session }" 
+                    <div class="col-auto py-1"
+                        ng-repeat="item2 in formData | filter:{id_session: selectdata_session }" 
                         ng-if="item2.user_displayname">
                         
-                        <div class="d-flex align-items-center p-1" style="height: 20px;">
-                            <button id="del-{{item2.seq}}" class="btn btn-link text-danger" 
+                        <div class="d-flex align-items-center p-1">
+                            @* <button id="del-{{item2.seq}}" class="btn btn-link text-danger" 
                                 ng-class="{'d-none':(!tab_general_active)}" 
                                 ng-click="removeData(item2.seq, selectdata_session, selectDatFormType)">
                                 Remove
+                            </button> *@
+                             <button class="btn btn-outline-secondary p-2" 
+                                    style="color: #ff2828; background-color: #f1f2f4; border-color: #ff2828;"
+                                    data-toggle="tooltip" 
+                                    data-placement="top" 
+                                    title="Remove"
+                                    ng-click="removeData(item2.seq, selectdata_session, selectDatFormType)">
+                                <span class="fa-regular fa-trash-can fa-lg"></span>
                             </button>
                             <div class="form-check mt-1 mb-0 text-1100 fw-bold" ng-if="selectDatFormType == 'approver'">
                                 <input class="form-check-input disabled-link" type="checkbox" ng-if="item2.approver_type =='approver'" checked 
@@ -2687,48 +2695,55 @@
                         <span class=" me-2 text-primary"><B>|</B></span>Contracter/Outsouce (if concern)
                     </h5>
                 </div>
-                <div class="modal-body" ng-show="selectDatFormType == 'attendees'|| selectDatFormType =='specialist' || selectDatFormType == 'member'">
+                <div class="modal-body" 
+                    ng-show="selectDatFormType == 'attendees'|| selectDatFormType =='specialist' || selectDatFormType == 'member'">
                     <div class="bg-white border-top border-bottom border-200 position-relative top-1">
                         <div class="table-responsive scrollbar-overlay mx-n1 px-1">
                             <table class="table table-sm fs--1 mb-0">
                                 <thead class="text-uppercase">
                                     <tr>
-                                        <th style="width:150px;"></th>
+                                        <th style="width: 90px;"></th>
                                         <th class="pe-5">Name (ชื่อ-นามสกุล)</th>
                                         <th class="pe-5">Title (ตำแหน่ง)</th>
                                     </tr>
                                 </thead>
                                 <tbody class="list">
-                                    @*<tr ng-repeat="outsource in formData_outsider">
-                                        <td>
-                                            <button class="btn btn-link text-danger p-0 text-end" style="width:140px;"
-                                                ng-class="{'d-none':(!tab_general_active)}"
-                                                ng-click="removeDataRelatedpeople(outsource.seq)">
-                                                Remove
-                                            </button>
-                                        </td>
-                                        <td>
-                                            <b>{{ outsource.user_displayname }}</b>
-                                        </td>
-                                        <td>
-                                            <b>{{ outsource.user_title }}</b>
-                                        </td>
-                                    </tr>*@
                                     @*Free text*@
                                     <tr class="hover-actions-trigger btn-reveal-trigger position-static"
                                         ng-repeat="itemRel in data_relatedpeople_outsider | filter:{id_session: selectdata_session, user_type: selectDatFormType}"> <!--------------------, user_type:selectDatFormType--------->
-                                        <td class="">
-                                            <button id="del-{{item2.seq}}" class="btn btn-link text-danger p-0 text-end" style="width:140px;"
+                                        <td class="d-flex  justify-content-start">
+                                            @* <button id="del-{{item2.seq}}" class="btn btn-link text-danger p-0 text-end" style="width:140px;"
                                                     ng-class="{'d-none':(!tab_general_active)}"
                                                     ng-click="removeDataRelatedpeopleOutsider(itemRel.seq)">
                                                 Remove
-                                            </button>
-                                            <button id="add-{{item2.seq}}" class="btn btn-link text-primary p-0 text-end" style="width:140px;"
+                                            </button> *@
+                                            <span class="mx-1">
+                                                <button class="btn btn-outline-secondary p-2" 
+                                                        style="color: #ff2828; background-color: #f1f2f4; border-color: #ff2828;"
+                                                        data-toggle="tooltip" 
+                                                        data-placement="top" 
+                                                        title="Remove"
+                                                        ng-click=removeDataRelatedpeopleOutsider(itemRel.seq)>
+                                                    <span class="fa-regular fa-trash-can fa-lg"></span>
+                                                </button>
+                                            </span>
+                                            <span class="mx-1">
+                                                <button class="btn btn-outline-secondary p-2" 
+                                                        style="color: #0abe0a; background-color: #f1f2f4; border-color: #0abe0a;"
+                                                        data-toggle="tooltip" 
+                                                        data-placement="top" 
+                                                        title="Add Other Contract"
+                                                        ng-click=addnewFreebox(itemRel.seq)>
+                                                    <span class="fa-solid fa-user-plus fa-lg"></span>
+                                                </button>
+                                            </span>
+
+                                            @* <button id="add-{{item2.seq}}" class="btn btn-link text-primary p-0 text-end" style="width:140px;"
                                                     ng-class="{'d-none':(!tab_general_active)}"
                                                     ng-click="addnewFreebox(itemRel.seq)"
                                                     ng-if="$last">
                                                 Add Other Contract
-                                            </button>
+                                            </button> *@
                                         </td>
                                         <td class="">
                                             <input type="text" class="form-control form-control-sm" placeholder="Name"
@@ -2748,21 +2763,22 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="d-none">
                     @* attendees *@
                     <div class="modal-body" ng-if="selectDatFormType =='member'">
-                        <div class="col-auto d-none" ng-repeat="item2 in data_relatedpeople | filter:{id_session: selectdata_session ,user_type:'attendees'}"
-                             ng-if="!(item2.user_displayname)">
+                        <div class="col-auto d-none" 
+                            ng-repeat="item2 in data_relatedpeople | filter:{id_session: selectdata_session ,user_type:'attendees'}"
+                            ng-if="!(item2.user_displayname)">
                             <div class="d-flex align-items-center p-1" style="height: 20px;">
-                                <button id="del-{{item2.seq}}" class="btn btn-link text-danger"
-                                        ng-class="{'d-none':(!tab_general_active)}"
-                                        ng-click="removeDataEmployee(item2.seq, selectdata_session)">
+                                <button id="del-{{item2.seq}}" 
+                                    class="btn btn-link text-danger"
+                                    ng-class="{'d-none':(!tab_general_active)}"
+                                    ng-click="removeDataEmployee(item2.seq, selectdata_session)">
                                     Remove
                                 </button>
-                                <label class="mb-0 ms-3 text-1100 fw-bold"
-                                       style="width:80%;border-color: #f1f2f4;">{{ item2.user_displayname}}</label>
-
+                                <label class="mb-0 ms-3 text-1100 fw-bold" style="width:80%;border-color: #f1f2f4;">
+                                       {{ item2.user_displayname}}
+                                </label>
                             </div>
                         </div>
                     </div>
