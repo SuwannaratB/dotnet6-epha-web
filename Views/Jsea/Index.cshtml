@@ -211,7 +211,9 @@
                                                         data-choices="data-choices"
                                                         data-options='{"removeItemButton":true,"placeholder":true}'
                                                         ng-change="actionChange(item,item.seq,'')" ng-model="item.id_apu">
-                                                    <option ng-repeat="item2 in master_apu" ng-value="item2.id">
+                                                    <option ng-repeat="item2 in master_apu" 
+                                                            ng-value="item2.id"
+                                                            ng-if="item2.id_company == item.id_company">
                                                         {{item2.name}}
                                                     </option>
                                                 </select>
@@ -2442,8 +2444,6 @@
 
                     </div>
                     @* <!-- Safety Reviewer Appeover end --> *@
-
-
                     <!-- Report start-->
                     <div class="" ng-class="{'tab-pane fade show active':(action_part==5),'tab-pane fade':(action_part!==5)}"
                          id="tab-report" role="tabpanel" aria-labelledby="report-tab" ng-if="export_type==true">
@@ -2540,7 +2540,6 @@
 
                     </div>
                     <!-- Report end-->
-
                 </div>
 
             </div>
