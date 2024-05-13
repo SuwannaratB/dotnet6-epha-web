@@ -5378,7 +5378,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
 
         document.getElementById('unit_no').classList.remove("show");
+        // set default list
         $scope.searchUnitNo.text = '';
+        $scope.master_unit_no_list =  $scope.master_unit_no;
         // document.getElementById('unit_no1').classList.remove("show");
 
         // out
@@ -5391,7 +5393,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     });
 
      $scope.filterFunction = function () {
-        $scope.master_unit_no_list= $filter('filter')($scope.master_unit_no, function(item) {
+        $scope.master_unit_no_list = $filter('filter')($scope.master_unit_no, function(item) {
             var itemName = item.name.toLowerCase();
             var searchText = $scope.searchUnitNo.text.toLowerCase();
     
