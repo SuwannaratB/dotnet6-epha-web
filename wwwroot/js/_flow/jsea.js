@@ -5046,7 +5046,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     };
 
     $scope.removeData = function(seq, seq_session, selectDatFormType) {
-        
+        console.log(selectDatFormType)
         switch (selectDatFormType) {
             case 'member':
                 $scope.removeDataEmployee(seq, seq_session);
@@ -5087,37 +5087,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
 
         running_no_level1($scope.data_memberteam, null, null);
+        $scope.formData =  $scope.data_memberteam;
         apply();
-    };
-
-    $scope.getFormData = function() {
-        switch ($scope.selectDatFormType) {
-            case 'member':
-                console.log("$scope.data_memberteam:", $scope.data_memberteam,$scope.user_name);
-                $scope.data_memberteam.sort(function(a, b) {
-                    if (a.user_name === $scope.user_name) return -1;
-                    if (b.user_name === $scope.user_name) return 1;
-                    return 0;
-                });                
-                return $scope.data_memberteam;
-            case 'approver':
-                console.log("$scope.data_approver:", $scope.data_approver);
-                $scope.data_approver.sort(function(a, b) {
-                    if (a.approver_type === "approver") return -1;
-                    if (b.approver_type === "approver") return 1;
-                    return 0;
-                });
-                
-                return $scope.data_approver;
-            case 'reviewer':
-                console.log("$scope.data_relatedpeople:", $scope.data_relatedpeople);
-                return $scope.data_relatedpeople;
-            case 'specialist':
-                var specialist = $scope.data_relatedpeople.filter(item => item.user_type === "specialist")
-                return specialist;
-            default:
-                return [];
-        }
     };
 
     /*$scope.getOutsourceFormData = function(){
@@ -5186,6 +5157,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
 
         running_no_level1($scope.data_approver, null, null);
+        $scope.formData =  $scope.data_approver;
+
         apply();
     };
 
@@ -5206,6 +5179,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         //???
 
         running_no_level1($scope.data_relatedpeople, null, null);
+        $scope.formData = $scope.data_relatedpeople;
         apply();
     };
 
@@ -5227,6 +5201,36 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         running_no_level1($scope.data_relatedpeople_outsider, null, null);
         apply();
+    };
+    
+    $scope.getFormData = function() {
+        switch ($scope.selectDatFormType) {
+            case 'member':
+                console.log("$scope.data_memberteam:", $scope.data_memberteam,$scope.user_name);
+                $scope.data_memberteam.sort(function(a, b) {
+                    if (a.user_name === $scope.user_name) return -1;
+                    if (b.user_name === $scope.user_name) return 1;
+                    return 0;
+                });                
+                return $scope.data_memberteam;
+            case 'approver':
+                console.log("$scope.data_approver:", $scope.data_approver);
+                $scope.data_approver.sort(function(a, b) {
+                    if (a.approver_type === "approver") return -1;
+                    if (b.approver_type === "approver") return 1;
+                    return 0;
+                });
+                
+                return $scope.data_approver;
+            case 'reviewer':
+                console.log("$scope.data_relatedpeople:", $scope.data_relatedpeople);
+                return $scope.data_relatedpeople;
+            case 'specialist':
+                var specialist = $scope.data_relatedpeople.filter(item => item.user_type === "specialist")
+                return specialist;
+            default:
+                return [];
+        }
     };
 
     $scope.downloadFileReviewer = function (item) {
