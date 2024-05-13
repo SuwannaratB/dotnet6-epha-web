@@ -3328,7 +3328,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.selectdata_nodeworksheet = seq;
         $scope.selectedDataNodeWorksheetRamType = ram_type;
         $scope.selectedDataRamTypeAction = ram_type_action;
-        
 
         if (ram_type_action == 'after') {
             $scope.cal_ram_action_security = _item.ram_after_security;
@@ -3374,7 +3373,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         var xseq = $scope.selectdata_listworksheet;
         var xbefor = $scope.selectedDataRamTypeAction;
-
+        console.log(xseq)
         for (let i = 0; i < $scope.data_listworksheet.length; i++) {
             try {
 
