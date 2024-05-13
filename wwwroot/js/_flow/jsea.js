@@ -5045,6 +5045,24 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         //$scope.formData_outsider = [];
     };
 
+    $scope.removeData = function(seq, seq_session, selectDatFormType) {
+        
+        switch (selectDatFormType) {
+            case 'member':
+                $scope.removeDataEmployee(seq, seq_session);
+                break;
+            case 'specialist':
+                $scope.removeDataRelatedpeople(seq, seq_session);
+                break;
+            case 'approver':
+                $scope.removeDataApprover(seq, seq_session);
+                break;
+            default:
+                break;
+        }
+    };
+    
+
     $scope.removeDataEmployee = function (seq, seq_session) {
 
         var arrdelete = $filter('filter')($scope.data_memberteam, function (item) {

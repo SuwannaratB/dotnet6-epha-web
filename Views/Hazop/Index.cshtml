@@ -3639,6 +3639,14 @@
                                     ng-click="removeDataEmployee(item2.seq, selectdata_session)">
                                 Remove
                             </button>
+                             <button class="btn btn-outline-secondary p-2" id="del-{{item2.seq}}"
+                                    style="color: #ff2828; background-color: #f1f2f4; border-color: #ff2828;"
+                                    data-toggle="tooltip" 
+                                    data-placement="top" 
+                                    title="Remove"
+                                    ng-click="removeDataEmployee(item2.seq, selectdata_session)">
+                                <span class="fa-regular fa-trash-can fa-lg"></span>
+                            </button>                            
                             <label class="mb-0 ms-3 text-1100 fw-bold" style="width: 80%; border-color: #f1f2f4;">{{ item2.user_displayname }}</label>
                         </div>
                     </div>

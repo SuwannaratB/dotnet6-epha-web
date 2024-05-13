@@ -2660,7 +2660,7 @@
 
                 <div class="modal-body" ng-if="!(selectDatFormType =='owner' && formData.length > 0)"><!---------------ng-if="!(selectDatFormType =='approver'|| selectDatFormType =='reviewer')"----------->
                     <div class="col-auto py-1"
-                        ng-repeat="item2 in data_relatedpeople | filter:{id_session: selectdata_session }" 
+                        ng-repeat="item2 in formData | filter:{id_session: selectdata_session }" 
                         ng-if="item2.user_displayname">
                         
                         <div class="d-flex align-items-center p-1">
@@ -2674,7 +2674,7 @@
                                     data-toggle="tooltip" 
                                     data-placement="top" 
                                     title="Remove"
-                                    ng-click="removeDataRelatedpeople(item2.seq, selectdata_session, selectDatFormType)">
+                                    ng-click="removeData(item2.seq, selectdata_session, selectDatFormType)">
                                 <span class="fa-regular fa-trash-can fa-lg"></span>
                             </button>
                             <div class="form-check mt-1 mb-0 text-1100 fw-bold" ng-if="selectDatFormType == 'approver'">
