@@ -269,9 +269,10 @@
                                         </div>
                                     </div> *@
                                     <!-- Unit No -->
-                                    <div class="col-md-3 p-1 align-items-top" ng-if="item.id_company != '9999' "
+                                    <div class="col-md-3 p-1 align-items-top" 
+                                        ng-if="item.id_company != '9999' "
                                         style="display: flex; flex-direction: column; padding-top: 2px;">
-                                        <label class="form-label ps-0" style="padding: 2px 0" for="unit">
+                                        <label class="form-label ps-0" style="margin-top: 4px;" for="unit">
                                             <b class="text-danger d-none"> * </b>
                                             Unit No 
                                              <span class="text-danger" style="font-size:10px;">(กรณีที่ไม่มี Unit No ต้องเลือก TAG ID )</span>
@@ -286,8 +287,7 @@
                                                 type="text" 
                                                 placeholder="Search.." 
                                                 ng-model="searchUnitNo.text"
-                                                ng-change="filterFunction()"
-                                                >
+                                                ng-change="filterFunction('unit_no')">
                                                 <a  ng-repeat="item2 in master_unit_no_list" 
                                                     ng-if="item2.id_company == item.id_company && item2.id_apu == item.id_apu"
                                                     ng-click="changeUnitNo(item2)"
@@ -319,7 +319,35 @@
                                     </div> *@
                                 
                                     <!-- Tag ID -->
-                                    <div class="col-md-auto p-1 align-items-top" ng-if="item.id_company != '9999' ">
+                                    <div class="d-flex flex-column col-md-auto p-1 align-items-top" ng-if="item.id_company != '9999' ">
+                                          <label class="form-label ps-0" style="margin-top: 4px;" for="unit">
+                                            <b class="text-danger d-none"> * </b>
+                                            TAG ID/EQUIPMENT
+                                        </label>
+                                        <div class="dropdown">
+                                            <button ng-repeat="item2 in master_tagid | filter: { id: item.id_tagid }" 
+                                                id="dropdown_tag_id" 
+                                                class="dropbtn" >
+                                                {{item2.name}}
+                                            </button>
+                                            <div id="tag_id" class="dropdown-content">
+                                                <input id="dropdown_input" 
+                                                class="dropdown_input" 
+                                                type="text" 
+                                                placeholder="Search.." 
+                                                ng-model="searchTagId.text"
+                                                ng-change="filterFunction('tag_id')">
+                                                <a  ng-repeat="item2 in master_tagid_list" 
+                                                    ng-if="item2.name != 'Please select'"
+                                                    ng-class="{'bg-primary text-white':(item.id_tagid == item2.id)}"
+                                                    ng-click="changeTagId(item2)"
+                                                    value="item2.id" >
+                                                    {{item2.name}}
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @* <div class="col-md-auto p-1 align-items-top" ng-if="item.id_company != '9999' ">
                                         <label class="form-label ps-0" for="tagid"><b class="text-danger d-none"> * </b>Tag ID/ Equipment </label>
                                         <label class="form-label ps-0" ng-if="select_history_tracking_record">
                                             <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
@@ -338,7 +366,7 @@
                                             </option>
                                         </select>
 
-                                    </div>
+                                    </div> *@
                                   
                                     <!-- Tag ID Audition => tagid_audition -->
                                     <div class="col-md-auto p-1 align-items-top">
