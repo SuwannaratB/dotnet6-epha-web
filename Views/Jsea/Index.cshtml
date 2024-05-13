@@ -275,18 +275,22 @@
                                              <span class="text-danger" style="font-size:10px;">(กรณีที่ไม่มี Unit No ต้องเลือก TAG ID )</span>
                                         </label>
                                         <div class="dropdown">
-                                            <button id="dropdown_unit_no" class="dropbtn">{{item.unit_no_name}}</button>
+                                            <button id="dropdown_unit_no" class="dropbtn" >
+                                                {{item.unit_no_name}}
+                                            </button>
                                             <div id="unit_no" class="dropdown-content">
-                                                <input id="dropdown_input" class="dropdown_input" type="text" placeholder="Search.." onkeyup="filterFunction()">
-                                                <a  ng-repeat="item2 in master_unit_no" 
+                                                <input id="dropdown_input" 
+                                                class="dropdown_input" 
+                                                type="text" 
+                                                placeholder="Search.." 
+                                                ng-model="searchUnitNo.text"
+                                                ng-change="filterFunction()"
+                                                >
+                                                <a  ng-repeat="item2 in master_unit_no_list" 
                                                     ng-if="item2.id_company == item.id_company && item2.id_apu == item.id_apu"
                                                     ng-click="changeUnitNo(item2)"
                                                     value="item2.id" >
                                                     {{item2.name}}
-                                                </a>
-                                                <a  ng-if="item2.id_company != item.id_company && item2.id_apu != item.id_apu"
-                                                    value="" >
-                                                    Not Found
                                                 </a>
                                             </div>
                                         </div>

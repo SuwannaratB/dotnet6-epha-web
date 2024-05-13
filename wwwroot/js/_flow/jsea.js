@@ -933,6 +933,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.master_apu = [];
         $scope.master_toc = [];
         $scope.master_unit_no = [];
+        $scope.master_unit_no_list = [];
         $scope.master_tagid = [];
         $scope.master_tagid_audition = [];
         $scope.master_ram = [];
@@ -989,6 +990,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.searchdataApprover = '';
 
         $scope.searchIndicator = {
+            text: ''
+        }
+
+        $scope.searchUnitNo = {
             text: ''
         }
 
@@ -1502,6 +1507,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     $scope.master_apu = arr.apu;
                     $scope.master_toc = arr.toc;
                     $scope.master_unit_no = arr.unit_no;
+                    $scope.master_unit_no_list = arr.unit_no;
                     $scope.master_tagid = arr.tagid;
                     $scope.master_tagid_audition = arr.tagid;//ใช้ใน tag id audition
 
@@ -5358,7 +5364,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         if (id_dropdown == 'dropdown') {
             var id_list = id.substring(id.indexOf("_") + 1); 
             console.log(id_list)
-            document.getElementById(id_list).classList.toggle("show");
+            try {
+                document.getElementById(id_list).classList.toggle("show");
+            } catch (error) {
+                
+            }
+            
             return;
         }
         // click input text
@@ -5367,6 +5378,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
 
         document.getElementById('unit_no').classList.remove("show");
+        $scope.searchUnitNo.text = '';
         // document.getElementById('unit_no1').classList.remove("show");
 
         // out
@@ -5377,20 +5389,15 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             // dropdown.classList.remove("show");
         // }
     });
-    //   function filterFunction() {
-    //     const input = document.getElementById("myInput");
-    //     const filter = input.value.toUpperCase();
-    //     const div = document.getElementById("myDropdown");
-    //     const a = div.getElementsByTagName("a");
-    //     for (let i = 0; i < a.length; i++) {
-    //       txtValue = a[i].textContent || a[i].innerText;
-    //       if (txtValue.toUpperCase().indexOf(filter) > -1) {
-    //         a[i].style.display = "";
-    //       } else {
-    //         a[i].style.display = "none";
-    //       }
-    //     }
-    //   }
+
+     $scope.filterFunction = function () {
+        $scope.master_unit_no_list= $filter('filter')($scope.master_unit_no, function(item) {
+            var itemName = item.name.toLowerCase();
+            var searchText = $scope.searchUnitNo.text.toLowerCase();
+    
+            return itemName.includes(searchText);
+        });
+      }
 
 
 });
