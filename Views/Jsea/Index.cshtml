@@ -2578,7 +2578,7 @@
                                                     <div class="avatar avatar-m" style="height: 20px; width: 20px;">
                                                         <img ng-if="item.employee_img" class="rounded-circle" ng-src="../../{{ item.employee_img }}" alt="">
                                                     </div>
-                                                    <p class="mb-0 ms-3 text-1100 fw-bold"> ({{item.employee_id}}){{item.employee_displayname}} </p>
+                                                    <p class="mb-0 ms-3 text-1100 fw-bold">{{item.employee_displayname}} </p>
                                                 </a>
                                             </td>
                                             <td class="">{{item.employee_position}} </td>
@@ -2654,7 +2654,7 @@
                                     </tr>
                                 </thead>
                                 <tbody class="list">
-                                    <tr ng-repeat="outsource in formData_outsider">
+                                    @*<tr ng-repeat="outsource in formData_outsider">
                                         <td>
                                             <button class="btn btn-link text-danger p-0 text-end" style="width:140px;"
                                                 ng-class="{'d-none':(!tab_general_active)}"
@@ -2668,7 +2668,7 @@
                                         <td>
                                             <b>{{ outsource.user_title }}</b>
                                         </td>
-                                    </tr>
+                                    </tr>*@
                                     @*Free text*@
                                     <tr class="hover-actions-trigger btn-reveal-trigger position-static"
                                         ng-repeat="itemRel in data_relatedpeople_outsider | filter:{id_session: selectdata_session, user_type: selectDatFormType}"> <!--------------------, user_type:selectDatFormType--------->

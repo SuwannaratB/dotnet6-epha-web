@@ -1555,13 +1555,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     $scope.data_relatedpeople_outsider = arr.relatedpeople_outsider;
                     $scope.data_relatedpeople_outsider_def = clone_arr_newrow(arr.relatedpeople_outsider);
                     $scope.data_relatedpeople_outsider_old = (arr.relatedpeople_outsider);
-
-                    
-                    $scope.data_relatedpeople_outsider.forEach(function(item) {
-                        if (item.user_type === 'attendees') {
-                            item.user_type = 'member';
-                        }
-                    });
                     
                     console.log($scope.data_relatedpeople_outsider)
 
@@ -4301,6 +4294,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         }
 
+        console.log("Show arr json before save", angular.toJson(arr_json));
+
         return angular.toJson(arr_json);
 
     }
@@ -4755,7 +4750,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         //$scope.getFormData()
         $scope.formData = $scope.getFormData();
-        $scope.formData_outsider = $scope.getOutsourceFormData();
+        //$scope.formData_outsider = $scope.getOutsourceFormData();
 
         apply();
 
@@ -5029,7 +5024,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         //$scope.getFormData()
         $scope.formData = $scope.getFormData();
-        $scope.formData_outsider = $scope.getOutsourceFormData();
+        //$scope.formData_outsider = $scope.getOutsourceFormData();
 
         apply();
 
@@ -5043,7 +5038,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     $scope.clearFormData = function() {
         $scope.formData = [];
-        $scope.formData_outsider = [];
+        //$scope.formData_outsider = [];
     };
 
     $scope.removeDataEmployee = function (seq, seq_session) {
@@ -5103,7 +5098,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
     };
 
-    $scope.getOutsourceFormData = function(){
+    /*$scope.getOutsourceFormData = function(){
         switch ($scope.selectDatFormType) {
             case 'member':
             case 'attendees':
@@ -5115,7 +5110,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             default:
                 return [];
         }
-    };      
+    }; */     
      
     
 
