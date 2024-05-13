@@ -935,6 +935,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.master_unit_no = [];
         $scope.master_unit_no_list = [];
         $scope.master_tagid = [];
+        $scope.master_tagid_list = [];
         $scope.master_tagid_audition = [];
         $scope.master_ram = [];
         $scope.master_ram_level = [];
@@ -994,6 +995,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
 
         $scope.searchUnitNo = {
+            text: ''
+        }
+        $scope.searchTagId = {
             text: ''
         }
 
@@ -1509,6 +1513,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     $scope.master_unit_no = arr.unit_no;
                     $scope.master_unit_no_list = arr.unit_no;
                     $scope.master_tagid = arr.tagid;
+                    $scope.master_tagid_list = arr.tagid;
                     $scope.master_tagid_audition = arr.tagid;//ใช้ใน tag id audition
 
                     //แก้ไขเบื้องต้น เนื่องจาก path file ผิดต้องเป็น folder jsea
@@ -5359,6 +5364,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         console.log($scope.data_general)
     };
 
+    $scope.changeTagId = function(tagIg) {
+        $scope.data_general[0].id_tagid = tagIg.id;
+        // $scope.data_general[0].unit_no_name = unit_no.name;
+        console.log($scope.data_general)
+    };
+
     $scope.openSearchDropdown = function(id) {
         // var dropdown = document.getElementById(id);
         // if (dropdown) {
@@ -5372,40 +5383,53 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         const targetElement = event.target;
         const id = targetElement.getAttribute('id');
         var id_dropdown = '';
+        var id_list = '';
 
         if (id) {
             id_dropdown = id.substring(0, id.indexOf('_'));
         }
         // click button
         if (id_dropdown == 'dropdown') {
-            var id_list = id.substring(id.indexOf("_") + 1); 
-            console.log(id_list)
-            try {
-                document.getElementById(id_list).classList.toggle("show");
-            } catch (error) {
-                
-            }
-            
-            return;
+            id_list = id.substring(id.indexOf("_") + 1); 
         }
         // click input text
         if (id == 'dropdown_input') {
             return
         }
-
+        // hidden dropdown
         document.getElementById('unit_no').classList.remove("show");
+        document.getElementById('tag_id').classList.remove("show");
         // set default list
         $scope.searchUnitNo.text = '';
         $scope.master_unit_no_list =  $scope.master_unit_no;
+        $scope.searchTagId.text = '';
+        $scope.master_tagid_list =  $scope.master_tagid;
+        // show
+        try {
+            document.getElementById(id_list).classList.toggle("show");
+        } catch (error) {}
     });
 
-     $scope.filterFunction = function () {
-        $scope.master_unit_no_list = $filter('filter')($scope.master_unit_no, function(item) {
-            var itemName = item.name.toLowerCase();
-            var searchText = $scope.searchUnitNo.text.toLowerCase();
-    
-            return itemName.includes(searchText);
-        });
+     $scope.filterFunction = function (type) {
+        if (type == 'unit_no') {
+            console.log(type)
+            $scope.master_unit_no_list = $filter('filter')($scope.master_unit_no, function(item) {
+                var itemName = item.name.toLowerCase();
+                var searchText = $scope.searchUnitNo.text.toLowerCase();
+        
+                return itemName.includes(searchText);
+            });
+        }
+
+        if (type == 'tag_id') {
+            $scope.master_tagid_list = $filter('filter')($scope.master_tagid, function(item) {
+                var itemName = item.name.toLowerCase();
+                var searchText = $scope.searchTagId.text.toLowerCase();
+        
+                return itemName.includes(searchText);
+            });
+        }
+
       }
 
 });
