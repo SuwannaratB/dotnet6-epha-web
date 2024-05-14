@@ -289,7 +289,8 @@
                                                 ng-model="searchUnitNo.text"
                                                 ng-change="filterFunction('unit_no')">
                                                 <a  ng-repeat="item2 in master_unit_no_list" 
-                                                    ng-if="item2.id_company == item.id_company && item2.id_apu == item.id_apu"
+                                                    ng-if="item2.id_company == item.id_company && item2.id_apu == item.id_apu &&
+                                                    (item2.id_plant_area == item.id_toc)"
                                                     ng-click="changeUnitNo(item2)"
                                                     value="item2.id" >
                                                     {{item2.name}}
@@ -1754,7 +1755,9 @@
                                                        id="target_start_date"
                                                        name="target_start_date" 
                                                        ng-change="actionChange(data_general[0],data_general[0].seq,'')"
-                                                       ng-model="data_general[0].target_start_date" placeholder="dd/mm/yyyy" />
+                                                       ng-model="data_general[0].target_start_date" 
+                                                       placeholder="dd/mm/yyyy" 
+                                                />
                                             </div>
                                         </div>
                                     </div>
@@ -1823,7 +1826,8 @@
                                                 ng-repeat="item in data_listworksheet | orderBy:'no'">
 
                                                 @* workstep *@
-                                                <td class="align-top border border-light border-end-0  border-start-0  border-top-0 "style="padding: 0 !important; width: 200px; max-width:300px;">
+                                                <td class="align-top border border-light border-end-0  border-start-0 border-top-0"
+                                                    style="padding: 0 !important; width: 200px; max-width:300px;">
                                                     <div class="d-flex align-items-top w-100" ng-if="item.row_type =='workstep' ">
                                                         <div>
                                                             <p class="p-0 m-0 me-1 text-end">{{item.workstep_no +'.'}}</p>
@@ -1887,7 +1891,8 @@
                                                 </td>
 
                                                 @* taskdesc *@
-                                                <td class="align-top border border-light border-end-0  border-start-0  border-top-0 " style="padding: 0 !important; width: 200px; max-width:300px;">
+                                                <td class="align-top border border-light border-end-0  border-start-0 border-top-0 " 
+                                                    style="padding: 0 !important; width: 200px; max-width:300px;">
                                                     <div class="d-flex align-items-top w-100" ng-if="item.row_type =='workstep' || item.row_type =='taskdesc'">
                                                         <div>
                                                             <p class="p-0 m-0 me-1 text-end">{{item.workstep_no +'.'+item.taskdesc_no +'.'}}</p>

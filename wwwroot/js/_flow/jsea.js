@@ -2304,7 +2304,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             arr_items.push(newInput);
         }
         arr_items.sort((a, b) => a.index_rows - b.index_rows);
-
     }
     function running_no_level1_lv1(arr_items, iNo, iRow, newInput) {
 
@@ -2972,11 +2971,18 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             running_no_possiblecase(seq_workstep, seq_taskdesc, seq_potentailhazard);
         }
 
+        // for (let i = 0; i < $scope.data_listworksheet.length; i++) {
+        //     if ($scope.data_listworksheet[i]) {
+                
+        //     }
+        //     console.log('all => ',$scope.data_listworksheet[i])
+        // }
+
         apply();
 
-
-        console.log($scope.data_listworksheet)
+        console.log('all => ',$scope.data_listworksheet)
     }
+    
     function running_index_worksheet(def_seq) {
         $scope.data_listworksheet.sort((a, b) => a.index_rows - b.index_rows);
 
@@ -4626,11 +4632,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         });
     };
 
-
     $scope.fillTextbox = function (string) {
         $scope.members = string;
         $scope.hidethis = true;
     }
+    
     $scope.toggleResultsVisibility = function () {
         $scope.showResults = false;
         $scope.isShow = '';
