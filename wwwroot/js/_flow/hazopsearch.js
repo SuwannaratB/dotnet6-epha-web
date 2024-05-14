@@ -1,4 +1,4 @@
- 
+
 
 AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) {
     $('#divLoading').hide();
@@ -60,7 +60,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         $scope.exportfile = [{ DownloadPath: '', Name: '' }];
 
         $scope.pha_status_comment = [
-            {id:1, data:''}
+            { id: 1, data: '' }
         ];
     }
     function replace_hashKey_arr(_arr) {
@@ -115,6 +115,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                 $scope.master_unit_no = null;
 
                 $scope.data_all = arr;
+
+                $scope.master_subsoftware = JSON.parse(replace_hashKey_arr(arr.subsoftware));
+
+
                 //apu, business_unit, unit_no, functional, approver, company, toc, tagid
                 $scope.master_apu = JSON.parse(replace_hashKey_arr(arr.apu));
                 $scope.master_unit_no = JSON.parse(replace_hashKey_arr(arr.unit_no));
@@ -177,15 +181,20 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                 } else if (sub_software == "HRA") {
 
                 } else {
-                    if ($scope.data_conditions[0].master_functional == null || $scope.data_conditions[0].master_functional == '') {
-                        $scope.data_conditions[0].master_functional = null;
-                        var arr_clone_def = { id: $scope.data_conditions[0].master_functional, name: 'Please select' };
-                        $scope.master_functional.splice(0, 0, arr_clone_def);
+
+                    if ($scope.master_functional.length > 0) {
+                        if ($scope.data_conditions[0].master_functional == null || $scope.data_conditions[0].master_functional == '') {
+                            $scope.data_conditions[0].master_functional = null;
+                            var arr_clone_def = { id: $scope.data_conditions[0].master_functional, name: 'Please select' };
+                            $scope.master_functional.splice(0, 0, arr_clone_def);
+                        }
                     }
-                    if ($scope.data_conditions[0].id_business_unit == null) {
-                        $scope.data_conditions[0].id_business_unit = null;
-                        var arr_clone_def = { id: $scope.data_conditions[0].id_business_unit, name: 'Please select' };
-                        $scope.master_business_unit.splice(0, 0, arr_clone_def);
+                    if ($scope.master_business_unit.length > 0) {
+                        if ($scope.data_conditions[0].id_business_unit == null) {
+                            $scope.data_conditions[0].id_business_unit = null;
+                            var arr_clone_def = { id: $scope.data_conditions[0].id_business_unit, name: 'Please select' };
+                            $scope.master_business_unit.splice(0, 0, arr_clone_def);
+                        }
                     }
                 }
 
@@ -293,7 +302,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
                         //    (item.emp_active_search == null ? 'x' : _item.emp_active_search.toLowerCase())
                         //        .includes((item.emp_active_search == null ? 'x' : item.emp_active_search.toLowerCase()))
-                        
+
                         //) 
                     );
                 });
@@ -312,8 +321,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                         (item.worksheet_active_search == null ? 'x' : _item.worksheet_active_search.toLowerCase())
                             .includes((item.worksheet_active_search == null ? 'x' : item.worksheet_active_search.toLowerCase()))
                     );
-                });    
-            $scope.data_results = arr_search ;
+                });
+
+
+            $scope.data_results = arr_search;
             apply();
         } catch {
 
@@ -474,7 +485,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         $('#divLoading').hide();
     }
     $scope.confirmManageDocument = function () {
-         
+
         var action_type = $scope.manage_document_type;
         var user_name = $scope.user_name_select;
         var sub_software = $scope.sub_software_select;
@@ -533,7 +544,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                 $.ajax({
                     url: url_ws + "Flow/manage_document_cancel",
                     data: '{"user_name":"' + user_name + '","sub_software":"' + sub_software + '"' + ',"pha_status_comment":"' + pha_status_comment + '"' +
-                    ',"pha_no":"' + pha_no + '","pha_seq":"' + pha_seq + '"}',
+                        ',"pha_no":"' + pha_no + '","pha_seq":"' + pha_seq + '"}',
                     type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
                     beforeSend: function () {
                         $('#divLoading').show();
