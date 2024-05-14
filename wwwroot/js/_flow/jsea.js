@@ -4817,6 +4817,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         if (searchText.length < 3 && searchIndicator.length < 3) { return items; }
        
         getEmployees(searchText,searchIndicator, function(data) {
+
+            data.employee.forEach(function(employee) {
+                employee.isAdded = false; 
+            });
+
             $scope.employeelist_show = data.employee
             apply();
             $('#modalEmployeeAdd').modal({
@@ -5032,6 +5037,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         
 
         //$scope.getFormData()
+        if (item.isAdded === false) {
+            item.isAdded = true;
+        }
+
         $scope.formData = $scope.getFormData();
         //$scope.formData_outsider = $scope.getOutsourceFormData();
 
@@ -5051,22 +5060,55 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     };
 
     $scope.removeData = function(seq, seq_session, selectDatFormType) {
-        console.log(selectDatFormType)
+        console.log(selectDatFormType);
+
+        // Common function to set isAdded to false for the given employee in employeelist_show
+        function setIsAddedToFalse(employeeName) {
+            var employeeToRemove = $scope.employeelist_show.find(function(remove) {
+                return remove.employee_name === employeeName;
+            });
+
+            if (employeeToRemove) {
+                employeeToRemove.isAdded = false;
+            }
+        }
+
+        // Handle different cases based on selectDatFormType
         switch (selectDatFormType) {
             case 'member':
+                console.log("$scope.employeelist_show", $scope.employeelist_show);
+                var employeeMember = $scope.data_memberteam.find(function(employee) {
+                    return employee.seq === seq && employee.id_session === seq_session;
+                });
+                setIsAddedToFalse(employeeMember.user_name);
+                console.log("$scope.employeelist_show", $scope.employeelist_show);
                 $scope.removeDataEmployee(seq, seq_session);
                 break;
+
             case 'specialist':
+                console.log("$scope.employeelist_show", $scope.employeelist_show);
+                var employeeSpecialist = $scope.data_relatedpeople.find(function(employee) {
+                    return employee.seq === seq && employee.id_session === seq_session;
+                });
+                setIsAddedToFalse(employeeSpecialist.user_name);
+                console.log("$scope.employeelist_show", $scope.employeelist_show);
                 $scope.removeDataRelatedpeople(seq, seq_session);
                 break;
+
             case 'approver':
+                console.log("$scope.employeelist_show", $scope.employeelist_show);
+                var employeeApprover = $scope.data_approver.find(function(employee) {
+                    return employee.seq === seq && employee.id_session === seq_session;
+                });
+                setIsAddedToFalse(employeeApprover.user_name);
+                console.log("$scope.employeelist_show", $scope.employeelist_show);
                 $scope.removeDataApprover(seq, seq_session);
                 break;
+
             default:
                 break;
         }
     };
-    
 
     $scope.removeDataEmployee = function (seq, seq_session) {
 
@@ -5074,9 +5116,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             return (item.seq == seq && item.action_type == 'update');
         });
         if (arrdelete.length > 0) { $scope.data_memberteam_delete.push(arrdelete[0]); }
+        
 
         $scope.data_memberteam = $filter('filter')($scope.data_memberteam, function (item) {
             return !(item.seq == seq && item.id_session == seq_session);
+            
         });
 
         //if delete row 1 clear to null
@@ -5237,6 +5281,18 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 return [];
         }
     };
+
+    $scope.isEmployeeAdded = function(employee_displayname) {
+        console.log("Employee display name:", employee_displayname);
+        var formData = $scope.getFormData();
+        var isAdded = formData.some(function(formDataItem) {
+            return formDataItem.employee_displayname === employee_displayname;
+        });
+        console.log("Is employee added:", isAdded);
+        return isAdded;
+    };
+    
+    
 
     $scope.downloadFileReviewer = function (item) {
 

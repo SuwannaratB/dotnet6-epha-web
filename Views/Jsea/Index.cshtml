@@ -2620,7 +2620,9 @@
                                 </div>
                             </div>
                             <div class="col-auto d-flex align-items-end justify-content-end" ng-show="selectDatFormType !== 'approver'">
-                                <button class="btn text-light btn-sm" style="background-color: #e90f8b;" ng-click="showContractor = !showContractor">
+                                <button class="btn text-light btn-sm" style="background-color: #e90f8b;" 
+                                        ng-class="{'button-fade': showContractor}"
+                                        ng-click="showContractor = !showContractor">
                                     <span class="fa-solid fa-user-pen"></span> Contractor/Outsource
                                 </button>
                             </div>
@@ -2644,12 +2646,18 @@
                                     <tbody class="list">
                                         <!-- Check if employeelist_show is not empty and the first item in the array is not null -->
                                         <tr ng-if="employeelist_show.length > 0 && employeelist_show[0].employee_displayname !== null" 
-                                            ng-repeat="item in employeelist_show">
+                                            ng-repeat="item in employeelist_show"><!-------------ng-class="{'light-bg-secondary': item.isAdded}"------->
                                             <td class="">
-                                                <a class="dropdown-item text-primary cursor-pointer" 
-                                                    ng-click="choosDataEmployee(item)">
-                                                    Add
-                                                </a>
+                                                <span class="mx-1">
+                                                    <button class="btn btn-outline-secondary p-1 cursor-pointer" 
+                                                            style="color: #0abe0a; background-color: #f1f2f4; border-color: #0abe0a;"
+                                                            data-toggle="tooltip" 
+                                                            data-placement="top" 
+                                                            title="choose Employee"
+                                                            ng-click="choosDataEmployee(item)">
+                                                        <span class="fa-solid fa-user-plus">Add</span>
+                                                    </button>
+                                                </span>                                                
                                             </td>
                                             <td class="">
                                                 <a class="text-decoration-none d-flex align-items-center">
@@ -2710,24 +2718,26 @@
                                 Remove
                             </button> *@
                              <button class="btn btn-outline-secondary p-1" 
-                                    style="color: #ff2828; background-color: #f1f2f4; border-color: #ff2828;"
+                                    style="color: #ff2828; background-color: #f1f2f4; border-color: #ff2828; width: 25px; height:25px;"
                                     data-toggle="tooltip" 
                                     data-placement="top" 
                                     title="Remove"
                                     ng-click="removeData(item2.seq, selectdata_session, selectDatFormType)">
                                 <span class="fa-regular fa-trash-can"></span>
                             </button>
-                            <div class="form-check mt-1 mb-0 ms-1 text-1100 fw-bold" ng-if="selectDatFormType == 'approver'">
-                                <input class="form-check-input disabled-link" 
+                            <div class="form-check mb-0 ms-2 text-1100 fw-bold d-flex align-contents-center" ng-if="selectDatFormType == 'approver'">
+                                <input class="form-check-input disabled-link rounded-2" 
+                                    style="width: 24px; height:24px;"
                                     type="checkbox" 
                                     ng-if="item2.approver_type =='approver'" 
                                     checked 
                                     ng-click="actionChangeSafety(item2, item2.seq)">
-                                <input class="form-check-input" 
+                                <input class="form-check-input rounded-2" 
                                     type="checkbox" 
+                                    style="width: 24px; height:24px;"
                                     ng-if="!(item2.approver_type =='approver')" 
                                     ng-click="actionChangeSafetyUnCheck(item2, item2.seq)">
-                                <label class="form-check-label fw-bold" for="approver_safety">(safety)</label>
+                                <label class="form-check-label m-auto fw-bold" for="approver_safety">(safety)</label>
                             </div>
                             <label class="mb-0 ms-3 text-1100 fw-bold" style="width:80%;border-color: #f1f2f4;">{{ item2.user_displayname}}</label>
                         </div>
@@ -2735,13 +2745,13 @@
                 </div>
 
                 <!------------contractor/out source-------------->
-                <div class="modal-header bg-soft" ng-if="!(selectDatFormType =='approver'|| selectDatFormType =='reviewer') && showContractor">
+                <div class="modal-header bg-soft" ng-if="!(selectDatFormType =='approver'|| selectDatFormType =='reviewer') && (showContractor || (data_relatedpeople_outsider | filter:{user_type: selectDatFormType}).length > 1)">
                     <h5 class="text-900 mb-0"> 
                         <span class=" me-2 text-primary"><B>|</B></span>Contracter/Outsouce (if concern)
                     </h5>
                 </div>
                 <div class="modal-body" 
-                    ng-show="(selectDatFormType == 'attendees' || selectDatFormType == 'specialist' || selectDatFormType == 'member') && showContractor">
+                    ng-show="(selectDatFormType == 'attendees' || selectDatFormType == 'specialist' || selectDatFormType == 'member') && (showContractor || (data_relatedpeople_outsider | filter:{user_type: selectDatFormType}).length > 1)">
                     <div class="bg-white border-top border-bottom border-200 position-relative top-1">
                         <div class="table-responsive scrollbar-overlay mx-n1 px-1">
                             <table class="table table-sm fs--1 mb-0">
