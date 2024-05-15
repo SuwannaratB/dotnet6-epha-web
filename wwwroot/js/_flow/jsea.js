@@ -663,12 +663,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         fd.append("file_doc", file_doc);
         fd.append("sub_software", 'jsea');
 
-         // แสดง loading indicator
-        $("#divLoading").show(); 
+ 
 
         try {
-            // ซ่อน loading indicator
-            $("#divLoading").hide();
+            // แสดง loading indicator
+            $("#divLoading").show();
+
 
             const request = new XMLHttpRequest();
             request.open("POST", url_ws + 'Flow/uploadfile_data');
@@ -713,7 +713,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             console.error('Error:', error);
             
         }
-        
+
+        // ซ่อน loading indicator
+        $("#divLoading").hide();
     
         return "";
     }
@@ -4720,7 +4722,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             if (b.approver_type === "approver") return 1;
             return 0;
         });
-        apply();
+        
+        $timeout(function() {
+            apply();
+        }, 100);
     }
 
 
@@ -5070,6 +5075,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     $scope.clearFormData = function() {
         $scope.formData = [];
+        $scope.searchText='';
+        $scope.searchIndicator = {
+            text: ''
+        }        
         //$scope.formData_outsider = [];
     };
 
@@ -5483,7 +5492,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         } catch (error) {}
     });
 
-     $scope.filterFunction = function (type) {
+    $scope.filterFunction = function (type) {
         if (type == 'unit_no') {
             console.log(type)
             $scope.master_unit_no_list = $filter('filter')($scope.master_unit_no, function(item) {
@@ -5503,6 +5512,22 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             });
         }
 
-      }
+    }
+
+    //access each role
+    $scope.canAccess = function(task) {
+        // If user is an admin, allow access
+        if ($scope.flow_role_type === 'admin') {
+            return true;
+        }
+        
+        // If user is an employee and the task belongs to them, allow access
+        if ($scope.flow_role_type === 'employee' && $scope.user_name === task.user_name) {
+            return true;
+        }
+        
+        //originator cant edit?
+        return false;
+    };
 
 });

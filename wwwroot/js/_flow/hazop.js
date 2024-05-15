@@ -544,6 +544,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
 
             var file_path = uploadFileApprover(file, fileSeq, fileName, fileSize, file_part, file_doc);
+            console.log("File path:", file_path);
+    
+            console.log("Next step after file upload");
 
         } else {
             fileInfoSpan.textContent = "";

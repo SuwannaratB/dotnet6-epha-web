@@ -2379,6 +2379,7 @@
 
                                         <tbody class="list" id="customer-rating-table-body">
                                             <tr ng-repeat="item in data_approver | orderBy:['no']"
+                                                ng-class="{ '': canAccess(item), '': !canAccess(item) }"
                                                 ng-if="(item.user_name == user_name ) || (flow_role_type == 'admin')"
                                                 class="hover-actions-trigger btn-reveal-trigger position-static text-center">
 
@@ -2397,7 +2398,9 @@
                                                     </div>
                                                 </td>
                                                 <td class="align-top white-space-nowrap  text-start">
-                                                    <div class="col-md-12 p-1 ps-3 text-start" ng-if="!(item.approver_action_type == 2 || data_header[0].pha_status != 21)   ">
+                                                    <div class="col-md-12 p-1 ps-3 text-start" 
+                                                        ng-class="{ 'no-drop': !canAccess(item), 'cursor-pointer': canAccess(item) }"
+                                                        ng-if="!(item.approver_action_type == 2 || data_header[0].pha_status != 21)   ">
                                                         <div class="form-check form-check-inline cursor-pointer p-0">
                                                             <span class="fa-solid far fa-file-pdf text-danger" style="font-size:15px;"
                                                                   ng-click="confirmExport('jsea_report','pdf')"></span>
@@ -2405,13 +2408,13 @@
                                                                 JSEA Report
                                                             </b>
                                                         </div><br />
-                                                        <div class="form-check form-check-inline">
+                                                        <div class="form-check form-check-inline" ng-class="{ 'cant-Access': !canAccess(item) }">
                                                             <input class="form-check-input" id="inlineRadio-{{item.seq}}" type="radio"
                                                                    name="inlineRadioOptions-{{item.seq}}"
                                                                    value="approve" checked ng-model="item.action_status" />
                                                             <label class="form-check-label" for="inlineRadioApprove-{{item.seq}}"> Approve</label>
                                                         </div>
-                                                        <div class="form-check form-check-inline">
+                                                        <div class="form-check form-check-inline" ng-class="{ 'cant-Access': !canAccess(item) }">
                                                             <input class="form-check-input" id="inlineRadioOptions-{{item.seq}}" type="radio"
                                                                    name="inlineRadioOptions-{{item.seq}}"
                                                                    value="reject" ng-model="item.action_status" />
@@ -2440,8 +2443,12 @@
                                                 </td>
                                                 <td class="align-top white-space-nowrap text-start">
 
-                                                    <div class="col-md-12 p-1 ps-3" ng-if="!(item.approver_action_type == 2 || data_header[0].pha_status != 21)">
-                                                        <textarea class="form-control rounded-1" id="floatingTextarea2" placeholder="Enter your comment"
+                                                    <div class="col-md-12 p-1 ps-3" 
+                                                        ng-class="{ 'no-drop': !canAccess(item), 'cursor-pointer': canAccess(item) }"
+                                                        ng-if="!(item.approver_action_type == 2 || data_header[0].pha_status != 21)">
+                                                        <textarea class="form-control rounded-1" 
+                                                                ng-class="{ 'cant-Access': !canAccess(item) }"
+                                                                id="floatingTextarea2" placeholder="Enter your comment"
                                                                   ng-model="item.comment">  </textarea>
 
                                                         <div id="valid-approver-comment-{{item.seq}}" class="invalid-feedback text-danger">
@@ -2460,6 +2467,7 @@
                                                         @* {{item_x.document_file_size}} xx {{item_x.document_file_name}}   *@
                                                     </div>
                                                     <div class=" p-0 cursor-pointer "
+                                                         ng-class="{ 'no-drop': !canAccess(item), 'cursor-pointer': canAccess(item) }"
                                                          ng-repeat="item_x in data_drawing_approver  | filter:{id_approver : item.seq}  ">
 
                                                         <div class="d-flex flex-nowrap" ng-if="!(item.approver_action_type == 2 || data_header[0].pha_status != 21)">
@@ -2475,8 +2483,9 @@
                                                                         <span class="fas fa-copy"></span>
                                                                         Add
                                                                     </a>
-                                                                    <div class="dropdown-divider"></div><a class="dropdown-item text-danger"
-                                                                                                           ng-click=removeDataApproverDrawing(item_x,item_d.seq)>
+                                                                    <div class="dropdown-divider"></div>
+                                                                        <a class="dropdown-item text-danger"
+                                                                           ng-click=removeDataApproverDrawing(item_x,item_d.seq)>
                                                                         <span class="fas fa-times-circle"></span> Remove
                                                                     </a>
                                                                 </div>
@@ -2544,15 +2553,19 @@
                                                     </div>
                                                 </td>
                                                 <td class="align-top px-0 pt-0 ">
-                                                    <div class="d-flex">
+                                                    <div class="d-flex"
+                                                        ng-class="{ 'no-drop': !canAccess(item), 'cursor-pointer': canAccess(item) }">
 
-                                                        <button class="btn btn-outline text-primary  p-1 m-2 me-0" style=" background-color: #f1f2f4; width:50px;"
+                                                        <button class="btn btn-outline text-primary  p-1 m-2 me-0" 
+                                                                ng-class="{ 'cant-Access': !canAccess(item)}"
+                                                                style=" background-color: #f1f2f4; width:50px;"
                                                                 ng-click="confirmDialogApprover(item,'save')"
                                                                 ng-if="!(item.approver_action_type == 2 || data_header[0].pha_status != 21)">
                                                             <span class="fa fa-save text-primary fa-lg"></span><br /><span style="font-size:8px">Save</span>
                                                         </button>
 
                                                         <button class="btn btn-outline text-success  p-1 m-2 ms-1"
+                                                                ng-class="{ 'cant-Access': !canAccess(item)}"
                                                                 style="background-color: #f1f2f4; width:80px; "
                                                                 ng-click="confirmDialogApprover(item,'submit')"
                                                                 ng-if="!(item.approver_action_type == 2 || data_header[0].pha_status != 21)">
@@ -2810,6 +2823,7 @@
                 <div class="modal-body" ng-if="!(selectDatFormType =='owner' && formData.length > 1)"><!---------------ng-if="!(selectDatFormType =='approver'|| selectDatFormType =='reviewer')"----------->
                     <div class="col-auto py-1"
                         ng-repeat="item2 in formData | filter:{id_session: selectdata_session }" 
+                        ng-class="{ 'slide-in-up': item2.approver_type === 'approver', 'slide-out-down': item2.approver_type !== 'approver' }"
                         ng-if="item2.user_displayname">
                         
                         <div class="d-flex align-items-center p-1">
@@ -2827,13 +2841,13 @@
                                 <span class="fa-regular fa-trash-can"></span>
                             </button>
                             <div class="form-check mb-0 ms-2 text-1100 fw-bold d-flex align-contents-center" ng-if="selectDatFormType == 'approver'">
-                                <input class="form-check-input disabled-link rounded-2" 
+                                <input class="form-check-input disabled-link rounded-2 cursor-pointer" 
                                     style="width: 24px; height:24px;"
                                     type="checkbox" 
                                     ng-if="item2.approver_type =='approver'" 
                                     checked 
                                     ng-click="actionChangeSafety(item2, item2.seq)">
-                                <input class="form-check-input rounded-2" 
+                                <input class="form-check-input rounded-2 cursor-pointer" 
                                     type="checkbox" 
                                     style="width: 24px; height:24px;"
                                     ng-if="!(item2.approver_type =='approver')" 
