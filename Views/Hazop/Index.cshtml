@@ -870,8 +870,41 @@
 
                                                     <td class="align-middle white-space col-3">
 
-                                                        <div class="uploadbox align-items-center cursor-pointer">
-                                                            <div class="col-12 align-items-center p-1 cursor-pointer ">
+                                                        <div class="uploadbox align-items-center ms-0 cursor-pointer">
+                                                            <div class="btn-group">
+                                                                <div class="icon-button border p-3" style="border-color: #0d6efd; background-color: #0d6efd;">
+                                                                    <span class="fa-solid fa-arrow-up-from-bracket fa-lg" style="color: #ffffff;"></span>
+                                                                </div>
+                                                                <button class="Upload-button btn ps-3 p-2"  ng-if="!item.document_file_size">
+                                                                    <label class="dz-message-text  fw-bold cursor-pointer"
+                                                                        for="attfile-{{item.seq}}" ng-class="{'d-none':(!tab_general_active)}">
+                                                                        Upload File(Word, Excel, PDF, Image)
+                                                                    </label>
+                                                                    <input type="file" id="attfile-{{item.seq}}"
+                                                                        name="file{{item.seq}}"
+                                                                        onchange="angular.element(this).scope().fileSelect(this,'drawing')"
+                                                                        style="display:none" />
+                                                                </button>
+                                                                <button class="Upload-button btn ps-3 p-2" ng-if="item.document_file_size > 0">
+                                                                    <div class="d-flex align-items-center">
+                                                                        <span class="mr-3 nametext"
+                                                                            id="filename{{item.seq}}" 
+                                                                            ng-class="{'d-none':(!tab_general_active)}"
+                                                                            ng-click="downloadFile(item)"
+                                                                            ng-if="item.document_file_size>0">
+                                                                                <b style="font-size:x-small;">
+                                                                                    {{(item.document_file_size>0? item.document_file_name + '('+  item.document_file_size + 'KB)' : '')}}
+                                                                                </b>
+                                                                        </span>
+                                                                        <a id="del-{{item.seq}}" class="btn btn-link text-danger"
+                                                                            ng-class="{'d-none':(!tab_general_active)}"
+                                                                            ng-click="clearFileName(item.seq)"><!--------- ng-if="status_upload"-------------->
+                                                                        <span class="fa-regular fa-trash-can fa-lg"></span>
+                                                                        </a> 
+                                                                    </div>
+                                                                </button>
+                                                            </div>                                                              
+                                                            @*<div class="col-12 align-items-center p-1 cursor-pointer ">
 
                                                                 <span class="mr-3 nametext text-primary" id="filename{{item.seq}}"
                                                                       ng-class="{'d-none':(!tab_general_active)}"
@@ -901,7 +934,7 @@
                                                                     <i class="far fa-file-pdf text-danger"></i>
                                                                 </a>
 
-                                                            </div>
+                                                            </div>*@
 
                                                         </div>
 

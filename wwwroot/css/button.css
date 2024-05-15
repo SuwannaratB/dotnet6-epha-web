@@ -150,6 +150,10 @@
     vertical-align: middle;
 }
 
+.nametext:hover{
+    color: #ffffff;
+}
+
 
 .fa-download {
     color: #ffffff;

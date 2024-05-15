@@ -555,6 +555,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
 
     $scope.fileSelectApprover = function (input, file_part) {
+        console.log(input, file_part)
         //drawing, responder, approver
         var file_doc = $scope.data_header[0].pha_no;
 
@@ -579,6 +580,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         } else {
             fileInfoSpan.textContent = "";
         }
+
     }
 
     function uploadFile(file_obj, seq, file_name, file_size, file_part, file_doc) {
@@ -661,59 +663,75 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         return "";
     }
+    
 
     function uploadFileApprover(file_obj, seq, file_name, file_size, file_part, file_doc) {
-
+        console.log(file_obj, seq, file_name, file_size, file_part, file_doc)
         var fd = new FormData();
-        //Take the first selected file
+        // Take the first selected file
         fd.append("file_obj", file_obj);
         fd.append("file_seq", seq);
         fd.append("file_name", file_name);
         fd.append("file_doc", file_doc);
-        fd.append("file_part", file_part);//drawing, responder, approver
+        fd.append("file_part", file_part); // drawing, responder, approver
         fd.append("file_doc", file_doc);
         fd.append("sub_software", 'jsea');
 
+         // แสดง loading indicator
+        $("#divLoading").show(); 
+
         try {
+            // ซ่อน loading indicator
+            $("#divLoading").hide();
+
             const request = new XMLHttpRequest();
             request.open("POST", url_ws + 'Flow/uploadfile_data');
+    
+            request.onreadystatechange = function() {
 
-            request.onreadystatechange = function () {
                 if (request.readyState === XMLHttpRequest.DONE) {
+                
                     if (request.status === 200) {
                         // รับค่าที่ส่งมาจาก service ที่ตอบกลับมาด้วย responseText
                         const responseFromService = request.responseText;
                         // ทำอะไรกับข้อมูลที่ได้รับเช่น แสดงผลหรือประมวลผลต่อไป
-                        console.log(responseFromService);
-
+                        console.log("responseFromService", responseFromService);
+    
                         const jsonArray = JSON.parse(responseFromService);
-
+    
                         var file_name = jsonArray[0].ATTACHED_FILE_NAME;
                         var file_path = jsonArray[0].ATTACHED_FILE_PATH;
-
-                        var arr = $filter('filter')($scope.data_drawing_approver, function (item) { return (item.seq == seq); });
+    
+                        var arr = $filter('filter')($scope.data_drawing_approver, function(item) {
+                            return (item.seq == seq);
+                        });
                         if (arr.length > 0) {
                             arr[0].document_file_name = file_name;
                             arr[0].document_file_size = file_size;
-                            arr[0].document_file_path = (url_ws.replace('/api/', '')) + file_path;// (url_ws.replace('/api/', '/')) + 'AttachedFileTemp/Hazop/' + file_name;
+                            arr[0].document_file_path = (url_ws.replace('/api/', '')) + file_path; //(url_ws.replace('/api/', '/')) + 'AttachedFileTemp/Hazop/' + file_name;
                             arr[0].document_module = 'approver';
                             arr[0].action_change = 1;
                             apply();
-
                         }
+                        console.log("show arr", arr)
                     } else {
                         // กรณีเกิดข้อผิดพลาดในการร้องขอไปยัง server
                         console.error('มีข้อผิดพลาด: ' + request.status);
                     }
                 }
             };
-
+    
             request.send(fd);
-
-        } catch { }
-
+        } catch (error) {
+            $("#divLoading").hide();
+            console.error('Error:', error);
+            
+        }
+        
+    
         return "";
     }
+    
 
     //  scroll  table header freezer 
     $scope.handleScroll = function () {
@@ -4334,6 +4352,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.data_drawing_delete[i].action_type = 'delete';
             arr_json.push($scope.data_drawing_delete[i]);
         }
+
+        console.log("$scope.data_drawing",$scope.data_drawing)
         return angular.toJson(arr_json);
     }
 
@@ -5312,25 +5332,27 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
 
     $scope.downloadFile = function (item) {
-        console.log(item)
-
         //<b>{{(item.document_file_size>0? item.document_file_name + '('+  item.document_file_size + 'KB)' : '')}}</b>
 
         //document_file_name:"HAZOP Report 202311281602.pdf"
         //document_file_path:"https://localhost:7098/AttachedFileTemp/hazop/HAZOP-2023-0000001-DRAWING-202312251052.PDF"
         //document_file_size:288
-
-        if (item.document_file_name != '') {
-            //var path = (url_ws).replace('/api/', '') + item.document_file_path;
+        if (item.document_file_name && item.document_file_name !== '') {
+            console.log("here it call this document_file_name")
             var path = item.document_file_path;
             var name = item.document_file_name;
-
-            $scope.exportfile[0].DownloadPath = path;
-            $scope.exportfile[0].Name = name;
-
-            $('#modalExportFile').modal('show');
-            apply();
+        } else {
+            console.log("here it call this file_upload_name")
+            var path = item.file_upload_path;
+            var name = item.file_upload_name;
         }
+        
+        $scope.exportfile[0].DownloadPath = path;
+        $scope.exportfile[0].Name = name;
+        $('#modalExportFile').modal('show');
+
+        apply();
+
     }
     $scope.downloadFileOwner = function (item) {
         //  alert(1);
