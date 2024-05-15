@@ -314,7 +314,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
 
     $scope.fileUploadSelectTemplate = function (input) {
-        console.log("input",input)
         var file_doc = $scope.data_header[0].pha_no;
         const fileInput = input;
         const fileSeq = fileInput.id.split('-')[1];
@@ -330,7 +329,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             fileInfoSpan.textContent = `${shortenedFileName} (${fileSize} KB)`;
 
 
-            if (fileName.toLowerCase().indexOf('.xlsx') == -1) {
+            if (fileName.toLowerCase().indexOf('.xlsx') == -1 && fileName.toLowerCase().indexOf('.xls') == -1) {
                 fileInfoSpan.textContent = "";
                 set_alert('Warning', 'Please select a Excle file.');
                 return;
@@ -345,21 +344,20 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             fd.append("sub_software", 'jsea');
 
             try {
+                $("#divLoading").show(); 
                 const request = new XMLHttpRequest();
                 request.open("POST", url_ws + 'Flow/importfile_data_jsea');
                 //request.send(fd);
 
                 request.onreadystatechange = function () {
                     if (request.readyState === XMLHttpRequest.DONE) {
+                        $("#divLoading").show(); 
                         if (request.status === 200) {
-
                             // รับค่าที่ส่งมาจาก service ที่ตอบกลับมาด้วย responseText
                             const responseFromService = request.responseText;
                             const array = JSON.parse(responseFromService);
 
                             if (true) {
-
-                                console.log(array)
                                 var file_name = array.msg[0].ATTACHED_FILE_NAME;
                                 var file_path = array.msg[0].ATTACHED_FILE_PATH;
 
@@ -367,14 +365,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                                 $scope.data_general[0].file_upload_size = fileSize;
                                 $scope.data_general[0].file_upload_path = (url_ws.replace('/api/', '')) + file_path;
                                 $scope.data_general[0].action_change = 1;
-                                
                                 set_data_general()
-
-                                console.log("data_general", $scope.data_general)
                             }
 
                             if (array.max) {
-
                                 var arr = $filter('filter')(array.max, function (item) { return (item.name == 'memberteam'); });
                                 var iMaxSeq = 1; if (arr.length > 0) { iMaxSeq = arr[0].values; }
                                 $scope.MaxSeqDataMemberteam = iMaxSeq;
@@ -387,13 +381,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                                 var arr = $filter('filter')(array.max, function (item) { return (item.name == 'tasks_worksheet'); });
                                 var iMaxSeq = 1; if (arr.length > 0) { iMaxSeq = arr[0].values; }
                                 $scope.MaxSeqdata_listworksheet = iMaxSeq;
-
-
                             }
+
                             if (true) {
-
                                 var id_session = $scope.selectdata_session;
-
                                 if (array.memberteam) {
                                     $scope.data_memberteam_old = [];
                                     angular.copy($scope.data_memberteam, $scope.data_memberteam_old);
@@ -403,9 +394,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                                     });
 
                                     $scope.data_memberteam = [...$scope.data_memberteam, ...array.memberteam]; 
-                                    
-                                    //console.log("check array memberteam", array.memberteam, "check memberteam", $scope.data_memberteam);
-                                    
+                                    //console.log("check array memberteam", array.memberteam, "check memberteam", $scope.data_memberteam);  
                                 }
                                 if (array.approver) {
                                     $scope.data_approver_old = [];
@@ -416,7 +405,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                                     });
 
                                     $scope.data_approver = [...$scope.data_approver,...array.approver]; 
-
                                     // Remove duplicates based on id
                                     $scope.data_approver = $scope.data_approver.reduce((acc, current) => {
                                         const existingItem = acc.find(item => item.id === current.id);
@@ -430,13 +418,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                                 if (array.relatedpeople_outsider) {
                                     //$scope.data_approver_old = [];
                                     //angular.copy($scope.data_approver, $scope.data_approver_old);
-
                                     array.relatedpeople_outsider.forEach(function (approver) {
                                         approver.id_session = id_session; // newValue คือค่าที่คุณต้องการให้ id_session อัปเดตเป็น
                                     });
 
                                     $scope.data_relatedpeople_outsider = [...$scope.data_relatedpeople_outsider,...array.relatedpeople_outsider]; 
-
                                     // Remove duplicates based on id
                                     $scope.data_relatedpeople_outsider = $scope.data_relatedpeople_outsider.reduce((acc, current) => {
                                         const existingItem = acc.find(item => item.id === current.id);
@@ -445,16 +431,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                                         }
                                         return acc;
                                     }, []);
-
                                     console.log("check array relatedpeople", array.relatedpeople_outsider, "check relatedpeoplem",  $scope.data_relatedpeople_outsider);                                                                     
                                 }
                                 if (array.tasks_worksheet) {
                                     //old data 
                                     angular.copy($scope.data_listworksheet, $scope.data_listworksheet_delete);
-
                                     $scope.data_listworksheet = JSON.parse(replace_hashKey_arr(array.tasks_worksheet));
                                     $scope.data_listworksheet_def = clone_arr_newrow(array.tasks_worksheet);
-
                                 }
                             } 
                             unsavedChanges = true;
@@ -466,25 +449,22 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                             // กรณีเกิดข้อผิดพลาดในการร้องขอไปยัง server
                             console.error('มีข้อผิดพลาด: ' + request.status);
                         }
+                        $("#divLoading").hide(); 
                     }
                 };
 
                 request.send(fd);
 
-            } catch { }
-
-
-
-
+            } catch { 
+                $("#divLoading").hide(); 
+             }
         } else {
             fileInfoSpan.textContent = "";
         }
     }
     $scope.fileSelect = function (input, file_part) {
-        console.log(input, file_part)
         //drawing, responder, approver
         var file_doc = $scope.data_header[0].pha_no;
-
         const fileInput = input;
         const fileSeq = fileInput.id.split('-')[1];
         const fileInfoSpan = document.getElementById('filename' + fileSeq);
@@ -495,13 +475,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             const fileSize = Math.round(file.size / 1024);
             try {
                 //fileInfoSpan.textContent = `${fileName} (${fileSize} KB)`;
-
-
                 let shortenedFileName = fileName.length > 20 ? fileName.substring(0, 20) + '...' : fileName;
                 fileInfoSpan.textContent = `${shortenedFileName} (${fileSize} KB)`;
 
+            } catch {
 
-            } catch { }
+             }
+
             if (file) {
                 const allowedFileTypes = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'jpg', 'png', 'gif']; // รายการของประเภทของไฟล์ที่อนุญาตให้แนบ
 
@@ -524,7 +504,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         } else {
             fileInfoSpan.textContent = "";
         }
+        // $("#divLoading").hide(); 
     }
+
     $scope.fileSelectRAM = function (input) {
 
         const fileInput = input;
@@ -596,6 +578,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         fd.append("sub_software", 'jsea');
 
         try {
+            $("#divLoading").show(); 
             const request = new XMLHttpRequest();
             request.open("POST", url_ws + 'Flow/uploadfile_data');
             //request.send(fd);
@@ -628,12 +611,15 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         // กรณีเกิดข้อผิดพลาดในการร้องขอไปยัง server
                         console.error('มีข้อผิดพลาด: ' + request.status);
                     }
+                    $("#divLoading").hide(); 
                 }
             };
 
             request.send(fd);
 
-        } catch { }
+        } catch { 
+            $("#divLoading").hide(); 
+        }
 
         return "";
     }
