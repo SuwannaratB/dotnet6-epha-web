@@ -756,29 +756,29 @@
                                                             </tr>
                                                         </thead>
                                                         <tbody class="customer-rating-table-body">
-                                                            <tr class="hover-actions-trigger btn-reveal-trigger position-static rowwork"
-                                                                ng-repeat="item_h in data_results">
+                                                            <tr class="hover-actions-trigger btn-reveal-trigger position-static rowwork hover-highlight"
+                                                                ng-repeat="item_h in data_results" >
 
                                                                 <td class="align-top text-end">
                                                                     @* {{item_h.pha_status}} *@
                                                                     <div class="d-flex p-1" ng-if="!(item_h.pha_no == null || item_h.pha_no =='')">
-                                                                        <button class="btn btn-outline text-secondary p-1 "
-                                                                                @* style=" background-color: #f1f2f4; " *@
+                                                                        <button class="btn btn-outline text-secondary p-1 btn-search"
+                                                                                style=" width:30px;  "
                                                                                 ng-click="confirmExport(item_h,'pdf')"
                                                                                 ng-class="{'disabled-link text-secondary':(!(item_h.pha_status>11))}"
                                                                                 data-toggle="tooltip" 
                                                                                 data-placement="top" 
                                                                                 title="Export PDF">
-                                                                            <span class="fa-solid fa-file-arrow-down fa-lg"></span>
-                                                                        </button>
-                                                                        <button class="btn btn-outline text-primary p-1 ms-1" 
-                                                                                @* style=" background-color: #f1f2f4; " *@
+                                                                            <span  class="fa-solid fa-file-pdf fa-xl" style="color: #ff1a1a;"></span>
+                                                                       </button>
+                                                                        <button class="btn btn-outline text-primary p-1 ms-1  btn-search" 
                                                                                 ng-click="selectDoc(item_h)"
                                                                                 data-toggle="tooltip" 
                                                                                 data-placement="top" 
                                                                                 title="View Detail">
-                                                                                <span class="fa-solid fa-circle-info fa-lg"></span>
-                                                                            @* See Details *@
+                                                                            <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                                                                                <path d="M5.027 10.9a8.729 8.729 0 0 1 6.422-3.62v-1.2A2.061 2.061 0 0 1 12.61 4.2a1.986 1.986 0 0 1 2.104.23l5.491 4.308a2.11 2.11 0 0 1 .588 2.566 2.109 2.109 0 0 1-.588.734l-5.489 4.308a1.983 1.983 0 0 1-2.104.228 2.065 2.065 0 0 1-1.16-1.876v-.942c-5.33 1.284-6.212 5.251-6.25 5.441a1 1 0 0 1-.923.806h-.06a1.003 1.003 0 0 1-.955-.7A10.221 10.221 0 0 1 5.027 10.9Z"/>
+                                                                            </svg>                                                                        
                                                                         </button>
                                                                     </div>
                                                                 </td>
@@ -815,29 +815,40 @@
                                                                     </div>
                                                                 </td>
 
-                                                                <td class="align-top">
-                                                                    <div class="d-flex p-1" ng-if="(item_h.pha_request_by == user_name || flow_role_type == 'admin') && !(item_h.pha_status==81) ">
-                                                                        <span class="mx-1">
-                                                                            <button class="btn btn-outline text-primary p-1 ms-1" 
-                                                                                    title="Copy PHA No."
-                                                                                    ng-click="selectManageDocument(item_h,'copy')">
-                                                                                <span class="fa-solid fa-copy fa-lg"></span>
-                                                                            </button>
-                                                                        </span>
-                                                                        <span class="mx-1">
-                                                                            <button class="btn btn-outline text-danger p-1 ms-1" 
-                                                                                    title="Cancel PHA No."
-                                                                                    ng-click="selectManageDocument(item_h,'cancel')"> 
-                                                                                <span class="fa-solid fa-ban fa-lg"></span>
-                                                                            </button>
-                                                                        </span>
-                                                                        <span class="mx-1" ng-if="item_h.pha_status == 13 && (flow_role_type == 'admin' || flow_role_type == 'originator')">
-                                                                            <button class="btn btn-outline text-secondery p-1 ms-1" 
-                                                                                    title="Edit PHA"
+                                                                <td class="align-top ps-0">
+                                                                    <div>
+                                                                        <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 text-align-end p-1"
+                                                                                type="button" 
+                                                                                data-bs-toggle="dropdown" 
+                                                                                data-boundary="window" 
+                                                                                aria-haspopup="true"
+                                                                                aria-expanded="false" 
+                                                                                data-bs-reference="parent"
+                                                                                data-toggle="tooltip" 
+                                                                                data-placement="top" 
+                                                                                title="Options">
+                                                                            <span class="fa-solid fa-ellipsis fa-xl"></span>
+                                                                        </button>
+                                                                        <div class="dropdown-menu dropdown-menu-end py-2 align-top">
+                                                                            <a class="dropdown-item text-success"
+                                                                                ng-click="selectManageDocument(item_h,'copy')">
+                                                                                <span class="fas fa-copy"></span>
+                                                                                Copy
+                                                                            </a>
+                                                                        <div class="dropdown-divider " ng-if="!(item.consequences_no  == 1)"></div> 
+                                                                                <a class="dropdown-item text-primary" 
+                                                                                    ng-click="selectManageDocument(item_h,'cancel')"
+                                                                                    ng-if="item.consequences_no > 1">
+                                                                                    <span class="fa-solid fa-ban"></span>
+                                                                                    Cancel PHA No.
+                                                                                </a>
+                                                                            <div class="dropdown-divider" ng-if="item_h.pha_status == 13 && (flow_role_type == 'admin' || flow_role_type == 'originator')"></div>        
+                                                                                <a class="dropdown-item" 
                                                                                     ng-click="editDoc(item_h)">
-                                                                                <span class="fa-solid fa-pen fa-lg"></span>
-                                                                            </button>
-                                                                        </span>
+                                                                                    <span class="fa-solid fa-file-pen"></span>
+                                                                                    Edit
+                                                                                </a>
+                                                                        </div>                                                                        
                                                                     </div>
                                                                 </td>
                                                             </tr>

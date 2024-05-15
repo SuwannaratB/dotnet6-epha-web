@@ -93,7 +93,67 @@
 }*/
 
 
+/*new export file for jsea*/
+.btn-group .icon-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.375rem 0 0 0.375rem;
+    margin: 0;
+}
 
+.btn-group .Download-button {
+    border-radius: 0 0.375rem 0.375rem 0; 
+    margin: 0;
+    border-color: #ff1a1a;
+    background-color: #ffffff;
+    color: #ff1a1a;
+    transition: background-color 0.3s ease, opacity 0.3s ease; 
+}
+
+.btn-group .Download-button:hover {
+    background-color: #ff1a1a;
+    color: #ffffff;
+    opacity: 0.5;
+}
+
+.btn-group .Upload-button {
+    border-radius: 0 0.375rem 0.375rem 0; 
+    margin: 0;
+    border-color: #0d6efd;
+    background-color: #ffffff;
+    color: #0d6efd;
+    transition: background-color 0.3s ease, opacity 0.3s ease; 
+}
+.btn-group .Upload-button:hover {
+    background-color: #0d6efd;
+    color: #ffffff;
+    opacity: 0.5;
+}
+.Upload-button .label{
+    color: #ffffff;
+}
+.btn-group .Upload-show{
+    border-radius: 0 0.375rem 0.375rem 0;
+    margin: 0;
+    border-color: #0d6efd;
+    background-color: #ffffff;
+    color: #0d6efd;
+    transition: background-color 0.3s ease, opacity 0.3s ease;  
+}
+.nametext {
+    display: inline-block;
+    max-width: 200px; 
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: middle;
+}
+
+
+.fa-download {
+    color: #ffffff;
+}
 
 
 

@@ -3577,10 +3577,16 @@
                                                     ng-repeat="item in employeelist_show">
 
                                                     <td class="">
-                                                        <a class="dropdown-item text-primary cursor-pointer"
-                                                        ng-click="choosDataEmployee(item)">
-                                                            Add
-                                                        </a>
+                                                        <span class="mx-1">
+                                                            <button class="btn btn-outline-secondary p-1 cursor-pointer" 
+                                                                    style="color: #0abe0a; background-color: #f1f2f4; border-color: #0abe0a;"
+                                                                    data-toggle="tooltip" 
+                                                                    data-placement="top" 
+                                                                    title="choose Employee"
+                                                                    ng-click="choosDataEmployee(item)">
+                                                                <span class="fa-solid fa-user-plus">Add</span>
+                                                            </button>
+                                                        </span>
                                                     </td>
 
                                                     <td class="">
@@ -3599,12 +3605,19 @@
                                                     <td class="">{{item.employee_type}}</td>
 
                                                 </tr>
+                                                <!-- Show "please enter" message  -->
+                                                <tr ng-if="!searchText && !searchIndicator.text">
+                                                    <td colspan="5">
+                                                        <p class="mb-0 ms-3 text-muted fw-bold text-center"> Enter employee details to search. </p>
+                                                    </td>
+                                                </tr>
+
                                                 <!-- Show "Not Found" message when employeelist_show is empty or the first item is null -->
                                                 <tr ng-if="employeelist_show[0].employee_displayname === null">
                                                     <td colspan="5">
                                                         <p class="mb-0 ms-3 text-1100 fw-bold text-center"> Not Found </p>
                                                     </td>
-                                                </tr>                                    
+                                                </tr>                                   
                                         </tbody>
                                     </table>
                                 </div>
@@ -3632,15 +3645,11 @@
                 </div>
 
                 <div class="modal-body">
-                    <div class="col-auto" ng-repeat="item2 in (selectDatFormType === 'member' ? data_memberteam : data_approver) | filter:{id_session: selectdata_session }"
+                    <div class="col-auto py-2" ng-repeat="item2 in (selectDatFormType === 'member' ? data_memberteam : data_approver) | filter:{id_session: selectdata_session }"
                         ng-if="!(item2.user_displayname == '' || item2.user_displayname == null)">
                         <div class="d-flex align-items-center p-1" style="height: 20px;">
-                            <button id="del-{{item2.seq}}" class="btn btn-link text-danger" ng-class="{'d-none': (!tab_general_active)}"
-                                    ng-click="removeDataEmployee(item2.seq, selectdata_session)">
-                                Remove
-                            </button>
-                             <button class="btn btn-outline-secondary p-2" id="del-{{item2.seq}}"
-                                    style="color: #ff2828; background-color: #f1f2f4; border-color: #ff2828;"
+                             <button class="btn btn-outline-secondary p-1" 
+                                    style="color: #ff2828; background-color: #f1f2f4; border-color: #ff2828; width: 25px; height:25px;"
                                     data-toggle="tooltip" 
                                     data-placement="top" 
                                     title="Remove"

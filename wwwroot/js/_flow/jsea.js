@@ -314,6 +314,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
 
     $scope.fileUploadSelectTemplate = function (input) {
+        console.log("input",input)
         var file_doc = $scope.data_header[0].pha_no;
         const fileInput = input;
         const fileSeq = fileInput.id.split('-')[1];
@@ -480,6 +481,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
     }
     $scope.fileSelect = function (input, file_part) {
+        console.log(input, file_part)
         //drawing, responder, approver
         var file_doc = $scope.data_header[0].pha_no;
 
@@ -5310,6 +5312,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
 
     $scope.downloadFile = function (item) {
+        console.log(item)
 
         //<b>{{(item.document_file_size>0? item.document_file_name + '('+  item.document_file_size + 'KB)' : '')}}</b>
 
