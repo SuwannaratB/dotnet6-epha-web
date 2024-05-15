@@ -1790,7 +1790,7 @@
 
                             <div class="border-bottom" id="fullscreenzone" style="background-color: #ffffff;">
                                 <div class="table-responsive scrollbar tableFixHead" style="min-height:400px">
-                                    <table class="table fs--2 mb-0 table-bordered" cellpadding="0" cellspacing="0">
+                                    <table class="table fs--2 mb-0 table-borderless table-condensed " cellpadding="0" cellspacing="0">
                                         <thead class="text-uppercase  text-center py-8 bg-soft" style="font-size: 10px;" id="myHeader">
                                             <tr class="">
                                                 <th class="align-middle mx-0" colspan="1" rowspan="2" style="padding: 0 !important; width: 8%;"
@@ -1822,12 +1822,18 @@
                                             </tr>
                                         </thead>
                                         <tbody class="">
-                                            <tr class="rowwork border border-dashed"
+                                            <tr class="rowwork border border-dashed border-top-0 border-bottom-0"
+                                                @* ng-class="{ 'border-active': (data_listworksheet.length - 1 == $index ) }" *@
                                                 ng-repeat="item in data_listworksheet | orderBy:'no'">
 
                                                 @* workstep *@
-                                                <td class="align-top border border-light border-end-0  border-start-0 border-top-0"
-                                                    style="padding: 0 !important; width: 200px; max-width:300px;">
+                                                <td class="align-top "
+                                                    style="padding: 0 !important; width: 200px; max-width:300px;"
+                                                    ng-class="{ 'border-active': 
+                                                                ( item.taskdesc_no == item.no - item.index_rows ) && 
+                                                                ( item.potentailhazard_no == item.no - item.index_rows ) &&
+                                                                ( item.possiblecase_no == item.no - item.index_rows )}" 
+                                                    >
                                                     <div class="d-flex align-items-top w-100" ng-if="item.row_type =='workstep' ">
                                                         <div>
                                                             <p class="p-0 m-0 me-1 text-end">{{item.workstep_no +'.'}}</p>
@@ -1888,11 +1894,13 @@
                                                             <span class="fa-regular fa-lightbulb fa-lg"></span>
                                                         </div>
                                                     </div>
-                                                </td>
+                                                </>
 
                                                 @* taskdesc *@
-                                                <td class="align-top border border-light border-end-0  border-start-0 border-top-0 " 
-                                                    style="padding: 0 !important; width: 200px; max-width:300px;">
+                                                <td class="align-top border-col2-active" 
+                                                    style="padding: 0 !important; width: 200px; max-width:300px;"
+                                                     ng-class="{ 'border-active': ( item.potentailhazard_no == item.no - item.index_rows ) && ( item.possiblecase_no == item.no - item.index_rows )}" 
+                                                     >
                                                     <div class="d-flex align-items-top w-100" ng-if="item.row_type =='workstep' || item.row_type =='taskdesc'">
                                                         <div>
                                                             <p class="p-0 m-0 me-1 text-end">{{item.workstep_no +'.'+item.taskdesc_no +'.'}}</p>
@@ -1952,7 +1960,9 @@
                                                 </td>
 
                                                 @* potentailhazard *@
-                                                <td class="align-top border border-light border-end-0  border-start-0  border-top-0 " style="padding: 0 !important; width: 200px; max-width:300px;">
+                                                <td class="align-top border-col3-active" style="padding: 0 !important; width: 200px; max-width:300px;"
+                                                    ng-class="{ 'border-active': ( item.possiblecase_no == item.no - item.index_rows )}" 
+                                                     >
                                                     <div class="d-flex align-items-top w-100" ng-if="item.row_type =='workstep' || item.row_type =='taskdesc' || item.row_type =='potentailhazard'">
                                                         <div>
                                                             <p class="p-0 m-0 me-1 text-end">{{item.workstep_no  + '.'+item.taskdesc_no + '.'+item.potentailhazard_no +'.'}}</p>
@@ -2014,7 +2024,7 @@
                                                 </td>
 
                                                 @* possiblecase *@
-                                                <td class="align-top border border-light border-end-0  border-start-0  border-top-0 " style="padding: 0 !important; width: 200px; max-width:300px;">
+                                                <td class="align-top border-col3-active border-active " style="padding: 0 !important; width: 200px; max-width:300px;">
                                                     <div class="d-flex align-items-top w-100" ng-if="item.row_type =='workstep' || item.row_type =='taskdesc' || item.row_type =='potentailhazard' || item.row_type =='possiblecase'">
                                                         <div>
                                                             <p class="p-0 m-0 me-1 text-end">{{item.workstep_no  + '.'+item.taskdesc_no + '.'+item.potentailhazard_no + '.' + item.possiblecase_no +'.'}}</p>
