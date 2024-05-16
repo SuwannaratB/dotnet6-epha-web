@@ -2210,22 +2210,22 @@
                                                                     <span ng-if="item.ram_befor_security && item.ram_befor_likelihood">/</span> 
                                                                     {{item.ram_befor_likelihood}}
                                                                 </h6> 
-                                                                <span class="fas fa-pencil-alt fa-sm" style=" width: 8px;"></span> 
                                                             </div>
                                                         </button>
                                                     </div>
                                                 </td>
 
                                                 <td class="align-top border border-light border-end-0  border-start-0  border-top-0 "
-                                                    style="padding: 0 !important; width: 25px;">
-                                                    <div class="align-items-center text-end mt-1" style=" width: 25px;">
+                                                    style="padding: 0 !important; width: 30px;">
+                                                    <div class="align-items-center text-end mt-1" style=" width: 30px;">
                                                         <button ng-style=" { 'background-color' : ((item.ram_befor_risk == 'H') ? 'red' : ((item.ram_befor_risk == 'M') ? 'yellow' : ((item.ram_befor_risk == 'L') ? 'green' : '#D3D3D3')) ) }"
                                                                 class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end"
                                                                 type="button" 
                                                                 ng-click="openModalDataRAM_Worksheet(item,'r',item.seq,'befor')" 
-                                                                style="width: 25px;">
-                                                            <div class="text-center" style=" width: 25px;">
+                                                                style="width: 30px;">
+                                                            <div class="d-flex text-center" style=" width: 25px;">
                                                                 <h6 class="me-1 text-center" style=" width: 25px;">{{item.ram_befor_risk}}</h6>
+                                                                <span class="fas fa-pencil-alt fa-sm " style=" width: 10px;"></span>
                                                             </div>
                                                         </button>
                                                     </div>
@@ -2271,7 +2271,7 @@
 
                                                 @* responder *@
                                                 <td class="align-top border border-light border-end-0  border-start-0  border-top-0 "
-                                                    style="padding: 0 !important; width: 200px; max-width:400px;">
+                                                    style="padding: 0 !important; width: 150px; max-width:350px;">
                                                     <div class="d-flex align-items-top w-100"
                                                          ng-if="item.row_type =='workstep' || item.row_type =='taskdesc' || item.row_type =='potentailhazard' || item.row_type =='possiblecase' ">
                                                         @* {{item.responder_action_by}} *@
@@ -2321,24 +2321,22 @@
                                                                     <span ng-if="item.ram_after_security && item.ram_after_likelihood">/</span>
                                                                      {{item.ram_after_likelihood}}
                                                                 </h6> 
-                                                                <span class="fas fa-pencil-alt fa-sm" style=" width: 8px;"></span> 
                                                             </div>
                                                         </button>
                                                     </div>
                                                 </td>
 
                                                 <td class="align-top border border-light border-end-0  border-start-0  border-top-0 "
-                                                    style="padding: 0 !important; width: 25px;">
-                                                    <div class="align-items-center text-end mt-1" style=" width: 25px;">
+                                                    style="padding: 0 !important; width: 30px;">
+                                                    <div class="align-items-center text-end mt-1" style=" width: 30px;">
                                                         <button ng-style=" { 'background-color' : ((item.ram_after_risk == 'H') ? 'red' : ((item.ram_after_risk == 'M') ? 'yellow' : ((item.ram_after_risk == 'L') ? 'green' : '#D3D3D3')) ) }"
                                                                 class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end"
                                                                 type="button" 
                                                                 ng-click="openModalDataRAM_Worksheet(item,'r',item.seq,'after')" 
-                                                                style="width: 25px;">
+                                                                style="width: 30px;">
                                                             <div class="text-center" style=" width: 25px;">
-                                                                <h6 class="me-1 text-center" style=" width: 25px;">
-                                                                    {{item.ram_after_risk}}
-                                                                </h6>
+                                                                <h6 class="me-1 text-center" style=" width: 25px;">{{item.ram_after_risk}}</h6>
+                                                                <span class="fas fa-pencil-alt fa-sm " style=" width: 10px;"></span>
                                                             </div>
                                                         </button>
                                                     </div>

@@ -1334,6 +1334,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
 
     function save_data_approver(action) {
+        unsavedChanges = false;
 
         var user_name = $scope.user_name;
         var token_doc = $scope.token_doc + "";
@@ -3968,8 +3969,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
 
     $scope.confirmDialogApprover = function (_item, action) {
-
+        $scope.data_drawing_approver.forEach(function(item) {
+            item.action_type === 'new' ? 'insert' : item.action_type;
+        });
+        
         var arr_chk = _item;
+        console.log("_item",_item)
         $scope.item_approver_active = [];
         $scope.item_approver_active.push(_item);
         apply();
@@ -5430,9 +5435,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         var index = $scope.data_drawing_approver.findIndex(function(item) {
             return item.seq === seq;
         });
-    
+        console.log($scope.data_drawing_approver.length)
         if (index !== -1) {
             if ($scope.data_drawing_approver[index].action_type === "new") {
+                $scope.data_drawing_approver.splice(index, 1);
+            } else if($scope.data_drawing_approver[index].action_type === "update" && $scope.data_drawing_approver.length>2) {
                 $scope.data_drawing_approver.splice(index, 1);
             } else {
                 $scope.data_drawing_approver[index].document_file_name = null;
