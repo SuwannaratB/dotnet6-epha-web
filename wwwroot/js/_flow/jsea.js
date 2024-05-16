@@ -148,6 +148,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 event.preventDefault();
             }
         }
+
+        console.log("unsavedChanges",unsavedChanges)
     });
 
     // close tab / browser window
@@ -537,7 +539,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
 
     $scope.fileSelectApprover = function (input, file_part) {
-        console.log(input, file_part)
         //drawing, responder, approver
         var file_doc = $scope.data_header[0].pha_no;
 
@@ -652,6 +653,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     
 
     function uploadFileApprover(file_obj, seq, file_name, file_size, file_part, file_doc) {
+        // แสดง loading indicator
+        $("#divLoading").show();
+
         console.log(file_obj, seq, file_name, file_size, file_part, file_doc)
         var fd = new FormData();
         // Take the first selected file
@@ -666,10 +670,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
  
 
         try {
-            // แสดง loading indicator
-            $("#divLoading").show();
-
-
             const request = new XMLHttpRequest();
             request.open("POST", url_ws + 'Flow/uploadfile_data');
     
@@ -678,6 +678,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 if (request.readyState === XMLHttpRequest.DONE) {
                 
                     if (request.status === 200) {
+
                         // รับค่าที่ส่งมาจาก service ที่ตอบกลับมาด้วย responseText
                         const responseFromService = request.responseText;
                         // ทำอะไรกับข้อมูลที่ได้รับเช่น แสดงผลหรือประมวลผลต่อไป
@@ -704,9 +705,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         // กรณีเกิดข้อผิดพลาดในการร้องขอไปยัง server
                         console.error('มีข้อผิดพลาด: ' + request.status);
                     }
+
+                    // ซ่อน loading indicator
+                    $("#divLoading").hide();
                 }
             };
-    
+
+
             request.send(fd);
         } catch (error) {
             $("#divLoading").hide();
@@ -714,8 +719,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             
         }
 
-        // ซ่อน loading indicator
-        $("#divLoading").hide();
+
     
         return "";
     }
@@ -1315,6 +1319,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     apply();
                     set_alert('Error', arr[0].status);
                 }
+
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 if (jqXHR.status == 500) {
@@ -3959,8 +3964,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
 
         save_data_create(action, action_def);
-
-        unsavedChanges = false;
+        var unsavedChanges = false;
     }
 
     $scope.confirmDialogApprover = function (_item, action) {
@@ -5382,7 +5386,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             create_by: user_name,
             update_by: null,
             action_change: 0,
-            action_type: "insert",
+            action_type: "new",//"insert"
             descriptions: null,
             document_file_name: null,
             document_file_path: null,
@@ -5410,23 +5414,37 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         var user_name = $scope.user_name;
         var seq = item_draw.seq;
         var fileUpload = document.getElementById('attfile-' + seq);
-        var fileNameDisplay = document.getElementById('filename' + seq);
-
-        fileUpload.value = ''; // ล้างค่าใน input file
-        fileNameDisplay.textContent = ''; // ล้างข้อความที่แสดงชื่อไฟล์
-
-        var arr = $filter('filter')($scope.data_drawing_approver, function (item) { return (item.seq == seq); });
-        if (arr.length > 0) {
-            arr[0].document_file_name = null;
-            arr[0].document_file_size = 0;
-            arr[0].document_file_path = null;
-            arr[0].action_type = 'delete';
-            arr[0].action_change = 1;
-            arr[0].update_by = user_name;
-            apply();
+        var fileNameDisplay = document.getElementById('filename-approver-' + seq);
+    
+        // Clear file input
+        if (fileUpload) {
+            fileUpload.value = '';
         }
+    
+        // Clear file name display
+        if (fileNameDisplay) {
+            fileNameDisplay.textContent = '';
+        }
+    
+        // Find and update data in $scope.data_drawing_approver
+        var index = $scope.data_drawing_approver.findIndex(function(item) {
+            return item.seq === seq;
+        });
+    
+        if (index !== -1) {
+            if ($scope.data_drawing_approver[index].action_type === "new") {
+                $scope.data_drawing_approver.splice(index, 1);
+            } else {
+                $scope.data_drawing_approver[index].document_file_name = null;
+                $scope.data_drawing_approver[index].document_file_size = 0;
+                $scope.data_drawing_approver[index].document_file_path = null;
+                $scope.data_drawing_approver[index].action_type = 'delete';
+                $scope.data_drawing_approver[index].action_change = 1;
+                $scope.data_drawing_approver[index].update_by = user_name;
+            }
+        }
+    
         clear_form_valid();
-
     }
 
     function clear_form_valid() {
