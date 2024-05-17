@@ -286,7 +286,7 @@
                                                 class="dropdown_input" 
                                                 type="text" 
                                                 placeholder="Search.." 
-                                                ng-model="searchUnitNo.text"
+                                                ng-model="search_keywords.unit_no"
                                                 ng-change="filterFunction('unit_no')">
                                                 <a  ng-repeat="item2 in master_unit_no_list" 
                                                     ng-if="item2.id_company == item.id_company && item2.id_apu == item.id_apu &&
@@ -321,7 +321,7 @@
                                 
                                     <!-- Tag ID -->
                                     <div class="d-flex flex-column col-md-auto p-1 align-items-top" ng-if="item.id_company != '9999' ">
-                                          <label class="form-label ps-0" style="margin-top: 4px;" for="unit">
+                                        <label class="form-label ps-0" style="margin-top: 4px;" for="unit">
                                             <b class="text-danger d-none"> * </b>
                                             TAG ID/EQUIPMENT
                                         </label>
@@ -336,7 +336,7 @@
                                                 class="dropdown_input" 
                                                 type="text" 
                                                 placeholder="Search.." 
-                                                ng-model="searchTagId.text"
+                                                ng-model="search_keywords.tag_id"
                                                 ng-change="filterFunction('tag_id')">
                                                 <a  ng-repeat="item2 in master_tagid_list" 
                                                     ng-if="item2.name != 'Please select'"
@@ -376,7 +376,6 @@
                                             <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
                                                data-bs-placement="top" data-bs-html="true"></a>
                                         </label>
-
                                         <select class="form-select align-bottom rounded-1 js-choice-tagid_audition"
                                                 ng-class="{'disabled-link':(!tab_general_active)}"
                                                 style="height: 36px;" data-choices="data-choices" data-options='{"removeItemButton":true,"placeholder":true}'
@@ -394,13 +393,12 @@
                                                 {{ item2.name }}
                                             </option>
                                         </select>
-
                                         <input class="form-control rounded-1 ps-1"
-                                               ng-class="{'disabled-link':(!tab_general_active)}"
-                                               ng-if="!tab_general_active"
-                                               type="text"
-                                               ng-model="item.tagid_audition" />
-
+                                            ng-class="{'disabled-link':(!tab_general_active)}"
+                                            ng-if="!tab_general_active"
+                                            type="text"
+                                            ng-model="item.tagid_audition" 
+                                            />
                                     </div>
 
                                     <!-- description -->
@@ -422,7 +420,7 @@
                                      ng-class="{'disabled-link':(!tab_general_active)}">
 
                                     <!-- department -->
-                                    <div class="col-1 p-1">
+                                    @* <div class="col-1 p-1">
                                         <label class="form-label ps-0" for="departments">
                                             <b class="text-danger d-none"> * </b>
                                             Departments 
@@ -440,10 +438,43 @@
                                             </option>
                                             
                                         </select>
-                                    </div>
+                                    </div> *@
 
                                     <!-- Task Type -->
-                                    <div class="col-1 p-1">
+                                    <div class="d-flex flex-column col-1 p-1">
+                                        <label class="form-label ps-0" style="margin-top: 4px;" for="unit">
+                                            <b class="text-danger d-none"> * </b>
+                                            Task Type
+                                        </label>                   
+                                        <div class="dropdown">
+                                            <button ng-if="item.id_request_type == null"
+                                                id="dropdown_request_type" 
+                                                class="dropbtn" >
+                                            </button>
+                                            <button ng-if="item.id_request_type != null"
+                                                ng-repeat="item2 in data_request_type | filter: { id: item.id_request_type }" 
+                                                id="dropdown_request_type" 
+                                                class="dropbtn" >
+                                                {{item2.name}}
+                                            </button>
+                                            <div id="request_type" class="dropdown-content">
+                                                <input id="dropdown_input" 
+                                                class="dropdown_input" 
+                                                type="text" 
+                                                placeholder="Search.." 
+                                                ng-model="search_keywords.request_type"
+                                                ng-change="filterFunction('request_type')">
+                                                <a ng-repeat="item2 in data_request_type_list" 
+                                                    ng-if="item2.name != 'Please select'"
+                                                    ng-class="{'bg-primary text-white':(item.id_request_type == item2.id)}"
+                                                    ng-click="changeRequestType(item2)"
+                                                    value="item2.id" >
+                                                    {{item2.name}}
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @* <div class="col-1 p-1">
                                         <label class="form-label ps-0" for="tagid"><b class="text-danger d-none"> * </b>Task Type </label>
                                         <select class="form-control js-choice-tagid"
                                                 data-choices="data-choices"
@@ -457,7 +488,7 @@
                                                 {{item.name}}
                                             </option>
                                         </select>
-                                    </div>
+                                    </div> *@
 
                                     <!-- Task Name -->
                                     <div class="col-md-4 p-1">
