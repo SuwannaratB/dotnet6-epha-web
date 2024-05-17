@@ -239,7 +239,7 @@
                                             <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
                                                data-bs-placement="top" title=" Reference MOC : PN-13081" data-bs-html="true"></a>
                                         </label>
-                                        <input type="text" name="reference_moc" class="form-control rounded-1"
+                                        <input type="text" name="reference_moc" class="form-control rounded-1 cursor-pointer"
                                                ng-class="{'disabled-link':(!tab_general_active)}"
                                                ng-keyup="actionChange(item,item.seq,'')" ng-model="item.reference_moc"
                                                placeholder="Input Data"
@@ -525,7 +525,7 @@
                                         </label>
                                         <input type="date" ng-model="item.target_start_date"
                                             ng-keyup="actionChange(item,item.seq,'')"
-                                            class="form-control rounded-1 datetimepicker"
+                                            class="form-control rounded-1 datetimepicker cursor-pointer"
                                             ng-class="{'disabled-link':(!tab_general_active)}"
                                             placeholder="dd/mm/yyyy">
                                     </div>
@@ -539,7 +539,7 @@
                                         <input type="date" name="te_date" ng-model="item.target_end_date"
                                         <input type="date" ng-model="item.target_end_date"
                                             ng-keyup="actionChange(item,item.seq,'')"
-                                            class="form-control rounded-1 datetimepicker"
+                                            class="form-control rounded-1 datetimepicker cursor-pointer"
                                             ng-class="{'disabled-link':(!tab_general_active)}"
                                             placeholder="dd/mm/yyyy">
                                     </div>
@@ -683,7 +683,7 @@
                                                                 <span class="col-md-4  p-1 ">
                                                                     <label class="form-label d-none" for="meeting_date">Meeting Date</label>
 
-                                                                    <input type="date" class="form-control rounded-1 datetimepicker" id="meeting_date" name="meeting_date"
+                                                                    <input type="date" class="form-control rounded-1 datetimepicker cursor-pointer" id="meeting_date" name="meeting_date"
                                                                            ng-change="actionChange(item,item.seq,'')"
                                                                            ng-model="item.meeting_date" placeholder="dd/mm/yyyy">
 
@@ -870,12 +870,12 @@
 
                                                     <td class="align-middle white-space col-3">
 
-                                                        <div class="uploadbox align-items-center ms-0 cursor-pointer">
+                                                        <div class="row uploadbox align-items-center" ng-if="tab_general_active">
                                                             <div class="btn-group">
                                                                 <div class="icon-button border p-3" style="border-color: #0d6efd; background-color: #0d6efd;">
                                                                     <span class="fa-solid fa-arrow-up-from-bracket fa-lg" style="color: #ffffff;"></span>
                                                                 </div>
-                                                                <button class="Upload-button btn ps-3 p-2"  ng-if="!item.document_file_size">
+                                                                <button class="Upload-button btn ps-3"  ng-if="!item.document_file_size">
                                                                     <label class="dz-message-text  fw-bold cursor-pointer"
                                                                         for="attfile-{{item.seq}}" ng-class="{'d-none':(!tab_general_active)}">
                                                                         Upload File(Word, Excel, PDF, Image)
@@ -885,7 +885,7 @@
                                                                         onchange="angular.element(this).scope().fileSelect(this,'drawing')"
                                                                         style="display:none" />
                                                                 </button>
-                                                                <button class="Upload-button btn ps-3 p-2" ng-if="item.document_file_size > 0">
+                                                                <button class="Upload-button btn ps-3" ng-if="item.document_file_size > 0">
                                                                     <div class="d-flex align-items-center">
                                                                         <span class="mr-3 nametext"
                                                                             id="filename{{item.seq}}" 
@@ -896,46 +896,40 @@
                                                                                     {{(item.document_file_size>0? item.document_file_name + '('+  item.document_file_size + 'KB)' : '')}}
                                                                                 </b>
                                                                         </span>
-                                                                        <a id="del-{{item.seq}}" class="btn btn-link text-danger"
+                                                                        <a id="deluploadfile-{{item.seq}}" class="btn btn-link text-danger p-0"
                                                                             ng-class="{'d-none':(!tab_general_active)}"
-                                                                            ng-click="clearFileName(item.seq)"><!--------- ng-if="status_upload"-------------->
-                                                                        <span class="fa-regular fa-trash-can fa-lg"></span>
+                                                                            ng-click="clearFileName(item.seq)"
+                                                                            ng-if="!(item.file_upload_name =='' || item.file_upload_name == null)">
+                                                                            <span class="fa-regular fa-trash-can fa-lg"></span>
                                                                         </a> 
                                                                     </div>
                                                                 </button>
-                                                            </div>                                                              
-                                                            @*<div class="col-12 align-items-center p-1 cursor-pointer ">
+                                                            </div>                                                                                                                                                                                
+                                                            @*<div class=" align-items-center p-1 cursor-pointer ">
 
-                                                                <span class="mr-3 nametext text-primary" id="filename{{item.seq}}"
-                                                                      ng-class="{'d-none':(!tab_general_active)}"
-                                                                      ng-click="downloadFile(item)">
-                                                                    <b style="font-size:x-small">{{(item.document_file_size>0? item.document_file_name + '('+  item.document_file_size + 'KB)' : '')}}</b>
-                                                                </span>
-                                                                <br>
+                                                                <br ng-if="item.document_file_size>0">
                                                                 <label class="dz-message-text text-primary fw-bold cursor-pointer"
                                                                        for="attfile-{{item.seq}}" ng-class="{'d-none':(!tab_general_active)}">
-                                                                    <i class="fa-solid fa-arrow-up-from-bracket fa-xl me-3"></i>Upload File(PDF)
+                                                                    <i class="fa-solid fa-arrow-up-from-bracket fa-xl me-3"></i>Upload File(Word, Excel, PDF, Image)
                                                                 </label>
                                                                 <input type="file" id="attfile-{{item.seq}}"
                                                                        name="file{{item.seq}}"
                                                                        onchange="angular.element(this).scope().fileSelect(this,'drawing')"
                                                                        style="display:none" />
-
                                                                 <button id="del-{{item.seq}}" class="btn btn-link text-danger"
                                                                         ng-class="{'d-none':(!tab_general_active)}"
                                                                         ng-click="clearFileName(item.seq)"
-                                                                        ng-if="status_upload">
+                                                                        ng-if="item.document_file_size>0">
                                                                     <span class="fa-regular fa-trash-can fa-lg"></span>
                                                                 </button>
                                                                 <br>
                                                                 <a class="nametext ms-3 filename-text me-2"
                                                                    ng-class="{'d-none':(tab_general_active)}"
                                                                    ng-click="downloadFile(item)">
-                                                                    <i class="far fa-file-pdf text-danger"></i>
+                                                                    <i class="far fa-file-pdf text-danger"></i> 
+                                                                    {{(item.document_file_size>0? item.document_file_name + '('+  item.document_file_size + 'KB)' : '')}}
                                                                 </a>
-
                                                             </div>*@
-
                                                         </div>
 
                                                         <div id="drawing-document-file-{{item.seq}}"

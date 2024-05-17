@@ -445,21 +445,30 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     };
 
     $scope.fileSelect = function (input, file_part) {
+        console.log(input, file_part)
         //drawing, responder, approver
         var file_doc = $scope.data_header[0].pha_no;
 
         const fileInput = input;
         const fileSeq = fileInput.id.split('-')[1];
+        console.log("fileSeq",fileSeq)
+        //document.getElementById('filename' + fileSeq);
+        //document.getElementById('attfile' + fileSeq);
         const fileInfoSpan = document.getElementById('filename' + fileSeq);
 
+        console.log("fileInfoSpan",fileInfoSpan)
         if (fileInput.files.length > 0) {
             const file = fileInput.files[0];
             const fileName = file.name;
             const fileSize = Math.round(file.size / 1024);
             //fileInfoSpan.textContent = `${fileName} (${fileSize} KB)`;
 
+            console.log("fileName",fileName)
+
+            //fileInfoSpan.textContent = `${fileName} (${fileSize} KB)`;
             let shortenedFileName = fileName.length > 20 ? fileName.substring(0, 20) + '...' : fileName;
             fileInfoSpan.textContent = `${shortenedFileName} (${fileSize} KB)`;
+
 
 
             if (fileName.toLowerCase().indexOf('.pdf') == -1) {

@@ -64,12 +64,12 @@
                                 <span> {{data_header[0].pha_status_displayname}}</span>
                             </div>
                         </div>
-                        <div class="col-auto" ><!----ng-class="{ 'd-none': (minutes > 9) }"------>
+                        @*<div class="col-auto" ><!----ng-class="{ 'd-none': (minutes > 9) }"------>
                             <div class="col-auto">
                                 <b>Expire Within :</b> <br>
                                 <span ng-class="{ 'blinking-text': (minutes <= 10) }">{{counterText}} </span>
                             </div>
-                       </div>
+                       </div>*@
                     </div>
 
                     <div class="row">
@@ -730,7 +730,7 @@
                                                                         </label>
                                                                     </div>
                                                                 </div>
-                                                                <!-- Specialist from data_relatedpeople_outsider -->
+                                                                <!-- data_relatedpeople_outsider -->
                                                                 <div class="row" ng-repeat="item2 in data_relatedpeople_outsider | filter:{id_session: selectdata_session, user_type: 'member'}" >
                                                                     <div class="col-8 align-items-center  p-1">
                                                                         <label class="mb-0 text-1100 fw-bold"
@@ -792,21 +792,33 @@
                                                                 </div>
                                                                 <!-- Specialist from data_relatedpeople -->
                                                                 <div class="row" ng-repeat="item2 in data_relatedpeople | filter:{id_session:item.seq, user_type:'specialist'}">
-                                                                    <div class="row align-items-center  p-1">
-                                                                        <label class="mb-0 text-1100 fw-bold" 
+                                                                    <div class="col-8 align-items-center  p-1">
+                                                                        <label class="mb-0 text-1100 fw-bold"
+                                                                                style="width:100%;border-color: #f1f2f4;">
+                                                                                {{ item2.user_displayname}}
+                                                                        </label>
+                                                                    </div>
+                                                                    <div class="col-4 align-items-center  p-1">
+                                                                        <label class="mb-0 text-1100 fw-bold"
                                                                                 style="width:80%;border-color: #f1f2f4;">
-                                                                            {{ item2.user_displayname}}
+                                                                                {{ item2.user_title}}
                                                                         </label>
                                                                     </div>
                                                                 </div>
                                                                 <!-- Specialist from data_relatedpeople_outsider -->
                                                                 <div class="row" ng-repeat="item2 in data_relatedpeople_outsider | filter:{id_session: selectdata_session, user_type:'specialist'}" >
-                                                                    <div class="row align-items-center  p-1">
+                                                                    <div class="col-8 align-items-center  p-1">
                                                                         <label class="mb-0 text-1100 fw-bold"
                                                                             style="width:80%;border-color: #f1f2f4;">
                                                                             {{ item2.user_displayname}}
                                                                         </label>
                                                                     </div>
+                                                                    <div class="col-4 align-items-center  p-1">
+                                                                        <label class="mb-0 text-1100 fw-bold"
+                                                                                style="width:80%;border-color: #f1f2f4;">
+                                                                                {{ item2.user_title}}
+                                                                        </label>
+                                                                    </div>                                                                       
                                                                 </div>
                                                             </div>
                                                             
@@ -825,10 +837,16 @@
                                                                     </button>
                                                                 </div>
                                                                 <div class="row" ng-repeat="item2 in data_relatedpeople | filter:{id_session:item.seq, user_type:'attendees'}">
-                                                                    <div class="row align-items-center  p-1">
+                                                                    <div class="col-8 align-items-center  p-1">
                                                                         <label class="mb-0 text-1100 fw-bold"
-                                                                               style="width:80%;border-color: #f1f2f4;">{
-                                                                            { item2.user_displayname}}
+                                                                                style="width:100%;border-color: #f1f2f4;">
+                                                                                {{ item2.user_displayname}}
+                                                                        </label>
+                                                                    </div>
+                                                                    <div class="col-4 align-items-center  p-1">
+                                                                        <label class="mb-0 text-1100 fw-bold"
+                                                                                style="width:80%;border-color: #f1f2f4;">
+                                                                                {{ item2.user_title}}
                                                                         </label>
                                                                     </div>
                                                                 </div>
@@ -2875,6 +2893,7 @@
                                 <label class="form-check-label m-auto fw-bold" for="approver_safety">(safety)</label>
                             </div>
                             <label class="mb-0 ms-3 text-1100 fw-bold" style="width:80%;border-color: #f1f2f4;">{{ item2.user_displayname}}</label>
+                            <label class="mb-0 ms-3 text-1100 fw-bold" style="width:80%;border-color: #f1f2f4;">{{ item2.user_position}}</label>
                         </div>
                     </div>
                 </div>
