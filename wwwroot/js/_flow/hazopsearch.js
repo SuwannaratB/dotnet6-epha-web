@@ -47,7 +47,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         $scope.master_bussiness_unit = [];
         $scope.master_unit_no = [];
         $scope.master_functional = [];
-
+        $scope.master_status = [];
 
         $scope.data_results = [];
         $scope.data_conditions = [];
@@ -115,7 +115,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                 $scope.data_all = arr;
 
                 $scope.master_subsoftware = JSON.parse(replace_hashKey_arr(arr.subsoftware));
-
+                $scope.master_status = JSON.parse(replace_hashKey_arr(arr.status));
 
                 //apu, business_unit, unit_no, functional, approver, company, toc, tagid
                 $scope.master_apu = JSON.parse(replace_hashKey_arr(arr.apu));
@@ -235,9 +235,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
     }
 
     $scope.selectDoc = function (item) {
-
         var controller_text = item.pha_sub_software;
-
         conFig.pha_seq = item.seq;
         conFig.pha_type_doc = 'edit';
         conFig.pha_status = item.pha_status;
@@ -247,18 +245,20 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
     }
 
     $scope.editDoc = function (item) {
-
         var controller_text = item.pha_sub_software;
-
         conFig.pha_seq = item.seq;
         conFig.pha_type_doc = 'edit';
         conFig.pha_status = item.pha_status;
         conFig.pha_sub_software = item.pha_sub_software;
+        var data_type = 'edit';
 
-        next_page(controller_text, conFig.pha_status, conFig.pha_type_doc);
+        if (item.pha_status == 21) {
+            data_type = 'edit_approver'
+        }
+
+        next_page(controller_text, conFig.pha_status, data_type);
     }
     $scope.actionChange = function (item) {
-
         try {
             var arr_search =
                 $filter('filter')($scope.data_results_def, function (_item) {
@@ -291,6 +291,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                         && (item.id_toc == null ? true : parseInt(_item.id_toc) == parseInt(item.id_toc))
                         && (item.id_tagid == null ? true : parseInt(_item.id_tagid) == parseInt(item.id_tagid))
                         && (item.id_company == null ? true : parseInt(_item.id_company) == parseInt(item.id_company))
+                        && (item.pha_status == null ? true : parseInt(_item.pha_status) == parseInt(item.pha_status))
 
                         && (item.expense_type == 'CAPEX' && item.sub_expense_type == 'Normal' ?
                             (item.approver_user_name == null ? 'x' : _item.approver_user_name)
@@ -358,8 +359,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                 $('#divLoading').hide();
             },
             success: function (data) {
-                // var arr = data;
-                // window.open(data.page, "_top");
                 if (editPage) {
                     return window.open(`${data.page}?data=` + encodeURIComponent(editPage), '_top');
                 }

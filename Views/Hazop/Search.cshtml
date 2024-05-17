@@ -181,118 +181,109 @@
                                      role="tabpanel" aria-labelledby="home-tab">
 
                                     <div class="" style="z-index: -1;">
-                                        <div class="row  g-3 align-items-center mx-3">
-
-                                            <div class="col-md-2 ">
-                                                <div class="row g-0 align-items-center">
-                                                    <div class="col-12">
+                                        <div class="row gap-3 align-items-center mx-3">
+                                            @* row 1 *@
+                                            <div class="row mb-4">
+                                                <div class="col-md-2 ">
                                                         <label class="form-label ps-0">
                                                             Sub-Software
                                                         </label>
                                                         <label class="form-label ps-0" ng-if="select_history_tracking_record">
                                                             <a class="form-label far fa-comment-alt text-warning cursor-pointer " data-bs-toggle="tooltip"
-                                                               data-bs-html="true"></a>
+                                                                data-bs-html="true"></a>
                                                         </label>
-
-                                                        <div class="d-flex me-3">
-                                                            <div class="">
-                                                                <select class="form-control" ng-model="item_m.pha_sub_software"
-                                                                        ng-change="SubSoftwateChange()">
-                                                                    <option values="hazop" ng-selected="item_m.pha_sub_software == 'hazop'">HAZOP</option>
-                                                                    <option values="jsea" ng-selected="item_m.pha_sub_software == 'jsea'">JSEA</option>
-                                                                    <option values="whatif" ng-selected="item_m.pha_sub_software == 'whatif'">WHATIF</option>
-                                                                    <option values="hra" ng-selected="item_m.pha_sub_software == 'hra'">HRA</option>
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            @* HAZOP 1*@
-                                            <div class="col-auto" ng-if="(item_m.pha_sub_software | lowercase)=='hazop' || (item_m.pha_sub_software | lowercase)=='whatif'">
-                                                <div class="row">
-                                                    <div class="col-auto">
-
-                                                        <label class="form-label ps-0">Expense Type</label>
-                                                        <label class="form-label ps-0" ng-if="select_history_tracking_record">
-                                                            <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
-                                                               data-bs-placement="top" title=" Expense Type : OPEX" data-bs-html="true"></a>
-                                                        </label>
-
-                                                        <select class="form-select rounded-1" id="expense_type" placeholder="Expense Type"
-                                                                name="expense_type"
-                                                                ng-model="item_m.expense_type"
-                                                                ng-change="actionChange(item_m)">
-                                                            <option id="OPEX">OPEX</option>
-                                                            <option id="CAPEX">CAPEX</option>
-                                                        </select>
-                                                    </div>
-                                                    <div class="col-auto">
-
-                                                        <label class="form-label ps-0">
-                                                            Sub Expense Type
-                                                        </label>
-                                                        <label class="form-label ps-0" ng-if="select_history_tracking_record">
-                                                            <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
-                                                               data-bs-placement="top" name="sub_expanse_type" title=" Sub Expense Type : Normal" data-bs-html="true"></a>
-                                                        </label>
-                                                        <select class="form-select  text-uppercase rounded-1"
-                                                                ng-model="item_m.sub_expense_type"
-                                                                ng-change="actionChange(item_m)">
-                                                            <option id="Normal">Normal</option>
-                                                            <option id="Study">Study</option>
-                                                        </select>
-                                                    </div>
-                                                    <div class="col-auto">
-                                                        <div class="row g-0 align-items-center">
-                                                            <div class="col-12 p-1">
-                                                                <label class="form-label ps-0" for="unit">Reference MOC </label>
-                                                                <label class="form-label ps-0" ng-if="select_history_tracking_record">
-                                                                    <a class="form-label far fa-comment-alt text-warning cursor-pointer"
-                                                                       data-bs-toggle="tooltip"
-                                                                       data-bs-placement="top"
-                                                                       title=" Reference MOC : PN-13081"
-                                                                       data-bs-html="true">
-                                                                    </a>
-                                                                </label>
-                                                                <input type="text"
-                                                                       name="reference_moc"
-                                                                       class="form-control rounded-1"
-                                                                       placeholder="Reference MOC"
-                                                                       autocomplete="off"
-                                                                       value="PN-13089"
-                                                                       ng-model="item_m.reference_moc"
-                                                                       ng-keyup="actionChange(item_m)">
-                                                            </div>
-
-                                                        </div>
-                                                    </div>
-                                                    @*    <div class="col-auto" ng-if="item_m.expense_type =='CAPEX' && item_m.sub_expense_type == 'Normal'">
-
-                                                    <label class="form-label ps-0" for="approver">TA2 Approver</label>
-                                                    <label class="form-label ps-0" ng-if="select_history_tracking_record">
-                                                    <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
-                                                    data-bs-placement="top" title=" TA2 Approver : xxxx " data-bs-html="true"></a>
-                                                    </label>
-
-                                                    <select class="form-control js-choice-approver"
-                                                    data-choices="data-choices"
-                                                    data-options='{"removeItemButton":true,"placeholder":true}'
-                                                    ng-model="item_m.approver_user_name"
-                                                    ng-change="actionChange(item_m)">
-                                                    <option ng-repeat="item2 in master_approver" ng-value="item2.employee_name">{{item2.employee_displayname}}</option>
+                                                        <select class="form-control" 
+                                                                ng-model="item_m.pha_sub_software"
+                                                                ng-change="SubSoftwateChange()">
+                                                            <option values="hazop" ng-selected="item_m.pha_sub_software == 'hazop'">HAZOP</option>
+                                                            <option values="jsea" ng-selected="item_m.pha_sub_software == 'jsea'">JSEA</option>
+                                                            <option values="whatif" ng-selected="item_m.pha_sub_software == 'whatif'">WHATIF</option>
+                                                            <option values="hra" ng-selected="item_m.pha_sub_software == 'hra'">HRA</option>
                                                     </select>
+                                                </div>
 
-                                                    </div> *@
+                                                <div class="col-md-2">
+                                                    <label class="form-label ps-0">
+                                                        STATUS
+                                                    </label>
+                                                    <label class="form-label ps-0" ng-if="select_history_tracking_record">
+                                                        <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
+                                                            data-bs-placement="top" name="sub_expanse_type" title=" Sub Expense Type : Normal" data-bs-html="true"></a>
+                                                    </label>
+                                                    <select class="form-select text-uppercase rounded-1"
+                                                            ng-model="item_m.pha_status"
+                                                            ng-change="actionChange(item_m)">
+                                                        <option ng-repeat="item_ls in master_status" id="item_ls.id"  ng-value="item_ls.id">
+                                                            {{item_ls.name}}
+                                                        </option>
+                                                    </select>
                                                 </div>
                                             </div>
+                                            @* row 2 HAZOP,WHAT-IF*@
+                                            <div class="row" ng-if="(item_m.pha_sub_software | lowercase)=='hazop' || (item_m.pha_sub_software | lowercase)=='whatif'">
+                                                <div class="col-md-2">
+                                                    <label class="form-label ps-0">Expense Type</label>
+                                                    <label class="form-label ps-0" ng-if="select_history_tracking_record">
+                                                        <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
+                                                            data-bs-placement="top" title=" Expense Type : OPEX" data-bs-html="true"></a>
+                                                    </label>
+                                                    <select class="form-select rounded-1" id="expense_type" placeholder="Expense Type"
+                                                            name="expense_type"
+                                                            ng-model="item_m.expense_type"
+                                                            ng-change="actionChange(item_m)">
+                                                        <option id="OPEX">OPEX</option>
+                                                        <option id="CAPEX">CAPEX</option>
+                                                    </select>
+                                                </div>
 
-                                            @* JSEA 1*@
-                                            <div class="col-auto" ng-if="(item_m.pha_sub_software | lowercase)=='jsea'">
+                                                <div class="col-md-2">
+                                                    <label class="form-label ps-0">
+                                                        Sub Expense Type
+                                                    </label>
+                                                    <label class="form-label ps-0" ng-if="select_history_tracking_record">
+                                                        <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
+                                                            data-bs-placement="top" name="sub_expanse_type" title=" Sub Expense Type : Normal" data-bs-html="true"></a>
+                                                    </label>
+                                                    <select class="form-select  text-uppercase rounded-1"
+                                                            ng-model="item_m.sub_expense_type"
+                                                            ng-change="actionChange(item_m)">
+                                                        <option id="Normal">Normal</option>
+                                                        <option id="Study">Study</option>
+                                                    </select>
+                                                </div>
+
+                                                <div class="col-md-2">
+                                                    <div class="row g-0 align-items-center">
+                                                        <div class="col-12">
+                                                            <label class="form-label ps-0" for="unit">Reference MOC </label>
+                                                            <label class="form-label ps-0" ng-if="select_history_tracking_record">
+                                                                <a class="form-label far fa-comment-alt text-warning cursor-pointer"
+                                                                    data-bs-toggle="tooltip"
+                                                                    data-bs-placement="top"
+                                                                    title=" Reference MOC : PN-13081"
+                                                                    data-bs-html="true">
+                                                                </a>
+                                                            </label>
+                                                            <input type="text"
+                                                                name="reference_moc"
+                                                                class="form-control rounded-1"
+                                                                placeholder="Reference MOC"
+                                                                autocomplete="off"
+                                                                value="PN-13089"
+                                                                ng-model="item_m.reference_moc"
+                                                                ng-keyup="actionChange(item_m)"
+                                                                >
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                            @* row 2 JSEA*@
+                                            <div class="row" ng-if="(item_m.pha_sub_software | lowercase)=='jsea'">
                                                 <div class="row">
-                                                    @* COMPANY *@
-                                                    <div class="col-auto ">
+
+                                                    <div class="col-md-2">
                                                         <label class="form-label ps-0" for="company">
                                                             Company
                                                         </label>
@@ -314,8 +305,8 @@
                                                             </option>
                                                         </select>
                                                     </div>
-                                                    @* AREA PROCESS UNIT *@
-                                                    <div class="col-auto ">
+                                              
+                                                    <div class="col-md-2">
                                                         <label class="form-label ps-0" for="area">Area Process Unit </label>
                                                         <label class="form-label ps-0" ng-if="select_history_tracking_record">
                                                             <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
@@ -330,8 +321,8 @@
                                                         </select>
 
                                                     </div>
-                                                    @* THAIOIL COMPLEX *@
-                                                    <div class="col-auto ">
+                                             
+                                                    <div class="col-md-2">
                                                         <label class="form-label ps-0" for="toc">Thaioil Complex </label>
                                                         <label class="form-label ps-0" ng-if="select_history_tracking_record">
                                                             <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
@@ -348,8 +339,8 @@
                                                             </option>
                                                         </select>
                                                     </div>
-                                                    @* UNIT NO *@
-                                                    <div class="col-auto ">
+                                        
+                                                    <div class="col-md-2">
                                                         <label class="form-label ps-0" for="unit">Unit No </label>
                                                         <label class="form-label ps-0" ng-if="select_history_tracking_record">
                                                             <a class="form-label far fa-comment-alt text-warning cursor-pointer"
@@ -367,8 +358,8 @@
                                                             <option ng-repeat="item2 in master_unit_no_show" ng-value="item2.id">{{item2.name}}</option>
                                                         </select>
                                                     </div>
-                                                    @* TAG ID/ EQUIPMENT *@
-                                                    <div class="col-auto ">
+                                                   
+                                                    <div class="col-md-2">
                                                         <label class="form-label ps-0" for="tagid">Tag ID/ Equipment </label>
                                                         <label class="form-label ps-0" ng-if="select_history_tracking_record">
                                                             <a class="form-label far fa-comment-alt text-warning cursor-pointer"
@@ -389,12 +380,242 @@
                                                     </div>
                                                 </div>
                                             </div>
+
+                                            @* row 3 HAZOP,WHAT-IF*@
+                                             <div class="row"
+                                                ng-if="(item_m.pha_sub_software | lowercase)=='hazop' || (item_m.pha_sub_software | lowercase)=='whatif'">
+                                                <!-- Project No -->
+                                                <div class="col-md-2">
+                                                    <label class="form-label ps-0">Project No</label>
+                                                    <label class="form-label ps-0" ng-if="select_history_tracking_record">
+                                                        <a class="form-label far fa-comment-alt text-warning cursor-pointer" 
+                                                            data-bs-toggle="tooltip"
+                                                        data-bs-placement="top"
+                                                        title=" Project No : HAZOP-2023-00000XX"
+                                                        data-bs-html="true"></a>
+                                                    </label>
+                                                    <input type="text"
+                                                        name="project_no"
+                                                        class="form-control rounded-1"
+                                                        placeholder="Project No"
+                                                        autocomplete="off"
+                                                        ng-model="item_m.project_no"
+                                                        ng-keyup="actionChange(item_m)"
+                                                        >
+                                                </div>
+                                                <!-- Project Name -->
+                                                <div class="col-md-2">
+                                                    <label class="form-label ps-0" for="unit" ng-if="item_m.expense_type=='CAPEX'">Project Name</label>
+                                                    <label class="form-label ps-0" for="unit" ng-if="item_m.expense_type=='OPEX'">e-MOC Request Number</label>
+                                                    <label class="form-label ps-0" ng-if="select_history_tracking_record">
+                                                        <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
+                                                        data-bs-placement="top"
+                                                        title=" Project Name : PXXXXXXX-0001 New close loop drain of CDU-1 Analyzer"
+                                                        data-bs-html="true"></a>
+                                                    </label>
+                                                    <input class="form-control rounded-1"
+                                                        type="text"
+                                                        placeholder="Project Name"
+                                                        name="project_name"
+                                                        ng-model="item_m.pha_request_name"
+                                                        ng-keyup="actionChange(item_m)">
+                                                    @* ng-keyup="filterResultGeneral(item_m.pha_request_name, 'pha_request_name')"> *@
+                                                    <ul class="list-group mt-2 w-25" style="position: absolute;" ng-show="showResults">
+                                                        <li class="list-group-item "
+                                                            ng-repeat="result in filteredResults | filter:{field:'pha_request_name'}"
+                                                            ng-click="selectResult(result,item,'pha_request_name')">
+                                                            {{ result.name }}
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <!-- Attendees -->
+                                                <div class="col-md-4">
+                                                    <label class="form-label ps-0">Attendees Name</label>
+                                                    <input type="text"
+                                                        name="attendees_search"
+                                                        class="form-control rounded-1"
+                                                        placeholder="คนที่เกี่ยวข้องทั้งหมด (Owner, Member Team, Safety Reviewer, Attendees, ผู้เชี่ยวชาญเฉพาะด้าน)" 
+                                                        autocomplete="off"
+                                                        ng-model="item_m.emp_active_search"
+                                                        ng-keyup="actionChange(item_m)"
+                                                        >
+                                                </div>
+                                                <!-- Target Date -->
+                                                <div class="col-md-7 p-1 d-none">
+                                                    <div class="row g-0 align-items-center">
+                                                        <div class="col-md-2">
+                                                            <label class="form-label ps-0" for="tgs_date">Target Start Date</label>
+                                                            <label class="form-label ps-0" ng-if="select_history_tracking_record">
+                                                                <a class="form-label far fa-comment-alt text-warning cursor-pointer" 
+                                                                    data-bs-toggle="tooltip"
+                                                                    data-bs-placement="top" 
+                                                                    title=" Target Start Date :  " 
+                                                                    data-bs-html="true">
+                                                                </a>
+                                                            </label>
+                                                            <input type="date" 
+                                                                name="ts_date"
+                                                                class="form-control rounded-1 datetimepicker" 
+                                                                id="tgs_date"
+                                                                placeholder="dd/mm/yyyy"
+                                                                >
+                                                        </div>
+
+                                                        <div class="col-md-2">
+                                                            <label class="form-label ps-0" for="tge_date">Target End Date</label>
+                                                            <label class="form-label ps-0" ng-if="select_history_tracking_record">
+                                                                <a class="form-label far fa-comment-alt text-warning cursor-pointer" 
+                                                                    data-bs-toggle="tooltip"
+                                                                data-bs-placement="top" 
+                                                                title=" Target End Date :  " 
+                                                                data-bs-html="true">
+                                                                </a>
+                                                            </label>
+                                                            <input type="date" 
+                                                                name="te_date"
+                                                                class="form-control rounded-1 datetimepicker" 
+                                                                id="tgs_date"
+                                                                placeholder="dd/mm/yyyy"
+                                                                >
+                                                        </div>
+
+
+                                                        <div class="col-md-2">
+                                                            <label class="form-label ps-0" for="tgs_date">Actual Start Date</label>
+                                                            <label class="form-label ps-0" ng-if="select_history_tracking_record">
+                                                                <a class="form-label far fa-comment-alt text-warning cursor-pointer" 
+                                                                    data-bs-toggle="tooltip"
+                                                                    data-bs-placement="top" 
+                                                                    title=" Actual Start Date :  " 
+                                                                    data-bs-html="true">
+                                                                </a>
+                                                            </label>
+                                                            <input type="date" 
+                                                                    name="as_date"
+                                                                    class="form-control rounded-1 datetimepicker" 
+                                                                    id="tgs_date"
+                                                                    placeholder="dd/mm/yyyy"
+                                                                >
+                                                        </div>
+
+                                                        <div class="col-md-2">
+                                                            <label class="form-label ps-0" for="tge_date">Actual End Date</label>
+                                                            <label class="form-label ps-0" ng-if="select_history_tracking_record">
+                                                                <a class="form-label far fa-comment-alt text-warning cursor-pointer" 
+                                                                    data-bs-toggle="tooltip"
+                                                                data-bs-placement="top" 
+                                                                title=" Actual End Date :  " 
+                                                                data-bs-html="true">
+                                                                </a>
+                                                            </label>
+                                                            @*item_m.actual_end_date*@
+                                                            <input type="date" 
+                                                                    name="ae_date"
+                                                                class="form-control rounded-1  datetimepicker"
+                                                                id="tgs_date" 
+                                                                placeholder="dd/mm/yyyy"
+                                                                >
+
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            @* row 3 JSEA*@
+                                            <div class="row" ng-if="(item_m.pha_sub_software | lowercase)=='jsea'">
+
+                                                <!-- Project No -->
+                                                <div class="col-md-2">
+                                                    <label class="form-label ps-0">Project No</label>
+                                                    <label class="form-label ps-0" ng-if="select_history_tracking_record">
+                                                        <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
+                                                        data-bs-placement="top"
+                                                        title=" Project No : JSEA-2023-00000XX"
+                                                        data-bs-html="true"></a>
+                                                    </label>
+                                                    <input type="text" name="project_no" class="form-control rounded-1" placeholder="Project No" autocomplete="off"
+                                                        ng-model="item_m.project_no"
+                                                        ng-keyup="actionChange(item_m)">
+                                                </div>
+
+                                                <!-- Project Name -->
+                                                <div class="col-md-2">
+                                                    <label class="form-label ps-0" for="unit">Task Name</label>
+                                                    <label class="form-label ps-0" ng-if="select_history_tracking_record">
+                                                        <a class="form-label far fa-comment-alt text-warning cursor-pointer"
+                                                        data-bs-toggle="tooltip"
+                                                        data-bs-placement="top"
+                                                        title=" Task Name : PXXXXXXX-0001 New close loop drain of CDU-1 Analyzer"
+                                                        data-bs-html="true">
+                                                        </a>
+                                                    </label>
+                                                    <input class="form-control rounded-1"
+                                                        type="text"
+                                                        placeholder="Project Name"
+                                                        name="project_name"
+                                                        ng-change="actionChange(item_m)"
+                                                        ng-model="item_m.pha_request_name">
+                                                    @* ng-keyup="filterResultGeneral(item_m.pha_request_name, 'pha_request_name')"> *@
+                                                    <ul class="list-group mt-2 w-25" style="position: absolute;" ng-show="showResults">
+                                                        <li class="list-group-item "
+                                                            ng-repeat="result in filteredResults | filter:{field:'pha_request_name'}"
+                                                            ng-click="selectResult(result,item,'pha_request_name')">
+                                                            {{ result.name }}
+                                                        </li>
+                                                    </ul>
+                                                </div>
+
+                                                <!-- Date -->
+                                                <div class="col-md-2">
+                                                    <label class="form-label ps-0" for="tgs_date">Date</label>
+                                                            <label class="form-label ps-0" ng-if="select_history_tracking_record">
+                                                                <a class="form-label far fa-comment-alt text-warning cursor-pointer"
+                                                                data-bs-toggle="tooltip"
+                                                                data-bs-placement="top"
+                                                                title=" Target Start Date :  "
+                                                                data-bs-html="true">
+                                                                </a>
+                                                            </label>
+                                                            <input type="date"
+                                                                name="ts_date"
+                                                                class="form-control rounded-1 datetimepicker"
+                                                                id="tgs_date"
+                                                                placeholder="dd/mm/yyyy"
+                                                                ng-change="actionChange(item_m)"
+                                                                ng-model="item_m.create_date">
+                                                </div>
+
+                                                <!-- A -->
+                                                <div class="col-md-3">
+                                                    <label class="form-label ps-0">Attendees Name</label>
+                                                    <input type="text"
+                                                        name="attendees_search"
+                                                        class="form-control rounded-1"
+                                                        placeholder="คนที่เกี่ยวข้องทั้งหมด (Owner, Member Team, Safety Reviewer, Attendees, ผู้เชี่ยวชาญเฉพาะด้าน)"
+                                                        autocomplete="off"
+                                                        ng-model="item_m.emp_active_search"
+                                                        ng-keyup="actionChange(item_m)">
+                                                </div>
+
+                                                <!-- Worksheet -->
+                                                <div class="col-md-3">
+                                                    <label class="form-label ps-0">Worksheet search</label>
+                                                    <input type="text"
+                                                        name="worksheet_search"
+                                                        class="form-control rounded-1"
+                                                        placeholder="POTENTIAL HAZARD ,POSSIBLE CAUSE" autocomplete="off"
+                                                        ng-model="item_m.worksheet_active_search"
+                                                        ng-keyup="actionChange(item_m)">
+                                                </div>                                                
+
+                                            </div>
                                         </div>
 
-                                        @* HAZOP 2*@
-                                        <div class="mx-3 row  g-3 align-items-center d-none" ng-if="(item_m.pha_sub_software | lowercase)=='hazop' || (item_m.pha_sub_software | lowercase)=='whatif' ">
 
-                                            <!-- area -->
+                                        @* HAZOP 2*@
+                                        @* <div class="row align-items-center d-none" ng-if="(item_m.pha_sub_software | lowercase)=='hazop' || (item_m.pha_sub_software | lowercase)=='whatif' ">
+
                                             <div class="col-md-2 p-1 d-none">
                                                 <div class="row g-0 align-items-center">
                                                     <div class="col-12 p-1  ">
@@ -415,7 +636,6 @@
                                                 </div>
                                             </div>
 
-                                            <!-- Functional Location -->
                                             <div class="col-md-3 p-1 d-none">
                                                 <div class="row g-0 align-items-center">
 
@@ -437,9 +657,7 @@
                                                 </div>
                                             </div>
 
-                                            <!-- Business Unit -->
                                             <div class="col-md-2 p-1 d-none">
-
                                                 <label class="form-label ps-0" for="unit">Business Unit </label>
                                                 <label class="form-label ps-0" ng-if="select_history_tracking_record">
                                                     <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
@@ -457,7 +675,6 @@
 
                                             </div>
 
-                                            <!-- Unit No -->
                                             <div class="col-md-2 p-1 d-none">
 
                                                 <label class="form-label ps-0" for="unit">Unit No </label>
@@ -475,7 +692,6 @@
                                                 </select>
                                             </div>
 
-                                            <!-- Attendees -->
                                             <div class="col-md-3 p-1">
                                                 <label class="form-label ps-0">Attendees Name</label>
                                                 <input type="text"
@@ -486,227 +702,13 @@
                                                        ng-keyup="actionChange(item_m)">
                                             </div>                                        
 
-                                        </div>
-
-                                        @* WHATIF 2*@
-                                        <div class="mx-3 row  g-3 align-items-center"
-                                             ng-if="(item_m.pha_sub_software | lowercase)=='hazop' || (item_m.pha_sub_software | lowercase)=='whatif'">
-                                            <!-- Project No -->
-                                            <div class="col-md-2 p-1">
-                                                <label class="form-label ps-0">Project No</label>
-                                                <label class="form-label ps-0" ng-if="select_history_tracking_record">
-                                                    <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
-                                                       data-bs-placement="top"
-                                                       title=" Project No : HAZOP-2023-00000XX"
-                                                       data-bs-html="true"></a>
-                                                </label>
-                                                <input type="text"
-                                                       name="project_no"
-                                                       class="form-control rounded-1"
-                                                       placeholder="Project No"
-                                                       autocomplete="off"
-                                                       ng-model="item_m.project_no"
-                                                       ng-keyup="actionChange(item_m)">
-                                            </div>
-
-                                            <!-- Project Name -->
-                                            <div class="col-md-3 p-1">
-                                                <label class="form-label ps-0" for="unit" ng-if="item_m.expense_type=='CAPEX'">Project Name</label>
-                                                <label class="form-label ps-0" for="unit" ng-if="item_m.expense_type=='OPEX'">e-MOC Request Number</label>
-                                                <label class="form-label ps-0" ng-if="select_history_tracking_record">
-                                                    <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
-                                                       data-bs-placement="top"
-                                                       title=" Project Name : PXXXXXXX-0001 New close loop drain of CDU-1 Analyzer"
-                                                       data-bs-html="true"></a>
-                                                </label>
-                                                <input class="form-control rounded-1"
-                                                       type="text"
-                                                       placeholder="Project Name"
-                                                       name="project_name"
-                                                       ng-model="item_m.pha_request_name"
-                                                       ng-keyup="actionChange(item_m)">
-                                                @* ng-keyup="filterResultGeneral(item_m.pha_request_name, 'pha_request_name')"> *@
-                                                <ul class="list-group mt-2 w-25" style="position: absolute;" ng-show="showResults">
-                                                    <li class="list-group-item "
-                                                        ng-repeat="result in filteredResults | filter:{field:'pha_request_name'}"
-                                                        ng-click="selectResult(result,item,'pha_request_name')">
-                                                        {{ result.name }}
-                                                    </li>
-                                                </ul>
-                                            </div>
-
-                                            <!-- Attendees -->
-                                            <div class="col-md-3 p-1">
-                                                <label class="form-label ps-0">Attendees Name</label>
-                                                <input type="text"
-                                                       name="attendees_search"
-                                                       class="form-control rounded-1"
-                                                       placeholder="คนที่เกี่ยวข้องทั้งหมด (Owner, Member Team, Safety Reviewer, Attendees, ผู้เชี่ยวชาญเฉพาะด้าน)" autocomplete="off"
-                                                       ng-model="item_m.emp_active_search"
-                                                       ng-keyup="actionChange(item_m)">
-                                            </div>
-
-                                            <!-- Target Date -->
-                                            <div class="col-md-7 p-1 d-none">
-
-                                                <div class="row g-0 align-items-center">
-                                                    <div class="col-md-3 p-1">
-
-                                                        <label class="form-label ps-0" for="tgs_date">Target Start Date</label>
-                                                        <label class="form-label ps-0" ng-if="select_history_tracking_record">
-                                                            <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
-                                                               data-bs-placement="top" title=" Target Start Date :  " data-bs-html="true"></a>
-                                                        </label>
-                                                        <input type="date" name="ts_date"
-                                                               class="form-control rounded-1 datetimepicker" id="tgs_date"
-                                                               placeholder="dd/mm/yyyy">
-
-                                                    </div>
-
-                                                    <div class="col-md-3 p-1">
-
-
-                                                        <label class="form-label ps-0" for="tge_date">Target End Date</label>
-                                                        <label class="form-label ps-0" ng-if="select_history_tracking_record">
-                                                            <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
-                                                               data-bs-placement="top" title=" Target End Date :  " data-bs-html="true"></a>
-                                                        </label>
-                                                        <input type="date" name="te_date"
-                                                               class="form-control rounded-1 datetimepicker" id="tgs_date"
-                                                               placeholder="dd/mm/yyyy">
-
-                                                    </div>
-
-
-                                                    <div class="col-md-3 p-1">
-
-                                                        <label class="form-label ps-0" for="tgs_date">Actual Start Date</label>
-                                                        <label class="form-label ps-0" ng-if="select_history_tracking_record">
-                                                            <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
-                                                               data-bs-placement="top" title=" Actual Start Date :  " data-bs-html="true"></a>
-                                                        </label>
-                                                        <input type="date" name="as_date"
-                                                               class="form-control rounded-1 datetimepicker" id="tgs_date"
-                                                               placeholder="dd/mm/yyyy">
-                                                    </div>
-
-                                                    <div class="col-md-3 p-1">
-
-                                                        <label class="form-label ps-0" for="tge_date">Actual End Date</label>
-                                                        <label class="form-label ps-0" ng-if="select_history_tracking_record">
-                                                            <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
-                                                               data-bs-placement="top" title=" Actual End Date :  " data-bs-html="true"></a>
-                                                        </label>
-                                                        @*item_m.actual_end_date*@
-                                                        <input type="date" name="ae_date"
-                                                               class="form-control rounded-1  datetimepicker"
-                                                               id="tgs_date" placeholder="dd/mm/yyyy">
-
-                                                    </div>
-
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        @* JSEA 2*@
-                                        <div class="mx-3 row  g-3 align-items-center" ng-if="(item_m.pha_sub_software | lowercase)=='jsea'">
-
-                                            <!-- Project No -->
-                                            <div class="col-md-2 p-1">
-                                                <label class="form-label ps-0">Project No</label>
-                                                <label class="form-label ps-0" ng-if="select_history_tracking_record">
-                                                    <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
-                                                       data-bs-placement="top"
-                                                       title=" Project No : JSEA-2023-00000XX"
-                                                       data-bs-html="true"></a>
-                                                </label>
-                                                <input type="text" name="project_no" class="form-control rounded-1" placeholder="Project No" autocomplete="off"
-                                                       ng-model="item_m.project_no"
-                                                       ng-keyup="actionChange(item_m)">
-                                            </div>
-
-                                            <!-- Project Name -->
-                                            <div class="col-md-3 p-1">
-                                                <label class="form-label ps-0" for="unit">Task Name</label>
-                                                <label class="form-label ps-0" ng-if="select_history_tracking_record">
-                                                    <a class="form-label far fa-comment-alt text-warning cursor-pointer"
-                                                       data-bs-toggle="tooltip"
-                                                       data-bs-placement="top"
-                                                       title=" Task Name : PXXXXXXX-0001 New close loop drain of CDU-1 Analyzer"
-                                                       data-bs-html="true">
-                                                    </a>
-                                                </label>
-                                                <input class="form-control rounded-1"
-                                                       type="text"
-                                                       placeholder="Project Name"
-                                                       name="project_name"
-                                                       ng-change="actionChange(item_m)"
-                                                       ng-model="item_m.pha_request_name">
-                                                @* ng-keyup="filterResultGeneral(item_m.pha_request_name, 'pha_request_name')"> *@
-                                                <ul class="list-group mt-2 w-25" style="position: absolute;" ng-show="showResults">
-                                                    <li class="list-group-item "
-                                                        ng-repeat="result in filteredResults | filter:{field:'pha_request_name'}"
-                                                        ng-click="selectResult(result,item,'pha_request_name')">
-                                                        {{ result.name }}
-                                                    </li>
-                                                </ul>
-                                            </div>
-
-                                            <!-- Date -->
-                                            <div class="col-md-7 p-1">
-                                                <div class="row g-0 align-items-center">
-                                                    <div class="col-md-3 p-1">
-                                                        <label class="form-label ps-0" for="tgs_date">Date</label>
-                                                        <label class="form-label ps-0" ng-if="select_history_tracking_record">
-                                                            <a class="form-label far fa-comment-alt text-warning cursor-pointer"
-                                                               data-bs-toggle="tooltip"
-                                                               data-bs-placement="top"
-                                                               title=" Target Start Date :  "
-                                                               data-bs-html="true">
-                                                            </a>
-                                                        </label>
-                                                        <input type="date"
-                                                               name="ts_date"
-                                                               class="form-control rounded-1 datetimepicker"
-                                                               id="tgs_date"
-                                                               placeholder="dd/mm/yyyy"
-                                                               ng-change="actionChange(item_m)"
-                                                               ng-model="item_m.create_date">
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <!-- A -->
-                                            <div class="col-md-3 p-1">
-                                                <label class="form-label ps-0">Attendees Name</label>
-                                                <input type="text"
-                                                       name="attendees_search"
-                                                       class="form-control rounded-1"
-                                                       placeholder="คนที่เกี่ยวข้องทั้งหมด (Owner, Member Team, Safety Reviewer, Attendees, ผู้เชี่ยวชาญเฉพาะด้าน)"
-                                                       autocomplete="off"
-                                                       ng-model="item_m.emp_active_search"
-                                                       ng-keyup="actionChange(item_m)">
-                                            </div>
-
-                                            <!-- Worksheet -->
-                                            <div class="col-md-3 p-1">
-                                                <label class="form-label ps-0">Worksheet search</label>
-                                                <input type="text"
-                                                       name="worksheet_search"
-                                                       class="form-control rounded-1"
-                                                       placeholder="POTENTIAL HAZARD ,POSSIBLE CAUSE" autocomplete="off"
-                                                       ng-model="item_m.worksheet_active_search"
-                                                       ng-keyup="actionChange(item_m)">
-                                            </div>                                                
-
-                                        </div>
+                                        </div> *@
 
                                         @* HRA 2*@
                                         <div class="mx-3 row  g-3 align-items-center" ng-if="(item_m.pha_sub_software | lowercase)=='hra'">
 
                                             <!-- Project Name -->
-                                            <div class="col-md-3 p-1">
-
+                                            <div class="col-md-2">
                                                 <label class="form-label ps-0" for="unit">Task Name</label>
                                                 <label class="form-label ps-0" ng-if="select_history_tracking_record">
                                                     <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
@@ -730,14 +732,16 @@
                                             </div>
                                         </div>
 
-
                                     </div>
 
                                     <div class="m-3 row  gx-0 align-items-center" style="z-index:0">
                                         <div class="card px-2" style="z-index:0">
                                             <div class="row g-3 justify-content-between align-items-center pt-2 pb-3">
                                                 <div class="col-12 col-md">
-                                                    <h5 class="text-900 mb-0" data-anchor="data-anchor"> <span class=" me-2 text-primary"><B>|</B></span>  Results</h5>
+                                                    <h5 class="text-900 mb-0" data-anchor="data-anchor"> 
+                                                        <span class=" me-2 text-primary"><B>|</B></span> 
+                                                         Results
+                                                    </h5>
                                                 </div>
                                             </div>
                                             <div class="col-12 col-md mx-1">
@@ -747,7 +751,7 @@
                                                             <tr>
                                                                 <th class="align-middle text-center" scope="col" style="font-size: 10px;"></th>
                                                                 <th class="align-middle" scope="col" style="font-size: 10px;">Project No.</th>
-                                                                <th class="align-middle" scope="col" style="font-size: 10px;">{{((item_m.pha_sub_software | lowercase)=='jsea' ? 'Project Name' : 'Task Name')}}</th>
+                                                                <th class="align-middle" scope="col" style="font-size: 10px;">Task Name <span class="my-subtext">(ชื่องาน)</span></th>
                                                                 <th class="align-middle text-center" scope="col" style="font-size: 10px;">Status</th>
                                                                 <th class="align-middle text-center" scope="col" style="font-size: 10px;">Revision</th>
                                                                 <th class="align-middle" scope="col" style="font-size: 10px;">Request</th>
@@ -847,7 +851,15 @@
                                                                                 ng-if="item_h.pha_status == 13 && (flow_role_type == 'admin' || flow_role_type == 'originator')"
                                                                                 ng-click="editDoc(item_h)">
                                                                                 <span class="fa-solid fa-file-pen"></span>
-                                                                                Edit
+                                                                                Change Action Owner
+                                                                            </a>
+                                                                            <div class="dropdown-divider" 
+                                                                                ng-if="item_h.pha_status == 21 && (flow_role_type == 'admin' || flow_role_type == 'originator')"></div>        
+                                                                            <a class="dropdown-item " 
+                                                                                ng-if="item_h.pha_status == 21 && (flow_role_type == 'admin' || flow_role_type == 'originator')"
+                                                                                ng-click="editDoc(item_h)">
+                                                                                <span class="fa-solid fa-file-pen"></span>
+                                                                                Change Approver
                                                                             </a>
                                                                         </div>                                                                        
                                                                     </div>
