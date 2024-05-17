@@ -1003,15 +1003,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.searchdataResponder = '';
         $scope.searchdataApprover = '';
 
-        $scope.searchIndicator = {
-            text: ''
-        }
-
-        $scope.searchUnitNo = {
-            text: ''
-        }
-        $scope.searchTagId = {
-            text: ''
+        $scope.search_keywords = {
+            indicator: '',
+            unit_no: '',
+            tag_id: '',
+            request_type: '',
         }
 
         // สร้างชั่วโมง (0-23)
@@ -1510,13 +1506,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 $('#divLoading').hide();
             },
             success: function (data) {
-                console.log(data);
-
-
                 var action_part_befor = $scope.action_part;//(page_load == false ? $scope.action_part : 0);
                 var tabs_befor = (page_load == false ? $scope.tabs : null);
-
                 var arr = data;
+
                 if (true) {
                     $scope.data_all = arr;
                     arr.company.push({ id: 9999, name: 'Other' })
@@ -1637,6 +1630,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 $scope.data_drawing_delete = [];
                 $scope.data_listworksheet_delete = [];
                 $scope.data_request_type = arr.request_type;
+                $scope.data_request_type_list = arr.request_type;
                 $scope.data_departments = arr.departments;
                 $scope.data_attendees= [];
 
@@ -5469,23 +5463,17 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     $scope.changeUnitNo = function(unit_no) {
         $scope.data_general[0].id_unit_no = unit_no.id;
         $scope.data_general[0].unit_no_name = unit_no.name;
-        console.log($scope.data_general)
     };
 
     $scope.changeTagId = function(tagIg) {
         $scope.data_general[0].id_tagid = tagIg.id;
         // $scope.data_general[0].unit_no_name = unit_no.name;
-        console.log($scope.data_general)
     };
 
-    $scope.openSearchDropdown = function(id) {
-        // var dropdown = document.getElementById(id);
-        // if (dropdown) {
-        //     dropdown.classList.toggle("show");
-        // }
-        // apply();
-        // console.log(id);
+    $scope.changeRequestType = function(request_type) {
+        $scope.data_general[0].id_request_type = request_type.id;
     };
+
 
     $document.on('click', function(event) {
         const targetElement = event.target;
@@ -5507,11 +5495,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         // hidden dropdown
         document.getElementById('unit_no').classList.remove("show");
         document.getElementById('tag_id').classList.remove("show");
+        document.getElementById('request_type').classList.remove("show");
         // set default list
-        $scope.searchUnitNo.text = '';
+        $scope.search_keywords = clone_arr_newrow(  $scope.search_keywords);
         $scope.master_unit_no_list =  $scope.master_unit_no;
-        $scope.searchTagId.text = '';
         $scope.master_tagid_list =  $scope.master_tagid;
+        $scope.data_request_type_list =  $scope.data_request_type;
         // show
         try {
             document.getElementById(id_list).classList.toggle("show");
@@ -5523,7 +5512,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             console.log(type)
             $scope.master_unit_no_list = $filter('filter')($scope.master_unit_no, function(item) {
                 var itemName = item.name.toLowerCase();
-                var searchText = $scope.searchUnitNo.text.toLowerCase();
+                var searchText = $scope.search_keywords.unit_no.toLowerCase();
         
                 return itemName.includes(searchText);
             });
@@ -5532,7 +5521,16 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         if (type == 'tag_id') {
             $scope.master_tagid_list = $filter('filter')($scope.master_tagid, function(item) {
                 var itemName = item.name.toLowerCase();
-                var searchText = $scope.searchTagId.text.toLowerCase();
+                var searchText = $scope.search_keywords.tag_id.toLowerCase();
+        
+                return itemName.includes(searchText);
+            });
+        }
+
+        if (type == 'request_type') {
+            $scope.data_request_type_list = $filter('filter')($scope.data_request_type, function(item) {
+                var itemName = item.name.toLowerCase();
+                var searchText = $scope.search_keywords.request_type.toLowerCase();
         
                 return itemName.includes(searchText);
             });
