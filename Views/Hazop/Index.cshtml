@@ -3246,10 +3246,29 @@
                                                     </div>
                                                 </td>
                                                 <td class="align-top white-space-nowrap">
-                                                    <div class="col-md-12 p-1 ps-3">
-                                                        <label class="text-1100 fw-bold ">
-                                                            {{item.user_displayname}}
-                                                        </label>
+                                                    <div class="col-md-12 p-1 ps-3 text-start">
+                                                        <div class="d-flex align-items-center">
+                                                            <div ng-if="params == 'edit_approver'">
+                                                                <button ng-click="
+                                                                    openDataEmployeeAdd(item,'owner'); 
+                                                                    recommentAction_valid(item);" 
+                                                                    class="btn btn-link px-0 mx-1"
+                                                                    data-toggle="tooltip" 
+                                                                    title="Add Employee">
+                                                                <span class="far fa-address-book"></span>
+                                                                </button>
+                                                                <button class="btn btn-sm transition-none btn-reveal fs--2 p-1 " 
+                                                                        type="button"
+                                                                        ng-click="removeDataEmpWorkSheet('worksheet',item.seq)"
+                                                                        ng-if="item.responder_id>0">
+                                                                    <span class="fas fa-times text-danger"></span>
+                                                                </button>
+                                                            </div>
+                                                            <label class="text-1100 fw-bold ">
+                                                                {{item.user_displayname}}
+                                                            </label>
+                                                        </div>
+                                                   
                                                     </div>
                                                 </td>
                                                 <td class="align-top white-space-nowrap">
@@ -3525,8 +3544,8 @@
                         </h5>
                     </div>
                     <!-- For form_type === 'owner' -->
-                    <div ng-if="selectDatFormType === 'owner'">
-                        <nav class="navbar navbar-expand-lg navbar-light bg-light ps-0">
+                    <div ng-if="selectDatFormType === 'owner' && params != 'edit_approver'">
+                        <nav class="navbar navbar-expand-lg navbar-light ps-0">
                             <div class="container-fluid">
                                 <ul class="nav nav-underline border-3 border-primary border-bottom" id="myTab"
                                     role="tablist" style="position: relative;">
@@ -3562,7 +3581,7 @@
                 <div class="modal-body" >
                     <h6 class="text-1200 mb-3" style="font-size: 1.2rem;" ng-if="owner_status">
                         <span class="me-2 text-primary"><B>|</B></span> 
-                        {{owner_status === 'employee'  ? 'Employee/Contract' : 'Teams'}}
+                        {{owner_status === 'employee'  ? 'Employee/Contract' : 'Teams'}} 
                     </h6>  
                     <div ng-show="selectDatFormType && owner_status !== 'teams'">
                         <div class="mb-4">
