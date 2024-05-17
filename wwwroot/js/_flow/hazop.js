@@ -1622,8 +1622,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 $scope.data_header = JSON.parse(replace_hashKey_arr(arr.header));
                 set_form_action(action_part_befor, !action_submit, page_load);
 
-                // if($scope.params == 'edit')  $scope.action_owner_active = true;
-                $scope.action_owner_active = true;
+                if($scope.params != 'edit_approver')  $scope.action_owner_active = true;
+                // $scope.action_owner_active = true;
 
                 //ตรวจสอบเพิ่มเติม
                 if (arr.user_in_pha_no[0].pha_no == '' && $scope.flow_role_type != 'admin') {
