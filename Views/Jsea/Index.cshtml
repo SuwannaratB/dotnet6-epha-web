@@ -2780,7 +2780,7 @@
                 <div class="modal-body"> <!----------------- ng-class="{'d-none':(selectDatFormType == 'specialist')}"------------------->
                     <div class="mb-4">
                         <div class="row g-3">
-                            <div class="col-auto">
+                            @*<div class="col-auto">
                                 <label for="" style="font-size: 14px; font-weight: bold; padding-left: 4px;">Employee</label>
                                 <div class="search-box position-relative">
                                     <input class="form-control search-input search"
@@ -2790,6 +2790,16 @@
                                     <span class="fas fa-search search-box-icon"></span>
                                 </div>
                             </div>
+                            <div class="col-auto">
+                                <label for="" style="font-size: 14px; font-weight: bold; padding-left: 4px;">Indicator</label>
+                                <div class="search-box position-relative">
+                                    <input class="form-control search-input search"
+                                           ng-model="searchIndicator.text" 
+                                           placeholder="Search"
+                                           ng-change="fillterDataEmployeeAdd()" />
+                                    <span class="fas fa-search search-box-icon"></span>
+                                </div>
+                            </div>*@
                             <div class="col-auto">
                                 <label for="" style="font-size: 14px; font-weight: bold; padding-left: 4px;">Indicator</label>
                                 <div class="search-box position-relative">
@@ -2850,12 +2860,12 @@
                                                 </a>
                                             </td>
                                             <td class="text-center">{{item.employee_position}} </td>
-                                            <td class="text-center"></td>
+                                            <td class="text-center">{{item.employee_position + '-'}}{{item.employee_name}} </td>
                                             <td class="text-center">{{item.employee_email}} </td>
                                             @*<td class="text-center">{{item.employee_type}}</td>*@
                                         </tr>
                                         <!-- Show "please enter" message  -->
-                                        <tr ng-if="!searchText && !searchIndicator.text">
+                                        <tr ng-if="!searchIndicator.text">
                                             <td colspan="5">
                                                 <p class="mb-0 ms-3 text-muted fw-bold text-center"> Enter employee details to search. </p>
                                             </td>
@@ -3851,6 +3861,28 @@
     </div>
     <!--Modal Check Send e-Mail ปุ่ม Submit TA2 Approver-->
 
+    <!----------------------------------------------->
+<div class="modal fade" id="unsavedChangesModal" tabindex="-1" role="dialog" 
+    aria-labelledby="unsavedChangesModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="unsavedChangesModalLabel">Unsaved Changes</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        You have unsaved changes. Are you sure you want to leave?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="stayButton" ng-click="">Stay</button>
+        <button type="button" class="btn btn-primary" id="leaveButton" ng-click="leaveWithSave">Leave with Save</button>
+        <button type="button" class="btn btn-primary" id="leaveButton" ng-click="leave">Leave</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 
 </div>

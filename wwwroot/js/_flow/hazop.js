@@ -444,26 +444,19 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         apply();
     };
 
-    $scope.fileSelect = function (input, file_part) {
-        console.log(input, file_part)
+    /*$scope.fileSelect = function (input, file_part) {
         //drawing, responder, approver
         var file_doc = $scope.data_header[0].pha_no;
 
         const fileInput = input;
         const fileSeq = fileInput.id.split('-')[1];
-        console.log("fileSeq",fileSeq)
-        //document.getElementById('filename' + fileSeq);
-        //document.getElementById('attfile' + fileSeq);
         const fileInfoSpan = document.getElementById('filename' + fileSeq);
 
-        console.log("fileInfoSpan",fileInfoSpan)
         if (fileInput.files.length > 0) {
             const file = fileInput.files[0];
             const fileName = file.name;
             const fileSize = Math.round(file.size / 1024);
             //fileInfoSpan.textContent = `${fileName} (${fileSize} KB)`;
-
-            console.log("fileName",fileName)
 
             //fileInfoSpan.textContent = `${fileName} (${fileSize} KB)`;
             let shortenedFileName = fileName.length > 20 ? fileName.substring(0, 20) + '...' : fileName;
@@ -497,7 +490,51 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 $scope.status_upload = true;
             }
         }
-    }
+    }*/
+    $scope.fileSelect = function (input, file_part) {
+        //drawing, responder, approver
+        var file_doc = $scope.data_header[0].pha_no;
+        const fileInput = input;
+        const fileSeq = fileInput.id.split('-')[1];
+        const fileInfoSpan = document.getElementById('filename' + fileSeq);
+
+        if (fileInput.files.length > 0) {
+            const file = fileInput.files[0];
+            const fileName = file.name;
+            const fileSize = Math.round(file.size / 1024);
+            try {
+                //fileInfoSpan.textContent = `${fileName} (${fileSize} KB)`;
+                let shortenedFileName = fileName.length > 20 ? fileName.substring(0, 20) + '...' : fileName;
+                fileInfoSpan.textContent = `${shortenedFileName} (${fileSize} KB)`;
+
+            } catch {
+
+             }
+
+            if (file) {
+                const allowedFileTypes = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'jpg', 'png', 'gif']; // รายการของประเภทของไฟล์ที่อนุญาตให้แนบ
+
+                const fileExtension = fileName.split('.').pop().toLowerCase(); // นำนามสกุลของไฟล์มาเปลี่ยนเป็นตัวพิมพ์เล็กทั้งหมดเพื่อให้เป็น case-insensitive
+
+                if (allowedFileTypes.includes(fileExtension)) {
+                    // ทำการแนบไฟล์
+                    //set_alert("File attached successfully.");
+                } else {
+                    $('#modalMsgFileError').modal('show');
+                    //set_alert('Warning', "Please select a PDF, Word or Excel, Image file.");
+                }
+            } else {
+                console.log("No file selected.");
+            }
+
+
+            var file_path = uploadFile(file, fileSeq, fileName, fileSize, file_part, file_doc);
+
+        } else {
+            fileInfoSpan.textContent = "";
+        }
+        // $("#divLoading").hide(); 
+    }    
     $scope.fileSelectRAM = function (input) {
 
 
