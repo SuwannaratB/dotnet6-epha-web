@@ -399,7 +399,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             if (selectedTab.action_part == 6) {
                 $scope.data_nodeworksheet.forEach(_item => {
-                    if (_item.recommendations && _item.responder_user_displayname && !_item.estimated_start_date) {
+                    if (_item.recommendations && (_item.responder_user_displayname || _item.project_team_text) && !_item.estimated_start_date) {
                         _item.estimated_start_date = new Date();
                         $scope.actionChangeWorksheet(_item, _item.seq, '');
                     }
@@ -4951,6 +4951,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     $scope.confirmDialogApprover = function (_item, action) {
 
+        $scope.data_drawing_approver.forEach(function(item) {
+            item.action_type === 'new' ? 'insert' : item.action_type;
+        });
+        
         var arr_chk = _item;
         $scope.item_approver_active = [];
         $scope.item_approver_active.push(_item);
@@ -5325,16 +5329,16 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         //    }
         //}
 
+        console.log("check_data_nodeworksheet",$scope.data_nodeworksheet)
         for (var i = 0; i < $scope.data_nodeworksheet.length; i++) {
             $scope.data_nodeworksheet[i].id = Number($scope.data_nodeworksheet[i].seq);
             $scope.data_nodeworksheet[i].id_pha = pha_seq;
 
             // action_project_team
-            if($scope.data_nodeworksheet[i].action_project_team){
-                $scope.data_nodeworksheet[i].action_project_team = $scope.data_nodeworksheet[i].action_project_team === true ? 1 : 0;
+            if ($scope.data_nodeworksheet[i].action_project_team !== undefined) {
+                $scope.data_nodeworksheet[i].action_project_team = $scope.data_nodeworksheet[i].action_project_team ? 1 : 0;
             }
             
-        
 
             //ram_action_security, ram_action_likelihood, ram_action_risk, estimated_start_date, estimated_end_date, document_file_path, document_file_name, action_status, responder_action_type, responder_user_name, responder_user_displayname
 
@@ -5352,7 +5356,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 }
             } catch (error) {} 
             try {
-                if ($scope.data_nodeworksheet[i].estimated_start_date) {
+                if ($scope.data_nodeworksheet[i].estimated_start_date !== null) {
                     var end_date = new Date($scope.data_nodeworksheet[i].estimated_end_date);
                     if (!isNaN(end_date.getTime())) { 
                         var end_date_utc = new Date(Date.UTC(end_date.getFullYear(), end_date.getMonth(), end_date.getDate()));
@@ -5364,23 +5368,30 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             if (pha_status == "11" || pha_status == "12" || pha_status == "22") {
                 try {
-                    var reviewer_date = new Date($scope.data_nodeworksheet[i].reviewer_action_date);
-                    if (!isNaN(reviewer_date.getTime())) {
-                        var reviewer_date_utc = new Date(Date.UTC(reviewer_date.getFullYear(), reviewer_date.getMonth(), reviewer_date.getDate()));
-                        $scope.data_nodeworksheet[i].reviewer_action_date = reviewer_date_utc.toISOString().split('T')[0];
-                    }
+                    if ($scope.data_nodeworksheet[i].reviewer_action_date !== null) {
+                        var reviewer_date = new Date($scope.data_nodeworksheet[i].reviewer_action_date);
+                        if (!isNaN(reviewer_date.getTime())) {
+                            var reviewer_date_utc = new Date(Date.UTC(reviewer_date.getFullYear(), reviewer_date.getMonth(), reviewer_date.getDate()));
+                            $scope.data_nodeworksheet[i].reviewer_action_date = reviewer_date_utc.toISOString().split('T')[0];
+                        }
+                    }                 
+
                 } catch (error) {}
                 
                 try {
-                    var responder_date = new Date($scope.data_nodeworksheet[i].responder_action_date);
-                    if (!isNaN(responder_date.getTime())) { 
-                        var responder_date_utc = new Date(Date.UTC(responder_date.getFullYear(), responder_date.getMonth(), responder_date.getDate()));
-                        $scope.data_nodeworksheet[i].responder_action_date = responder_date_utc.toISOString().split('T')[0];
-                    }
+                    if ($scope.data_nodeworksheet[i].responder_action_date !== null) {
+                        var responder_date = new Date($scope.data_nodeworksheet[i].responder_action_date);
+                        if (!isNaN(responder_date.getTime())) { 
+                            var responder_date_utc = new Date(Date.UTC(responder_date.getFullYear(), responder_date.getMonth(), responder_date.getDate()));
+                            $scope.data_nodeworksheet[i].responder_action_date = responder_date_utc.toISOString().split('T')[0];
+                        }
+                    }                      
+
                 } catch (error) {}
             }
 
         }
+        console.log("check_data_nodeworksheet",$scope.data_nodeworksheet)
 
         var arr_active = [];
         angular.copy($scope.data_nodeworksheet, arr_active);
@@ -5833,15 +5844,25 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     $scope.fillterDataEmployeeAdd = function () {
         $scope.employeelist_show = [];
-        var searchText = $scope.searchText;
+        //var searchText = $scope.searchText;
         var searchIndicator = $scope.searchIndicator.text;
-        if (!searchText && !searchIndicator) { return; }
+        if (!searchIndicator) { return; }
        
         var items = angular.copy($scope.employeelist_def, items);
 
-        if (searchText.length < 3 && searchIndicator.length < 3) { return items; }
+        if (searchIndicator.length < 3) { return items; }
+        
+        if (searchIndicator.length > 4 && /\W+/.test(searchIndicator)) {
+            var parts = searchIndicator.split(/\W+/);
+            var searchIndicator = parts.join('');
+        }
        
-        getEmployees(searchText,searchIndicator, function(data) {
+        getEmployees(searchIndicator, function(data) {
+
+            data.employee.forEach(function(employee) {
+                employee.isAdded = false; 
+            });
+
             $scope.employeelist_show = data.employee
             apply();
             $('#modalEmployeeAdd').modal({
@@ -5850,11 +5871,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }).modal('show');
         });
     };
-    function getEmployees(keywords,indicator, callback) {
+    function getEmployees( indicator, callback){
         $.ajax({
             url: url_ws + "Flow/employees_search",
-            data: '{"user_filter_text":"' + keywords + '"'
-                + ',"user_indicator":"' + indicator + '"'
+            data: '{"user_indicator":"' + indicator + '"'
                 + ',"max_rows":"10"'
                 + '}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
@@ -5999,6 +6019,15 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         else {
             $('#modalEmployeeAdd').modal('show');
         }
+    };
+
+    $scope.clearFormData = function() {
+        $scope.formData = [];
+        //$scope.searchText='';
+        $scope.searchIndicator = {
+            text: ''
+        }        
+        //$scope.formData_outsider = [];
     };
 
     $scope.removeDataEmployee = function (seq, seq_session) {

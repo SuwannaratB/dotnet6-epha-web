@@ -378,6 +378,26 @@
                                                             </option>
                                                         </select>
                                                     </div>
+
+                                                    <div class="col-md-2">
+                                                        <label class="form-label ps-0" for="unit">Task Type</label>
+                                                        <label class="form-label ps-0" ng-if="select_history_tracking_record">
+                                                            <a class="form-label far fa-comment-alt text-warning cursor-pointer"
+                                                               data-bs-toggle="tooltip"
+                                                               data-bs-placement="top"
+                                                               title=""
+                                                               data-bs-html="true">
+                                                            </a>
+                                                        </label>
+                                                        <select class="form-control"
+                                                                data-choices="data-choices"
+                                                                data-options='{"removeItemButton":true,"placeholder":true}'
+                                                                ng-change="actionChange(item_m)"
+                                                                ng-model="item_m.id_request_type">
+                                                            <option ng-repeat="item2 in master_request_type | filter: { id: item.id_request_type }" 
+                                                                ng-value="item2.id">{{item2.name}}</option>
+                                                        </select>
+                                                    </div>                                                    
                                                 </div>
                                             </div>
 

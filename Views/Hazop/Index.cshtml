@@ -647,10 +647,17 @@
 
                                                                 <div class="row" ng-repeat="item2 in data_memberteam | filter:{id_session:item.seq }">
 
-                                                                    <div class="row align-items-center  p-1">
+                                                                    <div class="col-8 align-items-center  p-1">
                                                                         <label class="mb-0 text-1100 fw-bold"
-                                                                               style="width:80%;border-color: #f1f2f4;">{{ item2.user_displayname}}</label>
-
+                                                                                style="width:100%;border-color: #f1f2f4;">
+                                                                                {{ item2.user_displayname}}
+                                                                        </label>
+                                                                    </div>
+                                                                    <div class="col-4 align-items-center  p-1">
+                                                                        <label class="mb-0 text-1100 fw-bold"
+                                                                                style="width:80%;border-color: #f1f2f4;">
+                                                                                {{ item2.user_title}}
+                                                                        </label>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -664,10 +671,17 @@
                                                                 </div>
                                                                 <div class="row" ng-repeat="item2 in data_approver | filter:{id_session:item.seq }">
 
-                                                                    <div class="row align-items-center  p-1">
+                                                                    <div class="col-8 align-items-center  p-1">
                                                                         <label class="mb-0 text-1100 fw-bold"
-                                                                               style="width:80%;border-color: #f1f2f4;">{{ item2.user_displayname}}</label>
-
+                                                                                style="width:100%;border-color: #f1f2f4;">
+                                                                                {{ item2.user_displayname}}
+                                                                        </label>
+                                                                    </div>
+                                                                    <div class="col-4 align-items-center  p-1">
+                                                                        <label class="mb-0 text-1100 fw-bold"
+                                                                                style="width:80%;border-color: #f1f2f4;">
+                                                                                {{ item2.user_title}}
+                                                                        </label>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -3342,7 +3356,7 @@
                                                                     </a>
                                                                 </div>
                                                             </div>
-                                                            <div class="align-items-center" 
+                                                            @*<div class="align-items-center" 
                                                                 ng-class="{ 'cant-Access': !canAccess(item) }">
                                                                 <div class="uploadbox ">
                                                                     <span class="nametext ms-3 filename-text me-2" id="filename-approver-{{item_x.seq}}" >
@@ -3360,7 +3374,35 @@
                                                                            onchange="angular.element(this).scope().fileSelectApprover(this,'approver')"
                                                                            style="display:none" />
                                                                 </div>
-                                                            </div>
+                                                            </div>*@
+                                                            <div class="btn-group my-2" ng-class="{ 'no-drop': !canAccess(item), 'cursor-pointer': canAccess(item) }">
+                                                                <div class="icon-button border p-3" style="border-color: #0d6efd; background-color: #0d6efd;">
+                                                                    <span class="fa-solid fa-arrow-up-from-bracket fa-lg" style="color: #ffffff;"></span>
+                                                                </div>
+                                                                <button class="Upload-button btn ps-3 cursor-pointer" 
+                                                                        ng-class="{ 'no-drop': !canAccess(item), 'cursor-pointer': canAccess(item) }" 
+                                                                        ng-if="!item_x.document_file_size">
+                                                                    <span class="nametext ms-3 filename-text me-2 d-none" id="filename-approver-{{item_x.seq}}">
+                                                                        {{(item_x.document_file_size>0? item_x.document_file_name + '('+  item_x.document_file_size + 'KB)' : '')}}
+                                                                    </span>
+                                                                    <label class="dz-message-text fw-bold p-1 cursor-pointer" for="attfile-{{item_x.seq}}">
+                                                                        Upload File (Max size 10mb)
+                                                                    </label>
+                                                                    <input type="file" id="attfile-{{item_x.seq}}"
+                                                                           class="cursor-pointer"
+                                                                           name="file{{item_x.seq}}"
+                                                                           ng-class="{ 'cant-Access': !canAccess(item) }"
+                                                                           onchange="angular.element(this).scope().fileSelectApprover(this,'approver')"
+                                                                           style="display:none" />
+                                                                </button>
+                                                                <button class="Upload-button btn cursor-pointer" style="width:250px;" ng-if="item_x.document_file_size > 0">
+                                                                    <div class="d-flex align-items-center">
+                                                                        <span class="nametext filename-text me-2 cursor-pointer">
+                                                                            {{ item_x.document_file_name }} ({{ item_x.document_file_size }} KB)
+                                                                        </span>
+                                                                    </div>
+                                                                </button>
+                                                            </div>                                                              
                                                         </div>
                                                         @* {{item_x.document_file_size}} *@
                                                         <div class="text-start p-0 cursor-pointer d-flex flex-nowrap" ng-if="item_x.document_file_size>0 ">
@@ -3562,7 +3604,7 @@
                         </nav>
                     </div>
 
-                    <button class="btn p-1" type="button" data-bs-dismiss="modal" aria-label="Close">
+                    <button class="btn p-1" type="button" data-bs-dismiss="modal" aria-label="Close" ng-click="clearFormData()">
                         <svg class="svg-inline--fa fa-xmark fs--1" aria-hidden="true" focusable="false" data-prefix="fas"
                                 data-icon="xmark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"
                                 data-fa-i2svg="">
@@ -3580,8 +3622,8 @@
                     <div ng-show="selectDatFormType && owner_status !== 'teams'">
                         <div class="mb-4">
                             <div class="row g-3">
-                                <div class="col-auto">
-                                    @*<label for="" style="font-size: 14px; font-weight: bold; padding-left: 4px;">Employee</label>*@
+                                @*<div class="col-auto">
+                                    <label for="" style="font-size: 14px; font-weight: bold; padding-left: 4px;">Employee</label>
                                     <div class="search-box form-floating position-relative">
                                         <input class="form-control search-input search"
                                             ng-model="searchText" 
@@ -3591,6 +3633,17 @@
                                         <span class="fas fa-search search-box-icon"></span>
                                     </div>                                  
                                 </div>
+                                <div class="col-auto">*@
+                                    @*<label for="" style="font-size: 14px; font-weight: bold; padding-left: 4px;">Indicator</label>
+                                    <div class="search-box form-floating position-relative">
+                                        <input class="form-control search-input search"
+                                            ng-model="searchIndicator.text" 
+                                            placeholder="Search Indicator"
+                                            ng-change="fillterDataEmployeeAdd()" />
+                                        <label class="ms-3" for="floatingInput">Indicator</label>    
+                                        <span class="fas fa-search search-box-icon"></span>
+                                    </div>                                      
+                                </div>*@
                                 <div class="col-auto">
                                     @*<label for="" style="font-size: 14px; font-weight: bold; padding-left: 4px;">Indicator</label>*@
                                     <div class="search-box form-floating position-relative">
@@ -3600,7 +3653,7 @@
                                             ng-change="fillterDataEmployeeAdd()" />
                                         <label class="ms-3" for="floatingInput">Indicator</label>    
                                         <span class="fas fa-search search-box-icon"></span>
-                                    </div>                                      
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -3612,10 +3665,12 @@
                                         <thead class=" text-uppercase">
                                             <tr class="text-center">
                                                 <th class=""> </th>
-                                                    <th class="pe-5" scope="col">Employee</th>
-                                                    <th class="pe-5" scope="col">Indicator</th>
-                                                    <th class="pe-5" scope="col">E-Mail</th>
-                                                    <th class="pe-5" scope="col">Employee Type</th>
+                                                <th class="pe-5" scope="col">Employee</th>
+                                                <th class="" scope="col">Section</th>
+                                                <th class="" scope="col">Indicator</th>
+                                                <th class="" scope="col">E-Mail</th>
+                                                @*<th class="" scope="col">Employee Type</th>*@
+
                                             </tr>
                                         </thead>
                                         <tbody class=" list">
@@ -3645,12 +3700,9 @@
                                                             <p class="mb-0 ms-3 text-1100 fw-bold">{{item.employee_displayname}} </p>
                                                         </a>
                                                     </td>
-
-                                                    <td class="">{{item.employee_position}} </td>
-
-                                                    <td class="">{{item.employee_email}} </td>
-
-                                                    <td class="">{{item.employee_type}}</td>
+                                                    <td class="text-center">{{item.employee_position}} </td>
+                                                    <td class="text-center">{{item.employee_position + '-'}}{{item.employee_name}} </td>
+                                                    <td class="text-center">{{item.employee_email}} </td>
 
                                                 </tr>
                                                 <!-- Show "please enter" message  -->
@@ -3686,13 +3738,14 @@
                 </div>
 
                 <!------------show name after add   --------------->
-                <div class="modal-header bg-soft" ng-if="selectDatFormType !== 'owner'">
+                <div class="modal-header bg-soft" ng-if="(selectDatFormType !== 'owner' && (data_memberteam || data_approver).length > 1 )">
                     <h5 class="text-900 mb-0">
                         <span class="me-2 text-primary"><B>|</B></span> {{ selectDatFormType === 'member' ? 'Member Team' : 'Approver' }}
                     </h5>
                 </div>
 
-                <div class="modal-body">
+                <div class="modal-body" 
+                    ng-if="(selectDatFormType !== 'owner' && (data_memberteam || data_approver).length > 1 )">
                     <div class="col-auto py-2" ng-repeat="item2 in (selectDatFormType === 'member' ? data_memberteam : data_approver) | filter:{id_session: selectdata_session }"
                         ng-if="!(item2.user_displayname == '' || item2.user_displayname == null)">
                         <div class="d-flex align-items-center p-1" style="height: 20px;">

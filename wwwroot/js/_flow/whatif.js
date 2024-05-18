@@ -353,7 +353,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         apply();
     };
-    $scope.fileSelect = function (input, file_part) {
+    /*$scope.fileSelect = function (input, file_part) {
         //drawing, responder, approver
         var file_doc = $scope.data_header[0].pha_no;
 
@@ -395,7 +395,51 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 $scope.status_upload = true;
             }
         }
-    }
+    }*/
+    $scope.fileSelect = function (input, file_part) {
+        //drawing, responder, approver
+        var file_doc = $scope.data_header[0].pha_no;
+        const fileInput = input;
+        const fileSeq = fileInput.id.split('-')[1];
+        const fileInfoSpan = document.getElementById('filename' + fileSeq);
+
+        if (fileInput.files.length > 0) {
+            const file = fileInput.files[0];
+            const fileName = file.name;
+            const fileSize = Math.round(file.size / 1024);
+            try {
+                //fileInfoSpan.textContent = `${fileName} (${fileSize} KB)`;
+                let shortenedFileName = fileName.length > 20 ? fileName.substring(0, 20) + '...' : fileName;
+                fileInfoSpan.textContent = `${shortenedFileName} (${fileSize} KB)`;
+
+            } catch {
+
+             }
+
+            if (file) {
+                const allowedFileTypes = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'jpg', 'png', 'gif']; // รายการของประเภทของไฟล์ที่อนุญาตให้แนบ
+
+                const fileExtension = fileName.split('.').pop().toLowerCase(); // นำนามสกุลของไฟล์มาเปลี่ยนเป็นตัวพิมพ์เล็กทั้งหมดเพื่อให้เป็น case-insensitive
+
+                if (allowedFileTypes.includes(fileExtension)) {
+                    // ทำการแนบไฟล์
+                    //set_alert("File attached successfully.");
+                } else {
+                    $('#modalMsgFileError').modal('show');
+                    //set_alert('Warning', "Please select a PDF, Word or Excel, Image file.");
+                }
+            } else {
+                console.log("No file selected.");
+            }
+
+
+            var file_path = uploadFile(file, fileSeq, fileName, fileSize, file_part, file_doc);
+
+        } else {
+            fileInfoSpan.textContent = "";
+        }
+        // $("#divLoading").hide(); 
+    }        
     $scope.fileSelectRAM = function (input) {
 
 
@@ -1444,6 +1488,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     set_data_general();
                     set_data_listworksheet('');
                     set_master_ram_likelihood('');
+
+                    try {
+                        var id_session_last = arr.session[arr.session.length - 1].seq;
+                        $scope.selectdata_session = id_session_last;
+
+                    } catch { $scope.selectdata_session = $scope.MaxSeqDataSession; }
+
 
                     //get recommendations_no in task worksheet
                     if ($scope.data_listworksheet.length > 0) {
@@ -5197,15 +5248,25 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     $scope.fillterDataEmployeeAdd = function () {
         $scope.employeelist_show = [];
-        var searchText = $scope.searchText;
+        //var searchText = $scope.searchText;
         var searchIndicator = $scope.searchIndicator.text;
-        if (!searchText && !searchIndicator) { return; }
+        if (!searchIndicator) { return; }
        
         var items = angular.copy($scope.employeelist_def, items);
 
-        if (searchText.length < 3 && searchIndicator.length < 3) { return items; }
+        if (searchIndicator.length < 3) { return items; }
+        
+        if (searchIndicator.length > 4 && /\W+/.test(searchIndicator)) {
+            var parts = searchIndicator.split(/\W+/);
+            var searchIndicator = parts.join('');
+        }
        
-        getEmployees(searchText,searchIndicator, function(data) {
+        getEmployees(searchIndicator, function(data) {
+
+            data.employee.forEach(function(employee) {
+                employee.isAdded = false; 
+            });
+
             $scope.employeelist_show = data.employee
             apply();
             $('#modalEmployeeAdd').modal({
@@ -5214,11 +5275,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }).modal('show');
         });
     };
-    function getEmployees(keywords,indicator, callback) {
+    function getEmployees( indicator, callback){
         $.ajax({
             url: url_ws + "Flow/employees_search",
-            data: '{"user_filter_text":"' + keywords + '"'
-                + ',"user_indicator":"' + indicator + '"'
+            data: '{"user_indicator":"' + indicator + '"'
                 + ',"max_rows":"10"'
                 + '}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
@@ -5241,7 +5301,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         });
     }
-
 
     function add_relatedpeople_outsider(xformtype, seq_session) {
 
@@ -5425,6 +5484,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         clear_valid_items($scope.recomment_clear_valid);
         $scope.recomment_clear_valid = '';
 
+        $scope.formData = $scope.getFormData();
+
         apply();
 
         if (xformtype == "owner") {
@@ -5434,6 +5495,16 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $('#modalEmployeeAdd').modal('show');
         }
     };
+
+    $scope.clearFormData = function() {
+        $scope.formData = [];
+        //$scope.searchText='';
+        $scope.searchIndicator = {
+            text: ''
+        }        
+        //$scope.formData_outsider = [];
+    };
+
     $scope.removeDataEmployee = function (seq, seq_session) {
 
         var arrdelete = $filter('filter')($scope.data_memberteam, function (item) {
@@ -5536,6 +5607,46 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         running_no_level1($scope.data_relatedpeople, null, null);
         apply();
+    };
+
+    $scope.getFormData = function() {
+        switch ($scope.selectDatFormType) {
+            case 'member':
+                console.log("$scope.data_memberteam:", $scope.data_memberteam,$scope.user_name);
+                $scope.data_memberteam.sort(function(a, b) {
+                    if (a.user_name === $scope.user_name) return -1;
+                    if (b.user_name === $scope.user_name) return 1;
+                    return 0;
+                });                
+                return $scope.data_memberteam;
+            case 'approver':
+                console.log("$scope.data_approver:", $scope.data_approver);
+                $scope.data_approver.sort(function(a, b) {
+                    if (a.approver_type === "approver") return -1;
+                    if (b.approver_type === "approver") return 1;
+                    return 0;
+                });
+                
+                return $scope.data_approver;
+            /*case 'reviewer':
+                console.log("$scope.data_relatedpeople:", $scope.data_relatedpeople);
+                return $scope.data_relatedpeople;
+            case 'specialist':
+                var specialist = $scope.data_relatedpeople.filter(item => item.user_type === "specialist")
+                return specialist;*/
+            default:
+                return [];
+        }
+    };
+
+    $scope.isEmployeeAdded = function(employee_displayname) {
+        console.log("Employee display name:", employee_displayname);
+        var formData = $scope.getFormData();
+        var isAdded = formData.some(function(formDataItem) {
+            return formDataItem.employee_displayname === employee_displayname;
+        });
+        console.log("Is employee added:", isAdded);
+        return isAdded;
     };
 
     $scope.removeDataRelatedpeopleOutsider = function (seq) {

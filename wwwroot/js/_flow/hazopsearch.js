@@ -131,7 +131,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                         $scope.master_company = JSON.parse(replace_hashKey_arr(arr.company));
                         $scope.master_toc = JSON.parse(replace_hashKey_arr(arr.toc));
                         $scope.master_tagid = JSON.parse(replace_hashKey_arr(arr.tagid));
-
+                        $scope.master_request_type = JSON.parse(replace_hashKey_arr(arr.request_type));
                     } catch { }
                 }
 
@@ -290,6 +290,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
                         && (item.id_toc == null ? true : parseInt(_item.id_toc) == parseInt(item.id_toc))
                         && (item.id_tagid == null ? true : parseInt(_item.id_tagid) == parseInt(item.id_tagid))
+                        && (item.id_request_type == null ? true : parseInt(_item.id_request_type) == parseInt(item.id_request_type))
                         && (item.id_company == null ? true : parseInt(_item.id_company) == parseInt(item.id_company))
                         && (item.pha_status == null ? true : parseInt(_item.pha_status) == parseInt(item.pha_status))
 

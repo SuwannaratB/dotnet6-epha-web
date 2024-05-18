@@ -641,14 +641,47 @@
                                         </textarea>
                                     </div>
 
-                                     <div class="col-5 p-1 mt-4 text-primary" style="border-right: 1px solid #e8e8e8;">
-                                        <h6>Note : </h6>
-                                        <p>1. จะต้องได้รับใบอนุญาตการทำงานและต้องจัดให้มีการทำ Toolbox talk เพื่อแจ้งให้ผู้ทำงานทุกฝ่ายที่ข้องเกี่ยวกับอันตรายและข้อควรระวังด้านความปลอดภัย ได้รับทราบ</p>
-                                        <p>2. ต้องสวมใส่อุปกรณ์ป้องกันภัยส่วนบุคคล เช่น หมวกนิรภัย แว่นตานิรภัย รองเท้านิรภัย ถุงมือ กางเกงขายาว และเสื้อแขนยาว ผ้า cotton 100% อย่างหนา หรือเป็นผ้าทนไฟ</p>
-                                        <p>3. สถานที่ปฏิบัติงานต้องได้รับการดูแลให้อยู่ในสภาพที่ปลอดภัยและเป็นระเบียบอยู่เสมอ มีผู้ควบคุมงานอยู่ตลอดเวลา</p>
-                                        <p>4. อุปกรณ์ เครื่องมือ หรืออุปกรณ์ที่เกี่ยวข้องกับงานยก ทั้งหมดต้องมั่นใจว่าสภาพดีและมีใบรับรองที่ถูกต้อง</p>
-                                     </div>
+                                    <div class="col-5 p-1 mt-4 text-primary" style="border-right: 1px solid #e8e8e8;">
+                                        <div class="d-flex mb-2 justify-content-between align-items-center">
+                                            <h6 class="m-0">Note :</h6>
+                                            <div ng-class="{'d-none':(!tab_general_active)}">
+                                                <button class="border-0 cursor-pointer"
+                                                        data-bs-toggle="tooltip"
+                                                        data-bs-placement="top" 
+                                                        title="Edit" 
+                                                        data-bs-html="true" 
+                                                        ng-click="action_memdatorytext('edit')" 
+                                                        ng-disabled="editing">
+                                                    <i class="fa-regular fa-pen-to-square fa-xs"></i>
+                                                </button>
+                                                <button class="border-0 cursor-pointer"
+                                                        data-bs-toggle="tooltip"
+                                                        data-bs-placement="top" 
+                                                        title="Save" 
+                                                        data-bs-html="true"                                                  
+                                                        ng-click="action_memdatorytext('save')" 
+                                                        ng-if="editing">
+                                                    <i class="fa-regular fa-floppy-disk fa-xs"></i>
+                                                </button>
+                                                <button class="border-0 cursor-pointer"
+                                                        data-bs-toggle="tooltip"
+                                                        data-bs-placement="top" 
+                                                        title="Refresh" 
+                                                        data-bs-html="true"                                                            ng-click="action_memdatorytext('refresh')">
+                                                    <i class="fa-solid fa-rotate-right fa-xs"></i>
+                                                </button>
+                                            </div>
+                                        </div>
 
+                                        <p ng-if="!editing" ng-bind-html="renderHtml(formattedText)" class="mb-0"></p>
+                                        <textarea style="height: 180px;"
+                                                type="text"
+                                                contenteditable="true" 
+                                                ng-show="editing" 
+                                                ng-model="editedText"
+                                                ng-change="actionchangeText(editedText)"
+                                                class="form-control"></textarea>
+                                    </div>
                                     <div class="col-5 p-1 mt-4">
                                          <div class="form-check form-switch ">
                                             <input class="form-check-input" 
@@ -822,7 +855,9 @@
                                                                     </button>
                                                                 </div>
                                                                 <!-- Specialist from data_relatedpeople -->
-                                                                <div class="row" ng-repeat="item2 in data_relatedpeople | filter:{id_session:item.seq, user_type:'specialist'}">
+                                                                <div class="row" 
+                                                                    ng-repeat="item2 in data_relatedpeople | filter:{id_session:item.seq, user_type:'specialist'}"
+                                                                    ng-show="(data_relatedpeople | filter:{id_session:item.seq, user_type:'specialist'}).length > 0">
                                                                     <div class="col-8 align-items-center  p-1">
                                                                         <label class="mb-0 text-1100 fw-bold"
                                                                                 style="width:100%;border-color: #f1f2f4;">
@@ -949,7 +984,7 @@
                                                                 <span class="col-md-4  p-1 ">
                                                                     <label class="form-label d-none" for="meeting_date">Meeting Date</label>
 
-                                                                    <input type="date" class="form-control rounded-1 datetimepicker" id="meeting_date" name="meeting_date"
+                                                                    <input type="date" class="form-control rounded-1 datetimepicker cursor-pointer" id="meeting_date" name="meeting_date"
                                                                            ng-change="actionChange(item,item.seq,'meeting_date')"
                                                                            ng-model="item.meeting_date" placeholder="dd/mm/yyyy">
 
@@ -959,19 +994,19 @@
                                                                     <label class="form-label d-none" for="timepicker1">Start Time</label>
                                                                     <label class="form-label d-none" style="font-size: 10px;">{{formatTo24Hour(item.meeting_start_time)}}</label>
 
-                                                                    <input class="form-control  d-none" id="st_meet" name="st_meet"
+                                                                    <input class="form-control cursor-pointer  d-none" id="st_meet" name="st_meet"
                                                                            style="width:20px; height: 20px"
                                                                            ng-change="actionChange(item,item.seq,'')"
                                                                            ng-model="item.meeting_start_time" value="{{formatTo24Hour(item.meeting_start_time)}}"
                                                                            type="time" placeholder="hour : minute" />
 
-                                                                    <select class="form-select rounded-1  me-1 p-1" ng-model="item.meeting_start_time_hh"
+                                                                    <select class="form-select rounded-1  me-1 p-1 cursor-pointer" ng-model="item.meeting_start_time_hh"
                                                                             style="width:60px" ng-change="actionChange(item,item.seq,'')">
                                                                         <option ng-repeat="item2 in master_hours" ng-value="item2.id">
                                                                             {{item2.name}}
                                                                         </option>
                                                                     </select>
-                                                                    <select class="form-select rounded-1  me-1 p-1" ng-model="item.meeting_start_time_mm"
+                                                                    <select class="form-select rounded-1  me-1 p-1 " ng-model="item.meeting_start_time_mm"
                                                                             style="width:60px" ng-change="actionChange(item,item.seq,'')">
                                                                         <option ng-repeat="item2 in master_minutes" ng-value="item2.id">
                                                                             {{item2.name}}
@@ -1104,7 +1139,7 @@
                                             </thead>
 
                                             <tbody class="list" id="customer-rating-table-body ">
-                                                <tr class="hover-actions-trigger btn-reveal-trigger position-static "
+                                                <tr class="hover-actions-trigger btn-reveal-trigger position-static repeated-item"
                                                     ng-repeat="item in data_drawing">
                                                     <td class="align-middle text-center">
                                                         <div class="p-1 ">
@@ -1482,7 +1517,7 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody class=" list">
-                                                        <tr class="hover-actions-trigger btn-reveal-trigger position-static"
+                                                        <tr class="hover-actions-trigger btn-reveal-trigger position-static repeated-item"
                                                             ng-repeat="item_ram in master_ram_level  | filter:{rows_level : select_rows_level,columns_level: select_columns_level}">
                                                             <td class="align-middle text-center" style="width:150px;">
                                                                 <b>{{item_ram.security_level}}</b>
@@ -2445,7 +2480,7 @@
                                         <tbody class="list" id="customer-rating-table-body">
                                             <tr ng-repeat="item in data_approver | orderBy:['no']"
                                                 ng-class="{ '': canAccess(item), '': !canAccess(item) }"
-                                                class="hover-actions-trigger btn-reveal-trigger position-static text-center">
+                                                class="hover-actions-trigger btn-reveal-trigger position-static text-center repeated-item">
                                                 <!----------------ng-if="(item.user_name == user_name ) || (flow_role_type == 'admin')"--------->
                                                 <td class="align-top white-space-nowrap">
                                                     <div class="col-md-12 p-1 ps-3">
@@ -2838,7 +2873,7 @@
                                     <tbody class="list">
                                         <!-- Check if employeelist_show is not empty and the first item in the array is not null -->
                                         <tr ng-if="employeelist_show.length > 0 && employeelist_show[0].employee_displayname !== null" 
-                                            ng-repeat="item in employeelist_show"><!-------------ng-class="{'light-bg-secondary': item.isAdded}"------->
+                                            ng-repeat="item in employeelist_show" class="repeated-item"><!-------------ng-class="{'light-bg-secondary': item.isAdded}"------->
                                             <td class="">
                                                 <span class="mx-1">
                                                     <button class="btn btn-outline-secondary p-1 cursor-pointer" 
@@ -2900,9 +2935,8 @@
                 </div>
 
                 <div class="modal-body" ng-if="!(selectDatFormType =='owner' && formData.length > 1)"><!---------------ng-if="!(selectDatFormType =='approver'|| selectDatFormType =='reviewer')"----------->
-                    <div class="col-auto py-1"
+                    <div class="col-auto py-1 repeated-item"
                         ng-repeat="item2 in formData | filter:{id_session: selectdata_session }" 
-                        ng-class="{ 'slide-in-up': item2.approver_type === 'approver', 'slide-out-down': item2.approver_type !== 'approver' }"
                         ng-if="item2.user_displayname">
                         
                         <div class="d-flex align-items-center p-1">
@@ -2959,7 +2993,7 @@
                                 </thead>
                                 <tbody class="list">
                                     @*Free text*@
-                                    <tr class="hover-actions-trigger btn-reveal-trigger position-static"
+                                    <tr class="hover-actions-trigger btn-reveal-trigger position-static repeated-item"
                                         ng-repeat="itemRel in data_relatedpeople_outsider | filter:{id_session: selectdata_session, user_type: selectDatFormType}"> <!--------------------, user_type:selectDatFormType--------->
                                         <td class="d-flex  justify-content-start">
                                             @* <button id="del-{{item2.seq}}" class="btn btn-link text-danger p-0 text-end" style="width:140px;"
@@ -3016,7 +3050,7 @@
                 <div class="d-none">
                     @* attendees *@
                     <div class="modal-body" ng-if="selectDatFormType =='member'">
-                        <div class="col-auto d-none" 
+                        <div class="col-auto d-none " 
                             ng-repeat="item2 in data_relatedpeople | filter:{id_session: selectdata_session ,user_type:'attendees'}"
                             ng-if="!(item2.user_displayname)">
                             <div class="d-flex align-items-center p-1" style="height: 20px;">
@@ -3036,7 +3070,7 @@
                     @* specialist *@
                     <div class="modal-body" ng-if="selectDatFormType =='specialist' ">
 
-                        <div class="col-auto" ng-repeat="item2 in data_relatedpeople | filter:{id_session: selectdata_session ,user_type:'specialist'}"
+                        <div class="col-auto repeated-item" ng-repeat="item2 in data_relatedpeople | filter:{id_session: selectdata_session ,user_type:'specialist'}"
                              ng-if="!(item2.user_displayname == null)">
                             <div class="d-flex align-items-center p-1" style="height: 20px;">
                                 <button id="del-{{item2.seq}}" class="btn btn-link text-danger"
