@@ -3767,7 +3767,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 break;
     
             case 'stay':
-                $('#unsavedChangesModal').modal(hide);
+                $('#unsavedChangesModal').modal('hide');
                 break;
         }
     };
