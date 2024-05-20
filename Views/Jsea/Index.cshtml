@@ -185,7 +185,8 @@
                                             <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
                                                data-bs-placement="top" name="company" title="" data-bs-html="true"></a>
                                         </label>
-                                        <select class="form-control js-choice-company "
+                                        <select class="form-control js-choice-company " 
+                                                disabled
                                                 ng-class="{'disabled-link':(!tab_general_active)}"
                                                 data-choices="data-choices"
                                                 data-options='{"removeItemButton":true,"placeholder":true}'
@@ -212,8 +213,7 @@
                                                         data-options='{"removeItemButton":true,"placeholder":true}'
                                                         ng-change="actionChange(item,item.seq,'')" ng-model="item.id_apu">
                                                     <option ng-repeat="item2 in master_apu" 
-                                                            ng-value="item2.id"
-                                                            ng-if="item2.id_company == item.id_company">
+                                                            ng-value="item2.id">
                                                         {{item2.name}}
                                                     </option>
                                                 </select>
@@ -237,11 +237,12 @@
                                                         ng-class="{'disabled-link':(!tab_general_active)}"
                                                         data-choices="data-choices"
                                                         data-options='{"removeItemButton":true,"placeholder":true}'
-                                                        ng-change="actionChange(item,item.seq,'')" ng-model="item.id_toc">
+                                                        ng-change="actionChange(item,item.seq,'')" 
+                                                        ng-model="item.id_toc">
                                                     <option ng-repeat="item2 in master_toc"
                                                             ng-value="item2.id"
                                                             value="item2.id"
-                                                            ng-if="item2.id_company == item.id_company && item2.id_area == item.id_apu">
+                                                            ng-if="item2.id_area == item.id_apu">
                                                         {{item2.name}}
                                                     </option>
                                                 </select>
@@ -279,7 +280,6 @@
                                         </label>
                                         <div class="dropdown">
                                             <button id="dropdown_unit_no" class="dropbtn" >
-                                                {{item.unit_no_name}}
                                             </button>
                                             <div id="unit_no" class="dropdown-content">
                                                 <input id="dropdown_input" 
@@ -289,8 +289,7 @@
                                                 ng-model="search_keywords.unit_no"
                                                 ng-change="filterFunction('unit_no')">
                                                 <a  ng-repeat="item2 in master_unit_no_list" 
-                                                    ng-if="item2.id_company == item.id_company && item2.id_apu == item.id_apu &&
-                                                    (item2.id_plant_area == item.id_toc)"
+                                                    ng-if="item2.id_plant_area == item.id_toc"
                                                     ng-click="changeUnitNo(item2)"
                                                     value="item2.id" >
                                                     {{item2.name}}
@@ -420,7 +419,7 @@
                                      ng-class="{'disabled-link':(!tab_general_active)}">
 
                                     <!-- department -->
-                                    @* <div class="col-1 p-1">
+                                    <div class="col-1 p-1 d-none ">
                                         <label class="form-label ps-0" for="departments">
                                             <b class="text-danger d-none"> * </b>
                                             Departments 
@@ -438,7 +437,7 @@
                                             </option>
                                             
                                         </select>
-                                    </div> *@
+                                    </div>
 
                                     <!-- Task Type -->
                                     <div class="d-flex flex-column col-1 p-1">
