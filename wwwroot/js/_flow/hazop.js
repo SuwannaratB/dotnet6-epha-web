@@ -249,7 +249,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     
             if ($scope.counter == 0) {
                 // เมื่อเวลาครบ 0 ให้แสดงแจ้งเตือน
-                set_alert("Warning", "Please save the information.")
+                // set_alert("Warning", "Please save the information.")
+                $scope.confirmSave ('save');
                 $scope.stopTimer();
                 startTimer(); // เริ่มนับใหม่
             }

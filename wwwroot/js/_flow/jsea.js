@@ -134,18 +134,30 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
 });
 
-AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, $document, $interval,$rootScope,$window) {
+AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, $document, $interval,$rootScope,$window,$timeout,$sce) {
 
     var unsavedChanges = false;
 
     // Track location changes
     $rootScope.$on('$locationChangeStart', function(event, next, current) {
-        console.log('Location is changing from:', current, 'to:', next);
+        console.log('Location is changing from:', current, 'to:', next,"with",event);
+        var url = $location.url();
+        console.log(url)
+
+        console.log($window.location.href)
 
         if (unsavedChanges) {
             var confirmLeave = $window.confirm("You have unsaved changes. Are you sure you want to leave?");
             if (!confirmLeave) {
+                $timeout(function() {
+                    $('#unsavedChangesModal').modal('show');
+                }, 500);
+
+   
+    
+                                
                 event.preventDefault();
+
             }
         }
 
@@ -158,7 +170,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         if (unsavedChanges) {
             var confirmationMessage = 'You have unsaved changes. Are you sure you want to leave?';
     
-            event.preventDefault();
+            $('.open-modal').click(function(e)
+            {
+                e.preventDefault();
+                alert('will open modal');
+                $('#unsavedChangesModal').modal('show');
+            });
             event.returnValue = confirmationMessage;
             return confirmationMessage;
         }
@@ -1010,6 +1027,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             request_type: '',
         }
 
+        $scope.editedText = '';
+
         // สร้างชั่วโมง (0-23)
         $scope.master_hours = [];
         for (var i = 0; i < 24; i++) {
@@ -1552,7 +1571,19 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         item.id_ram = (item.id_ram == null ? 4 : item.id_ram);
                     });
 
+                    var formattedText_check =  $scope.data_general[0].mandatory_note
+                    if (formattedText_check && /\W+/.test(formattedText_check)){
+                        var formattedText =  formattedText_check.replace(/\\n\r\n/g, '<br><br>');
 
+                        $scope.formattedText = formattedText;
+                        $scope.renderHtml = function(htmlContent) {
+                            return $sce.trustAsHtml(htmlContent);
+                        };
+    
+                    }
+                    
+                    $scope.mandatory_note = arr.mandatory_note
+       
                     $scope.data_tagid_audition = arr.tagid_audition;
 
                     $scope.data_session = arr.session;
@@ -3960,7 +3991,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
 
         save_data_create(action, action_def);
-        var unsavedChanges = false;
+        unsavedChanges = false;
     }
 
     $scope.confirmDialogApprover = function (_item, action) {
@@ -3969,7 +4000,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         });
         
         var arr_chk = _item;
-        console.log("_item",_item)
         $scope.item_approver_active = [];
         $scope.item_approver_active.push(_item);
         apply();
@@ -4028,6 +4058,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.showHistory = !$scope.showHistory;
     };
     function check_data_general() {
+
+        //set note 
+        $scope.data_general[0].mandatory_note = $scope.formattedText.replace(/(<br\s*\/?>)+/gi, "\\n\r\n");
 
         $scope.data_general[0].input_type_excel = ($scope.selectInputTypeForm == 'option1' ? 0 : 1);
         //alert($scope.data_general[0].input_type_excel);
@@ -4369,10 +4402,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             } catch (error) {}
             
             try {
-                var end_date = new Date($scope.data_nodeworksheet[i].estimated_end_date);
-                if (!isNaN(end_date.getTime())) { 
-                    var end_date_utc = new Date(Date.UTC(end_date.getFullYear(), end_date.getMonth(), end_date.getDate()));
-                    $scope.data_nodeworksheet[i].estimated_end_date = end_date_utc.toISOString().split('T')[0];
+                if($scope.data_nodeworksheet[i].estimated_end_date !== null){
+                    var end_date = new Date($scope.data_nodeworksheet[i].estimated_end_date);
+                    if (!isNaN(end_date.getTime())) { 
+                        var end_date_utc = new Date(Date.UTC(end_date.getFullYear(), end_date.getMonth(), end_date.getDate()));
+                        $scope.data_nodeworksheet[i].estimated_end_date = end_date_utc.toISOString().split('T')[0];
+                    }                    
                 }
             } catch (error) {}
         }
@@ -4831,15 +4866,20 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     $scope.fillterDataEmployeeAdd = function () {
         $scope.employeelist_show = [];
-        var searchText = $scope.searchText;
+        //var searchText = $scope.searchText;
         var searchIndicator = $scope.searchIndicator.text;
-        if (!searchText && !searchIndicator) { return; }
+        if (!searchIndicator) { return; }
        
         var items = angular.copy($scope.employeelist_def, items);
 
-        if (searchText.length < 3 && searchIndicator.length < 3) { return items; }
+        if (searchIndicator.length < 3) { return items; }
+        
+        if (searchIndicator.length > 4 && /\W+/.test(searchIndicator)) {
+            var parts = searchIndicator.split(/\W+/);
+            var searchIndicator = parts.join('');
+        }
        
-        getEmployees(searchText,searchIndicator, function(data) {
+        getEmployees(searchIndicator, function(data) {
 
             data.employee.forEach(function(employee) {
                 employee.isAdded = false; 
@@ -4854,11 +4894,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         });
     };
 
-    function getEmployees(keywords, indicator, callback){
+    function getEmployees( indicator, callback){
         $.ajax({
             url: url_ws + "Flow/employees_search",
-            data: '{"user_filter_text":"' + keywords + '"'
-                + ',"user_indicator":"' + indicator + '"'
+            data: '{"user_indicator":"' + indicator + '"'
                 + ',"max_rows":"10"'
                 + '}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
@@ -5430,7 +5469,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         var index = $scope.data_drawing_approver.findIndex(function(item) {
             return item.seq === seq;
         });
-        console.log($scope.data_drawing_approver.length)
         if (index !== -1) {
             if ($scope.data_drawing_approver[index].action_type === "new") {
                 $scope.data_drawing_approver.splice(index, 1);
@@ -5537,6 +5575,58 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
 
     }
+
+
+    $scope.editedText = "";
+    $scope.formattedText = "";
+    $scope.editing = false;
+
+    //convert text 
+    function convertText(text, editing) {
+        if (editing) {
+            return text.split(/<br\s*\/?>/g).join("\r\n");
+        } else {
+            var text_check = text.replace(/\\n/g, "\n").replace(/\\r/g, "\r")
+            return text_check.split(/[\r\n]+/g).join("<br><br>");        
+        }
+    }
+
+    $scope.actionchangeText = function(text){
+        $scope.editedText = text
+    };
+
+    // Action function
+    $scope.action_memdatorytext = function(type) {
+
+        switch (type) {
+            case 'edit':
+                $scope.editing = true;
+
+                $scope.editedText = convertText($scope.formattedText, true);
+
+                break;
+            case 'save':
+                $scope.formattedText = "";
+                $scope.formattedText = convertText($scope.editedText, false);
+
+                $scope.editing = false;
+                break;
+            case 'refresh':
+                $scope.formattedText = "";
+
+                $scope.editing = false;
+                $scope.formattedText = convertText($scope.mandatory_note[0].name, false);
+                console.log("Show text: ", $scope.formattedText);
+                break;
+            default:
+                break;
+        }
+    };
+
+    // Function to render HTML
+    $scope.renderHtml = function(htmlContent) {
+        return $sce.trustAsHtml(htmlContent);
+    };
 
     //access each role
     $scope.canAccess = function(task) {

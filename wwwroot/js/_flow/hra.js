@@ -243,7 +243,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
         };
 
-        $scope.fileSelect = function (input, file_part) {
+        /*$scope.fileSelect = function (input, file_part) {
             //drawing, responder, approver
             var file_doc = $scope.data_header[0].pha_no;
 
@@ -280,7 +280,51 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             } else {
                 fileInfoSpan.textContent = "";
             }
-        }
+        }*/
+        $scope.fileSelect = function (input, file_part) {
+            //drawing, responder, approver
+            var file_doc = $scope.data_header[0].pha_no;
+            const fileInput = input;
+            const fileSeq = fileInput.id.split('-')[1];
+            const fileInfoSpan = document.getElementById('filename' + fileSeq);
+    
+            if (fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                const fileName = file.name;
+                const fileSize = Math.round(file.size / 1024);
+                try {
+                    //fileInfoSpan.textContent = `${fileName} (${fileSize} KB)`;
+                    let shortenedFileName = fileName.length > 20 ? fileName.substring(0, 20) + '...' : fileName;
+                    fileInfoSpan.textContent = `${shortenedFileName} (${fileSize} KB)`;
+    
+                } catch {
+    
+                 }
+    
+                if (file) {
+                    const allowedFileTypes = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'jpg', 'png', 'gif']; // รายการของประเภทของไฟล์ที่อนุญาตให้แนบ
+    
+                    const fileExtension = fileName.split('.').pop().toLowerCase(); // นำนามสกุลของไฟล์มาเปลี่ยนเป็นตัวพิมพ์เล็กทั้งหมดเพื่อให้เป็น case-insensitive
+    
+                    if (allowedFileTypes.includes(fileExtension)) {
+                        // ทำการแนบไฟล์
+                        //set_alert("File attached successfully.");
+                    } else {
+                        $('#modalMsgFileError').modal('show');
+                        //set_alert('Warning', "Please select a PDF, Word or Excel, Image file.");
+                    }
+                } else {
+                    console.log("No file selected.");
+                }
+    
+    
+                var file_path = uploadFile(file, fileSeq, fileName, fileSize, file_part, file_doc);
+    
+            } else {
+                fileInfoSpan.textContent = "";
+            }
+            // $("#divLoading").hide(); 
+        }            
         function uploadFile(file_obj, seq, file_name, file_size, file_part, file_doc) {
 
             var fd = new FormData();
@@ -489,6 +533,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.keywords = {
             text:''
         };
+
+        $scope.searchIndicator = {
+            text: ''
+        }
+
 
         // สร้างชั่วโมง (0-23)
         $scope.master_hours = [];
@@ -3916,23 +3965,60 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         $scope.fillterDataEmployeeAdd = function () {
             $scope.employeelist_show = [];
-            var searchText = $scope.searchText;
-            if (!searchText) { return; }
-            if (searchText.length < 3) { return; }
-
+            //var searchText = $scope.searchText;
+            var searchIndicator = $scope.searchIndicator.text;
+            if (!searchIndicator) { return; }
+           
             var items = angular.copy($scope.employeelist_def, items);
-            searchText = searchText.toLowerCase();
-
-            $scope.employeelist_show = items.filter(function (item) {
-                return (
-                    item.employee_id.toLowerCase().includes(searchText.toLowerCase()) ||
-                    item.employee_displayname.toLowerCase().includes(searchText.toLowerCase()) ||
-                    item.employee_email.toLowerCase().includes(searchText.toLowerCase())
-                );
-            }).slice(0, 10);
-            apply();
-            $('#modalEmployeeAdd').modal('show');
+    
+            if (searchIndicator.length < 3) { return items; }
+            
+            if (searchIndicator.length > 4 && /\W+/.test(searchIndicator)) {
+                var parts = searchIndicator.split(/\W+/);
+                var searchIndicator = parts.join('');
+            }
+           
+            getEmployees(searchIndicator, function(data) {
+    
+                data.employee.forEach(function(employee) {
+                    employee.isAdded = false; 
+                });
+    
+                $scope.employeelist_show = data.employee
+                apply();
+                $('#modalEmployeeAdd').modal({
+                    backdrop: 'static',
+                    keyboard: false 
+                }).modal('show');
+            });
         };
+    
+        function getEmployees( indicator, callback){
+            $.ajax({
+                url: url_ws + "Flow/employees_search",
+                data: '{"user_indicator":"' + indicator + '"'
+                    + ',"max_rows":"10"'
+                    + '}',
+                type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+                beforeSend: function () {
+                    $("#divLoading").show();
+                },
+                complete: function () {
+                    $("#divLoading").hide();
+                },
+                success: function (data) {
+                    callback(data); 
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    if (jqXHR.status == 500) {
+                        alert('Internal error: ' + jqXHR.responseText);
+                    } else {
+                        alert('Unexpected ' + textStatus);
+                    }
+                }
+    
+            });
+        }
         $scope.choosDataEmployee = function (item) {
 
             var id = item.id;
@@ -4044,6 +4130,16 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             running_no_level1($scope.data_memberteam, null, null);
             apply();
         };
+
+
+        $scope.clearFormData = function() {
+            $scope.searchIndicator = {
+                text: ''
+            }        
+            //$scope.formData_outsider = [];
+        };
+    
+
 
         $scope.removeDataApprover = function (seq, seq_session) {
 

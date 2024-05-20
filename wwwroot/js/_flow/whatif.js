@@ -185,7 +185,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     
             if ($scope.counter == 0) {
                 // เมื่อเวลาครบ 0 ให้แสดงแจ้งเตือน
-                set_alert("Warning", "Please save the information.")
+                // set_alert("Warning", "Please save the information.")
+                $scope.confirmSave ('save');
                 $scope.stopTimer();
                 startTimer(); // เริ่มนับใหม่
             }
@@ -509,9 +510,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         fd.append("file_doc", file_doc);
         fd.append("file_part", file_part);//drawing, responder, approver
         fd.append("file_doc", file_doc);
-        fd.append("sub_software", 'whatif');
+        fd.append("sub_software", 'jsea');
 
         try {
+            $("#divLoading").show(); 
             const request = new XMLHttpRequest();
             request.open("POST", url_ws + 'Flow/uploadfile_data');
             //request.send(fd);
@@ -535,7 +537,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                             arr[0].document_file_size = file_size;
                             //'https://localhost:7098/api/' + '/AttachedFileTemp/hazop/HAZOP-2023-0000016-DRAWING-202312231716.PDF'
                             arr[0].document_file_path = (url_ws.replace('/api/', '')) + file_path;// (url_ws.replace('/api/', '/')) + 'AttachedFileTemp/Hazop/' + file_name;
-                            arr[0].document_module = 'whatif';
+                            arr[0].document_module = 'jsea';
                             arr[0].action_change = 1;
                             apply();
 
@@ -544,12 +546,15 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         // กรณีเกิดข้อผิดพลาดในการร้องขอไปยัง server
                         console.error('มีข้อผิดพลาด: ' + request.status);
                     }
+                    $("#divLoading").hide(); 
                 }
             };
 
             request.send(fd);
 
-        } catch { }
+        } catch { 
+            $("#divLoading").hide(); 
+        }
 
         return "";
     }
@@ -562,6 +567,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         fd.append("file_name", file_name);
 
         try {
+            $("#divLoading").show(); 
             const request = new XMLHttpRequest();
             request.open("POST", url_ws + 'Flow/uploadfile_data');
             request.send(fd);
@@ -574,7 +580,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 arr[0].action_change = 1;
                 apply();
             }
-        } catch { }
+            $("#divLoading").hide(); 
+        } catch { 
+            $("#divLoading").hide(); 
+        }
 
         return "";
     }
@@ -592,6 +601,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         fd.append("sub_software", 'whatif');
 
         try {
+            $("#divLoading").show(); 
             const request = new XMLHttpRequest();
             request.open("POST", url_ws + 'Flow/uploadfile_data');
 
@@ -622,12 +632,15 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         // กรณีเกิดข้อผิดพลาดในการร้องขอไปยัง server
                         console.error('มีข้อผิดพลาด: ' + request.status);
                     }
+                    $("#divLoading").hide(); 
                 }
             };
 
             request.send(fd);
 
-        } catch { }
+        } catch {
+            $("#divLoading").hide(); 
+         }
 
         return "";
     }
@@ -1671,6 +1684,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         });
 
+    }
+
+    function ensureArray(scope, variable) {
+        scope.$watch(variable, function(newVal) {
+            if (!Array.isArray(newVal)) {
+                scope[variable] = [];
+            }
+        }, true);
     }
 
     function set_form_action(action_part_befor, action_save, page_load) {
@@ -4104,7 +4125,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         });
 
     };
-    $scope.formData = {};
+    $scope.formData = [];
 
     $scope.confirmBack = function () {
 
@@ -5190,7 +5211,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     // <==== start Popup Employee ของ Member team==== >
     $scope.filteredData = [];
-    $scope.selectedData = {};
+    $scope.selectedData = [];
     $scope.updateSelectedItems = function () {
         $scope.selectedData = $scope.employeelist.filter(function (item) {
             return item.selected;
@@ -5795,5 +5816,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         //originator cant edit?
         return false;
     };    
+
+    
 
 });
