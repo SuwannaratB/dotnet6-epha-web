@@ -2785,10 +2785,36 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         $scope.confirmBack = function () {
 
-            window.open("home/portal", "_top");
-
+            if(!$scope.unsavedChanges){
+                window.open("home/portal", "_top");
+            }else{
+                $('#unsavedChangesModal').modal({
+                    backdrop: 'static',
+                    keyboard: false 
+                }).modal('show');
+            }
+            
             return;
         }
+        $scope.action_leavePage = function(action) {
+            switch (action) {
+                case 'leave':
+                    $scope.unsavedChanges = true;
+                    window.open("home/portal", "_top");
+                    break;
+        
+                case 'leaveWsave': 
+                    $scope.confirmSave('save');
+                    window.open("home/portal", "_top");
+                    break;
+        
+                case 'stay':
+                    $('#unsavedChangesModal').modal(hide);
+                    break;
+            }
+        };
+    
+
         $scope.confirmMailtoMemberReview = function (action) {
 
             if (action == 'submit') {

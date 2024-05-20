@@ -189,7 +189,7 @@ AppMenuPage.directive('hidePlaceholderOption', function() {
 
 AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, $document, $interval,$rootScope,$window) { 
 
-    var unsavedChanges = false;
+    $scope.unsavedChanges = false;
 
     // Track location changes
     $rootScope.$on('$locationChangeStart', function(event, next, current) {
@@ -4195,7 +4195,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.actionChangeWorksheet(arr_items, arr_items.seq);
         }
 
-        unsavedChanges = true;
+        $scope.unsavedChanges = true;
         apply();
         $('#modalEmployeeSelect').modal('hide');
     };
@@ -4599,10 +4599,38 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             });
             return;
-        } else { window.open("home/portal", "_top"); }
+        } else {
+            if(!$scope.unsavedChanges){
+                window.open("home/portal", "_top");
+            }else{
+                $('#unsavedChangesModal').modal({
+                    backdrop: 'static',
+                    keyboard: false 
+                }).modal('show');
+            }
+            
+        }
 
 
     }
+
+    $scope.action_leavePage = function(action) {
+        switch (action) {
+            case 'leave':
+                $scope.unsavedChanges = true;
+                window.open("home/portal", "_top");
+                break;
+    
+            case 'leaveWsave': 
+                $scope.confirmSave('save');
+                window.open("home/portal", "_top");
+                break;
+    
+            case 'stay':
+                $('#unsavedChangesModal').modal(hide);
+                break;
+        }
+    };    
 
     $scope.confirmMailtoMemberReview = function (action) {
 
@@ -4911,7 +4939,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             return $('#modalEditConfirm').modal('show');
         }
 
-        unsavedChanges = false;
+        $scope.unsavedChanges = false;
         save_data_create(action, action_def);
 
     }
@@ -5013,7 +5041,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             return;
         }
 
-        unsavedChanges = false;
+        $scope.unsavedChanges = false;
         save_data_create("submit", "submit");
     }
 
@@ -5516,7 +5544,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
 
 
-        unsavedChanges = true;
+        $scope.unsavedChanges = true;
         apply();
     }
 
@@ -5546,7 +5574,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
         }
 
-        unsavedChanges = true;
+        $scope.unsavedChanges = true;
     }
 
     $scope.actionChangeWorksheet = function (_arr, _seq, type_text) {
@@ -5627,7 +5655,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             return ((item.action_type !== '' || item.action_type !== null));
         });
         if (arr_submit.length > 0) { $scope.submit_type = true; } else { $scope.submit_type = false; }
-        unsavedChanges = true;
+        $scope.unsavedChanges = true;
         console.log('confirm ==> ',$scope.data_nodeworksheet)
     }
 
