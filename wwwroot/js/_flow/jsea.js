@@ -74,13 +74,11 @@ AppMenuPage.directive('hidePlaceholderOption', function() {
   
         // Show 
         element.on('hideDropdown', function(event) {
-          console.log("Dropdown closed");
           var placeholderItem = $('.is-open .is-active .choices__list .is-selected'); //choices__placeholder
           if (placeholderItem) {placeholderItem.remove('ng-hide');}
         });
 
         if (!scope.item.functional_location) {
-          console.log("No selection, hiding placeholder");
         }
       }
     };
@@ -140,11 +138,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     // Track location changes
     $rootScope.$on('$locationChangeStart', function(event, next, current) {
-        console.log('Location is changing from:', current, 'to:', next,"with",event);
+        //console.log('Location is changing from:', current, 'to:', next,"with",event);
         var url = $location.url();
-        console.log(url)
+        //console.log(url)
 
-        console.log($window.location.href)
+        //.log($window.location.href)
 
         if (unsavedChanges) {
             var confirmLeave = $window.confirm("You have unsaved changes. Are you sure you want to leave?");
@@ -161,12 +159,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
         }
 
-        console.log("unsavedChanges",unsavedChanges)
+        //console.log("unsavedChanges",unsavedChanges)
     });
 
     // close tab / browser window
     $window.addEventListener('beforeunload', function(event) {
-        console.log("Trigger Ec=vent",event)
+        //console.log("Trigger Ec=vent",event)
         if (unsavedChanges) {
             var confirmationMessage = 'You have unsaved changes. Are you sure you want to leave?';
     
@@ -451,7 +449,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                                         }
                                         return acc;
                                     }, []);
-                                    console.log("check array relatedpeople", array.relatedpeople_outsider, "check relatedpeoplem",  $scope.data_relatedpeople_outsider);                                                                     
+                                    //console.log("check array relatedpeople", array.relatedpeople_outsider, "check relatedpeoplem",  $scope.data_relatedpeople_outsider);                                                                     
                                 }
                                 if (array.tasks_worksheet) {
                                     //old data 
@@ -515,7 +513,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     //set_alert('Warning', "Please select a PDF, Word or Excel, Image file.");
                 }
             } else {
-                console.log("No file selected.");
+                //console.log("No file selected.");
             }
 
 
@@ -674,7 +672,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         // แสดง loading indicator
         $("#divLoading").show();
 
-        console.log(file_obj, seq, file_name, file_size, file_part, file_doc)
         var fd = new FormData();
         // Take the first selected file
         fd.append("file_obj", file_obj);
@@ -1191,10 +1188,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         var json_relatedpeople = check_data_relatedpeople();
         var json_relatedpeople_outsider = check_data_relatedpeople_outsider();
         var json_drawing = check_data_drawing();
-        console.log("now show json membertea", json_memberteam)
-        console.log("now show json approver", json_approver)
-        console.log("now show json relatedpeople", json_relatedpeople)
-        console.log("now show json relatedpeople_outsider", json_relatedpeople_outsider)
 
         var json_tasks_worksheet = check_data_listworksheet();
 
@@ -1231,8 +1224,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             },
             success: function (data) {
                 var arr = data;
-
-                console.log("will check data after save",arr)
 
                 if (arr[0].status == 'true') {
                     $scope.pha_type_doc = 'update';
@@ -1605,8 +1596,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     $scope.data_relatedpeople_outsider_def = clone_arr_newrow(arr.relatedpeople_outsider);
                     $scope.data_relatedpeople_outsider_old = (arr.relatedpeople_outsider);
                     
-                    console.log($scope.data_relatedpeople_outsider)
-
                     $scope.data_drawing = arr.drawing;
                     $scope.data_drawing_def = clone_arr_newrow(arr.drawing);
 
@@ -1830,7 +1819,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
 
     function addDefaultMember(){
-        console.log('data_header ',$scope.data_header)
        const data = {
         seq: 1249,
         id: $scope.data_header[0].id,
@@ -2098,9 +2086,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 for (var i = 0; i < xSplitFunc.length; i++) {
                     _functoArr.push(xSplitFunc[i]);
                 }
-                console.log('_functoArr');
                 $scope.data_general[0].tagid_audition = _functoArr;
-                console.log($scope.data_general[0].tagid_audition);
             } else {
                 $scope.data_general[0].tagid_audition = [];
             }
@@ -2257,15 +2243,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             iNoNew = iNo;
         }
 
-        console.log(iNo,newInput)
         for (let i = (iNo); i < arr_items.length; i++) {
 
             console.log(i)
             if (first_row == true && newInput !== null) {
                 iNoNew++;
-                console.log("for if Check old",newInput.no,"Check new",iNoNew)
                 newInput.no = (iNoNew);
-                console.log("for if Check old",newInput.no,"Check new",iNoNew)
                 first_row = false;//1
             } else {
                 arr_items[i].no = iNoNew;
@@ -2538,7 +2521,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             add_user_to_data_related_people(seq, action_type, user_type_of);
         }
 
-        console.log()
 
     };
     function add_user_to_data_member() {
@@ -2651,7 +2633,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         apply();
     }
     $scope.removeDrawingDoc = function (seq, index) {
-        console.log("Check ",seq, index)
         var arrdelete = $filter('filter')($scope.data_drawing, function (item) {
             return (item.seq == seq && item.action_type == 'update');
         });
@@ -2677,7 +2658,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.data_drawing[0].no = 1;
         }
 
-        console.log("Check before run",$scope.data_drawing,index)
         running_no_format_1($scope.data_drawing, null, index, null); //index??
 
         apply();
@@ -2746,8 +2726,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             newInput.action_change = 1;
             newInput.action_type = 'insert'
             $scope.master_ram.push(newInput);
-
-            console.log($scope.master_ram)
 
         }
         var json_ram_master = angular.toJson($scope.master_ram);
@@ -2891,7 +2869,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.MaxSeqdata_listworksheetworkstep = Number($scope.MaxSeqdata_listworksheetworkstep) + 1;
             seq_workstep = $scope.MaxSeqdata_listworksheetworkstep;
 
-            console.log("now click at ",row_type)
             seq_workstep = xseq;
 
             //กรณีที่เป็น workstep ให้ +1 
@@ -2914,9 +2891,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             possiblecase_no = 1;
             category_no = 1;
         }
-        if (row_type == "potentailhazard") {
-            console.log("now click at ",row_type)
-            
+        if (row_type == "potentailhazard") {            
             $scope.MaxSeqdata_listworksheetpotentailhazard = Number($scope.MaxSeqdata_listworksheetpotentailhazard) + 1;
             seq_potentailhazard = $scope.MaxSeqdata_listworksheetpotentailhazard;
 
@@ -3000,7 +2975,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         index = index_rows;
 
         console.clear();
-        console.log($scope.data_listworksheet);
 
         running_index_level1_lv1($scope.data_listworksheet, iNo, index, newInput);
 
@@ -3424,7 +3398,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         var xseq = $scope.selectdata_listworksheet;
         var xbefor = $scope.selectedDataRamTypeAction;
-        console.log(xseq)
         for (let i = 0; i < $scope.data_listworksheet.length; i++) {
             try {
 
@@ -3761,9 +3734,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 window.open("home/portal", "_top");
                 break;
     
-            case 'leaveWsave': 
-                $scope.confirmSave('save');
-                window.open("home/portal", "_top");
+            case 'leaveWithsave': 
+                $('#unsavedChangesModal').modal('hide');
+
+                $scope.confirmSave('save', function() {
+                    window.open("home/portal", "_top");
+                });
                 break;
     
             case 'stay':
@@ -3771,6 +3747,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 break;
         }
     };
+    
 
     $scope.confirmMailtoMemberReview = function (action) {
 
@@ -3831,7 +3808,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
     $scope.confirmSave = function (action) {
 
-        console.log("aready save!!!")
         //check required field 
         var pha_status = $scope.data_header[0].pha_status;
         //11	DF	Draft
@@ -4209,8 +4185,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
     function check_data_memberteam() {
 
-        console.log("will save member team",$scope.data_memberteam)
-
         var pha_seq = $scope.data_header[0].seq;
         for (var i = 0; i < $scope.data_memberteam.length; i++) {
             $scope.data_memberteam[i].id = $scope.data_memberteam[i].seq;
@@ -4259,8 +4233,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         return angular.toJson(arr_json);
     }
     function check_data_approver() {
-
-        console.log("will save approver",$scope.data_approver)
 
         var pha_seq = $scope.data_header[0].seq;
         for (var i = 0; i < $scope.data_approver.length; i++) {
@@ -4314,9 +4286,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
     function check_data_relatedpeople() {
 
-        console.log("will save relatedpeople",$scope.data_relatedpeople)
-
-
         var pha_seq = $scope.data_header[0].seq;
         for (var i = 0; i < $scope.data_relatedpeople.length; i++) {
             $scope.data_relatedpeople[i].id = $scope.data_relatedpeople[i].seq;
@@ -4352,8 +4321,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
     function check_data_relatedpeople_outsider() {
 
-        console.log("will save relatedpeople_outsider",$scope.data_relatedpeople_outsider)
-
         var pha_seq = $scope.data_header[0].seq;
         for (var i = 0; i < $scope.data_relatedpeople_outsider.length; i++) {
             $scope.data_relatedpeople_outsider[i].id = $scope.data_relatedpeople_outsider[i].seq;
@@ -4385,8 +4352,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         }
 
-        console.log("Show arr json before save", angular.toJson(arr_json));
-
         return angular.toJson(arr_json);
 
     }
@@ -4408,8 +4373,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.data_drawing_delete[i].action_type = 'delete';
             arr_json.push($scope.data_drawing_delete[i]);
         }
-
-        console.log("$scope.data_drawing",$scope.data_drawing)
         return angular.toJson(arr_json);
     }
 
@@ -4503,7 +4466,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.Action_Msg_Header = header;
         $scope.Action_Msg_Detail = detail;
 
-        console.log($scope.Action_Msg_Header)
         $('#modalMsg').modal('show');
     }
     function set_alert_confirm(header, detail) {
@@ -4543,7 +4505,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
 
         if (type_text == "ChangeRAM") {
-            console.log($scope.master_ram_level);
             set_master_ram_likelihood(_arr.id_ram);
         }
 
@@ -4828,7 +4789,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         running_no_level1($scope.data_relatedpeople_outsider, iNo, null);
 
         $scope.MaxSeqdata_relatedpeople_outsider = Number($scope.MaxSeqdata_relatedpeople_outsider) + 1
-        console.log('data_relatedpeople_outsider => ', $scope.data_relatedpeople_outsider)
     };
     //relatedpeople end
 
@@ -4891,8 +4851,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             $scope.MaxSeqdata_relatedpeople_outsider = Number($scope.MaxSeqdata_relatedpeople_outsider) + 1
         }
-        console.log('data_relatedpeople_outsider => ',$scope.data_relatedpeople_outsider)
-        console.log('data_relatedpeople => ',$scope.data_relatedpeople)
+
     }
 
     $scope.fillterDataEmployeeAdd = function () {
@@ -4985,7 +4944,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 newInput.user_displayname = employee_displayname;
                 newInput.user_title = employee_position;
                 newInput.user_img = employee_img;
-                console.log('newInput ',newInput)
                 $scope.data_memberteam.push(newInput);
                 running_no_level1($scope.data_memberteam, null, null);
 
@@ -5123,7 +5081,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 running_no_level1($scope.data_relatedpeople, null, null);
 
                 $scope.MaxSeqdata_relatedpeople = Number($scope.MaxSeqdata_relatedpeople) + 1
-                console.log('data_relatedpeople => ',$scope.data_relatedpeople)
             }
 
         }
@@ -5173,32 +5130,26 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         // Handle different cases based on selectDatFormType
         switch (selectDatFormType) {
             case 'member':
-                console.log("$scope.employeelist_show", $scope.employeelist_show);
                 var employeeMember = $scope.data_memberteam.find(function(employee) {
                     return employee.seq === seq && employee.id_session === seq_session;
                 });
                 setIsAddedToFalse(employeeMember.user_name);
-                console.log("$scope.employeelist_show", $scope.employeelist_show);
                 $scope.removeDataEmployee(seq, seq_session);
                 break;
 
             case 'specialist':
-                console.log("$scope.employeelist_show", $scope.employeelist_show);
                 var employeeSpecialist = $scope.data_relatedpeople.find(function(employee) {
                     return employee.seq === seq && employee.id_session === seq_session;
                 });
                 setIsAddedToFalse(employeeSpecialist.user_name);
-                console.log("$scope.employeelist_show", $scope.employeelist_show);
                 $scope.removeDataRelatedpeople(seq, seq_session);
                 break;
 
             case 'approver':
-                console.log("$scope.employeelist_show", $scope.employeelist_show);
                 var employeeApprover = $scope.data_approver.find(function(employee) {
                     return employee.seq === seq && employee.id_session === seq_session;
                 });
                 setIsAddedToFalse(employeeApprover.user_name);
-                console.log("$scope.employeelist_show", $scope.employeelist_show);
                 $scope.removeDataApprover(seq, seq_session);
                 break;
 
@@ -5352,7 +5303,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     $scope.getFormData = function() {
         switch ($scope.selectDatFormType) {
             case 'member':
-                console.log("$scope.data_memberteam:", $scope.data_memberteam,$scope.user_name);
                 $scope.data_memberteam.sort(function(a, b) {
                     if (a.user_name === $scope.user_name) return -1;
                     if (b.user_name === $scope.user_name) return 1;
@@ -5360,7 +5310,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 });                
                 return $scope.data_memberteam;
             case 'approver':
-                console.log("$scope.data_approver:", $scope.data_approver);
                 $scope.data_approver.sort(function(a, b) {
                     if (a.approver_type === "approver") return -1;
                     if (b.approver_type === "approver") return 1;
@@ -5369,7 +5318,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 
                 return $scope.data_approver;
             case 'reviewer':
-                console.log("$scope.data_relatedpeople:", $scope.data_relatedpeople);
                 return $scope.data_relatedpeople;
             case 'specialist':
                 var specialist = $scope.data_relatedpeople.filter(item => item.user_type === "specialist")
@@ -5380,12 +5328,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     };
 
     $scope.isEmployeeAdded = function(employee_displayname) {
-        console.log("Employee display name:", employee_displayname);
         var formData = $scope.getFormData();
         var isAdded = formData.some(function(formDataItem) {
             return formDataItem.employee_displayname === employee_displayname;
         });
-        console.log("Is employee added:", isAdded);
         return isAdded;
     };
     
@@ -5407,11 +5353,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         //document_file_path:"https://localhost:7098/AttachedFileTemp/hazop/HAZOP-2023-0000001-DRAWING-202312251052.PDF"
         //document_file_size:288
         if (item.document_file_name && item.document_file_name !== '') {
-            console.log("here it call this document_file_name")
             var path = item.document_file_path;
             var name = item.document_file_name;
         } else {
-            console.log("here it call this file_upload_name")
             var path = item.file_upload_path;
             var name = item.file_upload_name;
         }
@@ -5524,7 +5468,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
 
     $scope.toggleDescription = function() {
-        console.log($scope.isChecDescription)
         $scope.isChecDescription = !$scope.isChecDescription;
         apply();
     };
@@ -5579,7 +5522,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     $scope.filterFunction = function (type) {
         if (type == 'unit_no') {
-            console.log(type)
             $scope.master_unit_no_list = $filter('filter')($scope.master_unit_no, function(item) {
                 var itemName = item.name.toLowerCase();
                 var searchText = $scope.search_keywords.unit_no.toLowerCase();
@@ -5648,7 +5590,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                 $scope.editing = false;
                 $scope.formattedText = convertText($scope.mandatory_note[0].name, false);
-                console.log("Show text: ", $scope.formattedText);
                 break;
             default:
                 break;

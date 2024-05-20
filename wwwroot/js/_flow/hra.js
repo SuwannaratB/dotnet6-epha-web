@@ -338,6 +338,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             fd.append("sub_software", 'hra');
 
             try {
+                $("#divLoading").show(); 
+
                 const request = new XMLHttpRequest();
                 request.open("POST", url_ws + 'Flow/uploadfile_data');
                 //request.send(fd);
@@ -371,11 +373,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                             console.error('มีข้อผิดพลาด: ' + request.status);
                         }
                     }
+                    $("#divLoading").hide(); 
                 };
 
                 request.send(fd);
 
-            } catch { }
+            } catch { 
+                $("#divLoading").hide();
+            }
 
             return "";
         }
@@ -420,6 +425,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             fd.append("sub_software", 'hra');
 
             try {
+                $("#divLoading").show(); 
+
                 const request = new XMLHttpRequest();
                 request.open("POST", url_ws + 'Flow/uploadfile_data');
 
@@ -451,11 +458,15 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                             console.error('มีข้อผิดพลาด: ' + request.status);
                         }
                     }
+                    $("#divLoading").hide(); 
+
                 };
 
                 request.send(fd);
 
-            } catch { }
+            } catch {
+                $("#divLoading").hide(); 
+             }
 
             return "";
         }
@@ -2804,9 +2815,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     window.open("home/portal", "_top");
                     break;
         
-                case 'leaveWsave': 
-                    $scope.confirmSave('save');
-                    window.open("home/portal", "_top");
+                case 'leaveWithsave': 
+                    $('#unsavedChangesModal').modal('hide');
+    
+                    $scope.confirmSave('save', function() {
+                        window.open("home/portal", "_top");
+                    });
                     break;
         
                 case 'stay':

@@ -211,6 +211,23 @@
                                         </select>
                                     </div>
                                     <!-- sections -->
+
+                                    <!-------Verified By--------->
+                                    <div class="col-md-2 ">
+                                        <label class="form-label ps-0" for="">
+                                            <b class="text-danger d-none"> * </b>
+                                            Verified By 
+                                        </label>
+                                        <select class="form-control"
+                                                ng-class="{'disabled-link':(!tab_general_active)}"
+                                                data-choices="data-choices"
+                                                data-options='{"removeItemButton":true,"placeholder":true}'
+                                                ng-model="">
+                                            <option ng-repeat="" 
+                                                ng-value="">
+                                            </option>
+                                        </select>
+                                    </div>
                                 </div>
 
                                 <div class="mx-1 row g-3 align-items-center" ng-repeat="item in data_general ">
@@ -2481,7 +2498,6 @@
                         <span class="me-2 text-primary"><B>|</B></span> {{ selectDatFormType === 'member' ? 'Member Team' : 'Assessment Team Leader' }}
                     </h5>
                 </div>
-
                 <div class="modal-body" 
                     ng-if="(selectDatFormType !== 'owner' && (data_memberteam || data_approver).length > 1 )">
                     <div class="col-auto py-2" ng-repeat="item2 in (selectDatFormType === 'member' ? data_memberteam : data_approver) | filter:{id_session: selectdata_session }"
