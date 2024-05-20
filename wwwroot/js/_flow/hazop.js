@@ -4913,7 +4913,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
 
         // check follow up edit
-        if ($scope.params == 'edit') {
+        if ($scope.params) {
             return $('#modalEditConfirm').modal('show');
         }
 
