@@ -101,9 +101,14 @@
                 </span>
                 <span class="mx-2" ng-if="params == 'edit' && data_header[0].pha_status == 13 && action_part == 5">
                     <button class="btn btn-primary btn-sm" 
-                        style="width: 100px;" 
                         ng-click="confirmSave('save')">
-                        CHANGE
+                        Change Action Owner
+                    </button>
+                </span>
+                <span class="mx-2" ng-if="params == 'edit_approver' && action_part == 7">
+                    <button class="btn btn-primary btn-sm" 
+                        ng-click="confirmSave('save')">
+                        Change Approver
                     </button>
                 </span>
                 <span class="mx-2" ng-if="action_to_review_type">
@@ -3258,7 +3263,7 @@
                                                         <div class="d-flex align-items-center">
                                                             <div ng-if="params == 'edit_approver'">
                                                                 <button ng-click="
-                                                                    openDataEmployeeAdd(item,'owner'); 
+                                                                    openDataEmployeeAdd(item,'edit_approver',$index); 
                                                                     recommentAction_valid(item);" 
                                                                     class="btn btn-link px-0 mx-1"
                                                                     data-toggle="tooltip" 

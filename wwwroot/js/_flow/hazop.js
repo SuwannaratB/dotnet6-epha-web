@@ -1150,6 +1150,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             flow_action = 'submit'
         }else if(action == 'change_action_owner'){
             flow_action = 'change_action_owner'
+        }else if(action = 'change_approver'){
+            flow_action = 'change_approver'
         }else if(action == 'submit'){
             flow_action = action
         }else {
@@ -1702,6 +1704,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                             $scope.master_unit_no.splice(0, 0, arr_clone_def);
                         }
                     } catch (ex) { alert(ex); console.clear(); }
+
+                    if ($scope.params == 'edit_approver') {
+                        $scope.save_type = false;
+                    } 
 
                     $scope.$apply();
                     startTimer();
@@ -4965,12 +4971,16 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
     }
     
-    
-
     $scope.confirmEdit = function () {
+        var action = ''
+        if ($scope.params == 'edit') {
+            action = 'change_action_owner'
+        }else if($scope.params == 'edit_approver'){
+            action = 'change_approver'
+        }
         $('#modalEditConfirm').modal('hide');
         setTimeout(function() {
-            save_data_create('change_action_owner', 'save');
+            save_data_create(action, 'save');
         }, 200); 
     }
 
@@ -5847,13 +5857,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     page_load();
 
-    $scope.openDataEmployeeAdd = function (item, form_type) {
+    $scope.openDataEmployeeAdd = function (item, form_type, index) {
         $scope.selectedData = item;
         $scope.selectdata_session = item.seq;
         $scope.selectDatFormType = form_type;//member, approver, owner
         $scope.employeelist_show = [];
         $scope.searchText = '';
         $scope.owner_status = '';
+        $scope.approve_index = index;
 
         if (form_type === 'owner') {
             $scope.owner_status = 'employee'; //1 for em || 2 for teams to sent to p'kul
@@ -6035,6 +6046,22 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             arr_items.action_change = 1;
 
+        }
+        else if (xformtype == 'edit_approver') {
+            // ขั้นแรก เรียงข้อมูลตามฟิลด์ 'no'
+            var sortedData = $filter('orderBy')($scope.data_approver, 'no');
+            // จากนั้น กรองข้อมูลตามเงื่อนไขที่ต้องการ
+            var result = $filter('filter')(sortedData, function (item, idx) {
+                return idx == $scope.approve_index;
+            })[0];
+
+            if (result) {
+                result.action_change = 1;
+                result.user_displayname = item.employee_displayname;
+                result.user_img = item.employee_img;
+                result.user_name = item.employee_name;
+            }
+            $('#modalEmployeeAdd').modal('hide');
         }
 
         clear_valid_items($scope.recomment_clear_valid);
