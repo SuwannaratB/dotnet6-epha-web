@@ -5532,6 +5532,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     $scope.changeUnitNo = function(unit_no) {
         $scope.data_general[0].id_unit_no = unit_no.id;
         $scope.data_general[0].unit_no_name = unit_no.name;
+        $scope.data_general[0].id_company = unit_no.id_company;
     };
 
     $scope.changeTagId = function(tagIg) {
