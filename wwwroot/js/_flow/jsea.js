@@ -136,7 +136,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
 AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, $document, $interval,$rootScope,$window,$timeout,$sce) {
 
-    var unsavedChanges = false;
+    $scope.unsavedChanges  = false;
 
     // Track location changes
     $rootScope.$on('$locationChangeStart', function(event, next, current) {
@@ -182,7 +182,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     });
 
     function startTimer() {
-        $scope.counter = 1800; // 1800 วินาทีเท่ากับ 30 นาที
+        $scope.counter = 900; // 1800 วินาทีเท่ากับ 30 นาที
         var interval = $interval(function () {
             var minutes = Math.floor($scope.counter / 60); // หานาทีที่เหลืออยู่
             var seconds = $scope.counter % 60; // หาวินาทีที่เหลืออยู่
@@ -460,7 +460,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                                     $scope.data_listworksheet_def = clone_arr_newrow(array.tasks_worksheet);
                                 }
                             } 
-                            unsavedChanges = true;
+                            $scope.unsavedChanges  = true;
                             apply();
 
                             //set_alert('Warning', "Upload Data Success.");
@@ -1350,7 +1350,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
 
     function save_data_approver(action) {
-        unsavedChanges = false;
+        $scope.unsavedChanges  = false;
 
         var user_name = $scope.user_name;
         var token_doc = $scope.token_doc + "";
@@ -3700,8 +3700,18 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     $scope.formData = {};
 
     $scope.confirmBack = function () {
+        
+        if(!$scope.unsavedChanges){
+            window.open("home/portal", "_top");
+        }else{
+            $('#unsavedChangesModal').modal({
+                backdrop: 'static',
+                keyboard: false 
+            }).modal('show');
+        }
+        
 
-        window.open("home/portal", "_top");
+        //window.open("home/portal", "_top");
 
         return;
         //var page = conFig.controller_action_befor();
@@ -3743,6 +3753,25 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         return;
 
     }
+
+    $scope.action_leavePage = function(action) {
+        switch (action) {
+            case 'leave':
+                $scope.unsavedChanges = true;
+                window.open("home/portal", "_top");
+                break;
+    
+            case 'leaveWsave': 
+                $scope.confirmSave('save');
+                window.open("home/portal", "_top");
+                break;
+    
+            case 'stay':
+                $('#unsavedChangesModal').modal(hide);
+                break;
+        }
+    };
+
     $scope.confirmMailtoMemberReview = function (action) {
 
         if (action == 'submit') {
@@ -3801,6 +3830,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         set_alert_confirm('Confirm canceling the PHA No.', '');
     }
     $scope.confirmSave = function (action) {
+
+        console.log("aready save!!!")
         //check required field 
         var pha_status = $scope.data_header[0].pha_status;
         //11	DF	Draft
@@ -3991,7 +4022,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
 
         save_data_create(action, action_def);
-        unsavedChanges = false;
+        $scope.unsavedChanges  = false;
     }
 
     $scope.confirmDialogApprover = function (_item, action) {
@@ -4516,7 +4547,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             set_master_ram_likelihood(_arr.id_ram);
         }
 
-        unsavedChanges = true;
+        $scope.unsavedChanges  = true;
         apply();
     }
     $scope.actionChangeWorksheet = function (_arr, _seq, type_text) {
@@ -4541,7 +4572,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         apply();
 
-        unsavedChanges = true;
+        $scope.unsavedChanges  = true;
 
     }
     $scope.actionChangeRelatedPeople = function (_arr, _seq, type_text) {
