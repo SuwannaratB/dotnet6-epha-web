@@ -2795,7 +2795,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
             
             return;
-        }
+        };
+
         $scope.action_leavePage = function(action) {
             switch (action) {
                 case 'leave':
@@ -2809,7 +2810,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     break;
         
                 case 'stay':
-                    $('#unsavedChangesModal').modal(hide);
+                    $('#unsavedChangesModal').modal('hide');
                     break;
             }
         };

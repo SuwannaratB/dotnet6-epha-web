@@ -6070,9 +6070,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         apply();
 
         if (xformtype == "owner") {
+            $scope.clearFormData()
             $('#modalEmployeeAdd').modal('hide');
         }
         else {
+            $scope.clearFormData()
             $('#modalEmployeeAdd').modal('show');
         }
     };
