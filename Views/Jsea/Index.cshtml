@@ -781,7 +781,8 @@
                                                                         Add Member Team/Attendees
                                                                     </button>
                                                                 </div>
-                                                                <div class="row" ng-repeat="item2 in data_memberteam" ng-if="data_memberteam.user_name !== null">
+                                                                <div class="row" ng-repeat="item2 in data_memberteam" 
+                                                                     ng-if="item2.user_name !== null && item2.id_session === item.seq">
                                                                     <div class="col-8 align-items-center  p-1">
                                                                         <label class="mb-0 text-1100 fw-bold"
                                                                                 style="width:100%;border-color: #f1f2f4;">
@@ -796,7 +797,8 @@
                                                                     </div>
                                                                 </div>
                                                                 <!-- data_relatedpeople_outsider -->
-                                                                <div class="row" ng-repeat="item2 in data_relatedpeople_outsider | filter:{id_session: selectdata_session, user_type: 'member'}" >
+                                                                <div class="row" ng-repeat="item2 in data_relatedpeople_outsider | filter:{user_type: 'member'}" 
+                                                                    ng-if="item2.user_displayname !== null && item2.id_session === item.seq">
                                                                     <div class="col-8 align-items-center  p-1">
                                                                         <label class="mb-0 text-1100 fw-bold"
                                                                             style="width:80%;border-color: #f1f2f4;">
@@ -822,11 +824,12 @@
                                                                         Add Safety Reviewer
                                                                     </button>
                                                                 </div>
-                                                                <div class="row" ng-repeat="item2 in data_approver" ng-if="data_approver.user_name !== null"> 
+                                                                <div class="row" ng-repeat="item2 in data_approver" 
+                                                                    ng-if="item2.user_name !== null && item2.id_session === item.seq"> 
                                                                     <div class="col-8 align-items-center  p-1">
                                                                         <label class="mb-0 text-1100 fw-bold" 
                                                                                 style="width:80%;border-color: #f1f2f4;"
-                                                                                ng-if=" (item2.approver_type === 'approver')">
+                                                                                ng-if="item2.approver_type === 'approver'">
                                                                                 {{ '(Safety)' + item2.user_displayname}}
                                                                         </label>
                                                                         <label class="mb-0 text-1100 fw-bold" 
@@ -857,8 +860,8 @@
                                                                 </div>
                                                                 <!-- Specialist from data_relatedpeople -->
                                                                 <div class="row" 
-                                                                    ng-repeat="item2 in data_relatedpeople | filter:{id_session:item.seq, user_type:'specialist'}"
-                                                                    ng-show="(data_relatedpeople | filter:{id_session:item.seq, user_type:'specialist'}).length > 0">
+                                                                    ng-repeat="item2 in data_relatedpeople | filter:{ user_type:'specialist'}"
+                                                                    ng-if="item2.user_displayname !== null && item2.id_session === item.seq">
                                                                     <div class="col-8 align-items-center  p-1">
                                                                         <label class="mb-0 text-1100 fw-bold"
                                                                                 style="width:100%;border-color: #f1f2f4;">
@@ -872,8 +875,10 @@
                                                                         </label>
                                                                     </div>
                                                                 </div>
+
                                                                 <!-- Specialist from data_relatedpeople_outsider -->
-                                                                <div class="row" ng-repeat="item2 in data_relatedpeople_outsider | filter:{id_session: selectdata_session, user_type:'specialist'}" >
+                                                                <div class="row" ng-repeat="item2 in data_relatedpeople_outsider | filter:{id_session: selectdata_session, user_type:'specialist'}" 
+                                                                    ng-if="item2.user_displayname !== null && item2.id_session === item.seq">   
                                                                     <div class="col-8 align-items-center  p-1">
                                                                         <label class="mb-0 text-1100 fw-bold"
                                                                             style="width:80%;border-color: #f1f2f4;">
@@ -903,7 +908,8 @@
                                                                         Add Attendees:
                                                                     </button>
                                                                 </div>
-                                                                <div class="row" ng-repeat="item2 in data_relatedpeople | filter:{id_session:item.seq, user_type:'attendees'}">
+                                                                <div class="row" ng-repeat="item2 in data_relatedpeople | filter:{id_session:item.seq, user_type:'attendees'}"
+                                                                    ng-if="item2.user_name !== null && item2.id_session === item.seq">
                                                                     <div class="col-8 align-items-center  p-1">
                                                                         <label class="mb-0 text-1100 fw-bold"
                                                                                 style="width:100%;border-color: #f1f2f4;">
@@ -917,7 +923,8 @@
                                                                         </label>
                                                                     </div>
                                                                 </div>
-                                                                <div class="row" ng-repeat="item2 in data_relatedpeople_outsider | filter:{id_session:item.seq, user_type:'attendees'}">
+                                                                <div class="row" ng-repeat="item2 in data_relatedpeople_outsider | filter:{id_session:item.seq, user_type:'attendees'}"
+                                                                    ng-if="item2.user_name !== null && item2.id_session === item.seq">
                                                                     <div class="row align-items-center  p-1">
                                                                         <label class="mb-0 text-1100 fw-bold"
                                                                                style="width:80%;border-color: #f1f2f4;">
@@ -934,7 +941,8 @@
                                                                         <span class="far fa-address-book fa-lg pe-1"></span>Add Approver AE or AGSI:
                                                                     </button>
                                                                 </div>
-                                                                <div class="row" ng-repeat="item2 in data_relatedpeople | filter:{id_session:item.seq, user_type:'reviewer'}">
+                                                                <div class="row" ng-repeat="item2 in data_relatedpeople | filter:{id_session:item.seq, user_type:'reviewer'}"
+                                                                    ng-if="item2.user_name !== null && item2.id_session === item.seq">
                                                                     <div class="row align-items-center  p-1">
                                                                         <label class="mb-0 text-1100 fw-bold"
                                                                                style="width:80%;border-color: #f1f2f4;">
@@ -954,7 +962,8 @@
                                                                         Add ผู้เชี่ยวชาญเฉพาะด้าน (ถ้ามี):
                                                                     </button>
                                                                 </div>
-                                                                <div class="row" ng-repeat="item2 in data_relatedpeople | filter:{id_session:item.seq, user_type:'specialist'}">
+                                                                <div class="row" ng-repeat="item2 in data_relatedpeople | filter:{id_session:item.seq, user_type:'specialist'}"
+                                                                    ng-if="item2.user_name !== null && item2.id_session === item.seq">
                                                                     <div class="row align-items-center  p-1">
                                                                         <label class="mb-0 text-1100 fw-bold" 
                                                                                 style="width:80%;border-color: #f1f2f4;">
@@ -966,7 +975,7 @@
                                                                     <div class="row align-items-center  p-1">
                                                                         <label class="mb-0 text-1100 fw-bold"
                                                                                style="width:80%;border-color: #f1f2f4;">
-                                                                               {{ item2.user_displayname}}
+                                                                               {{item2.user_title}}
                                                                         </label>
                                                                     </div>
                                                                 </div>
@@ -2428,7 +2437,6 @@
                                                         </button>
                                                     </div>
                                                 </td>
-
                                                 <td class="align-top border border-light border-end-0  border-start-0  border-top-0 "
                                                     style="padding: 0 !important; width: 30px;">
                                                     <div class="align-items-center text-end mt-1" style=" width: 30px;">
@@ -2437,13 +2445,13 @@
                                                                 type="button" 
                                                                 ng-click="openModalDataRAM_Worksheet(item,'r',item.seq,'after')" 
                                                                 style="width: 30px;">
-                                                            <div class="text-center" style=" width: 25px;">
+                                                            <div class="d-flex text-center" style=" width: 25px;">
                                                                 <h6 class="me-1 text-center" style=" width: 25px;">{{item.ram_after_risk}}</h6>
                                                                 <span class="fas fa-pencil-alt fa-sm " style=" width: 10px;"></span>
                                                             </div>
                                                         </button>
                                                     </div>
-                                                </td>
+                                                </td>                                                
                                             </tr>
                                         </tbody>
 

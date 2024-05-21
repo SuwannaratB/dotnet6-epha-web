@@ -369,7 +369,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                 request.onreadystatechange = function () {
                     if (request.readyState === XMLHttpRequest.DONE) {
-                        $("#divLoading").show(); 
                         if (request.status === 200) {
                             // รับค่าที่ส่งมาจาก service ที่ตอบกลับมาด้วย responseText
                             const responseFromService = request.responseText;
@@ -2407,7 +2406,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
 
     $scope.copyDataSession = function (seq) {
-
         $scope.MaxSeqDataSession = Number($scope.MaxSeqDataSession) + 1;
         var xValues = $scope.MaxSeqDataSession;
 
@@ -2437,11 +2435,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         };
 
+
         running_no_format_1($scope.data_session, iNo, newInput);
 
         $scope.selectdata_session = xValues;
 
-        var arr_copy = [];
+        /*var arr_copy = [];
         angular.copy($scope.data_memberteam, arr_copy);
         var arrmember = $filter('filter')(arr_copy, function (item) { return (item.id_session == seq); });
         for (let i = 0; i < arrmember.length; i++) {
@@ -2454,7 +2453,33 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             $scope.data_memberteam.push(arrmember[i]);
             $scope.selectdata_memberteam += 1;
+        }*/
+        function processData(sourceArray, seq, id_session) {
+            let arr_copy = [];
+            angular.copy(sourceArray, arr_copy);
+            let arrmember = $filter('filter')(arr_copy, function(item) {
+                return (item.id_session == seq);
+            });
+        
+            for (let i = 0; i < arrmember.length; i++) {
+                arrmember[i].id_session = Number(id_session);
+                arrmember[i].action_type = 'insert';
+                arrmember[i].action_change = 1;
+        
+                arrmember[i].seq = $scope.selectdata_memberteam;
+                arrmember[i].id = $scope.selectdata_memberteam;
+        
+                sourceArray.push(arrmember[i]);
+                $scope.selectdata_memberteam += 1;
+            }
         }
+        
+        processData($scope.data_memberteam, seq, id_session);
+        processData($scope.data_approver, seq, id_session);
+        processData($scope.data_relatedpeople, seq, id_session);
+        processData($scope.data_relatedpeople_outsider, seq, id_session);
+
+        console.log("$scope.data_approver",$scope.data_approver)
 
     }
     $scope.removeDataSession = function (seq, index) {
@@ -3807,7 +3832,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         set_alert_confirm('Confirm canceling the PHA No.', '');
     }
     $scope.confirmSave = function (action) {
-
         //check required field 
         var pha_status = $scope.data_header[0].pha_status;
         //11	DF	Draft
@@ -5114,7 +5138,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     };
 
     $scope.removeData = function(seq, seq_session, selectDatFormType) {
-        console.log(selectDatFormType);
 
         // Common function to set isAdded to false for the given employee in employeelist_show
         function setIsAddedToFalse(employeeName) {
