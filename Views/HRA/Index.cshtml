@@ -687,7 +687,6 @@
                         </div>
                         @* Session End*@
 
-
                         @* Drawing Start*@
                         <div class="m-3 row  gx-0 align-items-center">
                             <div class="card px-2">
@@ -967,7 +966,7 @@
                                                             placeholder="Sub Area" 
                                                             style="height: 100px"
                                                             ng-change="actionChangeSubArae(item)"
-                                                            ng-model="item.sub_area">
+                                                            ng-model="item.work_of_task">
                                                     </textarea>
                                                     @* <b class="p-2 d-flex align-items-start text-start px-">{{item.work_of_task}}</b> *@
                                                 </td>
@@ -1303,7 +1302,6 @@
                     </div>
                     @* List of Worker Groups and Description of Tasks end*@
 
-
                     @* RAM start*@
                     <div class="d-none" 
                         ng-class="{'tab-pane fade show active':(action_part==4),'tab-pane fade':(action_part!==4)}"
@@ -1374,38 +1372,39 @@
                                                 </tr>
                                             </thead>
                                             <tbody class="list" id="customer-rating-table-body">
-                                                <tr ng-repeat="item in data_subareas_list">
+                                                <tr ng-repeat="item in data_worksheet_list">
                                                     
-                                                    <td>POM (SEG-1)</td>
+                                                    <td>{{ item.worker_group }}</td>
 
-                                                    <td>xxxxx</td>
+                                                    <td>&nbsp;</td>
 
                                                     <td>
-                                                        <div class="d-flex flex-col mb-10">
-                                                            <div class="p">
-                                                                {{ item.sub_area }}
+                                                        <div class="d-flex flex-col" ng-repeat="item_sub in item.sub_areas">
+                                                            <div style="margin-bottom: 30px;" >
+                                                                {{ item_sub.sub_area }}
                                                             </div>
                                                         </div>
                                                     </td>
 
                                                     <td>
-                                                        <div class="d-flex flex-col mb-10" ng-repeat="hazard in item.hazard">
-                                                            <div class="p" >
+                                                        <div class="d-flex flex-col"  ng-repeat="hazard in item.hazards">
+                                                            <div style="margin-bottom: 30px;" >
                                                                 {{ hazard.type_hazard }}
                                                             </div>
                                                         </div>
                                                     </td>
 
                                                     <td class="" >
-                                                        <div class="d-flex flex-col mb-10" ng-repeat="hazard in item.hazard">
-                                                            {{ hazard.health_hazard }}
+                                                        <div class="d-flex flex-col" ng-repeat="hazard in item.hazards"
+                                                            style="margin-bottom: 45px;">
+                                                           {{ hazard.health_hazard }}
                                                         </div>
                                                     </td>
 
                                                     <td class="" >
                                                         <div class="d-flex justify-content-center" 
-                                                            style="margin-bottom: 60px;"
-                                                            ng-repeat="hazard in item.hazard">
+                                                            style="margin-bottom: 33px;"
+                                                            ng-repeat="hazard in item.hazards">
                                                             <div class="effect-rating "
                                                                 ng-class="{
                                                                 'bg-success': (hazard.health_effect_rating == '1' || hazard.health_effect_rating == '2'),
@@ -1417,22 +1416,24 @@
                                                     </td>
 
                                                     <td class="" >
-                                                        <div class="d-flex align-items-center">
+                                                        <div class="d-flex align-items-center" 
+                                                            style="margin-bottom: 28px;"
+                                                            ng-repeat="hazard in item.hazards">
                                                             <select class="form-select form-select-sm rounded-1" 
                                                                     ng-if="tab_worksheet_active"
                                                                     ng-class="{'disabled-link':(!tab_worksheet_active)}"
-                                                                    ng-change="actionChangeWorksheet(item,item.seq,'frequency_level')"
-                                                                    ng-model="item.id_frequency_level" 
+                                                                    ng-change="actionChangeFrequencyLevel(hazard)"
+                                                                    ng-model="hazard.id_frequency_level" 
                                                                     style="width: 100%;">
                                                                 <option ng-repeat="item_m in master_frequency_level" ng-value="item_m.id">
                                                                     {{item_m.name}}
                                                                 </option>
                                                             </select>
-                                                            <p class=" m-0  text-center text-1100 fw-bold" 
+                                                            @* <p class=" m-0  text-center text-1100 fw-bold" 
                                                                 ng-if="!tab_worksheet_active"
                                                                 ng-repeat="item_ret in master_frequency_level | filter:{id:item.id_frequency_level}">
                                                                {{  item_ret.name  }}
-                                                            </p>
+                                                            </p> *@
                                                         </div>
                                                     </td>
 
@@ -1443,16 +1444,20 @@
                                                     <td class="" ></td>
 
                                                     <td class="" >
-                                                         <select class="form-select form-select-sm rounded-1" 
+                                                        <div class="d-flex align-items-center" 
+                                                            style="margin-bottom: 28px;"
+                                                            ng-repeat="hazard in item.hazards">
+                                                            <select class="form-select form-select-sm rounded-1" 
                                                                 ng-if="tab_worksheet_active"
                                                                 ng-class="{'disabled-link':(!tab_worksheet_active)}"
                                                                 @* ng-change="actionChangeWorksheet(item,item.seq,'frequency_level')" *@
                                                                 ng-model="item.id_exposure_level" 
                                                                 style="width: 100%;">
-                                                            <option ng-repeat="item_m in master_exposure_level" ng-value="item_m.id">
-                                                                {{item_m.name}}
-                                                            </option>
-                                                        </select>
+                                                                <option ng-repeat="item_m in master_exposure_level" ng-value="item_m.id">
+                                                                    {{item_m.name}}
+                                                                </option>
+                                                            </select>
+                                                        </div>
                                                     </td>
 
                                                     <td class="" ></td>
