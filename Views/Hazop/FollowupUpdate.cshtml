@@ -62,7 +62,14 @@
 
                                 </div>
                                 <div class="col-auto">
-                                    <div class="d-flex align-items-center py-2  justify-content-end">
+                                    <div class="d-flex align-items-center py-2 gap-4  justify-content-end">
+                                        <div class="d-flex align-items-center gap-2"  ng-class="{ 'd-none': (data_general[0].pha_status != 13)}">
+                                            <label class="switch">
+                                                <input type="checkbox" ng-model="toggleStatus" ng-change="toggleChanged()">
+                                                <span class="slider round"></span>
+                                            </label>
+                                            <b ng-class="{'text-primary': toggleStatus}"> {{ toggleStatus ? user_name : 'All Tasks'}} </b>
+                                        </div>
                                         <span class="mx-2" ng-if="cancle_type">
                                             <button class="btn btn-outline-secondary btn-sm" style="width: 100px;"
                                                     ng-click="confirmFollowBack()">
