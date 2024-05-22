@@ -4935,7 +4935,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         });
     }
 
+    $scope.clickedStates = {};
+
     $scope.choosDataEmployee = function (item) {
+        console.log(item)
         var id = item.id;
         var employee_name = item.employee_name;
         var employee_displayname = item.employee_displayname;
@@ -5111,9 +5114,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         
 
         //$scope.getFormData()
-        if (item.isAdded === false) {
-            item.isAdded = true;
-        }
+
 
         $scope.formData = $scope.getFormData();
         //$scope.formData_outsider = $scope.getOutsourceFormData();

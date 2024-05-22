@@ -21,6 +21,7 @@
 
     <link rel="stylesheet" href="~/css/autocomplete.css">
     <link rel="stylesheet" href="~/css/button.css" />
+    <link rel="stylesheet" href="~/css/scollbar.css" />
 
     <script src="~/assets/js/all.min.js"></script> 
 
@@ -911,18 +912,18 @@
                                                                             ng-class="{'d-none':(!tab_general_active)}"
                                                                             ng-click="downloadFile(item)"
                                                                             ng-if="item.document_file_size>0">
-                                                                                <b style="font-size:x-small;">
-                                                                                    {{(item.document_file_size>0? item.document_file_name + '('+  item.document_file_size + 'KB)' : '')}}
-                                                                                </b>
+                                                                            <b style="font-size:x-small;">
+                                                                                {{truncateFilename(item.document_file_name, 20)}} ({{item.document_file_size}} KB)
+                                                                            </b>
                                                                         </span>
-                                                                        <a id="deluploadfile-{{item.seq}}" class="btn btn-link text-danger p-0"
-                                                                            ng-class="{'d-none':(!tab_general_active)}"
-                                                                            ng-click="clearFileName(item.seq)"
-                                                                            ng-if="!(item.file_upload_name =='' || item.file_upload_name == null)">
+                                                                        <a id="deluploadfile-{{item.seq}}" class="btn btn-link text-danger p-0 ms-2"
+                                                                                ng-class="{'d-none':(!tab_general_active)}"
+                                                                                ng-click="clearFileName(item.seq)">
                                                                             <span class="fa-regular fa-trash-can fa-lg"></span>
-                                                                        </a> 
+                                                                        </a>
+
                                                                     </div>
-                                                                </button>
+                                                                </button> 
                                                             </div>                                                                                                                                                                                
                                                             @*<div class=" align-items-center p-1 cursor-pointer ">
 
@@ -2021,7 +2022,7 @@
                                 <div class="table-responsive scrollbar tableFixHead " id="table-container">
                                     <table class="table fs--2 mb-0 table-bordered " style="min-height:400px;" cellpadding="0" cellspacing="0">
                                         <thead class=" text-uppercase  text-center  bg-soft  test" style="font-size: 10px;" id="myHeader">
-                                            <tr>
+                                            <tr class="">
                                                 <th class=" align-middle mx-0" 
                                                     colspan="1" 
                                                     rowspan="2" 
@@ -2631,6 +2632,7 @@
                                                     </div>
 
                                                 </td>
+                                                {{item}}
 
                                                 <td class="align-top border border-light border-end-0  border-start-0  border-top-0 " style="padding: 0 !important; width: 120px;">
                                                     <div class="d-flex align-items-center ">
@@ -2650,6 +2652,7 @@
                                                                 <span class="fas fa-times text-danger"></span>
                                                             </button>
                                                         </div>
+                                                        {{item.action_project_team}}
                                                         <p class="m-0 text-1100 fw-bold" style="width: 115px;">
                                                             {{ item.action_project_team === false ? item.responder_user_displayname : item.project_team_text }}
                                                         </p>                                                     
@@ -2671,9 +2674,9 @@
                                                         </button>
                                                     </div>
 
-                                                    <select class="form-control" ng-if="item.action_project_team" ng-model="item.action_status">
+                                                    <select class="form-control px-1 " ng-if="item.action_project_team" ng-model="item.action_status">
                                                         <option value="N/A">N/A</option>
-                                                        <option value="wait_for_design">waiting for detail design</option>
+                                                        <option value="Wait_for_design" title="Waiting for detail design">Waiting for detail design</option>
                                                     </select>
                                                 </td>
 
@@ -3068,6 +3071,7 @@
                                                     </label>
                                                 </div>
                                             </td>
+                                            <!-------will change Approver ? //// sent to TA3--------->
                                             <td class="align-top rating white-space-nowrap">
                                                 <div class="ms-3">
                                                     <label>
@@ -3189,14 +3193,27 @@
                                                         </p>
                                                     </div>
 
-                                                    <div class="align-items-center ">
+                                                    @*<div class="align-items-center ">
                                                         <p ng-style=" { 'background-color' : ((item.ram_action_risk == 'H') ? 'red' : ((item.ram_action_risk == 'M') ? 'yellow' : ((item.ram_action_risk == 'L') ? 'green' : '#D3D3D3')) ) }"
                                                             class="transition-none fs--2p-1 ps-0 text-center rounded-1 cursor-pointer"
                                                             ng-click="openModalDataRAM_Worksheet(item,'r',item.seq,'action',item.id_ram)"
                                                             style="width: 20px; height:20px;">
                                                             {{item.ram_action_risk}}
                                                         </p>
+                                                    </div>*@
+                                                    <div class="align-items-center text-end mt-1" style=" width: 30px;">
+                                                        <button ng-style=" { 'background-color' : ((item.ram_action_risk == 'H') ? 'red' : ((item.ram_action_risk == 'M') ? 'yellow' : ((item.ram_action_risk == 'L') ? 'green' : '#D3D3D3')) ) }"
+                                                                class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end"
+                                                                type="button" 
+                                                                ng-click="openModalDataRAM_Worksheet(item,'r',item.seq,'action',item.id_ram)"
+                                                                style="width: 30px;">
+                                                            <div class="d-flex text-center" style=" width: 25px;">
+                                                                <h6 class="me-1 text-center" style=" width: 30px;">{{item.ram_after_risk}}</h6>
+                                                                <span class="fas fa-pencil-alt fa-sm " style=" width: 8px;"></span>
+                                                            </div>
+                                                        </button>
                                                     </div>
+
                                                 </div>
 
                                             </td>
@@ -3576,37 +3593,13 @@
     <div class="modal fade modal-xl" id="modalEmployeeAdd" tabindex="-1" aria-labelledby="modalEmployeeAddLabel"
          aria-hidden="true" style="display: none;">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <!-- For form_type === 'member' or 'approver' -->
+            <div class="modal-content scrollbar" style="max-height: calc(100vh - 100px); overflow-y:auto;">
+                <div class="modal-header" ng-if="selectDatFormType === 'member' || selectDatFormType === 'approver'">
+                     <!-- For form_type === 'member' or 'approver' -->
                     <div ng-if="selectDatFormType === 'member' || selectDatFormType === 'approver'">
                         <h5 class="text-900 mb-0" data-anchor="data-anchor" id="modalEmployeeCheckLabel">
                             <span class="me-2 text-primary"><B>|</B></span> Search Employee/Contract
                         </h5>
-                    </div>
-                    <!-- For form_type === 'owner' -->
-                    <div ng-if="selectDatFormType === 'owner' && params != 'edit_approver'">
-                        <nav class="navbar navbar-expand-lg navbar-light ps-0">
-                            <div class="container-fluid">
-                                <ul class="nav nav-underline border-3 border-primary border-bottom" id="myTab"
-                                    role="tablist" style="position: relative;">
-                                    <li class="mx-2" ng-if="tab.isShow || true">
-                                        <a ng-click="selectTab('employee')"
-                                           class="btn btn-outline-primary border border-0 "
-                                           ng-class="{'btn btn-outline-primary border border-0 active': (owner_status === 'employee'),'btn btn-outline-primary border border-0 ': (owner_status === 'teams') }"
-                                           style="border-radius: 10px 10px 0px 0px !important;"
-                                           aria-selected="tab.isActive">Search Employee/Contract</a>
-                                    </li>
-                                    <li class="mx-2" ng-if="tab.isShow || true">
-                                        <a ng-click="selectTab('teams')"
-                                           class="btn btn-outline-primary border border-0 "
-                                           ng-class="{'btn btn-outline-primary border border-0 active': (owner_status === 'teams'),'btn btn-outline-primary border border-0 ': (owner_status === 'employee') }"
-                                           style="border-radius: 10px 10px 0px 0px !important;"
-                                           aria-selected="tab.isActive">Add Teams</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </nav>
                     </div>
 
                     <button class="btn p-1" type="button" data-bs-dismiss="modal" aria-label="Close" ng-click="clearFormData()">
@@ -3618,37 +3611,50 @@
                             </path>
                         </svg>
                     </button>
+
                 </div>
-                <div class="modal-body" >
-                    <h6 class="text-1200 mb-3" style="font-size: 1.2rem;" ng-if="owner_status">
+                <div class="modal-header ps-0 pb-0" ng-if="selectDatFormType === 'owner' && params != 'edit_approver'">
+                    <!-- For form_type === 'owner' -->
+                    <nav class="navbar navbar-expand-lg navbar-light ps-0 pb-0">
+                        <div class="container-fluid ps-0">
+                            <ul class="nav nav-underline border-3  " id="myTab"
+                                role="tablist" style="position: relative;">
+                                <li class="mx-2" ng-if="tab.isShow || true"><!-----btn-outline-primary------->
+                                    <a ng-click="selectTab('employee')"
+                                       class="btn border border-0 "
+                                       ng-class="{'btn border border-bottom border-primary border-0 text-primary active': (owner_status === 'employee'),'btn border border-0 ': (owner_status === 'teams') }"
+                                        style="border-radius: 10px 10px 0px 0px !important;"
+                                       aria-selected="tab.isActive">Search Employee/Contract</a>
+                                </li>
+                                <li class="mx-2" ng-if="tab.isShow || true">
+                                    <a ng-click="selectTab('teams')"
+                                       class="btn border border-0 "
+                                       ng-class="{'btn border border-0 border-bottom border-primary text-primary active': (owner_status === 'teams'),'btn border border-0 ': (owner_status === 'employee') }"
+                                       style="border-radius: 10px 10px 0px 0px !important;"
+                                       aria-selected="tab.isActive">Add Teams</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </nav>
+
+                    <button class="btn p-1" type="button" data-bs-dismiss="modal" aria-label="Close" ng-click="clearFormData()">
+                        <svg class="svg-inline--fa fa-xmark fs--1" aria-hidden="true" focusable="false" data-prefix="fas"
+                                data-icon="xmark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"
+                                data-fa-i2svg="">
+                            <path fill="currentColor"
+                                    d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z">
+                            </path>
+                        </svg>
+                    </button>
+                </div>
+                <div class="modal-body h-50">
+                    @*<h6 class="text-1200 mb-3" style="font-size: 1.2rem;" ng-if="owner_status">
                         <span class="me-2 text-primary"><B>|</B></span> 
                         {{owner_status === 'employee'  ? 'Employee/Contract' : 'Teams'}} 
-                    </h6>  
+                    </h6>*@  
                     <div ng-show="selectDatFormType && owner_status !== 'teams'">
                         <div class="mb-4">
                             <div class="row g-3">
-                                @*<div class="col-auto">
-                                    <label for="" style="font-size: 14px; font-weight: bold; padding-left: 4px;">Employee</label>
-                                    <div class="search-box form-floating position-relative">
-                                        <input class="form-control search-input search"
-                                            ng-model="searchText" 
-                                            placeholder="Search Employee"
-                                            ng-change="fillterDataEmployeeAdd()" />
-                                        <label class="ms-3" for="floatingInput">Employee</label>
-                                        <span class="fas fa-search search-box-icon"></span>
-                                    </div>                                  
-                                </div>
-                                <div class="col-auto">*@
-                                    @*<label for="" style="font-size: 14px; font-weight: bold; padding-left: 4px;">Indicator</label>
-                                    <div class="search-box form-floating position-relative">
-                                        <input class="form-control search-input search"
-                                            ng-model="searchIndicator.text" 
-                                            placeholder="Search Indicator"
-                                            ng-change="fillterDataEmployeeAdd()" />
-                                        <label class="ms-3" for="floatingInput">Indicator</label>    
-                                        <span class="fas fa-search search-box-icon"></span>
-                                    </div>                                      
-                                </div>*@
                                 <div class="col-auto">
                                     @*<label for="" style="font-size: 14px; font-weight: bold; padding-left: 4px;">Indicator</label>*@
                                     <div class="search-box form-floating position-relative">
@@ -3665,67 +3671,86 @@
 
                         @* start แสดงข้อมูลที่ ค้นหาตาม textsearch*@
                         <div class="bg-white border-top border-bottom border-200 position-relative top-1" >
-                                <div class="table-responsive scrollbar-overlay mx-n1 px-1">
-                                    <table class="table table-sm fs--1 mb-0">
-                                        <thead class=" text-uppercase">
-                                            <tr class="text-center">
-                                                <th class=""> </th>
-                                                <th class="pe-5" scope="col">Employee</th>
-                                                <th class="" scope="col">Section</th>
-                                                <th class="" scope="col">Indicator</th>
-                                                <th class="" scope="col">E-Mail</th>
-                                                @*<th class="" scope="col">Employee Type</th>*@
+                            <div class="table-responsive scrollbar-overlay mx-n1 px-1">
+                                <table class="table table-sm fs--1 mb-0">
+                                    <thead class=" text-uppercase">
+                                        <tr class="text-center">
+                                            <th class=""> </th>
+                                            <th class="pe-5" scope="col">Employee</th>
+                                            <th class="" scope="col">Section</th>
+                                            <th class="" scope="col">Indicator</th>
+                                            <th class="" scope="col">E-Mail</th>
+                                            @*<th class="" scope="col">Employee Type</th>*@
+                                        </tr>
+                                    </thead>
+                                    <tbody class=" list">
+                                            <tr class="hover-actions-trigger btn-reveal-trigger position-static text-center"
+                                                ng-class="{'row-faded': clickedStates[item.employee_name]}"
+                                                ng-repeat="item in employeelist_show">
+                                                
+                                                <!-----------ng-if="employeelist_show.length > 0 && employeelist_show[0].employee_displayname !== null" ------->
+                                                <td class="">
+                                                    <span class="mx-1">
+                                                        <button class="btn btn-outline-secondary p-1 cursor-pointer"
+                                                                ng-class="{'btn-clicked': clickedStates[item.employee_name],'skeleton': loadingData}" 
+                                                                style="color: #2445fc; background-color: #f1f2f4; border-color: #2445fc;"
+                                                                data-toggle="tooltip" 
+                                                                data-placement="top" 
+                                                                title="choose Employee"
+                                                                ng-click="choosDataEmployee(item)">
+                                                            <span class="fa-solid fa-user-plus" ng-if="selectDatFormType !== 'owner'">Add</span>
+                                                            <span class="fa-solid fa-user-check" ng-if="selectDatFormType === 'owner'">selecte</span>
+                                                        </button>
+                                                    </span>
+                                                </td>
+                                                <td class="">
+                                                    <a class=" text-decoration-none d-flex align-items-center">
+                                                        <div class="avatar avatar-m" style="height: 20px; width: 20px;">
+                                                            <img ng-if="item.employee_img " class="rounded-circle" 
+                                                                 ng-class="{ 'skeleton': loadingData }"
+                                                                 ng-src="../../{{ item.employee_img }}" alt="">
+                                                        </div>
+                                                        <p class="mb-0 ms-3 text-1100 fw-bold"
+                                                            ng-class="{ 'skeleton skeleton-text skeleton-text__body': loadingData }">
+                                                            {{item.employee_displayname}} 
+                                                        </p>
+                                                    </a>
+                                                </td>
+                                                <td class="text-center m-0">
+                                                    <p class="m-0" ng-class="{ 'skeleton skeleton-text skeleton-text__body': loadingData }">{{ item.employee_position }}</p>
+                                                </td>
+                                                <td class="text-center m-0">
+                                                    <p class="m-0" ng-class="{ 'skeleton skeleton-text skeleton-text__body': loadingData }">{{ item.employee_position + '-' + item.employee_displayname.split(' ')[0] }}</p>
+                                                </td>
+                                                <td class="text-center">
+                                                    <p class="m-0" ng-class="{ 'skeleton skeleton-text skeleton-text__body': loadingData }">{{ item.employee_email }}</p>
+                                                </td>
 
                                             </tr>
-                                        </thead>
-                                        <tbody class=" list">
-
-                                                <tr class="hover-actions-trigger btn-reveal-trigger position-static text-center"
-                                                    ng-if="employeelist_show.length > 0 && employeelist_show[0].employee_displayname !== null" 
-                                                    ng-repeat="item in employeelist_show">
-
-                                                    <td class="">
-                                                        <span class="mx-1">
-                                                            <button class="btn btn-outline-secondary p-1 cursor-pointer" 
-                                                                    style="color: #0abe0a; background-color: #f1f2f4; border-color: #0abe0a;"
-                                                                    data-toggle="tooltip" 
-                                                                    data-placement="top" 
-                                                                    title="choose Employee"
-                                                                    ng-click="choosDataEmployee(item)">
-                                                                <span class="fa-solid fa-user-plus">Add</span>
-                                                            </button>
-                                                        </span>
-                                                    </td>
-
-                                                    <td class="">
-                                                        <a class=" text-decoration-none d-flex align-items-center">
-                                                            <div class="avatar avatar-m" style="height: 20px; width: 20px;">
-                                                                <img ng-if="item.employee_img" class="rounded-circle" ng-src="../../{{ item.employee_img }}" alt="">
-                                                            </div>
-                                                            <p class="mb-0 ms-3 text-1100 fw-bold">{{item.employee_displayname}} </p>
-                                                        </a>
-                                                    </td>
-                                                    <td class="text-center">{{item.employee_position}} </td>
-                                                    <td class="text-center">{{item.employee_position + '-'}}{{item.employee_name}} </td>
-                                                    <td class="text-center">{{item.employee_email}} </td>
-
-                                                </tr>
                                                 <!-- Show "please enter" message  -->
-                                                <tr ng-if="!searchText && !searchIndicator.text">
-                                                    <td colspan="5">
-                                                        <p class="mb-0 ms-3 text-muted fw-bold text-center"> Enter employee details to search. </p>
-                                                    </td>
-                                                </tr>
+                                            <tr ng-if="!searchText && !searchIndicator.text && employeelist_show.length < 1">
+                                                <td colspan="5">
+                                                    <p class="mb-0 ms-3 text-muted fw-bold text-center"> Enter employee details to search. </p>
+                                                </td>
+                                            </tr>
 
                                                 <!-- Show "Not Found" message when employeelist_show is empty or the first item is null -->
-                                                <tr ng-if="employeelist_show[0].employee_displayname === null">
-                                                    <td colspan="5">
-                                                        <p class="mb-0 ms-3 text-1100 fw-bold text-center"> Not Found </p>
-                                                    </td>
-                                                </tr>                                   
-                                        </tbody>
-                                    </table>
+                                            <tr ng-if="employeelist_show[0].employee_displayname === null">
+                                                <td colspan="5">
+                                                    <p class="mb-0 ms-3 text-1100 fw-bold text-center"> Not Found </p>
+                                                </td>
+                                            </tr>                                   
+                                    </tbody>
+                                </table>
+                                <div class="pagination-container" ng-show="employeelist_page.length > 10">
+                                    <button class="pagination-button" ng-disabled="currentPage === 1" ng-click="action_changepage('prevPage')">Previous</button>
+                                    <!-- Page numbers -->
+                                    <span class="pagination-info">Page {{currentPage }} of {{ totalPages}}</span>
+                                    <!-- Next page button -->
+                                    <button class="pagination-button" ng-disabled="currentPage === totalPages" ng-click="action_changepage('nextPage')">Next</button>
                                 </div>
+
+                            </div>
                         </div>
                         @* end แสดงข้อมูลที่ ค้นหาตาม textsearch*@
         
@@ -3733,13 +3758,15 @@
 
                     <div ng-show="selectDatFormType === 'owner' && owner_status === 'teams'">
                         <!-- For form_type === 'owner'  action_project_team if teams ==== 1-->
-                        <div>                    
-                            <div class="mb-3">
-                                <input type="text" class="form-control" id="employee_position" ng-model="owner_teams">
+                        <div class="d-flex">                    
+                            <div class="col-5 me-4">
+                                <input type="text" class="form-control " id="employee_position" ng-model="owner_teams">
                             </div>
-                            <button type="button" class="btn btn-primary" ng-click="choosDataEmployee()">Apply</button>                        
+
+                            <button type="button" class="btn btn-primary" ng-click="choosDataEmployee()" ng-disabled="!owner_teams">Apply</button>                        
                         </div>
                     </div>
+
                 </div>
 
                 <!------------show name after add   --------------->
@@ -3749,7 +3776,7 @@
                     </h5>
                 </div>
 
-                <div class="modal-body" 
+                <div class="modal-body h-50"  
                     ng-if="(selectDatFormType !== 'owner' && (data_memberteam || data_approver).length > 1 )">
                     <div class="col-auto py-2" ng-repeat="item2 in (selectDatFormType === 'member' ? data_memberteam : data_approver) | filter:{id_session: selectdata_session }"
                         ng-if="!(item2.user_displayname == '' || item2.user_displayname == null)">
@@ -4263,8 +4290,8 @@
     <!--Modal GuideWords Start-->
     <div class="modal fade modal-xl" id="modalGuideWords" tabindex="-1" aria-labelledby="modalGuideWordsLabel"
          aria-hidden="true" style="display: none;">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
+        <div class="modal-dialog modal-dialog-centered" >
+            <div class="modal-content scrollbar" style="max-height: calc(100vh - 100px); overflow-y: auto;" >
                 <div class="modal-header">
                     <h5 class="text-900 mb-0" data-anchor="data-anchor" id="modalGuideWordsLabel">
                         <span class=" me-2 text-primary"><B>|</B></span> Search Guide Words
@@ -4280,7 +4307,7 @@
                         </svg>
                     </button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body h-100"  >
 
                     <div class="mb-4">
                         <div class="row g-3" ng-class="{'d-none': !(tab_general_active)}">

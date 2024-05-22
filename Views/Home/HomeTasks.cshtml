@@ -251,10 +251,10 @@
 
                                 <div class="row g-3 justify-content-between align-items-center pt-2 pb-3">
 
-                                    <div class="table-responsive scrollbar " id="table-container">
+                                    <div class="table-responsive scrollbar rounded-top rounded-4" id="table-container">
 
-                                        <table class="table fs--2 mb-0 " cellpadding="0" cellspacing="0" ng-if="!(item.action_required=='Approver')">
-                                            <thead class=" text-uppercase  text-center  bg-soft " style="font-size: 10px;" id="myHeader">
+                                        <table class="table fs--2 mb-0 rounded-top rounded-4" cellpadding="0" cellspacing="0" ng-if="!(item.action_required=='Approver')">
+                                            <thead class=" text-uppercase  text-center  bg-soft rounded-top rounded-4" style="font-size: 10px;" id="myHeader">
                                                 <tr>
                                                     <td style='padding: 15px;'>
                                                         <h6 class="fw-semi-bold text-primary"><b class="fw-semi-bold text-primary">Total : {{data_resultes.length}} Tasks.</b></h6>
@@ -374,13 +374,13 @@
                                                     </td>
 
                                                     <td class="align-top text-center">
-                                                        <div class="p-1 " style="background-color: green;color:red" ng-if="item.remaining >3">
+                                                        <div class="p-1 rounded-pill" style="background-color: #ccffcc; color: #006600" ng-if="item.remaining > 3">
                                                             <h6 class="fw-semi-bold">{{item.remaining}}</h6>
                                                         </div>
-                                                        <div class="p-1 " style="background-color: yellow" ng-if="item.remaining >0 && item.remaining <3">
+                                                        <div class="p-1 rounded-pill" style="background-color: #ffffcc; color: #cccc00" ng-if="item.remaining > 0 && item.remaining < 3">
                                                             <h6 class="fw-semi-bold">{{item.remaining}}</h6>
                                                         </div>
-                                                        <div class="p-1 " style="background-color: red;color:white" ng-if="item.remaining <= 0 ">
+                                                        <div class="p-1 rounded-pill" style="background-color: #ffcccc; color: #cc0000" ng-if="item.remaining <= 0">
                                                             <h6 class="fw-semi-bold">{{item.remaining}}</h6>
                                                         </div>
                                                     </td>

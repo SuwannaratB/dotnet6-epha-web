@@ -499,18 +499,29 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         const fileSeq = fileInput.id.split('-')[1];
         const fileInfoSpan = document.getElementById('filename' + fileSeq);
 
+
+        // Function to truncate file name
+        function truncateFilename(filename, length) {
+            if (!filename) return '';
+            if (filename.length <= length) return filename;
+            const start = filename.slice(0, Math.floor(length / 2));
+            const end = filename.slice(-Math.floor(length / 2));
+            return `${start}.......${end}`;
+        }
+
         if (fileInput.files.length > 0) {
             const file = fileInput.files[0];
             const fileName = file.name;
             const fileSize = Math.round(file.size / 1024);
             try {
                 //fileInfoSpan.textContent = `${fileName} (${fileSize} KB)`;
-                let shortenedFileName = fileName.length > 20 ? fileName.substring(0, 20) + '...' : fileName;
-                fileInfoSpan.textContent = `${shortenedFileName} (${fileSize} KB)`;
-
-            } catch {
-
-             }
+                /*let shortenedFileName = fileName.length > 20 ? fileName.substring(0, 20) + '...' : fileName;
+                fileInfoSpan.textContent = `${shortenedFileName} (${fileSize} KB)`;*/
+                const truncatedFileName = truncateFilename(fileName, 20);
+                fileInfoSpan.textContent = `${truncatedFileName} (${fileSize} KB)`;
+            } catch (error) {
+                console.error('Error updating file info:', error);
+            }
 
             if (file) {
                 const allowedFileTypes = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'jpg', 'png', 'gif']; // รายการของประเภทของไฟล์ที่อนุญาตให้แนบ
@@ -521,7 +532,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     // ทำการแนบไฟล์
                     //set_alert("File attached successfully.");
                 } else {
-                    $('#modalMsgFileError').modal('show');
+                    $('#modalMsgFileError').modal({
+                        backdrop: 'static',
+                        keyboard: false 
+                    }).modal('show');
                     //set_alert('Warning', "Please select a PDF, Word or Excel, Image file.");
                 }
             } else {
@@ -633,6 +647,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                         var arr = $filter('filter')($scope.data_drawing, function (item) { return (item.seq == seq); });
                         if (arr.length > 0) {
+                            
                             arr[0].document_file_name = file_name;
                             arr[0].document_file_size = file_size;
                             //'https://localhost:7098/api/' + '/AttachedFileTemp/hazop/HAZOP-2023-0000016-DRAWING-202312231716.PDF'
@@ -658,6 +673,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         return "";
     }
+
+
 
     function uploadFileRAM(file_obj, seq, file_name, file_size) {
 
@@ -743,6 +760,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         return "";
     }
 
+    $scope.truncateFilename = function(filename, length) {
+        if (!filename) return '';
+        if (filename.length <= length) return filename;
+        const start = filename.slice(0, Math.floor(length / 2));
+        const end = filename.slice(-Math.floor(length / 2));
+        return `${start}.......${end}`;
+    };
 
 
     //  scroll  table header freezer 
@@ -1204,6 +1228,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                 var arr = data;
                 console.log("arr",arr)
+
+                //after save set to true and false 
+                $scope.data_nodeworksheet = data.data_nodeworksheet;
+                $scope.data_nodeworksheet.forEach(function (item) { item.action_project_team = (item.action_project_team == 1 ? true : false); });  
+
                 if (arr[0].status == 'true') {
                     $scope.pha_type_doc = 'update';
                     if (action == 'save' || action == 'submit_moc'
@@ -1234,7 +1263,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                                 //get_data_after_save(false, (flow_action == 'submit' ? true : false), $scope.pha_seq);
                                 get_data_after_save(false, false, $scope.pha_seq);
-
+                                
                                 set_alert('Success', 'Data has been successfully saved.');
                                 apply();
                             },
@@ -1551,13 +1580,17 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     }
 
                     //set action_project_team will set to 0 if that data null? 
-                    for (let i = 0; i < arr.nodeworksheet.length; i++) {
+                    /*for (let i = 0; i < arr.nodeworksheet.length; i++) {
                         if (arr.nodeworksheet[i].action_project_team !== null) {
-                            arr.nodeworksheet[i].action_project_team = arr.nodeworksheet[i].action_project_team === 1 ;                           
+                            arr.nodeworksheet[i].action_project_team = arr.nodeworksheet[i].action_project_team === 1 ? false : true;                           
                         }
-                    }
+                    }*/
 
                     $scope.data_nodeworksheet = arr.nodeworksheet;
+
+                    $scope.data_nodeworksheet.forEach(function (item) { item.action_project_team = (item.action_project_team == 1 ? true : false); });    
+
+                    console.log($scope.data_nodeworksheet)
                     // formatEstimatedDate
                     // formatEstimatedDate();
                     $scope.data_nodeworksheet_def = clone_arr_newrow(arr.nodeworksheet);
@@ -4761,9 +4794,20 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     var bCheckValid_Worksheet = false;
                     var bCheckValid_Manage = false;
 
-                    if (arr_chk[0].expense_type == '' || arr_chk[0].expense_type == null) { set_alert('Warning', 'Please select a valid Expense Type'); return; }
-                    if (arr_chk[0].sub_expense_type == '' || arr_chk[0].sub_expense_type == null) { set_alert('Warning', 'Please select a valid Sub-Expense Type'); return; }
-                    if (arr_chk[0].id_apu == '' || arr_chk[0].id_apu == null) { set_alert('Warning', 'Please select a valid Area Process Unit'); return; }
+                    var requiredFields = [
+                        { field: 'expense_type', errorId: 'expense_type_error' },
+                        { field: 'sub_expense_type', errorId: 'sub_expense_type_error' },
+                        { field: 'id_apu', errorId: 'id_apu_error' }
+                    ];
+                
+                    var invalidFieldFound = false;
+                    requiredFields.forEach(function (item) {
+                        if (!arr_chk[0][item.field]) {
+                            set_alert('Warning', 'Please select a valid General Information');
+                            validateSelect(item.field, item.errorId);
+                            invalidFieldFound = true; 
+                        }
+                    });
 
                     if (true) {
                         arr_chk = $scope.data_memberteam;
@@ -4923,7 +4967,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             var arr_chk = $scope.data_general;
 
             if (pha_status == "11") {
-                console.log("wil call to open modal alert")
                 var fieldValidations = [
                     { field: 'expense_type', message: 'Please select a valid Expense Type' },
                     { field: 'sub_expense_type', message: 'Please select a valid Sub-Expense Type' },
@@ -5506,7 +5549,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     function set_alert(header, detail) {
         $scope.Action_Msg_Header = header;
         $scope.Action_Msg_Detail = detail;
-        $('#modalMsg').modal('show');
+        $('#modalMsg').modal({
+            backdrop: 'static',
+            keyboard: false 
+        }).modal('show');
     }
 
     function set_alert_warning(header, detail) {
@@ -5514,7 +5560,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.Action_Msg_Header = header;
             $scope.Action_Msg_Detail = detail;
         });
-        $('#modalMsg').modal('show');
+        $('#modalMsg').modal({
+            backdrop: 'static',
+            keyboard: false 
+        }).modal('show');
     }
 
     function set_alert_confirm(header, detail) {
@@ -5524,7 +5573,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.Action_Msg_Header = header;
         $scope.Action_Msg_Detail = detail;
 
-        $('#modalMsg').modal('show');
+        $('#modalMsg').modal({
+            backdrop: 'static',
+            keyboard: false 
+        }).modal('show');
     }
 
     //start Update Action Type null to Update 
@@ -5897,12 +5949,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     $scope.fillterDataEmployeeAdd = function () {
         $scope.employeelist_show = [];
-        //var searchText = $scope.searchText;
         var searchIndicator = $scope.searchIndicator.text;
         if (!searchIndicator) { return; }
-       
+    
         var items = angular.copy($scope.employeelist_def, items);
-
+    
         if (searchIndicator.length < 3) { return items; }
         
         if (searchIndicator.length > 4 && /\W+/.test(searchIndicator)) {
@@ -5911,24 +5962,31 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
        
         getEmployees(searchIndicator, function(data) {
-
             data.employee.forEach(function(employee) {
                 employee.isAdded = false; 
             });
-
-            $scope.employeelist_show = data.employee
+    
+            $scope.employeelist_page = data.employee;
+            $scope.totalItems = $scope.employeelist_page.length; // Update totalItems
+            $scope.employeelist_show = $scope.getPaginatedItems();
+            
+            // Calculate total pages
+            $scope.totalPages = Math.ceil($scope.totalItems / $scope.itemsPerPage);
+    
             apply();
+    
             $('#modalEmployeeAdd').modal({
                 backdrop: 'static',
                 keyboard: false 
             }).modal('show');
         });
     };
+    
     function getEmployees( indicator, callback){
         $.ajax({
             url: url_ws + "Flow/employees_search",
             data: '{"user_indicator":"' + indicator + '"'
-                + ',"max_rows":"10"'
+                + ',"max_rows":"50"'
                 + '}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
             beforeSend: function () {
@@ -5951,6 +6009,49 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         });
     }
 
+    $scope.currentPage = 1;
+    $scope.itemsPerPage = 10; // Set the desired number of items per page
+    
+
+    $scope.getPaginatedItems = function() {
+        var begin = ($scope.currentPage - 1) * $scope.itemsPerPage;
+        var end = begin + $scope.itemsPerPage;
+        
+        $scope.loadingData = true; 
+        setTimeout(function() {
+            $scope.loadingData = false;
+            $scope.$apply(); 
+        }, 2000);
+    
+        var paginatedItems = $scope.employeelist_page.slice(begin, end);
+        
+        return paginatedItems;
+    };
+    
+
+    $scope.setPage = function(page) {
+        $scope.currentPage = page;
+        $scope.employeelist_show = $scope.getPaginatedItems();
+    };
+
+    $scope.action_changepage = function(action) {
+        switch (action) {
+            case 'prevPage':
+                if ($scope.currentPage > 1) {
+                    $scope.setPage($scope.currentPage - 1);
+                }
+                break;
+            case 'nextPage':
+                if ($scope.currentPage < $scope.totalPages) {
+                    $scope.setPage($scope.currentPage + 1);
+                }
+                break;
+        }
+};
+
+
+    
+    $scope.clickedStates = {};
 
     $scope.choosDataEmployee = function (item) {
 
@@ -6058,6 +6159,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
 
             arr_items.action_change = 1;
+            $('#modalEmployeeAdd').modal('hide');
 
         }
         else if (xformtype == 'edit_approver') {
@@ -6077,8 +6179,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $('#modalEmployeeAdd').modal('hide');
         }
 
-        clear_valid_items($scope.recomment_clear_valid);
+        //clear_valid_items($scope.recomment_clear_valid);
         $scope.recomment_clear_valid = '';
+
+        $scope.clickedStates[item.employee_name] = true;
 
         apply();
 
@@ -6087,13 +6191,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $('#modalEmployeeAdd').modal('hide');
         }
         else {
-            $scope.clearFormData()
             $('#modalEmployeeAdd').modal('show');
         }
     };
 
     $scope.clearFormData = function() {
         $scope.formData = [];
+        $scope.employeelist_show = [];
+        $scope.clickedStates = {};
         //$scope.searchText='';
         $scope.searchIndicator = {
             text: ''
@@ -6103,15 +6208,23 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     $scope.removeDataEmployee = function (seq, seq_session) {
 
+        console.log("call to del")
         var arrdelete = $filter('filter')($scope.data_memberteam, function (item) {
             return (item.seq == seq && item.action_type == 'update');
         });
         if (arrdelete.length > 0) { $scope.data_memberteam_delete.push(arrdelete[0]); }
 
         $scope.data_memberteam = $filter('filter')($scope.data_memberteam, function (item) {
+            if (item.seq == seq && item.id_session == seq_session) {
+                if (item.user_name !== undefined && item.user_name !== null) {
+                    $scope.clickedStates[item.user_name] = false;
+                } 
+            }
+        
             return !(item.seq == seq && item.id_session == seq_session);
         });
-
+        console.log("call to del",$scope.data_memberteam)
+        
         //if delete row 1 clear to null
         if ($scope.data_memberteam.length == 1 || $scope.data_memberteam.no == 1) {
             var keysToClear = ['user_name', 'user_displayname'];
@@ -6123,6 +6236,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             $scope.data_memberteam[0].no = 1;
         }
+
 
         running_no_level1($scope.data_memberteam, null, null);
         apply();
@@ -6151,6 +6265,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             $scope.actionChangeWorksheet(arr_items, arr_items.seq);
         }
+
+
         apply();
         $('#modalEmployeeAdd').modal('hide');
     };
