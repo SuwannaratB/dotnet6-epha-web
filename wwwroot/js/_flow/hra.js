@@ -722,8 +722,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         var json_worksheet = check_data_worksheet();
 
         var flow_action = (action == 'submit_complete' ? 'submit' : action);
-
-        $.ajax({
+  $.ajax({
             url: url_ws + "Flow/set_hra",
             data: '{"user_name":"' + user_name + '","token_doc":"' + token_doc + '","pha_status":"' + pha_status + '","pha_version":"' + pha_version + '","action_part":"' + action_part + '"'
                 + ',"json_header":' + JSON.stringify(json_header)
@@ -864,6 +863,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         });
 
+      
     }
 
     function save_data_approver(action) {
@@ -1114,6 +1114,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         $scope.data_worksheet = arr.worksheet;
                         $scope.data_worksheet_def = clone_arr_newrow(arr.worksheet);
                         $scope.data_worksheet_old = (arr.worksheet);
+
+                        $scope.data_worksheet_list = setup_worksheet($scope.data_subareas_list, $scope.data_tasks);
+                        console.log('data_worksheet_list ==> ',$scope.data_worksheet_list)
                     }
 
                     //Approver
@@ -1270,6 +1273,26 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         });
 
+    }
+
+    function setup_worksheet(subArea_list, worker_list) {
+        if (worker_list.length > 0) {
+            const worksheet_list = [...worker_list]
+            // จัดเรียงข้อมูลตามฟิลด์ no_subarea
+            $scope.data_hazard.sort(function(a, b) {
+                return a.no - b.no;
+            });
+
+            for (let i = 0; i < worker_list.length; i++) {
+                worksheet_list[i].sub_areas = subArea_list;
+                worksheet_list[i].hazards = angular.copy( $scope.data_hazard);
+                worksheet_list[i].id_frequency_level = '';
+                worksheet_list[i].frequency_level = '';
+                
+            }
+            return worksheet_list;
+        }
+      
     }
 
     function setup_tasks(data) {
@@ -1817,7 +1840,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 groupedArea[i].index_rows = i + 1;
                 groupedArea[i].id_sub_area = groupedArea[i].hazard[0].id_subareas;
                 groupedArea[i].sub_area = groupedArea[i].hazard[0].sub_area;
-                groupedArea[i].work_of_task = groupedArea[i].hazard[0].sub_area;
+                groupedArea[i].work_of_task = groupedArea[i].hazard[0].work_of_task;
                 groupedArea[i].hazard.sort((a, b) => a.no - b.no);
             }
             console.log('groupedArea ',groupedArea)
@@ -3677,17 +3700,18 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     return (item.id == _arr.id_sub_area);
                 });
                 if (arrText.length > 0) {
-                    // _arr.work_of_task = arrText[0].descriptions;
-                    _arr.sub_area = arrText[0].descriptions;
+                    _arr.work_of_task = arrText[0].descriptions;
+                    _arr.sub_area = arrText[0].name;
                     _arr.action_change = 1;
                     // set no_subareas for children hazard
                     for (let i = 0; i < _arr.hazard.length; i++) {
                         _arr.hazard[i].action_change = 1;
                         _arr.hazard[i].id_subareas = _arr.id_sub_area;
                         _arr.hazard[i].sub_area = _arr.sub_area;
-                        // _arr.hazard[i].sub_area = _arr.work_of_task;
+                        _arr.hazard[i].work_of_task = _arr.work_of_task;
                     }
                 }
+                console.log(_arr)
             }
             if (type_text == "type_hazard") {
                 var arrText = $filter('filter')($scope.master_hazard_type, function (item) {
@@ -3845,6 +3869,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             apply();
         }
+
         function action_type_changed(_arr, _seq) {
 
             if (_seq == undefined) { _seq = 1; }
@@ -3862,6 +3887,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             apply();
         }
+
+        $scope.actionChangeFrequencyLevel = function (item) {
+            console.log('item',item)
+            console.log('all',$scope.data_worksheet_list)
+        }
+
     }
 
     //functioin show history data ของแต่ละ field
