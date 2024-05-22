@@ -1451,7 +1451,7 @@
                                                                 ng-if="tab_worksheet_active"
                                                                 ng-class="{'disabled-link':(!tab_worksheet_active)}"
                                                                 @* ng-change="actionChangeWorksheet(item,item.seq,'frequency_level')" *@
-                                                                ng-model="item.id_exposure_level" 
+                                                                ng-model="hazard.id_exposure_level" 
                                                                 style="width: 100%;">
                                                                 <option ng-repeat="item_m in master_exposure_level" ng-value="item_m.id">
                                                                     {{item_m.name}}
