@@ -193,8 +193,20 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
         $scope.form_valid = { valid_document_file: false };
     }
 
+    $scope.toggleChanged = function() {
+        if ($scope.toggleStatus) {
+            var list =  $filter('filter')($scope.data_details_old, function (item) { 
+                return (item.responder_user_name == $scope.user_name); 
+            });
+            $scope.data_details = list;
+        } else{
+            $scope.data_details = $scope.data_details_old;
+        }
+    };
+
     function arr_def() {
-     
+        $scope.toggleStatus = false;
+
         $scope.selectViewTypeFollowup = true;
         $scope.action_part = 1;
         $scope.user_name = conFig.user_name();
@@ -485,7 +497,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                 $scope.data_header = arr.general;
                 $scope.data_general = arr.general;
                 $scope.data_details = arr.details;
-
+                $scope.data_details_old = arr.details;
                 //call to check who can Access
                 /*console.log($scope.data_details[0].responder_user_name)
                 if($scope.data_details){
