@@ -62,7 +62,14 @@
 
                                 </div>
                                 <div class="col-auto">
-                                    <div class="d-flex align-items-center py-2  justify-content-end">
+                                    <div class="d-flex align-items-center py-2 gap-4  justify-content-end">
+                                        <div class="d-flex align-items-center gap-2"  ng-class="{ 'd-none': (data_general[0].pha_status != 13)}">
+                                            <label class="switch">
+                                                <input type="checkbox" ng-model="toggleStatus" ng-change="toggleChanged()">
+                                                <span class="slider round"></span>
+                                            </label>
+                                            <b ng-class="{'text-primary': toggleStatus}"> {{ toggleStatus ? user_name : 'All Tasks'}} </b>
+                                        </div>
                                         <span class="mx-2" ng-if="cancle_type">
                                             <button class="btn btn-outline-secondary btn-sm" style="width: 100px;"
                                                     ng-click="confirmFollowBack()">
@@ -326,11 +333,12 @@
 
                                                     @* Implement 14 *@
                                                     <td class="align-top  px-0" ng-if="flow_status == 14">
-                                                        <div class="ms-3">
+                                                        <div class="d-flex align-items-center justify-content-center" style="min-height: 52px;">
                                                             <input type="checkbox"
                                                                 ng-model="item_d.implement"
                                                                 ng-click="actionImplement(item_d)"
-                                                                style="cursor: pointer;width:20px; height:20px;">
+                                                                style="cursor: pointer;width:20px; height:20px;"
+                                                            >
                                                         </div>
                                                     </td>
 
