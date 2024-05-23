@@ -270,12 +270,15 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         try {
             var arr_search =
                 $filter('filter')($scope.data_results_def, function (_item) {
+
                     return (
                         (item.pha_sub_software == null ? 'x' : _item.pha_sub_software).toLowerCase()
                         == (item.pha_sub_software == null ? 'x' : item.pha_sub_software).toLowerCase()
 
-                        && (item.expense_type == null ? 'x' : _item.expense_type).toLowerCase()
-                        == (item.expense_type == null ? 'x' : item.expense_type).toLowerCase()
+                        && (item.expense_type == null || item.expense_type === '' ? true : _item.expense_type.toLowerCase() == item.expense_type.toLowerCase())
+
+                        /*&& (item.expense_type == null ? 'x' : _item.expense_type).toLowerCase()
+                        == (item.expense_type == null ? 'x' : item.expense_type).toLowerCase()*/
 
                         && (item.sub_expense_type == null ? 'x' : _item.sub_expense_type ? _item.sub_expense_type.toLowerCase() : _item.sub_expense_type)
                         == (item.sub_expense_type == null ? 'x' : item.sub_expense_type ? item.sub_expense_type.toLowerCase() : item.sub_expense_type)
@@ -300,7 +303,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                         && (item.id_tagid == null ? true : parseInt(_item.id_tagid) == parseInt(item.id_tagid))
                         && (item.id_request_type == null ? true : parseInt(_item.id_request_type) == parseInt(item.id_request_type))
                         && (item.id_company == null ? true : parseInt(_item.id_company) == parseInt(item.id_company))
-                        && (item.pha_status == null ? true : parseInt(_item.pha_status) == parseInt(item.pha_status))
+                        && (item.pha_status == null || item.pha_status === '' ? true : parseInt(_item.pha_status) == parseInt(item.pha_status))
 
                         && (item.expense_type == 'CAPEX' && item.sub_expense_type == 'Normal' ?
                             (item.approver_user_name == null ? 'x' : _item.approver_user_name)
@@ -314,6 +317,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                         //) 
                     );
                 });
+
+                console.log("Filtered Results:", arr_search);
 
             arr_search =
                 $filter('filter')(arr_search, function (_item) {
