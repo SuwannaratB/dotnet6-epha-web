@@ -244,7 +244,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         next_page(controller_text, conFig.pha_status);
     }
 
-    $scope.editDoc = function (item) {
+    $scope.editDoc = function (item,action) {
         var controller_text = item.pha_sub_software;
         conFig.pha_seq = item.seq;
         conFig.pha_type_doc = 'edit';
@@ -252,8 +252,16 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         conFig.pha_sub_software = item.pha_sub_software;
         var data_type = 'edit';
 
-        if (item.pha_status == 21) {
+        if (item.pha_status == 21 && action === 'change_approver') {
             data_type = 'edit_approver'
+        }
+
+        if (item.pha_status !== 11 && item.pha_status !== 12 && action === 'edit'){
+            data_type = 'edit'
+        }
+
+        if (item.pha_status == 13 && action === 'change_owner') {
+            data_type = 'edit_action_owner'
         }
 
         next_page(controller_text, conFig.pha_status, data_type);

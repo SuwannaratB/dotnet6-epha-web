@@ -1231,7 +1231,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                 //after save set to true and false 
                 $scope.data_nodeworksheet = data.data_nodeworksheet;
-                $scope.data_nodeworksheet.forEach(function (item) { item.action_project_team = (item.action_project_team == 1 ? true : false); });  
+                try{
+                    $scope.data_nodeworksheet.forEach(function (item) { item.action_project_team = (item.action_project_team == 1 ? true : false); });  
+
+                }catch{}
 
                 if (arr[0].status == 'true') {
                     $scope.pha_type_doc = 'update';
@@ -1534,7 +1537,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     }
 
                     $scope.data_general = arr.general;
-                    console.log($scope.data_general)                 
 
                     //set id to 5 
                     $scope.data_general.forEach(function (item) { item.id_ram = (item.id_ram == null ? 5 : item.id_ram); });
@@ -1590,7 +1592,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                     $scope.data_nodeworksheet.forEach(function (item) { item.action_project_team = (item.action_project_team == 1 ? true : false); });    
 
-                    console.log($scope.data_nodeworksheet)
                     // formatEstimatedDate
                     // formatEstimatedDate();
                     $scope.data_nodeworksheet_def = clone_arr_newrow(arr.nodeworksheet);
@@ -1669,7 +1670,21 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 $scope.data_header = JSON.parse(replace_hashKey_arr(arr.header));
                 set_form_action(action_part_befor, !action_submit, page_load);
 
-                if($scope.params != 'edit_approver')  $scope.action_owner_active = true;
+                if($scope.params != 'edit_approver'){
+                    $scope.action_owner_active = true;
+                }  
+                
+                if($scope.params === 'edit_action_owner'){
+                    $scope.action_owner_active = true;
+                } 
+                if($scope.params === 'edit' && $scope.flow_role_type === 'admin') {
+                    $scope.tab_general_active = true;
+                    $scope.tab_node_active = true;
+                    $scope.tab_worksheet_active = true;
+                    $scope.tab_managerecom_active = true;
+
+                    $scope.save_type = true;
+                }
                 // $scope.action_owner_active = true;
 
                 //ตรวจสอบเพิ่มเติม
@@ -1899,7 +1914,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             var tag_name = 'manage';
 
-            if($scope.params == 'edit') {
+            if($scope.params == 'edit_action_owner') {
                 tag_name = 'worksheet';
             } 
 
@@ -5030,6 +5045,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     $scope.confirmEdit = function () {
         var action = ''
         if ($scope.params == 'edit') {
+            action = 'edit_worksheet'
+        }else if($scope.params == 'edit_action_owner'){
             action = 'change_action_owner'
         }else if($scope.params == 'edit_approver'){
             action = 'change_approver'
@@ -6089,6 +6106,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 newInput.user_name = employee_name;
                 newInput.user_displayname = employee_displayname;
                 newInput.user_img = employee_img;
+                newInput.user_title = employee_position;
 
                 $scope.data_memberteam.push(newInput);
                 running_no_level1($scope.data_memberteam, null, null);
@@ -6119,6 +6137,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 newInput.user_name = employee_name;
                 newInput.user_displayname = employee_displayname;
                 newInput.user_img = employee_img;
+                newInput.user_title = employee_position;
 
                 $scope.data_approver.push(newInput);
                 running_no_level1($scope.data_approver, null, null);
@@ -6139,23 +6158,16 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 arr_items.responder_user_displayname = employee_displayname;
                 arr_items.responder_user_email = employee_email;
                 arr_items.responder_user_img = employee_img;
-    
 
-            /*if (arr_items.action_type == 'insert') {
-                arr_items.action_type = 'edit';
-            }*/
-
-            //set sent 1 for if choose employees
-            //set 0 for if choose teams
-            if ($scope.owner_status === 'teams') {
-                arr_items.project_team_text =  $scope.owner_teams;
-                arr_items.action_project_team = true;
-                arr_items.action_status = 'N/A'
-                
-            } else {
-                arr_items.responder_user_displayname = employee_position + '-' + employee_displayname.split(" ")[0];
-                arr_items.action_project_team = false;
-                arr_items.action_status = 'Open'
+                if ($scope.owner_status === 'teams') {
+                    arr_items.project_team_text =  $scope.owner_teams;
+                    arr_items.action_project_team = true;
+                    arr_items.action_status = 'N/A'
+                    
+                } else {
+                    arr_items.responder_user_displayname = employee_position + '-' + employee_displayname.split(" ")[0];
+                    arr_items.action_project_team = false;
+                    arr_items.action_status = 'Open'
             }
 
             arr_items.action_change = 1;

@@ -2805,7 +2805,7 @@
     <!--Modal Employee Add Start-->
     <div class="modal fade modal-xl" id="modalEmployeeAdd" tabindex="-1" aria-labelledby="modalEmployeeAddLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
+            <div class="modal-content scrollbar" style="max-height: calc(100vh - 100px); overflow-y:auto;">
                 <div class="modal-header"><!-------- ng-if="selectDatFormType != 'specialist'"------->
                     <h5 class="text-900 mb-0" data-anchor="data-anchor" id="modalEmployeeCheckLabel">
                         <span class=" me-2 text-primary"><B>|</B></span> Search Employee/Contract
@@ -2865,69 +2865,91 @@
                     </div>
 
                     @* start แสดงข้อมูลที่ ค้นหาตาม textsearch*@
-                    <div class="bg-white border-top border-bottom border-200 position-relative top-1">
-                        <div class="table-responsive scrollbar-overlay mx-n1 px-1">
-                            <table class="table table-sm fs--1 mb-0">
-                                <thead class=" text-uppercase">
-                                    <tr class="text-center">
-                                        <th class=""> </th>
-                                        <th class="pe-5" scope="col">Employee</th>
-                                        <th class="" scope="col">Section</th>
-                                        <th class="" scope="col">Indicator</th>
-                                        <th class="" scope="col">E-Mail</th>
-                                        @*<th class="" scope="col">Employee Type</th>*@
+                        <div class="bg-white border-top border-bottom border-200 position-relative top-1" >
+                            <div class="table-responsive scrollbar-overlay mx-n1 px-1">
+                                <table class="table table-sm fs--1 mb-0">
+                                    <thead class=" text-uppercase">
+                                        <tr class="text-center">
+                                            <th class=""> </th>
+                                            <th class="pe-5" scope="col">Employee</th>
+                                            <th class="" scope="col">Section</th>
+                                            <th class="" scope="col">Indicator</th>
+                                            <th class="" scope="col">E-Mail</th>
+                                            @*<th class="" scope="col">Employee Type</th>*@
+                                        </tr>
+                                    </thead>
+                                    <tbody class=" list">
+                                            <tr class="hover-actions-trigger btn-reveal-trigger position-static text-center"
+                                                ng-class="{'row-faded': clickedStates[item.employee_name]}"
+                                                ng-repeat="item in employeelist_show">
+                                                
+                                                <!-----------ng-if="employeelist_show.length > 0 && employeelist_show[0].employee_displayname !== null" ------->
+                                                <td class="">
+                                                    <span class="mx-1">
+                                                        <button class="btn btn-outline-secondary p-1 cursor-pointer"
+                                                                ng-class="{'btn-clicked': clickedStates[item.employee_name],'skeleton': loadingData}" 
+                                                                style="color: #2445fc; background-color: #f1f2f4; border-color: #2445fc;"
+                                                                data-toggle="tooltip" 
+                                                                data-placement="top" 
+                                                                title="choose Employee"
+                                                                ng-click="choosDataEmployee(item)">
+                                                            <span class="fa-solid fa-user-plus" ng-if="selectDatFormType !== 'owner'">Add</span>
+                                                            <span class="fa-solid fa-user-check" ng-if="selectDatFormType === 'owner'">selecte</span>
+                                                        </button>
+                                                    </span>
+                                                </td>
+                                                <td class="">
+                                                    <a class=" text-decoration-none d-flex align-items-center">
+                                                        <div class="avatar avatar-m" style="height: 20px; width: 20px;">
+                                                            <img ng-if="item.employee_img " class="rounded-circle" 
+                                                                 ng-class="{ 'skeleton': loadingData }"
+                                                                 ng-src="../../{{ item.employee_img }}" alt="">
+                                                        </div>
+                                                        <p class="mb-0 ms-3 text-1100 fw-bold"
+                                                            ng-class="{ 'skeleton skeleton-text skeleton-text__body': loadingData }">
+                                                            {{item.employee_displayname}} 
+                                                        </p>
+                                                    </a>
+                                                </td>
+                                                <td class="text-center m-0">
+                                                    <p class="m-0" ng-class="{ 'skeleton skeleton-text skeleton-text__body': loadingData }">{{ item.employee_position }}</p>
+                                                </td>
+                                                <td class="text-center m-0">
+                                                    <p class="m-0" ng-class="{ 'skeleton skeleton-text skeleton-text__body': loadingData }">{{ item.employee_position + '-' + item.employee_displayname.split(' ')[0] }}</p>
+                                                </td>
+                                                <td class="text-center">
+                                                    <p class="m-0" ng-class="{ 'skeleton skeleton-text skeleton-text__body': loadingData }">{{ item.employee_email }}</p>
+                                                </td>
 
-                                    </tr>
-                                </thead>
-                                    <tbody class="list">
-                                        <!-- Check if employeelist_show is not empty and the first item in the array is not null -->
-                                        <tr ng-if="employeelist_show.length > 0 && employeelist_show[0].employee_displayname !== null" 
-                                            ng-repeat="item in employeelist_show" class="repeated-item"><!-------------ng-class="{'light-bg-secondary': item.isAdded}"------->
-                                            <td class="">
-                                                <span class="mx-1">
-                                                    <button class="btn btn-outline-secondary p-1 cursor-pointer" 
-                                                            style="color: #0abe0a; background-color: #f1f2f4; border-color: #0abe0a;"
-                                                            data-toggle="tooltip" 
-                                                            data-placement="top" 
-                                                            title="choose Employee"
-                                                            ng-click="choosDataEmployee(item)">
-                                                        <span class="fa-solid fa-user-plus">Add</span>
-                                                    </button>
-                                                </span>                                                
-                                            </td>
-                                            <td class="">
-                                                <a class="text-decoration-none d-flex align-items-center">
-                                                    <div class="avatar avatar-m" style="height: 20px; width: 20px;">
-                                                        <img ng-if="item.employee_img" class="rounded-circle" ng-src="../../{{ item.employee_img }}" alt="">
-                                                    </div>
-                                                    <p class="mb-0 ms-3 text-1100 fw-bold">{{item.employee_displayname}} </p>
-                                                </a>
-                                            </td>
-                                            <td class="text-center">{{item.employee_position}} </td>
-                                            <td class="text-center">{{item.employee_position + '-'}}{{item.employee_name}} </td>
-                                            <td class="text-center">{{item.employee_email}} </td>
-                                            @*<td class="text-center">{{item.employee_type}}</td>*@
-                                        </tr>
-                                        <!-- Show "please enter" message  -->
-                                        <tr ng-if="!searchIndicator.text">
-                                            <td colspan="5">
-                                                <p class="mb-0 ms-3 text-muted fw-bold text-center"> Enter employee details to search. </p>
-                                            </td>
-                                        </tr>
+                                            </tr>
+                                                <!-- Show "please enter" message  -->
+                                            <tr ng-if="!searchText && !searchIndicator.text && employeelist_show.length < 1">
+                                                <td colspan="5">
+                                                    <p class="mb-0 ms-3 text-muted fw-bold text-center"> Enter employee details to search. </p>
+                                                </td>
+                                            </tr>
 
-                                        <!-- Show "Not Found" message when employeelist_show is empty or the first item is null -->
-                                        <tr ng-if="employeelist_show[0].employee_displayname === null">
-                                            <td colspan="5">
-                                                <p class="mb-0 ms-3 text-1100 fw-bold text-center"> Not Found </p>
-                                            </td>
-                                        </tr>
+                                                <!-- Show "Not Found" message when employeelist_show is empty or the first item is null -->
+                                            <tr ng-if="employeelist_show[0].employee_displayname === null">
+                                                <td colspan="5">
+                                                    <p class="mb-0 ms-3 text-1100 fw-bold text-center"> Not Found </p>
+                                                </td>
+                                            </tr>                                   
                                     </tbody>
-                            </table>
+                                </table>
+                                <div class="pagination-container" ng-show="employeelist_page.length > 10">
+                                    <button class="pagination-button" ng-disabled="currentPage === 1" ng-click="action_changepage('prevPage')">Previous</button>
+                                    <!-- Page numbers -->
+                                    <span class="pagination-info">Page {{currentPage }} of {{ totalPages}}</span>
+                                    <!-- Next page button -->
+                                    <button class="pagination-button" ng-disabled="currentPage === totalPages" ng-click="action_changepage('nextPage')">Next</button>
+                                </div>
 
+                            </div>
                         </div>
+                        @* end แสดงข้อมูลที่ ค้นหาตาม textsearch*@
+        
                     </div>
-                    @* end แสดงข้อมูลที่ ค้นหาตาม textsearch*@
-                </div>
 
             <!-------------- Show b=name after add------------------------------->
                 <div class="modal-header bg-soft" ng-if="formData.length > 1">

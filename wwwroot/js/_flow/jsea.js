@@ -4894,13 +4894,16 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
        
         getEmployees(searchIndicator, function(data) {
-
-            data.employee.forEach(function(employee) {
-                employee.isAdded = false; 
-            });
-
-            $scope.employeelist_show = data.employee
+    
+            $scope.employeelist_page = data.employee;
+            $scope.totalItems = $scope.employeelist_page.length; // Update totalItems
+            $scope.employeelist_show = $scope.getPaginatedItems();
+            
+            // Calculate total pages
+            $scope.totalPages = Math.ceil($scope.totalItems / $scope.itemsPerPage);
+    
             apply();
+    
             $('#modalEmployeeAdd').modal({
                 backdrop: 'static',
                 keyboard: false 
@@ -4912,7 +4915,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $.ajax({
             url: url_ws + "Flow/employees_search",
             data: '{"user_indicator":"' + indicator + '"'
-                + ',"max_rows":"10"'
+                + ',"max_rows":"50"'
                 + '}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
             beforeSend: function () {
@@ -4935,6 +4938,47 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         });
     }
 
+    $scope.currentPage = 1;
+    $scope.itemsPerPage = 10;
+    
+
+    $scope.getPaginatedItems = function() {
+        var begin = ($scope.currentPage - 1) * $scope.itemsPerPage;
+        var end = begin + $scope.itemsPerPage;
+        
+        $scope.loadingData = true; 
+        setTimeout(function() {
+            $scope.loadingData = false;
+            $scope.$apply(); 
+        }, 2000);
+    
+        var paginatedItems = $scope.employeelist_page.slice(begin, end);
+        
+        return paginatedItems;
+    };
+    
+
+    $scope.setPage = function(page) {
+        $scope.currentPage = page;
+        $scope.employeelist_show = $scope.getPaginatedItems();
+    };
+
+    $scope.action_changepage = function(action) {
+        switch (action) {
+            case 'prevPage':
+                if ($scope.currentPage > 1) {
+                    $scope.setPage($scope.currentPage - 1);
+                }
+                break;
+            case 'nextPage':
+                if ($scope.currentPage < $scope.totalPages) {
+                    $scope.setPage($scope.currentPage + 1);
+                }
+                break;
+        }
+};
+
+    
     $scope.clickedStates = {};
 
     $scope.choosDataEmployee = function (item) {
@@ -5113,10 +5157,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
         
 
-        //$scope.getFormData()
-
-
         $scope.formData = $scope.getFormData();
+        $scope.clickedStates[item.employee_name] = true;
         //$scope.formData_outsider = $scope.getOutsourceFormData();
 
         apply();
@@ -5132,6 +5174,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     $scope.clearFormData = function() {
         $scope.formData = [];
         $scope.searchText='';
+        $scope.clickedStates = {};
         $scope.searchIndicator = {
             text: ''
         }        
@@ -5140,24 +5183,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     $scope.removeData = function(seq, seq_session, selectDatFormType) {
 
-        // Common function to set isAdded to false for the given employee in employeelist_show
-        function setIsAddedToFalse(employeeName) {
-            var employeeToRemove = $scope.employeelist_show.find(function(remove) {
-                return remove.employee_name === employeeName;
-            });
-
-            if (employeeToRemove) {
-                employeeToRemove.isAdded = false;
-            }
-        }
-
         // Handle different cases based on selectDatFormType
         switch (selectDatFormType) {
             case 'member':
                 var employeeMember = $scope.data_memberteam.find(function(employee) {
                     return employee.seq === seq && employee.id_session === seq_session;
                 });
-                setIsAddedToFalse(employeeMember.user_name);
                 $scope.removeDataEmployee(seq, seq_session);
                 break;
 
@@ -5165,7 +5196,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 var employeeSpecialist = $scope.data_relatedpeople.find(function(employee) {
                     return employee.seq === seq && employee.id_session === seq_session;
                 });
-                setIsAddedToFalse(employeeSpecialist.user_name);
                 $scope.removeDataRelatedpeople(seq, seq_session);
                 break;
 
@@ -5173,7 +5203,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 var employeeApprover = $scope.data_approver.find(function(employee) {
                     return employee.seq === seq && employee.id_session === seq_session;
                 });
-                setIsAddedToFalse(employeeApprover.user_name);
                 $scope.removeDataApprover(seq, seq_session);
                 break;
 
@@ -5349,14 +5378,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             default:
                 return [];
         }
-    };
-
-    $scope.isEmployeeAdded = function(employee_displayname) {
-        var formData = $scope.getFormData();
-        var isAdded = formData.some(function(formDataItem) {
-            return formDataItem.employee_displayname === employee_displayname;
-        });
-        return isAdded;
     };
     
     

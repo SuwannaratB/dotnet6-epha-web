@@ -100,7 +100,7 @@
                         SAVE
                     </button>
                 </span>
-                <span class="mx-2" ng-if="params == 'edit' && data_header[0].pha_status == 13 && action_part == 5">
+                <span class="mx-2" ng-if="params == 'edit_action_owner' && data_header[0].pha_status == 13 && action_part == 5">
                     <button class="btn btn-primary btn-sm" 
                         ng-click="confirmSave('save')">
                         Change Action Owner
@@ -1929,7 +1929,6 @@
                     <!-- HAZOP Worksheet -->
                     <div class="" ng-class="{'tab-pane fade show active':(action_part==5),'tab-pane fade':(action_part!==5)}"
                          id="tab-worksheet" role="tabpanel" aria-labelledby="worksheet-tab">
-
                         <div style="background-color: #ffffff;"
                              ng-if=" ( data_header[0].pha_status == 11 && tab_worksheet_active==true) || (data_header[0].pha_status >  11) || (data_general[0].expense_type == 'OPEX' && (data_general[0].sub_expense_type == 'Study' || data_general[0].sub_expense_type == 'Internal Study'))">
 
@@ -2632,15 +2631,15 @@
                                                     </div>
 
                                                 </td>
-                                                {{item}}
-
                                                 <td class="align-top border border-light border-end-0  border-start-0  border-top-0 " style="padding: 0 !important; width: 120px;">
                                                     <div class="d-flex align-items-center ">
-                                                        <div class="" ng-class="{'disabled-link':(!action_owner_active)}">
-                                                            <button ng-click="
-                                                                    openDataEmployeeAdd(item,'owner'); 
-                                                                    recommentAction_valid(item);" 
-                                                                    class="btn btn-link px-0 mx-1"
+                                                        <div ng-class="{'disabled-link': (!action_owner_active) || (item.action_status === 'Responed')}">
+                                                            <button ng-click="openDataEmployeeAdd(item, 'owner'); recommentAction_valid(item);" 
+                                                                    class="px-0 mx-1"
+                                                                    ng-class="{
+                                                                        'btn btn-dark': item.action_status === 'Responded',
+                                                                        'btn btn-link': item.action_status !== 'Responded' || item.action_status !== 'Close'
+                                                                    }"
                                                                     data-toggle="tooltip" 
                                                                     title="Add Employee">
                                                                 <span class="far fa-address-book"></span>
@@ -2652,7 +2651,6 @@
                                                                 <span class="fas fa-times text-danger"></span>
                                                             </button>
                                                         </div>
-                                                        {{item.action_project_team}}
                                                         <p class="m-0 text-1100 fw-bold" style="width: 115px;">
                                                             {{ item.action_project_team === false ? item.responder_user_displayname : item.project_team_text }}
                                                         </p>                                                     
