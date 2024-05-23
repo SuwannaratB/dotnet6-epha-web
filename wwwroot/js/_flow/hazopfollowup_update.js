@@ -56,15 +56,48 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
         const fileInput = input;
         const fileSeq = fileInput.id.split('-')[1];
         const fileInfoSpan = document.getElementById('filename' + fileSeq);
-
+        // Function to truncate file name
+        function truncateFilename(filename, length) {
+            if (!filename) return '';
+            if (filename.length <= length) return filename;
+            const start = filename.slice(0, Math.floor(length / 2));
+            const end = filename.slice(-Math.floor(length / 2));
+            return `${start}.......${end}`;
+        }
+        
         if (fileInput.files.length > 0) {
-            console.log('if')
             const file = fileInput.files[0];
             const fileName = file.name;
             const fileSize = Math.round(file.size / 1024);
             fileInfoSpan.textContent = `${fileName} (${fileSize} KB)`;
             $scope.fileInfoSpan = `${fileName} (${fileSize} KB)`;
-            
+            try {
+                const truncatedFileName = truncateFilename(fileName, 20);
+                fileInfoSpan.textContent = `${truncatedFileName} (${fileSize} KB)`;
+            } catch (error) {
+                console.error('Error updating file info:', error);
+            }
+
+            if (file) {
+                const allowedFileTypes = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'jpg', 'png', 'gif']; // รายการของประเภทของไฟล์ที่อนุญาตให้แนบ
+
+                const fileExtension = fileName.split('.').pop().toLowerCase(); // นำนามสกุลของไฟล์มาเปลี่ยนเป็นตัวพิมพ์เล็กทั้งหมดเพื่อให้เป็น case-insensitive
+
+                if (allowedFileTypes.includes(fileExtension)) {
+                    // ทำการแนบไฟล์
+                    //set_alert("File attached successfully.");
+                } else {
+                    $('#modalMsgFileError').modal({
+                        backdrop: 'static',
+                        keyboard: false 
+                    }).modal('show');
+                    //set_alert('Warning', "Please select a PDF, Word or Excel, Image file.");
+                }
+            } else {
+                console.log("No file selected.");
+            }
+
+
             var file_path = uploadFile(file, fileSeq, fileName, fileSize);
 
         } else {
@@ -503,7 +536,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                 if($scope.data_details){
                     $scope.canAccess($scope.data_details)
                 }*/
-
                 $scope.data_drawingworksheet = arr.drawingworksheet;
                 $scope.data_drawingworksheet_responder = arr.drawingworksheet_responder;
                 $scope.data_drawingworksheet_reviewer = arr.drawingworksheet_reviewer;
