@@ -1035,16 +1035,7 @@
                                                                 {{item_list.health_hazard}}
                                                             </button>
                                                         </span>
-                                                        @* <select class="form-control"
-                                                            ng-class="{'disabled-link':(!tab_general_active || !(tab_general_active && data_header[0].pha_status<=12 ))}"
-                                                            ng-change="changeHealthHazard(item_list)"
-                                                            ng-model="item_list.id_health_hazard"
-                                                            ng-if="tab_general_active">
-                                                            <option value="" disabled>Please select</option>
-                                                            <option ng-repeat="item_m in item_list.health_hazard_list" ng-value="item_m.id">
-                                                                {{ item_m.name }} {{item_m.id}}
-                                                            </option>
-                                                        </select> *@
+
                                                         @* health_effect_rating *@
                                                         <div class="d-flex align-items-center justify-content-center gap-2" 
                                                                 style="width: 20%;">
@@ -1055,7 +1046,8 @@
                                                                     'bg-success': (item_list.health_effect_rating == '1' || item_list.health_effect_rating == '2'),
                                                                     'bg-warning': (item_list.health_effect_rating == '3') 
                                                                 }"  
-                                                                ng-if="item_list.health_effect_rating">
+                                                                ng-if="item_list.health_effect_rating"
+                                                                ng-click="openModalRisk(item,item_list)">
                                                                 {{item_list.health_effect_rating}}
                                                             </div>
                                                             @* icon *@
@@ -1207,6 +1199,10 @@
                                                          ng-repeat="workers in item.worker_list">
                                                         <p class="text-1100 text-start fw-bold">{{workers.user_displayname}}</p>
                                                     </div>
+                                                    <div class="container-add-staff">
+                                                        <input class="input-add-staff" ng-model="item.text_add" type="text">
+                                                        <button class="btn-add-staff bg-success" ng-click="addStaff(item)">Add</button>
+                                                    </div>
                                                 </td>
                                                 @* <td class="align-top rating px-1 d-flex flex-column align-items-center justify-content-start">
                                                     <div class="d-flex justify-content-start w-100 ps-2"
@@ -1355,21 +1351,21 @@
                                         <table class="table fs--2 mb-0 table-bordered">
                                             <thead class=" text-uppercase  text-center bg-soft" style="font-size: 10px;">
                                                 <tr>
-                                                    <th class=" align-middle" >Job Type/Change Type</th>
-                                                    <th class=" align-middle" >Task or Activity</th>
-                                                    <th class=" align-middle" >Sub Area</th>
-                                                    <th class=" align-middle" colspan="2">Exposure Indicator</th>
-                                                    <th class=" align-middle" >Health Effect Rating</th>
-                                                    <th class=" align-middle" >Frequency Level</th>
-                                                    <th class=" align-middle" >Exposure Band</th>
-                                                    <th class=" align-middle" >TLV std</th>
-                                                    <th class=" align-middle" >Exposure<br/>Level = [3.7] <br/>vs [3.8]</th>
-                                                    <th class=" align-middle" >Exposure<br/>Rating = [3.6] <br/>vs [3.9]</th>
-                                                    <th class=" align-middle" >Initial Risk<br/>Rating = [3.5]<br/>vs [3.10]</th>
-                                                    <th class=" align-middle" >Hierarchy of Control (ALARP)</th>
-                                                    <th class=" align-middle" >Effective?</th>
-                                                    <th class=" align-middle" >Residual Risk Rating</th>
-                                                    <th class=" align-middle" >Comments</th>
+                                                    <th class=" align-middle" >[3.1] <br><br> Job Type/Change Type</th>
+                                                    <th class=" align-middle" >[3.2] <br><br> Task or Activity</th>
+                                                    <th class=" align-middle" >[3.3] <br><br> Sub Area</th>
+                                                    <th class=" align-middle" colspan="2">[3.4] <br><br> Exposure Indicator</th>
+                                                    <th class=" align-middle" >[3.5] <br><br> Health Effect Rating</th>
+                                                    <th class=" align-middle" >[3.6]<br><br>Frequency Level</th>
+                                                    <th class=" align-middle" >[3.7]<br><br>Exposure Band</th>
+                                                    <th class=" align-middle" >[3.8]<br><br>TLV std</th>
+                                                    <th class=" align-middle" >[3.9]<br><br>Exposure<br/>Level = [3.7] <br/>vs [3.8]</th>
+                                                    <th class=" align-middle" >[3.10]<br><br>Exposure<br/>Rating = [3.6] <br/>vs [3.9]</th>
+                                                    <th class=" align-middle" >[3.11]<br><br>Initial Risk<br/>Rating = [3.5]<br/>vs [3.10]</th>
+                                                    <th class=" align-middle" >[3.12]<br><br>Hierarchy of Control (ALARP)</th>
+                                                    <th class=" align-middle" >[3.13]<br><br>Effective?</th>
+                                                    <th class=" align-middle" >[3.14]<br><br>Residual Risk Rating</th>
+                                                    <th class=" align-middle" >[3.15]<br><br>Comments</th>
                                                 </tr>
                                             </thead>
                                             <tbody class="list" id="customer-rating-table-body">
@@ -1380,52 +1376,56 @@
                                                     <td>&nbsp;</td>
 
                                                     <td>
-                                                        <div class="d-flex flex-col" ng-repeat="item_sub in item.sub_areas">
-                                                            <div style="margin-bottom: 30px;" >
+                                                        <div class="d-flex flex-column" ng-repeat="item_sub in item.sub_areas">
+                                                            <div class="box" 
+                                                                @* ng-style="{'margin-bottom': (item_sub.hazard.length * 56) + 'px'}" *@
+                                                                >
                                                                 {{ item_sub.sub_area }}
+                                                            </div>
+                                                            <div class="box empty" ng-repeat="n in [].constructor(item_sub.hazard.length - 1) track by $index">
+                                                                &nbsp;
                                                             </div>
                                                         </div>
                                                     </td>
 
                                                     <td>
                                                         <div class="d-flex flex-col"  ng-repeat="hazard in item.hazards">
-                                                            <div style="margin-bottom: 30px;" >
+                                                            <div class="box" >
                                                                 {{ hazard.type_hazard }}
                                                             </div>
                                                         </div>
                                                     </td>
 
                                                     <td class="" >
-                                                        <div class="d-flex flex-col" ng-repeat="hazard in item.hazards"
-                                                            style="margin-bottom: 45px;">
+                                                        <div class="d-flex flex-col box" ng-repeat="hazard in item.hazards">
                                                            {{ hazard.health_hazard }}
                                                         </div>
                                                     </td>
 
                                                     <td class="" >
-                                                        <div class="d-flex justify-content-center" 
-                                                            style="margin-bottom: 33px;"
+                                                        <div class="d-flex justify-content-center box" 
                                                             ng-repeat="hazard in item.hazards">
-                                                            <div class="effect-rating "
+                                                            <div>
+                                                                <div class="effect-rating "
                                                                 ng-class="{
                                                                 'bg-success': (hazard.health_effect_rating == '1' || hazard.health_effect_rating == '2'),
                                                                 'bg-warning': (hazard.health_effect_rating == '3') 
                                                                 }" >
                                                                 {{ hazard.health_effect_rating }}
                                                             </div>
+                                                            </div>
                                                         </div>
                                                     </td>
 
                                                     <td class="" >
-                                                        <div class="d-flex align-items-center" 
-                                                            style="margin-bottom: 28px;"
+                                                        <div class=" box" 
                                                             ng-repeat="hazard in item.hazards">
                                                             <select class="form-select form-select-sm rounded-1" 
                                                                     ng-if="tab_worksheet_active"
                                                                     ng-class="{'disabled-link':(!tab_worksheet_active)}"
                                                                     ng-change="actionChangeFrequencyLevel(hazard)"
                                                                     ng-model="hazard.id_frequency_level" 
-                                                                    style="width: 100%;">
+                                                                    style="min-width: 100px;">
                                                                 <option ng-repeat="item_m in master_frequency_level" ng-value="item_m.id">
                                                                     {{item_m.name}}
                                                                 </option>
@@ -1439,21 +1439,38 @@
                                                     </td>
 
                                                     <td class="" >
-                                                       
+                                                       <div class=" box"  ng-repeat="hazard in item.hazards">
+                                                            <div class="d-flex align-items-center gap-2" style="font-size: 14px;">
+                                                                <input class="form-control form-control-sm placeholder-right" 
+                                                                    style="min-width: 100px;"
+                                                                    type="text" 
+                                                                    placeholder=""
+                                                                    ng-keyup="processExposure(hazard)"
+                                                                    ng-model="hazard.exposure_band"
+                                                                >
+                                                                ppm
+                                                            </div>
+                                                       </div>
                                                     </td>
 
-                                                    <td class="" ></td>
+                                                    <td class="" >
+                                                        <div class="d-flex flex-col box" 
+                                                            style="min-width: max-content; padding-top: 7px; font-size: 14px;"
+                                                            ng-repeat="hazard in item.hazards">
+                                                           {{ hazard.standard_value }} {{  hazard.standard_value ? 'ppm' : '' }}
+                                                        </div>
+                                                    </td>
 
                                                     <td class="" >
-                                                        <div class="d-flex align-items-center" 
-                                                            style="margin-bottom: 28px;"
-                                                            ng-repeat="hazard in item.hazards">
+                                                        <div class="box" ng-repeat="hazard in item.hazards">
                                                             <select class="form-select form-select-sm rounded-1" 
                                                                 ng-if="tab_worksheet_active"
                                                                 ng-class="{'disabled-link':(!tab_worksheet_active)}"
                                                                 @* ng-change="actionChangeWorksheet(item,item.seq,'frequency_level')" *@
+                                                                ng-change="actionChangeFrequencyLevel(hazard)"
                                                                 ng-model="hazard.id_exposure_level" 
-                                                                style="width: 100%;">
+                                                                style="min-width: 100px;"
+                                                                ng-disabled="!hazard.exposure_status">
                                                                 <option ng-repeat="item_m in master_exposure_level" ng-value="item_m.id">
                                                                     {{item_m.name}}
                                                                 </option>
@@ -1461,12 +1478,76 @@
                                                         </div>
                                                     </td>
 
-                                                    <td class="" ></td>
-                                                    <td class="" ></td>
-                                                    <td class="" ></td>
-                                                    <td class="" ></td>
-                                                    <td class="" ></td>
-                                                    <td class="" ></td>
+                                                    <td>
+                                                        <div class="box text-center" 
+                                                            style="min-width: max-content; padding-top: 7px; font-size: 13px; text-align: center;"
+                                                            ng-repeat="hazard in item.hazards">
+                                                            {{ hazard.exposure_rating }}
+                                                        </div>
+                                                    </td>
+
+                                                    <td class="" >
+                                                        <div class="box" 
+                                                            style="min-width: max-content; padding-top: 7px; font-size: 13px; text-align: center;"
+                                                            ng-repeat="hazard in item.hazards">
+                                                            {{ hazard.initial_risk_rating }}
+                                                        </div>
+                                                    </td>
+
+                                                    <td class="" >
+                                                        <div class="box" ng-repeat="hazard in item.hazards">
+                                                             <textarea class="form-control form-control-sm" 
+                                                                    rows="2" 
+                                                                    type="text" 
+                                                                    style="width: 200px;"
+                                                                    placeholder="Hierarchy of Control (ALARP)" 
+                                                                    ng-disabled="hazard.initial_risk_rating === 'Low'"
+                                                                    ng-style="{'background-color': hazard.initial_risk_rating === 'Low' ? '#f2f2f2' : 'inherit'}"
+                                                                    ng-model="hazard.hierarchy_of_control">
+                                                            </textarea>
+                                                        </div>
+                                                    </td>
+
+                                                    <td class="" >
+                                                        <div class="box" ng-repeat="hazard in item.hazards">
+                                                             <textarea class="form-control form-control-sm" 
+                                                                    rows="2" 
+                                                                    type="text" 
+                                                                    style="width: 200px;"
+                                                                    placeholder="Effective?" 
+                                                                    ng-disabled="hazard.initial_risk_rating === 'Low'"
+                                                                    ng-style="{'background-color': hazard.initial_risk_rating === 'Low' ? '#f2f2f2' : 'inherit'}"
+                                                                    ng-model="hazard.effective">
+                                                            </textarea>
+                                                        </div>
+                                                    </td>
+
+                                                    <td class="" >
+                                                        <div class="box" ng-repeat="hazard in item.hazards">
+                                                             <textarea class="form-control form-control-sm" 
+                                                                    rows="2" 
+                                                                    type="text" 
+                                                                    style="width: 200px;"
+                                                                    placeholder="Residual Risk Rating" 
+                                                                    ng-disabled="hazard.initial_risk_rating === 'Low'"
+                                                                    ng-style="{'background-color': hazard.initial_risk_rating === 'Low' ? '#f2f2f2' : 'inherit'}"
+                                                                    ng-model="hazard.residual_risk_rating">
+                                                            </textarea>
+                                                        </div>
+                                                    </td>
+
+                                                    <td class="" >
+                                                        <div class="box" ng-repeat="hazard in item.hazards">
+                                                             @* <p class="pe-1 text-1100 fw-bold">{{ (hazard.recommendations_no +'.') }}</p> *@
+                                                            <textarea class="form-control form-control-sm " 
+                                                                    rows="2" 
+                                                                    type="text"
+                                                                    style="width: 200px;"
+                                                                    placeholder="Comments"
+                                                                    ng-model="hazard.recommendations">
+                                                            </textarea>
+                                                        </div>
+                                                    </td>
                                                 </tr>
                                             </tbody>
                                         </table>
