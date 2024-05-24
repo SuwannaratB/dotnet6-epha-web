@@ -386,11 +386,13 @@ a .dropdown-item {
     outline: none;
     border: 1px solid #ccc;
     border-radius: 4px 0 0 4px;
-    padding: 4px;
+    padding: 8px;
+    min-width: 244px;
   }
 
   .btn-add-staff {
     outline: none;
+    padding: 0 10px;
     border: 1px solid #1bc163;
     border-radius: 0 4px 4px 0;
     color: white;
