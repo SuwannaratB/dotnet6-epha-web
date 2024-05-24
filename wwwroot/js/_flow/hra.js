@@ -1304,6 +1304,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             for (let i = 0; i < worker_list.length; i++) {
                 worksheet_list[i].sub_areas = subArea_list;
+                worksheet_list[i].descriptions = worker_list[i].descriptions;
                 worksheet_list[i].hazards = angular.copy( subArea_list[0].hazard);
                 worksheet_list[i].id_frequency_level = '';
                 worksheet_list[i].frequency_level = '';

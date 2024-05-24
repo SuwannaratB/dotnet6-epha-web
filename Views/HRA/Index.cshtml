@@ -1382,7 +1382,11 @@
                                                     
                                                     <td>{{ item.worker_group }}</td>
 
-                                                    <td>&nbsp;</td>
+                                                    <td>
+                                                        <div  class="box" ng-repeat="item_dec in item.descriptions">
+                                                            {{ item_dec.descriptions }}
+                                                        </div>
+                                                    </td>
 
                                                     <td>
                                                         <div class="d-flex flex-column" ng-repeat="item_sub in item.sub_areas">
