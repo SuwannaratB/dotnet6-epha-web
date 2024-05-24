@@ -1316,8 +1316,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
 
     function setup_worksheet(subArea_list, worker_list) {
-        console.log(subArea_list)
-        console.log(worker_list)
+
         if (worker_list.length > 0) {
             const worksheet_list = [...worker_list]
             // จัดเรียงข้อมูลตามฟิลด์ no_subarea
@@ -1328,16 +1327,16 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     return a.no - b.no;
                 }
             });
-            console.log('data h ',  $scope.data_hazard)
+            console.log(subArea_list)
             for (let i = 0; i < worker_list.length; i++) {
                 worksheet_list[i].sub_areas = subArea_list;
                 worksheet_list[i].descriptions = worker_list[i].descriptions;
-                worksheet_list[i].hazards = angular.copy( $scope.data_hazard);
+                worksheet_list[i].hazards = convertSubAreaToHazard();
                 // worksheet_list[i].hazards = angular.copy( subArea_list[0].hazard);
                 worksheet_list[i].id_frequency_level = '';
                 worksheet_list[i].frequency_level = '';
             }
-            console.log('all ',worksheet_list)
+
             return worksheet_list;
         }
       
@@ -4588,10 +4587,20 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             return (item.id == hazard.id_health_hazard); 
         })[0];
 
+        console.log('list',list)
+
         if (list) {
             hazard.health_hazard = list.name;
             hazard.health_effect_rating = list.hazards_rating
             hazard.action_change = 1
+
+            hazard.standard_type_text = list.standard_type_text
+            hazard.standard_unit = list.standard_unit
+            hazard.standard_value = list.standard_value
+
+            // if(hazard.standard_value) $scope.processExposure(hazard);
+            console.log('hazard ==> ',hazard)
+            console.log('all ==> ',$scope.data_worksheet_list)
         }
 
         // console.log('hazard',hazard)
@@ -4615,9 +4624,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         // hazard.health_hazard = $scope.hazard_standard_list[0].name
         // hazard.healthng_effect_rating = $scope.hazard_standard_list[0].hazards_rating
         // hazard.action_chae = 1
-
-        console.log('sub ==> ',$scope.data_subareas_list)
-        console.log('all ==> ',$scope.data_worksheet_list)
     };
 
     $scope.openModalRisk = function (item_hazard, index) {
@@ -4651,8 +4657,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         item.worker_list.push(new_staff)
         item.text_add = "";
-        console.log(new_staff)
-        console.log(item)
     }
 
     $scope.removeStaff = function(item, index) {
@@ -4662,7 +4666,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
 
     $scope.processExposure = function (hazard){
-        console.log(hazard)
+        console.log('hazard',hazard)
         hazard.exposure_band = hazard.exposure_band.replace(/[^0-9.]/g, '');
         // ตรวจสอบว่ามีจุดทศนิยมมากกว่าหนึ่งจุดหรือไม่
         var parts = hazard.exposure_band.split('.');
@@ -4673,6 +4677,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         if(!hazard.exposure_band || !hazard.standard_value){
             hazard.id_exposure_level = null;
+            hazard.initial_risk_rating = null
+            hazard.id_exposure_rating = null
+            hazard.exposure_rating = null
             hazard.exposure_status = false;
             return
         } 
@@ -4763,6 +4770,22 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         
         // hazard.id_initial_risk_rating = id_exposure_rating;
         hazard.initial_risk_rating = compare.results;
+    }
+
+    function convertSubAreaToHazard() {
+        var hazardList = [];
+        console.log('$scope.data_subareas_list ',$scope.data_subareas_list)
+        for (var i = 0; i < $scope.data_subareas_list.length; i++) {
+            for (let j = 0; j < $scope.data_subareas_list[i].hazard.length; j++) {
+                if ($scope.data_subareas_list[i].hazard[j].id_subareas &&
+                    $scope.data_subareas_list[i].hazard[j].id_type_hazard &&
+                    $scope.data_subareas_list[i].hazard[j].id_health_hazard 
+                ) {
+                    hazardList.push(angular.copy($scope.data_subareas_list[i].hazard[j]))
+                }
+            }
+        }
+        return hazardList;
     }
 
     $scope.Matrix_Frequency_Rating = function () {
