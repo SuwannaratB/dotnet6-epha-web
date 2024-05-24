@@ -1193,14 +1193,26 @@
                                                 </td>
 
                                                 <!----span work/task lenght rowspan=""----->
-                                                <td class="align-top rating px-1 d-flex flex-column align-items-center justify-content-start">
-                                                    <div class="d-flex justify-content-start w-100 ps-2"
+                                                <td class="align-top rating px-1 d-flex flex-column align-items-center justify-content-start" >
+                                                    @*<div class="d-flex justify-content-start w-100 ps-2"
                                                          ng-repeat="workers in item.worker_list">
                                                         <p class="text-1100 text-start fw-bold">{{workers.user_displayname}}</p>
                                                     </div>
                                                     <div class="container-add-staff">
                                                         <input class="input-add-staff" ng-model="item.text_add" type="text">
                                                         <button class="btn-add-staff bg-success" ng-click="addStaff(item)">Add</button>
+                                                     
+                                                    </div>*@
+                                                    <div class="d-flex justify-content-start w-100 ps-2" ng-show="item.id_worker_group">
+                                                        <button class="btn btn-outline-secondary p-0 cursor-pointer col-auto" style="color: #2445fc; background-color: #f1f2f4; border-color: #f1f2f4;"
+                                                                ng-click="openDataEmployeeAdd(item,'worker')">
+                                                            <span class="far fa-address-book fa-lg pe-1"></span>Add Workers
+                                                        </button>
+
+                                                    </div>  
+                                                    <div class="d-flex justify-content-start w-100 ps-2"
+                                                         ng-repeat="workers in data_workers">
+                                                        <p class="text-1100 text-start fw-bold">{{workers.user_displayname}}</p>
                                                     </div>
                                                 </td>
                                                 @* <td class="align-top rating px-1 d-flex flex-column align-items-center justify-content-start">
@@ -2516,13 +2528,13 @@
                                     <span class="fas fa-search search-box-icon"></span>
                                 </div>
                             </div>
-                            @*<div class="col-auto d-flex align-items-end justify-content-end" ng-show="selectDatFormType !== 'approver'">
+                            <div class="col-auto d-flex align-items-end justify-content-end" ng-show="selectDatFormType !== 'approver'">
                                 <button class="btn text-light btn-sm" style="background-color: #e90f8b;" 
                                         ng-class="{'button-fade': showContractor}"
                                         ng-click="showContractor = !showContractor">
                                     <span class="fa-solid fa-user-pen"></span> Contractor/Outsource
                                 </button>
-                            </div>*@
+                            </div>
                         </div>
                     </div>
 
@@ -2611,14 +2623,15 @@
                         @* end แสดงข้อมูลที่ ค้นหาตาม textsearch*@
                 </div>
 
-                <div class="modal-header bg-soft" ng-if="(selectDatFormType !== 'owner' && (data_memberteam || data_approver).length > 1 )">
+                <div class="modal-header bg-soft" ng-if="(selectDatFormType !== 'owner' && (data_memberteam || data_approver || data_workers).length > 1 )">
                     <h5 class="text-900 mb-0">
-                        <span class="me-2 text-primary"><B>|</B></span> {{ selectDatFormType === 'member' ? 'Member Team' : 'Assessment Team Leader' }}
+                        <span class="me-2 text-primary"><B>|</B></span> {{ selectDatFormType === 'member' ? 'Member Team' :  selectDatFormType === 'worker' ? 'Worker':'Assessment Team Leader' }}
                     </h5>
                 </div>
                 <div class="modal-body" 
-                    ng-if="(selectDatFormType !== 'owner' && (data_memberteam || data_approver).length > 1 )">
-                    <div class="col-auto py-2" ng-repeat="item2 in (selectDatFormType === 'member' ? data_memberteam : data_approver) | filter:{id_session: selectdata_session }"
+                    ng-if="(selectDatFormType !== 'owner' && (data_memberteam || data_approver || data_workers).length > 1 )">
+                    <div class="col-auto py-2" ng-repeat="item2 in (selectDatFormType === 'member' ? data_memberteam : selectDatFormType === 'worker' ? data_workers : data_approver) | 
+                        filter:{id_session: selectdata_session }"
                         ng-if="!(item2.user_displayname == '' || item2.user_displayname == null)">
                         <div class="d-flex align-items-center p-1" style="height: 20px;">
                              <button class="btn btn-outline-secondary p-1" 

@@ -1502,6 +1502,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         var type_doc = $scope.pha_type_doc;//review_document
 
 
+        $scope.params = get_params();
+
         $.ajax({
             url: url_ws + "Flow/get_jsea_details",
             data: '{"sub_software":"jsea","user_name":"' + user_name + '","token_doc":"' + pha_seq + '","type_doc":"' + type_doc + '"}',
@@ -1698,6 +1700,20 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 arr.header[0].flow_mail_to_member = (arr.header[0].flow_mail_to_member == null ? 0 : arr.header[0].flow_mail_to_member);
                 $scope.data_header = JSON.parse(replace_hashKey_arr(arr.header));
                 set_form_action(action_part_befor, !action_submit, page_load);
+
+                if($scope.params != 'edit_approver'){
+                    $scope.action_owner_active = true;
+                }  
+                
+                if($scope.params === 'edit' && $scope.flow_role_type === 'admin') {
+                    $scope.tab_general_active = true;
+                    $scope.tab_node_active = true;
+                    $scope.tab_worksheet_active = true;
+                    $scope.tab_managerecom_active = true;
+
+                    $scope.save_type = true;
+                }
+
 
                 //ตรวจสอบเพิ่มเติม
                 if (arr.user_in_pha_no[0].pha_no == '' && $scope.flow_role_type != 'admin') {

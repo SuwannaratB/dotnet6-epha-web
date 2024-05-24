@@ -1243,33 +1243,36 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                 //ตรวจสอบเพิ่มเติม workflow
                 if (true) {
-                    set_form_action(action_part_befor, !action_submit, page_load);
-                    if (arr.user_in_pha_no[0].pha_no == '' && $scope.flow_role_type != 'admin') {
-                        if (arr.data_header[0].action_type != 'insert') {
-                            $scope.tab_general_active = false;
-                            $scope.tab_listarea_active = false;
-                            $scope.tab_worksheet_active = false;
-                            $scope.tab_managerecom_active = false;
-
-                            $scope.save_type = false;
-                            $scope.submit_review = false;
-                            $scope.submit_type = false;
+                    try{
+                        set_form_action(action_part_befor, !action_submit, page_load);
+                        if (arr.user_in_pha_no[0].pha_no == '' && $scope.flow_role_type != 'admin') {
+                            if (arr.data_header[0].action_type != 'insert') {
+                                $scope.tab_general_active = false;
+                                $scope.tab_listarea_active = false;
+                                $scope.tab_worksheet_active = false;
+                                $scope.tab_managerecom_active = false;
+    
+                                $scope.save_type = false;
+                                $scope.submit_review = false;
+                                $scope.submit_type = false;
+                            }
+                        } else if (arr.user_in_pha_no[0].pha_no != '' && $scope.flow_role_type != 'admin') {
+                            if (arr.header[0].action_type != 'insert') {
+                                $scope.tab_general_active = false;
+                                $scope.tab_listarea_active = false;
+                                $scope.tab_worksheet_active = false;
+                                $scope.tab_managerecom_active = false;
+    
+                                $scope.save_type = false;
+                                $scope.submit_review = false;
+                                $scope.submit_type = false;
+                            }
                         }
-                    } else if (arr.user_in_pha_no[0].pha_no != '' && $scope.flow_role_type != 'admin') {
-                        if (arr.header[0].action_type != 'insert') {
-                            $scope.tab_general_active = false;
-                            $scope.tab_listarea_active = false;
-                            $scope.tab_worksheet_active = false;
-                            $scope.tab_managerecom_active = false;
-
-                            $scope.save_type = false;
-                            $scope.submit_review = false;
-                            $scope.submit_type = false;
+                        if (!page_load && !action_submit) {
+                            $scope.tabs = tabs_befor;
                         }
-                    }
-                    if (!page_load && !action_submit) {
-                        $scope.tabs = tabs_befor;
-                    }
+                    }catch{}
+
                 }
 
                 //add Please select in list master
@@ -3894,6 +3897,41 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 element.id_tasks = item.id_worker_group;
             });
             console.log(item)
+
+
+
+            //will set user to data_workers  =====>>>>>> Bug มัน reset อันเดิม ที่เคยเลือก
+            var arr_items = $filter('filter')($scope.data_workers, function (item) {
+                return (item.id == item.seq);
+            });
+
+            arr_items.forEach(item => {
+                if (item.worker_list && Array.isArray(item.worker_list)) {
+                    item.worker_list.forEach(worker => {
+                        let seq = $scope.MaxSeqdataWorkers;
+
+                        // Create a new user detail object with the necessary properties
+                        let newInput = clone_arr_newrow($scope.data_workers_def)[0];
+                        newInput.seq = seq;
+                        newInput.id = seq;
+                        newInput.no = 0;
+                        newInput.id_session = Number(item.seq);
+                        newInput.action_type = 'insert';
+                        newInput.action_change = 1;
+
+                        // Add the user details
+                        newInput.user_name = worker.user_name;
+                        newInput.user_displayname = worker.user_displayname;
+                        newInput.user_type = worker.user_type;
+
+                        // Push the newInput to the data_workers array
+                        $scope.data_workers.push(newInput);
+                    });
+                }
+            });
+
+            console.log("Updated data_workers", $scope.data_workers);
+
         }
 
         $scope.actionChangeSubArae = function (item) {
@@ -4185,7 +4223,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
     };    
 
-        $scope.choosDataEmployee = 
 
         $scope.choosDataEmployee = function (item) {
 
@@ -4199,12 +4236,15 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             var seq_session = $scope.selectdata_session;
             var xformtype = $scope.selectDatFormType;
 
+            console.log("item",item)
+
             if (xformtype == "member") {
 
                 var arr_items = $filter('filter')($scope.data_memberteam, function (item) {
                     return (item.id_session == seq_session && item.user_name == employee_name);
                 });
 
+                console.log("arr_items",arr_items)
                 if (arr_items.length == 0) {
 
                     //add new employee 
@@ -4268,6 +4308,39 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                 }
 
+            }
+            else if (xformtype == "worker") {
+                var arr_items = $filter('filter')($scope.data_workers, function (item) {
+                    return (item.id_session == seq_session && item.user_name == employee_name);
+                });
+
+                console.log("arr_items",arr_items)
+
+                if (arr_items.length == 0) {
+                    //add new employee 
+                    var seq = $scope.MaxSeqdataWorkers;
+
+                    var newInput = clone_arr_newrow($scope.data_workers_def)[0];
+                    newInput.seq = seq;
+                    newInput.id = seq;
+                    newInput.no = (0);
+                    newInput.id_session = Number(seq_session);
+                    newInput.action_type = 'insert';
+                    newInput.action_change = 1;
+
+                    newInput.user_name = employee_name;
+                    newInput.user_displayname = employee_displayname;
+                    newInput.user_title = employee_position;
+                    newInput.user_img = employee_img;
+
+                    $scope.data_workers.push(newInput);
+                    running_no_level1($scope.data_workers, null, null);
+
+                    $scope.MaxSeqdataWorkers = Number($scope.MaxSeqdataWorkers + 1);
+
+                }
+
+                console.log("$scope.data_workers",$scope.data_workers)
             }
             apply();
 

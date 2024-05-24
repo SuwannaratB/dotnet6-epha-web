@@ -3196,13 +3196,16 @@
                                                     <div class="d-flex align-items-center">
                                                         <div class="col-md-12 p-1 ps-3 d-flex justify-content-between align-items-center">
                                                             <div ng-if="params == 'edit_approver'">
-                                                                <button ng-click="
-                                                                    openDataEmployeeAdd(item,'edit_approver',$index); 
-                                                                    recommentAction_valid(item);" 
+                                                                <button 
+                                                                    ng-click="
+                                                                        openDataEmployeeAdd(item, 'edit_approver', $index); 
+                                                                        recommentAction_valid(item);" 
                                                                     class="btn btn-link px-0 mx-1"
+                                                                    ng-class="{'no-drop': item.approver_action_type == 2 || data_header[0].pha_status != 21}"
+                                                                    ng-disabled="item.approver_action_type == 2 || data_header[0].pha_status != 21"
                                                                     data-toggle="tooltip" 
                                                                     title="Add Employee">
-                                                                <span class="far fa-address-book"></span>
+                                                                    <span class="far fa-address-book"></span>
                                                                 </button>
                                                                 <button class="btn btn-sm transition-none btn-reveal fs--2 p-1 " 
                                                                         type="button"
@@ -3232,26 +3235,23 @@
                                                     </div>
                                                 </td>
                                                 <td class="align-top white-space-nowrap">
-                                                    <div class="col-md-12 p-1 ps-3 text-start" ng-if="!(item.approver_action_type == 2 || data_header[0].pha_status != 21)   ">
+                                                    <div class="col-md-12 p-1 ps-3 text-start" ng-if="!(item.approver_action_type == 2 || data_header[0].pha_status != 21)" >
                                                         <div class="form-check form-check-inline cursor-pointer">
                                                             <span class="fa-solid far fa-file-pdf text-danger" style="font-size:15px;" ng-click="confirmExport('hazop_report','pdf')"></span>
                                                             <b>
                                                                 What's if Report
                                                             </b>
                                                         </div><br />
-                                                        <div class="form-check form-check-inline"
-                                                             ng-class="{ 'no-drop': !canAccess(item), 'cursor-pointer': canAccess(item) }">
+                                                        <div class="form-check form-check-inline" ng-class="{ 'no-drop': !canAccess(item), 'cursor-pointer': canAccess(item) }">
                                                             <input class="form-check-input" id="inlineRadio-{{item.seq}}" type="radio"
+                                                                   name="inlineRadioOptions-{{item.seq}}" 
                                                                    ng-class="{ 'cant-Access': !canAccess(item) }"
-                                                                   name="inlineRadioOptions-{{item.seq}}"
                                                                    value="approve" checked ng-model="item.action_status" />
                                                             <label class="form-check-label" for="inlineRadioApprove-{{item.seq}}"> Approve</label>
                                                         </div>
-                                                        <div class="form-check form-check-inline"
-                                                             ng-class="{ 'no-drop': !canAccess(item), 'cursor-pointer': canAccess(item) }">
+                                                        <div class="form-check form-check-inline"  ng-class="{ 'no-drop': !canAccess(item), 'cursor-pointer': canAccess(item) }">
                                                             <input class="form-check-input" id="inlineRadioOptions-{{item.seq}}" type="radio"
-                                                                   ng-class="{ 'cant-Access': !canAccess(item) }"   
-                                                                   name="inlineRadioOptions-{{item.seq}}"
+                                                                   name="inlineRadioOptions-{{item.seq}}" ng-class="{ 'cant-Access': !canAccess(item) }"
                                                                    value="reject" ng-model="item.action_status" />
                                                             <label class="form-check-label" for="inlineRadioReject-{{item.seq}}"> Send back with Comment</label>
                                                         </div>
@@ -3260,10 +3260,12 @@
                                                         </div>
                                                     </div>
 
-                                                    <div class="col-md-12 p-1 ps-3" ng-if="(item.approver_action_type == 2 || data_header[0].pha_status != 21)">
+                                                    <div class="col-md-12 p-1 ps-3" ng-if="(item.approver_action_type == 2 || data_header[0].pha_status != 21)"
+                                                        ng-class="{ 'no-drop': !canAccess(item), 'cursor-pointer': canAccess(item) }">
                                                         <p>{{item.action_status =='approve' ? 'Approve' : 'Send back with Comment' }}</p>
                                                     </div>
-                                                </td>
+
+                                                </td>                                                
 
                                                 <td class="align-top white-space-nowrap text-start">
 
@@ -3591,7 +3593,7 @@
                                         <span class="fas fa-search search-box-icon"></span>
                                     </div>
                                 </div>
-                                <div class="col-auto d-flex align-items-end justify-content-end" ng-show="selectDatFormType !== 'approver' && selectDatFormType !== 'approver_ta3'">
+                                <div class="col-auto d-flex align-items-end justify-content-end" ng-show="selectDatFormType !== 'approver' && selectDatFormType !== 'approver_ta3' && params !== 'edit_approver'">
                                     <button class="btn text-light btn-sm" style="background-color: #e90f8b;" 
                                             ng-class="{'button-fade': showContractor}"
                                             ng-click="showContractor = !showContractor">
@@ -3630,8 +3632,8 @@
                                                                 data-placement="top" 
                                                                 title="choose Employee"
                                                                 ng-click="choosDataEmployee(item)">
-                                                            <span class="fa-solid fa-user-plus" ng-if="selectDatFormType !== 'owner'">Add</span>
-                                                            <span class="fa-solid fa-user-check" ng-if="selectDatFormType === 'owner'">selecte</span>
+                                                            <span class="fa-solid fa-user-plus" ng-if="selectDatFormType !== 'owner' && params !== 'edit_approver'">Add</span>
+                                                            <span class="fa-solid fa-user-check" ng-if="selectDatFormType === 'owner' || params === 'edit_approver'">selecte</span>
                                                         </button>
                                                     </span>
                                                 </td>

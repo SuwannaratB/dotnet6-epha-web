@@ -282,7 +282,7 @@
                                                     <td class="align-top  px-1">
                                                         <div class="text-center">
                                                             <p class="mb-0 ms-3 fw-bold" style="width: 30px;" rows="3">
-                                                                {{item_d.recommendations_no}}
+                                                                {{item_d.recommendations_no}} {{item_d.subarea_no}}
                                                             </p>
                                                         </div>
                                                     </td>
@@ -290,7 +290,7 @@
                                                     <td class="align-top  px-1">
                                                         <div class="d-flex text-start">
                                                             <p class="mb-0 ms-3 fw-bold" style="width: 30px;" rows="3">
-                                                                {{item_d.node_no+'.'}}
+                                                                {{item_d.node_no+'.'}} {{item_d.gruop_no}} {{item_d.hazard_no}}
                                                             </p>
                                                         </div>
                                                     </td>
@@ -562,26 +562,14 @@
                                                     @*Initial risk*@
                                                     <td class="align-top text-center" ng-if="pha_sub_software == 'hra'">
                                                         <div class="p-1 rounded-3" style="background-color: #ccffcc; color: #006600" ng-if="item.remaining > 3">
-                                                            <h6 class="fw-semi-bold">{{}}</h6>
-                                                        </div>
-                                                        <div class="p-1 rounded-3" style="background-color: #ffffcc; color: #cccc00" ng-if="item.remaining > 0 && item.remaining < 3">
-                                                            <h6 class="fw-semi-bold">{{}}</h6>
-                                                        </div>
-                                                        <div class="p-1 rounded-3" style="background-color: #ffcccc; color: #cc0000" ng-if="item.remaining <= 0">
-                                                            <h6 class="fw-semi-bold">{{}</h6>
+                                                            <h6 class="fw-semi-bold">{{item.initail_risk}}</h6>
                                                         </div>
                                                     </td>
 
                                                     @*Residual risk*@
                                                     <td class="align-top text-center" ng-if="pha_sub_software == 'hra'">
                                                         <div class="p-1 rounded-3" style="background-color: #ccffcc; color: #006600" ng-if="item.remaining > 3">
-                                                            <h6 class="fw-semi-bold">{}}</h6>
-                                                        </div>
-                                                        <div class="p-1 rounded-3" style="background-color: #ffffcc; color: #cccc00" ng-if="item.remaining > 0 && item.remaining < 3">
-                                                            <h6 class="fw-semi-bold">{{}}</h6>
-                                                        </div>
-                                                        <div class="p-1 rounded-3" style="background-color: #ffcccc; color: #cc0000" ng-if="item.remaining <= 0">
-                                                            <h6 class="fw-semi-bold">{{}}</h6>
+                                                            <h6 class="fw-semi-bold">{item.residual_risk}}</h6>
                                                         </div>
                                                     </td>
                                                     @* Implement 13 *@
