@@ -1320,7 +1320,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         console.log(worker_list)
         if (worker_list.length > 0) {
             const worksheet_list = [...worker_list]
-            console.log( $scope.data_hazard)
             // จัดเรียงข้อมูลตามฟิลด์ no_subarea
             $scope.data_hazard.sort(function(a, b) {
                 if (a.no_subareas !== b.no_subareas) {
@@ -1329,11 +1328,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     return a.no - b.no;
                 }
             });
-
+            console.log('data h ',  $scope.data_hazard)
             for (let i = 0; i < worker_list.length; i++) {
                 worksheet_list[i].sub_areas = subArea_list;
                 worksheet_list[i].descriptions = worker_list[i].descriptions;
-                worksheet_list[i].hazards = angular.copy( subArea_list[0].hazard);
+                worksheet_list[i].hazards = angular.copy( $scope.data_hazard);
+                // worksheet_list[i].hazards = angular.copy( subArea_list[0].hazard);
                 worksheet_list[i].id_frequency_level = '';
                 worksheet_list[i].frequency_level = '';
             }
@@ -2690,6 +2690,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
 
               $scope.data_worksheet_list = setup_worksheet($scope.data_subareas_list, $scope.data_tasks);
+              console.log('data all ',$scope.data_worksheet_list)
             apply();
             // console.log($scope.data_worksheet);
 
@@ -4593,18 +4594,19 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             hazard.action_change = 1
         }
 
-        console.log('hazard',hazard)
-        let set;
-        for (let i = 0; i < $scope.data_subareas_list[0].hazard.length; i++) {
-            if (hazard_index == i) {
-                $scope.data_subareas_list[0].hazard[i] = hazard;
-                set = true;
-            }
-        }
+        // console.log('hazard',hazard)
+        // let set;
+        // for (let i = 0; i < $scope.data_subareas_list[0].hazard.length; i++) {
+        //     if (hazard_index == i) {
+        //         $scope.data_subareas_list[0].hazard[i] = hazard;
+        //         set = true;
+        //     }
+        // }
 
-        if (set) {
-            $scope.data_worksheet_list = setup_worksheet($scope.data_subareas_list, $scope.data_tasks);
-        }
+        // if (set) {
+        //     $scope.data_worksheet_list = setup_worksheet($scope.data_subareas_list, $scope.data_tasks);
+        // }
+
         // $scope.hazard_standard_list = $filter('filter')($scope.hazard_standard, function (item) { 
         //     return (item.name == hazard.health_hazard); 
         // });

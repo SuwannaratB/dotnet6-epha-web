@@ -1431,7 +1431,7 @@
                                                             ng-repeat="hazard in item.hazards">
                                                             <div ng-if="hazard.health_effect_rating">
                                                                 <div class="effect-rating "
-                                                                    ng-click="openModalRisk(hazard, $index)"
+                                                                    @* ng-click="openModalRisk(hazard, $index)" *@
                                                                     ng-class="{
                                                                     'bg-success': (hazard.health_effect_rating == '1' || hazard.health_effect_rating == '2'),
                                                                     'bg-warning': (hazard.health_effect_rating == '3') 
