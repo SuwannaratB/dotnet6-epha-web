@@ -1077,6 +1077,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     //List of Areas to Be Assessed and Health Hazards or Risk Factors
                     if (true) {
                         // add key count_riskfactors
+                        $scope.hazard_standard = arr.hazard_standard;
+                        
                         arr.hazard = setup_hazard(arr.hazard);
 
                         $scope.data_subareas = arr.subareas;
@@ -1106,8 +1108,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         $scope.data_tasks = taskList;
                         $scope.data_tasks_def = clone_arr_newrow(taskList);
                         $scope.data_tasks_old = (taskList);
-
-                        $scope.hazard_standard = arr.hazard_standard;
 
                         $scope.data_workers = arr.workers;
                         $scope.data_workers_def = clone_arr_newrow(arr.workers);
@@ -1291,7 +1291,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             const worksheet_list = [...worker_list]
             // จัดเรียงข้อมูลตามฟิลด์ no_subarea
             $scope.data_hazard.sort(function(a, b) {
-                return a.no - b.no;
+                if (a.no_subareas !== b.no_subareas) {
+                    return a.no_subareas - b.no_subareas;
+                } else {
+                    return a.no - b.no;
+                }
             });
 
             for (let i = 0; i < worker_list.length; i++) {
@@ -1362,9 +1366,19 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     function setup_hazard(hazard) {
         hazard.forEach(item => {
+
+            const std = $scope.hazard_standard.find((_item) => _item.id === item.id_health_hazard);
+
+            if (std) {
+                item.standard_unit = std.standard_unit;
+                item.standard_value = std.standard_value;
+                item.standard_type_text = std.standard_type_text;
+            }
+
             item.count_riskfactors = 1;
             item.sort_health_hazard  = false;
-            item.health_hazard_list  =  $scope.filter_hazard_riskfactors;
+            // console.log($scope.hazard_standard)
+            // item.health_hazard_list  =  $scope.filter_hazard_riskfactors;
 
             // if (item.id_health_hazard) {
             //     $scope.chooseRiskRating(item);
@@ -3930,8 +3944,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
 
         $scope.actionChangeFrequencyLevel = function (item) {
-            console.log('item',item)
-            console.log('all',$scope.data_worksheet_list)
+            processExposureRating(item)
         }
 
     }
@@ -4419,6 +4432,124 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.master_hazard_riskfactors_list = $filter('filter')($scope.master_hazard_riskfactors, function (item) { 
             return item.name.toLowerCase().includes($scope.keywords.text.toLowerCase()); 
         });
+    }
+
+    $scope.addStaff = function(item) {
+        var new_staff = {
+            id: 0,
+            name: item.text_add,
+            user_name: item.text_add.toUpperCase(),
+            user_displayname :item.text_add,
+        }
+
+        item.worker_list.push(new_staff)
+        item.text_add = "";
+        console.log(new_staff)
+        console.log(item)
+    }
+
+    $scope.processExposure = function (hazard){
+        console.log(hazard)
+        hazard.exposure_band = hazard.exposure_band.replace(/[^0-9.]/g, '');
+        // ตรวจสอบว่ามีจุดทศนิยมมากกว่าหนึ่งจุดหรือไม่
+        var parts = hazard.exposure_band.split('.');
+        if (parts.length > 2) {
+            // ถ้ามีจุดทศนิยมมากกว่าหนึ่งจุด ให้ใช้เฉพาะจุดแรกและส่วนที่เหลือเป็นตัวเลข
+            hazard.exposure_band = parts[0] + '.' + parts.slice(1).join('');
+        }
+
+        if(!hazard.exposure_band || !hazard.standard_value){
+            hazard.id_exposure_level = null;
+            hazard.exposure_status = false;
+            return
+        } 
+
+        const exposure_result = parseFloat(hazard.exposure_band);
+        const exposure_level = (exposure_result/hazard.standard_value) * 100;
+        var id_exposure = 0;
+
+        if (exposure_level < 10) {
+            id_exposure = 1;
+        } else if (exposure_level < 50) {
+            id_exposure = 2;
+        } else if (exposure_level < 75) {
+            id_exposure = 3;
+        } else if (exposure_level < 100) {
+            id_exposure = 4;
+        } else {
+            id_exposure = 5;
+        }
+        hazard.id_exposure_level = id_exposure;
+        hazard.exposure_status = true;
+        processExposureRating(hazard);
+    }
+
+    function processExposureRating(hazard) {
+        console.log(hazard)
+        if (!hazard.id_exposure_level || !hazard.id_frequency_level) {
+            return
+        }
+
+        let id_exposure_rating;
+        let exposure_rating;
+
+        if ((hazard.id_exposure_level === 2) &&
+            (hazard.id_frequency_level === 3 || hazard.id_frequency_level === 4) ||
+            (hazard.id_exposure_level === 3) &&
+            (hazard.id_frequency_level === 2 || hazard.id_frequency_level === 3) ||
+            (hazard.id_exposure_level === 4) &&
+            (hazard.id_frequency_level === 2 )
+        ) {
+            id_exposure_rating = 2;
+            exposure_rating = "[2] = น้อย";
+        } else if ( (hazard.id_exposure_level === 2) &&
+                    (hazard.id_frequency_level === 5) ||
+                    (hazard.id_exposure_level === 3) &&
+                    (hazard.id_frequency_level === 4 || hazard.id_frequency_level === 5) ||
+                    (hazard.id_exposure_level === 4) &&
+                    (hazard.id_frequency_level === 3) ||
+                    (hazard.id_exposure_level === 5) &&
+                    (hazard.id_frequency_level === 2 || hazard.id_frequency_level === 3)
+        ) {
+            id_exposure_rating = 3;
+            exposure_rating = "[3] = ปานกลาง";
+        } else if ( (hazard.id_exposure_level === 4) &&
+                    (hazard.id_frequency_level === 4 || hazard.id_frequency_level === 5) ||
+                    (hazard.id_exposure_level === 5) &&
+                    (hazard.id_frequency_level === 4)
+        ) {
+            id_exposure_rating = 4;
+            exposure_rating = "[4] = สูง";
+        } else if ( (hazard.id_exposure_level === 5) &&
+                    (hazard.id_frequency_level === 5)
+        ) {
+            id_exposure_rating = 5;
+            exposure_rating = "[5] = สูงมาก";
+        } else {
+            // ค่าเริ่มต้น (default) หากไม่มีเงื่อนไขใด ๆ ตรงตามที่กำหนด
+            id_exposure_rating = 1; 
+            exposure_rating = "[1] = ไม่ได้รับสัมผัส";
+        }
+
+        hazard.id_exposure_rating = id_exposure_rating;
+        hazard.exposure_rating = exposure_rating;
+        processidInitialRiskRating(hazard);
+    }
+
+    function processidInitialRiskRating(hazard) {
+
+        if (!hazard.id_exposure_rating || !hazard.health_effect_rating) {
+            return
+        }
+
+        hazard.health_effect_rating = parseInt(hazard.health_effect_rating);
+
+        var compare = $filter('filter')($scope.master_compare_initial_risk_rating, function (item) { 
+            return (hazard.id_exposure_rating == item.exposure_rating && hazard.health_effect_rating == item.health_effect_rating); 
+        })[0];
+        
+        // hazard.id_initial_risk_rating = id_exposure_rating;
+        hazard.initial_risk_rating = compare.results;
     }
 
     $scope.Matrix_Frequency_Rating = function () {
