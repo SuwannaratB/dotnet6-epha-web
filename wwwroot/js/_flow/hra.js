@@ -281,6 +281,15 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 fileInfoSpan.textContent = "";
             }
         }*/
+
+        $scope.truncateFilename = function(filename, length) {
+            if (!filename) return '';
+            if (filename.length <= length) return filename;
+            const start = filename.slice(0, Math.floor(length / 2));
+            const end = filename.slice(-Math.floor(length / 2));
+            return `${start}.......${end}`;
+        };
+
         $scope.fileSelect = function (input, file_part) {
             //drawing, responder, approver
             var file_doc = $scope.data_header[0].pha_no;
@@ -288,18 +297,31 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             const fileSeq = fileInput.id.split('-')[1];
             const fileInfoSpan = document.getElementById('filename' + fileSeq);
     
+    
+            console.log("fileInfoSpan",fileInfoSpan)
+            // Function to truncate file name
+            function truncateFilename(filename, length) {
+                if (!filename) return '';
+                if (filename.length <= length) return filename;
+                const start = filename.slice(0, Math.floor(length / 2));
+                const end = filename.slice(-Math.floor(length / 2));
+                return `${start}.......${end}`;
+            }
+    
             if (fileInput.files.length > 0) {
                 const file = fileInput.files[0];
                 const fileName = file.name;
                 const fileSize = Math.round(file.size / 1024);
                 try {
                     //fileInfoSpan.textContent = `${fileName} (${fileSize} KB)`;
-                    let shortenedFileName = fileName.length > 20 ? fileName.substring(0, 20) + '...' : fileName;
-                    fileInfoSpan.textContent = `${shortenedFileName} (${fileSize} KB)`;
-    
-                } catch {
-    
-                 }
+                    /*let shortenedFileName = fileName.length > 20 ? fileName.substring(0, 20) + '...' : fileName;
+                    fileInfoSpan.textContent = `${shortenedFileName} (${fileSize} KB)`;*/
+                    const truncatedFileName = truncateFilename(fileName, 20);
+                    fileInfoSpan.textContent = `${truncatedFileName} (${fileSize} KB)`;
+
+                } catch (error) {
+                    console.error('Error updating file info:', error);
+                }
     
                 if (file) {
                     const allowedFileTypes = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'jpg', 'png', 'gif']; // รายการของประเภทของไฟล์ที่อนุญาตให้แนบ
@@ -310,7 +332,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         // ทำการแนบไฟล์
                         //set_alert("File attached successfully.");
                     } else {
-                        $('#modalMsgFileError').modal('show');
+                        $('#modalMsgFileError').modal({
+                            backdrop: 'static',
+                            keyboard: false 
+                        }).modal('show');
                         //set_alert('Warning', "Please select a PDF, Word or Excel, Image file.");
                     }
                 } else {
@@ -324,7 +349,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 fileInfoSpan.textContent = "";
             }
             // $("#divLoading").hide(); 
-        }            
+        }              
         function uploadFile(file_obj, seq, file_name, file_size, file_part, file_doc) {
 
             var fd = new FormData();
@@ -3169,6 +3194,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         $scope.confirmDialogApprover = function (_item, action) {
 
+
+            
+            $scope.data_drawing_approver.forEach(function(item) {
+                item.action_type === 'new' ? 'insert' : item.action_type;
+            });
+            
+
             var arr_chk = _item;
             $scope.item_approver_active = [];
             $scope.item_approver_active.push(_item);
@@ -4045,17 +4077,19 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             apply();
 
-            $('#modalEmployeeAdd').modal('show');
+            $('#modalEmployeeAdd').modal({
+                backdrop: 'static',
+                keyboard: false 
+            }).modal('show');
         };
 
         $scope.fillterDataEmployeeAdd = function () {
             $scope.employeelist_show = [];
-            //var searchText = $scope.searchText;
             var searchIndicator = $scope.searchIndicator.text;
             if (!searchIndicator) { return; }
-           
+        
             var items = angular.copy($scope.employeelist_def, items);
-    
+        
             if (searchIndicator.length < 3) { return items; }
             
             if (searchIndicator.length > 4 && /\W+/.test(searchIndicator)) {
@@ -4064,13 +4098,19 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
            
             getEmployees(searchIndicator, function(data) {
-    
                 data.employee.forEach(function(employee) {
                     employee.isAdded = false; 
                 });
-    
-                $scope.employeelist_show = data.employee
+        
+                $scope.employeelist_page = data.employee;
+                $scope.totalItems = $scope.employeelist_page.length; // Update totalItems
+                $scope.employeelist_show = $scope.getPaginatedItems();
+                
+                // Calculate total pages
+                $scope.totalPages = Math.ceil($scope.totalItems / $scope.itemsPerPage);
+        
                 apply();
+        
                 $('#modalEmployeeAdd').modal({
                     backdrop: 'static',
                     keyboard: false 
@@ -4082,7 +4122,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $.ajax({
                 url: url_ws + "Flow/employees_search",
                 data: '{"user_indicator":"' + indicator + '"'
-                    + ',"max_rows":"10"'
+                    + ',"max_rows":"50"'
                     + '}',
                 type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
                 beforeSend: function () {
@@ -4104,6 +4144,49 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     
             });
         }
+
+    $scope.currentPage = 1;
+    $scope.itemsPerPage = 10; // Set the desired number of items per page
+    
+
+    $scope.getPaginatedItems = function() {
+        var begin = ($scope.currentPage - 1) * $scope.itemsPerPage;
+        var end = begin + $scope.itemsPerPage;
+        
+        $scope.loadingData = true; 
+        setTimeout(function() {
+            $scope.loadingData = false;
+            $scope.$apply(); 
+        }, 2000);
+    
+        var paginatedItems = $scope.employeelist_page.slice(begin, end);
+        
+        return paginatedItems;
+    };
+    
+
+    $scope.setPage = function(page) {
+        $scope.currentPage = page;
+        $scope.employeelist_show = $scope.getPaginatedItems();
+    };
+
+    $scope.action_changepage = function(action) {
+        switch (action) {
+            case 'prevPage':
+                if ($scope.currentPage > 1) {
+                    $scope.setPage($scope.currentPage - 1);
+                }
+                break;
+            case 'nextPage':
+                if ($scope.currentPage < $scope.totalPages) {
+                    $scope.setPage($scope.currentPage + 1);
+                }
+                break;
+        }
+    };    
+
+        $scope.choosDataEmployee = 
+
         $scope.choosDataEmployee = function (item) {
 
             var id = item.id;
@@ -4218,6 +4301,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
 
         $scope.clearFormData = function() {
+            $scope.employeelist_show = [];
+            $scope.clickedStates = {};
+            //$scope.searchText='';
             $scope.searchIndicator = {
                 text: ''
             }        
@@ -4304,6 +4390,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $('#modalExportReviewerFile').modal('show');
         }
 
+        //add Drawing
         $scope.addDataApproverDrawing = function (item_draw, seq_approver, id_session) {
             //item_draw = data_drawing_approver
             var user_name = $scope.user_name;
@@ -4315,18 +4402,19 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             var xseq = Number($scope.MaxSeqdata_drawing_approver) + 1;
             $scope.MaxSeqdata_drawing_approver = xseq;
 
-            //add Item Drawing   
+            //add Item Drawing  
+            //var newInput = clone_arr_newrow($scope.data_drawing_def)[0];
             var add_items = {
                 create_by: user_name,
                 update_by: null,
                 action_change: 0,
-                action_type: "insert",
+                action_type: "new", //"insert"
                 descriptions: null,
                 document_file_name: null,
                 document_file_path: null,
                 document_file_size: null,
                 document_name: null,
-                document_module: 'hra',
+                document_module: 'hazop',
                 document_no: null,
                 id_pha: id_pha,
                 id_session: id_session,
@@ -4343,28 +4431,44 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
             apply();
         }
+
         $scope.removeDataApproverDrawing = function (item_draw, seq_approver) {
             var user_name = $scope.user_name;
             var seq = item_draw.seq;
             var fileUpload = document.getElementById('attfile-' + seq);
-            var fileNameDisplay = document.getElementById('filename' + seq);
-
-            fileUpload.value = ''; // ล้างค่าใน input file
-            fileNameDisplay.textContent = ''; // ล้างข้อความที่แสดงชื่อไฟล์
-
-            var arr = $filter('filter')($scope.data_drawing_approver, function (item) { return (item.seq == seq); });
-            if (arr.length > 0) {
-                arr[0].document_file_name = null;
-                arr[0].document_file_size = 0;
-                arr[0].document_file_path = null;
-                arr[0].action_type = 'delete';
-                arr[0].action_change = 1;
-                arr[0].update_by = user_name;
-                apply();
+            var fileNameDisplay = document.getElementById('filename-approver-' + seq);
+        
+            // Clear file input
+            if (fileUpload) {
+                fileUpload.value = '';
             }
+        
+            // Clear file name display
+            if (fileNameDisplay) {
+                fileNameDisplay.textContent = '';
+            }
+        
+            // Find and update data in $scope.data_drawing_approver
+            var index = $scope.data_drawing_approver.findIndex(function(item) {
+                return item.seq === seq;
+            });
+        
+            if (index !== -1) {
+                if ($scope.data_drawing_approver[index].action_type === "new") {
+                    $scope.data_drawing_approver.splice(index, 1);
+                } else {
+                    $scope.data_drawing_approver[index].document_file_name = null;
+                    $scope.data_drawing_approver[index].document_file_size = 0;
+                    $scope.data_drawing_approver[index].document_file_path = null;
+                    $scope.data_drawing_approver[index].action_type = 'delete';
+                    $scope.data_drawing_approver[index].action_change = 1;
+                    $scope.data_drawing_approver[index].update_by = user_name;
+                }
+            }
+        
             clear_form_valid();
+        };
 
-        }
         function clear_form_valid() {
             $scope.id_approver_select = null;
             $scope.form_valid = { valid_document_file: false };

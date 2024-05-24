@@ -500,6 +500,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         const fileInfoSpan = document.getElementById('filename' + fileSeq);
 
 
+        console.log("fileInfoSpan",fileInfoSpan)
         // Function to truncate file name
         function truncateFilename(filename, length) {
             if (!filename) return '';
@@ -661,8 +662,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         // กรณีเกิดข้อผิดพลาดในการร้องขอไปยัง server
                         console.error('มีข้อผิดพลาด: ' + request.status);
                     }
-                    $("#divLoading").hide(); 
+
                 }
+                $("#divLoading").hide(); 
             };
 
             request.send(fd);
@@ -6027,7 +6029,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
 
     $scope.currentPage = 1;
-    $scope.itemsPerPage = 10; // Set the desired number of items per page
+    $scope.itemsPerPage = 10; 
     
 
     $scope.getPaginatedItems = function() {
@@ -6064,7 +6066,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 }
                 break;
         }
-};
+    };
 
 
     
@@ -6194,6 +6196,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         //clear_valid_items($scope.recomment_clear_valid);
         $scope.recomment_clear_valid = '';
 
+        //show fade item if selected
         $scope.clickedStates[item.employee_name] = true;
 
         apply();
@@ -6220,7 +6223,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     $scope.removeDataEmployee = function (seq, seq_session) {
 
-        console.log("call to del")
         var arrdelete = $filter('filter')($scope.data_memberteam, function (item) {
             return (item.seq == seq && item.action_type == 'update');
         });

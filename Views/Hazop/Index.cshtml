@@ -3690,7 +3690,7 @@
                                                 <td class="">
                                                     <span class="mx-1">
                                                         <button class="btn btn-outline-secondary p-1 cursor-pointer"
-                                                                ng-class="{'btn-clicked': clickedStates[item.employee_name],'skeleton': loadingData}" 
+                                                                ng-class="{'btn-clicked': clickedStates[item.employee_name]}" 
                                                                 style="color: #2445fc; background-color: #f1f2f4; border-color: #2445fc;"
                                                                 data-toggle="tooltip" 
                                                                 data-placement="top" 
@@ -3705,23 +3705,22 @@
                                                     <a class=" text-decoration-none d-flex align-items-center">
                                                         <div class="avatar avatar-m" style="height: 20px; width: 20px;">
                                                             <img ng-if="item.employee_img " class="rounded-circle" 
-                                                                 ng-class="{ 'skeleton': loadingData }"
-                                                                 ng-src="../../{{ item.employee_img }}" alt="">
+                                                                
+                                                                 ng-src="../../{{ item.employee_img }}" alt=""><!--- ng-class="{ 'skeleton': loadingData }"---->
                                                         </div>
-                                                        <p class="mb-0 ms-3 text-1100 fw-bold"
-                                                            ng-class="{ 'skeleton skeleton-text skeleton-text__body': loadingData }">
+                                                        <p class="mb-0 ms-3 text-1100 fw-bold"><!---ng-class="{ 'skeleton skeleton-text skeleton-text__body': loadingData }"---->
                                                             {{item.employee_displayname}} 
                                                         </p>
                                                     </a>
                                                 </td>
                                                 <td class="text-center m-0">
-                                                    <p class="m-0" ng-class="{ 'skeleton skeleton-text skeleton-text__body': loadingData }">{{ item.employee_position }}</p>
+                                                    <p class="m-0">{{ item.employee_position }}</p>
                                                 </td>
                                                 <td class="text-center m-0">
-                                                    <p class="m-0" ng-class="{ 'skeleton skeleton-text skeleton-text__body': loadingData }">{{ item.employee_position + '-' + item.employee_displayname.split(' ')[0] }}</p>
+                                                    <p class="m-0">{{ item.employee_position + '-' + item.employee_displayname.split(' ')[0] }}</p>
                                                 </td>
                                                 <td class="text-center">
-                                                    <p class="m-0" ng-class="{ 'skeleton skeleton-text skeleton-text__body': loadingData }">{{ item.employee_email }}</p>
+                                                    <p class="m-0">{{ item.employee_email }}</p>
                                                 </td>
 
                                             </tr>

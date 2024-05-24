@@ -119,9 +119,10 @@
                                                         {{ pha_sub_software == 'hra' ? "Commnets" : 'Recommendations' }}
                                                     </th>
 
-                                                    <th class="sort align-middle" colspan="2" rowspan="1" scope="col">                                                        
+                                                    <th class="sort align-middle" colspan="2" rowspan="{{ pha_sub_software == 'hra' ? 2 : 1 }}" scope="col">
                                                         {{ pha_sub_software == 'hra' ? "Risk Rating" : 'Risk Assessment Matrix' }}
                                                     </th>
+
 
                                                     @* Implement 13 *@
                                                     <th class="sort align-middle " colspan="1" rowspan="3" scope="col" ng-if="flow_status != 14">
@@ -227,7 +228,7 @@
                                                     </th>
                                                 </tr>
 
-                                                <tr class="text-center">
+                                                <tr class="text-center" ng-if="pha_sub_software !== 'hra'">
                                                     <th class="sort align-middle " scope="col">
                                                         <div class="d-flex ">
                                                             <div class="align-items-center ">
@@ -478,7 +479,7 @@
                                                     </td>
 
                                                     @*Before action*@
-                                                    <td class="align-top  px-1">
+                                                    <td class="align-top  px-1" ng-if="pha_sub_software !== 'hra'">
                                                         <div class="d-flex ">
                                                             <div class="align-items-center">
                                                                 <h6 class="transition-none fs--2p-1 ps-0 text-center rounded-1 h-100 d-flex justify-content-center align-items-center"
@@ -518,7 +519,7 @@
                                                     </td>
 
                                                     @*After action*@
-                                                    <td class="align-top  px-1">
+                                                    <td class="align-top  px-1" ng-if="pha_sub_software !== 'hra'">
                                                         <div class="d-flex ">
                                                             <div class="align-items-center text-center">
                                                                 <h6 class="transition-none fs--2p-1 ps-0 text-center rounded-1 h-100 d-flex justify-content-center align-items-center"
@@ -558,6 +559,31 @@
                                                         </div>
                                                     </td>
 
+                                                    @*Initial risk*@
+                                                    <td class="align-top text-center" ng-if="pha_sub_software == 'hra'">
+                                                        <div class="p-1 rounded-3" style="background-color: #ccffcc; color: #006600" ng-if="item.remaining > 3">
+                                                            <h6 class="fw-semi-bold">{{}}</h6>
+                                                        </div>
+                                                        <div class="p-1 rounded-3" style="background-color: #ffffcc; color: #cccc00" ng-if="item.remaining > 0 && item.remaining < 3">
+                                                            <h6 class="fw-semi-bold">{{}}</h6>
+                                                        </div>
+                                                        <div class="p-1 rounded-3" style="background-color: #ffcccc; color: #cc0000" ng-if="item.remaining <= 0">
+                                                            <h6 class="fw-semi-bold">{{}</h6>
+                                                        </div>
+                                                    </td>
+
+                                                    @*Residual risk*@
+                                                    <td class="align-top text-center" ng-if="pha_sub_software == 'hra'">
+                                                        <div class="p-1 rounded-3" style="background-color: #ccffcc; color: #006600" ng-if="item.remaining > 3">
+                                                            <h6 class="fw-semi-bold">{}}</h6>
+                                                        </div>
+                                                        <div class="p-1 rounded-3" style="background-color: #ffffcc; color: #cccc00" ng-if="item.remaining > 0 && item.remaining < 3">
+                                                            <h6 class="fw-semi-bold">{{}}</h6>
+                                                        </div>
+                                                        <div class="p-1 rounded-3" style="background-color: #ffcccc; color: #cc0000" ng-if="item.remaining <= 0">
+                                                            <h6 class="fw-semi-bold">{{}}</h6>
+                                                        </div>
+                                                    </td>
                                                     @* Implement 13 *@
                                                     <td class="align-top px-0" ng-if="flow_status != 14">
                                                         <div class="d-flex justify-content-center align-items-center h-100 w-100 p-2">
