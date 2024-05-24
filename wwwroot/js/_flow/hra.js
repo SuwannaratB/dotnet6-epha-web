@@ -755,7 +755,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         var json_tasks = check_data_tasks();
         var json_descriptions = check_data_descriptions();
         var json_workers = check_data_workers();
-        var json_worksheet = check_data_worksheet();
+        var json_worksheet = "[]";
+        // var json_worksheet = check_data_worksheet();
 
         var flow_action = (action == 'submit_complete' ? 'submit' : action);
   $.ajax({
@@ -1315,8 +1316,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
 
     function setup_worksheet(subArea_list, worker_list) {
+        console.log(subArea_list)
+        console.log(worker_list)
         if (worker_list.length > 0) {
             const worksheet_list = [...worker_list]
+            console.log( $scope.data_hazard)
             // จัดเรียงข้อมูลตามฟิลด์ no_subarea
             $scope.data_hazard.sort(function(a, b) {
                 if (a.no_subareas !== b.no_subareas) {
@@ -1328,11 +1332,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             for (let i = 0; i < worker_list.length; i++) {
                 worksheet_list[i].sub_areas = subArea_list;
-                worksheet_list[i].hazards = angular.copy( $scope.data_hazard);
+                worksheet_list[i].descriptions = worker_list[i].descriptions;
+                worksheet_list[i].hazards = angular.copy( subArea_list[0].hazard);
                 worksheet_list[i].id_frequency_level = '';
                 worksheet_list[i].frequency_level = '';
-                
             }
+            console.log('all ',worksheet_list)
             return worksheet_list;
         }
       
@@ -2113,7 +2118,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             newInput.hazard[0].action_change = 0;
             newInput.hazard[0].action_new_row = 0;
             newInput.hazard[0].no_subareas = (item.no + 1);
-            newInput.hazard[0].health_hazard_list  =  $scope.filter_hazard_riskfactors;
+            // newInput.hazard[0].health_hazard_list  =  $scope.filter_hazard_riskfactors;
             
             var parent = angular.copy($scope.data_subareas_list);
 
@@ -2177,7 +2182,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             newInput.action_type = 'insert';
             newInput.action_change = 0;
             newInput.action_new_row = 0;
-            newInput.health_hazard_list  =  $scope.filter_hazard_riskfactors;
+            // newInput.health_hazard_list  =  $scope.filter_hazard_riskfactors;
             console.log('new ', newInput)
             // add
             var parent = angular.copy($scope.data_subareas_list[item_area.no - 1]);
@@ -2683,6 +2688,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             if (arr_items_def.length > 0) {
                 $scope.data_worksheet = $filter('filter')(arr_items_def, function (item) { return !(item.id == null); });
             }
+
+              $scope.data_worksheet_list = setup_worksheet($scope.data_subareas_list, $scope.data_tasks);
             apply();
             // console.log($scope.data_worksheet);
 
@@ -4574,30 +4581,49 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     $scope.changeRisk = function (hazard, index) {
         $scope.select_risk_index = index;
         $scope.chooseIndexRating = 0;
+        var hazard_index = $scope.select_hazard_index;
         // filter hazard_standard
-        console.log('hazard',hazard)
-        $scope.hazard_standard_list = $filter('filter')($scope.hazard_standard, function (item) { 
-            return (item.name == hazard.health_hazard); 
-        });
-        console.log($scope.hazard_standard_list)
-        hazard.id_health_hazard = $scope.hazard_standard_list[0].id
-        hazard.health_hazard = $scope.hazard_standard_list[0].name
-        hazard.health_effect_rating = $scope.hazard_standard_list[0].hazards_rating
-        hazard.action_change = 1
+        var list = $filter('filter')($scope.hazard_standard, function (item) { 
+            return (item.id == hazard.id_health_hazard); 
+        })[0];
 
-        console.log('all ==> ',$scope.data_subareas_list)
+        if (list) {
+            hazard.health_hazard = list.name;
+            hazard.health_effect_rating = list.hazards_rating
+            hazard.action_change = 1
+        }
+
+        console.log('hazard',hazard)
+        let set;
+        for (let i = 0; i < $scope.data_subareas_list[0].hazard.length; i++) {
+            if (hazard_index == i) {
+                $scope.data_subareas_list[0].hazard[i] = hazard;
+                set = true;
+            }
+        }
+
+        if (set) {
+            $scope.data_worksheet_list = setup_worksheet($scope.data_subareas_list, $scope.data_tasks);
+        }
+        // $scope.hazard_standard_list = $filter('filter')($scope.hazard_standard, function (item) { 
+        //     return (item.name == hazard.health_hazard); 
+        // });
+        // console.log($scope.hazard_standard_list)
+        // hazard.id_health_hazard = $scope.hazard_standard_list[0].id
+        // hazard.health_hazard = $scope.hazard_standard_list[0].name
+        // hazard.healthng_effect_rating = $scope.hazard_standard_list[0].hazards_rating
+        // hazard.action_chae = 1
+
+        console.log('sub ==> ',$scope.data_subareas_list)
+        console.log('all ==> ',$scope.data_worksheet_list)
     };
 
-    $scope.openModalRisk = function (item_area, item_hazard) {
-        $scope.select_area = item_area;
+    $scope.openModalRisk = function (item_hazard, index) {
         $scope.select_hazard = item_hazard;
-        $scope.select_health_hazard = '';
-        $scope.select_hazard = item_hazard;
-
-        $scope.hazard_standard_list = $filter('filter')($scope.hazard_standard, function (item) { 
-            return (item.name == $scope.select_hazard.health_hazard); 
-        });
-        console.log('select_hazard ',$scope.select_hazard)
+        $scope.select_hazard_index = index;
+        // $scope.hazard_standard_list = $filter('filter')($scope.hazard_standard, function (item) { 
+        //     return (item.name == $scope.select_hazard.health_hazard); 
+        // });
         $('#modalRisk').modal('show');
     };
 
@@ -4614,15 +4640,23 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     $scope.addStaff = function(item) {
         var new_staff = {
             id: 0,
+            id_worker_group: 0,
             name: item.text_add,
             user_name: item.text_add.toUpperCase(),
             user_displayname :item.text_add,
+            remove: true
         }
 
         item.worker_list.push(new_staff)
         item.text_add = "";
         console.log(new_staff)
         console.log(item)
+    }
+
+    $scope.removeStaff = function(item, index) {
+        item.worker_list = $filter('filter')(item.worker_list, function (item,idx) { 
+            return (idx != index); 
+        });
     }
 
     $scope.processExposure = function (hazard){

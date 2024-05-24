@@ -1021,16 +1021,17 @@
                                                                 {{item_m.name}}
                                                             </option>
                                                         </select> 
+
                                                         @* master_hazard_riskfactors *@
                                                         <span class="mx-2"  style="width: 30%;">
                                                             <button ng-if="!item_list.health_hazard" class="btn btn-outline-secondary btn-sm w-100 h-100" 
                                                                 style="border: 1px solid #cbd0dd " 
-                                                                ng-click="openModalRisk(item,item_list)">
+                                                                ng-click="openModalRisk(item_list, index)">
                                                                 Please select
                                                             </button>
                                                             <button ng-if="item_list.health_hazard" class="btn btn-outline-secondary btn-sm w-100 h-100" 
                                                                 style="border: 1px solid #cbd0dd " 
-                                                                ng-click="openModalRisk(item,item_list)">
+                                                                ng-click="openModalRisk(item_list, index)">
                                                                 {{item_list.health_hazard}}
                                                             </button>
                                                         </span>
@@ -1046,7 +1047,7 @@
                                                                     'bg-warning': (item_list.health_effect_rating == '3') 
                                                                 }"  
                                                                 ng-if="item_list.health_effect_rating"
-                                                                ng-click="openModalRisk(item,item_list)">
+                                                                ng-click="openModalRisk(item_list, index)">
                                                                 {{item_list.health_effect_rating}}
                                                             </div>
                                                             @* icon *@
@@ -1196,7 +1197,15 @@
                                                 <td class="align-top rating px-1 d-flex flex-column align-items-center justify-content-start" >
                                                     @*<div class="d-flex justify-content-start w-100 ps-2"
                                                          ng-repeat="workers in item.worker_list">
-                                                        <p class="text-1100 text-start fw-bold">{{workers.user_displayname}}</p>
+                                                        <p class="flex-1 text-1100 text-start fw-bold" style="max-width: 244px">{{workers.user_displayname}}</p>
+                                                        <del ng-if="!workers.remove" class="flex-1">
+                                                            Remove
+                                                        </del>
+                                                        <div ng-if="workers.remove" 
+                                                            class="flex-1 text-danger cursor-pointer" 
+                                                            ng-click="removeStaff(item, $index)">
+                                                            Remove
+                                                        </div>
                                                     </div>
                                                     <div class="container-add-staff">
                                                         <input class="input-add-staff" ng-model="item.text_add" type="text">
@@ -1384,7 +1393,11 @@
                                                     
                                                     <td>{{ item.worker_group }}</td>
 
-                                                    <td>&nbsp;</td>
+                                                    <td>
+                                                        <div  class="box" ng-repeat="item_dec in item.descriptions">
+                                                            {{ item_dec.descriptions }}
+                                                        </div>
+                                                    </td>
 
                                                     <td>
                                                         <div class="d-flex flex-column" ng-repeat="item_sub in item.sub_areas">
@@ -1416,12 +1429,13 @@
                                                     <td class="" >
                                                         <div class="d-flex justify-content-center box" 
                                                             ng-repeat="hazard in item.hazards">
-                                                            <div>
+                                                            <div ng-if="hazard.health_effect_rating">
                                                                 <div class="effect-rating "
-                                                                ng-class="{
-                                                                'bg-success': (hazard.health_effect_rating == '1' || hazard.health_effect_rating == '2'),
-                                                                'bg-warning': (hazard.health_effect_rating == '3') 
-                                                                }" >
+                                                                    ng-click="openModalRisk(hazard, $index)"
+                                                                    ng-class="{
+                                                                    'bg-success': (hazard.health_effect_rating == '1' || hazard.health_effect_rating == '2'),
+                                                                    'bg-warning': (hazard.health_effect_rating == '3') 
+                                                                    }" >
                                                                 {{ hazard.health_effect_rating }}
                                                             </div>
                                                             </div>
@@ -2383,17 +2397,29 @@
                             <table class="table table-sm fs--1 mb-0">
                                 <thead class=" text-uppercase bg-white">
                                     <tr class="text-center">
-                                        <th class="text-center" style="width: 10%;">select</th>
+                                        <th class="text-center" style="width: 10%;">Select</th>
                                         <th class="text-start" style="width: 70%;">RISK FACTOR ({{master_hazard_riskfactors.length}})</th>
-                                        <th class="text-start" style="width: 20%;">rating</th>
-
+                                        <th class="text-center" style="width: 10%;">Rating</th>
+                                        <th class="text-center" style="width: 10%;">Type</th>
                                     </tr>
                                 </thead>
                                 <tbody class=" list">
                                     <tr class="hover-actions-trigger btn-reveal-trigger position-static text-center"
-                                        ng-repeat="item in master_hazard_riskfactors_list">
+                                        ng-repeat="item in hazard_standard">
 
                                         <td class="text-center" style="width: 10%;">
+                                            <input type="radio" 
+                                                id="risk"
+                                                name="risk"  
+                                                ng-model="select_hazard.id_health_hazard"
+                                                ng-value="item.id"
+                                                style="cursor: pointer; width: 22px; height: 22px;"
+                                                ng-change="changeRisk(select_hazard, $index)"
+                                                @* ng-click="changeRisk(select_hazard, $index)" *@
+                                            >
+                                       </td>
+
+                                        @* <td class="text-center" style="width: 10%;">
                                             <input type="radio" 
                                                 id="risk"
                                                 name="risk"  
@@ -2402,16 +2428,33 @@
                                                 style="cursor: pointer; width: 22px; height: 22px;"
                                                 ng-change="changeRisk(select_hazard, $index)"
                                                 ng-click="changeRisk(select_hazard, $index)">
-                                       </td>
+                                       </td> *@
 
                                         <td class="text-start" style="width: 70%;">{{item.name}}</td>
 
-                                        <td class="text-center" style="width: 20%;">
-                                            @* health_effect_rating *@
+                                        <td class="text-center" style="width: 10%;">
+                                            <div class="d-flex align-items-center justify-content-center" style="width: 100%;">
+                                                <div ng-if="item.hazards_rating">
+                                                    <div class="effect-rating"
+                                                        ng-class="{
+                                                            'bg-success': (item.hazards_rating == '1' || item.hazards_rating == '2'),
+                                                            'bg-warning': (item.hazards_rating == '3') 
+                                                        }" 
+                                                        ng-click="chooseRating(select_hazard.health_hazard, $index)"
+                                                        >
+                                                        {{item.hazards_rating}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+
+                                          <td class="text-center" style="width: 10%;">{{item.standard_type_text}}</td>
+
+                                        @* <td class="text-center" style="width: 20%;">
                                             <div class="d-flex align-items-center justify-content-center gap-2" 
                                                 style="width: 20%;"
                                                 ng-if="select_hazard.health_hazard == item.name">
-                                                @* rating *@
+                                
                                                 <div class="effect-rating"
                                                     ng-repeat="item in hazard_standard_list"
                                                     ng-class="{
@@ -2419,56 +2462,16 @@
                                                         'bg-warning': (item.hazards_rating == '3') 
                                                     }" 
                                                     ng-class="{'active':chooseIndexRating == $index}"
-                                                    @* ng-if="chooseIndexRating == $index" *@
-                                                    ng-click="chooseRating(select_hazard.health_hazard, $index)"
-                                                    @* ng-class="{'mr-27': (item_list.count_riskfactors <= 1)}" *@>
+                                                    ng-click="chooseRating(select_hazard.health_hazard, $index)" >
                                                     {{item.hazards_rating}}
                                                 </div>
-                                                @* icon *@
-                                                @* <div class="font-sans-serif btn-reveal-trigger position-static" 
-                                                    ng-class="{'d-none': !(tab_general_active)}"
-                                                    ng-if="item_list.health_effect_rating && item_list.count_riskfactors > 1">
-                                                    <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 p-1"
-                                                            type="button" 
-                                                            data-bs-toggle="dropdown" 
-                                                            data-boundary="window" 
-                                                            aria-haspopup="true"
-                                                            aria-expanded="false" 
-                                                            data-bs-reference="parent"
-                                                            ng-click="chooseRiskRating(item_list)">
-                                                        <span class="fas fa-cog text-info"></span>
-                                                    </button>
-                                                    <div class="dropdown-menu dropdown-menu-end py-2">
-                                                        <div class="d-flex align-items-center justify-content-start px-2 gap-2 flex-wrap"
-                                                            style="max-width: 177px;">
-                                                            <div ng-repeat="item_sub in sub_hazard_riskfactors" 
-                                                                class="d-flex align-items-center justify-content-center">
-                                                                <div class="effect-rating bg-danger" 
-                                                                    ng-click="changeRiskRating(item_list, item_sub)">
-                                                                    {{item_sub.hazards_rating}}
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div> *@
                                             </div>
-                                        </td>
+                                        </td> *@
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
                     </div>
-
-                    @* <div class="mb-4 d-flex flex-column gap-2">
-                        <div class="d-flex justify-content-start align-items-center gap-2" 
-                                ng-repeat="item in master_hazard_riskfactors">
-                                <input type="radio" 
-                                        id="risk"
-                                        name="risk"  
-                                       style="cursor: pointer; width: 30px; height: 30px;">
-                                <label for="risk"><b>{{item.name}}</b></label>
-                        </div>
-                    </div> *@
                 </div>
             </div>
         </div>
