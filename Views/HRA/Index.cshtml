@@ -1497,11 +1497,18 @@
                                                     </td>
 
                                                     <td class="" >
-                                                        <div class="box" ng-repeat="hazard in item.hazards">
+                                                       <div class="box text-center" 
+                                                            style="min-width: max-content; padding-top: 7px; font-size: 13px; text-align: center;"
+                                                            ng-repeat="hazard in item.hazards">
+                                                            <p ng-if="hazard.id_exposure_level"
+                                                                ng-repeat="item_m in master_exposure_level | filter:{ id: hazard.id_exposure_level }">
+                                                                {{ item_m.name }}
+                                                            </p>
+                                                        </div>
+                                                        @* <div class="box" ng-repeat="hazard in item.hazards">
                                                             <select class="form-select form-select-sm rounded-1" 
                                                                 ng-if="tab_worksheet_active"
                                                                 ng-class="{'disabled-link':(!tab_worksheet_active)}"
-                                                                @* ng-change="actionChangeWorksheet(item,item.seq,'frequency_level')" *@
                                                                 ng-change="actionChangeFrequencyLevel(hazard)"
                                                                 ng-model="hazard.id_exposure_level" 
                                                                 style="min-width: 100px;"
@@ -1510,7 +1517,7 @@
                                                                     {{item_m.name}}
                                                                 </option>
                                                             </select>
-                                                        </div>
+                                                        </div> *@
                                                     </td>
 
                                                     <td>
