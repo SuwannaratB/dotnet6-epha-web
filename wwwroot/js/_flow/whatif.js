@@ -1562,21 +1562,47 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 $scope.data_header = JSON.parse(replace_hashKey_arr(arr.header));
                 set_form_action(action_part_befor, !action_submit, page_load);
 
-
                 if($scope.params != 'edit_approver'){
                     $scope.action_owner_active = true;
                 }  
-                
-                if($scope.params === 'edit_action_owner'){
-                    $scope.action_owner_active = true;
-                } 
-                if($scope.params === 'edit' && $scope.flow_role_type === 'admin') {
-                    $scope.tab_general_active = true;
-                    $scope.tab_task_active = true;
-                    $scope.tab_worksheet_active = true;
-                    $scope.tab_managerecom_active = true;
 
-                    $scope.save_type = true;
+                console.log("$scope.params",$scope.params)
+
+                if($scope.params !== null){
+                    console.log("$scope.params",$scope.params)
+
+                    if($scope.params != 'edit_approver'){
+                        $scope.action_owner_active = true;
+                    }  
+                    
+    
+                    if($scope.params !== 'edit') {
+                        $scope.tab_general_active = false;
+                        $scope.tab_node_active = false;
+                        $scope.tab_worksheet_active = false;
+                        $scope.tab_managerecom_active = false;
+                        $scope.tab_approver_active = false;
+    
+                        if($scope.params === 'edit_action_owner'){
+                            $scope.action_owner_active = true;
+                        } 
+    
+                        if($scope.params === 'edit_approver'){
+                            $scope.action_owner_active = false;
+    
+                        }  
+    
+                    }
+    
+                    if($scope.params === 'edit' && $scope.flow_role_type === 'admin') {
+                        $scope.tab_general_active = true;
+                        $scope.tab_node_active = true;
+                        $scope.tab_worksheet_active = true;
+                        $scope.tab_managerecom_active = true;
+                        $scope.tab_approver_active = true;
+    
+                        $scope.save_type = true;
+                    }
                 }
 
                 //ตรวจสอบเพิ่มเติม
@@ -5686,7 +5712,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             }
             
-            $('#modalEmployeeAdd').modal('hide');
         }
 
         clear_valid_items($scope.recomment_clear_valid);
@@ -5694,14 +5719,16 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         $scope.formData = $scope.getFormData();
 
-        apply();
-
-        if (xformtype == "owner" || xformtype == "approver_ta3") {
+        if (xformtype == "owner" || xformtype == "approver_ta3" || xformtype == "edit_approver") {
             $('#modalEmployeeAdd').modal('hide');
+
+            $scope.clearFormData();
         } else {
             $('#modalEmployeeAdd').modal('show');
         }
         
+        apply();
+
     };
 
     $scope.clearFormData = function() {

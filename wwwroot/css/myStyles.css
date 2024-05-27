@@ -221,7 +221,8 @@ background-color: #3e8e41;
 .form-control,
 .form-select,
 .form-check-input,
-a .dropdown-item {
+a .dropdown-item,
+a {
     cursor: pointer;
 }
 

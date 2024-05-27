@@ -25,6 +25,8 @@
 
     <script src="~/assets/js/all.min.js"></script> 
 
+    <script src="employee.js"></script>
+
     <link rel="stylesheet" href="~/css/myStyles.css">
 }
 
@@ -148,6 +150,8 @@
         </div>
 
     </div>
+
+    {{"tab_approver_active   " + tab_approver_active}}
 
     <div class="row g-0">
         <div class="col-12 ">
@@ -615,7 +619,7 @@
                                                     <th class="align-middle text-center" style="font-size: 10px;" rowspan="2">No</th>
                                                     <th class="align-middle text-center" style="font-size: 10px;" rowspan="2">
                                                         Member team {{(data_general[0].expense_type=='CAPEX' && data_general[0].sub_expense_type=='Normal')?' and Approver':''}}
-                                                        <span class="fa-stack fa-lg cursor-pointer" 
+                                                        <span class="fa-stack fa-lg cursor-pointer p-1" 
                                                             data-toggle="tooltip" 
                                                             data-placement="top" 
                                                             title="" 
@@ -1329,10 +1333,10 @@
                         <div class="m-3 row  gx-0 align-items-center" ng-if="flow_role_type == 'admin' && tab_worksheet_active">
                             <div class="card px-2 pb-2 ">
                                 <div class="row g-3 justify-content-between align-items-center pt-2 pb-3">
-                                    <div class="col-10">
+                                    <div class="col-6">
                                         <h5 class="text-900 mb-0"> <span class=" me-2 text-primary"><B>|</B></span><b class="text-danger"> * </b> Risk Assessment Matrix</h5>
                                     </div>
-                                    <div class="col-2 d-none">
+                                    <div class="col-6">
                                         <span class="mx-1 d-flex" style="float:right;">
                                             <a class="m-1 text-info cursor-pointer"
                                                href="{{y.document_definition_file_path}}" 
@@ -1363,13 +1367,13 @@
                                                     </a>
                                                 </h5>
                                             </div>
-                                            <div class="col-auto">
+                                            @*<div class="col-auto">
                                                 <span class="mx-1 d-flex" style="float:right;">
                                                     <a class="m-1 text-info cursor-pointer"
                                                        href="{{y.document_definition_file_path}}" target="_blank"
                                                        ng-repeat="y in master_ram | filter:{id: data_general[0].id_ram}">Definition Consequence Rating</a>
                                                 </span>
-                                            </div>
+                                            </div>*@
                                         </div>
                                     </div>
                                     <div class="row ps-2 mt-2" ng-if="((select_rows_level==4 && select_columns_level==4) || (select_rows_level==5 && select_columns_level==5))">
@@ -2435,6 +2439,7 @@
                                                     <div class="align-items-center text-end mt-1" style=" width: 30px;">
                                                         <button ng-style=" { 'background-color' : ((item.ram_befor_risk == 'H') ? 'red' : ((item.ram_befor_risk == 'M') ? 'yellow' : ((item.ram_befor_risk == 'L') ? 'green' : '#D3D3D3')) ) }"
                                                                 class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end"
+                                                                ng-class="{'disabled-link':(!tab_worksheet_active)}"
                                                                 type="button" 
                                                                 ng-click="openModalDataRAM_Worksheet(item,'r',item.seq,'befor')" 
                                                                 style="width: 30px; height:30;">
@@ -2545,6 +2550,7 @@
                                                         <button ng-style=" { 'background-color' : ((item.ram_after_risk == 'H') ? 'red' : ((item.ram_after_risk == 'M') ? 'yellow' : ((item.ram_after_risk == 'L') ? 'green' : '#D3D3D3')) ) }"
                                                                 class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end"
                                                                 type="button" 
+                                                                ng-class="{'disabled-link':(!tab_worksheet_active)}"
                                                                 ng-click="openModalDataRAM_Worksheet(item,'r',item.seq,'after')" 
                                                                 style="width: 30px;">
                                                             <div class="d-flex text-center" style=" width: 25px;">
@@ -2672,7 +2678,9 @@
                                                         </button>
                                                     </div>
 
-                                                    <select class="form-control px-1 " ng-if="item.action_project_team" ng-model="item.action_status">
+                                                    <select class="form-control px-1 "
+                                                            ng-class="{'disabled-link':(!tab_worksheet_active)}"
+                                                            ng-if="item.action_project_team" ng-model="item.action_status">
                                                         <option value="N/A">N/A</option>
                                                         <option value="Wait_for_design" title="Waiting for detail design">Waiting for detail design</option>
                                                     </select>
@@ -3122,7 +3130,7 @@
                                                 </div>
                                             </td> -->
 
-                                            <td class="align-top rating white-space-nowrap">
+                                            <td class="align-top rating white-space-nowrap" ng-class="{'disabled-link':(!tab_managerecom_active)}">
                                                 <input type="date" 
                                                         class="form-control datetimepicker rounded-1" 
                                                         ng-class="{'disabled-link':(!tab_managerecom_active)}"
@@ -3135,10 +3143,10 @@
                                                 </div>
                                             </td>
 
-                                            <td class="align-top rating white-space-nowrap">
+                                            <td class="align-top rating white-space-nowrap" ng-class="{'disabled-link':(!tab_managerecom_active)}">
                                                 <input type="date" 
                                                         class="form-control  datetimepicker rounded-1" 
-                                                        ng-class="{'disabled-link':(!tab_managerecom_active)}"
+                                                       ng-class="{'disabled-link':(!tab_managerecom_active)}"
                                                        placeholder="End Date dd/mm/yyyy"
                                                        ng-model="item.estimated_end_date"
                                                        ng-change="actionChangeWorksheet(item,item.seq,'')">
@@ -3174,7 +3182,7 @@
                                                 </div>
                                             </td>
 
-                                            <td class="align-top rating white-space-nowrap ">
+                                            <td class="align-top rating white-space-nowrap " ng-class="{'disabled-link':(!tab_managerecom_active)}">
                                                 <div class="d-flex align-items-center text-end ">
                                                     <div class="align-items-center ">
                                                         <p class="transition-none fs--2p-1 ps-0 text-center rounded-1 cursor-pointer"
@@ -3299,7 +3307,7 @@
                                                    
                                                     </div>
                                                 </td>
-                                                <td class="align-top white-space-nowrap">
+                                                <td class="align-top white-space-nowrap" ng-class="{'disabled-link':(!tab_approver_active)}">
                                                     <div class="col-md-12 p-1 ps-3 text-start" ng-if="!(item.approver_action_type == 2 || data_header[0].pha_status != 21)" >
                                                         <div class="form-check form-check-inline cursor-pointer p-0">
                                                             <span class="fa-solid far fa-file-pdf text-danger" style="font-size:15px;" ng-click="confirmExport('hazop_report','pdf')"></span>
@@ -3331,7 +3339,7 @@
                                                     </div>
 
                                                 </td>
-                                                <td class="align-top white-space-nowrap text-start">
+                                                <td class="align-top white-space-nowrap text-start" ng-class="{'disabled-link':(!tab_approver_active)}">
 
                                                     <div class="col-md-12 p-1 ps-3" ng-if="!(item.approver_action_type == 2 || data_header[0].pha_status != 21)" 
                                                          ng-class="{ 'no-drop': !canAccess(item) }">
@@ -3346,10 +3354,10 @@
                                                     </div>
                                                     <div class="col-md-12 p-1 ps-3" ng-if="(item.approver_action_type == 2 || data_header[0].pha_status != 21)">
 
-                                                        <p>Comment: {{item.comment}}</p>
+                                                        <p ng-class="{'disabled-link':(!tab_approver_active)}" >Comment: {{item.comment}}</p>
                                                     </div>
                                                 </td>
-                                                <td class="align-top px-1" style="min-width:200px;">
+                                                <td class="align-top px-1" style="min-width:200px;" ng-class="{'disabled-link':(!tab_approver_active)}">
                                                     @* {{item.seq}} *@
                                                     <div class=" p-0 cursor-pointer " 
                                                          ng-repeat="item_x in data_drawing_approver  | filter:{id_approver : item.seq}  ">
@@ -3443,7 +3451,7 @@
                                                         </label>
                                                     </div>
                                                 </td>
-                                                <td class="align-top px-0 pt-0 ">
+                                                <td class="align-top px-0 pt-0 " ng-class="{'disabled-link':(!tab_approver_active)}">
                                                     <div class="d-flex"                                                          
                                                          ng-class="{ 'no-drop': !canAccess(item), 'cursor-pointer': canAccess(item) }">
 
@@ -3592,9 +3600,17 @@
          aria-hidden="true" style="display: none;">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content scrollbar" style="max-height: calc(100vh - 100px); overflow-y:auto;">
-                <div class="modal-header" ng-if="selectDatFormType === 'member' || selectDatFormType === 'approver'">
+
+                <employee-table data="data" header="header" icon="icon" 
+                    is-new-row="isNewRow" 
+                    style-table="styleTable" 
+                    condition-empty-row="conditionEmptyRow" 
+                    addrow="addRow()">
+                </employee-table>
+
+                <div class="modal-header" ng-if="selectDatFormType === 'member' || selectDatFormType === 'approver' || params === 'edit_approver'">
                      <!-- For form_type === 'member' or 'approver' -->
-                    <div ng-if="selectDatFormType === 'member' || selectDatFormType === 'approver'">
+                    <div > <!------ng-if="selectDatFormType === 'member' || selectDatFormType === 'approver'"----->
                         <h5 class="text-900 mb-0" data-anchor="data-anchor" id="modalEmployeeCheckLabel">
                             <span class="me-2 text-primary"><B>|</B></span> Search Employee/Contract
                         </h5>
@@ -3696,8 +3712,9 @@
                                                                 data-placement="top" 
                                                                 title="choose Employee"
                                                                 ng-click="choosDataEmployee(item)">
-                                                            <span class="fa-solid fa-user-plus" ng-if="selectDatFormType !== 'owner'">Add</span>
-                                                            <span class="fa-solid fa-user-check" ng-if="selectDatFormType === 'owner'">selecte</span>
+                                                            <span class="fa-solid fa-user-plus" ng-if="selectDatFormType !== 'owner' && params !== 'edit_approver'">Add</span>
+                                                            <span class="fa-solid fa-user-check" ng-if="selectDatFormType === 'owner' || params === 'edit_approver'">selecte</span>
+                                                            <span class="fa-solid fa-paper-plane" ng-if="selectDatFormType ==== 'approver_ta3' && params !== 'edit_approver'">selecte</span>
                                                         </button>
                                                     </span>
                                                 </td>
@@ -3739,7 +3756,7 @@
                                             </tr>                                   
                                     </tbody>
                                 </table>
-                                <div class="pagination-container" ng-show="employeelist_page.length > 10">
+                                <div class="pagination-container" ng-if="employeelist_show.length > 1">
                                     <button class="pagination-button" ng-disabled="currentPage === 1" ng-click="action_changepage('prevPage')">Previous</button>
                                     <!-- Page numbers -->
                                     <span class="pagination-info">Page {{currentPage }} of {{ totalPages}}</span>
@@ -3767,14 +3784,14 @@
                 </div>
 
                 <!------------show name after add   --------------->
-                <div class="modal-header bg-soft" ng-if="(selectDatFormType !== 'owner' && (data_memberteam || data_approver).length > 1 )">
+                <div class="modal-header bg-soft" ng-if="(selectDatFormType !== 'owner' &&  params !== 'edit_approver' && (data_memberteam || data_approver).length > 1 )">
                     <h5 class="text-900 mb-0">
                         <span class="me-2 text-primary"><B>|</B></span> {{ selectDatFormType === 'member' ? 'Member Team' : 'Approver' }}
                     </h5>
                 </div>
 
                 <div class="modal-body h-50"  
-                    ng-if="(selectDatFormType !== 'owner' && (data_memberteam || data_approver).length > 1 )">
+                    ng-if="(selectDatFormType !== 'owner' &&  params !== 'edit_approver' && (data_memberteam || data_approver).length > 1 )">
                     <div class="col-auto py-2" ng-repeat="item2 in (selectDatFormType === 'member' ? data_memberteam : data_approver) | filter:{id_session: selectdata_session }"
                         ng-if="!(item2.user_displayname == '' || item2.user_displayname == null)">
                         <div class="d-flex align-items-center p-1" style="height: 20px;">

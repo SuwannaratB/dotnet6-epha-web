@@ -1672,21 +1672,51 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 $scope.data_header = JSON.parse(replace_hashKey_arr(arr.header));
                 set_form_action(action_part_befor, !action_submit, page_load);
 
+                console.log("$scope.params",$scope.params)
+                console.log("$scope.tab_approver_active 0 ",$scope.tab_approver_active)
+
                 if($scope.params != 'edit_approver'){
                     $scope.action_owner_active = true;
                 }  
-                
-                if($scope.params === 'edit_action_owner'){
-                    $scope.action_owner_active = true;
-                } 
-                if($scope.params === 'edit' && $scope.flow_role_type === 'admin') {
-                    $scope.tab_general_active = true;
-                    $scope.tab_node_active = true;
-                    $scope.tab_worksheet_active = true;
-                    $scope.tab_managerecom_active = true;
 
-                    $scope.save_type = true;
+                if($scope.params !== null){
+                    console.log("$scope.params",$scope.params)
+
+                    if($scope.params != 'edit_approver'){
+                        $scope.action_owner_active = true;
+                    }  
+                    
+    
+                    if($scope.params !== 'edit') {
+                        $scope.tab_general_active = false;
+                        $scope.tab_node_active = false;
+                        $scope.tab_worksheet_active = false;
+                        $scope.tab_managerecom_active = false;
+                        $scope.tab_approver_active = false;
+    
+                        if($scope.params === 'edit_action_owner'){
+                            $scope.action_owner_active = true;
+                        } 
+    
+                        if($scope.params === 'edit_approver'){
+                            $scope.action_owner_active = false;
+    
+                        }  
+    
+                    }
+    
+                    if($scope.params === 'edit' && $scope.flow_role_type === 'admin') {
+                        $scope.tab_general_active = true;
+                        $scope.tab_node_active = true;
+                        $scope.tab_worksheet_active = true;
+                        $scope.tab_managerecom_active = true;
+                        $scope.tab_approver_active = true;
+    
+                        $scope.save_type = true;
+                    }
                 }
+
+                console.log("$scope.tab_approver_active 1 ",$scope.tab_approver_active)
                 // $scope.action_owner_active = true;
 
                 //ตรวจสอบเพิ่มเติม
@@ -1713,6 +1743,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         $scope.submit_type = false;
                     }
                 }
+
+                console.log("$scope.tab_approver_active after check",$scope.tab_approver_active)
 
                 if (true) {
 
@@ -1785,6 +1817,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                 }
 
+
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 if (jqXHR.status == 500) {
@@ -1805,6 +1838,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
 
     function set_form_action(action_part_befor, action_save, page_load) {
+
+        console.log("action_part_befor",action_part_befor)//1
+        console.log("action_save",action_save)//true
+        console.log("page_load",page_load)//true
 
         //แสดง tab ตาม flow
         $scope.tab_general_show = true;
@@ -1828,6 +1865,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.action_part = action_part_befor;
 
         var pha_status_def = Number($scope.data_header[0].pha_status);
+
+        console.log(pha_status_def,"pha_status_def")
 
         $scope.submit_review = false;
         if (Number(pha_status_def) == 81) {
@@ -1969,7 +2008,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.tab_managerecom_active = false;
             $scope.tab_approver_active = $scope.tab_managerecom_show;
 
+            console.log(" $scope.tab_approver_active",$scope.tab_approver_active)
             check_case_member_review();
+            console.log("$scope.tab_approver_active 00 ",$scope.tab_approver_active)
 
         }
         else if (pha_status_def == 22) {
@@ -2072,6 +2113,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.tab_node_active = true;
         }
 
+        console.log("$scope.pha_type_doc",$scope.pha_type_doc)
+
         if ($scope.pha_type_doc == 'review_document') {
             $scope.tab_general_active = false;
             $scope.tab_node_active = false;
@@ -2086,6 +2129,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.submit_type = false;
             $scope.submit_review = false;
         }
+
+        
+        console.log("$scope.tab_approver_active 0 ",$scope.tab_approver_active)
 
 
         $scope.date_to_approve_moc_text = '';
@@ -6043,6 +6089,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }, 2000);
     
         var paginatedItems = $scope.employeelist_page.slice(begin, end);
+
+        console.log("paginatedItems",paginatedItems)
         
         return paginatedItems;
     };
@@ -6192,6 +6240,49 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
             $('#modalEmployeeAdd').modal('hide');
         }
+        else if (xformtype == "approver_ta3"){
+
+            var arr_approver_TA2 = $filter('filter')($scope.data_approver, function (item) {
+                return (item.id == seq_session);
+            });
+
+            var arr_approver_TA3 = $filter('filter')($scope.data_approver_ta3, function (item) {
+                return (item.id_session == seq_session && item.user_name == employee_name);
+            });
+
+            
+            if (arr_approver_TA3.length == 0) {
+                //add new employee 
+                var seq = $scope.MaxSeqdata_approver_ta3;
+
+                var newInput = clone_arr_newrow($scope.data_approver_ta3_def)[0];
+                newInput.seq = seq;
+                newInput.id = seq;
+                newInput.no = (0);
+                newInput.id_session = Number(seq_session);
+                newInput.action_type = 'insert';
+                newInput.action_change = 1;
+
+                newInput.id_pha = arr_approver_TA2[0].id_pha
+                newInput.id_approver = seq_session;
+                newInput.approver_type = arr_approver_TA2[0].approver_type;
+
+                newInput.user_name = employee_name;
+                newInput.user_displayname = employee_displayname;
+                newInput.user_img = employee_img;
+
+                console.log(newInput)
+                $scope.data_approver_ta3.push(newInput);
+
+                console.log("arr_approver_TA3",$scope.data_approver_ta3)
+                running_no_level1($scope.data_approver_ta3, null, null);
+
+                $scope.MaxSeqdata_approver_ta3 = Number($scope.MaxSeqdata_approver_ta3) + 1
+
+            }
+            
+            $('#modalEmployeeAdd').modal('hide');
+        }
 
         //clear_valid_items($scope.recomment_clear_valid);
         $scope.recomment_clear_valid = '';
@@ -6199,15 +6290,15 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         //show fade item if selected
         $scope.clickedStates[item.employee_name] = true;
 
+        if (xformtype == "owner" || xformtype == "approver_ta3" || xformtype == "edit_approver") {
+            $('#modalEmployeeAdd').modal('hide');
+
+            $scope.clearFormData();
+        } else {
+        }
+        
         apply();
 
-        if (xformtype == "owner") {
-            $scope.clearFormData()
-            $('#modalEmployeeAdd').modal('hide');
-        }
-        else {
-            $('#modalEmployeeAdd').modal('show');
-        }
     };
 
     $scope.clearFormData = function() {
