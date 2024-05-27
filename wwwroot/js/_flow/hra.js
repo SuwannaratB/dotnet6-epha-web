@@ -1327,7 +1327,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     return a.no - b.no;
                 }
             });
-            console.log(subArea_list)
+            console.log('subArea_list',subArea_list)
             for (let i = 0; i < worker_list.length; i++) {
                 worksheet_list[i].sub_areas = subArea_list;
                 worksheet_list[i].descriptions = worker_list[i].descriptions;
@@ -4666,7 +4666,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
 
     $scope.processExposure = function (hazard){
-        console.log('hazard',hazard)
         hazard.exposure_band = hazard.exposure_band.replace(/[^0-9.]/g, '');
         // ตรวจสอบว่ามีจุดทศนิยมมากกว่าหนึ่งจุดหรือไม่
         var parts = hazard.exposure_band.split('.');
@@ -4770,6 +4769,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         
         // hazard.id_initial_risk_rating = id_exposure_rating;
         hazard.initial_risk_rating = compare.results;
+
+        // setup sub area tab2
+        // for (let i = 0; i < array.length; i++) {
+        //     const element = array[i];
+            
+        // }
+        console.log('data_subareas_list',$scope.data_subareas_list)
+        console.log('data_worksheet_list',$scope.data_worksheet_list)
     }
 
     function convertSubAreaToHazard() {
