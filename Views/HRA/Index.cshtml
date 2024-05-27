@@ -1834,12 +1834,14 @@
                                 <table class="table fs--2 mb-0">
                                     <thead class=" text-uppercase text-center">
                                         <tr>
-                                            <th class=" align-middle" colspan="1" rowspan="2">Recommen<br />dations<br />No</th>
-                                            <th class=" align-middle" colspan="1" rowspan="2">Task No.</th>
-                                            <th class=" align-middle" colspan="1" rowspan="2">Exposure Rating</th>
-                                            <th class=" align-middle" colspan="1" rowspan="2">Initial Risk Rating   </th>
-                                            <th class=" align-middle" colspan="1" rowspan="2">Type of Hazard</th>
+                                            <th class=" align-middle" colspan="1" rowspan="2">JOB TYPE/CHANGE TYPE</th>
+                                            <th class=" align-middle" colspan="1" rowspan="2">TASK OR ACTIVITY</th>
+                                            <th class=" align-middle" colspan="1" rowspan="2">SUB AREA</th>
                                             <th class=" align-middle" colspan="1" rowspan="2">Exposure Indicator</th>
+                                            <th class=" align-middle" colspan="1" rowspan="2">HEALTH EFFECT RATING</th>
+                                            <th class=" align-middle text-center" colspan="2" rowspan="1">
+                                                <b class="text-danger"> * </b>RISK RATING
+                                            </th>
                                             <th class=" align-middle" colspan="1" rowspan="2" ng-if="data_header[0].pha_status >12">Document File</th>
                                             <th class=" align-middle text-start" colspan="1" rowspan="2">Recommendation</th>
                                             <th class=" align-middle text-center" colspan="1" rowspan="2">Action<br />Status<br />(Items)</th>
@@ -1849,6 +1851,8 @@
                                             <th class=" align-middle" colspan="1" rowspan="2">Action Close Date</th>
                                         </tr>
                                         <tr>
+                                            <th class=" align-middle" scope="col" >INITIAL RISK RATING</th>
+                                            <th class=" align-middle" scope="col" >RESIDUAL RISK RATING</th>
                                             <th class=" align-middle" scope="col" >Start Date</th>
                                             <th class=" align-middle" scope="col" >End Date</th>
                                         </tr>
@@ -1862,20 +1866,36 @@
                                             <td class="align-top rating white-space-nowrap text-start">
                                                 <div class="ms-3">
                                                     <label>
-                                                        {{item.recommendations_no}} 
+                                                        {{item.worker_group}} 
                                                     </label>
                                                 </div>
                                             </td>
                                             
                                             <td class="align-top rating white-space-nowrap">
                                                 <div class="ms-3">
-                                                    <label>
-                                                        {{item.tasks_no+'.'}}
-                                                    </label>
+                                                        <div  class="box" ng-repeat="item_dec in item.descriptions">
+                                                            {{ item_dec.descriptions }}
+                                                        </div>
                                                 </div>
                                             </td>
 
                                             <td class="align-top rating white-space-nowrap">
+                                                <div class="ms-3">
+                                                        <div class="d-flex flex-column" ng-repeat="item_sub in item.sub_areas">
+                                                            <div class="box" 
+                                                                @* ng-style="{'margin-bottom': (item_sub.hazard.length * 56) + 'px'}" *@
+                                                                >
+                                                                {{ item_sub.sub_area }}
+                                                            </div>
+                                                            <div class="box empty" ng-repeat="n in [].constructor(item_sub.hazard.length - 1) track by $index">
+                                                                &nbsp;
+                                                            </div>
+                                                        </div>                                                    
+
+                                                </div>
+                                            </td>
+
+                                            <td class="align-top rating white-space-nowrap text-start">
                                                 <div class="ms-3">
                                                     <label>
                                                         {{item.exposure_rating}}
@@ -1890,22 +1910,28 @@
                                                     </label>
                                                 </div>
                                             </td>
-
-                                            <td class="align-top rating white-space-nowrap">
-                                                <div class="align-items-center ">
-                                                    <div class="font-sans-serif btn-reveal-trigger position-static  ">
-                                                        <p class="px-1 m-0  text-center text-1100 fw-bold"
-                                                           ng-repeat="item_ret in data_hazard | filter:{id:item.id_hazard}">{{  item_ret.type_hazard  }}</p>
-
-                                                    </div>
+  
+                                            <td class="align-top rating white-space-nowrap text-start">
+                                                <div class="ms-3">
+                                                    <label>
+                                                        {{item.residual_risk_rating}}
+                                                    </label>
                                                 </div>
                                             </td>
 
+                                        @*action owb=ner*@
                                             <td class="align-top rating white-space-nowrap">
                                                 <div class="ms-3">
-                                                    <label>
-                                                        {{item.responder_user_displayname}} 
-                                                    </label>
+                                                    <div class="d-flex justify-content-start w-100 ps-2" ng-show="item.id_worker_group">
+                                                        <button class="btn btn-outline-secondary p-0 cursor-pointer col-auto" style="color: #2445fc; background-color: #f1f2f4; border-color: #f1f2f4;"
+                                                                ng-click="openDataEmployeeAdd(item,'manage')">
+                                                            <span class="far fa-address-book fa-lg pe-1"></span>Add action owner
+                                                        </button>
+
+                                                    </div>  
+                                                    <div class="d-flex justify-content-start w-100 ps-2">
+                                                        <p class="text-1100 text-start fw-bold">{{item.user_displayname}}</p>
+                                                    </div>
                                                 </div>
                                             </td>
 
@@ -1941,13 +1967,10 @@
                                             </td>
 
                                             <td class="align-top rating white-space-nowrap">
-                                                <div class="d-flex align-items-center">
-                                                    <div class="mx-1">
-                                                        <textarea class="form-control form-control-sm " rows="3" type="text"
-                                                                  style="width: 200px;"
-                                                                  placeholder="Recommendations"
-                                                                  ng-model="item.recommendations"></textarea>
-                                                    </div>
+                                                <div class="ms-3">
+                                                    <label>
+                                                        {{item.recommendations}} 
+                                                    </label>
                                                 </div>
                                             </td>
 

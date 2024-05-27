@@ -1156,6 +1156,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         console.log('data_worksheet_list ==> ',$scope.data_worksheet_list)
                     }
 
+
                     //Approver
                     if (true) {
                         $scope.data_drawing_approver = arr.drawing_approver;
@@ -2372,6 +2373,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 }
             }
             console.log('all ==> ', $scope.data_tasks)
+            setup_worksheet($scope.data_tasks,'task','add')
+
         }
 
         $scope.removeDataTasks = function (item, index) {
@@ -2396,6 +2399,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
 
             console.log('newTask ==> ',$scope.data_tasks)
+            setup_worksheet($scope.data_tasks,'task','add')
         };
 
         //work or tasks
@@ -2807,6 +2811,45 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         };
 
+    }
+
+    if (true) {
+        //will set for manage to show just medium and high
+        function setup_worksheet(data,type,action) {
+            $scope.selectdata_session = 'x'
+            console.log("will set data for worksheet",data,type,action)
+
+            if (arr_items.length == 0) {
+
+                //add new data_work sheet 
+                // 1 group / 1hazard type / 1 factor/
+                var seq = '';
+
+                var newInput = clone_arr_newrow($scope.data_memberteam_def)[0];
+                newInput.seq = seq;
+                newInput.id = seq;
+                newInput.no = (0);
+                newInput.id_session = Number(seq_session);
+                newInput.action_type = 'insert';
+                newInput.action_change = 1;
+
+                newInput.user_name = employee_name;
+                newInput.user_displayname = employee_displayname;
+                newInput.user_img = employee_img;
+                newInput.user_title = employee_position;
+
+                //set up if add new data from list of worker
+                newInput.project_team_text = ''; // === dataworkgroup
+
+
+
+                $scope.data_memberteam.push(newInput);
+                running_no_level1($scope.data_memberteam, null, null);
+
+                $scope.MaxSeqDataMemberteam = Number($scope.MaxSeqDataMemberteam) + 1
+            }
+
+        }
     }
 
     //action in page
@@ -3938,6 +3981,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             });
 
             console.log("Updated data_workers", $scope.data_workers);
+            setup_worksheet($scope.data_tasks,'task','add')
 
         }
 
