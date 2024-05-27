@@ -528,7 +528,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         $scope.data_worksheet = [];
 
-
         $scope.data_session_delete = [];
         $scope.data_memberteam_delete = [];
         $scope.data_approver_delete = [];
@@ -561,7 +560,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.searchdata = '';
         $scope.searchEmployee = '';
 
-
         $scope.searchdataMemberTeam = '';
         $scope.searchdataResponder = '';
         $scope.searchdataApprover = '';
@@ -574,6 +572,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             text: ''
         }
 
+        $scope.data_initial_risk = [
+            { id: 'Low', name: 'Low' },
+            { id: 'Meduim\r\n', name: 'Meduim' },
+            { id: 'High\r\n', name: 'High' },
+        ];
 
         // สร้างชั่วโมง (0-23)
         $scope.master_hours = [];
@@ -1054,6 +1057,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         $scope.master_unit_no = JSON.parse(replace_hashKey_arr(arr.unit_no)); // NAME OF AREA --> เลือกจากตาราง epha_m_business_unit
 
                         $scope.master_subarea = JSON.parse(replace_hashKey_arr(arr.subarea));
+                        $scope.master_subarea_location = JSON.parse(replace_hashKey_arr(arr.subarea_location));
                         $scope.master_hazard_type = JSON.parse(replace_hashKey_arr(arr.hazard_type));
                         $scope.master_hazard_riskfactors = JSON.parse(replace_hashKey_arr(arr.hazard_riskfactors));
                         $scope.master_hazard_riskfactors_list = JSON.parse(replace_hashKey_arr(arr.hazard_riskfactors));
@@ -1328,7 +1332,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     return a.no - b.no;
                 }
             });
-            console.log(subArea_list)
+            console.log('subArea_list',subArea_list)
             for (let i = 0; i < worker_list.length; i++) {
                 worksheet_list[i].sub_areas = subArea_list;
                 worksheet_list[i].descriptions = worker_list[i].descriptions;
@@ -3795,7 +3799,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 }
             }
             if (type_text == "sub_area") {
-                var arrText = $filter('filter')($scope.master_subarea, function (item) {
+                var arrText = $filter('filter')($scope.master_subarea_location, function (item) {
                     return (item.id == _arr.id_sub_area);
                 });
                 if (arrText.length > 0) {
@@ -4312,8 +4316,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     $scope.data_approver.push(newInput);
                     running_no_level1($scope.data_approver, null, null);
 
+                    newInput.no == 0 ? newInput.verified = true : newInput.verified = false;
                     $scope.MaxSeqdataApprover = Number($scope.MaxSeqdataApprover) + 1
-
+                    console.log('data_approver ',$scope.data_approver)
                 }
 
             }
@@ -4354,32 +4359,39 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             $('#modalEmployeeAdd').modal('show');
         };
+
         $scope.removeDataEmployee = function (seq, seq_session) {
+            const actions = $scope.selectDatFormType;
 
-            var arrdelete = $filter('filter')($scope.data_memberteam, function (item) {
-                return (item.seq == seq && item.action_type == 'update');
-            });
-            if (arrdelete.length > 0) { $scope.data_memberteam_delete.push(arrdelete[0]); }
-
-            $scope.data_memberteam = $filter('filter')($scope.data_memberteam, function (item) {
-                return !(item.seq == seq && item.id_session == seq_session);
-            });
-
-            //if delete row 1 clear to null
-            if ($scope.data_memberteam.length == 1 || $scope.data_memberteam.no == 1) {
-                var keysToClear = ['user_name', 'user_displayname'];
-
-                keysToClear.forEach(function (key) {
-                    $scope.data_memberteam[0][key] = null;
+            if (actions == 'member') {
+                var arrdelete = $filter('filter')($scope.data_memberteam, function (item) {
+                    return (item.seq == seq && item.action_type == 'update');
                 });
 
-                $scope.data_memberteam[0].no = 1;
+                if (arrdelete.length > 0) { $scope.data_memberteam_delete.push(arrdelete[0]); }
+    
+                $scope.data_memberteam = $filter('filter')($scope.data_memberteam, function (item) {
+                    return !(item.seq == seq && item.id_session == seq_session);
+                });
+                //if delete row 1 clear to null
+                if ($scope.data_memberteam.length == 1 || $scope.data_memberteam.no == 1) {
+                    var keysToClear = ['user_name', 'user_displayname'];
+    
+                    keysToClear.forEach(function (key) {
+                        $scope.data_memberteam[0][key] = null;
+                    });
+                    $scope.data_memberteam[0].no = 1;
+                }
+                running_no_level1($scope.data_memberteam, null, null)
             }
 
-            running_no_level1($scope.data_memberteam, null, null);
+            if (actions == 'approver') {
+                $scope.removeDataApprover(seq, seq_session)
+            }
+
+;
             apply();
         };
-
 
         $scope.clearFormData = function() {
             $scope.employeelist_show = [];
@@ -4391,8 +4403,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             //$scope.formData_outsider = [];
         };
     
-
-
         $scope.removeDataApprover = function (seq, seq_session) {
 
             var arrdelete = $filter('filter')($scope.data_approver, function (item) {
@@ -4429,6 +4439,15 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
             item.approver_type = 'approver';
             apply();
+        }
+
+        $scope.actionVerified = function (item) {
+            // console.log(item);
+            $scope.data_approver.forEach(el => {
+                if (el.verified) {
+                    el.verified = false;
+                }
+            });
         }
 
     }
@@ -4667,7 +4686,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
 
     $scope.processExposure = function (hazard){
-        console.log('hazard',hazard)
         hazard.exposure_band = hazard.exposure_band.replace(/[^0-9.]/g, '');
         // ตรวจสอบว่ามีจุดทศนิยมมากกว่าหนึ่งจุดหรือไม่
         var parts = hazard.exposure_band.split('.');
@@ -4771,6 +4789,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         
         // hazard.id_initial_risk_rating = id_exposure_rating;
         hazard.initial_risk_rating = compare.results;
+
+        // setup sub area tab2
+        // for (let i = 0; i < array.length; i++) {
+        //     const element = array[i];
+            
+        // }
+        console.log('data_subareas_list',$scope.data_subareas_list)
+        console.log('data_worksheet_list',$scope.data_worksheet_list)
     }
 
     function convertSubAreaToHazard() {
