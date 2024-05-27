@@ -145,7 +145,7 @@
                 if (!user_name || !pass_word) { return; }
 
                 $.ajax({
-                    url: "Login/Authentication",
+                    url: "Login/Authentication", 
                     data: '{"user_name":"' + user_name + '","pass_word":"' + pass_word + '"}',
                     type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
                     beforeSend: function () {
@@ -179,6 +179,8 @@
 
 
         });
+
+
 
     </script>
 }
