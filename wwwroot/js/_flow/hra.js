@@ -1054,6 +1054,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         $scope.master_unit_no = JSON.parse(replace_hashKey_arr(arr.unit_no)); // NAME OF AREA --> เลือกจากตาราง epha_m_business_unit
 
                         $scope.master_subarea = JSON.parse(replace_hashKey_arr(arr.subarea));
+                        $scope.master_subarea_location = JSON.parse(replace_hashKey_arr(arr.subarea_location));
                         $scope.master_hazard_type = JSON.parse(replace_hashKey_arr(arr.hazard_type));
                         $scope.master_hazard_riskfactors = JSON.parse(replace_hashKey_arr(arr.hazard_riskfactors));
                         $scope.master_hazard_riskfactors_list = JSON.parse(replace_hashKey_arr(arr.hazard_riskfactors));
@@ -3793,7 +3794,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 }
             }
             if (type_text == "sub_area") {
-                var arrText = $filter('filter')($scope.master_subarea, function (item) {
+                var arrText = $filter('filter')($scope.master_subarea_location, function (item) {
                     return (item.id == _arr.id_sub_area);
                 });
                 if (arrText.length > 0) {
