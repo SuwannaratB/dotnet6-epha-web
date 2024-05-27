@@ -2332,6 +2332,7 @@
                                                     <div class="align-items-center text-end mt-1" style=" width: 30px;">
                                                         <button ng-style=" { 'background-color' : ((item.ram_befor_risk == 'H') ? 'red' : ((item.ram_befor_risk == 'M') ? 'yellow' : ((item.ram_befor_risk == 'L') ? 'green' : '#D3D3D3')) ) }"
                                                                 class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end"
+                                                                ng-class="{'disabled-link':(!tab_worksheet_active)}"
                                                                 type="button" 
                                                                 ng-click="openModalDataRAM_Worksheet(item,'r',item.seq,'befor')" 
                                                                 style="width: 30px;">
@@ -2499,13 +2500,32 @@
                                                     </div>
                                                 </td>
                                                 <td class="align-top white-space-nowrap">
-                                                    <div class="col-md-12 p-1 ps-3">
-                                                        <label class="text-1100 fw-bold ">
-                                                            {{item.user_displayname}}
-                                                        </label>
+                                                    <div class="col-md-12 p-1 ps-3 text-start">
+                                                        <div class="d-flex align-items-center">
+                                                            <div ng-if="params == 'edit_approver'">
+                                                                <button ng-click="
+                                                                    openDataEmployeeAdd(item,'edit_approver',$index); 
+                                                                    recommentAction_valid(item);" 
+                                                                    class="btn btn-link px-0 mx-1"
+                                                                    data-toggle="tooltip" 
+                                                                    title="Add Employee">
+                                                                <span class="far fa-address-book"></span>
+                                                                </button>
+                                                                <button class="btn btn-sm transition-none btn-reveal fs--2 p-1 " 
+                                                                        type="button"
+                                                                        ng-click="removeDataEmpWorkSheet('worksheet',item.seq)"
+                                                                        ng-if="item.responder_id>0">
+                                                                    <span class="fas fa-times text-danger"></span>
+                                                                </button>
+                                                            </div>
+                                                            <label class="text-1100 fw-bold ">
+                                                                {{item.user_displayname}}
+                                                            </label>
+                                                        </div>
+                                                   
                                                     </div>
                                                 </td>
-                                                <td class="align-top white-space-nowrap  text-start">
+                                                <td class="align-top white-space-nowrap  text-start" ng-class="{'disabled-link':(!tab_approver_active)}">
                                                     <div class="col-md-12 p-1 ps-3 text-start" 
                                                         ng-class="{ 'no-drop': !canAccess(item), 'cursor-pointer': canAccess(item) }"
                                                         ng-if="!(item.approver_action_type == 2 || data_header[0].pha_status != 21)   ">
@@ -2549,7 +2569,7 @@
                                                     </div>
 
                                                 </td>
-                                                <td class="align-top white-space-nowrap text-start">
+                                                <td class="align-top white-space-nowrap text-start" ng-class="{'disabled-link':(!tab_approver_active)}">
 
                                                     <div class="col-md-12 p-1 ps-3" 
                                                         ng-class="{ 'no-drop': !canAccess(item), 'cursor-pointer': canAccess(item) }"
@@ -2569,7 +2589,7 @@
                                                         </label>
                                                     </div>
                                                 </td>
-                                                <td class="align-top px-1 text-start" style="min-width:200px;">
+                                                <td class="align-top px-1 text-start" style="min-width:200px;" ng-class="{'disabled-link':(!tab_approver_active)}">
                                                     <div class=" p-0 cursor-pointer "
                                                          ng-repeat="item_x in data_drawing_approver  | filter:{id_approver : item.seq}  ">
                                                         @* {{item_x.document_file_size}} xx {{item_x.document_file_name}}   *@
@@ -2663,7 +2683,7 @@
                                                         </label>
                                                     </div>
                                                 </td>
-                                                <td class="align-top px-0 pt-0 ">
+                                                <td class="align-top px-0 pt-0 " ng-class="{'disabled-link':(!tab_approver_active)}">
                                                     <div class="d-flex"
                                                         ng-class="{ 'no-drop': !canAccess(item), 'cursor-pointer': canAccess(item) }">
 
@@ -2893,8 +2913,9 @@
                                                                 data-placement="top" 
                                                                 title="choose Employee"
                                                                 ng-click="choosDataEmployee(item)">
-                                                            <span class="fa-solid fa-user-plus" ng-if="selectDatFormType !== 'owner'">Add</span>
-                                                            <span class="fa-solid fa-user-check" ng-if="selectDatFormType === 'owner'">selecte</span>
+                                                            <span class="fa-solid fa-user-plus" ng-if="selectDatFormType !== 'owner' && params !== 'edit_approver'">Add</span>
+                                                            <span class="fa-solid fa-user-check" ng-if="selectDatFormType === 'owner' || params === 'edit_approver'">selecte</span>
+                                                            <span class="fa-solid fa-paper-plane" ng-if="selectDatFormType ==== 'approver_ta3' && params !== 'edit_approver'">selecte</span>
                                                         </button>
                                                     </span>
                                                 </td>
@@ -2937,7 +2958,7 @@
                                             </tr>                                   
                                     </tbody>
                                 </table>
-                                <div class="pagination-container" ng-show="employeelist_page.length > 10">
+                                <div class="pagination-container" ng-show="employeelist_show.length > 1">
                                     <button class="pagination-button" ng-disabled="currentPage === 1" ng-click="action_changepage('prevPage')">Previous</button>
                                     <!-- Page numbers -->
                                     <span class="pagination-info">Page {{currentPage }} of {{ totalPages}}</span>

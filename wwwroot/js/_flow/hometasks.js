@@ -177,7 +177,15 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
         next_page(controller_text, '');
     }
+    $scope.editActionApprove = function (item) {
+        //open document 
+        var controller_text = item.pha_type;
 
+        $scope.pha_seq = item.id_pha;
+        $scope.pha_type_doc = 'approve';
+
+        next_page(controller_text, '', item.user_name);
+    }
     $scope.editActionFollowup = function (item) {
         //open document 
         var controller_text = item.pha_type;
