@@ -896,6 +896,8 @@
                         <div style="background-color: #ffffff;">
                             <div class="mx-3 row  g-3 align-items-top ">
                                 <div class="d-flex gap-4">
+                                    {{data_general[0].id_apu}}
+                                    {{data_general[0].id_apu}}
                                     <p ng-repeat="item2 in master_apu | filter:{
                                         id: data_general[0].id_apu}">
                                          <b>AREA: &nbsp;</b>{{item2.name}}
@@ -1920,6 +1922,7 @@
                                             </th>
                                             <th class=" align-middle" colspan="1" rowspan="2" ng-if="data_header[0].pha_status >12">Document File</th>
                                             <th class=" align-middle text-start" colspan="1" rowspan="2">Recommendation</th>
+                                            <th class=" align-middle text-start" colspan="1" rowspan="2">Action Owner</th>
                                             <th class=" align-middle text-center" colspan="1" rowspan="2">Action<br />Status<br />(Items)</th>
                                             <th class=" align-middle text-center" colspan="2" rowspan="1">
                                                 <b class="text-danger"> * </b>Recommendations Close Plan
@@ -1975,23 +1978,70 @@
                                                 </div>
                                             </td>
 
-                                            <td class="align-top rating white-space-nowrap text-start">
-                                                <div class="ms-3">
-                                                    <label>
-                                                        {{item.initial_risk_rating}}
-                                                    </label>
-                                                </div>
-                                            </td>
-  
-                                            <td class="align-top rating white-space-nowrap text-start">
-                                                <div class="ms-3">
-                                                    <label>
-                                                        {{item.residual_risk_rating}}
-                                                    </label>
+                                            <td>
+                                                <div class="d-flex justify-content-center box" 
+                                                    ng-repeat="hazard in item.hazards">
+                                                    <div ng-if="hazard.health_effect_rating">
+                                                        <div class="effect-rating "
+                                                            @* ng-click="openModalRisk(hazard, $index)" *@
+                                                            ng-class="{
+                                                                    'bg-success': (hazard.health_effect_rating == '1' || hazard.health_effect_rating == '2'),
+                                                                    'bg-warning': (hazard.health_effect_rating == '3') 
+                                                            }" >
+                                                            {{ hazard.health_effect_rating }}
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </td>
 
-                                        @*action owb=ner*@
+                                            <td class="align-top rating white-space-nowrap text-start">
+                                                <div class="d-flex justify-content-center box" >
+                                                    <div ng-if="hazard.health_effect_rating">
+                                                        <div class="effect-rating "
+                                                            @* ng-click="openModalRisk(hazard, $index)" *@
+                                                            ng-class="{
+                                                                    'bg-success': (item.initial_risk_rating == 'Low' ),
+                                                                    'bg-warning': (item.initial_risk_rating == 'Medium')
+                                                                    'bg-danger': (item.initial_risk_rating == 'High') 
+                                                            }" >
+                                                            {{item.initial_risk_rating }}
+                                                        </div>
+                                                    </div>
+                                                </div>                                                
+                                            </td>
+  
+                                            <!-- if status close show this --->
+                                            <td class="align-top rating white-space-nowrap text-start">
+                                                <div class="d-flex justify-content-center box" >
+                                                    <div ng-if="hazard.health_effect_rating">
+                                                        <div class="effect-rating "
+                                                            @* ng-click="openModalRisk(hazard, $index)" *@
+                                                            ng-class="{
+                                                                    'bg-success': (item.residual_risk_rating == 'Low' ),
+                                                                    'bg-warning': (item.residual_risk_rating == 'Medium')
+                                                                    'bg-danger': (item.residual_risk_rating == 'High') 
+                                                            }" >
+                                                            {{item.initial_risk_rating }}
+                                                        </div>
+                                                    </div>
+                                                </div>                                                 
+                                            </td>
+
+
+                                            <td class="" >
+                                                <div class="box" ng-repeat="hazard in item.hazards">
+                                                             @* <p class="pe-1 text-1100 fw-bold">{{ (hazard.recommendations_no +'.') }}</p> *@
+                                                    <textarea class="form-control form-control-sm " 
+                                                            rows="2" 
+                                                            type="text"
+                                                            style="width: 200px;"
+                                                            placeholder="Comments"
+                                                            ng-model="hazard.recommendations">
+                                                    </textarea>
+                                                </div>
+                                            </td>                                            
+
+                                            @*action owb=ner*@
                                             <td class="align-top rating white-space-nowrap">
                                                 <div class="ms-3">
                                                     <div class="d-flex justify-content-start w-100 ps-2" ng-show="item.id_worker_group">

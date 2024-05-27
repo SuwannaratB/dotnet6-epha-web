@@ -499,8 +499,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         const fileSeq = fileInput.id.split('-')[1];
         const fileInfoSpan = document.getElementById('filename' + fileSeq);
 
-
-        console.log("fileInfoSpan",fileInfoSpan)
         // Function to truncate file name
         function truncateFilename(filename, length) {
             if (!filename) return '';
@@ -675,8 +673,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         return "";
     }
-
-
 
     function uploadFileRAM(file_obj, seq, file_name, file_size) {
 

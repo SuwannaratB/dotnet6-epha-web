@@ -52,10 +52,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
         clear_form_valid();
     };
 
-    $scope.fileSelect = function (input) {
+    $scope.fileSelect = function (input, file_part) {
+        //drawing, responder, approver
+        var file_doc = $scope.data_header[0].pha_no;
         const fileInput = input;
         const fileSeq = fileInput.id.split('-')[1];
         const fileInfoSpan = document.getElementById('filename' + fileSeq);
+
         // Function to truncate file name
         function truncateFilename(filename, length) {
             if (!filename) return '';
@@ -64,14 +67,15 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
             const end = filename.slice(-Math.floor(length / 2));
             return `${start}.......${end}`;
         }
-        
+
         if (fileInput.files.length > 0) {
             const file = fileInput.files[0];
             const fileName = file.name;
             const fileSize = Math.round(file.size / 1024);
-            fileInfoSpan.textContent = `${fileName} (${fileSize} KB)`;
-            $scope.fileInfoSpan = `${fileName} (${fileSize} KB)`;
             try {
+                //fileInfoSpan.textContent = `${fileName} (${fileSize} KB)`;
+                /*let shortenedFileName = fileName.length > 20 ? fileName.substring(0, 20) + '...' : fileName;
+                fileInfoSpan.textContent = `${shortenedFileName} (${fileSize} KB)`;*/
                 const truncatedFileName = truncateFilename(fileName, 20);
                 fileInfoSpan.textContent = `${truncatedFileName} (${fileSize} KB)`;
             } catch (error) {
@@ -98,14 +102,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
             }
 
 
-            var file_path = uploadFile(file, fileSeq, fileName, fileSize);
+            var file_path = uploadFile(file, fileSeq, fileName, fileSize, file_part, file_doc);
 
         } else {
             fileInfoSpan.textContent = "";
-            $scope.fileInfoSpan = '';
         }
-
-    }
+        // $("#divLoading").hide(); 
+    }   
     function uploadFile(file_obj, seq, file_name, file_size) {
 
         var fd = new FormData();
@@ -132,6 +135,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
 
 
             try {
+                $("#divLoading").show(); 
                 const request = new XMLHttpRequest();
                 request.open("POST", url_ws + 'Flow/uploadfile_data_followup');
 
@@ -164,18 +168,26 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                             // กรณีเกิดข้อผิดพลาดในการร้องขอไปยัง server
                             console.error('มีข้อผิดพลาด: ' + request.status);
                         }
+                        $("#divLoading").hide(); 
                     }
                 };
 
                 request.send(fd);
 
-            } catch { }
+            } catch {$("#divLoading").hide();  }
 
         } catch (ex) { alert(ex); }
 
         unsavedChanges = true;
     }
 
+    $scope.truncateFilename = function(filename, length) {
+        if (!filename) return '';
+        if (filename.length <= length) return filename;
+        const start = filename.slice(0, Math.floor(length / 2));
+        const end = filename.slice(-Math.floor(length / 2));
+        return `${start}.......${end}`;
+    };
 
 
     //  scroll  table header freezer 

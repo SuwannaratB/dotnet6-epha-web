@@ -151,8 +151,6 @@
 
     </div>
 
-    {{"tab_approver_active   " + tab_approver_active}}
-
     <div class="row g-0">
         <div class="col-12 ">
 
@@ -3756,7 +3754,7 @@
                                             </tr>                                   
                                     </tbody>
                                 </table>
-                                <div class="pagination-container" ng-if="employeelist_show.length > 1">
+                                <div class="pagination-container" ng-show="employeelist_show.length > 1">
                                     <button class="pagination-button" ng-disabled="currentPage === 1" ng-click="action_changepage('prevPage')">Previous</button>
                                     <!-- Page numbers -->
                                     <span class="pagination-info">Page {{currentPage }} of {{ totalPages}}</span>

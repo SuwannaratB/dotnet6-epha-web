@@ -486,18 +486,28 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         const fileSeq = fileInput.id.split('-')[1];
         const fileInfoSpan = document.getElementById('filename' + fileSeq);
 
+        // Function to truncate file name
+        function truncateFilename(filename, length) {
+            if (!filename) return '';
+            if (filename.length <= length) return filename;
+            const start = filename.slice(0, Math.floor(length / 2));
+            const end = filename.slice(-Math.floor(length / 2));
+            return `${start}.......${end}`;
+        }
+
         if (fileInput.files.length > 0) {
             const file = fileInput.files[0];
             const fileName = file.name;
             const fileSize = Math.round(file.size / 1024);
             try {
                 //fileInfoSpan.textContent = `${fileName} (${fileSize} KB)`;
-                let shortenedFileName = fileName.length > 20 ? fileName.substring(0, 20) + '...' : fileName;
-                fileInfoSpan.textContent = `${shortenedFileName} (${fileSize} KB)`;
-
-            } catch {
-
-             }
+                /*let shortenedFileName = fileName.length > 20 ? fileName.substring(0, 20) + '...' : fileName;
+                fileInfoSpan.textContent = `${shortenedFileName} (${fileSize} KB)`;*/
+                const truncatedFileName = truncateFilename(fileName, 20);
+                fileInfoSpan.textContent = `${truncatedFileName} (${fileSize} KB)`;
+            } catch (error) {
+                console.error('Error updating file info:', error);
+            }
 
             if (file) {
                 const allowedFileTypes = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'jpg', 'png', 'gif']; // รายการของประเภทของไฟล์ที่อนุญาตให้แนบ
@@ -508,11 +518,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     // ทำการแนบไฟล์
                     //set_alert("File attached successfully.");
                 } else {
-                    $('#modalMsgFileError').modal('show');
+                    $('#modalMsgFileError').modal({
+                        backdrop: 'static',
+                        keyboard: false 
+                    }).modal('show');
                     //set_alert('Warning', "Please select a PDF, Word or Excel, Image file.");
                 }
             } else {
-                //console.log("No file selected.");
+                console.log("No file selected.");
             }
 
 
@@ -522,7 +535,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             fileInfoSpan.textContent = "";
         }
         // $("#divLoading").hide(); 
-    }
+    }   
 
     $scope.fileSelectRAM = function (input) {
 
@@ -580,6 +593,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
 
     }
+
+    $scope.truncateFilename = function(filename, length) {
+        if (!filename) return '';
+        if (filename.length <= length) return filename;
+        const start = filename.slice(0, Math.floor(length / 2));
+        const end = filename.slice(-Math.floor(length / 2));
+        return `${start}.......${end}`;
+    };
 
     function uploadFile(file_obj, seq, file_name, file_size, file_part, file_doc) {
 
@@ -5258,7 +5279,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             $scope.clearFormData();
         } else {
-            $('#modalEmployeeAdd').modal('show');
         }
         
         apply();

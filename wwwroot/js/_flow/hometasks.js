@@ -182,7 +182,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         var controller_text = item.pha_type;
 
         $scope.pha_seq = item.id_pha;
-        $scope.pha_type_doc = 'approve';
+        $scope.pha_type_doc = 'review_document';
 
         next_page(controller_text, '', item.user_name);
     }

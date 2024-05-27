@@ -510,8 +510,8 @@
                                                                         <h6 class="me-1 text-center"
                                                                             style=" width: 30px;">
                                                                             {{item_d.ram_after_risk}}</h6>
-                                                                        <span class="fas fa-pencil-alt fa-sm "
-                                                                            style=" width: 8px;"></span>
+                                                                        @*<span class="fas fa-pencil-alt fa-sm "
+                                                                            style=" width: 8px;"></span>*@
                                                                     </div>
                                                                 </button>
                                                             </div>
@@ -551,8 +551,8 @@
                                                                         <h6 class="me-1 text-center"
                                                                             style=" width: 30px;">
                                                                             {{item_d.ram_action_risk}}</h6>
-                                                                        <span class="fas fa-pencil-alt fa-sm "
-                                                                            style=" width: 8px;"></span>
+                                                                        @*<span class="fas fa-pencil-alt fa-sm "
+                                                                            style=" width: 8px;"></span>*@
                                                                     </div>
                                                                 </button>
                                                             </div>
@@ -631,7 +631,7 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="align-items-center" style="width: 280px">
-                                                                    <div class="uploadbox ">
+                                                                    @*<div class="uploadbox ">
                                                                         <span class="nametext ms-3 filename-text me-2" 
                                                                             id="filename{{item_x.seq}}">
                                                                             {{(item_x.document_file_size>0? item_x.document_file_name + '('+  item_x.document_file_size + 'KB)' : '')}}
@@ -651,7 +651,47 @@
                                                                                setSeqUpload(item_d.seq)" 
                                                                                style="display:none" 
                                                                                />
-                                                                    </div>
+                                                                    </div>*@
+
+                                                                   <div class="btn-group mb-2 w-100" style="height:60px;">
+                                                                        <div class="icon-button border p-3" style="border-color: #0d6efd; background-color: #0d6efd;">
+                                                                            <span class="fa-solid fa-arrow-up-from-bracket fa-lg" style="color: #ffffff;"></span>
+                                                                        </div>
+                                                                        <button class="Upload-button btn ps-3"  ng-if="!item.document_file_size">
+                                                                            <label class="dz-message-text fw-bold cursor-pointer" for="attfile-{{item_x.seq}}" ng-class="{'d-none':(!tab_general_active)}" 
+                                                                                style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; max-width: 150px;">
+                                                                                Upload File
+                                                                            </label>
+                                                                            <input type="file" id="attfile-{{item_x.seq}}"
+                                                                                name="file{{item_x.seq}}"
+                                                                                onchange="
+                                                                                angular.element(this).scope().fileSelect(this);"
+                                                                                ng-click="
+                                                                                alert(item_x.seq);
+                                                                                setSeqUpload(item_d.seq)" 
+                                                                                style="display:none" 
+                                                                                />
+                                                                        </button>
+                                                                        <button class="Upload-button btn ps-3" ng-if="item.document_file_size > 0">
+                                                                            <div class="d-flex align-items-center">
+                                                                                <span class="mr-3 nametext"
+                                                                                    id="filename{{item.seq}}" 
+                                                                                    ng-class="{'d-none':(!tab_general_active)}"
+                                                                                    ng-click="downloadFile(item)"
+                                                                                    ng-if="item.document_file_size>0">
+                                                                                    <b style="font-size:x-small;">
+                                                                                        {{truncateFilename(item.document_file_name, 20)}} ({{item.document_file_size}} KB)
+                                                                                    </b>
+                                                                                </span>
+                                                                                <a id="deluploadfile-{{item.seq}}" class="btn btn-link text-danger p-0 ms-2"
+                                                                                        ng-class="{'d-none':(!tab_general_active)}"
+                                                                                        ng-click="clearFileName(item.seq)">
+                                                                                    <span class="fa-regular fa-trash-can fa-lg"></span>
+                                                                                </a>
+
+                                                                            </div>
+                                                                        </button> 
+                                                                    </div>                                                                      
                                                                 </div>
                                                             </div>
                                                             

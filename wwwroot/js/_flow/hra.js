@@ -297,8 +297,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             const fileSeq = fileInput.id.split('-')[1];
             const fileInfoSpan = document.getElementById('filename' + fileSeq);
     
-    
-            console.log("fileInfoSpan",fileInfoSpan)
             // Function to truncate file name
             function truncateFilename(filename, length) {
                 if (!filename) return '';
@@ -318,7 +316,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     fileInfoSpan.textContent = `${shortenedFileName} (${fileSize} KB)`;*/
                     const truncatedFileName = truncateFilename(fileName, 20);
                     fileInfoSpan.textContent = `${truncatedFileName} (${fileSize} KB)`;
-
                 } catch (error) {
                     console.error('Error updating file info:', error);
                 }
@@ -495,6 +492,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             return "";
         }
+
+        $scope.truncateFilename = function(filename, length) {
+            if (!filename) return '';
+            if (filename.length <= length) return filename;
+            const start = filename.slice(0, Math.floor(length / 2));
+            const end = filename.slice(-Math.floor(length / 2));
+            return `${start}.......${end}`;
+        };
     }
 
 
@@ -1025,6 +1030,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     function call_api_load(page_load, action_submit, user_name, pha_seq) {
         var type_doc = $scope.pha_type_doc;//review_document
 
+        $scope.params = get_params();
 
         $.ajax({
             url: url_ws + "Flow/get_hra_details",
@@ -1246,6 +1252,48 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
 
                 }
+
+                if($scope.params != 'edit_approver'){
+                    $scope.action_owner_active = true;
+                }  
+
+                if($scope.params !== null){
+                    console.log("$scope.params",$scope.params)
+
+                    if($scope.params != 'edit_approver'){
+                        $scope.action_owner_active = true;
+                    }  
+                    
+    
+                    if($scope.params !== 'edit') {
+                        $scope.tab_general_active = false;
+                        $scope.tab_node_active = false;
+                        $scope.tab_worksheet_active = false;
+                        $scope.tab_managerecom_active = false;
+                        $scope.tab_approver_active = false;
+    
+                        if($scope.params === 'edit_action_owner'){
+                            $scope.action_owner_active = true;
+                        } 
+    
+                        if($scope.params === 'edit_approver'){
+                            $scope.action_owner_active = false;
+    
+                        }  
+    
+                    }
+    
+                    if($scope.params === 'edit' && $scope.flow_role_type === 'admin') {
+                        $scope.tab_general_active = true;
+                        $scope.tab_node_active = true;
+                        $scope.tab_worksheet_active = true;
+                        $scope.tab_managerecom_active = true;
+                        $scope.tab_approver_active = true;
+    
+                        $scope.save_type = true;
+                    }
+                }
+
 
                 //ตรวจสอบเพิ่มเติม workflow
                 if (true) {
@@ -1475,6 +1523,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         hazard.action_change = 1;
 
         $scope.chooseRiskRating(hazard);
+    }
+
+    function get_params() {
+        var queryParams = new URLSearchParams(window.location.search);
+        var dataReceived = queryParams.get('data');
+        return dataReceived;
     }
 
     function set_form_action(action_part_befor, action_save, page_load) {
@@ -2417,7 +2471,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             newInput.id_pha = item_t.id_pha;
             newInput.id_tasks = item_t.id_worker_group;
             newInput.action_type = 'insert';
-            newInput.action_change = 0;
+            newInput.action_change = 1;
             newInput.index_rows = item_t.index_rows;
 
             var index_push = item_t.descriptions.length;
@@ -3038,6 +3092,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
         $scope.confirmSave = function (action) {
 
+
+            console.log("$scope.data_tasks",$scope.data_tasks)
             //check required field 
             var pha_status = $scope.data_header[0].pha_status;
             //11	DF	Draft
@@ -4037,6 +4093,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.filteredResults = [];
         $scope.showResults = false;
         $scope.filterResultGeneral = function (fieldText, fieldName) {
+
+            console.log(fieldText,fieldName)
             $scope.filteredResults = [];
             var arr = [];
             if (fieldName == 'pha_request_name') {
@@ -4060,6 +4118,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             //เพิ่มfor work or task
             else if (fieldName == 'work_or_task') {
                 arr = $scope.data_all.his_work_or_task;
+
+                console.log("arr",arr)
             }
 
             var count = 0;
@@ -4326,6 +4386,39 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 var arr_items = $filter('filter')($scope.data_workers, function (item) {
                     return (item.id_session == seq_session && item.user_name == employee_name);
                 });
+
+                console.log("arr_items",arr_items)
+
+                if (arr_items.length == 0) {
+                    //add new employee 
+                    var seq = $scope.MaxSeqdataWorkers;
+
+                    var newInput = clone_arr_newrow($scope.data_workers_def)[0];
+                    newInput.seq = seq;
+                    newInput.id = seq;
+                    newInput.no = (0);
+                    newInput.id_session = Number(seq_session);
+                    newInput.action_type = 'insert';
+                    newInput.action_change = 1;
+
+                    newInput.user_name = employee_name;
+                    newInput.user_displayname = employee_displayname;
+                    newInput.user_title = employee_position;
+                    newInput.user_img = employee_img;
+
+                    $scope.data_workers.push(newInput);
+                    running_no_level1($scope.data_workers, null, null);
+
+                    $scope.MaxSeqdataWorkers = Number($scope.MaxSeqdataWorkers + 1);
+
+                }
+
+                console.log("$scope.data_workers",$scope.data_workers)
+            }
+            else if (xformtype == "manage") {
+                /*var arr_items = $filter('filter')($scope.data_workers, function (item) {
+                    return (item.id_session == seq_session && item.user_name == employee_name);
+                });*/
 
                 console.log("arr_items",arr_items)
 
