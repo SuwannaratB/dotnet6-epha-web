@@ -4311,8 +4311,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     $scope.data_approver.push(newInput);
                     running_no_level1($scope.data_approver, null, null);
 
+                    newInput.no == 0 ? newInput.verified = true : newInput.verified = false;
                     $scope.MaxSeqdataApprover = Number($scope.MaxSeqdataApprover) + 1
-
+                    console.log('data_approver ',$scope.data_approver)
                 }
 
             }
@@ -4353,32 +4354,39 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             $('#modalEmployeeAdd').modal('show');
         };
+
         $scope.removeDataEmployee = function (seq, seq_session) {
+            const actions = $scope.selectDatFormType;
 
-            var arrdelete = $filter('filter')($scope.data_memberteam, function (item) {
-                return (item.seq == seq && item.action_type == 'update');
-            });
-            if (arrdelete.length > 0) { $scope.data_memberteam_delete.push(arrdelete[0]); }
-
-            $scope.data_memberteam = $filter('filter')($scope.data_memberteam, function (item) {
-                return !(item.seq == seq && item.id_session == seq_session);
-            });
-
-            //if delete row 1 clear to null
-            if ($scope.data_memberteam.length == 1 || $scope.data_memberteam.no == 1) {
-                var keysToClear = ['user_name', 'user_displayname'];
-
-                keysToClear.forEach(function (key) {
-                    $scope.data_memberteam[0][key] = null;
+            if (actions == 'member') {
+                var arrdelete = $filter('filter')($scope.data_memberteam, function (item) {
+                    return (item.seq == seq && item.action_type == 'update');
                 });
 
-                $scope.data_memberteam[0].no = 1;
+                if (arrdelete.length > 0) { $scope.data_memberteam_delete.push(arrdelete[0]); }
+    
+                $scope.data_memberteam = $filter('filter')($scope.data_memberteam, function (item) {
+                    return !(item.seq == seq && item.id_session == seq_session);
+                });
+                //if delete row 1 clear to null
+                if ($scope.data_memberteam.length == 1 || $scope.data_memberteam.no == 1) {
+                    var keysToClear = ['user_name', 'user_displayname'];
+    
+                    keysToClear.forEach(function (key) {
+                        $scope.data_memberteam[0][key] = null;
+                    });
+                    $scope.data_memberteam[0].no = 1;
+                }
+                running_no_level1($scope.data_memberteam, null, null)
             }
 
-            running_no_level1($scope.data_memberteam, null, null);
+            if (actions == 'approver') {
+                $scope.removeDataApprover(seq, seq_session)
+            }
+
+;
             apply();
         };
-
 
         $scope.clearFormData = function() {
             $scope.employeelist_show = [];
@@ -4390,8 +4398,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             //$scope.formData_outsider = [];
         };
     
-
-
         $scope.removeDataApprover = function (seq, seq_session) {
 
             var arrdelete = $filter('filter')($scope.data_approver, function (item) {
@@ -4428,6 +4434,15 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
             item.approver_type = 'approver';
             apply();
+        }
+
+        $scope.actionVerified = function (item) {
+            // console.log(item);
+            $scope.data_approver.forEach(el => {
+                if (el.verified) {
+                    el.verified = false;
+                }
+            });
         }
 
     }
