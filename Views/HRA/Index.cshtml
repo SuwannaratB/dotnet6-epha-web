@@ -1860,7 +1860,7 @@
                                     </thead>
 
                                     <tbody class="list" id="customer-rating-table-body">
-                                        <tr ng-repeat="item in data_worksheet | orderBy:['index_rows']" 
+                                        <tr ng-repeat="item in data_worksheet_list | orderBy:['index_rows']" 
                                             class="hover-actions-trigger btn-reveal-trigger position-static text-center">
 
                                             <td class="align-top rating white-space-nowrap text-start">
@@ -1878,28 +1878,24 @@
                                                         </div>
                                                 </div>
                                             </td>
-
-                                            <td class="align-top rating white-space-nowrap">
-                                                <div class="ms-3">
-                                                        <div class="d-flex flex-column" ng-repeat="item_sub in item.sub_areas">
-                                                            <div class="box" 
-                                                                @* ng-style="{'margin-bottom': (item_sub.hazard.length * 56) + 'px'}" *@
-                                                                >
-                                                                {{ item_sub.sub_area }}
-                                                            </div>
-                                                            <div class="box empty" ng-repeat="n in [].constructor(item_sub.hazard.length - 1) track by $index">
-                                                                &nbsp;
-                                                            </div>
-                                                        </div>                                                    
-
+                                            <td>
+                                                <div class="d-flex flex-column" ng-repeat="item_sub in item.sub_areas">
+                                                    <div class="box" 
+                                                        @* ng-style="{'margin-bottom': (item_sub.hazard.length * 56) + 'px'}" *@
+                                                        >
+                                                        {{ item_sub.sub_area }}
+                                                    </div>
+                                                    <div class="box empty" ng-repeat="n in [].constructor(item_sub.hazard.length - 1) track by $index">
+                                                        &nbsp;
+                                                    </div>
                                                 </div>
                                             </td>
 
-                                            <td class="align-top rating white-space-nowrap text-start">
-                                                <div class="ms-3">
-                                                    <label>
-                                                        {{item.exposure_rating}}
-                                                    </label>
+                                            <td>
+                                                <div class="d-flex flex-col"  ng-repeat="hazard in item.hazards">
+                                                    <div class="box" >
+                                                        {{ hazard.type_hazard }}
+                                                    </div>
                                                 </div>
                                             </td>
 
