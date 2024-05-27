@@ -894,21 +894,18 @@
                          id="tab-areas" role="tabpanel" aria-labelledby="areas-tab">
 
                         <div style="background-color: #ffffff;">
-
                             <div class="mx-3 row  g-3 align-items-top ">
-
-                                <div class="d-flex gap-2">
+                                <div class="d-flex gap-4">
                                     <p ng-repeat="item2 in master_apu | filter:{
                                         id: data_general[0].id_apu}">
-                                         <b>AREA: </b> {{item2.name}}
+                                         <b>AREA: &nbsp;</b>{{item2.name}}
                                     </p>
                                     <p ng-repeat="item2 in master_unit_no | filter:{
                                         id: data_general[0].id_unit_no, 
                                         id_apu: data_general[0].id_apu,
                                         id_company: data_general[0].id_company} ">
-                                        <b> UNIT: </b> {{item2.name}}
+                                        <b>UNIT: &nbsp;</b>{{item2.name}}
                                     </p>
-
                                 </div>
                                 <!------ NAME OF SUB AREA :------>
                                 <div class="table-responsive scrollbar mb-3" id="table-container">
@@ -1132,6 +1129,11 @@
                         aria-labelledby="worker-tab">
                         <div style="background-color: #ffffff;">
                             <div class="mx-3 row  g-3 align-items-top ">
+                                <div class="d-flex gap-4">
+                                    <p><b>DEPARTMENT: &nbsp;</b>{{data_general[0].id_departments}}</p>
+                                    <p><b>SECTIONS: &nbsp;</b>{{data_general[0].id_sections}}</p>
+                                </div>
+
                                 <div class="table-responsive scrollbar" id="table-container">
                                     <table class="table fs--2 mb-0 table-bordered">
                                         <thead class=" text-uppercase  text-center bg-soft">
@@ -2408,7 +2410,8 @@
                                         <th class="text-center" style="width: 10%;">Select</th>
                                         <th class="text-start" style="width: 70%;">RISK FACTOR ({{master_hazard_riskfactors.length}})</th>
                                         <th class="text-center" style="width: 10%;">Rating</th>
-                                        <th class="text-center" style="width: 10%;">Type</th>
+                                        <th class="text-center" style="width: 10%;">TLV STD</th>
+                                        @* <th class="text-center" style="width: 10%;">Type</th> *@
                                     </tr>
                                 </thead>
                                 <tbody class=" list">
@@ -2426,17 +2429,6 @@
                                                 @* ng-click="changeRisk(select_hazard, $index)" *@
                                             >
                                        </td>
-
-                                        @* <td class="text-center" style="width: 10%;">
-                                            <input type="radio" 
-                                                id="risk"
-                                                name="risk"  
-                                                ng-model="select_hazard.health_hazard"
-                                                ng-value="item.name"
-                                                style="cursor: pointer; width: 22px; height: 22px;"
-                                                ng-change="changeRisk(select_hazard, $index)"
-                                                ng-click="changeRisk(select_hazard, $index)">
-                                       </td> *@
 
                                         <td class="text-start" style="width: 70%;">{{item.name}}</td>
 
@@ -2456,25 +2448,10 @@
                                             </div>
                                         </td>
 
-                                          <td class="text-center" style="width: 10%;">{{item.standard_type_text}}</td>
+                                        <td class="text-center" style="width: 10%;">{{item.standard_value}} {{item.standard_unit}}</td>
+                                        
+                                        @* <td class="text-center" style="width: 10%;">{{item.standard_type_text}}</td> *@
 
-                                        @* <td class="text-center" style="width: 20%;">
-                                            <div class="d-flex align-items-center justify-content-center gap-2" 
-                                                style="width: 20%;"
-                                                ng-if="select_hazard.health_hazard == item.name">
-                                
-                                                <div class="effect-rating"
-                                                    ng-repeat="item in hazard_standard_list"
-                                                    ng-class="{
-                                                        'bg-success': (item.hazards_rating == '1' || item.hazards_rating == '2'),
-                                                        'bg-warning': (item.hazards_rating == '3') 
-                                                    }" 
-                                                    ng-class="{'active':chooseIndexRating == $index}"
-                                                    ng-click="chooseRating(select_hazard.health_hazard, $index)" >
-                                                    {{item.hazards_rating}}
-                                                </div>
-                                            </div>
-                                        </td> *@
                                     </tr>
                                 </tbody>
                             </table>
