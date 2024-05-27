@@ -263,14 +263,18 @@
                                                 <label class="form-label ps-0" for="area"><b class="text-danger d-none"> * </b>Area Process Unit </label>
                                                 <label class="form-label ps-0" ng-if="select_history_tracking_record">
                                                     <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
-                                                       data-bs-placement="top" title=" Area Process Unit : A" data-bs-html="true"></a>
+                                                       data-bs-placement="top" 
+                                                       title=" Area Process Unit : A" 
+                                                       data-bs-html="true">
+                                                    </a>
                                                 </label>
                                                 <label class="form-label ps-0" for="area"></label>
                                                 <select class="form-control js-choice-apu"
                                                         ng-class="{'disabled-link':(!tab_general_active)}"
                                                         data-choices="data-choices"
                                                         data-options='{"removeItemButton":true,"placeholder":true}'
-                                                        ng-change="actionChange(item,item.seq,'')" ng-model="item.id_apu">
+                                                        ng-change="actionChange(item,item.seq,'')" 
+                                                        ng-model="item.id_apu">
                                                     <option ng-repeat="item2 in master_apu" ng-value="item2.id">
                                                         {{item2.name}}
                                                     </option>
@@ -304,9 +308,6 @@
                                                         {{item2.name}}
                                                     </option>
                                                 </select>
-
-
-
                                             </div>
                                         </div>
                                     </div>
@@ -316,18 +317,25 @@
 
                                         <label class="form-label ps-0" for="unit"><b class="text-danger"> * </b>Name of Area </label>
                                         <label class="form-label ps-0" ng-if="select_history_tracking_record">
-                                            <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
-                                               data-bs-placement="top" title=" Name of Area" data-bs-html="true"></a>
+                                            <a class="form-label far fa-comment-alt text-warning cursor-pointer" 
+                                                data-bs-toggle="tooltip"
+                                                data-bs-placement="top" 
+                                                title=" Name of Area" 
+                                                data-bs-html="true">
+                                               </a>
                                         </label>
 
                                         <select class="form-control col-auto js-choice-unit_no"
                                                 ng-class="{'disabled-link':(!tab_general_active)}"
                                                 data-choices="data-choices"
                                                 data-options='{"removeItemButton":true,"placeholder":true}'
-                                                ng-change="actionChange(item,item.seq,'unit_no')" ng-model="item.id_unit_no">
+                                                ng-change="actionChange(item,item.seq,'unit_no')" 
+                                                ng-model="item.id_unit_no">
                                             <option ng-selected="item.id_unit_no == item2.id"
-                                                    ng-repeat="item2 in master_unit_no" ng-value="item2.id"
-                                                    ng-if="item2.id_company == item.id_company">
+                                                    ng-repeat="item2 in master_unit_no" 
+                                                    ng-value="item2.id"
+                                                    ng-if="item2.id_company == item.id_company &&
+                                                            item2.id_apu == item.id_apu">
                                                 {{item2.name}}
                                             </option>
                                         </select>
@@ -889,8 +897,19 @@
 
                             <div class="mx-3 row  g-3 align-items-top ">
 
-                                <p><b>NAME OF AREA : {{selectedBusiness_Unit}}</b></p>
+                                <div class="d-flex gap-2">
+                                    <p ng-repeat="item2 in master_apu | filter:{
+                                        id: data_general[0].id_apu}">
+                                         <b>AREA: </b> {{item2.name}}
+                                    </p>
+                                    <p ng-repeat="item2 in master_unit_no | filter:{
+                                        id: data_general[0].id_unit_no, 
+                                        id_apu: data_general[0].id_apu,
+                                        id_company: data_general[0].id_company} ">
+                                        <b> UNIT: </b> {{item2.name}}
+                                    </p>
 
+                                </div>
                                 <!------ NAME OF SUB AREA :------>
                                 <div class="table-responsive scrollbar mb-3" id="table-container">
 
@@ -1018,6 +1037,7 @@
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                        
                                                         @* master_hazard_type *@
                                                         <select class="form-control"
                                                             style="width: 30%;"
@@ -1116,20 +1136,20 @@
                                     <table class="table fs--2 mb-0 table-bordered">
                                         <thead class=" text-uppercase  text-center bg-soft">
                                             <tr>
-                                                <th class="sort align-middle" colspan="3" rowspan="1">
+                                                <th class="sort align-middle" colspan="2" rowspan="1" style="width: 56%;">
                                                     NAME OF WORKER GROUP
                                                 </th>
-                                                <th class="sort align-middle text-center" colspan="1" rowspan="2">
+                                                <th class="sort align-middle text-center" colspan="1" rowspan="2" >
                                                     NUMBERS OF WORKERS
                                                 </th>
-                                                <th class="sort align-middle text-center" colspan="1" rowspan="2">
+                                                <th class="sort align-middle text-center" colspan="1" rowspan="2" style="width: 28%;">
                                                     DESCRIPTION OF WORK OR TASK
                                                 </th>
                                             </tr>
                                             <tr>
-                                                <th class=" align-middle text-start">AREA</th>
-                                                <th class=" align-middle text-start">WORKER GROUP</th>
-                                                <th class=" align-middle text-start">EMPLOYEES /STAFF MEMBERS</th>
+                                                <th class=" align-middle text-start" style="width: 28%;">AREA</th>
+                                                <th class=" align-middle text-start" style="width: 28%;">WORKER GROUP</th>
+                                                @* <th class=" align-middle text-start">EMPLOYEES /STAFF MEMBERS</th> *@
                                             </tr>
                                         </thead>
                                         <tbody class="list" id="customer-rating-table-body">
@@ -1141,7 +1161,7 @@
                                                     style="width: 150px;" 
                                                     rowspan="{{data_tasks.length}}" 
                                                     ng-if="$index == 0"> 
-                                                    <p class="text-1100 fw-bold" ng-if="$index == 0">
+                                                    <p class="text-1100 fw-bold p-3" ng-if="$index == 0">
                                                         {{selectedBusiness_Unit}}
                                                     </p>
                                                 </td>
@@ -1203,24 +1223,7 @@
                                                 </td>
 
                                                 <!----span work/task lenght rowspan=""----->
-                                                <td class="align-top rating px-1 d-flex flex-column align-items-center justify-content-start" >
-                                                    @*<div class="d-flex justify-content-start w-100 ps-2"
-                                                         ng-repeat="workers in item.worker_list">
-                                                        <p class="flex-1 text-1100 text-start fw-bold" style="max-width: 244px">{{workers.user_displayname}}</p>
-                                                        <del ng-if="!workers.remove" class="flex-1">
-                                                            Remove
-                                                        </del>
-                                                        <div ng-if="workers.remove" 
-                                                            class="flex-1 text-danger cursor-pointer" 
-                                                            ng-click="removeStaff(item, $index)">
-                                                            Remove
-                                                        </div>
-                                                    </div>
-                                                    <div class="container-add-staff">
-                                                        <input class="input-add-staff" ng-model="item.text_add" type="text">
-                                                        <button class="btn-add-staff bg-success" ng-click="addStaff(item)">Add</button>
-                                                     
-                                                    </div>*@
+                                                @* <td class="align-top rating px-1 d-flex flex-column align-items-center justify-content-start" >
                                                     <div class="d-flex justify-content-start w-100 ps-2" ng-show="item.id_worker_group">
                                                         <button class="btn btn-outline-secondary p-0 cursor-pointer col-auto" style="color: #2445fc; background-color: #f1f2f4; border-color: #f1f2f4;"
                                                                 ng-click="openDataEmployeeAdd(item,'worker')">
@@ -1232,17 +1235,13 @@
                                                          ng-repeat="workers in data_workers">
                                                         <p class="text-1100 text-start fw-bold">{{workers.user_displayname}}</p>
                                                     </div>
-                                                </td>
-                                                @* <td class="align-top rating px-1 d-flex flex-column align-items-center justify-content-start">
-                                                    <div class="d-flex justify-content-start w-100 ps-2"
-                                                         ng-repeat="workers in data_workers | filter:{id_tasks:item.id} | orderBy:'no'">
-                                                        <p class="text-1100 text-start fw-bold">{{workers.user_displayname}}</p>
-                                                    </div>
                                                 </td> *@
 
                                                 <!----span work/task lenght rowspan=""----->
-                                                <td class="align-top status text-center px-1" style="width: 50px;"><!----span same id work group? same no. ----->
-                                                    <p><b>{{ item.numbers_of_workers }}</b></p>
+                                                <td class="align-top status text-center px-1" ><!----span same id work group? same no. ----->
+                                                    <p class="p-3">
+                                                        <b>{{ item.numbers_of_workers }}</b>
+                                                    </p>
                                                 </td>
 
                                                 <!----- work or task ==> can be add------->
