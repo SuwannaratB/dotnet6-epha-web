@@ -1347,8 +1347,8 @@
                         <div style="background-color: #ffffff;">
                             @* header *@
                             <div class="mx-3 row  g-3 align-items-top">
-                                <div class="col-md-5   ">
-                                    <p><b>NAME OF AREA : {{selectedBusiness_Unit}}</b></p>
+                                <div class="d-flex gap-4">
+                                    <p><b>NAME OF AREA: &nbsp;</b>{{selectedBusiness_Unit}}</p>
                                 </div>
                                 <div class="col-7 ">
                                     <div class="col-12 float-end align-top text-end ">
@@ -1390,8 +1390,8 @@
                                                     <th class=" align-middle" >[3.7]<br><br>Exposure Band</th>
                                                     <th class=" align-middle" >[3.8]<br><br>TLV std</th>
                                                     <th class=" align-middle" >[3.9]<br><br>Exposure<br/>Level = [3.7] <br/>vs [3.8]</th>
-                                                    <th class=" align-middle" >[3.10]<br><br>Exposure<br/>Rating = [3.6] <br/>vs [3.9]</th>
-                                                    <th class=" align-middle" >[3.11]<br><br>Initial Risk<br/>Rating = [3.5]<br/>vs [3.10]</th>
+                                                    <th class=" align-middle cursor-pointer" ng-click="Matrix_Exposure_Rating()">[3.10]<br><br>Exposure<br/>Rating = [3.6] <br/>vs [3.9]</th>
+                                                    <th class=" align-middle cursor-pointer" ng-click="Matrix_Frequency_Rating()">[3.11]<br><br>Initial Risk<br/>Rating = [3.5]<br/>vs [3.10]</th>
                                                     <th class=" align-middle" >[3.12]<br><br>Hierarchy of Control (ALARP)</th>
                                                     <th class=" align-middle" >[3.13]<br><br>Effective?</th>
                                                     <th class=" align-middle" >[3.14]<br><br>Residual Risk Rating</th>
@@ -1522,10 +1522,24 @@
                                                     </td>
 
                                                     <td class="" >
-                                                        <div class="box" 
+                                                        @* <div class="box" 
                                                             style="min-width: max-content; padding-top: 7px; font-size: 13px; text-align: center;"
                                                             ng-repeat="hazard in item.hazards">
                                                             {{ hazard.initial_risk_rating }}
+                                                        </div> *@
+                                                        <div class="box" ng-repeat="hazard in item.hazards">
+                                                            <select class="form-select form-select-sm rounded-1" 
+                                                                ng-if="tab_worksheet_active"
+                                                                ng-class="{'disabled-link':(!tab_worksheet_active)}"
+                                                                @* ng-change="actionChangeWorksheet(item,item.seq,'frequency_level')" *@
+                                                                ng-change="actionChangeFrequencyLevel(hazard)"
+                                                                ng-model="hazard.initial_risk_rating" 
+                                                                style="min-width: 100px;"
+                                                                ng-disabled="!hazard.exposure_status">
+                                                                <option ng-repeat="item_m in data_initial_risk" ng-value="item_m.id">
+                                                                    {{item_m.name}}
+                                                                </option>
+                                                            </select>
                                                         </div>
                                                     </td>
 

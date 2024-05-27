@@ -528,7 +528,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         $scope.data_worksheet = [];
 
-
         $scope.data_session_delete = [];
         $scope.data_memberteam_delete = [];
         $scope.data_approver_delete = [];
@@ -561,7 +560,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.searchdata = '';
         $scope.searchEmployee = '';
 
-
         $scope.searchdataMemberTeam = '';
         $scope.searchdataResponder = '';
         $scope.searchdataApprover = '';
@@ -574,6 +572,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             text: ''
         }
 
+        $scope.data_initial_risk = [
+            { id: 'Low', name: 'Low' },
+            { id: 'Meduim\r\n', name: 'Meduim' },
+            { id: 'High\r\n', name: 'High' },
+        ];
 
         // สร้างชั่วโมง (0-23)
         $scope.master_hours = [];
