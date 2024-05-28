@@ -33,7 +33,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
     //  add file 
     $scope.clearFileName = function (inputId) {
 
-        var fileUpload = document.getElementById('attfile-' + inputId);
+        /*var fileUpload = document.getElementById('attfile-' + inputId);
         var fileNameDisplay = document.getElementById('filename' + inputId);
         var del = document.getElementById('del-' + inputId);
         fileUpload.value = ''; // ล้างค่าใน input file
@@ -49,7 +49,28 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
             arr[0].action_change = 1;
             apply();
         }
-        clear_form_valid();
+        clear_form_valid();*/
+        
+        var fileInput = document.getElementById('attfile-' + inputId);
+        if (fileInput) {
+            fileInput.value = '';
+        }
+
+        const fileInfoSpan = document.getElementById('filename' + inputId);
+        fileInfoSpan.textContent = "";
+        $scope.status_upload = false;
+
+        var arr = $filter('filter')($scope.data_drawingworksheet,
+            function (item) { return (item.seq == inputId); }
+        );
+
+        if (arr.length > 0) {
+            arr[0].document_file_name = null;
+            arr[0].document_file_size = null;
+            arr[0].document_file_path = null;
+            arr[0].action_change = 1;
+            apply();
+        }
     };
 
     $scope.fileSelect = function (input, file_part) {
@@ -72,15 +93,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
             const file = fileInput.files[0];
             const fileName = file.name;
             const fileSize = Math.round(file.size / 1024);
-            try {
-                //fileInfoSpan.textContent = `${fileName} (${fileSize} KB)`;
-                /*let shortenedFileName = fileName.length > 20 ? fileName.substring(0, 20) + '...' : fileName;
-                fileInfoSpan.textContent = `${shortenedFileName} (${fileSize} KB)`;*/
-                const truncatedFileName = truncateFilename(fileName, 20);
-                fileInfoSpan.textContent = `${truncatedFileName} (${fileSize} KB)`;
-            } catch (error) {
-                console.error('Error updating file info:', error);
-            }
 
             if (file) {
                 const allowedFileTypes = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'jpg', 'png', 'gif']; // รายการของประเภทของไฟล์ที่อนุญาตให้แนบ

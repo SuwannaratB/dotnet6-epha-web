@@ -1216,14 +1216,13 @@
                                                                             ng-class="{'d-none':(!tab_general_active)}"
                                                                             ng-click="downloadFile(item)"
                                                                             ng-if="item.document_file_size>0">
-                                                                                <b style="font-size:x-small;">
-                                                                                    {{(item.document_file_size>0? item.document_file_name + '('+  item.document_file_size + 'KB)' : '')}}
-                                                                                </b>
+                                                                            <b style="font-size:x-small;">
+                                                                                {{truncateFilename(item.document_file_name, 20)}} ({{item.document_file_size}} KB)
+                                                                            </b>
                                                                         </span>
                                                                         <a id="deluploadfile-{{item.seq}}" class="btn btn-link text-danger p-0"
                                                                             ng-class="{'d-none':(!tab_general_active)}"
                                                                             ng-click="clearFileName(item.seq)"
-                                                                            ng-if="!(item.file_upload_name =='' || item.file_upload_name == null)">
                                                                             <span class="fa-regular fa-trash-can fa-lg"></span>
                                                                         </a> 
                                                                     </div>

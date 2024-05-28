@@ -101,7 +101,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 });
 
 
-AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, $document, $interval, $rootScope, $window) {
+AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, $document, $interval, $rootScope, $window,$q) {
 
     $scope.data_tooltip = [
         { id:1, title_th: '', title_en: 'List System' },
@@ -5534,6 +5534,28 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
 
     }
+    $scope.showModal = function() {
+        var deferred = $q.defer();
+
+        $('#modalConfirm').modal('show');
+
+        $scope.confirm = function() {
+            $('#modalConfirm').modal('hide');
+            deferred.resolve(true);
+        };
+
+        $scope.cancel = function() {
+            $('#modalConfirm').modal('hide');
+            deferred.resolve(false);
+        };
+
+        $('#modalConfirm').on('hidden.bs.modal', function() {
+            deferred.resolve(false);
+        });
+
+        return deferred.promise;
+    };
+
     $scope.choosDataEmployee = function (item) {
 
         if(item) {
@@ -5547,6 +5569,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         var seq_session = $scope.selectdata_session;
         var xformtype = $scope.selectDatFormType;
+
+        $scope.confirmation = false;
 
         if (xformtype == "member") {
 
@@ -5704,32 +5728,45 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             
             if (arr_approver_TA3.length == 0) {
-                //add new employee 
-                var seq = $scope.MaxSeqdata_approver_ta3;
+                $('#modalEmployeeAdd').modal('hide');
 
-                var newInput = clone_arr_newrow($scope.data_approver_ta3_def)[0];
-                newInput.seq = seq;
-                newInput.id = seq;
-                newInput.no = (0);
-                newInput.id_session = Number(seq_session);
-                newInput.action_type = 'insert';
-                newInput.action_change = 1;
+                $scope.showModal().then(function(confirmed) {
 
-                newInput.id_pha = arr_approver_TA2[0].id_pha
-                newInput.id_approver = seq_session;
-                newInput.approver_type = arr_approver_TA2[0].approver_type;
+                    if(confirmed === true){
+                       //add new employee 
+                       var seq = $scope.MaxSeqdata_approver_ta3;
+    
+                       var newInput = clone_arr_newrow($scope.data_approver_ta3_def)[0];
+                       newInput.seq = seq;
+                       newInput.id = seq;
+                       newInput.no = (0);
+                       newInput.id_session = Number(seq_session);
+                       newInput.action_type = 'insert';
+                       newInput.action_change = 1;
+   
+                       newInput.id_pha = arr_approver_TA2[0].id_pha
+                       newInput.id_approver = seq_session;
+                       newInput.approver_type = arr_approver_TA2[0].approver_type;
+   
+                       newInput.user_name = employee_name;
+                       newInput.user_displayname = employee_displayname;
+                       newInput.user_img = employee_img;
+   
+                       console.log(newInput)
+                       $scope.data_approver_ta3.push(newInput);
+   
+                       console.log("arr_approver_TA3",$scope.data_approver_ta3)
+                       running_no_level1($scope.data_approver_ta3, null, null);
+   
+                       $scope.MaxSeqdata_approver_ta3 = Number($scope.MaxSeqdata_approver_ta3) + 1
+                    }
 
-                newInput.user_name = employee_name;
-                newInput.user_displayname = employee_displayname;
-                newInput.user_img = employee_img;
+                });
 
-                console.log(newInput)
-                $scope.data_approver_ta3.push(newInput);
-
-                console.log("arr_approver_TA3",$scope.data_approver_ta3)
-                running_no_level1($scope.data_approver_ta3, null, null);
-
-                $scope.MaxSeqdata_approver_ta3 = Number($scope.MaxSeqdata_approver_ta3) + 1
+                //save and sent mail?
+                setTimeout(function() {
+                    save_data_create("approver_ta3", 'save');
+                }, 200); 
 
             }
             
@@ -5751,6 +5788,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         apply();
 
     };
+
+    $scope.confirm = function(){
+        $scope.confirmation = true;
+    }
 
     $scope.clearFormData = function() {
         $scope.formData = [];

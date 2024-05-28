@@ -351,7 +351,7 @@
                                                                         <div class="icon-button border p-3" style="border-color: #0d6efd; background-color: #0d6efd;">
                                                                             <span class="fa-solid fa-arrow-up-from-bracket fa-lg" style="color: #ffffff;"></span>
                                                                         </div>
-                                                                        <button class="Upload-button btn ps-3"  ng-if="!item.document_file_size">
+                                                                        <button class="Upload-button btn ps-3"  ng-if="!item_x.document_file_size">
                                                                             <label class="dz-message-text fw-bold cursor-pointer" for="attfile-{{item_x.seq}}" ng-class="{'d-none':(!tab_general_active)}" 
                                                                                 style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; max-width: 150px;">
                                                                                 Upload File (Word, Excel, PDF, Image)
@@ -365,20 +365,20 @@
                                                                                 setSeqUpload(item_d.seq)" 
                                                                                 style="display:none" />
                                                                         </button>
-                                                                        <button class="Upload-button btn ps-3" ng-if="item.document_file_size > 0">
+                                                                        <button class="Upload-button btn ps-3" ng-if="item_x.document_file_size > 0">
                                                                             <div class="d-flex align-items-center">
                                                                                 <span class="mr-3 nametext"
-                                                                                    id="filename{{item.seq}}" 
+                                                                                    id="filename{{item_x.seq}}" 
                                                                                     ng-class="{'d-none':(!tab_general_active)}"
-                                                                                    ng-click="downloadFile(item)"
-                                                                                    ng-if="item.document_file_size>0">
+                                                                                    ng-click="downloadFile(item_x)"
+                                                                                    ng-if="item_x.document_file_size>0">
                                                                                     <b style="font-size:x-small;">
-                                                                                        {{truncateFilename(item.document_file_name, 20)}} ({{item.document_file_size}} KB)
+                                                                                        {{truncateFilename(item_x.document_file_name, 20)}} ({{item_x.document_file_size}} KB)
                                                                                     </b>
                                                                                 </span>
-                                                                                <a id="deluploadfile-{{item.seq}}" class="btn btn-link text-danger p-0 ms-2"
+                                                                                <a id="deluploadfile-{{item_x.seq}}" class="btn btn-link text-danger p-0 ms-2"
                                                                                         ng-class="{'d-none':(!tab_general_active)}"
-                                                                                        ng-click="clearFileName(item.seq)">
+                                                                                        ng-click="clearFileName(item_x.seq)">
                                                                                     <span class="fa-regular fa-trash-can fa-lg"></span>
                                                                                 </a>
 
@@ -403,15 +403,16 @@
                                                     </td>
 
                                                     @* Implement 14 *@
-                                                    <td class="align-top  px-0" ng-if="flow_status == 14">
-                                                        <div class="d-flex align-items-center justify-content-center" style="min-height: 52px;">
+                                                    <td class="align-top px-0" ng-if="flow_status == 14">
+                                                        <div class="d-flex align-items-center justify-content-center position-relative" style="min-height: 52px;">
                                                             <input type="checkbox"
                                                                 ng-model="item_d.implement"
-                                                                ng-click="actionImplement(item_d)"
-                                                                style="cursor: pointer;width:20px; height:20px;"
+                                                                style="cursor: not-allowed; width: 20px; height: 20px;"
                                                             >
+                                                            <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; cursor: not-allowed;"></div>
                                                         </div>
                                                     </td>
+
 
                                                     @* action owner responded 14 *@
                                                     <td class="align-top  px-1"  ng-if="flow_status == 14">
@@ -497,13 +498,12 @@
 
                                                             <div class="align-items-center text-end mt-1"
                                                                 ng-class="{ 'no-drop': !canAccess(item_d), 'cursor-pointer': canAccess(item_d) }"
-                                                                style=" width: 30px;">
+                                                                style=" width: 30px;height:30px">
                                                                 <button
                                                                     ng-style=" { 'background-color' : ((item_d.ram_after_risk == 'H') ? 'red' : ((item_d.ram_after_risk == 'M') ? 'yellow' : ((item_d.ram_after_risk == 'L') ? 'green' : '#D3D3D3')) ) }"
-                                                                    class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end"
+                                                                    class="btn btn-sm dropdown-toggle h-100 dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end"
                                                                     ng-class="{ 'cant-Access': !canAccess(item_d) }"
                                                                     type="button"
-                                                                    ng-click="openModalDataRAM('r',item_d,'after',item_d.id_ram,true)"
                                                                     style="width: 30px;">
                                                                     <div class="d-flex text-center"
                                                                         style=" width: 25px;">
@@ -512,7 +512,7 @@
                                                                             {{item_d.ram_after_risk}}</h6>
                                                                         @*<span class="fas fa-pencil-alt fa-sm "
                                                                             style=" width: 8px;"></span>*@
-                                                                    </div>
+                                                                    </div><!---ng-click="openModalDataRAM('r',item_d,'after',item_d.id_ram,true)"--->
                                                                 </button>
                                                             </div>
                                                         </div>
@@ -538,10 +538,10 @@
                                                             </div>
                                                             <div class="align-items-center text-end mt-1" 
                                                                  ng-class="{ 'no-drop': !canAccess(item_d), 'cursor-pointer': canAccess(item_d) }"
-                                                                 style=" width: 30px;">
+                                                                 style=" width: 30px;height:30px">
                                                                 <button
                                                                     ng-style=" { 'background-color' : ((item_d.ram_action_risk == 'H') ? 'red' : ((item_d.ram_action_risk == 'M') ? 'yellow' : ((item_d.ram_action_risk == 'L') ? 'green' : '#D3D3D3')) ) }"
-                                                                    class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end"
+                                                                    class="btn btn-sm dropdown-toggle h-100 dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end"
                                                                     ng-class="{ 'cant-Access': !canAccess(item_d) }"
                                                                     type="button"
                                                                     ng-click="openModalDataRAM('r',item_d,'action',item_d.id_ram,false)"
@@ -551,8 +551,8 @@
                                                                         <h6 class="me-1 text-center"
                                                                             style=" width: 30px;">
                                                                             {{item_d.ram_action_risk}}</h6>
-                                                                        @*<span class="fas fa-pencil-alt fa-sm "
-                                                                            style=" width: 8px;"></span>*@
+                                                                        <span class="fas fa-pencil-alt fa-sm "
+                                                                            style=" width: 8px;"></span>
                                                                     </div>
                                                                 </button>
                                                             </div>
@@ -657,7 +657,8 @@
                                                                         <div class="icon-button border p-3" style="border-color: #0d6efd; background-color: #0d6efd;">
                                                                             <span class="fa-solid fa-arrow-up-from-bracket fa-lg" style="color: #ffffff;"></span>
                                                                         </div>
-                                                                        <button class="Upload-button btn ps-3"  ng-if="!item.document_file_size">
+
+                                                                        <button class="Upload-button btn ps-3"  ng-if="!item_d.document_file_size">
                                                                             <label class="dz-message-text fw-bold cursor-pointer" for="attfile-{{item_x.seq}}" ng-class="{'d-none':(!tab_general_active)}" 
                                                                                 style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; max-width: 150px;">
                                                                                 Upload File
@@ -672,20 +673,22 @@
                                                                                 style="display:none" 
                                                                                 />
                                                                         </button>
-                                                                        <button class="Upload-button btn ps-3" ng-if="item.document_file_size > 0">
+                                                                        {{item_d.document_file_size}}                                                                        {{item_x.document_file_size}}
+                                                                        {{item_x.document_file_size}}
+                                                                        <button class="Upload-button btn ps-3" ng-if="item_d.document_file_size > 0">
                                                                             <div class="d-flex align-items-center">
                                                                                 <span class="mr-3 nametext"
-                                                                                    id="filename{{item.seq}}" 
+                                                                                    id="filename{{item_x.seq}}" 
                                                                                     ng-class="{'d-none':(!tab_general_active)}"
-                                                                                    ng-click="downloadFile(item)"
-                                                                                    ng-if="item.document_file_size>0">
+                                                                                    ng-click="downloadFile(item_x)"
+                                                                                    ng-if="item_x.document_file_size>0">
                                                                                     <b style="font-size:x-small;">
-                                                                                        {{truncateFilename(item.document_file_name, 20)}} ({{item.document_file_size}} KB)
+                                                                                        {{truncateFilename(item_x.document_file_name, 20)}} ({{item_x.document_file_size}} KB)
                                                                                     </b>
                                                                                 </span>
-                                                                                <a id="deluploadfile-{{item.seq}}" class="btn btn-link text-danger p-0 ms-2"
+                                                                                <a id="deluploadfile-{{item_x.seq}}" class="btn btn-link text-danger p-0 ms-2"
                                                                                         ng-class="{'d-none':(!tab_general_active)}"
-                                                                                        ng-click="clearFileName(item.seq)">
+                                                                                        ng-click="clearFileName(item_x.seq)">
                                                                                     <span class="fa-regular fa-trash-can fa-lg"></span>
                                                                                 </a>
 
