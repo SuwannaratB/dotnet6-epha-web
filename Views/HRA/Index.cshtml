@@ -1339,7 +1339,7 @@
                                                             title="Copy Description of Work or Tasks"
                                                             ng-click="pasteDescription(item)"
                                                             ng-disabled="!dec_copy_status">
-                                                            <span class="fas fa-copy fa-lg"></span>
+                                                            <span class="fa-solid fa-clipboard fa-lg"></span>
                                                             Paste 
                                                         </button>
                                                     </div>
@@ -1602,29 +1602,37 @@
                                                     <td class="" >
                                                         <div class="box" ng-repeat="hazard in item.hazards">
                                                              <textarea class="form-control form-control-sm" 
-                                                                    rows="2" 
-                                                                    type="text" 
-                                                                    style="width: 200px;"
-                                                                    placeholder="Hierarchy of Control (ALARP)" 
-                                                                    ng-disabled="hazard.initial_risk_rating === 'Low'"
-                                                                    ng-style="{'background-color': hazard.initial_risk_rating === 'Low' ? '#f2f2f2' : 'inherit'}"
-                                                                    ng-model="hazard.hierarchy_of_control">
+                                                                rows="2" 
+                                                                type="text" 
+                                                                style="width: 200px;"
+                                                                placeholder="Hierarchy of Control (ALARP)" 
+                                                                ng-disabled="hazard.initial_risk_rating === 'Low'"
+                                                                ng-style="{'background-color': hazard.initial_risk_rating === 'Low' ? '#f2f2f2' : 'inherit'}"
+                                                                ng-model="hazard.hierarchy_of_control">
                                                             </textarea>
                                                         </div>
                                                     </td>
 
                                                     <td class="" >
-                                                        <div class="box" ng-repeat="hazard in item.hazards">
-                                                             @*<textarea class="form-control form-control-sm" 
-                                                                    rows="2" 
-                                                                    type="text" 
-                                                                    style="width: 200px;"
-                                                                    placeholder="Effective?" 
-                                                                    ng-disabled="hazard.initial_risk_rating === 'Low'"
-                                                                    ng-style="{'background-color': hazard.initial_risk_rating === 'Low' ? '#f2f2f2' : 'inherit'}"
+                                                        <div class="box" ng-repeat="(idx,hazard) in item.hazards">
+                                                            <div class="d-flex gap-2 mb-2" style="min-width: max-content;">
+                                                                <input type="radio" 
+                                                                    name="ef-{{item.index_rows}}-{{idx}}" 
+                                                                    id="effective-{{item.index_rows}}-{{idx}}" 
+                                                                    style="width: 20px;"
+                                                                    value="effective"
                                                                     ng-model="hazard.effective">
-                                                            </textarea>*@
-
+                                                                <label for="effective">Effective</label>
+                                                            </div>
+                                                            <div class="d-flex gap-2" style="min-width: max-content;">
+                                                                <input type="radio" 
+                                                                    name="ef-{{item.index_rows}}-{{idx}}" 
+                                                                    id="ineffective-{{item.index_rows}}-{{idx}}" 
+                                                                    style="width: 20px;"
+                                                                    value="ineffective"
+                                                                    ng-model="hazard.effective">
+                                                                <label for="ineffective">Ineffective</label>
+                                                            </div>
                                                         </div>
                                                     </td>
 
@@ -1661,17 +1669,15 @@
                                                         
                                                     </td>
 
-                                                                                                            
-
                                                     <td class="" >
                                                         <div class="box" ng-repeat="hazard in item.hazards">
                                                              @* <p class="pe-1 text-1100 fw-bold">{{ (hazard.recommendations_no +'.') }}</p> *@
                                                             <textarea class="form-control form-control-sm " 
-                                                                    rows="2" 
-                                                                    type="text"
-                                                                    style="width: 200px;"
-                                                                    placeholder="Comments"
-                                                                    ng-model="hazard.recommendations">
+                                                                rows="2" 
+                                                                type="text"
+                                                                style="width: 200px;"
+                                                                placeholder="Comments"
+                                                                ng-model="hazard.recommendations">
                                                             </textarea>
                                                         </div>
                                                     </td>
