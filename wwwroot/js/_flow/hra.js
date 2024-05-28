@@ -4912,17 +4912,16 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     $scope.pasteDescription = function (item) {
         const data_copy = $scope.dec_copy;
-
-        if ($scope.dec_copy) {
-
-            if (item.descriptions.length != $scope.dec_copy.descriptions.length) {
-                const num_rows = $scope.dec_copy.descriptions.length - item.descriptions.length;
+        if (data_copy) {
+            if (item.descriptions.length != data_copy.descriptions.length) {
+                const num_rows = data_copy.descriptions.length - item.descriptions.length;
                 for (let i = 0; i < num_rows; i++) {
                     $scope.addDescriptions(item, item.descriptions[item.descriptions.length - 1])
                 }
             }
 
             for (let i = 0; i < data_copy.descriptions.length; i++) {
+                item.descriptions[i].action_change = 1;
                 item.descriptions[i].descriptions = data_copy.descriptions[i].descriptions;
             }
         }
