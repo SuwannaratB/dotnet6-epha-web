@@ -2402,7 +2402,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
 
             console.log('newTask ==> ',$scope.data_tasks)
-ช        };
+        };
 
         //work or tasks
         $scope.addDescriptions = function (item_t, item_d){
@@ -4813,6 +4813,32 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
         }
         return hazardList;
+    }
+
+    $scope.copyDescription = function (item) {
+        if (item) {
+            $scope.dec_copy = item;
+            $scope.dec_copy_status = true;
+        }
+    }
+
+    $scope.pasteDescription = function (item) {
+        const data_copy = $scope.dec_copy;
+
+        if ($scope.dec_copy) {
+
+            if (item.descriptions.length != $scope.dec_copy.descriptions.length) {
+                const num_rows = $scope.dec_copy.descriptions.length - item.descriptions.length;
+                for (let i = 0; i < num_rows; i++) {
+                    $scope.addDescriptions(item, item.descriptions[item.descriptions.length - 1])
+                }
+                
+            }
+
+            for (let i = 0; i < data_copy.descriptions.length; i++) {
+                item.descriptions[i].descriptions = data_copy.descriptions[i].descriptions;
+            }
+        }
     }
 
     $scope.Matrix_Frequency_Rating = function () {
