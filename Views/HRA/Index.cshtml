@@ -1158,7 +1158,7 @@
                                         </thead>
                                         <tbody class="list" id="customer-rating-table-body">
                                             <tr class="hover-actions-trigger btn-reveal-trigger position-static" 
-                                                ng-repeat="item in data_tasks" 
+                                                ng-repeat="(index, item) in data_tasks" 
                                                 ng-if="item.tasks_type_other == 0">
 
                                                 <td class="align-top rating white-space-nowrap px-1" 
@@ -1218,11 +1218,11 @@
                                                             </option>
                                                         </select>
                                                         <input type="text" class="form-control" 
-                                                                placeholder="Name"
-                                                                ng-class="{'disabled-link':(!tab_general_active || !(tab_general_active && data_header[0].pha_status<=12 ))}"
-                                                                ng-model="item.worker_group"
-                                                                ng-if="item.tasks_type_other == 1">
-
+                                                            placeholder="Name"
+                                                            ng-class="{'disabled-link':(!tab_general_active || !(tab_general_active && data_header[0].pha_status<=12 ))}"
+                                                            ng-model="item.worker_group"
+                                                            ng-if="item.tasks_type_other == 1"
+                                                            >
                                                     </div>
                                                 </td>
 
@@ -1257,7 +1257,7 @@
                                                                     <div style="padding-right: 8px;">
                                                                         <div class="align-top text-center">
                                                                             <div class="font-sans-serif btn-reveal-trigger position-static ">
-                                                                                <span class="px-1">{{item_d.index_rows + 1}}.{{item_d.no}} </span>
+                                                                                <span class="px-1">{{index + 1}}.{{item_d.no}} </span>
                                                                             </div>
                                                                         </div>
                                                                         <div class="font-sans-serif btn-reveal-trigger position-static" 
@@ -1296,8 +1296,9 @@
                                                                 ng-class="{'disabled-link':(!tab_general_active)}" 
                                                                 type="text" 
                                                                 placeholder="Work or Task" 
-                                                                ng-model="item_d.descriptions" 
-                                                                ng-keyup="filterResultGeneral(item_d.descriptions, 'work_or_task')"
+                                                                ng-model="item_d.descriptions"
+                                                                ng-change="changeDescription(item_d)" 
+                                                                @* ng-keyup="filterResultGeneral(item_d.descriptions, 'work_or_task')" *@
                                                                 >
                                                         @* <ul class="list-group mt-2 w-25" 
                                                             style="position: absolute;" 

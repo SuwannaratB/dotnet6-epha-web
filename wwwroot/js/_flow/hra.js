@@ -536,6 +536,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.data_subareas_delete = [];
         $scope.data_hazard_delete = [];
         $scope.data_tasks_delete = [];
+        $scope.data_descriptions_delete= [];
         $scope.data_workers_delete = [];
 
         $scope.data_worksheet_delete = [];
@@ -758,6 +759,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         var json_descriptions = check_data_descriptions();
         var json_workers = check_data_workers();
         var json_worksheet = "[]";
+        check_data_worksheet_list();
         // var json_worksheet = check_data_worksheet();
 
         var flow_action = (action == 'submit_complete' ? 'submit' : action);
@@ -1132,6 +1134,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                     //List of Worker Groups and Description of Tasks
                     if (true) {
+
                         var taskList = setup_tasks(arr);
                         $scope.data_tasks = taskList;
                         $scope.data_tasks_def = clone_arr_newrow(taskList);
@@ -1141,6 +1144,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         $scope.data_workers_def = clone_arr_newrow(arr.workers);
                         $scope.data_workers_old = (arr.workers);
 
+                        $scope.data_descriptions_def = clone_arr_newrow(arr.descriptions);
                         $scope.data_descriptions_def = clone_arr_newrow(arr.descriptions);
                         $scope.data_tasks = groupTaksList($scope.data_tasks);
                     }
@@ -1187,6 +1191,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     $scope.data_subareas_delete = [];
                     $scope.data_hazard_delete = [];
                     $scope.data_tasks_delete = [];
+                    $scope.data_descriptions_delete = [];
                     $scope.data_workers_delete = [];
 
                     $scope.data_worksheet_delete = [];
@@ -1350,7 +1355,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         data.tasks[0].descriptions[0].id_tasks = null;
         data.tasks[0].descriptions[0].id = xValues;
         data.tasks[0].descriptions[0].seq = xValues;
+        data.tasks[0].descriptions[0].id_tasks = data.tasks[0].seq ;
+        data.tasks[0].descriptions[0].action_change = 0 ;
         data.tasks[0].descriptions[0].action_type = 'insert';
+
+        if ( data.tasks[0].descriptions[0].descriptions) {
+            data.tasks[0].descriptions[0].action_type = 'update'
+        }
         return data.tasks;
     }
 
@@ -1827,11 +1838,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     newInput.id = xValues;
                     newInput.no = 1;
                     newInput.id_pha = arr_tasks[i].id_pha;
-                    newInput.id_tasks = arr_tasks[i].id_worker_group;
+                    newInput.id_tasks = arr_tasks[i].seq;
                     newInput.action_type = 'insert';
                     newInput.action_change = 0;
                     newInput.index_rows = arr_tasks[i].index_rows;
-
                     arr_tasks[i].descriptions = [];
                     arr_tasks[i].descriptions.push(newInput);
                 }
@@ -1842,8 +1852,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                 arr_tasks[i].worker_list = workerList;
             }
-
-            return arr_tasks;
+           
+            return  groupDescriptions(arr_tasks);
         }
 
         function groupHazardList (arr_hazard) {
@@ -1875,6 +1885,42 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 groupedArea[i].hazard.sort((a, b) => a.no - b.no);
             }
             return groupedArea;
+        }
+
+        function groupDescriptions (arr_tasks) {
+            var groupedData = [];
+            var groupedArea = [];
+            var mocData = angular.copy($scope.data_tasks);
+            // ใช้ reduce เพื่อแบ่งข้อมูลเป็นกลุ่มโดยใช้ id_subareas เป็นกุญแจ
+            arr_tasks[0].descriptions.reduce(function(acc, curr) {
+                if (!acc[curr.id_tasks]) {
+                    acc[curr.id_tasks] = [];
+                }
+                acc[curr.id_tasks].push(curr);
+                return acc;
+            }, groupedData);
+
+            var filteredData = groupedData.filter(function(item) {
+                return Array.isArray(item);
+            })
+
+            // filteredData[0][0].action_type = 'update'
+            console.log('filteredData',filteredData)
+            for (let i = 0; i < filteredData.length; i++) {
+                // console.log(filteredData[i][i])
+                // if (filteredData[i][i].descriptions) {
+                //     filteredData[i][i].action_type = 'update'
+                // }
+              
+                arr_tasks[i].descriptions = filteredData[i];
+            }
+            return arr_tasks;
+        }
+
+        $scope.changeDescription = function (dec) {
+            if (dec) {
+                dec.action_change = 1;
+            }
         }
 
         $scope.addDataSession = function (seq, index) {
@@ -2311,6 +2357,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             newInput2.action_type = 'insert';
             newInput2.action_change = 0;
             newInput2.index_rows = item.no;
+            newInput2.id_tasks = newInput.seq;
 
             newInput.descriptions.push(newInput2);
 
@@ -2372,7 +2419,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             newInput.id = xValues;
             newInput.no = Number(item_d.no + 1);
             newInput.id_pha = item_t.id_pha;
-            newInput.id_tasks = item_t.id_worker_group;
+            newInput.id_tasks = item_t.seq;
             newInput.action_type = 'insert';
             newInput.action_change = 0;
             newInput.index_rows = item_t.index_rows;
@@ -2399,9 +2446,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.removeDescriptions = function (item_t, index) {
             const delItem = item_t.descriptions.find((item, idx) => idx === index);
 
-            if (!delItem) return;
-
-            // $scope.data_hazard_delete.push(delItem);
+            if (!delItem) return console.log('item data_descriptions not found');
+            // remove
+            $scope.data_descriptions_delete.push(delItem);
 
             item_t.descriptions = $filter('filter')(item_t.descriptions, function (item, idx) {
                 return (idx != index);
@@ -3581,7 +3628,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             var arr_json = $filter('filter')(descriptionList, function (item) {
                 return ((item.action_type == 'update' && item.action_change == 1) || item.action_type == 'insert');
             });
-
+            // delete
+            for (var i = 0; i < $scope.data_descriptions_delete.length; i++) {
+                $scope.data_descriptions_delete[i].action_type = 'delete';
+                arr_json.push($scope.data_descriptions_delete[i]);
+            }
+            console.log('arr descriptions json all => ',(descriptionList))
             console.log('arr descriptions json => ',(arr_json))
             return angular.toJson(arr_json);
         }
@@ -3627,6 +3679,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             return angular.toJson(arr_json);
         }
+
+        function check_data_worksheet_list() {
+            console.log('data_worksheet_list',$scope.data_worksheet_list)
+            console.log('data_worksheet',$scope.data_worksheet)
+        }
+
         function check_data_worksheet() {
 
             var pha_status = $scope.data_header[0].pha_status;
@@ -3813,10 +3871,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 _arr.numbers_of_workers = arrWorkerList.length;
 
                 // custom descirption
-                _arr.descriptions.forEach(element => {
-                    element.id_tasks = arrText[0].id;
-                });
-                console.log('item ',_arr)
+                // _arr.descriptions.forEach(element => {
+                //     element.id_tasks = _arr.seq;
+                // });
+                // console.log('item ',_arr)
             }
             if (type_text == "descriptions") {
                
@@ -3846,12 +3904,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
             // set descriptions
             item.numbers_of_workers = workerList.length;
-            item.descriptions.forEach(element => {
-                element.id_tasks = item.id_worker_group;
-            });
-            console.log(item)
-
-
+            // item.descriptions.forEach(element => {
+            //     element.id_tasks = item.id_worker_group;
+            // });
+            // console.log(item)
 
             //will set user to data_workers  =====>>>>>> Bug มัน reset อันเดิม ที่เคยเลือก
             var arr_items = $filter('filter')($scope.data_workers, function (item) {
