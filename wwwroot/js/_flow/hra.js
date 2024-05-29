@@ -4876,14 +4876,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             return (hazard.id_exposure_rating == item.exposure_rating && hazard.health_effect_rating == item.health_effect_rating); 
         })[0];
         
-        // hazard.id_initial_risk_rating = id_exposure_rating;
         hazard.initial_risk_rating = compare.results;
-
-        // setup sub area tab2
-        // for (let i = 0; i < array.length; i++) {
-        //     const element = array[i];
-            
-        // }
 
         console.log('data_worksheet_list',$scope.data_worksheet_list)
     }
