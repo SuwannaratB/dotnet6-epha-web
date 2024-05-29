@@ -187,7 +187,7 @@ AppMenuPage.directive('hidePlaceholderOption', function() {
   
   
 
-AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, $document, $interval,$rootScope,$window) { 
+AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, $document, $interval,$rootScope,$window,$q) { 
 
     $scope.unsavedChanges = false;
 
@@ -947,6 +947,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.data_session = [];
         $scope.data_memberteam = [];
         $scope.data_approver = [];
+        $scope.data_approver_ta3 = [];
 
         $scope.data_drawing = [];
         $scope.data_node = [];
@@ -958,6 +959,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.data_session_delete = [];
         $scope.data_memberteam_delete = [];
         $scope.data_approver_delete = [];
+        $scope.data_approver_ta3_delete = [];
         $scope.data_drawing_delete = [];
         $scope.data_node_delete = [];
         $scope.data_nodedrawing_delete = [];
@@ -1095,6 +1097,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         var arr_check = $filter('filter')($scope.data_all.max, function (item) { return (item.name == 'drawing_approver'); });
         var iMaxSeq = 1; if (arr_check.length > 0) { iMaxSeq = arr_check[0].values; }
         $scope.MaxSeqdata_drawing_approver = iMaxSeq;
+
+        $scope.MaxSeqdata_approver_ta3 = 0;
+        var arr_check = $filter('filter')($scope.data_all.max, function (item) { return (item.name == 'approver_ta3'); });
+        var iMaxSeq = 1; if (arr_check.length > 0) { iMaxSeq = arr_check[0].values; }
+        $scope.MaxSeqdata_approver_ta3 = iMaxSeq;
 
 
         $scope.selectdata_session = 1;
@@ -1447,6 +1454,102 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         });
 
     }
+    function save_data_approver_ta3(action) {
+
+        console.log("save_data_approver_ta3 called with action:", action);
+
+        var user_name = $scope.user_name;
+        var token_doc = $scope.token_doc + "";
+        var pha_seq = $scope.data_header[0].seq;
+        var pha_status = $scope.data_header[0].pha_status;
+        var flow_role_type = $scope.flow_role_type;
+
+        var flow_action = action;
+
+        console.log("Step 1: Inside save_data_approver_ta3 function");
+
+        var json_header = angular.toJson($scope.data_header);
+        var json_approver = check_data_approver();
+        var json_approver_ta3 = check_data_approver_ta3();
+        //var json_drawing_approver = check_data_drawing_approver(id_session);
+
+
+        var data = {
+            sub_software: "hazop",
+            user_name: user_name,
+            role_type: flow_role_type,
+            action: flow_action,
+            json_header: json_header,
+            json_approver: json_approver,
+            json_approver_ta3: json_approver_ta3
+        };
+        
+        var jsonData = JSON.stringify(data);
+        
+        // Log the constructed JSON string
+        console.log("Constructed JSON Data:", jsonData);
+
+    console.log("AJAX request data:", {
+        sub_software: "hazop",
+        user_name: user_name,
+        role_type: flow_role_type,
+        action: flow_action,
+        json_header: json_header,
+        json_approver: json_approver,
+        json_approver_ta3: json_approver_ta3
+    });
+
+        $.ajax({
+            url: url_ws + "flow/set_approve_ta3",
+            data: '{"sub_software":"hazop","user_name":"' + user_name + '","role_type":"' + flow_role_type + '","token_doc":"' + pha_seq + '","action":"' + flow_action 
+                + '","json_header":' + JSON.stringify(json_header) 
+                + ',"json_approver":' + JSON.stringify(json_approver) 
+                + ',"json_approver_ta3":' + JSON.stringify(json_approver_ta3) 
+                + '}',  
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            beforeSend: function() {
+                $("#divLoading").show();
+            },
+            complete: function() {
+                $("#divLoading").hide();
+            },
+            success: function(data) {
+                var arr = data;
+                console.log(arr);
+
+                if (arr[0].status == 'true') {
+                    $scope.pha_type_doc = 'update';
+
+                    if (action == 'save') {
+                        set_alert('Success', 'Data has been successfully saved.');
+                        $scope.$apply();
+                    } else {
+                        set_alert('Success', 'Data has been successfully submitted.');
+                    }
+                } else {
+                    set_alert('Error', arr[0].status);
+                    $scope.$apply();
+                }
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                if (jqXHR.status == 500) {
+                    console.error('Internal error: ' + jqXHR.responseText);
+                    alert('Internal error: ' + jqXHR.responseText);
+                } else if (jqXHR.status == 400) {
+                    console.error('Bad Request: ' + jqXHR.responseText);
+                    alert('Bad Request: ' + jqXHR.responseText);
+                } else {
+                    console.error('Unexpected error:', textStatus, errorThrown);
+                    console.error('Response Text:', jqXHR.responseText);
+                    alert('Unexpected error: ' + textStatus);
+                }
+            }
+        });
+
+    }
+
 
     function get_data(page_load, action_submit) {
 
@@ -1552,6 +1655,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     $scope.data_approver = arr.approver;
                     $scope.data_approver_def = clone_arr_newrow(arr.approver);
                     $scope.data_approver_old = (arr.approver);
+
+                    $scope.data_approver_ta3 = arr.approver_ta3;
+                    $scope.data_approver_ta3_def = clone_arr_newrow(arr.approver_ta3);
+                    $scope.data_approver_ta3_old = (arr.approver_ta3);
 
                     $scope.data_drawing = arr.drawing;
                     $scope.data_drawing_def = clone_arr_newrow(arr.drawing);
@@ -5393,6 +5500,63 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         return angular.toJson(arr_json);
     }
 
+    function check_data_approver_ta3() {
+
+        var pha_seq = $scope.data_header[0].seq;
+        for (var i = 0; i < $scope.data_approver_ta3.length; i++) {
+            $scope.data_approver_ta3[i].id = $scope.data_approver_ta3[i].seq;
+            $scope.data_approver_ta3[i].id_pha = pha_seq;
+            $scope.data_approver_ta3[i].no = (i + 1);
+        }
+
+        var arr_active = [];
+        angular.copy($scope.data_approver_ta3, arr_active);
+        var arr_json = $filter('filter')(arr_active, function (item) {
+            return ((item.user_name !== null && item.action_type === 'update' && item.action_change === 1) || item.action_type === 'insert');
+        });
+        
+        for (var i = 0; i < $scope.data_approver_ta3_delete.length; i++) {
+            $scope.data_approver_ta3_delete[i].action_type = 'delete';
+            arr_json.push($scope.data_approver_ta3_delete[i]);
+        }
+        for (var i = 0; i < arr_active.length; i++) {
+            if (arr_active[i].user_name == null) {
+                arr_active[i].action_type = 'delete';
+                arr_json.push(arr_active[i]);
+            }
+        }
+
+        //check จากข้อมูลเดิมที่เคยบันทึกไว้ถ้าไม่มีในของเดิมให้ delete ออกด้วย
+        for (var i = 0; i < $scope.data_approver_ta3_old.length; i++) {
+            var arr_check = $filter('filter')($scope.data_approver_ta3, function (item) {
+                return (item.user_name == $scope.data_approver_ta3_old[i].user_name
+                    && item.id_session == $scope.data_approver_ta3_old[i].id_session
+                    && (item.action_type == 'insert' || item.action_type == 'update'));
+            });
+            if (arr_check.length == 0) {
+                $scope.data_approver_ta3_old[i].action_type = 'delete';
+                arr_json.push($scope.data_approver_ta3_old[i]);
+            }
+        }
+
+        //check จากข้อมูล session ให้ delete ออกด้วย
+        for (var i = 0; i < $scope.data_approver_ta3.length; i++) {
+            var arr_check = $filter('filter')($scope.data_session, function (item) {
+                return (item.seq == $scope.data_approver_ta3[i].id_session || item.id == $scope.data_approver_ta3[i].id_session);
+            });
+            if (arr_check.length == 0) {
+                for (var l = 0; l < arr_check.length; l++) {
+                    arr_check[l].action_type = 'delete';
+                    arr_json.push(arr_check[l]);
+                }
+            }
+        }
+
+        console.log("arr_json",arr_json)
+        return angular.toJson(arr_json);
+    }
+
+
     function check_data_drawing() {
 
         var pha_seq = $scope.data_header[0].seq;
@@ -6115,7 +6279,27 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     
     $scope.clickedStates = {};
+    $scope.showModal = function() {
+        var deferred = $q.defer();
 
+        $('#modalConfirm').modal('show');
+
+        $scope.confirm = function() {
+            $('#modalConfirm').modal('hide');
+            deferred.resolve(true);
+        };
+
+        $scope.cancel = function() {
+            $('#modalConfirm').modal('hide');
+            deferred.resolve(false);
+        };
+
+        $('#modalConfirm').on('hidden.bs.modal', function() {
+            deferred.resolve(false);
+        });
+
+        return deferred.promise;
+    };
     $scope.choosDataEmployee = function (item) {
 
         if(item) {
@@ -6230,6 +6414,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             if (result) {
                 result.action_change = 1;
+                result.action_type = 'update';
                 result.user_displayname = item.employee_displayname;
                 result.user_img = item.employee_img;
                 result.user_name = item.employee_name;
@@ -6238,9 +6423,19 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
         else if (xformtype == "approver_ta3"){
 
-            var arr_approver_TA2 = $filter('filter')($scope.data_approver, function (item) {
-                return (item.id == seq_session);
+            var arr_approver_TA2 = $scope.data_approver.filter(item => item.id === seq_session);
+
+            $scope.data_approver = $scope.data_approver.map(item => {
+                if (arr_approver_TA2.includes(item)) {
+                    return {
+                        ...item,
+                        action_type: 'update',
+                        action_change: 1
+                    };
+                }
+                return item;
             });
+            
 
             var arr_approver_TA3 = $filter('filter')($scope.data_approver_ta3, function (item) {
                 return (item.id_session == seq_session && item.user_name == employee_name);
@@ -6248,38 +6443,53 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             
             if (arr_approver_TA3.length == 0) {
-                //add new employee 
-                var seq = $scope.MaxSeqdata_approver_ta3;
-
-                var newInput = clone_arr_newrow($scope.data_approver_ta3_def)[0];
-                newInput.seq = seq;
-                newInput.id = seq;
-                newInput.no = (0);
-                newInput.id_session = Number(seq_session);
-                newInput.action_type = 'insert';
-                newInput.action_change = 1;
-
-                newInput.id_pha = arr_approver_TA2[0].id_pha
-                newInput.id_approver = seq_session;
-                newInput.approver_type = arr_approver_TA2[0].approver_type;
-
-                newInput.user_name = employee_name;
-                newInput.user_displayname = employee_displayname;
-                newInput.user_img = employee_img;
-
-                console.log(newInput)
-                $scope.data_approver_ta3.push(newInput);
-
+                $('#modalEmployeeAdd').modal('hide');
                 console.log("arr_approver_TA3",$scope.data_approver_ta3)
-                running_no_level1($scope.data_approver_ta3, null, null);
 
-                $scope.MaxSeqdata_approver_ta3 = Number($scope.MaxSeqdata_approver_ta3) + 1
+                $scope.showModal().then(function(confirmed) {
 
+                    if(confirmed === true){
+                       //add new employee 
+                       var seq = $scope.MaxSeqdata_approver_ta3;
+    
+                       var newInput = clone_arr_newrow($scope.data_approver_ta3_def)[0];
+                       newInput.seq = seq;
+                       newInput.id = seq;
+                       newInput.no = (0);
+                       newInput.id_session = Number(seq_session);
+                       newInput.action_type = 'insert';
+                       newInput.action_change = 1;
+   
+                       newInput.id_pha = arr_approver_TA2[0].id_pha
+                       newInput.id_approver = seq_session;
+                       newInput.approver_type = arr_approver_TA2[0].approver_type;
+   
+                       newInput.user_name = employee_name;
+                       newInput.user_displayname = employee_displayname;
+                       newInput.user_img = employee_img;
+   
+                       console.log(newInput)
+                       $scope.data_approver_ta3.push(newInput);
+   
+                       console.log("arr_approver_TA3",$scope.data_approver_ta3)
+                       running_no_level1($scope.data_approver_ta3, null, null);
+   
+                       $scope.MaxSeqdata_approver_ta3 = Number($scope.MaxSeqdata_approver_ta3) + 1
+                    }
+
+                    // Debugging log
+                    console.log("Before calling save_data_approver_ta3");
+
+                    // Save and send
+                    setTimeout(function() {
+                        console.log("Calling save_data_approver_ta3");
+                        save_data_approver_ta3("submit");
+                    }, 200);
+
+                });
             }
             
-            $('#modalEmployeeAdd').modal('hide');
         }
-
         //clear_valid_items($scope.recomment_clear_valid);
         $scope.recomment_clear_valid = '';
 

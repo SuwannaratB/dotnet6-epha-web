@@ -2433,14 +2433,14 @@
                                                 </td>
 
                                                 <td class="align-top border border-light border-end-0  border-start-0  border-top-0 "
-                                                    style="padding: 0 !important; width: 30px;">
+                                                    style="padding: 0 !important; width: 30px; height:30;">
                                                     <div class="align-items-center text-end mt-1" style=" width: 30px;">
                                                         <button ng-style=" { 'background-color' : ((item.ram_befor_risk == 'H') ? 'red' : ((item.ram_befor_risk == 'M') ? 'yellow' : ((item.ram_befor_risk == 'L') ? 'green' : '#D3D3D3')) ) }"
-                                                                class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end"
+                                                                class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end h-100"
                                                                 ng-class="{'disabled-link':(!tab_worksheet_active)}"
                                                                 type="button" 
                                                                 ng-click="openModalDataRAM_Worksheet(item,'r',item.seq,'befor')" 
-                                                                style="width: 30px; height:30;">
+                                                                style="width: 30px;height:30px !important;">
                                                             <div class="d-flex text-center" style=" width: 20px;">
                                                                 <h6 class="me-1 text-center" style=" width: 20px;">{{item.ram_befor_risk}}</h6>
                                                                 <span class="fas fa-pencil-alt fa-sm " style=" width: 8px;"></span>
@@ -2543,14 +2543,14 @@
                                                 </td>
 
                                                 <td class="align-top border border-light border-end-0  border-start-0  border-top-0 "
-                                                    style="padding: 0 !important; width: 30px;">
+                                                    style="padding: 0 !important; width: 30px; heigh:30px">
                                                     <div class="align-items-center text-end mt-1" style=" width: 30px;">
                                                         <button ng-style=" { 'background-color' : ((item.ram_after_risk == 'H') ? 'red' : ((item.ram_after_risk == 'M') ? 'yellow' : ((item.ram_after_risk == 'L') ? 'green' : '#D3D3D3')) ) }"
                                                                 class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end"
                                                                 type="button" 
                                                                 ng-class="{'disabled-link':(!tab_worksheet_active)}"
                                                                 ng-click="openModalDataRAM_Worksheet(item,'r',item.seq,'after')" 
-                                                                style="width: 30px;">
+                                                                style="width: 30px; height:30px !important;">
                                                             <div class="d-flex text-center" style=" width: 25px;">
                                                                 <h6 class="me-1 text-center" style=" width: 30px;">{{item.ram_after_risk}}</h6>
                                                                 <span class="fas fa-pencil-alt fa-sm " style=" width: 8px;"></span>
@@ -3155,44 +3155,55 @@
                                             </td>
 
                                             <td class="align-top rating white-space-nowrap ">
-                                                <div class="d-flex align-items-center text-end ">
-                                                    <div class="align-items-center ">
-                                                        <p class="transition-none fs--2p-1 ps-0 text-center rounded-1 cursor-pointer"
-                                                           style="width: 20px; height:20px">
+                                                <div class="d-flex align-items-top text-end ">
+                                                    <div class="d-flex align-items-top justify-content-center" style="min-height: 52px;">
+                                                        <p class="transition-none fs--2p-1 ps-0 p-1 text-center rounded-1 cursor-pointer"
+                                                        style="width: 20px; height:20px; margin: 0;">
                                                             {{item.ram_after_security}}
                                                         </p>
                                                     </div>
 
-                                                    <div class="align-items-center ">
-                                                        <p class="transition-none fs--2p-1 ps-0 text-center rounded-1 cursor-pointer"
-                                                           style="width: 20px; height:20px">
+                                                    <div class="d-flex align-items-top justify-content-center" style="min-height: 52px;">
+                                                        <p class="transition-none fs--2p-1 ps-0 p-1 text-center rounded-1 cursor-pointer"
+                                                        style="width: 20px; height:20px; margin: 0;">
                                                             {{item.ram_after_likelihood}}
                                                         </p>
                                                     </div>
 
-                                                    <div class="align-items-center ">
-                                                        <p ng-style=" { 'background-color' : ((item.ram_after_risk == 'H') ? 'red' : ((item.ram_after_risk == 'M') ? 'yellow' : ((item.ram_after_risk == 'L') ? 'green' : '#D3D3D3')) ) }"
-                                                           class="transition-none fs--2p-1 ps-0 text-center rounded-1 cursor-pointer"
-                                                           style="width: 20px; height:20px">
-                                                            {{item.ram_after_risk}}
-                                                        </p>
+                                                    <div class="d-flex align-items-top justify-content-center text-end" 
+                                                         ng-class="{ 'no-drop': !canAccess(item_d), 'cursor-pointer': canAccess(item_d) }"
+                                                         style=" width: 30px;height:30px">
+                                                        <button
+                                                            ng-style=" { 'background-color' : ((item.ram_after_risk == 'H') ? 'red' : ((item.ram_after_risk == 'M') ? 'yellow' : ((item.ram_after_risk == 'L') ? 'green' : '#D3D3D3')) ) }"
+                                                            class="btn btn-sm dropdown-toggle h-100 dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end"
+                                                            ng-class="{ 'cant-Access': !canAccess(item_d) }"
+                                                            type="button"
+                                                            style="width: 30px;">
+                                                            <div class="d-flex text-center"
+                                                                style=" width: 25px;">
+                                                                <h6 class="me-1 text-center"
+                                                                    style=" width: 30px;">
+                                                                    {{item.ram_after_risk}}</h6>
+                                                            </div>
+                                                        </button>
                                                     </div>
                                                 </div>
                                             </td>
 
                                             <td class="align-top rating white-space-nowrap " ng-class="{'disabled-link':(!tab_managerecom_active)}">
-                                                <div class="d-flex align-items-center text-end ">
-                                                    <div class="align-items-center ">
-                                                        <p class="transition-none fs--2p-1 ps-0 text-center rounded-1 cursor-pointer"
-                                                           ng-click="openModalDataRAM_Worksheet(item,'s',item.seq,'after',item.id_ram)" style="width: 20px; height:20px">
+                                                <div class="d-flex align-items-top text-end ">
+                                                    <div class="d-flex align-items-top justify-content-center" style="min-height: 52px;">
+                                                        <p class="transition-none fs--2p-1 ps-0 p-1 text-center rounded-1 cursor-pointer"
+                                                            style="width: 20px; height:20px; margin: 0;"
+                                                            ng-click="openModalDataRAM_Worksheet(item,'s',item.seq,'after',item.id_ram)">
                                                             {{item.ram_action_security}}
                                                         </p>
                                                     </div>
 
-                                                    <div class="align-items-center ">
-                                                        <p class="transition-none fs--2p-1 ps-0 text-center rounded-1 cursor-pointer"
-                                                            ng-click="openModalDataRAM_Worksheet(item,'r',item.seq,'action',item.id_ram)"
-                                                            style="width: 20px; height:20px">
+                                                    <div class="d-flex align-items-top justify-content-center" style="min-height: 52px;">
+                                                        <p class="transition-none fs--2p-1 ps-0 p-1 text-center rounded-1 cursor-pointer"
+                                                            style="width: 20px; height:20px; margin: 0;"
+                                                            ng-click="openModalDataRAM_Worksheet(item,'r',item.seq,'action',item.id_ram)">
                                                             {{item.ram_action_likelihood}}
                                                         </p>
                                                     </div>
@@ -3205,19 +3216,25 @@
                                                             {{item.ram_action_risk}}
                                                         </p>
                                                     </div>*@
-                                                    <div class="align-items-center text-end mt-1" style=" width: 30px;">
-                                                        <button ng-style=" { 'background-color' : ((item.ram_action_risk == 'H') ? 'red' : ((item.ram_action_risk == 'M') ? 'yellow' : ((item.ram_action_risk == 'L') ? 'green' : '#D3D3D3')) ) }"
-                                                                class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end"
-                                                                type="button" 
-                                                                ng-click="openModalDataRAM_Worksheet(item,'r',item.seq,'action',item.id_ram)"
-                                                                style="width: 30px;">
-                                                            <div class="d-flex text-center" style=" width: 25px;">
-                                                                <h6 class="me-1 text-center" style=" width: 30px;">{{item.ram_after_risk}}</h6>
-                                                                <span class="fas fa-pencil-alt fa-sm " style=" width: 8px;"></span>
+                                                    <div class="align-items-top text-end cursor-pointer" 
+                                                         ng-class="{ 'no-drop': !canAccess(item_d), 'cursor-pointer': canAccess(item_d) }"
+                                                         style=" width: 30px;height:30px">
+                                                        <button
+                                                            ng-style=" { 'background-color' : ((item.ram_action_risk == 'H') ? 'red' : ((item.ram_action_risk == 'M') ? 'yellow' : ((item.ram_action_risk == 'L') ? 'green' : '#D3D3D3')) ) }"
+                                                            class="btn btn-sm dropdown-toggle h-100 cursor-pointer dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end"
+                                                            type="button"
+                                                            ng-click="openModalDataRAM_Worksheet(item,'r',item.seq,'action',item.id_ram)"
+                                                            style="width: 30px;">
+                                                            <div class="d-flex text-center"
+                                                                style=" width: 25px;">
+                                                                <h6 class="me-1 text-center"
+                                                                    style=" width: 30px;">
+                                                                    {{item.ram_action_risk}}</h6>
+                                                                <span class="fas fa-pencil-alt fa-sm "
+                                                                    style=" width: 8px;"></span>
                                                             </div>
                                                         </button>
-                                                    </div>
-
+                                                    </div>                                                    
                                                 </div>
 
                                             </td>
@@ -3280,16 +3297,19 @@
                                                     </div>
                                                 </td>
                                                 <td class="align-top white-space-nowrap">
-                                                    <div class="col-md-12 p-1 ps-3 text-start">
-                                                        <div class="d-flex align-items-center">
+                                                    <div class="d-flex align-items-center">
+                                                        <div class="col-md-12 p-1 ps-3 d-flex justify-content-between align-items-center">
                                                             <div ng-if="params == 'edit_approver'">
-                                                                <button ng-click="
-                                                                    openDataEmployeeAdd(item,'edit_approver',$index); 
-                                                                    recommentAction_valid(item);" 
+                                                                <button 
+                                                                    ng-click="
+                                                                        openDataEmployeeAdd(item, 'edit_approver', $index); 
+                                                                        recommentAction_valid(item);" 
                                                                     class="btn btn-link px-0 mx-1"
+                                                                    ng-class="{'no-drop': item.approver_action_type == 2 || data_header[0].pha_status != 21}"
+                                                                    ng-disabled="item.approver_action_type == 2 || data_header[0].pha_status != 21"
                                                                     data-toggle="tooltip" 
                                                                     title="Add Employee">
-                                                                <span class="far fa-address-book"></span>
+                                                                    <span class="far fa-address-book"></span>
                                                                 </button>
                                                                 <button class="btn btn-sm transition-none btn-reveal fs--2 p-1 " 
                                                                         type="button"
@@ -3298,11 +3318,29 @@
                                                                     <span class="fas fa-times text-danger"></span>
                                                                 </button>
                                                             </div>
-                                                            <label class="text-1100 fw-bold ">
+                                                            <div ng-show="item.user_name === user_name && params !== 'edit_approver'">
+                                                                <button ng-click="openDataEmployeeAdd(item,'approver_ta3')"
+                                                                    class="btn btn-link px-0 mx-1"
+                                                                    data-toggle="tooltip" 
+                                                                    title="Add Employee">
+                                                                    <span class="far fa-address-book"></span>
+                                                                </button>
+                                                                @*<button class="btn btn-sm transition-none btn-reveal fs--2 p-1 " 
+                                                                        type="button"
+                                                                        ng-click="removeDataEmpWorkSheet('worksheet',item.seq)"
+                                                                        ng-if="item.responder_id>0">
+                                                                    <span class="fas fa-times text-danger"></span>
+                                                                </button>*@
+                                                            </div>                                                                                                                                                                                   
+                                                            <label class="text-1100 fw-bold m-0">
                                                                 {{item.user_displayname}}
                                                             </label>
                                                         </div>
-                                                   
+                                                    </div>
+                                                     <div class="col-md-12 p-1 ps-3">
+                                                        <div ng-repeat="item_ta3 in data_approver_ta3" ng-if="item.id === item_ta3.id_approver">
+                                                            <label class="text-1100 fw-bold ">{{item_ta3.user_displayname}}</label>
+                                                        </div>
                                                     </div>
                                                 </td>
                                                 <td class="align-top white-space-nowrap" ng-class="{'disabled-link':(!tab_approver_active)}">
@@ -3449,7 +3487,7 @@
                                                         </label>
                                                     </div>
                                                 </td>
-                                                <td class="align-top px-0 pt-0 " ng-class="{'disabled-link':(!tab_approver_active)}">
+                                                <td class="align-top px-1 py-3" ng-class="{'disabled-link':(!tab_approver_active)}">
                                                     <div class="d-flex"                                                          
                                                          ng-class="{ 'no-drop': !canAccess(item), 'cursor-pointer': canAccess(item) }">
 
@@ -3704,15 +3742,15 @@
                                                 <td class="">
                                                     <span class="mx-1">
                                                         <button class="btn btn-outline-secondary p-1 cursor-pointer"
-                                                                ng-class="{'btn-clicked': clickedStates[item.employee_name]}" 
+                                                                ng-class="{'btn-clicked': clickedStates[item.employee_name],'skeleton': loadingData}" 
                                                                 style="color: #2445fc; background-color: #f1f2f4; border-color: #2445fc;"
                                                                 data-toggle="tooltip" 
                                                                 data-placement="top" 
                                                                 title="choose Employee"
                                                                 ng-click="choosDataEmployee(item)">
-                                                            <span class="fa-solid fa-user-plus" ng-if="selectDatFormType !== 'owner' && params !== 'edit_approver'">Add</span>
+                                                            <span class="fa-solid fa-user-plus" ng-if="selectDatFormType !== 'owner' && selectDatFormType !== 'approver_ta3' && params !== 'edit_approver'">Add</span>
                                                             <span class="fa-solid fa-user-check" ng-if="selectDatFormType === 'owner' || params === 'edit_approver'">selecte</span>
-                                                            <span class="fa-solid fa-paper-plane" ng-if="selectDatFormType ==== 'approver_ta3' && params !== 'edit_approver'">selecte</span>
+                                                            <span class="fa-solid fa-paper-plane" ng-if="selectDatFormType === 'approver_ta3'">selecte</span>
                                                         </button>
                                                     </span>
                                                 </td>
@@ -3802,6 +3840,7 @@
                                 <span class="fa-regular fa-trash-can fa-lg"></span>
                             </button>                            
                             <label class="mb-0 ms-3 text-1100 fw-bold" style="width: 80%; border-color: #f1f2f4;">{{ item2.user_displayname }}</label>
+                            <label class="mb-0 ms-3 text-1100 fw-bold" style="width: 80%; border-color: #f1f2f4;">{{ item2.user_position }}</label>
                         </div>
                     </div>
                 </div>
@@ -5291,6 +5330,44 @@
             </div>
         </div>
     </div>
+
+
+    @* Modal Confirm *@
+    <div class="modal fade" id="modalConfirm" tabindex="-1" aria-labelledby="modalConfirm" aria-hidden="true"
+         style="display: none;">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="text-900 mb-0" data-anchor="data-anchor" id="modalConfirm">
+                        <span class=" me-2 text-primary"><B>|</B></span> Invite collaborator?
+                    </h5>
+
+                    <button class="btn p-1" type="button" data-bs-dismiss="modal" aria-label="Close">
+                        <svg class="svg-inline--fa fa-xmark fs--1" aria-hidden="true" focusable="false"
+                             data-prefix="fas" data-icon="xmark" role="img" xmlns="http://www.w3.org/2000/svg"
+                             viewBox="0 0 320 512" data-fa-i2svg="">
+                            <path fill="currentColor"
+                                  d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 
+                                  301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 
+                                  0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 
+                                  210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z">
+                            </path>
+                        </svg>
+                    </button>
+
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure</p>
+                    <div class="col-auto" style="float:right">
+                        <button style="width:100px;" class="btn btn-success me-1 mb-1" type="button" ng-click="confirm()">Yes</button>
+                        <button style="width:100px;" class="btn btn-outline-secondary me-1 mb-1" type="button" data-bs-dismiss="modal" aria-label="Close">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>    
 
 
 </div>

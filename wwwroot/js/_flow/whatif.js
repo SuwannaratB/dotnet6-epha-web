@@ -864,6 +864,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.data_session_delete = [];
         $scope.data_memberteam_delete = [];
         $scope.data_approver_delete = [];
+        $scope.data_approver_ta3_delete = [];
         $scope.data_relatedpeople_delete = [];
         $scope.data_drawing_delete = [];
         $scope.data_tasklist_delete = [];
@@ -1353,6 +1354,95 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         });
 
     }
+    function save_data_approver_ta3(action) {
+
+        console.log("save_data_approver_ta3 called with action:", action);
+
+        var user_name = $scope.user_name;
+        var token_doc = $scope.token_doc + "";
+        var pha_seq = $scope.data_header[0].seq;
+        var pha_status = $scope.data_header[0].pha_status;
+        var flow_role_type = $scope.flow_role_type;
+
+        var flow_action = action;
+
+        console.log("Step 1: Inside save_data_approver_ta3 function");
+
+        var json_header = angular.toJson($scope.data_header);
+        var json_approver = check_data_approver();
+        var json_approver_ta3 = check_data_approver_ta3();
+        //var json_drawing_approver = check_data_drawing_approver(id_session);
+
+
+
+    // Additional log to verify variables
+    console.log("Step 2: Variables initialized", {
+        user_name: user_name,
+        token_doc: token_doc,
+        pha_seq: pha_seq,
+        pha_status: pha_status,
+        flow_role_type: flow_role_type,
+        flow_action: flow_action,
+        json_header: json_header,
+        json_approver: json_approver,
+        json_approver_ta3: json_approver_ta3
+    });
+
+    console.log("AJAX request data:", {
+        sub_software: "whatif",
+        user_name: user_name,
+        role_type: flow_role_type,
+        action: flow_action,
+        json_header: json_header,
+        json_approver: json_approver,
+        json_approver_ta3: json_approver_ta3
+    });
+
+        $.ajax({
+            url: url_ws + "flow/set_approve_ta3",
+            data: '{"sub_software":"hazop","user_name":"' + user_name + '","role_type":"' + flow_role_type + '","token_doc":"' + pha_seq + '","action":"' + flow_action 
+                + '","json_header":' + JSON.stringify(json_header) 
+                + ',"json_approver":' + JSON.stringify(json_approver) 
+                + ',"json_approver_ta3":' + JSON.stringify(json_approver_ta3) 
+                + '}', 
+            
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            beforeSend: function() {
+                $("#divLoading").show();
+            },
+            complete: function() {
+                $("#divLoading").hide();
+            },
+            success: function(data) {
+                var arr = data;
+                console.log(arr);
+
+                if (arr[0].status == 'true') {
+                    $scope.pha_type_doc = 'update';
+
+                    if (action == 'save') {
+                        set_alert('Success', 'Data has been successfully saved.');
+                        $scope.$apply();
+                    } else {
+                        set_alert('Success', 'Data has been successfully submitted.');
+                    }
+                } else {
+                    set_alert('Error', arr[0].status);
+                    $scope.$apply();
+                }
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                if (jqXHR.status == 500) {
+                    alert('Internal error: ' + jqXHR.responseText);
+                } else {
+                    alert('Unexpected ' + textStatus);
+                }
+            }
+        });
+
+    }
 
     function get_data(page_load, action_submit) {
 
@@ -1538,6 +1628,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 $scope.data_session_delete = [];
                 $scope.data_memberteam_delete = [];
                 $scope.data_approver_delete = [];
+                $scope.data_approver_ta3_delete = [];
                 $scope.data_relatedpeople_delete = [];
                 $scope.data_relatedpeople_outsider_delete = [];
                 $scope.data_drawing_delete = [];
@@ -4779,6 +4870,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         var arr_json = $filter('filter')(arr_active, function (item) {
             return ((!(item.user_name == null) && item.action_type == 'update' && item.action_change == 1) || item.action_type == 'insert');
         });
+
+        
         for (var i = 0; i < $scope.data_approver_delete.length; i++) {
             $scope.data_approver_delete[i].action_type = 'delete';
             arr_json.push($scope.data_approver_delete[i]);
@@ -4807,6 +4900,58 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         for (var i = 0; i < $scope.data_approver.length; i++) {
             var arr_check = $filter('filter')($scope.data_session, function (item) {
                 return (item.seq == $scope.data_approver[i].id_session || item.id == $scope.data_approver[i].id_session);
+            });
+            if (arr_check.length == 0) {
+                for (var l = 0; l < arr_check.length; l++) {
+                    arr_check[l].action_type = 'delete';
+                    arr_json.push(arr_check[l]);
+                }
+            }
+        }
+        return angular.toJson(arr_json);
+    }
+    function check_data_approver_ta3() {
+
+        var pha_seq = $scope.data_header[0].seq;
+        for (var i = 0; i < $scope.data_approver_ta3.length; i++) {
+            $scope.data_approver_ta3[i].id = $scope.data_approver_ta3[i].seq;
+            $scope.data_approver_ta3[i].id_pha = pha_seq;
+            $scope.data_approver_ta3[i].no = (i + 1);
+        }
+
+        var arr_active = [];
+        angular.copy($scope.data_approver_ta3, arr_active);
+        var arr_json = $filter('filter')(arr_active, function (item) {
+            return ((!(item.user_name == null) && item.action_type == 'update' && item.action_change == 1) || item.action_type == 'insert');
+        });
+        for (var i = 0; i < $scope.data_approver_ta3_delete.length; i++) {
+            $scope.data_approver_ta3_delete[i].action_type = 'delete';
+            arr_json.push($scope.data_approver_ta3_delete[i]);
+        }
+        for (var i = 0; i < arr_active.length; i++) {
+            if (arr_active[i].user_name == null) {
+                arr_active[i].action_type = 'delete';
+                arr_json.push(arr_active[i]);
+            }
+        }
+
+        //check จากข้อมูลเดิมที่เคยบันทึกไว้ถ้าไม่มีในของเดิมให้ delete ออกด้วย
+        for (var i = 0; i < $scope.data_approver_ta3_old.length; i++) {
+            var arr_check = $filter('filter')($scope.data_approver_ta3, function (item) {
+                return (item.user_name == $scope.data_approver_ta3_old[i].user_name
+                    && item.id_session == $scope.data_approver_ta3_old[i].id_session
+                    && (item.action_type == 'insert' || item.action_type == 'update'));
+            });
+            if (arr_check.length == 0) {
+                $scope.data_approver_ta3_old[i].action_type = 'delete';
+                arr_json.push($scope.data_approver_ta3_old[i]);
+            }
+        }
+
+        //check จากข้อมูล session ให้ delete ออกด้วย
+        for (var i = 0; i < $scope.data_approver_ta3.length; i++) {
+            var arr_check = $filter('filter')($scope.data_session, function (item) {
+                return (item.seq == $scope.data_approver_ta3[i].id_session || item.id == $scope.data_approver_ta3[i].id_session);
             });
             if (arr_check.length == 0) {
                 for (var l = 0; l < arr_check.length; l++) {
@@ -5536,25 +5681,27 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
     $scope.showModal = function() {
         var deferred = $q.defer();
-
+        
         $('#modalConfirm').modal('show');
-
+        
         $scope.confirm = function() {
             $('#modalConfirm').modal('hide');
             deferred.resolve(true);
         };
-
+        
         $scope.cancel = function() {
             $('#modalConfirm').modal('hide');
             deferred.resolve(false);
         };
-
+        
         $('#modalConfirm').on('hidden.bs.modal', function() {
             deferred.resolve(false);
+            $('#modalConfirm').off('hidden.bs.modal'); 
         });
-
+        
         return deferred.promise;
     };
+    
 
     $scope.choosDataEmployee = function (item) {
 
@@ -5718,9 +5865,19 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
         else if (xformtype == "approver_ta3"){
 
-            var arr_approver_TA2 = $filter('filter')($scope.data_approver, function (item) {
-                return (item.id == seq_session);
+            var arr_approver_TA2 = $scope.data_approver.filter(item => item.id === seq_session);
+
+            $scope.data_approver = $scope.data_approver.map(item => {
+                if (arr_approver_TA2.includes(item)) {
+                    return {
+                        ...item,
+                        action_type: 'update',
+                        action_change: 1
+                    };
+                }
+                return item;
             });
+            
 
             var arr_approver_TA3 = $filter('filter')($scope.data_approver_ta3, function (item) {
                 return (item.id_session == seq_session && item.user_name == employee_name);
@@ -5729,6 +5886,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             
             if (arr_approver_TA3.length == 0) {
                 $('#modalEmployeeAdd').modal('hide');
+                console.log("arr_approver_TA3",$scope.data_approver_ta3)
 
                 $scope.showModal().then(function(confirmed) {
 
@@ -5761,13 +5919,16 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                        $scope.MaxSeqdata_approver_ta3 = Number($scope.MaxSeqdata_approver_ta3) + 1
                     }
 
+                    // Debugging log
+                    console.log("Before calling save_data_approver_ta3");
+
+                    // Save and send
+                    setTimeout(function() {
+                        console.log("Calling save_data_approver_ta3");
+                        save_data_approver_ta3("submit");
+                    }, 200);
+
                 });
-
-                //save and sent mail?
-                setTimeout(function() {
-                    save_data_create("approver_ta3", 'save');
-                }, 200); 
-
             }
             
         }

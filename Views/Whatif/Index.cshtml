@@ -3226,13 +3226,20 @@
                                                                     <span class="fas fa-times text-danger"></span>
                                                                 </button>
                                                             </div>
-                                                            <div class="ms-1" ng-show="item.user_name === user_name && params !== 'edit_approver'">
-                                                                <button class="btn btn-outline-secondary p-0 cursor-pointer col-auto"
-                                                                        style="color: #2445fc; background-color: #f1f2f4; border-color: #f1f2f4;"
-                                                                        ng-click="openDataEmployeeAdd(item,'approver_ta3')">
-                                                                    <span class="far fa-address-book fa-lg pe-1"></span>
+                                                            <div ng-show="item.user_name === user_name && params !== 'edit_approver'">
+                                                                <button ng-click="openDataEmployeeAdd(item,'approver_ta3')"
+                                                                    class="btn btn-link px-0 mx-1"
+                                                                    data-toggle="tooltip" 
+                                                                    title="Add Employee">
+                                                                    <span class="far fa-address-book"></span>
                                                                 </button>
-                                                            </div>                                                                                                                        
+                                                                @*<button class="btn btn-sm transition-none btn-reveal fs--2 p-1 " 
+                                                                        type="button"
+                                                                        ng-click="removeDataEmpWorkSheet('worksheet',item.seq)"
+                                                                        ng-if="item.responder_id>0">
+                                                                    <span class="fas fa-times text-danger"></span>
+                                                                </button>*@
+                                                            </div>                                                                                                                                                                                   
                                                             <label class="text-1100 fw-bold m-0">
                                                                 {{item.user_displayname}}
                                                             </label>
@@ -4684,6 +4691,61 @@
         </div>
     </div>
 
+    @* Modal matrix *@
+    <div class="modal fade" id="modalMatrix" tabindex="-1" aria-labelledby="modalMatrix"
+         aria-hidden="true" style="display: none;">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalMatrix">CAPEX Technical Review Matrix</h5>
+                    <button class="btn p-1" type="button" data-bs-dismiss="modal" aria-label="Close">
+                        <svg class="svg-inline--fa fa-xmark fs--1" aria-hidden="true" focusable="false" data-prefix="fas"
+                             data-icon="xmark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"
+                             data-fa-i2svg="">
+                            <path fill="currentColor"
+                                  d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z">
+                            </path>
+                        </svg>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="row g-3 flex-center">
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+    @* Modal New RAM *@
+
+    <!----------------------------------------------->
+    <div class="modal fade" id="unsavedChangesModal" tabindex="-1" role="dialog" 
+        aria-labelledby="unsavedChangesModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="unsavedChangesModalLabel">Unsaved Changes</h5>
+                @*<button type="button border-0" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>*@
+            </div>
+            <div class="modal-body">
+                You have unsaved changes. Are you sure you want to leave?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" type="button" data-bs-dismiss="modal" aria-label="Close" id="stayButton" 
+                        ng-click="action_leavePage('stay')">Stay</button>
+                <button type="button" class="btn btn-primary" id="leaveButton" ng-click="action_leavePage('leaveWithsave')">Leave with Save</button>
+                <button type="button" class="btn btn-primary" id="leaveButton" ng-click="action_leavePage('leave')">Leave</button>
+            </div>
+            </div>
+        </div>
+    </div>
+
+
     @* Modal Confirm *@
     <div class="modal fade" id="modalConfirm" tabindex="-1" aria-labelledby="modalConfirm" aria-hidden="true"
          style="display: none;">
@@ -4719,7 +4781,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div>  
 
 
 </div>
