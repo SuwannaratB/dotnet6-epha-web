@@ -880,6 +880,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 } else {
                     set_alert('Error', arr[0].IMPORT_DATA_MSG);
                 }
+                
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 if (jqXHR.status == 500) {
@@ -1869,6 +1870,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 }
 
                 addDefaultMember();
+                $scope.unsavedChanges= false;
+
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 if (jqXHR.status == 500) {
@@ -5227,6 +5230,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         }
         else if (xformtype == "approver_ta3"){
+            
 
             var arr_approver_TA2 = $filter('filter')($scope.data_approver, function (item) {
                 return (item.id == seq_session);
@@ -5761,7 +5765,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     };
 
     //access each role
-    $scope.canAccess = function(task) {
+    $scope.Access_check = function(task) {
         // If user is an admin, allow access
         if ($scope.flow_role_type === 'admin') {
             return true;
@@ -5775,5 +5779,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         //originator cant edit?
         return false;
     };
+    
 
 });

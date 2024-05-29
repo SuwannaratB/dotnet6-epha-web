@@ -1048,7 +1048,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         var arr_tab = $filter('filter')($scope.tabs, function (item) { return (item.name == val); });
         if (arr_tab.length > 0) { $scope.action_part = Number(arr_tab[0].action_part); }
         if (val == 'worksheet') { $scope.viewDataNodeList($scope.selectedItemNodeView); }
-        if (val === 'approver') { $scope.canAccess($scope.data_approver)}
+        //if (val === 'approver') { }
     }
 
     function get_max_id() {
@@ -1456,8 +1456,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
     function save_data_approver_ta3(action) {
 
-        console.log("save_data_approver_ta3 called with action:", action);
-
         var user_name = $scope.user_name;
         var token_doc = $scope.token_doc + "";
         var pha_seq = $scope.data_header[0].seq;
@@ -1465,8 +1463,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         var flow_role_type = $scope.flow_role_type;
 
         var flow_action = action;
-
-        console.log("Step 1: Inside save_data_approver_ta3 function");
 
         var json_header = angular.toJson($scope.data_header);
         var json_approver = check_data_approver();
@@ -1485,19 +1481,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         };
         
         var jsonData = JSON.stringify(data);
-        
-        // Log the constructed JSON string
         console.log("Constructed JSON Data:", jsonData);
-
-    console.log("AJAX request data:", {
-        sub_software: "hazop",
-        user_name: user_name,
-        role_type: flow_role_type,
-        action: flow_action,
-        json_header: json_header,
-        json_approver: json_approver,
-        json_approver_ta3: json_approver_ta3
-    });
 
         $.ajax({
             url: url_ws + "flow/set_approve_ta3",
@@ -1590,7 +1574,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                 var action_part_befor = $scope.action_part;//(page_load == false ? $scope.action_part : 0);
                 var tabs_befor = (page_load == false ? $scope.tabs : null);
-
+                console.log("$scope.pha_type_doc",$scope.pha_type_doc)
                 var arr = data;
                 if (true) {
                     $scope.data_all = arr;
@@ -1755,6 +1739,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 $scope.action_to_review_type = false;
                 $scope.submit_type = true;
 
+                
                 $scope.selectActiveNotification = ($scope.data_header[0].active_notification == 1 ? true : false);
 
                 if (page_load) {
@@ -1920,6 +1905,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                 }
 
+                $scope.unsavedChanges= false;
+
 
             },
             error: function (jqXHR, textStatus, errorThrown) {
@@ -1941,10 +1928,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
 
     function set_form_action(action_part_befor, action_save, page_load) {
-
-        console.log("action_part_befor",action_part_befor)//1
-        console.log("action_save",action_save)//true
-        console.log("page_load",page_load)//true
 
         //แสดง tab ตาม flow
         $scope.tab_general_show = true;
@@ -2216,8 +2199,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.tab_node_active = true;
         }
 
-        console.log("$scope.pha_type_doc",$scope.pha_type_doc)
-
         if ($scope.pha_type_doc == 'review_document') {
             $scope.tab_general_active = false;
             $scope.tab_node_active = false;
@@ -2233,9 +2214,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.submit_review = false;
         }
 
-        
-        console.log("$scope.tab_approver_active 0 ",$scope.tab_approver_active)
-
+        for (let i = 0; i < $scope.data_approver.length; i++) {
+            if ($scope.user_name === $scope.data_approver[i].user_name) {
+              $scope.tab_approver_active = true;
+              break;
+            }
+        }
 
         $scope.date_to_approve_moc_text = '';
         $scope.date_approve_moc_text = '';
@@ -4816,6 +4800,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             });
             return;
         } else {
+
+            console.log($scope.unsavedChanges,"$scope.unsavedChanges")
             if(!$scope.unsavedChanges){
                 window.open("home/portal", "_top");
             }else{
@@ -5418,6 +5404,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
         }
 
+        console.log("arr_json",arr_json)
+
+
         //check จากข้อมูลเดิมที่เคยบันทึกไว้ถ้าไม่มีในของเดิมให้ delete ออกด้วย
         for (var i = 0; i < $scope.data_memberteam_old.length; i++) {
 
@@ -5432,6 +5421,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
         }
 
+        console.log("arr_json",arr_json)
+
         //check จากข้อมูล session ให้ delete ออกด้วย
         for (var i = 0; i < $scope.data_memberteam.length; i++) {
             var arr_check = $filter('filter')($scope.data_session, function (item) {
@@ -5444,6 +5435,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 }
             }
         }
+
+        console.log("arr_json",arr_json)
+
         return angular.toJson(arr_json);
     }
 
@@ -5461,6 +5455,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         var arr_json = $filter('filter')(arr_active, function (item) {
             return ((!(item.user_name == null) && item.action_type == 'update' && item.action_change == 1) || item.action_type == 'insert');
         });
+        
         for (var i = 0; i < $scope.data_approver_delete.length; i++) {
             $scope.data_approver_delete[i].action_type = 'delete';
             arr_json.push($scope.data_approver_delete[i]);
@@ -5514,7 +5509,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         var arr_json = $filter('filter')(arr_active, function (item) {
             return ((item.user_name !== null && item.action_type === 'update' && item.action_change === 1) || item.action_type === 'insert');
         });
-        
+    
         for (var i = 0; i < $scope.data_approver_ta3_delete.length; i++) {
             $scope.data_approver_ta3_delete[i].action_type = 'delete';
             arr_json.push($scope.data_approver_ta3_delete[i]);
@@ -5538,7 +5533,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 arr_json.push($scope.data_approver_ta3_old[i]);
             }
         }
-
+        
         //check จากข้อมูล session ให้ delete ออกด้วย
         for (var i = 0; i < $scope.data_approver_ta3.length; i++) {
             var arr_check = $filter('filter')($scope.data_session, function (item) {
@@ -5552,7 +5547,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
         }
 
-        console.log("arr_json",arr_json)
+        //make sure each id_approver have only one ta3
+
         return angular.toJson(arr_json);
     }
 
@@ -6156,6 +6152,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.owner_status = '';
         $scope.approve_index = index;
 
+        console.log()
+
         if (form_type === 'owner') {
             $scope.owner_status = 'employee'; //1 for em || 2 for teams to sent to p'kul
         }
@@ -6281,23 +6279,23 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     $scope.clickedStates = {};
     $scope.showModal = function() {
         var deferred = $q.defer();
-
+    
         $('#modalConfirm').modal('show');
-
+    
         $scope.confirm = function() {
             $('#modalConfirm').modal('hide');
             deferred.resolve(true);
         };
-
+    
         $scope.cancel = function() {
             $('#modalConfirm').modal('hide');
             deferred.resolve(false);
         };
-
+    
         $('#modalConfirm').on('hidden.bs.modal', function() {
             deferred.resolve(false);
         });
-
+    
         return deferred.promise;
     };
     $scope.choosDataEmployee = function (item) {
@@ -6313,6 +6311,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         var seq_session = $scope.selectdata_session;
         var xformtype = $scope.selectDatFormType;
+
+        $scope.selected_TA3 = [];
 
         if (xformtype == "member") {
 
@@ -6423,6 +6423,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
         else if (xformtype == "approver_ta3"){
 
+            $scope.selected_TA3 = item;
             var arr_approver_TA2 = $scope.data_approver.filter(item => item.id === seq_session);
 
             $scope.data_approver = $scope.data_approver.map(item => {
@@ -6435,17 +6436,18 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 }
                 return item;
             });
-            
 
+            $scope.data_approver_ta3.forEach(function(item) {
+                item.action_type = 'delete';
+            });
+
+            console.log("$scope.data_approver_ta3",$scope.data_approver_ta3)
             var arr_approver_TA3 = $filter('filter')($scope.data_approver_ta3, function (item) {
                 return (item.id_session == seq_session && item.user_name == employee_name);
             });
-
             
-            if (arr_approver_TA3.length == 0) {
+            if (arr_approver_TA3.length === 0) {
                 $('#modalEmployeeAdd').modal('hide');
-                console.log("arr_approver_TA3",$scope.data_approver_ta3)
-
                 $scope.showModal().then(function(confirmed) {
 
                     if(confirmed === true){
@@ -6456,7 +6458,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                        newInput.seq = seq;
                        newInput.id = seq;
                        newInput.no = (0);
-                       newInput.id_session = Number(seq_session);
+                       newInput.id_session = Number(arr_approver_TA2[0].id_session);
                        newInput.action_type = 'insert';
                        newInput.action_change = 1;
    
@@ -6471,20 +6473,17 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                        console.log(newInput)
                        $scope.data_approver_ta3.push(newInput);
    
-                       console.log("arr_approver_TA3",$scope.data_approver_ta3)
                        running_no_level1($scope.data_approver_ta3, null, null);
    
                        $scope.MaxSeqdata_approver_ta3 = Number($scope.MaxSeqdata_approver_ta3) + 1
+                       
+                        // Save and send
+                        setTimeout(function() {
+                            console.log("Calling save_data_approver_ta3");
+                            save_data_approver_ta3("submit");
+                        }, 200);
                     }
 
-                    // Debugging log
-                    console.log("Before calling save_data_approver_ta3");
-
-                    // Save and send
-                    setTimeout(function() {
-                        console.log("Calling save_data_approver_ta3");
-                        save_data_approver_ta3("submit");
-                    }, 200);
 
                 });
             }
@@ -6713,7 +6712,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
 
     //access each role
-    $scope.canAccess = function(task) {
+    $scope.Access_check = function(task) {
         // If user is an admin, allow access
         if ($scope.flow_role_type === 'admin') {
             return true;
