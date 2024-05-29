@@ -1395,20 +1395,23 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
 
     function setup_tasks(data) {
-        $scope.MaxSeqdataDescriptions = Number($scope.MaxSeqdataDescriptions);
-        var xValues = $scope.MaxSeqdataDescriptions;
+        // $scope.MaxSeqdataDescriptions = Number($scope.MaxSeqdataDescriptions) + 1;
+        // var xValues = $scope.MaxSeqdataDescriptions;
 
-        // data.tasks[0].numbers_of_workers = 0;
         data.tasks[0].descriptions = data.descriptions;
-        data.tasks[0].descriptions[0].id_tasks = null;
-        data.tasks[0].descriptions[0].id = xValues;
-        data.tasks[0].descriptions[0].seq = xValues;
-        data.tasks[0].descriptions[0].id_tasks = data.tasks[0].seq ;
-        data.tasks[0].descriptions[0].action_change = 0 ;
-        data.tasks[0].descriptions[0].action_type = 'insert';
+        // data.tasks[0].descriptions[0].id_tasks = null;
+        // data.tasks[0].descriptions[0].id = xValues;
+        // data.tasks[0].descriptions[0].seq = xValues;
+        // data.tasks[0].descriptions[0].id_tasks = data.tasks[0].seq ;
+        // data.tasks[0].descriptions[0].action_change = 0 ;
+        // data.tasks[0].descriptions[0].action_type = 'insert';
 
         if ( data.tasks[0].descriptions[0].descriptions) {
             data.tasks[0].descriptions[0].action_type = 'update'
+        }
+
+        if ( data.tasks[0].descriptions[0].action_type == 'new') {
+            data.tasks[0].descriptions[0].action_type = 'insert'
         }
         return data.tasks;
     }
@@ -1958,14 +1961,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 return Array.isArray(item);
             })
 
-            // filteredData[0][0].action_type = 'update'
-            console.log('filteredData',filteredData)
             for (let i = 0; i < filteredData.length; i++) {
-                // console.log(filteredData[i][i])
-                // if (filteredData[i][i].descriptions) {
-                //     filteredData[i][i].action_type = 'update'
-                // }
-              
                 arr_tasks[i].descriptions = filteredData[i];
             }
             return arr_tasks;
@@ -2446,10 +2442,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             if (!delTasks) return console.log('item data_tasks not found');
             // remove
             $scope.data_tasks_delete.push(delTasks);
-
+            // remove tasks
             $scope.data_tasks = $filter('filter')($scope.data_tasks, function (tasks, idx) {
                 return (idx != index);
             });
+            // remove descriptions
+            for (let i = 0; i < item.descriptions.length; i++) {
+                $scope.data_descriptions_delete.push(item.descriptions[i]);
+            }
             // sort number
             for (let i = 0; i < $scope.data_tasks.length; i++) {
                 $scope.data_tasks[i].no = i + 1;
