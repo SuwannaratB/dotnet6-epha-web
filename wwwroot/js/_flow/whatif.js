@@ -4894,7 +4894,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         var arr_active = [];
         angular.copy($scope.data_approver_ta3, arr_active);
         var arr_json = $filter('filter')(arr_active, function (item) {
-            return ((!(item.user_name == null) && item.action_type == 'update' && item.action_change == 1) || item.action_type == 'insert');
+            return ((!(item.user_name == null) && item.action_type == 'update' && item.action_change == 1) 
+                    || item.action_type == 'insert' || item.action_type == 'delete' );
         });
         for (var i = 0; i < $scope.data_approver_ta3_delete.length; i++) {
             $scope.data_approver_ta3_delete[i].action_type = 'delete';
@@ -5838,26 +5839,36 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         else if (xformtype == "approver_ta3"){
 
             $scope.selected_TA3 = item;
-            var arr_approver_TA2 = $scope.data_approver.filter(item => item.id === seq_session);
 
-            $scope.data_approver = $scope.data_approver.map(item => {
+            //set this aprrover to update 
+            var arr_approver_TA2 = $scope.data_approver.filter(item => item.id === seq_session);
+            $scope.data_approver.forEach(item => {
                 if (arr_approver_TA2.includes(item)) {
-                    return {
-                        ...item,
-                        action_type: 'update',
-                        action_change: 1
-                    };
+                    item.action_type = 'update';
+                    item.action_change = 1;
                 }
-                return item;
             });
 
-            $scope.data_approver_ta3.forEach(function(item) {item.action_type = 'delete';});
+            //set other to del if same id_apprver
+            var arr_approver_TA3 = $scope.data_approver_ta3.filter(item => {
+                return  item.id_approver === arr_approver_TA2[0].id;
+            });
+            //item.id_session === arr_approver_TA2[0].id_session &&
+            $scope.data_approver_ta3.forEach(item => {
+                if (arr_approver_TA3.includes(item)) {
+                    item.action_type = 'delete';
+                    item.action_change = 1;
+                }
+            });
+
+            console.log("$scope.data_approver_ta3",$scope.data_approver_ta3)
             
-            var arr_approver_TA3 = $filter('filter')($scope.data_approver_ta3, function (item) {
+
+            var arr_data = $filter('filter')($scope.data_approver_ta3, function (item) {
                 return (item.id_session == seq_session && item.user_name == employee_name);
             });
             
-            if (arr_approver_TA3.length === 0) {
+            if (arr_data.length === 0) {
                 $('#modalEmployeeAdd').modal('hide');
                 $scope.showModal().then(function(confirmed) {
 

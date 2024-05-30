@@ -3329,30 +3329,30 @@
                                                             </label>
                                                         </div>
                                                     </div>
-                                                    <div class="text-start ps-4"
-                                                        ng-if="!filtered_data_TA3.length && item.user_name === user_name">
-                                                        <a ng-click="openDataEmployeeAdd(item,'approver_ta3')"
-                                                             ng-if="!filtered_data_TA3.length"
+
+
+                                                    <div class="col-md-12 text-start p-1 ps-4" 
+                                                        ng-init="filtered_data_TA3 = data_approver_ta3.filter(function(t) { return t.id_approver === item.id; })">
+                                                        <div ng-show="filtered_data_TA3.length === 0 && item.user_name === user_name">
+                                                            <a ng-click="openDataEmployeeAdd(item, 'approver_ta3')"
                                                             class="btn btn-link px-0"
                                                             data-toggle="tooltip" 
                                                             title="Add Employee"
                                                             style="font-size: smaller;">
                                                             <span>Click to select TA3</span>
-                                                        </a>
-                                                    </div>
-
-
-                                                    <div class="col-md-12 text-start p-1 ps-4" 
-                                                        ng-show="item.user_name === user_name"
-                                                        ng-repeat="item_ta3 in data_approver_ta3 | filter:{id_approver : item.id}">   
-                                                        <div>
-                                                            <label class="text-secondary">Task assigned : <br></label>
-                                                            <div>
-                                                                <label class="text-1100 fw-bold">{{item_ta3.user_displayname}}</label>
-                                                                <a class="fa-solid fa-user-pen" 
-                                                                ng-click="openDataEmployeeAdd(item,'approver_ta3')"
-                                                                data-toggle="tooltip" 
-                                                                title="Change TA3"></a>
+                                                            </a>
+                                                        </div>
+                                                        {{filtered_data_TA3}}
+                                                        <div ng-repeat="item_ta3 in filtered_data_TA3">
+                                                            <div ng-if="item_ta3.id_approver === item.id && item.user_name === user_name">
+                                                                <label class="text-secondary">Task assigned : <br></label>
+                                                                <div>
+                                                                    <a class="fa-solid fa-user-pen pe-2 cursor-pointer" 
+                                                                    ng-click="openDataEmployeeAdd(item, 'approver_ta3')"
+                                                                    data-toggle="tooltip" 
+                                                                    title="Change TA3"></a>
+                                                                    <label class="text-1100 fw-bold">{{item_ta3.user_displayname}}</label>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>

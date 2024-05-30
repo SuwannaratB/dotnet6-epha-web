@@ -1912,15 +1912,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                 }
 
-                $scope.filtered_data_TA3 = [];
-                $scope.data_approver.forEach(function(item) {
-                    console.log(item.id)
-                    var filteredData = $scope.data_approver_ta3.filter(function(item_ta3) {
-                        console.log(item_ta3.id_approver)
-                        return item_ta3.id_approver === item.id;
-                    });
-                    $scope.filtered_data_TA3.push(filteredData);
-                });
 
                 $scope.unsavedChanges= false;
 
@@ -6739,8 +6730,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.id_approver_select = null;
         $scope.form_valid = { valid_document_file: false };
     }
-    
-
     
 
     //access each role
