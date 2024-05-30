@@ -217,7 +217,7 @@ background-color: #3e8e41;
 }
 
 .task-highlight{
-    background-color: #e2efff;
+    /*background-color: #e2efff;*/
     transition: background-color 0.3s ease;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     border-left: 3px solid #007bff;     
@@ -229,7 +229,7 @@ background-color: #3e8e41;
 .form-select,
 .form-check-input,
 a .dropdown-item,
-a {
+a, i {
     cursor: pointer;
 }
 
