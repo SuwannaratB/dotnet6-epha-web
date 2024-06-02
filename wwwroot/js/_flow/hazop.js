@@ -2820,6 +2820,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 case 'DrawingDoc':
                     $scope.removeDrawingDoc($scope.seqToRemove, $scope.indexToRemove);
                     break;
+                case 'nodelist' :
+                    $scope.removeDataNodeList($scope.seqToRemove, $scope.indexToRemove)
                 default:
                     console.error('Unknown type:', $scope.typeToRemove);
             }
