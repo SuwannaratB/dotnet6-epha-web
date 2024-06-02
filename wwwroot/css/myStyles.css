@@ -216,10 +216,10 @@ background-color: #3e8e41;
     transition: background-color 0.3s ease;
 }
 
-.task-highlight{
+.task-highlight:hover{
     /*background-color: #e2efff;*/
     transition: background-color 0.3s ease;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     border-left: 3px solid #007bff;     
 }
 

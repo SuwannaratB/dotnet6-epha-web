@@ -34,6 +34,22 @@ AppMenuPage.filter('ResponderMultiFieldFilter', function () {
         });
     };
 });
+AppMenuPage.filter('toArray', function() {
+    return function(obj) {
+      if (!obj) {
+        return [];
+      }
+  
+      if (Array.isArray(obj)) {
+        return obj;
+      } else {
+        return Object.keys(obj).map(function(key) {
+          return obj[key];
+        });
+      }
+    };
+  });
+  
 AppMenuPage.filter('ApproverMultiFieldFilter', function () {
     return function (items, searchApproverText) {
         if (!searchApproverText) {

@@ -159,6 +159,23 @@ AppMenuPage.filter('sortNodeworksheet', function() {
         return sortedArray;
     };
 });
+AppMenuPage.filter('toArray', function() {
+    return function(obj) {
+      if (!obj) {
+        return [];
+      }
+  
+      if (Array.isArray(obj)) {
+        return obj;
+      } else {
+        return Object.keys(obj).map(function(key) {
+          return obj[key];
+        });
+      }
+    };
+  });
+  
+
 //to hide please selected
 AppMenuPage.directive('hidePlaceholderOption', function() {
     return {
@@ -2782,6 +2799,36 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         arr_items.sort((a, b) => a.no - b.no);
 
     }
+
+    $scope.triggerRemove = function(seq, index, type) {
+        if (seq !== null && index !== null) {
+            $scope.seqToRemove = seq;
+            $scope.indexToRemove = index;
+            $scope.typeToRemove = type;
+            $('#removeModal').modal('show');
+        } else {
+            console.error('is null');
+        }
+    };
+    
+    $scope.action_remove = function(action) {
+        if (action === 'yes') {
+            switch($scope.typeToRemove) {
+                case 'session':
+                    $scope.removeDataSession($scope.seqToRemove, $scope.indexToRemove);
+                    break;
+                case 'DrawingDoc':
+                    $scope.removeDrawingDoc($scope.seqToRemove, $scope.indexToRemove);
+                    break;
+                default:
+                    console.error('Unknown type:', $scope.typeToRemove);
+            }
+            $('#removeModal').modal('hide');
+        } else {
+            $('#removeModal').modal('hide');
+        }
+    };
+    
     $scope.addDataSession = function (seq, index) {
 
         $scope.MaxSeqDataSession = Number($scope.MaxSeqDataSession) + 1;

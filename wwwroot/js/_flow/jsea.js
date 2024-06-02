@@ -52,6 +52,29 @@ AppMenuPage.filter('ApproverMultiFieldFilter', function () {
         });
     };
 });
+AppMenuPage.filter('isArray', function() {
+    return function(input) {
+        return Array.isArray(input);
+    };
+});
+
+AppMenuPage.filter('toArray', function() {
+    return function(obj) {
+      if (!obj) {
+        return [];
+      }
+  
+      if (Array.isArray(obj)) {
+        return obj;
+      } else {
+        return Object.keys(obj).map(function(key) {
+          return obj[key];
+        });
+      }
+    };
+  });
+  
+
 
 //to hide please selected
 AppMenuPage.directive('hidePlaceholderOption', function() {
@@ -131,6 +154,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
     };
 
 });
+
 
 AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, $document, $interval,$rootScope,$window,$timeout,$sce) {
 
@@ -2284,7 +2308,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
 
     }
-
+    
     // <==== (Kul)Session zone function  ====> 
     //Coppy Key 1st Array and set null
     function clone_arr_newrow(arr_items) {
@@ -2455,6 +2479,38 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         arr_items.sort((a, b) => a.no - b.no);
 
     }
+
+
+    $scope.triggerRemove = function(seq, index, type) {
+        if (seq !== null && index !== null) {
+            $scope.seqToRemove = seq;
+            $scope.indexToRemove = index;
+            $scope.typeToRemove = type;
+            $('#removeModal').modal('show');
+        } else {
+            console.error('seq or index is null');
+        }
+    };
+    
+    $scope.action_remove = function(action) {
+        if (action === 'yes') {
+            switch($scope.typeToRemove) {
+                case 'session':
+                    $scope.removeDataSession($scope.seqToRemove, $scope.indexToRemove);
+                    break;
+                case 'DrawingDoc':
+                    $scope.removeDrawingDoc($scope.seqToRemove, $scope.indexToRemove);
+                    break;
+                default:
+                    console.error('Unknown type:', $scope.typeToRemove);
+            }
+            $('#removeModal').modal('hide');
+        } else {
+            $('#removeModal').modal('hide');
+        }
+    };
+    
+
     $scope.addDataSession = function (seq, index) {
         $scope.MaxSeqDataSession = Number($scope.MaxSeqDataSession) + 1;
         var xValues = $scope.MaxSeqDataSession;
@@ -5056,7 +5112,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     $scope.clickedStates = {};
 
     $scope.choosDataEmployee = function (item) {
-        console.log(item)
         var id = item.id;
         var employee_name = item.employee_name;
         var employee_displayname = item.employee_displayname;
@@ -5714,7 +5769,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
 
 
-    $scope.editedText = "";
+    $scope.editedText = {
+        text: ''
+    }     
     $scope.formattedText = "";
     $scope.editing = false;
 
@@ -5728,36 +5785,52 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
     }
 
-    $scope.actionchangeText = function(text){
-        $scope.editedText = text
-    };
-
     // Action function
     $scope.action_memdatorytext = function(type) {
-
+        
         switch (type) {
             case 'edit':
+                $scope.editedText ='';
                 $scope.editing = true;
+                $scope.unsavedChanges  = false;
 
-                $scope.editedText = convertText($scope.formattedText, true);
+                
+                var editedText = convertText($scope.formattedText, true);
 
+                $scope.editedText = {
+                    text: editedText
+                } 
+              
+                console.log("$scope.editedText",$scope.editedText)
                 break;
             case 'save':
                 $scope.formattedText = "";
-                $scope.formattedText = convertText($scope.editedText, false);
-
+                $scope.formattedText = convertText($scope.editedText.text, false);
+                
                 $scope.editing = false;
+                $scope.unsavedChanges  = true;
+
                 break;
             case 'refresh':
                 $scope.formattedText = "";
 
                 $scope.editing = false;
+                $scope.unsavedChanges  = true;
+
                 $scope.formattedText = convertText($scope.mandatory_note[0].name, false);
+
                 break;
             default:
                 break;
         }
-    };
+
+        if (!$scope.$$phase) {
+            console.log(" Digest Cycle");
+            $scope.$apply();
+        } else {
+            console.log("Already in AngularJS Digest Cycle");
+        }
+};
 
     // Function to render HTML
     $scope.renderHtml = function(htmlContent) {

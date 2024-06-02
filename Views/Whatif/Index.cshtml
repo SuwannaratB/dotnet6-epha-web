@@ -468,7 +468,7 @@
                                        ng-keyup="filterResultGeneral(item.pha_request_name, 'pha_request_name')">
                                 <ul class="list-group mt-2 w-25" style="position: absolute;" ng-show="showResults">
                                     <li class="list-group-item "
-                                        ng-repeat="result in filteredResults | filter:{field:'pha_request_name'}"
+                                        ng-repeat="result in filteredResults | toArray | filter:{field:'pha_request_name'}"
                                         ng-click="selectResult(result,item,'pha_request_name')">
                                         {{ result.name }}
                                     </li>
@@ -622,7 +622,7 @@
                                                                     </div>
                                                                 </div>
                                                                 <!-- data_relatedpeople_outsider -->
-                                                                <div class="row" ng-repeat="item2 in data_relatedpeople_outsider | filter:{user_type: 'member'}" 
+                                                                <div class="row" ng-repeat="item2 in data_relatedpeople_outsider | toArray | filter:{user_type: 'member'}" 
                                                                     ng-if="item2.user_displayname !== null && item2.id_session === item.seq">
                                                                     <div class="col-8 align-items-center  p-1">
                                                                         <label class="mb-0 text-1100 fw-bold"
@@ -685,7 +685,7 @@
                                                                 </div>
                                                                 <!-- Specialist from data_relatedpeople -->
                                                                 <div class="row" 
-                                                                    ng-repeat="item2 in data_relatedpeople | filter:{ user_type:'specialist'}"
+                                                                    ng-repeat="item2 in data_relatedpeople | toArray | filter:{ user_type:'specialist'}"
                                                                     ng-if="item2.user_displayname !== null && item2.id_session === item.seq">
                                                                     <div class="col-8 align-items-center  p-1">
                                                                         <label class="mb-0 text-1100 fw-bold"
@@ -702,7 +702,7 @@
                                                                 </div>
 
                                                                 <!-- Specialist from data_relatedpeople_outsider -->
-                                                                <div class="row" ng-repeat="item2 in data_relatedpeople_outsider | filter:{id_session: selectdata_session, user_type:'specialist'}" 
+                                                                <div class="row" ng-repeat="item2 in data_relatedpeople_outsider | toArray | filter:{id_session: selectdata_session, user_type:'specialist'}" 
                                                                     ng-if="item2.user_displayname !== null && item2.id_session === item.seq">   
                                                                     <div class="col-8 align-items-center  p-1">
                                                                         <label class="mb-0 text-1100 fw-bold"
@@ -1157,7 +1157,7 @@
                                                                 <div class="autocomplete-dropdown" style="position: absolute;" ng-show="showResults"
                                                                      ng-class="{'ng-show' : (filteredArr[0].fieldID == ('task_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('task_'+item.seq)) }">
                                                                     <div class="autocomplete-option"
-                                                                         ng-repeat="result in filteredResults | filter:{field:'task'}"
+                                                                         ng-repeat="result in filteredResults | toArray | filter:{field:'task'}"
                                                                          ng-click="selectResult(result,item,'task')">
                                                                         {{ result.name }}
                                                                     </div>
@@ -1184,7 +1184,7 @@
                                                                 <div class="autocomplete-dropdown" style="position: absolute;" ng-show="showResults"
                                                                      ng-class="{'ng-show' : (filteredArr[0].fieldID == ('design_intent_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('design_intent_'+item.seq)) }">
                                                                     <div class="autocomplete-option"
-                                                                         ng-repeat="result in filteredResults | filter:{field:'design_intent'}"
+                                                                         ng-repeat="result in filteredResults | toArray | filter:{field:'design_intent'}"
                                                                          ng-click="selectResult(result,item,'design_intent')">
                                                                         {{ result.name }}
                                                                     </div>
@@ -1210,7 +1210,7 @@
                                                                 <div class="autocomplete-dropdown" style="position: absolute;" ng-show="showResults"
                                                                      ng-class="{'ng-show' : (filteredArr[0].fieldID == ('design_conditions_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('design_conditions_'+item.seq)) }">
                                                                     <div class="autocomplete-option"
-                                                                         ng-repeat="result in filteredResults | filter:{field:'design_conditions'}"
+                                                                         ng-repeat="result in filteredResults | toArray | filter:{field:'design_conditions'}"
                                                                          ng-click="selectResult(result,item,'design_conditions')">
                                                                         {{ result.name }}
                                                                     </div>
@@ -1235,7 +1235,7 @@
                                                                 <div class="autocomplete-dropdown" style="position: absolute;" ng-show="showResults"
                                                                      ng-class="{'ng-show' : (filteredArr[0].fieldID == ('operating_conditions_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('operating_conditions_'+item.seq)) }">
                                                                     <div class="autocomplete-option"
-                                                                         ng-repeat="result in filteredResults | filter:{field:'operating_conditions'}"
+                                                                         ng-repeat="result in filteredResults | toArray | filter:{field:'operating_conditions'}"
                                                                          ng-click="selectResult(result,item,'operating_conditions')">
                                                                         {{ result.name }}
                                                                     </div>
@@ -1260,7 +1260,7 @@
                                                                 <div class="autocomplete-dropdown" style="position: absolute;" ng-show="showResults"
                                                                      ng-class="{'ng-show' : (filteredArr[0].fieldID == ('task_boundary_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('task_boundary_'+item.seq)) }">
                                                                     <div class="autocomplete-option"
-                                                                         ng-repeat="result in filteredResults | filter:{field:'task_boundary'}"
+                                                                         ng-repeat="result in filteredResults | toArray | filter:{field:'task_boundary'}"
                                                                          ng-click="selectResult(result,item,'task_boundary')">
                                                                         {{ result.name }}
                                                                     </div>
@@ -1271,7 +1271,7 @@
 
                                                     <td class="align-top text-end ">
                                                         @*data_tasklistdrawing*@
-                                                        <div ng-repeat="item2 in data_tasklistdrawing | filter:{id_list:item.seq}">
+                                                        <div ng-repeat="item2 in data_tasklistdrawing | toArray | filter:{id_list:item.seq}">
                                                             <div class="d-flex align-items-center pb-1" style="width: 350px;">
                                                                 <div class="font-sans-serif btn-reveal-trigger position-static me-1"
                                                                      ng-class="{'d-none':(!tab_general_active)}">
@@ -1374,7 +1374,7 @@
                                             <a class="m-1 text-info cursor-pointer"
                                                href="{{y.document_definition_file_path}}" 
                                                target="_blank"
-                                               ng-repeat="y in master_ram | filter:{id: data_general[0].id_ram}">
+                                               ng-repeat="y in master_ram | toArray | filter:{id: data_general[0].id_ram}">
                                                Definition Consequence Rating
                                             </a>
                                         </span>
@@ -1405,7 +1405,7 @@
                                     </div>
                                     <div class="row ps-2 mt-2">
                                         <div class="col-12 mt-4"
-                                             ng-repeat="itemRam in master_ram | filter:{id: data_general[0].id_ram}">
+                                             ng-repeat="itemRam in master_ram | toArray | filter:{id: data_general[0].id_ram}">
 
                                             @* <div class="row ">
                                                 <div class="col-12">
@@ -1453,7 +1453,7 @@
                                                         <th rowspan="2" colspan="1" class="text-center">ระดับความรุนแรง (Security)</th>
                                                         <th rowspan="1" colspan="{{select_columns_level}}" class="text-center">โอกาสในการเกิดความเสี่ยง (Likelihood)</th>
                                                     </tr>
-                                                    <tr ng-repeat="item_ram in master_ram_level  | filter:{rows_level : select_rows_level,columns_level: select_columns_level}"
+                                                    <tr ng-repeat="item_ram in master_ram_level  | toArray | filter:{rows_level : select_rows_level,columns_level: select_columns_level}"
                                                         ng-if="$index == 0">
                                                         <th rowspan="1" colspan="1" class="text-center">{{item_ram.likelihood1_text}}</th>
                                                         <th rowspan="1" colspan="1" class="text-center">{{item_ram.likelihood2_text}}</th>
@@ -1469,7 +1469,7 @@
                                                 </thead>
                                                 <tbody class=" list">
                                                     <tr class="hover-actions-trigger btn-reveal-trigger position-static"
-                                                        ng-repeat="item_ram in master_ram_level  | filter:{rows_level : select_rows_level,columns_level: select_columns_level}">
+                                                        ng-repeat="item_ram in master_ram_level  | toArray | filter:{rows_level : select_rows_level,columns_level: select_columns_level}">
                                                         <td class="align-top text-center" style="width:150px;">{{item_ram.security_level}}</td>
                                                         <td class="align-top text-center" ng-style=" { 'background-color' : item_ram.ram1_color}">{{item_ram.ram1_text}}<br />{{item_ram.ram1_priority}}</td>
                                                         <td class="align-top text-center" ng-style=" { 'background-color' : item_ram.ram2_color}">{{item_ram.ram2_text}}<br />{{item_ram.ram2_priority}}</td>
@@ -1512,7 +1512,7 @@
                                                             <th rowspan="2" colspan="1" class="text-center">ระดับความรุนแรง (Security)</th>
                                                             <th rowspan="1" colspan="{{select_columns_level}}" class="text-center">โอกาสในการเกิดความเสี่ยง (Likelihood)</th>
                                                         </tr>
-                                                        <tr ng-repeat="item_ram in master_ram_level | filter:{rows_level : select_rows_level,columns_level: select_columns_level}" ng-if="$index == 0">
+                                                        <tr ng-repeat="item_ram in master_ram_level | toArray | filter:{rows_level : select_rows_level,columns_level: select_columns_level}" ng-if="$index == 0">
                                                             <th rowspan="1" colspan="1" class="text-center">
                                                                 <input class="form-control text-center" type="text" ng-model="item_ram.likelihood1_text" placeholder="Likelihood">
                                                                 <input class="form-control mt-1" type="text" ng-model="item_ram.likelihood1_desc" placeholder="Description">
@@ -1549,7 +1549,7 @@
                                                     </thead>
                                                     <tbody class=" list">
                                                         <tr class="hover-actions-trigger btn-reveal-trigger position-static"
-                                                            ng-repeat="item_ram in master_ram_level  | filter:{rows_level : select_rows_level,columns_level: select_columns_level}">
+                                                            ng-repeat="item_ram in master_ram_level  | toArray | filter:{rows_level : select_rows_level,columns_level: select_columns_level}">
                                                             <td class="align-middle text-center" style="width:150px;">
                                                                 <b>{{item_ram.security_level}}</b>
                                                             </td>
@@ -1919,7 +1919,7 @@
                         </div>
 
                         <div class="m-3 row  gx-0 align-items-center" ng-if="!(flow_role_type == 'admin') || !tab_worksheet_active">
-                            <div class="card px-2 pb-2 " ng-repeat="itemRam in master_ram | filter:{id: data_general[0].id_ram}">
+                            <div class="card px-2 pb-2 " ng-repeat="itemRam in master_ram | toArray | filter:{id: data_general[0].id_ram}">
                                 <div class="row g-3 justify-content-between align-items-center pt-2 pb-3">
                                     <div class="col-10">
                                         <h5 class="text-900 mb-0"> <span class=" me-2 text-primary"><B>|</B></span><b class="text-danger"> * </b> Risk Assessment Matrix {{itemRam.name}}</h5>
@@ -1929,7 +1929,7 @@
                                         <span class="mx-1 d-flex" style="float:right;">
                                             <a class="m-1 text-info cursor-pointer"
                                                href="{{y.document_definition_file_path}}" target="_blank"
-                                               ng-repeat="y in master_ram | filter:{id: data_general[0].id_ram}">Definition Consequence Rating<span class="fas fa-file-pdf fa-lg ms-1"></span></a>
+                                               ng-repeat="y in master_ram | toArray | filter:{id: data_general[0].id_ram}">Definition Consequence Rating<span class="fas fa-file-pdf fa-lg ms-1"></span></a>
                                         </span>
                                     </div>
 
@@ -1981,7 +1981,7 @@
                                 </div>
 
                                 <div class="col-md-6">
-                                    <div ng-repeat="item in data_tasklist | filter:{id:selectedItemListView}"
+                                    <div ng-repeat="item in data_tasklist | toArray | filter:{id:selectedItemListView}"
                                          ng-if="item.id == selectedItemListView">
                                         <div class="row">
                                             <div class=" col-auto">
@@ -1997,7 +1997,7 @@
                                                 <p class="form-label m-1">
                                                     PFD, PID No. :
                                                     <div class="d-flex">
-                                                        <div class="m-0 p-0" ng-repeat="x in data_tasklistdrawing | filter:{id_list:selectedItemListView}">
+                                                        <div class="m-0 p-0" ng-repeat="x in data_tasklistdrawing | toArray | filter:{id_list:selectedItemListView}">
                                                             <a class="form-label m-1 text-info cursor-pointer"
                                                                href="{{y.document_file_path}}" target="_blank"
                                                                ng-repeat="y in data_drawing"
@@ -2176,7 +2176,7 @@
                                         <tbody class="">
                                             <tr class="rowwork border border-dashed"
                                                 ng-if="( data_tasklist.length == 1 ? (data_tasklist[0].list == null ? false : true) : true) "
-                                                ng-repeat="item in data_listworksheet | filter:{id_list : selectedItemListView} | orderBy:'no'">
+                                                ng-repeat="item in data_listworksheet | toArray | filter:{id_list : selectedItemListView} | orderBy:'no'">
                                                 @* List system*@
                                                 <td class="align-top border border-light border-end-0  border-start-0  border-top-0 " style="padding: 0 !important;">
                                                     <div class="d-flex align-items-top w-100" ng-if="item.row_type =='list_system'">
@@ -2232,7 +2232,7 @@
                                                             <div class="autocomplete-dropdown" style="position: absolute;" ng-show="isShow == 'list_worksheet_'+ item.seq"
                                                                  ng-class="{'ng-show' : (filteredArr[0].fieldID == ('list_worksheet_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('liat_worksheet_'+item.seq)) }">
                                                                 <div class="autocomplete-option"
-                                                                     ng-repeat="result in filteredResults | filter:{field:'list'}"
+                                                                     ng-repeat="result in filteredResults | toArray | filter:{field:'list'}"
                                                                      ng-click="selectResult(result,item,'list')">
                                                                     {{ result.name }}
                                                                 </div>
@@ -2291,7 +2291,7 @@
                                                             <div class="autocomplete-dropdown" style="position: absolute;" ng-show="isShow == 'listsub_worksheet_'+ item.seq"
                                                                  ng-class="{'ng-show' : (filteredArr[0].fieldID == ('listsub_worksheet_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('listsub_worksheet_'+item.seq)) }">
                                                                 <div class="autocomplete-option"
-                                                                     ng-repeat="result in filteredResults | filter:{field:'listsub'}"
+                                                                     ng-repeat="result in filteredResults | toArray | filter:{field:'listsub'}"
                                                                      ng-click="selectResult(result,item,'listsub')">
                                                                     {{ result.name }}
                                                                 </div>
@@ -2349,7 +2349,7 @@
                                                             <div class="autocomplete-dropdown" style="position: absolute;" ng-show="isShow == 'listsub_worksheet_'+ item.seq"
                                                                  ng-class="{'ng-show' : (filteredArr[0].fieldID == ('causes_worksheet_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('causes_worksheet_'+item.seq)) }">
                                                                 <div class="autocomplete-option"
-                                                                     ng-repeat="result in filteredResults | filter:{field:'causes'}"
+                                                                     ng-repeat="result in filteredResults | toArray | filter:{field:'causes'}"
                                                                      ng-click="selectResult(result,item,'causes')">
                                                                     {{ result.name }}
                                                                 </div>
@@ -2407,7 +2407,7 @@
                                                             <div class="autocomplete-dropdown" style="position: absolute;" ng-show="isShow == 'consequences_worksheet_'+ item.seq"
                                                                  ng-class="{'ng-show' : (filteredArr[0].fieldID == ('consequences_worksheet_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('consequences_worksheet_'+item.seq)) }">
                                                                 <div class="autocomplete-option"
-                                                                     ng-repeat="result in filteredResults | filter:{field:'consequences'}"
+                                                                     ng-repeat="result in filteredResults | toArray | filter:{field:'consequences'}"
                                                                      ng-click="selectResult(result,item,'consequences')">
                                                                     {{ result.name }}
                                                                 </div>
@@ -2523,7 +2523,7 @@
                                                             <div class="autocomplete-dropdown" style="position: absolute;" ng-show="showResults"
                                                                  ng-class="{'ng-show' : (filteredArr[0].fieldID == ('safeguards_worksheet_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('safeguards_worksheet_'+item.seq)) }">
                                                                 <div class="autocomplete-option"
-                                                                     ng-repeat="result in filteredResults | filter:{field:'safeguards'}"
+                                                                     ng-repeat="result in filteredResults | toArray | filter:{field:'safeguards'}"
                                                                      ng-click="selectResult(result,item,'safeguards')">
                                                                     {{ result.name }}
                                                                 </div>
@@ -2605,7 +2605,7 @@
                                                             <div class="autocomplete-dropdown" style="position: absolute;" ng-show="showResults"
                                                                  ng-class="{'ng-show' : (filteredArr[0].fieldID == ('recommendations_worksheet_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('recommendations_worksheet_'+item.seq)) }">
                                                                 <div class="autocomplete-option"
-                                                                     ng-repeat="result in filteredResults | filter:{field:'recommendations'}"
+                                                                     ng-repeat="result in filteredResults | toArray | filter:{field:'recommendations'}"
                                                                      ng-click="selectResult(result,item,'recommendations')">
                                                                     {{ result.name }}
                                                                 </div>
@@ -2680,7 +2680,7 @@
 
                                 <div class="form-floating d-none" id="div_node_note" name="div_node_note" ng-class="{'disabled-link':(!tab_worksheet_active)}">
                                     <textarea class="form-control rounded-1" placeholder="Note"
-                                              ng-repeat="item in data_tasklist | filter:{id:selectedItemListView}"
+                                              ng-repeat="item in data_tasklist | toArray | filter:{id:selectedItemListView}"
                                               ng-if="item.id == selectedItemListView"
                                               ng-model="item.descriptions"
                                               style="height: 50px"></textarea>
@@ -3055,7 +3055,7 @@
                                                     </a>
                                                 </div>
                                                 <div class="ms-3 text-start"
-                                                     ng-repeat="item_x in data_drawingworksheet_responder | filter:{id_worksheet:item.seq}"
+                                                     ng-repeat="item_x in data_drawingworksheet_responder | toArray | filter:{id_worksheet:item.seq}"
                                                      ng-click="downloadFileOwner(item)"
                                                      ng-if="$index == 0">
                                                     <a class="nametext ms-3 filename-text me-2 cursor-pointer" ng-click="downloadFileOwner(item)">
@@ -3063,7 +3063,7 @@
                                                     </a>
                                                 </div>
                                                 <div class="ms-3 text-start"
-                                                     ng-repeat="item_x in data_drawingworksheet_reviewer | filter:{id_worksheet:item.seq}"
+                                                     ng-repeat="item_x in data_drawingworksheet_reviewer | toArray | filter:{id_worksheet:item.seq}"
                                                      ng-click="downloadFileReviewer(item)"
                                                      ng-if="$index == 0">
                                                     <a class="nametext ms-3 filename-text me-2 cursor-pointer" ng-click="downloadFileReviewer(item)">
@@ -3312,7 +3312,7 @@
                                                     <div class="col-md-12 p-1 ps-3 text-start" >
                                                     @* {{item.seq}} *@
                                                     <div class=" p-0 cursor-pointer "
-                                                         ng-repeat="item_x in data_drawing_approver  | filter:{id_approver : item.seq}  ">
+                                                         ng-repeat="item_x in data_drawing_approver  | toArray | filter:{id_approver : item.seq}  ">
 
                                                         <div class="d-flex flex-nowrap" 
                                                              ng-class="{ 'no-drop': !canAccess }"
@@ -3749,7 +3749,7 @@
 
                 <div class="modal-body" ng-if="!(selectDatFormType =='owner' && formData.length > 1)"><!---------------ng-if="!(selectDatFormType =='approver'|| selectDatFormType =='reviewer')"----------->
                     <div class="col-auto py-1 repeated-item"
-                        ng-repeat="item2 in formData | filter:{id_session: selectdata_session }" 
+                        ng-repeat="item2 in formData | toArray | filter:{id_session: selectdata_session }" 
                         ng-if="item2.user_displayname">
                         
                         <div class="d-flex align-items-center p-1">
@@ -3787,13 +3787,13 @@
                 </div>
 
                 <!------------contractor/out source-------------->
-                <div class="modal-header bg-soft" ng-if="!(selectDatFormType =='approver'|| selectDatFormType =='reviewer') && (showContractor || (data_relatedpeople_outsider | filter:{user_type: selectDatFormType}).length > 1)">
+                <div class="modal-header bg-soft" ng-if="!(selectDatFormType =='approver'|| selectDatFormType =='reviewer') && (showContractor || (data_relatedpeople_outsider | toArray | filter:{user_type: selectDatFormType}).length > 1)">
                     <h5 class="text-900 mb-0"> 
                         <span class=" me-2 text-primary"><B>|</B></span>Contracter/Outsouce (if concern)
                     </h5>
                 </div>
                 <div class="modal-body" 
-                    ng-show="(selectDatFormType == 'attendees' || selectDatFormType == 'specialist' || selectDatFormType == 'member') && (showContractor || (data_relatedpeople_outsider | filter:{user_type: selectDatFormType}).length > 1)">
+                    ng-show="(selectDatFormType == 'attendees' || selectDatFormType == 'specialist' || selectDatFormType == 'member') && (showContractor || (data_relatedpeople_outsider | toArray | filter:{user_type: selectDatFormType}).length > 1)">
                     <div class="bg-white border-top border-bottom border-200 position-relative top-1">
                         <div class="table-responsive scrollbar-overlay mx-n1 px-1">
                             <table class="table table-sm fs--1 mb-0">
@@ -3807,7 +3807,7 @@
                                 <tbody class="list">
                                     @*Free text*@
                                     <tr class="hover-actions-trigger btn-reveal-trigger position-static repeated-item"
-                                        ng-repeat="itemRel in data_relatedpeople_outsider | filter:{id_session: selectdata_session, user_type: selectDatFormType}"> <!--------------------, user_type:selectDatFormType--------->
+                                        ng-repeat="itemRel in data_relatedpeople_outsider | toArray | filter:{id_session: selectdata_session, user_type: selectDatFormType}"> <!--------------------, user_type:selectDatFormType--------->
                                         <td class="d-flex  justify-content-start">
                                             @* <button id="del-{{item2.seq}}" class="btn btn-link text-danger p-0 text-end" style="width:140px;"
                                                     ng-class="{'d-none':(!tab_general_active)}"
@@ -4055,12 +4055,12 @@
                                 <span class="mx-1 d-flex pt-5">
                                     <a class="m-1 text-info cursor-pointer"
                                        href="{{y.document_definition_file_path}}" target="_blank"
-                                       ng-repeat="y in master_ram | filter:{id: data_general[0].id_ram}">Definition Consequence Rating<span class="fas fa-file-pdf fa-lg ms-1"></span></a>
+                                       ng-repeat="y in master_ram | toArray | filter:{id: data_general[0].id_ram}">Definition Consequence Rating<span class="fas fa-file-pdf fa-lg ms-1"></span></a>
                                 </span>
                             </div>
                             <div class="col-5 d-flex justify-content-center" style="padding: 10px 10px;gap: 65px;">
                                 <div class="d-flex justify-content-end align-items-center flex-column"
-                                     ng-repeat="item_ram in master_likelihood_level | filter:{id_ram:data_general[0].id_ram,columns_level:item_ram.columns_level}">
+                                     ng-repeat="item_ram in master_likelihood_level | toArray | filter:{id_ram:data_general[0].id_ram,columns_level:item_ram.columns_level}">
                                     <label for="likelihood"><b>{{item_ram.likelihood_level}}</b></label>
                                     <input type="radio"
                                            id="likelihood"
@@ -4075,7 +4075,7 @@
 
                         <div class="col-1 d-flex flex-column justify-content-end" style="gap: 40px; padding: 0px;  padding-bottom: 20px;">
                             <div class="d-flex justify-content-end align-items-center gap-2"
-                                 ng-repeat="item_ram in master_security_level | filter:{id_ram:data_general[0].id_ram,category_type:item_ram.category_type}">
+                                 ng-repeat="item_ram in master_security_level | toArray | filter:{id_ram:data_general[0].id_ram,category_type:item_ram.category_type}">
                                 <label for="security_level"><b>{{item_ram.security_level}}</b></label>
                                 <input type="radio"
                                        id="security_level"
@@ -4087,7 +4087,7 @@
                         </div>
 
                         <div class="col-11">
-                            <div class="cursor-pointer " ng-repeat="itemRam in master_ram | filter:{id: data_general[0].id_ram}">
+                            <div class="cursor-pointer " ng-repeat="itemRam in master_ram | toArray | filter:{id: data_general[0].id_ram}">
                                 <img src="{{itemRam.document_file_path}}" style="width:100%;" />
                             </div>
                         </div>
@@ -4098,7 +4098,7 @@
                             </div>
                             <div class="col-8 d-flex justify-content-center" style="padding: 20px 20px 20px 50px; gap: 160px">
                                 <div class="d-flex justify-content-end align-items-center flex-column"
-                                     ng-repeat="item_ram in master_likelihood_level | filter:{id_ram:data_general[0].id_ram,columns_level:item_ram.columns_level}">
+                                     ng-repeat="item_ram in master_likelihood_level | toArray | filter:{id_ram:data_general[0].id_ram,columns_level:item_ram.columns_level}">
                                     <label for="likelihood"><b>{{item_ram.likelihood_level}}</b></label>
                                     <input type="radio"
                                            id="likelihood" checked="{{cal_ram_action_likelihood == item_ram.likelihood_level}}"
@@ -4112,7 +4112,7 @@
 
                         <div class="col-1 d-flex flex-column justify-content-end" style="gap: 63px; padding-bottom: 20px;">
                             <div class="d-flex justify-content-end align-items-center gap-2"
-                                 ng-repeat="item_ram in master_security_level | filter:{id_ram:data_general[0].id_ram,category_type:item_ram.category_type}">
+                                 ng-repeat="item_ram in master_security_level | toArray | filter:{id_ram:data_general[0].id_ram,category_type:item_ram.category_type}">
                                 <label for="security_level"><b>{{item_ram.security_level}}</b></label>
                                 <input type="radio"
                                        id="security_level" checked="{{cal_ram_action_security == item_ram.security_level}}"
@@ -4124,7 +4124,7 @@
                         </div>
 
                         <div class="col-11">
-                            <div class="cursor-pointer " ng-repeat="itemRam in master_ram | filter:{id: data_general[0].id_ram}">
+                            <div class="cursor-pointer " ng-repeat="itemRam in master_ram | toArray | filter:{id: data_general[0].id_ram}">
                                 <img src="{{itemRam.document_file_path}}" style="width:100%;" />
                             </div>
                         </div>
@@ -4437,7 +4437,7 @@
 
                         <label class="form-label ps-0" for="expense_type">Note to Approver</label>
                         <textarea class="form-control rounded-1" placeholder="Note"
-                                  ng-repeat="item in data_node | filter:{id:selectedItemNodeView}"
+                                  ng-repeat="item in data_node | toArray | filter:{id:selectedItemNodeView}"
                                   ng-model="item.descriptions"
                                   ng-if=" data_header[0].pha_status == 22"
                                   style="height: 50px"></textarea>
@@ -4622,7 +4622,7 @@
                 <div class="modal-body">
 
                     <div class="bg-white position-relative top-1"
-                         ng-repeat="item_x in data_drawingworksheet_responder | filter:{id_worksheet:id_worksheet_select}">
+                         ng-repeat="item_x in data_drawingworksheet_responder | toArray | filter:{id_worksheet:id_worksheet_select}">
                         <a href="{{item_x.document_file_path}}" target="_blank">
                             {{item_x.document_file_name}}
                         </a>
@@ -4654,7 +4654,7 @@
                 <div class="modal-body">
 
                     <div class="bg-white position-relative top-1"
-                         ng-repeat="item_x in data_drawingworksheet_reviewer | filter:{id_worksheet:id_worksheet_select}">
+                         ng-repeat="item_x in data_drawingworksheet_reviewer | toArray | filter:{id_worksheet:id_worksheet_select}">
                         <a href="{{item_x.document_file_path}}" target="_blank">
                             {{item_x.document_file_name}}
                         </a>

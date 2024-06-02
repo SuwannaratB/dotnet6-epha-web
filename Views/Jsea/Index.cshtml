@@ -246,9 +246,6 @@
                                                         {{item2.name}}
                                                     </option>
                                                 </select>
-
-
-
                                             </div>
                                         </div>
                                     </div>
@@ -326,7 +323,7 @@
                                             TAG ID/EQUIPMENT
                                         </label>
                                         <div class="dropdown">
-                                            <button ng-repeat="item2 in master_tagid | filter: { id: item.id_tagid }" 
+                                            <button ng-repeat="item2 in master_tagid | toArray | filter: { id: item.id_tagid }" 
                                                 id="dropdown_tag_id" 
                                                 class="dropbtn" >
                                                 {{item2.name}}
@@ -452,7 +449,7 @@
                                                 class="dropbtn" >
                                             </button>
                                             <button ng-if="item.id_request_type != null"
-                                                ng-repeat="item2 in data_request_type | filter: { id: item.id_request_type }" 
+                                                ng-repeat="item2 in data_request_type | toArray | filter: { id: item.id_request_type }" 
                                                 id="dropdown_request_type" 
                                                 class="dropbtn" >
                                                 {{item2.name}}
@@ -506,7 +503,7 @@
                                                ng-keyup="filterResultGeneral(item.pha_request_name, 'pha_request_name')">
                                         <ul class="list-group mt-2 w-25" style="position: absolute; z-index: 999" ng-show="showResults">
                                             <li class="list-group-item "
-                                                ng-repeat="result in filteredResults | filter:{field:'pha_request_name'}"
+                                                ng-repeat="result in filteredResults | toArray | filter:{field:'pha_request_name'}"
                                                 ng-click="selectResult(result,item,'pha_request_name')">
                                                 {{ result.name }}
                                             </li>
@@ -676,12 +673,11 @@
 
                                         <p ng-if="!editing" ng-bind-html="renderHtml(formattedText)" class="mb-0"></p>
                                         <textarea style="height: 180px;"
-                                                type="text"
-                                                contenteditable="true" 
                                                 ng-show="editing" 
-                                                ng-model="editedText"
+                                                ng-model="editedText.text"
                                                 ng-change="actionchangeText(editedText)"
                                                 class="form-control"></textarea>
+
                                     </div>
                                     <div class="col-5 p-1 mt-4">
                                          <div class="form-check form-switch ">
@@ -797,7 +793,7 @@
                                                                     </div>
                                                                 </div>
                                                                 <!-- data_relatedpeople_outsider -->
-                                                                <div class="row" ng-repeat="item2 in data_relatedpeople_outsider | filter:{user_type: 'member'}" 
+                                                                <div class="row" ng-repeat="item2 in data_relatedpeople_outsider | toArray | filter:{user_type: 'member'}" 
                                                                     ng-if="item2.user_displayname !== null && item2.id_session === item.seq">
                                                                     <div class="col-8 align-items-center  p-1">
                                                                         <label class="mb-0 text-1100 fw-bold"
@@ -860,7 +856,7 @@
                                                                 </div>
                                                                 <!-- Specialist from data_relatedpeople -->
                                                                 <div class="row" 
-                                                                    ng-repeat="item2 in data_relatedpeople | filter:{ user_type:'specialist'}"
+                                                                    ng-repeat="item2 in data_relatedpeople | toArray | filter:{ user_type:'specialist'}"
                                                                     ng-if="item2.user_displayname !== null && item2.id_session === item.seq">
                                                                     <div class="col-8 align-items-center  p-1">
                                                                         <label class="mb-0 text-1100 fw-bold"
@@ -877,7 +873,7 @@
                                                                 </div>
 
                                                                 <!-- Specialist from data_relatedpeople_outsider -->
-                                                                <div class="row" ng-repeat="item2 in data_relatedpeople_outsider | filter:{id_session: selectdata_session, user_type:'specialist'}" 
+                                                                <div class="row" ng-repeat="item2 in data_relatedpeople_outsider | toArray | filter:{id_session: selectdata_session, user_type:'specialist'}" 
                                                                     ng-if="item2.user_displayname !== null && item2.id_session === item.seq">   
                                                                     <div class="col-8 align-items-center  p-1">
                                                                         <label class="mb-0 text-1100 fw-bold"
@@ -893,8 +889,7 @@
                                                                     </div>                                                                       
                                                                 </div>
                                                             </div>
-                                                            
-                                                            <b class="p-0 text-danger"> Note:This JSEA will be approved by AE or AGSI via Safety Permit</b>
+                                                        
                                                         </div>
 
                                                         <div class="row d-flex pt-2 d-none" style="background-color:#F8F8F8; zoom:0.8;">
@@ -908,7 +903,7 @@
                                                                         Add Attendees:
                                                                     </button>
                                                                 </div>
-                                                                <div class="row" ng-repeat="item2 in data_relatedpeople | filter:{id_session:item.seq, user_type:'attendees'}"
+                                                                <div class="row" ng-repeat="item2 in data_relatedpeople | toArray | filter:{id_session:item.seq, user_type:'attendees'}"
                                                                     ng-if="item2.user_name !== null && item2.id_session === item.seq">
                                                                     <div class="col-8 align-items-center  p-1">
                                                                         <label class="mb-0 text-1100 fw-bold"
@@ -923,7 +918,7 @@
                                                                         </label>
                                                                     </div>
                                                                 </div>
-                                                                <div class="row" ng-repeat="item2 in data_relatedpeople_outsider | filter:{id_session:item.seq, user_type:'attendees'}"
+                                                                <div class="row" ng-repeat="item2 in data_relatedpeople_outsider | toArray | filter:{id_session:item.seq, user_type:'attendees'}"
                                                                     ng-if="item2.user_name !== null && item2.id_session === item.seq">
                                                                     <div class="row align-items-center  p-1">
                                                                         <label class="mb-0 text-1100 fw-bold"
@@ -941,7 +936,7 @@
                                                                         <span class="far fa-address-book fa-lg pe-1"></span>Add Approver AE or AGSI:
                                                                     </button>
                                                                 </div>
-                                                                <div class="row" ng-repeat="item2 in data_relatedpeople | filter:{id_session:item.seq, user_type:'reviewer'}"
+                                                                <div class="row" ng-repeat="item2 in data_relatedpeople | toArray | filter:{id_session:item.seq, user_type:'reviewer'}"
                                                                     ng-if="item2.user_name !== null && item2.id_session === item.seq">
                                                                     <div class="row align-items-center  p-1">
                                                                         <label class="mb-0 text-1100 fw-bold"
@@ -962,7 +957,7 @@
                                                                         Add ผู้เชี่ยวชาญเฉพาะด้าน (ถ้ามี):
                                                                     </button>
                                                                 </div>
-                                                                <div class="row" ng-repeat="item2 in data_relatedpeople | filter:{id_session:item.seq, user_type:'specialist'}"
+                                                                <div class="row" ng-repeat="item2 in data_relatedpeople | toArray | filter:{id_session:item.seq, user_type:'specialist'}"
                                                                     ng-if="item2.user_name !== null && item2.id_session === item.seq">
                                                                     <div class="row align-items-center  p-1">
                                                                         <label class="mb-0 text-1100 fw-bold" 
@@ -971,7 +966,7 @@
                                                                         </label>
                                                                     </div>
                                                                 </div>
-                                                                <div class="row" ng-repeat="item2 in data_relatedpeople_outsider | filter:{id_session:item.seq, user_type:'specialist'}">
+                                                                <div class="row" ng-repeat="item2 in data_relatedpeople_outsider | toArray | filter:{id_session:item.seq, user_type:'specialist'}">
                                                                     <div class="row align-items-center  p-1">
                                                                         <label class="mb-0 text-1100 fw-bold"
                                                                                style="width:80%;border-color: #f1f2f4;">
@@ -1065,7 +1060,7 @@
                                                                             data-toggle="tooltip" 
                                                                             data-placement="top" 
                                                                             title="Remove"
-                                                                            ng-click=removeDataSession(item.seq,$index)>
+                                                                            ng-click=triggerRemove(item.seq,$index,'session')>
                                                                         <span class="fa-regular fa-trash-can fa-lg"></span>
                                                                     </button>
                                                                 </span>
@@ -1109,9 +1104,15 @@
 
                                                 </tr>
 
-
                                             </tbody>
 
+                                            <tfoot>
+                                                <tr>
+                                                    <td colspan="3" class="text-danger">
+                                                        <b>Note: This JSEA will be approved by AE or AGSI via Safety Permit</b>
+                                                    </td>
+                                                </tr>
+                                            </tfoot>
                                         </table>
 
                                     </div>
@@ -1220,13 +1221,14 @@
                                                                                 {{truncateFilename(item.document_file_name, 20)}} ({{item.document_file_size}} KB)
                                                                             </b>
                                                                         </span>
-                                                                        <a id="deluploadfile-{{item.seq}}" class="btn btn-link text-danger p-0"
-                                                                            ng-class="{'d-none':(!tab_general_active)}"
-                                                                            ng-click="clearFileName(item.seq)"
+                                                                        <a id="deluploadfile-{{item.seq}}" class="btn btn-link text-danger p-0 ms-2"
+                                                                                ng-class="{'d-none':(!tab_general_active)}"
+                                                                                ng-click="clearFileName(item.seq)">
                                                                             <span class="fa-regular fa-trash-can fa-lg"></span>
-                                                                        </a> 
+                                                                        </a>
+
                                                                     </div>
-                                                                </button>
+                                                                </button> 
                                                             </div>                                                                                                                                                                                
                                                             @*<div class=" align-items-center p-1 cursor-pointer ">
 
@@ -1286,7 +1288,7 @@
                                                                 <span class="mx-1">
                                                                     <button class="btn btn-outline-secondary p-2" 
                                                                             style="color: #ff2828; background-color: #f1f2f4; border-color: #ff2828;"
-                                                                            ng-click=removeDrawingDoc(item.seq,$index-1)
+                                                                            ng-click=triggerRemove(item.seq,$index-1,'DrawingDoc')
                                                                             data-toggle="tooltip" 
                                                                             data-placement="top" 
                                                                             title="Remove">
@@ -1342,7 +1344,7 @@
                                         <span class="mx-1 d-flex" style="float:right;">
                                             <a class="m-1 text-info cursor-pointer"
                                                href="{{y.document_definition_file_path}}" target="_blank"
-                                               ng-repeat="y in master_ram | filter:{id: data_general[0].id_ram}">Definition Consequence Rating<span class="fas fa-file-pdf fa-lg ms-1"></span></a>
+                                               ng-repeat="y in master_ram | toArray | filter:{id: data_general[0].id_ram}">Definition Consequence Rating<span class="fas fa-file-pdf fa-lg ms-1"></span></a>
                                         </span>
                                     </div>
                                 </div>
@@ -1377,7 +1379,7 @@
 
                                     <div class="row ps-2 mt-2">
                                         <div class="col-12 mt-4"
-                                             ng-repeat="itemRam in master_ram | filter:{id: data_general[0].id_ram}">
+                                             ng-repeat="itemRam in master_ram | toArray | filter:{id: data_general[0].id_ram}">
                                                   <div class="row">
                                                     <div class="col-12 d-flex justify-content-center">
                                                         <div class="row" style="background-color : #F8F8F8 ; width:75%;">
@@ -1431,7 +1433,7 @@
                                                         <th rowspan="2" colspan="1" class="text-center">ระดับความรุนแรง (Security)</th>
                                                         <th rowspan="1" colspan="{{select_columns_level}}" class="text-center">โอกาสในการเกิดความเสี่ยง (Likelihood)</th>
                                                     </tr>
-                                                    <tr ng-repeat="item_ram in master_ram_level  | filter:{rows_level : select_rows_level,columns_level: select_columns_level}"
+                                                    <tr ng-repeat="item_ram in master_ram_level  | toArray | filter:{rows_level : select_rows_level,columns_level: select_columns_level}"
                                                         ng-if="$index == 0">
                                                         <th rowspan="1" colspan="1" class="text-center">{{item_ram.likelihood1_text}}</th>
                                                         <th rowspan="1" colspan="1" class="text-center">{{item_ram.likelihood2_text}}</th>
@@ -1447,7 +1449,7 @@
                                                 </thead>
                                                 <tbody class=" list">
                                                     <tr class="hover-actions-trigger btn-reveal-trigger position-static"
-                                                        ng-repeat="item_ram in master_ram_level  | filter:{rows_level : select_rows_level,columns_level: select_columns_level}">
+                                                        ng-repeat="item_ram in master_ram_level  | toArray | filter:{rows_level : select_rows_level,columns_level: select_columns_level}">
                                                         <td class="align-top text-center" style="width:150px;">{{item_ram.security_level}}</td>
                                                         <td class="align-top text-center" ng-style=" { 'background-color' : item_ram.ram1_color}">{{item_ram.ram1_text}}<br />{{item_ram.ram1_priority}}</td>
                                                         <td class="align-top text-center" ng-style=" { 'background-color' : item_ram.ram2_color}">{{item_ram.ram2_text}}<br />{{item_ram.ram2_priority}}</td>
@@ -1490,7 +1492,7 @@
                                                             <th rowspan="2" colspan="1" class="text-center">ระดับความรุนแรง (Security)</th>
                                                             <th rowspan="1" colspan="{{select_columns_level}}" class="text-center">โอกาสในการเกิดความเสี่ยง (Likelihood)</th>
                                                         </tr>
-                                                        <tr ng-repeat="item_ram in master_ram_level | filter:{rows_level : select_rows_level,columns_level: select_columns_level}" ng-if="$index == 0">
+                                                        <tr ng-repeat="item_ram in master_ram_level | toArray | filter:{rows_level : select_rows_level,columns_level: select_columns_level}" ng-if="$index == 0">
                                                             <th rowspan="1" colspan="1" class="text-center">
                                                                 <input class="form-control text-center" type="text" ng-model="item_ram.likelihood1_text" placeholder="Likelihood">
                                                                 <input class="form-control mt-1" type="text" ng-model="item_ram.likelihood1_desc" placeholder="Description">
@@ -1527,7 +1529,7 @@
                                                     </thead>
                                                     <tbody class=" list">
                                                         <tr class="hover-actions-trigger btn-reveal-trigger position-static repeated-item"
-                                                            ng-repeat="item_ram in master_ram_level  | filter:{rows_level : select_rows_level,columns_level: select_columns_level}">
+                                                            ng-repeat="item_ram in master_ram_level  | toArray | filter:{rows_level : select_rows_level,columns_level: select_columns_level}">
                                                             <td class="align-middle text-center" style="width:150px;">
                                                                 <b>{{item_ram.security_level}}</b>
                                                             </td>
@@ -2052,7 +2054,7 @@
                                                             <div class="autocomplete-dropdown" style="position: absolute;"
                                                                  ng-class="{'ng-show' : (filteredArr[0].fieldID == ('workstep_worksheet_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('workstep_worksheet_'+item.seq)) }">
                                                                 <div class="autocomplete-option"
-                                                                     ng-repeat="result in filteredResults | filter:{field:'workstep'}"
+                                                                     ng-repeat="result in filteredResults | toArray | filter:{field:'workstep'}"
                                                                      ng-click="selectResult(result,item,'workstep')">
                                                                     {{ result.name }}
                                                                 </div>
@@ -2116,7 +2118,7 @@
                                                             <div class="autocomplete-dropdown" style="position: absolute;"
                                                                  ng-class="{'ng-show' : (filteredArr[0].fieldID == ('taskdesc_worksheet_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('taskdesc_worksheet_'+item.seq)) }">
                                                                 <div class="autocomplete-option"
-                                                                     ng-repeat="result in filteredResults | filter:{field:'taskdesc'}"
+                                                                     ng-repeat="result in filteredResults | toArray | filter:{field:'taskdesc'}"
                                                                      ng-click="selectResult(result,item,'taskdesc')">
                                                                     {{ result.name }}
                                                                 </div>
@@ -2178,7 +2180,7 @@
                                                             <div class="autocomplete-dropdown" style="position: absolute;"
                                                                  ng-class="{'ng-show' : (filteredArr[0].fieldID == ('potentailhazard_worksheet_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('potentailhazard_worksheet_'+item.seq)) }">
                                                                 <div class="autocomplete-option"
-                                                                     ng-repeat="result in filteredResults | filter:{field:'potentailhazard'}"
+                                                                     ng-repeat="result in filteredResults | toArray | filter:{field:'potentailhazard'}"
                                                                      ng-click="selectResult(result,item,'potentailhazard')">
                                                                     {{ result.name }}
                                                                 </div>
@@ -2240,7 +2242,7 @@
                                                             <div class="autocomplete-dropdown" style="position: absolute;"
                                                                  ng-class="{'ng-show' : (filteredArr[0].fieldID == ('possiblecase_worksheet_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('possiblecase_worksheet_'+item.seq)) }">
                                                                 <div class="autocomplete-option"
-                                                                     ng-repeat="result in filteredResults | filter:{field:'possiblecase'}"
+                                                                     ng-repeat="result in filteredResults | toArray | filter:{field:'possiblecase'}"
                                                                      ng-click="selectResult(result,item,'possiblecase')">
                                                                     {{ result.name }}
                                                                 </div>
@@ -2367,7 +2369,7 @@
                                                             <div class="autocomplete-dropdown col-auto" style="position: absolute;"
                                                                  ng-class="{'ng-show' : (filteredArr[0].fieldID == ('recommendations_worksheet_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('recommendations_worksheet_'+item.seq)) }">
                                                                 <div class="autocomplete-option"
-                                                                     ng-repeat="result in filteredResults | filter:{field:'recommendations'}"
+                                                                     ng-repeat="result in filteredResults | toArray | filter:{field:'recommendations'}"
                                                                      ng-click="selectResult(result,item,'recommendations')">
                                                                     {{ result.name }}โช
                                                                 </div>
@@ -2398,7 +2400,7 @@
                                                             <div class="autocomplete-dropdown col-auto" style="position: absolute;"
                                                                  ng-class="{'ng-show' : (filteredArr[0].fieldID == ('responder_action_by_worksheet_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('responder_action_by_worksheet_'+item.seq)) }">
                                                                 <div class="autocomplete-option"
-                                                                     ng-repeat="result in filteredResults | filter:{field:'responder_action_by'}"
+                                                                     ng-repeat="result in filteredResults | toArray | filter:{field:'responder_action_by'}"
                                                                      ng-click="selectResult(result,item,'responder_action_by')">
                                                                     {{ result.name }}
                                                                 </div>
@@ -2594,12 +2596,12 @@
                                                 </td>
                                                 <td class="align-top px-1 text-start" style="min-width:200px;" ng-class="{'disabled-link':(!tab_approver_active)}">
                                                     <div class=" p-0 cursor-pointer "
-                                                         ng-repeat="item_x in data_drawing_approver  | filter:{id_approver : item.seq}  ">
+                                                         ng-repeat="item_x in data_drawing_approver  | toArray | filter:{id_approver : item.seq}  ">
                                                         @* {{item_x.document_file_size}} xx {{item_x.document_file_name}}   *@
                                                     </div>
                                                     <div class=" p-0 cursor-pointer "
                                                          ng-class="{ 'no-drop': !canAccess, 'cursor-pointer': canAccess }"
-                                                         ng-repeat="item_x in data_drawing_approver  | filter:{id_approver : item.seq}  ">
+                                                         ng-repeat="item_x in data_drawing_approver  | toArray | filter:{id_approver : item.seq}  ">
 
                                                         <div class="d-flex flex-nowrap" ng-if="!(item.approver_action_type == 2 || data_header[0].pha_status != 21)">
                                                             <div class="font-sans-serif btn-reveal-trigger position-static me-1">
@@ -2995,7 +2997,7 @@
 
                 <div class="modal-body" ng-if="!(selectDatFormType =='owner' && formData.length > 1)"><!---------------ng-if="!(selectDatFormType =='approver'|| selectDatFormType =='reviewer')"----------->
                     <div class="col-auto py-1 repeated-item"
-                        ng-repeat="item2 in formData | filter:{id_session: selectdata_session }" 
+                        ng-repeat="item2 in formData | toArray | filter:{id_session: selectdata_session }" 
                         ng-if="item2.user_displayname">
                         
                         <div class="d-flex align-items-center p-1">
@@ -3033,13 +3035,13 @@
                 </div>
 
                 <!------------contractor/out source-------------->
-                <div class="modal-header bg-soft" ng-if="!(selectDatFormType =='approver'|| selectDatFormType =='reviewer') && (showContractor || (data_relatedpeople_outsider | filter:{user_type: selectDatFormType}).length > 1)">
+                <div class="modal-header bg-soft" ng-if="!(selectDatFormType =='approver'|| selectDatFormType =='reviewer') && (showContractor || (data_relatedpeople_outsider | toArray | filter:{user_type: selectDatFormType}).length > 1)">
                     <h5 class="text-900 mb-0"> 
                         <span class=" me-2 text-primary"><B>|</B></span>Contracter/Outsouce (if concern)
                     </h5>
                 </div>
                 <div class="modal-body" 
-                    ng-show="(selectDatFormType == 'attendees' || selectDatFormType == 'specialist' || selectDatFormType == 'member') && (showContractor || (data_relatedpeople_outsider | filter:{user_type: selectDatFormType}).length > 1)">
+                    ng-show="(selectDatFormType == 'attendees' || selectDatFormType == 'specialist' || selectDatFormType == 'member') && (showContractor || (data_relatedpeople_outsider | toArray | filter:{user_type: selectDatFormType}).length > 1)">
                     <div class="bg-white border-top border-bottom border-200 position-relative top-1">
                         <div class="table-responsive scrollbar-overlay mx-n1 px-1">
                             <table class="table table-sm fs--1 mb-0">
@@ -3053,7 +3055,7 @@
                                 <tbody class="list">
                                     @*Free text*@
                                     <tr class="hover-actions-trigger btn-reveal-trigger position-static repeated-item"
-                                        ng-repeat="itemRel in data_relatedpeople_outsider | filter:{id_session: selectdata_session, user_type: selectDatFormType}"> <!--------------------, user_type:selectDatFormType--------->
+                                        ng-repeat="itemRel in data_relatedpeople_outsider | toArray | filter:{id_session: selectdata_session, user_type: selectDatFormType}"> <!--------------------, user_type:selectDatFormType--------->
                                         <td class="d-flex  justify-content-start">
                                             @* <button id="del-{{item2.seq}}" class="btn btn-link text-danger p-0 text-end" style="width:140px;"
                                                     ng-class="{'d-none':(!tab_general_active)}"
@@ -3110,7 +3112,7 @@
                     @* attendees *@
                     <div class="modal-body" ng-if="selectDatFormType =='member'">
                         <div class="col-auto d-none " 
-                            ng-repeat="item2 in data_relatedpeople | filter:{id_session: selectdata_session ,user_type:'attendees'}"
+                            ng-repeat="item2 in data_relatedpeople | toArray | filter:{id_session: selectdata_session ,user_type:'attendees'}"
                             ng-if="!(item2.user_displayname)">
                             <div class="d-flex align-items-center p-1" style="height: 20px;">
                                 <button id="del-{{item2.seq}}" 
@@ -3129,7 +3131,7 @@
                     @* specialist *@
                     <div class="modal-body" ng-if="selectDatFormType =='specialist' ">
 
-                        <div class="col-auto repeated-item" ng-repeat="item2 in data_relatedpeople | filter:{id_session: selectdata_session ,user_type:'specialist'}"
+                        <div class="col-auto repeated-item" ng-repeat="item2 in data_relatedpeople | toArray | filter:{id_session: selectdata_session ,user_type:'specialist'}"
                              ng-if="!(item2.user_displayname == null)">
                             <div class="d-flex align-items-center p-1" style="height: 20px;">
                                 <button id="del-{{item2.seq}}" class="btn btn-link text-danger"
@@ -3420,7 +3422,7 @@
                                     <a class="m-1 text-info cursor-pointer"
                                        href="{{y.document_definition_file_path}}" 
                                        target="_blank"
-                                       ng-repeat="y in master_ram | filter:{id: data_general[0].id_ram}">
+                                       ng-repeat="y in master_ram | toArray | filter:{id: data_general[0].id_ram}">
                                        Definition Consequence Rating
                                        <span class="fas fa-file-pdf fa-lg ms-1"></span>
                                     </a>
@@ -3428,7 +3430,7 @@
                             </div>
                             <div class="col-5 d-flex justify-content-center" style="padding: 10px 10px;gap: 65px;">
                                 <div class="d-flex justify-content-end align-items-center flex-column"
-                                     ng-repeat="item_ram in master_likelihood_level | filter:{id_ram:data_general[0].id_ram,columns_level:item_ram.columns_level}">
+                                     ng-repeat="item_ram in master_likelihood_level | toArray | filter:{id_ram:data_general[0].id_ram,columns_level:item_ram.columns_level}">
                                     <label for="likelihood"><b>{{item_ram.likelihood_level}}</b></label>
                                     <input type="radio"
                                            id="likelihood"
@@ -3442,7 +3444,7 @@
                         </div>
                         <div class="col-1 d-flex flex-column justify-content-end" style="gap: 40px; padding: 0px;  padding-bottom: 20px;">
                             <div class="d-flex justify-content-end align-items-center gap-2"
-                                 ng-repeat="item_ram in master_security_level | filter:{id_ram:data_general[0].id_ram,category_type:item_ram.category_type}">
+                                 ng-repeat="item_ram in master_security_level | toArray | filter:{id_ram:data_general[0].id_ram,category_type:item_ram.category_type}">
                                 <label for="security_level"><b>{{item_ram.security_level}}</b></label>
                                 <input type="radio"
                                        id="security_level"
@@ -3453,7 +3455,7 @@
                             </div>
                         </div>
                         <div class="col-11">
-                            <div class="cursor-pointer " ng-repeat="itemRam in master_ram | filter:{id: data_general[0].id_ram}">
+                            <div class="cursor-pointer " ng-repeat="itemRam in master_ram | toArray | filter:{id: data_general[0].id_ram}">
                                 <img src="{{itemRam.document_file_path}}" style="width:100%;" />
                             </div>
                         </div>
@@ -3464,7 +3466,7 @@
                             </div>
                             <div class="col-8 d-flex justify-content-center" style="padding: 20px 20px 20px 50px; gap: 160px">
                                 <div class="d-flex justify-content-end align-items-center flex-column"
-                                     ng-repeat="item_ram in master_likelihood_level | filter:{id_ram:data_general[0].id_ram,columns_level:item_ram.columns_level}">
+                                     ng-repeat="item_ram in master_likelihood_level | toArray | filter:{id_ram:data_general[0].id_ram,columns_level:item_ram.columns_level}">
                                     <label for="likelihood"><b>{{item_ram.likelihood_level}}</b></label>
                                     <input type="radio"
                                            id="likelihood" 
@@ -3477,7 +3479,7 @@
                         </div>
                         <div class="col-1 d-flex flex-column justify-content-end" style="gap: 63px; padding-bottom: 20px;">
                             <div class="d-flex justify-content-end align-items-center gap-2"
-                                 ng-repeat="item_ram in master_security_level | filter:{id_ram:data_general[0].id_ram,category_type:item_ram.category_type}">
+                                 ng-repeat="item_ram in master_security_level | toArray | filter:{id_ram:data_general[0].id_ram,category_type:item_ram.category_type}">
                                 <label for="security_level"><b>{{item_ram.security_level}}</b></label>
                                 <input type="radio"
                                        id="security_level" 
@@ -3489,7 +3491,7 @@
                         </div>
 
                         <div class="col-11">
-                            <div class="cursor-pointer " ng-repeat="itemRam in master_ram | filter:{id: data_general[0].id_ram}">
+                            <div class="cursor-pointer " ng-repeat="itemRam in master_ram | toArray | filter:{id: data_general[0].id_ram}">
                                 <img src="{{itemRam.document_file_path}}" style="width:100%;" />
                             </div>
                         </div>
@@ -3796,7 +3798,7 @@
                         <label class="form-label ps-0" for="expense_type">Note to Approver</label>
                         <textarea class="form-control rounded-1" 
                                 placeholder="Note"
-                                ng-repeat="item in data_node | filter:{id:selectedItemNodeView}"
+                                ng-repeat="item in data_node | toArray | filter:{id:selectedItemNodeView}"
                                 ng-model="item.descriptions"
                                 ng-if=" data_header[0].pha_status == 22"
                                 style="height: 50px">
@@ -3911,6 +3913,7 @@
         </div>
     </div>
     <!--Modal Genarate Full Report-->
+
     <!--Modal Check Send e-Mail ปุ่ม Submit TA2 Approver-->
     <div class="modal fade" id="modalSendMailApprover" tabindex="-1" aria-labelledby="modalSendMailApproverLabel"
          aria-hidden="true" style="display: none;">
@@ -3955,27 +3958,50 @@
     <!--Modal Check Send e-Mail ปุ่ม Submit TA2 Approver-->
 
     <!----------------------------------------------->
-<div class="modal fade" id="unsavedChangesModal" tabindex="-1" role="dialog" 
-    aria-labelledby="unsavedChangesModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="unsavedChangesModalLabel">Unsaved Changes</h5>
-        @*<button type="button border-0" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>*@
-      </div>
-      <div class="modal-body">
-        You have unsaved changes. Are you sure you want to leave?
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="stayButton" ng-click="action_leavePage('stay')">Stay</button>
-        <button type="button" class="btn btn-primary" id="leaveButton" ng-click="action_leavePage('leaveWithsave')">Leave with Save</button>
-        <button type="button" class="btn btn-primary" id="leaveButton" ng-click="action_leavePage('leave')">Leave</button>
-      </div>
+    <div class="modal fade" id="unsavedChangesModal" tabindex="-1" role="dialog" 
+        aria-labelledby="unsavedChangesModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="unsavedChangesModalLabel">Unsaved Changes</h5>
+                @*<button type="button border-0" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>*@
+            </div>
+            <div class="modal-body">
+                You have unsaved changes. Are you sure you want to leave?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="stayButton" ng-click="action_leavePage('stay')">Stay</button>
+                <button type="button" class="btn btn-primary" id="leaveButton" ng-click="action_leavePage('leaveWithsave')">Leave with Save</button>
+                <button type="button" class="btn btn-primary" id="leaveButton" ng-click="action_leavePage('leave')">Leave</button>
+            </div>
+            </div>
+        </div>
     </div>
-  </div>
+
+
+<!-------- Modal Before Remove ------------->
+<div class="modal fade" id="removeModal" tabindex="-1" role="dialog" aria-labelledby="removeModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="removeModalLabel">Confirm Removal</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to remove this item?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" ng-click="action_remove('yes')">Yes</button>
+                <button type="button" class="btn btn-primary" ng-click="action_remove('no')">Cancel</button>
+            </div>
+        </div>
+    </div>
 </div>
+
 
 
 </div>
