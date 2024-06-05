@@ -58,12 +58,12 @@
                                 <span> {{data_header[0].pha_status_displayname}}</span>
                             </div>
                         </div>
-                        <div class="col-auto" ng-class="{ 'd-none': (minutes > 9) }">
+                        <div class="col-auto" ><!----ng-class="{ 'd-none': (minutes > 9) }"------>
                             <div class="col-auto">
-                                <b>Expire Within :</b> <br>
+                                <b>Auto-Save Interval :</b> <br>
                                 <span ng-class="{ 'blinking-text': (minutes <= 10) }">{{counterText}} </span>
                             </div>
-                        </div>
+                       </div>
                     </div>
 
                 </div>
@@ -3547,7 +3547,26 @@
          aria-hidden="true" style="display: none;">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content scrollbar" style="max-height: calc(100vh - 100px); overflow-y:auto;">
-                <div class="modal-header">
+                <div class="modal-header" ng-if="selectDatFormType === 'member' || selectDatFormType === 'approver' || params === 'edit_approver'">
+                     <!-- For form_type === 'member' or 'approver' -->
+                    <div > <!------ng-if="selectDatFormType === 'member' || selectDatFormType === 'approver'"----->
+                        <h5 class="text-900 mb-0" data-anchor="data-anchor" id="modalEmployeeCheckLabel">
+                            <span class="me-2 text-primary"><B>|</B></span> Search Employee/Contract
+                        </h5>
+                    </div>
+
+                    <button class="btn p-1" type="button" data-bs-dismiss="modal" aria-label="Close" ng-click="clearFormData()">
+                        <svg class="svg-inline--fa fa-xmark fs--1" aria-hidden="true" focusable="false" data-prefix="fas"
+                                data-icon="xmark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"
+                                data-fa-i2svg="">
+                            <path fill="currentColor"
+                                    d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z">
+                            </path>
+                        </svg>
+                    </button>
+
+                </div>
+                <div class="modal-header"  ng-if="selectDatFormType === 'owner' && params != 'edit_approver'">
                     <!-- For form_type === 'member' or 'approver' -->
                     <div ng-if="selectDatFormType !== 'owner'">
                         <h5 class="text-900 mb-0" data-anchor="data-anchor" id="modalEmployeeCheckLabel">
@@ -3665,8 +3684,8 @@
                                                                 title="choose Employee"
                                                                 ng-click="choosDataEmployee(item)">
                                                             <span class="fa-solid fa-user-plus" ng-if="selectDatFormType !== 'owner' && selectDatFormType !== 'approver_ta3' && params !== 'edit_approver'">Add</span>
-                                                            <span class="fa-solid fa-user-check" ng-if="selectDatFormType === 'owner' || params === 'edit_approver'">selecte</span>
-                                                            <span class="fa-solid fa-paper-plane" ng-if="selectDatFormType === 'approver_ta3'">selecte</span>
+                                                            <span class="fa-solid fa-user-check" ng-if="selectDatFormType === 'owner' || params === 'edit_approver'">Select</span>
+                                                            <span class="fa-solid fa-paper-plane" ng-if="selectDatFormType === 'approver_ta3'">Select</span>
                                                         </button>
                                                     </span>
                                                 </td>
@@ -3781,7 +3800,7 @@
                                 <label class="form-check-label m-auto fw-bold" for="approver_safety">(safety)</label>
                             </div>
                             <label class="mb-0 ms-3 text-1100 fw-bold" style="width:80%;border-color: #f1f2f4;">{{ item2.user_displayname}}</label>
-                            <label class="mb-0 ms-3 text-1100 fw-bold" style="width:80%;border-color: #f1f2f4;">{{ item2.user_position}}</label>
+                            <label class="mb-0 ms-3 text-1100 fw-bold" style="width:80%;border-color: #f1f2f4;">{{ item2.user_title}}</label>
                         </div>
                     </div>
                 </div>
@@ -4791,6 +4810,17 @@
             </div>
         </div>
     </div>  
+
+
+    <div class="modal autosaveModal" id="autosaved" tabindex="-1" role="dialog" aria-labelledby="autosavedModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" style="background-color: #dff0d8;">
+                <div class="modal-body">
+                    <strong>Success!</strong> Your work has been successfully saved.
+                </div>
+            </div>
+        </div>
+    </div>
 
 
 </div>

@@ -954,8 +954,9 @@
                                                                                 <span class="fas fa-copy"></span>
                                                                                 Copy
                                                                             </a>
-                                                                            <div class="dropdown-divider"></div> 
+                                                                            <div class="dropdown-divider" ng-if="flow_role_type == 'admin' || item_h.request_user_displayname === user_name"></div> 
                                                                             <a class="dropdown-item text-danger" 
+                                                                                ng-if="flow_role_type == 'admin' || item_h.request_user_displayname === user_name"
                                                                                 ng-click="selectManageDocument(item_h,'cancel')">
                                                                                 <span class="fa-solid fa-ban"></span>
                                                                                 Cancel
@@ -970,17 +971,17 @@
                                                                                 Edit
                                                                             </a>                                                                       
                                                                             <div class="dropdown-divider" 
-                                                                                ng-if="item_h.pha_status == 13 && (flow_role_type == 'admin' || flow_role_type == 'originator')"></div>        
+                                                                                ng-if="item_h.pha_status == 13 && (flow_role_type == 'admin' || item_h.request_user_displayname === user_name)"></div>        
                                                                             <a class="dropdown-item " 
-                                                                                ng-if="item_h.pha_status == 13 && (flow_role_type == 'admin' || flow_role_type == 'originator')"
+                                                                                ng-if="item_h.pha_status == 13 && (flow_role_type == 'admin' || item_h.request_user_displayname === user_name)"
                                                                                 ng-click="editDoc(item_h,'change_owner')">
                                                                                 <span class="fa-solid fa-user-pen"></span>
                                                                                 Change Action Owner
                                                                             </a>
                                                                             <div class="dropdown-divider" 
-                                                                                ng-if="item_h.pha_status == 21 && (flow_role_type == 'admin' || flow_role_type == 'originator')"></div>        
+                                                                                ng-if="item_h.pha_status == 21 && (flow_role_type == 'admin' || item_h.request_user_displayname === user_name)"></div>        
                                                                             <a class="dropdown-item " 
-                                                                                ng-if="item_h.pha_status == 21 && (flow_role_type == 'admin' || flow_role_type == 'originator')"
+                                                                                ng-if="item_h.pha_status == 21 && (flow_role_type == 'admin' || item_h.request_user_displayname === user_name)"
                                                                                 ng-click="editDoc(item_h,'change_approver')">
                                                                                 <span class="fa-solid fa-user-pen"></span>
                                                                                 Change Approver

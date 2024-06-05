@@ -175,6 +175,7 @@ AppMenuPage.filter('toArray', function() {
     };
   });
   
+  
 
 //to hide please selected
 AppMenuPage.directive('hidePlaceholderOption', function() {
@@ -252,7 +253,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     ];
 
     function startTimer() {
-        $scope.counter = 1800; // 1800 วินาทีเท่ากับ 30 นาที
+        $scope.counter = 900; // 1800 วินาทีเท่ากับ 30 นาที
+        $scope.autosave = false;
+
         var interval = $interval(function () {
             var minutes = Math.floor($scope.counter / 60); // หานาทีที่เหลืออยู่
             var seconds = $scope.counter % 60; // หาวินาทีที่เหลืออยู่
@@ -266,8 +269,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     
             if ($scope.counter == 0) {
                 // เมื่อเวลาครบ 0 ให้แสดงแจ้งเตือน
-                // set_alert("Warning", "Please save the information.")
+                $scope.autosave = true;
                 $scope.confirmSave ('save');
+                
                 $scope.stopTimer();
                 startTimer(); // เริ่มนับใหม่
             }
@@ -375,6 +379,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     || selectedTab.name == 'report'
                 ) {
 
+                    console.log("$scope.status_upload",$scope.status_upload)
+                    console.log("$scope.data_drawing",$scope.data_drawing)
                     if ($scope.data_general[0].sub_expense_type == 'Normal') {
                         
                         if (!$scope.data_general[0].expense_type ||
@@ -386,12 +392,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                             return set_alert('Warning', 'Please select a valid General Information');
                         }
 
-                        if (!$scope.data_drawing[0].document_no ||
-                            !$scope.status_upload) {
-                            $scope.tab_worksheet_show = true;
-                            $scope.tab_managerecom_show = true;
-                            return set_alert('Warning', 'Please select a valid Drawing');
-                        }
+                    if (!$scope.data_drawing[0].document_no ) {
+                        //|| !$scope.status_upload
+                        $scope.tab_worksheet_show = true;
+                        $scope.tab_managerecom_show = true;
+                        return set_alert('Warning', 'Please select a valid Drawing');
+                    }
+
                         if (!$scope.data_node[0].node ||
                             !$scope.data_nodedrawing[0].id_drawing
                         ) {
@@ -1215,6 +1222,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             flow_action = action
         }
 
+        console.log("flow_action",flow_action)
         $.ajax({
             url: url_ws + "Flow/set_hazop",
             data: '{"user_name":"' + user_name + '","token_doc":"' + token_doc + '","pha_status":"' + pha_status + '","pha_version":"' + pha_version + '","action_part":"' + action_part + '"'
@@ -1289,7 +1297,17 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                                 //get_data_after_save(false, (flow_action == 'submit' ? true : false), $scope.pha_seq);
                                 get_data_after_save(false, false, $scope.pha_seq);
                                 
-                                set_alert('Success', 'Data has been successfully saved.');
+                                if ($scope.autosave === true) {
+                                    $timeout(function() {
+                                        $("#autosaved").modal("show");
+                                        $(".modal-backdrop").remove();
+                                    }, 3000);
+                                    $('#autosaved').modal('hide');
+                                    
+                                } else {
+                                    set_alert('Success', 'Data has been successfully saved.');
+
+                                }                                
                                 apply();
                             },
                             error: function (jqXHR, textStatus, errorThrown) {
@@ -1784,9 +1802,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 $scope.data_header = JSON.parse(replace_hashKey_arr(arr.header));
                 set_form_action(action_part_befor, !action_submit, page_load);
 
-                console.log("$scope.params",$scope.params)
-                console.log("$scope.tab_approver_active 0 ",$scope.tab_approver_active)
-
                 if($scope.params != 'edit_approver'){
                     $scope.action_owner_active = true;
                 }  
@@ -1827,8 +1842,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         $scope.save_type = true;
                     }
                 }
-
-                console.log("$scope.tab_approver_active 1 ",$scope.tab_approver_active)
                 // $scope.action_owner_active = true;
 
                 //ตรวจสอบเพิ่มเติม
@@ -1977,8 +1990,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         var pha_status_def = Number($scope.data_header[0].pha_status);
 
-        console.log(pha_status_def,"pha_status_def")
-
         $scope.submit_review = false;
         if (Number(pha_status_def) == 81) {
             $scope.back_type = true;
@@ -2119,9 +2130,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.tab_managerecom_active = false;
             $scope.tab_approver_active = $scope.tab_managerecom_show;
 
-            console.log(" $scope.tab_approver_active",$scope.tab_approver_active)
             check_case_member_review();
-            console.log("$scope.tab_approver_active 00 ",$scope.tab_approver_active)
 
         }
         else if (pha_status_def == 22) {
@@ -2306,6 +2315,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     }
 
+    function formatDate(input) {
+        const dateParts = input.value.split('/');
+        const formattedDate = `${dateParts[0]}/${dateParts[1]}/${dateParts[2]}`;
+        // Now use the formattedDate as needed
+      }
+      
+      
     $scope.getGuidWordById = function (id_guide_word) {
         var _item = $scope.master_guidwords.find(function (guidWord) {
             return guidWord.seq == id_guide_word;
@@ -2319,23 +2335,31 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.data_general[0].id_ram = 5;
         }
 
-
         if ($scope.data_general[0].target_start_date !== null) {
-            const x = $scope.data_general[0].target_start_date.split('T')[0].split("-");
-            $scope.data_general[0].target_start_date = new Date(x[0], x[1] - 1, x[2]);
+            const startDateParts = $scope.data_general[0].target_start_date.split('T')[0].split("-");
+            const year = parseInt(startDateParts[0]);
+            $scope.data_general[0].target_start_date = new Date(year, parseInt(startDateParts[1]) - 1, parseInt(startDateParts[2]));
+            console.log( $scope.data_general[0].target_start_date)
         }
+
         if ($scope.data_general[0].target_end_date !== null) {
-            const x = $scope.data_general[0].target_end_date.split('T')[0].split("-");
-            $scope.data_general[0].target_end_date = new Date(x[0], x[1] - 1, x[2]);
+            const endDateParts = $scope.data_general[0].target_end_date.split('T')[0].split("-");
+            const year = parseInt(endDateParts[0]);
+            $scope.data_general[0].target_end_date = new Date(year, parseInt(endDateParts[1]) - 1, parseInt(endDateParts[2]));
+            console.log( $scope.data_general[0].target_end_date)
+
         }
-              
+        
         if ($scope.data_general[0].actual_start_date !== null) {
-            const x = ($scope.data_general[0].actual_start_date.split('T')[0]).split("-");
-            $scope.data_general[0].actual_start_date = new Date(x[0], x[1] - 1, x[2]);
+            const startDateParts = $scope.data_general[0].actual_start_date.split('T')[0].split("-");
+            const year = parseInt(startDateParts[0]);
+            $scope.data_general[0].actual_start_date = new Date(year, parseInt(startDateParts[1]) - 1, parseInt(startDateParts[2]));
         }
+
         if ($scope.data_general[0].actual_end_date !== null) {
-            const x = ($scope.data_general[0].actual_end_date.split('T')[0]).split("-");
-            $scope.data_general[0].actual_end_date = new Date(x[0], x[1] - 1, x[2]);
+            const endDateParts = $scope.data_general[0].actual_end_date.split('T')[0].split("-");
+            const year = parseInt(endDateParts[0]);
+            $scope.data_general[0].actual_end_date = new Date(year, parseInt(endDateParts[1]) - 1, parseInt(endDateParts[2]));
         }
 
         for (let i = 0; i < $scope.data_session.length; i++) {
@@ -4969,7 +4993,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         //91	CL	Closed
         //81	CN	Cancle
 
-
         //call required field
         if (true) {
             var bCheckRequiredField = false;
@@ -4990,6 +5013,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     requiredFields.forEach(function (item) {
                         if (!arr_chk[0][item.field]) {
                             set_alert('Warning', 'Please select a valid General Information');
+                            console.log("will ser alert for",item.field)
                             validateSelect(item.field, item.errorId);
                             invalidFieldFound = true; 
                         }
@@ -6343,23 +6367,24 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     $scope.clickedStates = {};
     $scope.showModal = function() {
         var deferred = $q.defer();
-    
+        
         $('#modalConfirm').modal('show');
-    
+        
         $scope.confirm = function() {
             $('#modalConfirm').modal('hide');
             deferred.resolve(true);
         };
-    
+        
         $scope.cancel = function() {
             $('#modalConfirm').modal('hide');
             deferred.resolve(false);
         };
-    
+        
         $('#modalConfirm').on('hidden.bs.modal', function() {
             deferred.resolve(false);
+            $('#modalConfirm').off('hidden.bs.modal'); 
         });
-    
+        
         return deferred.promise;
     };
     $scope.choosDataEmployee = function (item) {
@@ -6440,6 +6465,22 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             }
 
+        }
+        else if (xformtype == 'edit_approver') {
+            // ขั้นแรก เรียงข้อมูลตามฟิลด์ 'no'
+            var sortedData = $filter('orderBy')($scope.data_approver, 'no');
+            // จากนั้น กรองข้อมูลตามเงื่อนไขที่ต้องการ
+            var result = $filter('filter')(sortedData, function (item, idx) {
+                return idx == $scope.approve_index;
+            })[0];
+
+            if (result) {
+                result.action_change = 1;
+                result.user_displayname = item.employee_displayname;
+                result.user_img = item.employee_img;
+                result.user_name = item.employee_name;
+            }
+            $('#modalEmployeeAdd').modal('hide');
         }
         else if (xformtype == "owner") {
             var seq_worksheet = seq_session;
@@ -6560,6 +6601,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
             
         }
+
         //clear_valid_items($scope.recomment_clear_valid);
         $scope.recomment_clear_valid = '';
 
@@ -6571,6 +6613,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             $scope.clearFormData();
         } else {
+            $('#modalEmployeeAdd').modal('show');
         }
         
         apply();

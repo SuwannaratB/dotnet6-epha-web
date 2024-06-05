@@ -159,7 +159,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     });
 
     function startTimer() {
-        $scope.counter = 1800; // 1800 วินาทีเท่ากับ 30 นาที
+        $scope.counter = 900; // 1800 วินาทีเท่ากับ 30 นาที
+        $scope.autosave = false;
+
         var interval = $interval(function () {
             var minutes = Math.floor($scope.counter / 60); // หานาทีที่เหลืออยู่
             var seconds = $scope.counter % 60; // หาวินาทีที่เหลืออยู่
@@ -173,8 +175,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     
             if ($scope.counter == 0) {
                 // เมื่อเวลาครบ 0 ให้แสดงแจ้งเตือน
-                // set_alert("Warning", "Please save the information.")
+                $scope.autosave = true;
                 $scope.confirmSave ('save');
+                
                 $scope.stopTimer();
                 startTimer(); // เริ่มนับใหม่
             }
@@ -184,7 +187,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $interval.cancel(interval);
         };
     }
-    
+
     $scope.startTimer = startTimer;
 
     $scope.formatTo24Hour = function (_time) {
@@ -1121,7 +1124,17 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         var json_ram_master = check_master_ram();
 
         //submit, submit_without, submit_complete
-        var flow_action = (action == 'submit_complete' ? 'submit' : action);
+        if(action == 'submit_complete'){
+            flow_action = 'submit'
+        }else if(action == 'change_action_owner'){
+            flow_action = 'change_action_owner'
+        }else if(action = 'change_approver'){
+            flow_action = 'change_approver'
+        }else if(action == 'submit'){
+            flow_action = action
+        }else {
+            flow_action = action
+        }
 
         $.ajax({
             url: url_ws + "Flow/set_whatif",
@@ -1156,7 +1169,15 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             },
             success: function (data) {
                 var arr = data;
-                console.log(arr);
+                console.log("arr,arr");
+
+                //after save set to true and false 
+                $scope.data_listworksheet = arr.data_listworksheet;
+                try{
+                    $scope.data_listworksheet.forEach(function (item) { item.action_project_team = (item.action_project_team == 1 ? true : false); });  
+
+                }catch{}
+                
                 if (arr[0].status == 'true') {
 
                     $scope.pha_type_doc = 'update';
@@ -1188,10 +1209,18 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                                 get_data_after_save(false, (flow_action == 'submit' ? true : false), $scope.pha_seq);
 
-                                set_alert('Success', 'Data has been successfully saved.');
-                                apply();
+                                if ($scope.autosave === true) {
+                                    $timeout(function() {
+                                        $("#autosaved").modal("show");
+                                        $(".modal-backdrop").remove();
+                                    }, 3000);
+                                    $('#autosaved').modal('hide');
+                                    
+                                } else {
+                                    set_alert('Success', 'Data has been successfully saved.');
 
-                                $scope.stopTimer();
+                                }                                  
+                                apply();
                             },
                             error: function (jqXHR, textStatus, errorThrown) {
                                 if (jqXHR.status == 500) {
@@ -2178,20 +2207,27 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
 
         if ($scope.data_general[0].target_start_date !== null) {
-            const x = ($scope.data_general[0].target_start_date.split('T')[0]).split("-");
-            $scope.data_general[0].target_start_date = new Date(x[0], x[1] - 1, x[2]);
+            const startDateParts = $scope.data_general[0].target_start_date.split('T')[0].split("-");
+            const year = parseInt(startDateParts[0]);
+            $scope.data_general[0].target_start_date = new Date(year, parseInt(startDateParts[1]) - 1, parseInt(startDateParts[2]));
         }
+
         if ($scope.data_general[0].target_end_date !== null) {
-            const x = ($scope.data_general[0].target_end_date.split('T')[0]).split("-");
-            $scope.data_general[0].target_end_date = new Date(x[0], x[1] - 1, x[2]);
+            const endDateParts = $scope.data_general[0].target_end_date.split('T')[0].split("-");
+            const year = parseInt(endDateParts[0]);
+            $scope.data_general[0].target_end_date = new Date(year, parseInt(endDateParts[1]) - 1, parseInt(endDateParts[2]));
         }
+        
         if ($scope.data_general[0].actual_start_date !== null) {
-            const x = ($scope.data_general[0].actual_start_date.split('T')[0]).split("-");
-            $scope.data_general[0].actual_start_date = new Date(x[0], x[1] - 1, x[2]);
+            const startDateParts = $scope.data_general[0].actual_start_date.split('T')[0].split("-");
+            const year = parseInt(startDateParts[0]);
+            $scope.data_general[0].actual_start_date = new Date(year, parseInt(startDateParts[1]) - 1, parseInt(startDateParts[2]));
         }
+
         if ($scope.data_general[0].actual_end_date !== null) {
-            const x = ($scope.data_general[0].actual_end_date.split('T')[0]).split("-");
-            $scope.data_general[0].actual_end_date = new Date(x[0], x[1] - 1, x[2]);
+            const endDateParts = $scope.data_general[0].actual_end_date.split('T')[0].split("-");
+            const year = parseInt(endDateParts[0]);
+            $scope.data_general[0].actual_end_date = new Date(year, parseInt(endDateParts[1]) - 1, parseInt(endDateParts[2]));
         }
 
         for (let i = 0; i < $scope.data_session.length; i++) {
@@ -5100,7 +5136,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.data_listworksheet[i].id_pha = pha_seq;
 
             // action_project_team
-            if($scope.data_listworksheet[i].action_project_team){
+            if($scope.data_listworksheet[i].action_project_team !== undefined ){
                 $scope.data_listworksheet[i].action_project_team = $scope.data_listworksheet[i].action_project_team === true ? 1 : 0;           
             }
 
@@ -5730,6 +5766,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 newInput.user_name = employee_name;
                 newInput.user_displayname = employee_displayname;
                 newInput.user_img = employee_img;
+                newInput.user_title = employee_position;
 
                 $scope.data_memberteam.push(newInput);
                 running_no_level1($scope.data_memberteam, null, null);
@@ -5737,6 +5774,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 $scope.MaxSeqDataMemberteam = Number($scope.MaxSeqDataMemberteam) + 1
 
             }
+
+            console.log("$scope.data_memberteam",$scope.data_memberteam)
 
         }
         else if (xformtype == "approver") {
@@ -5761,6 +5800,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 newInput.user_name = employee_name;
                 newInput.user_displayname = employee_displayname;
                 newInput.user_img = employee_img;
+                newInput.user_title = employee_position;
 
                 $scope.data_approver.push(newInput);
                 running_no_level1($scope.data_approver, null, null);
@@ -5783,6 +5823,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 result.user_displayname = item.employee_displayname;
                 result.user_img = item.employee_img;
                 result.user_name = item.employee_name;
+                newInput.user_title = employee_position;
+
             }
             $('#modalEmployeeAdd').modal('hide');
         }
@@ -5798,6 +5840,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             arr_items.responder_user_displayname = employee_displayname;
             arr_items.responder_user_email = employee_email;
             arr_items.responder_user_img = employee_img;
+            arr_items.user_title = employee_position;
+
 
             /*if (arr_items.action_type == 'insert') {
                 arr_items.action_type = 'edit';
@@ -5843,6 +5887,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 newInput.user_name = employee_name;
                 newInput.user_displayname = employee_displayname;
                 newInput.user_img = employee_img;
+                newInput.user_title = employee_position;
+
 
                 $scope.data_relatedpeople.push(newInput);
                 running_no_level1($scope.data_relatedpeople, null, null);
@@ -5907,6 +5953,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                        newInput.user_name = employee_name;
                        newInput.user_displayname = employee_displayname;
                        newInput.user_img = employee_img;
+                       newInput.user_title = employee_position;
    
                        console.log(newInput)
                        $scope.data_approver_ta3.push(newInput);
@@ -5928,7 +5975,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             
         }
 
-        clear_valid_items($scope.recomment_clear_valid);
+        //clear_valid_items($scope.recomment_clear_valid);
         $scope.recomment_clear_valid = '';
 
         $scope.formData = $scope.getFormData();

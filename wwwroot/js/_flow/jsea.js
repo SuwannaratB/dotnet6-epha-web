@@ -203,8 +203,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
     });
 
+    
+
     function startTimer() {
         $scope.counter = 900; // 1800 วินาทีเท่ากับ 30 นาที
+        $scope.autosave = false;
+
         var interval = $interval(function () {
             var minutes = Math.floor($scope.counter / 60); // หานาทีที่เหลืออยู่
             var seconds = $scope.counter % 60; // หาวินาทีที่เหลืออยู่
@@ -218,8 +222,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     
             if ($scope.counter == 0) {
                 // เมื่อเวลาครบ 0 ให้แสดงแจ้งเตือน
-                // set_alert("Warning", "Please save the information.")
+                $scope.autosave = true;
+                // set_alert("Warning", "Please save the information.")          
                 $scope.confirmSave ('save');
+                
                 $scope.stopTimer();
                 startTimer(); // เริ่มนับใหม่
             }
@@ -1301,7 +1307,17 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                                 get_data_after_save(false, (flow_action == 'submit' ? true : false), $scope.pha_seq);
 
-                                set_alert('Success', 'Data has been successfully saved.');
+                                if ($scope.autosave === true) {
+                                    $timeout(function() {
+                                        $("#autosaved").modal("show");
+                                        $(".modal-backdrop").remove();
+                                    }, 3000);
+                                    $('#autosaved').modal('hide');
+                                    
+                                } else {
+                                    set_alert('Success', 'Data has been successfully saved.');
+
+                                }
                                 apply();
 
                                 $scope.stopTimer();
@@ -1742,6 +1758,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         } else { inputs[i].checked = false; }
                     }
                 }
+                console.log("$scope.tab_approver_active",$scope.tab_approver_active)
+
 
                 arr.header[0].flow_mail_to_member = (arr.header[0].flow_mail_to_member == null ? 0 : arr.header[0].flow_mail_to_member);
                 $scope.data_header = JSON.parse(replace_hashKey_arr(arr.header));
@@ -1788,6 +1806,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     }
                 }
 
+                console.log("$scope.tab_approver_active",$scope.tab_approver_active)
+
 
                 //ตรวจสอบเพิ่มเติม
                 if (arr.user_in_pha_no[0].pha_no == '' && $scope.flow_role_type != 'admin') {
@@ -1813,6 +1833,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         $scope.submit_type = false;
                     }
                 }
+
+                console.log("$scope.tab_approver_active",$scope.tab_approver_active)
+
 
                 if (true) {
 
@@ -1943,10 +1966,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         //แสดง tab ตาม flow
         $scope.tab_general_show = true;
         $scope.tab_worksheet_show = false;
+        $scope.tab_approver_show = false;
+
 
         //เปิดให้แก้ไขข้อมูลในแต่ละ tab ตาม flow
         $scope.tab_general_active = true;
         $scope.tab_worksheet_active = true;
+        $scope.tab_approver_active = true;
+        
 
         for (let _item of $scope.tabs) {
             _item.isShow = true;
@@ -3505,9 +3532,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         arr_items.sort((a, b) => a.category_no - b.category_no);
     }
     $scope.openModalDataRAM_Worksheet = function (_item, ram_type, seq, ram_type_action) {
-        $scope.selectdata_nodeworksheet = seq;
+        $scope.selectdata_listworksheet = seq;
         $scope.selectedDataNodeWorksheetRamType = ram_type;
         $scope.selectedDataRamTypeAction = ram_type_action;
+
+        console.log("$scope.selectdata_listworksheet",$scope.selectdata_listworksheet)
+        console.log("$scope.selectedDataNodeWorksheetRamType",$scope.selectedDataNodeWorksheetRamType)
+        console.log("$scope.selectedDataRamTypeAction",$scope.selectedDataRamTypeAction)
 
         if (ram_type_action == 'after') {
             $scope.cal_ram_action_security = _item.ram_after_security;

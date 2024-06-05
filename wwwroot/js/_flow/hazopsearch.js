@@ -526,11 +526,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                     console.log(arr);
                     if (arr[0].status == 'true') {
 
-                        var controller_text = 'HAZOP'; //เนื่องจากไม่ได้แยกตาม module ให้ชี้ไป hazop ที่เดียว
+                        var controller_text = sub_software; //"hazop" //เนื่องจากไม่ได้แยกตาม module ให้ชี้ไป hazop ที่เดียว
                         conFig.pha_type_doc = 'edit';
                         conFig.pha_sub_software = sub_software;
                         conFig.pha_seq = arr[0].seq_new;
                         conFig.pha_status = arr[0].pha_status;
+
+                        console.log("controller_text",controller_text)
 
                         next_page(controller_text, conFig.pha_status);
 

@@ -64,12 +64,12 @@
                                 <span> {{data_header[0].pha_status_displayname}}</span>
                             </div>
                         </div>
-                        @*<div class="col-auto" ><!----ng-class="{ 'd-none': (minutes > 9) }"------>
+                        <div class="col-auto" ><!----ng-class="{ 'd-none': (minutes > 9) }"------>
                             <div class="col-auto">
-                                <b>Expire Within :</b> <br>
+                                <b>Auto-Save Interval :</b> <br>
                                 <span ng-class="{ 'blinking-text': (minutes <= 10) }">{{counterText}} </span>
                             </div>
-                       </div>*@
+                       </div>
                     </div>
 
                     <div class="row">
@@ -778,7 +778,7 @@
                                                                     </button>
                                                                 </div>
                                                                 <div class="row" ng-repeat="item2 in data_memberteam" 
-                                                                     ng-if="item2.user_name !== null && item2.id_session === item.seq">
+                                                                     ng-if="item2.user_name !== null && item2.user_displayname !== nul && item2.id_session === item.seq">
                                                                     <div class="col-8 align-items-center  p-1">
                                                                         <label class="mb-0 text-1100 fw-bold"
                                                                                 style="width:100%;border-color: #f1f2f4;">
@@ -856,7 +856,7 @@
                                                                 </div>
                                                                 <!-- Specialist from data_relatedpeople -->
                                                                 <div class="row" 
-                                                                    ng-repeat="item2 in data_relatedpeople | toArray | filter:{ user_type:'specialist'}"
+                                                                    ng-repeat="item2 in data_relatedpeople | toArray | filter:{ user_type:'specialist' }"
                                                                     ng-if="item2.user_displayname !== null && item2.id_session === item.seq">
                                                                     <div class="col-8 align-items-center  p-1">
                                                                         <label class="mb-0 text-1100 fw-bold"
@@ -873,7 +873,7 @@
                                                                 </div>
 
                                                                 <!-- Specialist from data_relatedpeople_outsider -->
-                                                                <div class="row" ng-repeat="item2 in data_relatedpeople_outsider | toArray | filter:{id_session: selectdata_session, user_type:'specialist'}" 
+                                                                <div class="row" ng-repeat="item2 in data_relatedpeople_outsider | toArray | filter:{id_session: selectdata_session,user_type:'specialist', user_type: 'reviewer'}" 
                                                                     ng-if="item2.user_displayname !== null && item2.id_session === item.seq">   
                                                                     <div class="col-8 align-items-center  p-1">
                                                                         <label class="mb-0 text-1100 fw-bold"
@@ -1051,7 +1051,7 @@
 
                                                     @* Buton Action *@
                                                     <td class="align-top " style="width: 158px;" ng-class="{'d-none': (!tab_general_active)}">
-
+                                                        {{}}
                                                         <div class="col-12" style="width: 158px;">
                                                             <div class="float-end">
                                                                 <span class="mx-1">
@@ -1060,6 +1060,8 @@
                                                                             data-toggle="tooltip" 
                                                                             data-placement="top" 
                                                                             title="Remove"
+                                                                            ng-disabled="!((data_approver.length && data_approver[0].user_name !== null) || 
+                                                                                            (data_memberteam.length && data_memberteam[0].user_name !== null))"                                                                       
                                                                             ng-click=triggerRemove(item.seq,$index,'session')>
                                                                         <span class="fa-regular fa-trash-can fa-lg"></span>
                                                                     </button>
@@ -1071,6 +1073,8 @@
                                                                             data-toggle="tooltip" 
                                                                             data-placement="top" 
                                                                             title="Copy"
+                                                                            ng-disabled="!((data_approver.length && data_approver[0].user_name !== null) || 
+                                                                                            (data_memberteam.length && data_memberteam[0].user_name !== null))"                                                                               
                                                                             ng-click=copyDataSession(item.seq,$index)>
                                                                         <span class="fas fa-copy fa-lg"></span>
                                                                     </button>
@@ -2332,14 +2336,14 @@
                                                     style="padding: 0 !important; width: 30px;">
                                                     <div class="align-items-center text-end mt-1" style=" width: 30px;">
                                                         <button ng-style=" { 'background-color' : ((item.ram_befor_risk == 'H') ? 'red' : ((item.ram_befor_risk == 'M') ? 'yellow' : ((item.ram_befor_risk == 'L') ? 'green' : '#D3D3D3')) ) }"
-                                                                class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end"
+                                                                class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end h-100"
                                                                 ng-class="{'disabled-link':(!tab_worksheet_active)}"
                                                                 type="button" 
                                                                 ng-click="openModalDataRAM_Worksheet(item,'r',item.seq,'befor')" 
-                                                                style="width: 30px;">
-                                                            <div class="d-flex text-center" style=" width: 25px;">
-                                                                <h6 class="me-1 text-center" style=" width: 25px;">{{item.ram_befor_risk}}</h6>
-                                                                <span class="fas fa-pencil-alt fa-sm " style=" width: 10px;"></span>
+                                                                style="width: 30px;height:30px !important;">
+                                                            <div class="d-flex text-center" style=" width: 20px;">
+                                                                <h6 class="me-1 text-center" style=" width: 20px;">{{item.ram_befor_risk}}</h6>
+                                                                <span class="fas fa-pencil-alt fa-sm " style=" width: 8px;"></span>
                                                             </div>
                                                         </button>
                                                     </div>
@@ -2440,20 +2444,21 @@
                                                     </div>
                                                 </td>
                                                 <td class="align-top border border-light border-end-0  border-start-0  border-top-0 "
-                                                    style="padding: 0 !important; width: 30px;">
+                                                    style="padding: 0 !important; width: 30px; heigh:30px">
                                                     <div class="align-items-center text-end mt-1" style=" width: 30px;">
                                                         <button ng-style=" { 'background-color' : ((item.ram_after_risk == 'H') ? 'red' : ((item.ram_after_risk == 'M') ? 'yellow' : ((item.ram_after_risk == 'L') ? 'green' : '#D3D3D3')) ) }"
                                                                 class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end"
                                                                 type="button" 
+                                                                ng-class="{'disabled-link':(!tab_worksheet_active)}"
                                                                 ng-click="openModalDataRAM_Worksheet(item,'r',item.seq,'after')" 
-                                                                style="width: 30px;">
+                                                                style="width: 30px; height:30px !important;">
                                                             <div class="d-flex text-center" style=" width: 25px;">
-                                                                <h6 class="me-1 text-center" style=" width: 25px;">{{item.ram_after_risk}}</h6>
-                                                                <span class="fas fa-pencil-alt fa-sm " style=" width: 10px;"></span>
+                                                                <h6 class="me-1 text-center" style=" width: 30px;">{{item.ram_after_risk}}</h6>
+                                                                <span class="fas fa-pencil-alt fa-sm " style=" width: 8px;"></span>
                                                             </div>
                                                         </button>
                                                     </div>
-                                                </td>                                                
+                                                </td>                                              
                                             </tr>
                                         </tbody>
 
@@ -2491,13 +2496,15 @@
                                         <tbody class="list" id="customer-rating-table-body">
                                             <tr ng-repeat="item in data_approver | orderBy:['no']"
                                                 ng-init="canAccess = Access_check(item)"
-                                                ng-style="{ 'background-color': canAccess ? '' : '#f9fbff' }"  
+                                                ng-style="{ 'background-color': canAccess ? '' : '#f9fbff' }"
+                                                ng-class="{ 'task-highlight':  canAccess}"    
                                                 class="hover-actions-trigger btn-reveal-trigger position-static text-center repeated-item">
                                                 <!----------------ng-if="(item.user_name == user_name ) || (flow_role_type == 'admin')"--------->
                                                 <td class="align-top white-space-nowrap">
                                                     <div class="col-md-12 p-1 ps-3">
                                                         <label class="text-1100 fw-bold ">
-                                                            {{item.no}}
+                                                            {{$index + 1 }}
+                                                            <!----{{item.no}}----->
                                                         </label>
                                                     </div>
                                                 </td>
@@ -2538,14 +2545,16 @@
                                                                 JSEA Report
                                                             </b>
                                                         </div><br />
-                                                        <div class="form-check form-check-inline" ng-class="{ 'cant-Access': !canAccess }">
+                                                        <div class="form-check form-check-inline" ng-class="{ 'cant-Access': !canAccess }"
+                                                            ng-hide="!canAccess">
                                                             <input class="form-check-input" id="inlineRadio-{{item.seq}}" type="radio"
                                                                    name="inlineRadioOptions-{{item.seq}}"
                                                                    ng-disabled="!canAccess"
                                                                    value="approve" checked ng-model="item.action_status" />
                                                             <label class="form-check-label" for="inlineRadioApprove-{{item.seq}}"> Approve</label>
                                                         </div>
-                                                        <div class="form-check form-check-inline" ng-class="{ 'cant-Access': !canAccess }">
+                                                        <div class="form-check form-check-inline" ng-class="{ 'cant-Access': !canAccess }"
+                                                            ng-hide="!canAccess">
                                                             <input class="form-check-input" id="inlineRadioOptions-{{item.seq}}" type="radio"
                                                                    name="inlineRadioOptions-{{item.seq}}"
                                                                    ng-disabled="!canAccess"
@@ -2565,11 +2574,7 @@
                                                                 JSEA Report
                                                             </b>
                                                         </div><br />
-                                                        <div class="form-check form-check-inline">
-                                                            <input class="form-check-input" type="radio" disabled checked />
-                                                            <label class="form-check-label">  {{item.action_status =='approve' ? 'Approve' : 'Send back with Comment' }}</label>
-                                                        </div>
-
+                                                        <p>{{item.action_status =='approve' ? 'Approve' : 'Send back with Comment' }}</p>
                                                     </div>
 
                                                 </td>
@@ -2581,6 +2586,7 @@
                                                         <textarea class="form-control rounded-1" 
                                                                 ng-class="{ 'cant-Access': !canAccess }"
                                                                 ng-disabled="!canAccess"
+                                                                ng-hide="!canAccess"
                                                                 id="floatingTextarea2" placeholder="Enter your comment"
                                                                   ng-model="item.comment">  </textarea>
 
@@ -2609,6 +2615,7 @@
                                                                         type="button" data-bs-toggle="dropdown" data-boundary="window"
                                                                         ng-class="{ 'cant-Access': !canAccess }"
                                                                         ng-disabled="!canAccess"
+                                                                        ng-hide="!canAccess"
                                                                         aria-haspopup="true" aria-expanded="false" data-bs-reference="parent">
                                                                     <span class="fas fa-cog text-info"></span>
                                                                 </button>
@@ -2643,7 +2650,8 @@
                                                                     </label>
                                                                 </div>
                                                             </div>*@
-                                                            <div class="btn-group my-2" ng-class="{ 'no-drop': !canAccess, 'cursor-pointer': canAccess }">
+                                                            <div class="btn-group my-2" ng-class="{ 'no-drop': !canAccess, 'cursor-pointer': canAccess }"
+                                                                ng-hide="!canAccess">
                                                                 <div class="icon-button border p-3" style="border-color: #0d6efd; background-color: #0d6efd;">
                                                                     <span class="fa-solid fa-arrow-up-from-bracket fa-lg" style="color: #ffffff;"></span>
                                                                 </div>
@@ -2699,6 +2707,7 @@
                                                                 style=" background-color: #f1f2f4; width:50px;"
                                                                 ng-click="confirmDialogApprover(item,'save')"
                                                                 ng-disabled="!canAccess"
+                                                                ng-hide="!canAccess"
                                                                 ng-if="!(item.approver_action_type == 2 || data_header[0].pha_status != 21)">
                                                             <span class="fa fa-save text-primary fa-lg"></span><br /><span style="font-size:8px">Save</span>
                                                         </button>
@@ -2708,6 +2717,7 @@
                                                                 style="background-color: #f1f2f4; width:80px; "
                                                                 ng-click="confirmDialogApprover(item,'submit')"
                                                                 ng-disabled="!canAccess"
+                                                                ng-hide="!canAccess"
                                                                 ng-if="!(item.approver_action_type == 2 || data_header[0].pha_status != 21)">
                                                             <span class="fa fa-save text-success fa-lg"></span><br /><span style="font-size:8px">Submit</span>
                                                         </button>
@@ -3987,9 +3997,18 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="removeModalLabel">Confirm Removal</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                    <button class="btn p-1" type="button" data-bs-dismiss="modal" aria-label="Close">
+                        <svg class="svg-inline--fa fa-xmark fs--1" aria-hidden="true" focusable="false"
+                             data-prefix="fas" data-icon="xmark" role="img" xmlns="http://www.w3.org/2000/svg"
+                             viewBox="0 0 320 512" data-fa-i2svg="">
+                            <path fill="currentColor"
+                                  d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 
+                                  301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 
+                                  0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 
+                                  210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z">
+                            </path>
+                        </svg>
+                    </button>
             </div>
             <div class="modal-body">
                 Are you sure you want to remove this item?
@@ -3997,6 +4016,16 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal" ng-click="action_remove('yes')">Yes</button>
                 <button type="button" class="btn btn-primary" ng-click="action_remove('no')">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal autosaveModal" id="autosaved" tabindex="-1" role="dialog" aria-labelledby="autosavedModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="background-color: #dff0d8;">
+            <div class="modal-body">
+                <strong>Success!</strong> Your work has been successfully saved.
             </div>
         </div>
     </div>
