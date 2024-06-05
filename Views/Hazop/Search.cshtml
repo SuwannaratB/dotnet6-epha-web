@@ -249,7 +249,7 @@
                                                             ng-model="item_m.sub_expense_type"
                                                             ng-change="actionChange(item_m)">
                                                         <option id="Normal">Normal</option>
-                                                        <option id="Study">Study</option>
+                                                        <option id="Internal Study">Internal Study</option>
                                                     </select>
                                                 </div>
 
@@ -407,14 +407,19 @@
                                                 <div class="col-md-2">
                                                     <label class="form-label ps-0">Project Type</label>
                                                     <label class="form-label ps-0" ng-if="select_history_tracking_record">
-                                                        <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
-                                                            data-bs-placement="top" title=" Project Type" data-bs-html="true"></a>
+                                                        <a class="form-label far fa-comment-alt text-warning cursor-pointer" 
+                                                            data-bs-toggle="tooltip"
+                                                            data-bs-placement="top" 
+                                                            title=" Project Type" 
+                                                            data-bs-html="true"></a>
                                                     </label>
-                                                    <select class="form-select rounded-1" id="expense_type" placeholder="Project Type"
+                                                    <select class="form-select rounded-1" 
+                                                            id="expense_type" 
+                                                            placeholder="Project Type"
                                                             name="expense_type"
                                                             ng-model="item_m.expense_type"
                                                             ng-change="actionChange(item_m)">
-                                                        <option id="" value="" selected>All</option>
+                                                        <option id="ALL" value="ALL" selected>All</option>
                                                         <option id="MOC" value="MOC">MOC</option>
                                                         <option id="5YEAR" value="5YEAR">5YEAR</option>
                                                     </select>
@@ -855,7 +860,7 @@
                                                 <div class="col-12 col-md">
                                                     <h5 class="text-900 mb-0" data-anchor="data-anchor"> 
                                                         <span class=" me-2 text-primary"><B>|</B></span> 
-                                                         Results
+                                                         Results ({{data_results.length}})
                                                     </h5>
                                                 </div>
                                             </div>

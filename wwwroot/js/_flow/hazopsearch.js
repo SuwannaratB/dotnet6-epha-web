@@ -212,6 +212,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                     const choices4 = new Choices('.js-choice-tagid');
                     //const choices5 = new Choices('.js-choice-tagid_audition');
                 } catch { }
+                // load filter
+                $scope.actionChange($scope.data_conditions[0]);
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 if (jqXHR.status == 500) {
@@ -268,75 +270,107 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
     }
     $scope.actionChange = function (item) {
         try {
-            var arr_search =
-                $filter('filter')($scope.data_results_def, function (_item) {
-
-                    return (
-                        (item.pha_sub_software == null ? 'x' : _item.pha_sub_software).toLowerCase()
-                        == (item.pha_sub_software == null ? 'x' : item.pha_sub_software).toLowerCase()
-
-                        && (item.expense_type == null || item.expense_type === '' ? true : _item.expense_type.toLowerCase() == item.expense_type.toLowerCase())
-
-                        /*&& (item.expense_type == null ? 'x' : _item.expense_type).toLowerCase()
-                        == (item.expense_type == null ? 'x' : item.expense_type).toLowerCase()*/
-
-                        && (item.sub_expense_type == null ? 'x' : _item.sub_expense_type ? _item.sub_expense_type.toLowerCase() : _item.sub_expense_type)
-                        == (item.sub_expense_type == null ? 'x' : item.sub_expense_type ? item.sub_expense_type.toLowerCase() : item.sub_expense_type)
-
-                        && (_item.reference_moc == null || item.reference_moc == '' ? 'x' : _item.reference_moc.toLowerCase())
-                            .includes((item.reference_moc == null || item.reference_moc == '' ? 'x' : item.reference_moc.toLowerCase()))
-
-                        && (_item.pha_request_name == null || item.pha_request_name == '' ? 'x' : _item.pha_request_name.toLowerCase())
-                            .includes((item.pha_request_name == null || item.pha_request_name == '' ? 'x' : item.pha_request_name.toLowerCase()))
-
-                        && (item.project_no == null ? 'x' : _item.pha_no.toLowerCase())
-                            .includes((item.project_no == null ? 'x' : item.project_no.toLowerCase()))
-
-                        && (item.create_date == null ? true : formatDate(item.create_date, _item.create_date))
-
-                        && (item.id_apu == null ? true : _item.id_apu == item.id_apu)
-                        && (item.functional_location == null ? true : _item.functional_location == item.functional_location)
-                        && (item.id_business_unit == null ? true : _item.id_business_unit == item.id_business_unit)
-                        && (item.id_unit_no == null ? true : _item.id_unit_no == item.id_unit_no)
-
-                        && (item.id_toc == null ? true : parseInt(_item.id_toc) == parseInt(item.id_toc))
-                        && (item.id_tagid == null ? true : parseInt(_item.id_tagid) == parseInt(item.id_tagid))
-                        && (item.id_request_type == null ? true : parseInt(_item.id_request_type) == parseInt(item.id_request_type))
-                        && (item.id_company == null ? true : parseInt(_item.id_company) == parseInt(item.id_company))
-                        && (item.pha_status == null || item.pha_status === '' ? true : parseInt(_item.pha_status) == parseInt(item.pha_status))
-
-                        && (item.expense_type == 'CAPEX' && item.sub_expense_type == 'Normal' ?
-                            (item.approver_user_name == null ? 'x' : _item.approver_user_name)
-                            == (item.approver_user_name == null ? 'x' : item.approver_user_name) : true)
-
-                        //&& (item.emp_active_search == null ? true : 
-
-                        //    (item.emp_active_search == null ? 'x' : _item.emp_active_search.toLowerCase())
-                        //        .includes((item.emp_active_search == null ? 'x' : item.emp_active_search.toLowerCase()))
-
-                        //) 
-                    );
-                });
-
-                console.log("Filtered Results:", arr_search);
-
-            arr_search =
-                $filter('filter')(arr_search, function (_item) {
-                    return (
-                        (item.emp_active_search == null ? 'x' : _item.emp_active_search.toLowerCase())
-                            .includes((item.emp_active_search == null ? 'x' : item.emp_active_search.toLowerCase()))
-                    );
-                });
-
-            arr_search =
-                $filter('filter')(arr_search, function (_item) {
-                    return (
-                        (item.worksheet_active_search == null ? 'x' : _item.worksheet_active_search.toLowerCase())
-                            .includes((item.worksheet_active_search == null ? 'x' : item.worksheet_active_search.toLowerCase()))
-                    );
-                });
+            if (item.pha_sub_software == 'HRA' && ( item.expense_type == 'OPEX' ||  item.expense_type == 'CAPEX')) {
+                item.expense_type = 'ALL'
+            }
+            
+            var arr_search = $filter('filter')($scope.data_results_def, function (_item) {
+                return (
+                    (item.expense_type
+                        ? ( item.expense_type == 'ALL'
+                            ? item.expense_type != null
+                            : item.expense_type == _item.expense_type) 
+                        : true
+                    )
 
 
+                    && (item.sub_expense_type.toLowerCase() == _item.sub_expense_type.toLowerCase()) 
+                    // status
+                    && (item.pha_status
+                        ? (parseInt(item.pha_status) == parseInt(_item.pha_status)) 
+                        : true) 
+                    // reference moc
+                    && (item.reference_moc
+                        ? (_item.reference_moc == null || _item.reference_moc == '' 
+                            ? 'x' 
+                            : _item.reference_moc.toLowerCase()).includes((
+                                item.reference_moc == null || item.reference_moc == '' 
+                                ? 'x' 
+                                : item.reference_moc.toLowerCase())) 
+                        : true)
+                    // request name
+                    && (item.pha_request_name
+                        ? (_item.pha_request_name == null || _item.pha_request_name == '' 
+                            ? 'x' 
+                            : _item.pha_request_name.toLowerCase()).includes((
+                                item.pha_request_name == null || item.pha_request_name == '' 
+                                ? 'x' 
+                                : item.pha_request_name.toLowerCase()))
+                        : true)
+                    // project no
+                    && (item.project_no
+                        ? (_item.pha_no == null || _item.pha_no == ''
+                            ? 'x' 
+                            : _item.pha_no.toLowerCase()).includes((
+                                item.project_no == null || item.project_no == '' 
+                                    ? 'x' 
+                                : item.project_no.toLowerCase()))
+                        : true)
+                    // attendees name
+                    && (item.emp_active_search
+                        ? (_item.emp_active_search == null || _item.emp_active_search == ''
+                            ? 'x' 
+                            : _item.emp_active_search.toLowerCase()).includes((
+                                item.emp_active_search == null || item.emp_active_search == '' 
+                                    ? 'x' 
+                                : item.emp_active_search.toLowerCase()))
+                        : true)
+                    // --- JSEA SEARCH ---
+                    // company
+                    && (item.id_company
+                        ? (parseInt(item.id_company) == parseInt(_item.id_company)) 
+                        : true ) 
+                    // company
+                    && (item.id_apu
+                        ? (parseInt(item.id_apu) == parseInt(_item.id_apu)) 
+                        : true ) 
+                    // thaioil complex
+                    && (item.id_toc
+                        ? (parseInt(item.id_toc) == parseInt(_item.id_toc)) 
+                        : true ) 
+                    // unit no
+                    && (item.id_unit_no
+                        ? (parseInt(item.id_unit_no) == parseInt(_item.id_unit_no)) 
+                        : true ) 
+                    // tagid
+                    && (item.id_tagid
+                        ? (parseInt(item.id_tagid) == parseInt(_item.id_tagid)) 
+                        : true ) 
+                    // request type
+                    && (item.id_request_type
+                        ? (parseInt(item.id_request_type) == parseInt(_item.id_request_type)) 
+                        : true ) 
+                    // worksheet active search
+                    && (item.worksheet_active_search
+                        ? (_item.worksheet_active_search == null || _item.worksheet_active_search == ''
+                            ? 'x' 
+                            : _item.worksheet_active_search.toLowerCase()).includes((
+                                item.worksheet_active_search == null || item.worksheet_active_search == '' 
+                                    ? 'x' 
+                                : item.worksheet_active_search.toLowerCase()))
+                        : true)
+                    
+                    // && (item.create_date == null ? true : formatDate(item.create_date, _item.create_date))
+                    // && (item.functional_location == null ? true : _item.functional_location == item.functional_location)
+                    // && (item.id_business_unit == null ? true : _item.id_business_unit == item.id_business_unit)
+                    // && (item.expense_type == 'CAPEX' && item.sub_expense_type == 'Normal' ?
+                    //     (item.approver_user_name == null ? 'x' : _item.approver_user_name)
+                    //     == (item.approver_user_name == null ? 'x' : item.approver_user_name) : true)
+
+                );
+            });
+
+            console.log("Filtered Results:", arr_search);
             $scope.data_results = arr_search;
             apply();
         } catch {
