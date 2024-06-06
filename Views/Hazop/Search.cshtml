@@ -301,6 +301,7 @@
                                                                 data-options='{"removeItemButton":true,"placeholder":true}'
                                                                 ng-model="item_m.id_company"
                                                                 ng-change="actionChange(item_m)">
+                                                            <option id="ALL" value="ALL" selected>All</option>
                                                             <option ng-repeat="item2 in master_company" ng-value="item2.id">
                                                                 {{item2.name}}
                                                             </option>
@@ -318,6 +319,7 @@
                                                                 data-options='{"removeItemButton":true,"placeholder":true}'
                                                                 ng-model="item_m.id_apu"
                                                                 ng-change="actionChange(item_m)">
+                                                            <option id="ALL" value="ALL" selected>All</option>
                                                             <option ng-repeat="item2 in master_apu" ng-value="item2.id">{{item2.name}}</option>
                                                         </select>
 
@@ -335,6 +337,7 @@
                                                                 data-options='{"removeItemButton":true,"placeholder":true}'
                                                                 ng-change="actionChange(item_m)"
                                                                 ng-model="item_m.id_toc">
+                                                            <option id="ALL" value="ALL" selected>All</option>
                                                             <option ng-repeat="item2 in master_toc" ng-value="item2.id">
                                                                 {{item2.name}}
                                                             </option>
@@ -356,6 +359,7 @@
                                                                 data-options='{"removeItemButton":true,"placeholder":true}'
                                                                 ng-change="actionChange(item_m)"
                                                                 ng-model="item_m.id_unit_no">
+                                                            <option id="ALL" value="ALL" selected>All</option>
                                                             <option ng-repeat="item2 in master_unit_no_show" ng-value="item2.id">{{item2.name}}</option>
                                                         </select>
                                                     </div>
@@ -374,6 +378,7 @@
                                                                 data-options='{"removeItemButton":true,"placeholder":true}'
                                                                 ng-change="actionChange(item_m)"
                                                                 ng-model="item_m.id_tagid">
+                                                            <option id="ALL" value="ALL" selected>All</option>
                                                             <option ng-repeat="item2 in master_tagid" ng-value="item2.id">
                                                                 {{item2.name}}
                                                             </option>
@@ -395,6 +400,7 @@
                                                                 data-options='{"removeItemButton":true,"placeholder":true}'
                                                                 ng-change="actionChange(item_m)"
                                                                 ng-model="item_m.id_request_type">
+                                                            <option id="ALL" value="ALL" selected>All</option>
                                                             <option ng-repeat="item2 in master_request_type | filter: { id: item.id_request_type }" 
                                                                 ng-value="item2.id">{{item2.name}}</option>
                                                         </select>
@@ -889,6 +895,7 @@
                                                                         <button class="btn btn-outline text-secondary p-1 btn-search"
                                                                                 style=" width:30px;  "
                                                                                 ng-click="confirmExport(item_h,'pdf')"
+                                                                                ng-style="{'opacity': item_h.pha_status == 11 ? '0.1' : ''}"
                                                                                 ng-class="{'disabled-link no-drop text-secondary':(!(item_h.pha_status>11))}"
                                                                                 data-toggle="tooltip" 
                                                                                 data-placement="top" 
@@ -959,9 +966,9 @@
                                                                                 <span class="fas fa-copy"></span>
                                                                                 Copy
                                                                             </a>
-                                                                            <div class="dropdown-divider" ng-if="flow_role_type == 'admin' || item_h.request_user_displayname === user_name"></div> 
+                                                                            <div class="dropdown-divider" ng-if="(flow_role_type == 'admin' || item_h.request_user_displayname === user_name ) && item_h.pha_status !== 81"></div> 
                                                                             <a class="dropdown-item text-danger" 
-                                                                                ng-if="flow_role_type == 'admin' || item_h.request_user_displayname === user_name"
+                                                                                ng-if="(flow_role_type == 'admin' || item_h.request_user_displayname === user_name ) && item_h.pha_status !== 81"
                                                                                 ng-click="selectManageDocument(item_h,'cancel')">
                                                                                 <span class="fa-solid fa-ban"></span>
                                                                                 Cancel

@@ -13,6 +13,15 @@
     }
 }
 
+.form,
+.form-control,
+.form-select,
+.form-check-input,
+a .dropdown-item,
+a, i {
+    cursor: pointer;
+}
+
 .blinking-text {
     color: red;
     animation: blink 1s infinite;
@@ -224,14 +233,7 @@ background-color: #3e8e41;
 }
 
 
-.form,
-.form-control,
-.form-select,
-.form-check-input,
-a .dropdown-item,
-a, i {
-    cursor: pointer;
-}
+
 
 
 /*if aready add in data*/

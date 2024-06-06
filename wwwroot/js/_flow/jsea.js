@@ -5175,6 +5175,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 newInput.user_displayname = employee_displayname;
                 newInput.user_title = employee_position;
                 newInput.user_img = employee_img;
+                
                 $scope.data_memberteam.push(newInput);
                 running_no_level1($scope.data_memberteam, null, null);
 
