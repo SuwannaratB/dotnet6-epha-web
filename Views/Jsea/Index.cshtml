@@ -769,16 +769,18 @@
                                                         <div class="row d-flex">
                                                             <!-- Member Team/Attendees Section -->
                                                             <div class="col-6">
-                                                                <div class="row" ng-class="{'d-none':(!tab_general_active)}">
+                                                                <div class="row">
                                                                     <button class="btn btn-outline-secondary p-0 cursor-pointer col-auto" 
+                                                                            ng-class="{'d-none':(!tab_general_active)}"
                                                                             style="color: #2445fc; background-color: #f1f2f4; border-color: #f1f2f4;"
                                                                             ng-click="openDataEmployeeAdd(item,'member')">
                                                                         <span class="far fa-address-book fa-lg pe-1"></span>
                                                                         Add Member Team/Attendees
                                                                     </button>
+                                                                    <h6 class="text-primary ps-0" ng-class="{'d-none':(tab_general_active)}">Member Team/Attendees</h6>
                                                                 </div>
                                                                 <div class="row" ng-repeat="item2 in data_memberteam" 
-                                                                     ng-if="item2.user_name !== null && item2.user_displayname !== nul && item2.id_session === item.seq">
+                                                                     ng-if="(item2.user_name !== null && item2.user_displayname !== null) && item2.id_session === item.seq">
                                                                     <div class="col-8 align-items-center  p-1">
                                                                         <label class="mb-0 text-1100 fw-bold"
                                                                                 style="width:100%;border-color: #f1f2f4;">
@@ -794,7 +796,7 @@
                                                                 </div>
                                                                 <!-- data_relatedpeople_outsider -->
                                                                 <div class="row" ng-repeat="item2 in data_relatedpeople_outsider | toArray | filter:{user_type: 'member'}" 
-                                                                    ng-if="item2.user_displayname !== null && item2.id_session === item.seq">
+                                                                    ng-if="(item2.user_displayname !== null) && item2.id_session === item.seq">
                                                                     <div class="col-8 align-items-center  p-1">
                                                                         <label class="mb-0 text-1100 fw-bold"
                                                                             style="width:80%;border-color: #f1f2f4;">
@@ -811,14 +813,16 @@
                                                             </div>
                                                             <!-- Safety Reviewer Section -->
                                                             <div class="col-6">
-                                                                <div class="row" ng-class="{'d-none':(!tab_general_active)}">
+                                                                <div class="row" >
                                                                     <button class="btn btn-outline-secondary p-0 cursor-pointer col-auto" 
+                                                                            ng-class="{'d-none':(!tab_general_active)}"
                                                                             style="color: #2445fc; background-color: #f1f2f4; border-color: #f1f2f4;"
                                                                             ng-click="openDataEmployeeAdd(item,'approver')" 
                                                                             title="ผู้ทบทวนหลัก">
                                                                         <span class="far fa-address-book fa-lg"></span>
                                                                         Add Safety Reviewer
                                                                     </button>
+                                                                    <h6 class="text-primary ps-0" ng-class="{'d-none':(tab_general_active)}">Safety Reviewer</h6>                                                                    
                                                                 </div>
                                                                 <div class="row" ng-repeat="item2 in data_approver" 
                                                                     ng-if="item2.user_name !== null && item2.id_session === item.seq"> 
@@ -846,14 +850,16 @@
 
                                                         <div class="row d-flex mt-4">
                                                              <div class="col-6 ">
-                                                                <div class="row" ng-class="{'d-none':(!tab_general_active)}">
+                                                                <div class="row" >
                                                                     <button class="btn btn-outline-secondary p-0 cursor-pointer col-auto" 
+                                                                            ng-class="{'d-none':(!tab_general_active)}"
                                                                             style="color: #2445fc; background-color: #f1f2f4; border-color: #f1f2f4;"
                                                                             ng-click="openDataEmployeeAdd(item,'specialist')">
                                                                         <span class="far fa-address-book fa-lg pe-1"></span>
                                                                         Add ผู้เชี่ยวชาญเฉพาะด้าน (ถ้ามี):
                                                                     </button>
-                                                                </div>
+                                                                    <h6 class="text-primary ps-0" ng-class="{'d-none':(tab_general_active)}">ผู้เชี่ยวชาญเฉพาะด้าน (ถ้ามี):</h6>                                                                    
+                                                                </div>                                                             
                                                                 <!-- Specialist from data_relatedpeople -->
                                                                 <div class="row" 
                                                                     ng-repeat="item2 in data_relatedpeople | toArray | filter:{ user_type:'specialist' }"
@@ -1051,7 +1057,6 @@
 
                                                     @* Buton Action *@
                                                     <td class="align-top " style="width: 158px;" ng-class="{'d-none': (!tab_general_active)}">
-                                                        {{}}
                                                         <div class="col-12" style="width: 158px;">
                                                             <div class="float-end">
                                                                 <span class="mx-1">
@@ -2000,18 +2005,19 @@
                                         </thead>
                                         <tbody class="">
                                             <tr class="rowwork border border-dashed border-top-0 border-bottom-0"
+
                                                 @* ng-class="{ 'border-active': (data_listworksheet.length - 1 == $index ) }" *@
                                                 ng-repeat="item in data_listworksheet | orderBy:'no'">
 
                                                 @* workstep *@
                                                 <td class="align-top "
                                                     style="padding: 0 !important; width: 200px; max-width:300px;"
+                                                    ng-if="item.row_type === 'workstep'" rowspan="{{ (data_listworksheet | filter:{workstep_no: item.workstep_no}).length }}"
                                                     ng-class="{ 'border-active': 
                                                                 ( item.taskdesc_no == item.no - item.index_rows ) && 
                                                                 ( item.potentailhazard_no == item.no - item.index_rows ) &&
-                                                                ( item.possiblecase_no == item.no - item.index_rows )}" 
-                                                    >
-                                                    <div class="d-flex align-items-top w-100" ng-if="item.row_type =='workstep' ">
+                                                                ( item.possiblecase_no == item.no - item.index_rows )}">
+                                                    <div class="d-flex align-items-top w-100" style="min-height: 100% ">
                                                         <div>
                                                             <p class="p-0 m-0 me-1 text-end">{{item.workstep_no +'.'}}</p>
                                                             <div class="" ng-class="{'d-none': !(tab_worksheet_active)}">
@@ -2042,13 +2048,12 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="autocomplete-container" style=" width: 100%; " ng-class="{'disabled-link':(!tab_worksheet_active)}">
-                                                            <textarea class="form-control form-control-sm rounded-1 p-0 m-0 w-100 border border-end-0 border-top-0"
-                                                                      style=" width: 100vh; font-size: 10px;"
+                                                        <div class="" style=" width: 100%;min-height: 100% " ng-class="{'disabled-link':(!tab_worksheet_active)}">
+                                                            <textarea class="form-control worksheetscroll rounded-1 p-0 m-0 w-100 border border-0"
+                                                                      style=" width: 100%; font-size: 10px;height: calc(1.49em + 5rem + 10px); resize: none;"
                                                                       id="workstep_worksheet_{{item.seq}}" 
                                                                       name="workstep_worksheet_{{item.seq}}"
                                                                       placeholder="Work Step" 
-                                                                      rows="3"
                                                                       ng-model="item.workstep"
                                                                       ng-keyup="filterResultHistory(item.workstep, 'workstep', 'workstep_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'');
                                                                                 (contentModified && item.workstep.trim() !== '') ? updateWorksheetChanges(item, item.seq, '') : null"
@@ -2071,14 +2076,16 @@
                                                             <span class="fa-regular fa-lightbulb fa-lg"></span>
                                                         </div>
                                                     </div>
-                                                </>
+                                                </td>
 
                                                 @* taskdesc *@
-                                                <td class="align-top border-col2-active" 
+                                                <td class="align-top border-col2-active border-active" 
                                                     style="padding: 0 !important; width: 200px; max-width:300px;"
-                                                     ng-class="{ 'border-active': ( item.potentailhazard_no == item.no - item.index_rows ) && ( item.possiblecase_no == item.no - item.index_rows )}" 
-                                                     >
-                                                    <div class="d-flex align-items-top w-100" ng-if="item.row_type =='workstep' || item.row_type =='taskdesc'">
+                                                    ng-if="item.row_type =='workstep' || item.row_type =='taskdesc' " 
+                                                    rowspan="{{ (data_listworksheet | filter:{workstep_no: item.workstep_no,taskdesc_no: item.taskdesc_no}).length }}">
+
+                                                     <!------ng-class="{ 'border-active': ( item.potentailhazard_no == item.no - item.index_rows ) && ( item.possiblecase_no == item.no - item.index_rows )}" ----->
+                                                    <div class="d-flex align-items-top w-100"">
                                                         <div>
                                                             <p class="p-0 m-0 me-1 text-end">{{item.workstep_no +'.'+item.taskdesc_no +'.'}}</p>
                                                             <div class="" ng-class="{'d-none':(!tab_worksheet_active)}">
@@ -2109,9 +2116,9 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="autocomplete-container" style=" width: 100%; " ng-class="{'disabled-link':(!tab_worksheet_active)}">
-                                                            <textarea class="form-control form-control-sm rounded-1 p-0 m-0 w-100 border border-end-0 border-top-0"
-                                                                      style=" width: 200px; font-size: 10px;"
+                                                        <div class="autocomplete-container" style=" width: 100%; " ng-class="{'disabled-link':(!tab_worksheet_active)}">                                                     
+                                                            <textarea class="form-control form-control-sm worksheetscroll rounded-1 p-0 m-0 w-100 border border-0 border-top-0"
+                                                                      style=" width: 200px; font-size: 10px;resize: none;"
                                                                       id="taskdesc_worksheet_{{item.seq}}" 
                                                                       name="taskdesc_worksheet_{{item.seq}}"
                                                                       placeholder="taskdesc" 
@@ -2137,10 +2144,10 @@
                                                 </td>
 
                                                 @* potentailhazard *@
-                                                <td class="align-top border-col3-active" style="padding: 0 !important; width: 200px; max-width:300px;"
-                                                    ng-class="{ 'border-active': ( item.possiblecase_no == item.no - item.index_rows )}" 
-                                                     >
-                                                    <div class="d-flex align-items-top w-100" ng-if="item.row_type =='workstep' || item.row_type =='taskdesc' || item.row_type =='potentailhazard'">
+                                                <td class="align-top border-col3-active border-active" style="padding: 0 !important; width: 200px; max-width:300px;"
+                                                    ng-if="item.row_type =='workstep' || item.row_type =='taskdesc' || item.row_type =='potentailhazard' " 
+                                                    rowspan="{{ (data_listworksheet | filter:{workstep_no: item.workstep_no,taskdesc_no: item.taskdesc_no,potentailhazard_no:item.potentailhazard_no}).length }}">
+                                                    <div class="d-flex align-items-top w-100">
                                                         <div>
                                                             <p class="p-0 m-0 me-1 text-end">{{item.workstep_no  + '.'+item.taskdesc_no + '.'+item.potentailhazard_no +'.'}}</p>
                                                             <div class="" ng-class="{'d-none':(!tab_worksheet_active)}">
@@ -2172,8 +2179,8 @@
                                                             </div>
                                                         </div>
                                                         <div class="autocomplete-container" style=" width: 100%; " ng-class="{'disabled-link':(!tab_worksheet_active)}">
-                                                            <textarea class="form-control form-control-sm rounded-1 p-0 m-0 w-100 border border-end-0 border-top-0"
-                                                                      style=" width: 200px; font-size: 10px;"
+                                                            <textarea class="form-control form-control-sm worksheetscroll rounded-1 p-0 m-0 w-100 border border-0 border-top-0"
+                                                                      style=" width: 200px; font-size: 10px;resize: none;"
                                                                       id="potentailhazard_worksheet_{{item.seq}}" 
                                                                       name="potentailhazard_worksheet_{{item.seq}}"
                                                                       placeholder="potentailhazard" 
@@ -2234,8 +2241,8 @@
                                                             </div>
                                                         </div>
                                                         <div class="autocomplete-container" style=" width: 100%; " ng-class="{'disabled-link':(!tab_worksheet_active)}">
-                                                            <textarea class="form-control form-control-sm rounded-1 p-0 m-0 w-100 border border-end-0 border-top-0"
-                                                                      style=" width: 200px; font-size: 10px;"
+                                                            <textarea class="form-control form-control-sm worksheetscroll rounded-1 p-0 m-0 w-100 border border-0 border-top-0"
+                                                                      style=" width: 200px; font-size: 10px;resize: none;"
                                                                       id="possiblecase_worksheet_{{item.seq}}" 
                                                                       name="possiblecase_worksheet_{{item.seq}}"
                                                                       placeholder="possiblecase" 
@@ -2314,7 +2321,7 @@
                                                     </div>
                                                 </td> *@
 
-                                                <td class="align-top border border-light border-end-0  border-start-0  border-top-0 "
+                                                <td class="align-top border border-light border-end-0  border-start-0  border-top-0 border-active"
                                                     style="padding: 0 !important; width: 20px;">
                                                     <div class="align-items-center text-end mt-1" style=" width: 20px;"
                                                          ng-class="{'disabled-link':(!tab_worksheet_active)}">
@@ -2332,7 +2339,7 @@
                                                     </div>
                                                 </td>
 
-                                                <td class="align-top border border-light border-end-0  border-start-0  border-top-0 "
+                                                <td class="align-top border border-light border-end-0  border-start-0  border-top-0 border-active"
                                                     style="padding: 0 !important; width: 30px;">
                                                     <div class="align-items-center text-end mt-1" style=" width: 30px;">
                                                         <button ng-style=" { 'background-color' : ((item.ram_befor_risk == 'H') ? 'red' : ((item.ram_befor_risk == 'M') ? 'yellow' : ((item.ram_befor_risk == 'L') ? 'green' : '#D3D3D3')) ) }"
@@ -2350,7 +2357,7 @@
                                                 </td>
                                                 
                                                 @* recommendations *@
-                                                <td class="align-top border border-light border-end-0  border-start-0  border-top-0 "
+                                                <td class="align-top border border-light border-end-0  border-start-0  border-top-0 border-active"
                                                     style="padding: 0 !important; width: 200px; max-width:400px;">
                                                     <div class="d-flex align-items-top w-100"
                                                          ng-if="item.row_type =='workstep' || item.row_type =='taskdesc' || item.row_type =='potentailhazard' || item.row_type =='possiblecase' ">
@@ -2363,8 +2370,8 @@
                                                         </span>
 
                                                         <div class="autocomplete-container" style=" width: 100%; " ng-class="{'disabled-link':(!tab_worksheet_active)}">
-                                                            <textarea class="form-control form-control-sm rounded-1 p-0 m-0 w-100 border border-end-0 border-top-0"
-                                                                      style="min-width: 200px !important; max-width: 400px !important; font-size: 10px;"
+                                                            <textarea class="form-control form-control-sm worksheetscroll rounded-1 p-0 m-0 w-100 border border-0 border-top-0"
+                                                                      style="min-width: 200px !important; max-width: 400px !important; font-size: 10px;resize: none;"
                                                                       id="recommendations_worksheet_{{item.seq}}" name="recommendations_worksheet_{{item.seq}}"
                                                                       placeholder="Recommendations" rows="3"
                                                                       ng-model="item.recommendations"
@@ -2375,7 +2382,7 @@
                                                                 <div class="autocomplete-option"
                                                                      ng-repeat="result in filteredResults | toArray | filter:{field:'recommendations'}"
                                                                      ng-click="selectResult(result,item,'recommendations')">
-                                                                    {{ result.name }}โช
+                                                                    {{ result.name }}
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -2388,14 +2395,14 @@
                                                 </td>
 
                                                 @* responder *@
-                                                <td class="align-top border border-light border-end-0  border-start-0  border-top-0 "
+                                                <td class="align-top border border-light border-end-0  border-start-0  border-top-0 border-active"
                                                     style="padding: 0 !important; width: 150px; max-width:350px;">
                                                     <div class="d-flex align-items-top w-100"
                                                          ng-if="item.row_type =='workstep' || item.row_type =='taskdesc' || item.row_type =='potentailhazard' || item.row_type =='possiblecase' ">
                                                         @* {{item.responder_action_by}} *@
                                                         <div class="autocomplete-container" style=" width: 100%; " ng-class="{'disabled-link':(!tab_worksheet_active)}">
-                                                            <textarea class="form-control form-control-sm rounded-1 p-0 m-0 w-100 border border-end-0 border-top-0"
-                                                                      style=" min-width: 200px !important; max-width: 300px !important; font-size: 10px;"
+                                                            <textarea class="form-control form-control-sm worksheetscroll rounded-1 p-0 m-0 w-100 border border-end-0 border-top-0 resize: none;"
+                                                                      style=" min-width: 200px !important; max-width: 300px !important; font-size: 10px; resize:none;"
                                                                       id="responder_action_by_worksheet_{{item.seq}}" name="responder_action_by_worksheet_{{item.seq}}"
                                                                       placeholder="Action by" rows="3"
                                                                       ng-model="item.responder_action_by"
@@ -2428,7 +2435,7 @@
                                                     </div>
                                                 </td> *@
 
-                                                <td class="align-top border border-light border-end-0  border-start-0  border-top-0 "
+                                                <td class="align-top border border-light border-end-0  border-start-0  border-top-0 border-active"
                                                     style="padding: 0 !important; width: 20px;">
                                                     <div class="align-items-center text-end mt-1" style=" width: 20px;" ng-class="{'disabled-link':(!tab_worksheet_active)}">
                                                         <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end"
@@ -2443,7 +2450,7 @@
                                                         </button>
                                                     </div>
                                                 </td>
-                                                <td class="align-top border border-light border-end-0  border-start-0  border-top-0 "
+                                                <td class="align-top border border-light border-end-0  border-start-0  border-top-0 border-active"
                                                     style="padding: 0 !important; width: 30px; heigh:30px">
                                                     <div class="align-items-center text-end mt-1" style=" width: 30px;">
                                                         <button ng-style=" { 'background-color' : ((item.ram_after_risk == 'H') ? 'red' : ((item.ram_after_risk == 'M') ? 'yellow' : ((item.ram_after_risk == 'L') ? 'green' : '#D3D3D3')) ) }"

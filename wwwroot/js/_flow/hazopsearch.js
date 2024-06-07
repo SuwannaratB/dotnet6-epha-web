@@ -163,7 +163,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
                 $scope.master_unit_no_show = $filter('filter')($scope.master_unit_no, function (item) { return (item.id_apu == $scope.master_apu[0].id); });
 
-                if ($scope.data_conditions[0].master_apu == null || $scope.data_conditions[0].master_apu == '') {
+                /*if ($scope.data_conditions[0].master_apu == null || $scope.data_conditions[0].master_apu == '') {
                     $scope.data_conditions[0].master_apu = null;
                     var arr_clone_def = { id: $scope.data_conditions[0].master_apu, name: 'Please select' };
                     $scope.master_apu.splice(0, 0, arr_clone_def);
@@ -172,9 +172,16 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                     $scope.data_conditions[0].master_unit_no = null;
                     var arr_clone_def = { id: $scope.data_conditions[0].master_unit_no, name: 'Please select' };
                     $scope.master_unit_no.splice(0, 0, arr_clone_def);
-                }
+                }*/
 
                 if (sub_software == "JSEA") {
+                    $scope.data_conditions[0].id_company = $scope.data_conditions[0].id_company || "ALL";
+                    $scope.data_conditions[0].id_apu = $scope.data_conditions[0].id_apu || "ALL";
+                    $scope.data_conditions[0].id_toc = $scope.data_conditions[0].id_toc || "ALL";
+                    $scope.data_conditions[0].id_unit_no = $scope.data_conditions[0].id_unit_no || "ALL";
+                    $scope.data_conditions[0].id_tagid = $scope.data_conditions[0].id_tagid || "ALL";
+                    $scope.data_conditions[0].id_request_type = $scope.data_conditions[0].id_request_type || "ALL";
+                    
 
                 } else if (sub_software == "HRA") {
 
@@ -269,6 +276,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         next_page(controller_text, conFig.pha_status, data_type);
     }
     $scope.actionChange = function (item) {
+
+        console.log("item",item)
         try {
             if (item.pha_sub_software == 'HRA' && ( item.expense_type == 'OPEX' ||  item.expense_type == 'CAPEX')) {
                 item.expense_type = 'ALL'
@@ -327,29 +336,47 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                         : true)
                     // --- JSEA SEARCH ---
                     // company
-                    && (item.id_company
-                        ? (parseInt(item.id_company) == parseInt(_item.id_company)) 
-                        : true ) 
-                    // company
-                    && (item.id_apu
-                        ? (parseInt(item.id_apu) == parseInt(_item.id_apu)) 
-                        : true ) 
+                    &&  (item.id_company
+                        ? ( item.id_company == 'ALL'
+                            ? item.id_company != null
+                            : parseInt(item.id_company) == parseInt(_item.id_company)) 
+                        : true
+                    )
+                    // APU
+                    &&  (item.id_apu
+                        ? ( item.id_apu == 'ALL'
+                            ? item.id_apu != null
+                            : parseInt(item.id_apu) == parseInt(_item.id_apu)) 
+                        : true
+                    )      
                     // thaioil complex
-                    && (item.id_toc
-                        ? (parseInt(item.id_toc) == parseInt(_item.id_toc)) 
-                        : true ) 
+                    &&  (item.id_toc
+                        ? ( item.id_toc == 'ALL'
+                            ? item.id_toc != null
+                            : parseInt(item.id_toc) == parseInt(_item.id_toc)) 
+                        : true
+                    )                             
                     // unit no
-                    && (item.id_unit_no
-                        ? (parseInt(item.id_unit_no) == parseInt(_item.id_unit_no)) 
-                        : true ) 
+                    &&  (item.id_unit_no
+                        ? ( item.id_unit_no == 'ALL'
+                            ? item.id_unit_no != null
+                            : parseInt(item.id_unit_no) == parseInt(_item.id_unit_no)) 
+                        : true
+                    )     
                     // tagid
-                    && (item.id_tagid
-                        ? (parseInt(item.id_tagid) == parseInt(_item.id_tagid)) 
-                        : true ) 
+                    &&  (item.id_tagid
+                        ? ( item.id_tagid == 'ALL'
+                            ? item.id_tagid != null
+                            : parseInt(item.id_tagid) == parseInt(_item.id_tagid)) 
+                        : true
+                    )     
                     // request type
-                    && (item.id_request_type
-                        ? (parseInt(item.id_request_type) == parseInt(_item.id_request_type)) 
-                        : true ) 
+                    &&  (item.id_request_type
+                        ? ( item.id_request_type == 'ALL'
+                            ? item.id_request_type != null
+                            : parseInt(item.id_request_type) == parseInt(_item.id_request_type)) 
+                        : true
+                    )     
                     // worksheet active search
                     && (item.worksheet_active_search
                         ? (_item.worksheet_active_search == null || _item.worksheet_active_search == ''

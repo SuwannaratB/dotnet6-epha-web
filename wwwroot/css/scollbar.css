@@ -29,3 +29,33 @@
 }
 
 
+/* Hide the default scrollbar */
+.worksheetscroll {
+    scrollbar-width: thin; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+}
+
+.worksheetscroll{
+    ::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: #ffffff;
+    }
+
+    /*::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+    }  */  
+
+    ::-webkit-scrollbar-track {
+        background-color: #f1f1f1;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+        background-color: #888;
+        border-radius: 10px;
+    }
+}
+
