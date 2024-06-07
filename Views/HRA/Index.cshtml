@@ -1381,25 +1381,23 @@
                                     <table class="table fs--2 mb-0 table-bordered">
                                         <thead class=" text-uppercase  text-center bg-soft">
                                             <tr>
-                                                <th class="sort align-middle" colspan="2" rowspan="1" style="width: 40%;">
+                                                <th class="sort align-middle" colspan="2" rowspan="1" style="width: 46%;">
                                                     NAME OF WORKER GROUP
                                                 </th>
-                                                <th class="sort align-middle text-center" colspan="1" rowspan="2" style="width: 5%;">
-                                                    NUMBERS OF WORKERS
-                                                </th>
 
-                                                <th class="sort align-middle text-center" colspan="2" rowspan="1" style="width: 25%;">
+                                                <th class="sort align-middle text-center" colspan="2" rowspan="1" style="width: 46%;">
                                                     EMPLOYEES /STAFF MEMBERS
                                                 </th>
-                                                <th class="sort align-middle text-center" colspan="1" rowspan="2" style="width: 15%;">
-                                                    ACTION
+
+                                                <th class="sort align-middle text-center" colspan="1" rowspan="2" style="width: 8%;">
+                                                    NUMBERS OF WORKERS
                                                 </th>
                                             </tr>
                                             <tr>
-                                                <th class=" align-middle text-start" style="width: 20%;">AREA</th>
-                                                <th class=" align-middle text-start" style="width: 20%;">WORKER GROUP</th>
-                                                <th class=" align-middle text-start"></th>
-                                                <th class=" align-middle text-start">EMPLOYEES /STAFF MEMBERS</th>
+                                                <th class=" align-middle text-start" style="width: 23%;">AREA</th>
+                                                <th class=" align-middle text-start" style="width: 23%;">WORKER GROUP</th>
+                                                <th class=" align-middle text-start" style="width: 18%;"></th>
+                                                <th class=" align-middle text-start" style="width: 28%;">EMPLOYEES /STAFF MEMBERS</th>
                                             </tr>
                                         </thead>
                                         <tbody class="list" id="customer-rating-table-body">
@@ -1438,12 +1436,6 @@
                                                     </div>
                                                 </td>
 
-                                                <td class="align-top status text-center px-1" >
-                                                    <p class="p-3">
-                                                        <b>{{ item.numbers_of_workers }}</b>
-                                                    </p>
-                                                </td>
-
                                                 <td>
                                                     <div class="d-flex justify-content-center ps-2 py-1">
                                                         <button class="btn btn-outline-secondary p-2 cursor-pointer col-auto" 
@@ -1464,26 +1456,11 @@
                                                     </div>
                                                 </td>
 
+
                                                 <td class="align-top status text-center px-1" >
-                                                    <div class="d-flex justify-content-center gap-2 py-1">
-                                                        <button class="btn btn-outline-primary p-2" 
-                                                            data-toggle="tooltip" 
-                                                            data-placement="top" 
-                                                            title="Copy Description of Work or Tasks"
-                                                            ng-click=copyDescription(item)>
-                                                            <span class="fas fa-copy fa-lg"></span>
-                                                            Copy
-                                                        </button>
-                                                        <button class="btn btn-outline-success p-2" 
-                                                            data-toggle="tooltip" 
-                                                            data-placement="top" 
-                                                            title="Copy Description of Work or Tasks"
-                                                            ng-click="pasteDescription(item)"
-                                                            ng-disabled="!dec_copy_status">
-                                                            <span class="fa-solid fa-clipboard fa-lg"></span>
-                                                            Paste 
-                                                        </button>
-                                                    </div>
+                                                    <p class="p-3">
+                                                        <b>{{ item.numbers_of_workers }}</b>
+                                                    </p>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -1492,7 +1469,6 @@
                             </div>
                         </div>
                     </div>
-
 
                     @* HRA Worksheet start*@
                     <div class="" 
@@ -1570,23 +1546,23 @@
                                                     
                                                     <td>
                                                         <div class="box text-center">
-                                                            {{ item.worker_group }}
+                                                            {{ item.worker_group ? item.worker_group : 'Not found' }}
                                                         </div>
                                                     </td>
 
                                                     <td>
                                                         <div  class="box" ng-repeat="item_dec in item.descriptions">
-                                                            {{ item_dec.descriptions }}
+                                                            {{ item_dec.descriptions ? item_dec.descriptions : 'Not found' }}
                                                         </div>
                                                     </td>
 
                                                     <td>
-                                                        <div class="d-flex flex-column" ng-repeat="ws in item.worksheet">
-                                                            <div class="box" 
-                                                                >
-                                                                {{ item.worksheet[$index - 1].sub_area == ws.sub_area ?'' : ws.sub_area }}
-                                                            </div>
-                                                           
+                                                        <div class="d-flex flex-column box" ng-repeat="ws in item.worksheet" style="min-width: max-content;">
+                                                            {{ ws.sub_area
+                                                                ? item.worksheet[$index - 1].sub_area == ws.sub_area 
+                                                                    ? '' 
+                                                                    : ws.sub_area 
+                                                                : 'Not found'}}
                                                         </div>
                                                     </td>
                                                     @* <td>
@@ -1602,16 +1578,14 @@
                                                     </td> *@
 
                                                     <td>
-                                                        <div class="d-flex flex-col"  ng-repeat="hazard in item.worksheet">
-                                                            <div class="box" >
-                                                                {{ hazard.type_hazard }}
-                                                            </div>
+                                                        <div class="d-flex flex-col box" ng-repeat="hazard in item.worksheet" style="min-width: max-content;">
+                                                            {{ hazard.type_hazard ? hazard.type_hazard : 'Not found'}}
                                                         </div>
                                                     </td>
 
                                                     <td class="" >
                                                         <div class="d-flex flex-col box" ng-repeat="hazard in item.worksheet">
-                                                           {{ hazard.health_hazard }}
+                                                           {{ hazard.health_hazard ? hazard.health_hazard  : 'Not found'}}
                                                         </div>
                                                     </td>
 
@@ -1644,11 +1618,6 @@
                                                                     {{item_m.name}}
                                                                 </option>
                                                             </select>
-                                                            @* <p class=" m-0  text-center text-1100 fw-bold" 
-                                                                ng-if="!tab_worksheet_active"
-                                                                ng-repeat="item_ret in master_frequency_level | filter:{id:item.id_frequency_level}">
-                                                               {{  item_ret.name  }}
-                                                            </p> *@
                                                         </div>
                                                     </td>
 
@@ -1738,6 +1707,7 @@
                                                                 placeholder="Hierarchy of Control (ALARP)" 
                                                                 ng-disabled="hazard.initial_risk_rating === 'Low'"
                                                                 ng-style="{'background-color': hazard.initial_risk_rating === 'Low' ? '#f2f2f2' : 'inherit'}"
+                                                                ng-change="actionChangeControl(hazard)"
                                                                 ng-model="hazard.hierarchy_of_control">
                                                             </textarea>
                                                         </div>
@@ -1751,6 +1721,7 @@
                                                                     id="effective-{{item.index_rows}}-{{idx}}" 
                                                                     style="width: 20px;"
                                                                     value="0"
+                                                                    ng-change="actionChangEffective(hazard)"
                                                                     ng-model="hazard.effective">
                                                                 <label for="effective">Effective</label>
                                                             </div>
@@ -1760,6 +1731,7 @@
                                                                     id="ineffective-{{item.index_rows}}-{{idx}}" 
                                                                     style="width: 20px;"
                                                                     value="1"
+                                                                    ng-change="actionChangEffective(hazard)"
                                                                     ng-model="hazard.effective">
                                                                 <label for="ineffective">Ineffective</label>
                                                             </div>
@@ -1767,18 +1739,6 @@
                                                     </td>
 
                                                     <td class="" >
-                                                        @*<div class="box" ng-repeat="hazard in item.hazards">
-                                                             <textarea class="form-control form-control-sm" 
-                                                                    rows="2" 
-                                                                    type="text" 
-                                                                    style="width: 200px;"
-                                                                    placeholder="Residual Risk Rating" 
-                                                                    ng-disabled="hazard.initial_risk_rating === 'Low'"
-                                                                    ng-style="{'background-color': hazard.initial_risk_rating === 'Low' ? '#f2f2f2' : 'inherit'}"
-                                                                    ng-model="hazard.residual_risk_rating">
-                                                            </textarea>
-
-                                                        </div>*@
                                                         <div class="box" ng-repeat="hazard in item.worksheet">
                                                             <select class="form-select form-select-sm rounded-1" 
                                                                 ng-if="tab_worksheet_active"
@@ -1807,6 +1767,7 @@
                                                                 type="text"
                                                                 style="width: 200px;"
                                                                 placeholder="Comments"
+                                                                ng-change="actionChangeComment(hazard)"
                                                                 ng-model="hazard.recommendations">
                                                             </textarea>
                                                         </div>
