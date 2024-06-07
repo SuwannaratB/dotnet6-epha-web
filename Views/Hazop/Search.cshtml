@@ -895,8 +895,8 @@
                                                                         <button class="btn btn-outline text-secondary p-1 btn-search"
                                                                                 style=" width:30px;  "
                                                                                 ng-click="confirmExport(item_h,'pdf')"
-                                                                                ng-style="{'opacity': item_h.pha_status == 11 ? '0.1' : ''}"
-                                                                                ng-class="{'disabled-link no-drop text-secondary':(!(item_h.pha_status>11))}"
+                                                                                ng-style="{'opacity': item_h.pha_status <= 12 ? '0.1' : ''}"
+                                                                                ng-class="{'disabled-link no-drop text-secondary':(!(item_h.pha_status>12))}"
                                                                                 data-toggle="tooltip" 
                                                                                 data-placement="top" 
                                                                                 title="Export PDF">
@@ -929,7 +929,8 @@
                                                                 <td class="align-top text-center">
                                                                     <div class="p-1 ">
                                                                         <h6 class="fw-semi-bold">{{item_h.pha_status_displayname}}</h6>
-                                                                        <h6 class="fw-semi-bold my-subtext">{{item_h.pha_status_comment}}</h6>
+                                                                        <h6 class="fw-semi-bold my-subtext" 
+                                                                            ng-if="item_h.pha_status === 81">{{item_h.pha_status_comment}}</h6>
                                                                     </div>
                                                                 </td>
 

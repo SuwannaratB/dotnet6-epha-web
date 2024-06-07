@@ -224,10 +224,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 // เมื่อเวลาครบ 0 ให้แสดงแจ้งเตือน
                 $scope.autosave = true;
                 // set_alert("Warning", "Please save the information.")          
-                $scope.confirmSave ('save');
+                $scope.confirmSave('save');
                 
                 $scope.stopTimer();
-                startTimer(); // เริ่มนับใหม่
+                //startTimer(); // เริ่มนับใหม่
             }
         }, 1000);
     
@@ -1307,6 +1307,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                                 get_data_after_save(false, (flow_action == 'submit' ? true : false), $scope.pha_seq);
 
+                                console.log("auto save will call auto save modal")
                                 if ($scope.autosave === true) {
                                     $timeout(function() {
                                         $("#autosaved").modal("show");

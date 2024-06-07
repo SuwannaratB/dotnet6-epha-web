@@ -205,7 +205,7 @@ AppMenuPage.directive('hidePlaceholderOption', function() {
   
   
 
-AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, $document, $interval,$rootScope,$window,$q) { 
+AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, $document, $interval,$rootScope,$window,$q,$timeout) { 
 
     $scope.unsavedChanges = false;
 
@@ -270,10 +270,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             if ($scope.counter == 0) {
                 // เมื่อเวลาครบ 0 ให้แสดงแจ้งเตือน
                 $scope.autosave = true;
-                $scope.confirmSave ('save');
+                // set_alert("Warning", "Please save the information.")          
+                $scope.confirmSave('save');
                 
                 $scope.stopTimer();
-                startTimer(); // เริ่มนับใหม่
+                //startTimer(); // เริ่มนับใหม่
             }
         }, 1000);
     
@@ -281,7 +282,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $interval.cancel(interval);
         };
     }
-    
+
     $scope.startTimer = startTimer;
 
     $scope.formatTo24Hour = function (_time) {
@@ -1304,6 +1305,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                                 //get_data_after_save(false, (flow_action == 'submit' ? true : false), $scope.pha_seq);
                                 get_data_after_save(false, false, $scope.pha_seq);
                                 
+                                console.log("will call to open this modal jaa")
                                 if ($scope.autosave === true) {
                                     $timeout(function() {
                                         $("#autosaved").modal("show");
@@ -1375,7 +1377,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     else {
 
                         set_alert('Success', 'Data has been successfully submitted.');
-                        get_data_after_save(false, false, $scope.pha_seq);
+                         get_data_after_save(false, false, $scope.pha_seq);
                         // window.open('hazop/search', "_top");
                         return;
                     }
@@ -1550,7 +1552,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     $scope.pha_type_doc = 'update';
 
                     if (action == 'save') {
-                        set_alert('Success', 'Data has been successfully saved.');
+                        //set_alert('Success', 'Data has been successfully saved.');
                         $scope.$apply();
                     } else {
                         set_alert('Success', 'Data has been successfully submitted.');
@@ -5869,6 +5871,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     function set_alert(header, detail) {
         $scope.Action_Msg_Header = header;
         $scope.Action_Msg_Detail = detail;
+
         $('#modalMsg').modal({
             backdrop: 'static',
             keyboard: false 
