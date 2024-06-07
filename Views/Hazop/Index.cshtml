@@ -356,7 +356,34 @@
                             </div>
 
                             <!-- Unit No -->
-                            <div class="col-md-3 p-1 align-items-top">
+                            <div class="col-md-3 p-1 align-items-top" 
+                                ng-if="item.id_company != '9999' "
+                                style="display: flex; flex-direction: column; padding-top: 2px;">
+                                    <label class="form-label ps-0" style="margin-top: 4px;" for="unit">
+                                        <b class="text-danger d-none"> * </b>
+                                        Unit No 
+                                    </label>
+                                    <div class="dropdown">
+                                        <button id="dropdown_unit_no" class="dropbtn" >
+                                            {{item.unit_no_name}}
+                                        </button>
+                                        <div id="unit_no" class="dropdown-content">
+                                            <input id="dropdown_input" 
+                                                class="dropdown_input" 
+                                                type="text" 
+                                                placeholder="Search.." 
+                                                ng-model="search_keywords.unit_no"
+                                                ng-change="filterFunction('unit_no')">
+                                            <a  ng-repeat="item2 in master_unit_no_list" 
+                                                ng-if="item2.id_apu == item.id_apu"
+                                                ng-click="changeUnitNo(item2)"
+                                                value="item2.id" >
+                                                {{item2.name}}
+                                            </a>
+                                        </div>
+                                    </div>
+                            </div>
+                            @*<div class="col-md-3 p-1 align-items-top">
                                 <div class="row g-0 align-items-top p-2">
 
                                     <label class="form-label ps-0" for="unit">Unit No </label>
@@ -379,14 +406,14 @@
                                             </option>
                                         </select>
 
-                                        @*<select class="form-control disabled-link" ng-model="item.id_unit_no"
+                                        <select class="form-control disabled-link" ng-model="item.id_unit_no"
                                                 ng-if="!tab_general_active && !(item.expense_type=='CAPEX' && (item.sub_expense_type=='Study' || item.sub_expense_type=='Internal Study'))">
                                             <option ng-selected="item.id_unit_no == item2.id"
                                                     ng-repeat="item2 in master_unit_no" ng-value="item2.id"
                                                     ng-if="item2.id_apu == item.id_apu">
                                                 {{item2.name}}
                                             </option>
-                                        </select>*@
+                                        </select>
                                     </div>
 
                                     <div ng-if="(item.expense_type=='CAPEX' && (item.sub_expense_type=='Study' || item.sub_expense_type=='Internal Study'))">
@@ -397,12 +424,38 @@
 
 
                                 </div>
-                            </div>
+                            </div>*@
 
-                            <!-- functional location -->
                             <div class="col-md-7 p-1 align-items-top">
                                 <div class="row g-0 align-items-top">
-                                    <div class="col-5 p-1">
+                                    <!-- functional location -->
+                                    <div class="col-md-3 p-1 align-items-top" 
+                                        ng-if="item.id_company != '9999' "
+                                        style="display: flex; flex-direction: column; padding-top: 2px;">
+                                            <label class="form-label ps-0" style="margin-top: 4px;" for="unit">
+                                                <b class="text-danger d-none"> * </b>
+                                                Functional Location
+                                            </label>
+                                            <div class="dropdown">
+                                                <button id="dropdown_functional" class="dropbtn" >
+                                                    {{item.functional_location}}
+                                                </button>
+                                                <div id="functional" class="dropdown-content">
+                                                    <input id="dropdown_input" 
+                                                        class="dropdown_input" 
+                                                        type="text" 
+                                                        placeholder="Search.." 
+                                                        ng-model="search_keywords.functional"
+                                                        ng-change="filterFunction('functional')">
+                                                    <a  ng-repeat="item2 in master_functional_list" 
+                                                        ng-click="changeTFunctional(item2)"
+                                                        value="item2.id" >
+                                                        {{item2.name}}
+                                                    </a>
+                                                </div>
+                                            </div>
+                                    </div>                                    
+                                    <div class="col-5 p-1 d-none">
                                         <label class="form-label ps-0" for="organizerSingle">
                                             Functional Location
                                         </label>
@@ -428,11 +481,11 @@
                                                         ng-value="item2.id">{{item2.name}}
                                                 </option>
                                             </select>
-                                            @*<select class="form-control disabled-link"
+                                            <select class="form-control disabled-link"
                                                     ng-model='item.functional_location'
                                                     ng-if="!tab_general_active && !(item.expense_type=='CAPEX' && (item.sub_expense_type=='Study' || item.sub_expense_type=='Internal Study'))">
                                                 <option ng-repeat="item2 in master_functional" ng-value="item2.id">{{item2.name}}</option>
-                                            </select>*@
+                                            </select>
 
                                         </div>
 
@@ -3892,8 +3945,8 @@
                                     ng-click="removeDataEmployee(item2.seq, selectdata_session)">
                                 <span class="fa-regular fa-trash-can fa-lg"></span>
                             </button>                            
-                            <label class="mb-0 ms-3 text-1100 fw-bold" style="width: 80%; border-color: #f1f2f4;">{{ item2.user_displayname }}</label>
-                            <label class="mb-0 ms-3 text-1100 fw-bold" style="width: 80%; border-color: #f1f2f4;">{{ item2.user_title }}</label>
+                            <label class="mb-0 ms-3 text-1100 fw-bold" style="width: 25%; border-color: #f1f2f4;">{{ item2.user_displayname }}</label>
+                            <label class="mb-0 text-1100 fw-bold" style="width: 25%; border-color: #f1f2f4;">{{ item2.user_title }}</label>
                         </div>
                     </div>
                 </div>

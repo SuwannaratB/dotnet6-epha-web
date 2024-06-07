@@ -1128,7 +1128,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             flow_action = 'submit'
         }else if(action == 'change_action_owner'){
             flow_action = 'change_action_owner'
-        }else if(action = 'change_approver'){
+        }else if(action == 'change_approver'){
             flow_action = 'change_approver'
         }else if(action == 'submit'){
             flow_action = action
@@ -2348,35 +2348,38 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         if (true) {
             var arr_worksheet = $scope.data_listworksheet;
-            for (var w = 0; w < arr_worksheet.length; w++) {
+            if (arr_worksheet.length > 0) {
+                for (var w = 0; w < arr_worksheet.length; w++) {
 
-                //recommendations_no
-                arr_worksheet[w].recommendations_no = (arr_worksheet[w].recommendations_no == null ? arr_worksheet[w].consequences_no : arr_worksheet[w].recommendations_no);
-                var arr_node = $filter('filter')($scope.data_tasklist, function (item) {
-                    return (item.id == arr_worksheet[w].id_task);
-                });
-                if (arr_node.length > 0) {
-                    arr_worksheet[w].tasks_no = arr_node[0].no;
-                    //arr_worksheet[w].list = arr_node[0].list;
+                    //recommendations_no
+                    arr_worksheet[w].recommendations_no = (arr_worksheet[w].recommendations_no == null ? arr_worksheet[w].consequences_no : arr_worksheet[w].recommendations_no);
+                    var arr_node = $filter('filter')($scope.data_tasklist, function (item) {
+                        return (item.id == arr_worksheet[w].id_task);
+                    });
+                    if (arr_node.length > 0) {
+                        arr_worksheet[w].tasks_no = arr_node[0].no;
+                        //arr_worksheet[w].list = arr_node[0].list;
+                    }
+
+                    //Estimated Date  
+                    try {
+                        if (arr_worksheet[w].estimated_start_date !== null) {
+                            const x = (arr_worksheet[w].estimated_start_date.split('T')[0]).split("-");
+                            if (x[0] > 2000) {
+                                arr_worksheet[w].estimated_start_date = new Date(x[0], x[1] - 1, x[2]);
+                            }
+                        }
+                    } catch { }
+                    try {
+                        if (arr_worksheet[w].estimated_end_date !== null) {
+                            const x = (arr_worksheet[w].estimated_end_date.split('T')[0]).split("-");
+                            if (x[0] > 2000) {
+                                arr_worksheet[w].estimated_end_date = new Date(x[0], x[1] - 1, x[2]);
+                            }
+                        }
+                    } catch { }
+
                 }
-
-                //Estimated Date  
-                try {
-                    if (arr_worksheet[w].estimated_start_date !== null) {
-                        const x = (arr_worksheet[w].estimated_start_date.split('T')[0]).split("-");
-                        if (x[0] > 2000) {
-                            arr_worksheet[w].estimated_start_date = new Date(x[0], x[1] - 1, x[2]);
-                        }
-                    }
-                } catch { }
-                try {
-                    if (arr_worksheet[w].estimated_end_date !== null) {
-                        const x = (arr_worksheet[w].estimated_end_date.split('T')[0]).split("-");
-                        if (x[0] > 2000) {
-                            arr_worksheet[w].estimated_end_date = new Date(x[0], x[1] - 1, x[2]);
-                        }
-                    }
-                } catch { }
 
             }
         }
