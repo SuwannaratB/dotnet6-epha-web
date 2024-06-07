@@ -1375,6 +1375,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     else {
 
                         set_alert('Success', 'Data has been successfully submitted.');
+                        get_data_after_save(false, false, $scope.pha_seq);
                         // window.open('hazop/search', "_top");
                         return;
                     }

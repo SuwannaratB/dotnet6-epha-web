@@ -3757,44 +3757,36 @@
                     </button>
 
                 </div>
-                <div class="modal-header"  ng-if="selectDatFormType === 'owner' && params != 'edit_approver'">
-                    <!-- For form_type === 'member' or 'approver' -->
-                    <div ng-if="selectDatFormType !== 'owner'">
-                        <h5 class="text-900 mb-0" data-anchor="data-anchor" id="modalEmployeeCheckLabel">
-                            <span class="me-2 text-primary"><B>|</B></span> Search Employee/Contract
-                        </h5>
-                    </div>
+                <div class="modal-header ps-0 pb-0" ng-if="selectDatFormType === 'owner' && params != 'edit_approver'">
                     <!-- For form_type === 'owner' -->
-                    <div>
-                        <nav class="navbar navbar-expand-lg navbar-light ps-0">
-                            <div class="container-fluid">
-                                <ul class="nav nav-underline border-3 border-primary border-bottom" id="myTab"
-                                    role="tablist" style="position: relative;">
-                                    <li class="mx-2" ng-if="tab.isShow || true">
-                                        <a ng-click="selectTab('employee')"
-                                           class="btn btn-outline-primary border border-0 "
-                                           ng-class="{'btn btn-outline-primary border border-0 active': (owner_status === 'employee'),'btn btn-outline-primary border border-0 ': (owner_status === 'teams') }"
-                                           style="border-radius: 10px 10px 0px 0px !important;"
-                                           aria-selected="tab.isActive">Search Employee/Contract</a>
-                                    </li>
-                                    <li class="mx-2" ng-if="tab.isShow || true">
-                                        <a ng-click="selectTab('teams')"
-                                           class="btn btn-outline-primary border border-0 "
-                                           ng-class="{'btn btn-outline-primary border border-0 active': (owner_status === 'teams'),'btn btn-outline-primary border border-0 ': (owner_status === 'employee') }"
-                                           style="border-radius: 10px 10px 0px 0px !important;"
-                                           aria-selected="tab.isActive">Add Teams</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </nav>
-                    </div>
+                    <nav class="navbar navbar-expand-lg navbar-light ps-0 pb-0">
+                        <div class="container-fluid ps-0">
+                            <ul class="nav nav-underline border-3  " id="myTab"
+                                role="tablist" style="position: relative;">
+                                <li class="mx-2" ng-if="tab.isShow || true"><!-----btn-outline-primary------->
+                                    <a ng-click="selectTab('employee')"
+                                       class="btn border border-0 "
+                                       ng-class="{'btn border border-bottom border-primary border-0 text-primary active': (owner_status === 'employee'),'btn border border-0 ': (owner_status === 'teams') }"
+                                        style="border-radius: 10px 10px 0px 0px !important;"
+                                       aria-selected="tab.isActive">Search Employee/Contract</a>
+                                </li>
+                                <li class="mx-2" ng-if="tab.isShow || true">
+                                    <a ng-click="selectTab('teams')"
+                                       class="btn border border-0 "
+                                       ng-class="{'btn border border-0 border-bottom border-primary text-primary active': (owner_status === 'teams'),'btn border border-0 ': (owner_status === 'employee') }"
+                                       style="border-radius: 10px 10px 0px 0px !important;"
+                                       aria-selected="tab.isActive">Add Teams</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </nav>
 
                     <button class="btn p-1" type="button" data-bs-dismiss="modal" aria-label="Close" ng-click="clearFormData()">
                         <svg class="svg-inline--fa fa-xmark fs--1" aria-hidden="true" focusable="false" data-prefix="fas"
                                 data-icon="xmark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"
                                 data-fa-i2svg="">
                             <path fill="currentColor"
-                                  d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z">
+                                    d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z">
                             </path>
                         </svg>
                     </button>
@@ -3924,9 +3916,7 @@
                 </div>
 
                 <!------------show name after add   --------------->
-                <div class="modal-header bg-soft" 
-                    ng-if="((selectDatFormType !== 'owner' || (selectDatFormType !== 'approver_ta3')) && params !== 'edit_approver' && (data_memberteam || data_approver).length > 1)">
-                    @*ng-if="((selectDatFormType !== 'owner' || (selectDatFormType !== 'approver_ta3') &&  params !== 'edit_approver' && (data_memberteam || data_approver).length > 1 )"*@
+                <div class="modal-header bg-soft" ng-if="(selectDatFormType !== 'owner' &&  params !== 'edit_approver' && (data_memberteam || data_approver).length > 1 )">
                     <h5 class="text-900 mb-0">
                         <span class="me-2 text-primary"><B>|</B></span> {{ selectDatFormType === 'member' ? 'Member Team' : 'Approver' }}
                     </h5>
