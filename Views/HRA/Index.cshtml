@@ -913,19 +913,19 @@
                                     <table class="table fs--2 mb-0 table-bordered">
                                         <thead class=" text-uppercase  text-center bg-soft">
                                             <tr>
-                                                <th class="sort align-middle text-center px-0" style="width: 5%;">
+                                                <th class="sort align-middle text-center px-0" style="width: 6%;">
 
                                                 </th>
-                                                <th class="sort align-middle text-start px-1" style="width: 35%;">
+                                                <th class="sort align-middle text-start px-1" style="width: 26%;">
                                                     NAME OF SUB AREA
                                                 </th>
-                                                <th class="sort align-middle px-0" style="width: 25%;">
+                                                <th class="sort align-middle px-0" style="width: 30%;">
                                                     TYPE OF HAZARD
                                                 </th>
-                                                <th class="sort align-middle px-0" style="width: 20%;">
+                                                <th class="sort align-middle px-0" style="width: 30%;">
                                                     HEALTH HAZARDS OR RISK FACTOR
                                                 </th>
-                                                <th class="sort align-middle px-0" style="width: 15%;">
+                                                <th class="sort align-middle px-0" style="width: 8%;">
                                                     HEALTH EFFECT RATING
                                                 </th>
                                             </tr>
@@ -1038,20 +1038,58 @@
                                                         
                                                         @* master_hazard_type *@
                                                         <select class="form-control"
-                                                            style="width: 30%;"
+                                                            style="width: 32%;"
                                                             ng-class="{'disabled-link':(!tab_general_active || !(tab_general_active && data_header[0].pha_status<=12 ))}"
                                                             ng-change="actionChangeTabArea('type_hazard', item, item_list)"
-                                                            @* ng-change="actionChange(item_list,item_list.seq,'type_hazard')" *@
+                                                            @* ng-click="actionChangeTabArea('disabled_type_hazard', item, item_list)" *@
                                                             ng-model="item_list.id_type_hazard"
                                                             ng-if="tab_general_active">
                                                             <option value="" disabled>Please select</option>
-                                                            <option ng-repeat="item_m in master_hazard_type" ng-value="item_m.id">
+                                                            <option ng-repeat="item_m in master_hazard_type" 
+                                                                    ng-if="!item_m.disabled"
+                                                                    ng-value="item_m.id">
                                                                 {{item_m.name}}
                                                             </option>
                                                         </select> 
 
+                                                        @* number *@
+                                                        <div class="" style="padding-left: 4px; width: 10%">
+                                                            <div class="align-top">
+                                                                <div class="font-sans-serif btn-reveal-trigger position-static ">
+                                                                    <span class="px-1"> </span>
+                                                                    @* <span class="px-1">{{item_list.no_subareas}}.{{ item_list.no }}</span> *@
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="font-sans-serif btn-reveal-trigger position-static" ng-class="{'d-none': !(tab_general_active)}">
+                                                                <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 p-1"
+                                                                        type="button" 
+                                                                        data-bs-toggle="dropdown" 
+                                                                        data-boundary="window" 
+                                                                        aria-haspopup="true"
+                                                                        aria-expanded="false" 
+                                                                        data-bs-reference="parent">
+                                                                    <span class="fas fa-cog text-info"></span>
+                                                                </button>
+                                                                <div class="dropdown-menu dropdown-menu-end py-2">
+                                                                    <a class="dropdown-item text-success" 
+                                                                        ng-click="addDataHazardList(item, item_list, MaxSeqdataSubareas)">
+                                                                        <span class="fas fa-copy"></span>
+                                                                        Add
+                                                                    </a>
+                                                                    <div class="dropdown-divider" ng-if="!(item_list.no == 1)"></div>
+                                                                    <a class="dropdown-item text-danger" 
+                                                                        ng-if="!(item_list.no == 1)"
+                                                                        ng-click="removeDataHazardList(item, item_list, $index)">
+                                                                        <span class="fas fa-times-circle"></span>
+                                                                        Remove
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
                                                         @* master_hazard_riskfactors *@
-                                                        <span class="mx-2"  style="width: 30%;">
+                                                        <div class="mx-2"  style="width: 32%;">
                                                             <button ng-if="!item_list.health_hazard" class="btn btn-outline-secondary btn-sm w-100 h-100" 
                                                                 style="border: 1px solid #cbd0dd " 
                                                                 ng-click="openModalRisk(item_list, index)">
@@ -1062,11 +1100,11 @@
                                                                 ng-click="openModalRisk(item_list, index)">
                                                                 {{item_list.health_hazard}}
                                                             </button>
-                                                        </span>
+                                                        </div>
 
                                                         @* health_effect_rating *@
-                                                        <div class="d-flex align-items-center justify-content-center gap-2" 
-                                                                style="width: 20%;">
+                                                        <div class="d-flex align-items-center justify-content-center gap-2"  
+                                                                style="width: 8%;">
                                                             @* rating *@
                                                             <div class="effect-rating" 
                                                                 @* ng-class="{'mr-27': (item_list.count_riskfactors <= 1)}" *@
@@ -2664,7 +2702,7 @@
                                 <thead class=" text-uppercase bg-white">
                                     <tr class="text-center">
                                         <th class="text-center" style="width: 10%;">Select</th>
-                                        <th class="text-start" style="width: 70%;">RISK FACTOR ({{master_hazard_riskfactors.length}})</th>
+                                        <th class="text-start" style="width: 70%;">RISK FACTOR ({{master_hazard_riskfactors_list.length}})</th>
                                         <th class="text-center" style="width: 10%;">Rating</th>
                                         <th class="text-center" style="width: 10%;">TLV STD</th>
                                         @* <th class="text-center" style="width: 10%;">Type</th> *@
@@ -2672,7 +2710,7 @@
                                 </thead>
                                 <tbody class=" list">
                                     <tr class="hover-actions-trigger btn-reveal-trigger position-static text-center"
-                                        ng-repeat="item in hazard_standard">
+                                        ng-repeat="item in master_hazard_riskfactors_list">
 
                                         <td class="text-center" style="width: 10%;">
                                             <input type="radio" 
