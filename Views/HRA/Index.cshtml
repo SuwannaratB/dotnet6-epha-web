@@ -1090,12 +1090,16 @@
 
                                                         @* master_hazard_riskfactors *@
                                                         <div class="mx-2"  style="width: 32%;">
-                                                            <button ng-if="!item_list.health_hazard" class="btn btn-outline-secondary btn-sm w-100 h-100" 
+                                                            <button ng-if="!item_list.health_hazard" 
+                                                                ng-disabled="!item_list.id_type_hazard"
+                                                                class="btn btn-outline-secondary btn-sm w-100 h-100" 
                                                                 style="border: 1px solid #cbd0dd " 
                                                                 ng-click="openModalRisk(item_list, index)">
                                                                 Please select
                                                             </button>
-                                                            <button ng-if="item_list.health_hazard" class="btn btn-outline-secondary btn-sm w-100 h-100" 
+                                                            <button ng-if="item_list.health_hazard" 
+                                                                ng-disabled="!item_list.id_type_hazard"
+                                                                class="btn btn-outline-secondary btn-sm w-100 h-100" 
                                                                 style="border: 1px solid #cbd0dd " 
                                                                 ng-click="openModalRisk(item_list, index)">
                                                                 {{item_list.health_hazard}}
@@ -1589,8 +1593,8 @@
                                                     </td>
 
                                                     <td>
-                                                        <div  class="box" ng-repeat="item_dec in item.descriptions">
-                                                            {{ item_dec.descriptions ? item_dec.descriptions : 'Not found' }}
+                                                        <div class="box" ng-repeat="item_dec in item.descriptions">
+                                                              {{ item_dec.descriptions ? item_dec.descriptions : 'Not found' }}
                                                         </div>
                                                     </td>
 
@@ -2110,10 +2114,10 @@
                                             </td>
                                             
                                             <td class="align-top rating white-space-nowrap">
-                                                <div class="ms-3">
-                                                        <div  class="box" ng-repeat="item_dec in item.descriptions">
-                                                            {{ item_dec.descriptions }}
-                                                        </div>
+                                                <div class="box"  
+                                                    style="border: none; margin-bottom: 0px;"
+                                                    ng-repeat="item_dec in item.descriptions">
+                                                        {{ item_dec.descriptions ? item_dec.descriptions : 'Not found' }}
                                                 </div>
                                             </td>
                                             <td>
