@@ -607,9 +607,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             { name: 'areas', action_part: 2, title: 'List of Areas to Be Assessed and Health Hazards or Risk Factors', isActive: false, isShow: false },
             { name: 'worker', action_part: 3, title: 'List of Worker Groups and Description of Tasks', isActive: false, isShow: false },
             //{ name: 'ram', action_part: 4, title: 'RAM', isActive: false, isShow: false },
-            { name: 'list_name', action_part: 4, title: 'List of Name', isActive: false, isShow: false },
             { name: 'worksheet', action_part: 5, title: $scope.sub_software + ' Worksheet', isActive: false, isShow: false },
             { name: 'manage', action_part: 6, title: 'Manage Recommendations', isActive: false, isShow: false },
+            { name: 'list_name', action_part: 7, title: 'List of Name', isActive: false, isShow: false },
             //{ name: 'approver', action_part: 7, title: 'Assessment Team Leader (QMTS)', isActive: false, isShow: false },
             { name: 'report', action_part: 8, title: 'Report', isActive: false, isShow: false }
         ];
@@ -1224,10 +1224,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                             { name: 'general', action_part: 1, title: 'General Information', isActive: true, isShow: false },
                             { name: 'list_areas', action_part: 2, title: 'List of Areas to Be Assessed and Health Hazards or Risk Factors', isActive: false, isShow: false },
                             { name: 'list_worker', action_part: 3, title: 'List of Worker Groups and Description of Tasks', isActive: false, isShow: false },
-                            { name: 'list_name', action_part: 4, title: 'List of Name', isActive: false, isShow: false },
                             { name: 'worksheet', action_part: 5, title: $scope.sub_software + ' Worksheet', isActive: false, isShow: false },
                             { name: 'manage', action_part: 6, title: 'Manage Recommendations', isActive: false, isShow: false },
-                            { name: 'approver', action_part: 7, title: 'Assessment Team Leader (QMTS)', isActive: false, isShow: false },
+                            // { name: 'approver', action_part: 7, title: 'Assessment Team Leader (QMTS)', isActive: false, isShow: false },
+                            { name: 'list_name', action_part: 7, title: 'List of Name', isActive: false, isShow: false },
                             { name: 'report', action_part: 8, title: 'Report', isActive: false, isShow: false }
                         ];
 
@@ -4723,7 +4723,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.selectDatFormType = form_type;//member, approver, owner
             $scope.employeelist_show = [];
             $scope.searchText = '';
-            console.log(' $scope.selectdata_session', $scope.selectdata_session)
+
+            if($scope.selectDatFormType == 'worker')
+                $scope.data_worker_list = item.worker_list
+
+            console.log('selectedWorker ', $scope.data_worker_list)
             apply();
 
             $('#modalEmployeeAdd').modal({
@@ -5039,6 +5043,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             if (actions == 'approver') {
                 $scope.removeDataApprover(seq, seq_session)
+            }
+
+            if (actions == 'worker') {
+                
             }
 
 ;
