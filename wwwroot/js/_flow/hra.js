@@ -4910,9 +4910,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             if($scope.selectDatFormType == 'worker')
                 $scope.data_worker_list = item.worker_list
 
-            console.log('selectedWorker ', $scope.data_worker_list)
             apply();
-
+            console.log('selectDatFormType ',$scope.selectDatFormType)
             $('#modalEmployeeAdd').modal({
                 backdrop: 'static',
                 keyboard: false 
@@ -4981,45 +4980,45 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             });
         }
 
-    $scope.currentPage = 1;
-    $scope.itemsPerPage = 10; // Set the desired number of items per page
-    
-
-    $scope.getPaginatedItems = function() {
-        var begin = ($scope.currentPage - 1) * $scope.itemsPerPage;
-        var end = begin + $scope.itemsPerPage;
+        $scope.currentPage = 1;
+        $scope.itemsPerPage = 10; // Set the desired number of items per page
         
-        $scope.loadingData = true; 
-        setTimeout(function() {
-            $scope.loadingData = false;
-            $scope.$apply(); 
-        }, 2000);
-    
-        var paginatedItems = $scope.employeelist_page.slice(begin, end);
+
+        $scope.getPaginatedItems = function() {
+            var begin = ($scope.currentPage - 1) * $scope.itemsPerPage;
+            var end = begin + $scope.itemsPerPage;
+            
+            $scope.loadingData = true; 
+            setTimeout(function() {
+                $scope.loadingData = false;
+                $scope.$apply(); 
+            }, 2000);
         
-        return paginatedItems;
-    };
-    
+            var paginatedItems = $scope.employeelist_page.slice(begin, end);
+            
+            return paginatedItems;
+        };
+        
 
-    $scope.setPage = function(page) {
-        $scope.currentPage = page;
-        $scope.employeelist_show = $scope.getPaginatedItems();
-    };
+        $scope.setPage = function(page) {
+            $scope.currentPage = page;
+            $scope.employeelist_show = $scope.getPaginatedItems();
+        };
 
-    $scope.action_changepage = function(action) {
-        switch (action) {
-            case 'prevPage':
-                if ($scope.currentPage > 1) {
-                    $scope.setPage($scope.currentPage - 1);
-                }
-                break;
-            case 'nextPage':
-                if ($scope.currentPage < $scope.totalPages) {
-                    $scope.setPage($scope.currentPage + 1);
-                }
-                break;
-        }
-    };    
+        $scope.action_changepage = function(action) {
+            switch (action) {
+                case 'prevPage':
+                    if ($scope.currentPage > 1) {
+                        $scope.setPage($scope.currentPage - 1);
+                    }
+                    break;
+                case 'nextPage':
+                    if ($scope.currentPage < $scope.totalPages) {
+                        $scope.setPage($scope.currentPage + 1);
+                    }
+                    break;
+            }
+        };    
 
 
     $scope.choosDataEmployee = function (item) {
@@ -5157,42 +5156,53 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     newInput.user_img = employee_img;
 
                     tasks.worker_list.push(newInput);
+
+                    tasks.numbers_of_workers = tasks.worker_list.length;
                 }
                 console.log('Add Worker ', newInput)
-                console.log('Add Worker All ',  $scope.data_tasks)
+                console.log('Add tasks ', tasks)
+                console.log('Add tasks All ',  $scope.data_tasks)
             }
             else if (xformtype == "manage") {
+                var data =  $scope.selectedData;
+
+                if(!data) return;
+
+                data.responder_user_displayname = employee_displayname
+                data.responder_action_type = employee_position
+                data.responder_user_email = employee_email
+                data.responder_user_name = employee_name
+                data.responder_user_img = employee_img
+                data.responder_user_id = id
+                data.action_change = 1;
                 /*var arr_items = $filter('filter')($scope.data_workers, function (item) {
                     return (item.id_session == seq_session && item.user_name == employee_name);
                 });*/
 
-                console.log("arr_items",arr_items)
+                // if (arr_items.length == 0) {
+                //     var seq = $scope.MaxSeqdataWorkers;
 
-                if (arr_items.length == 0) {
-                    //add new employee 
-                    var seq = $scope.MaxSeqdataWorkers;
+                //     var newInput = clone_arr_newrow($scope.data_workers_def)[0];
+                //     newInput.seq = seq;
+                //     newInput.id = seq;
+                //     newInput.no = (0);
+                //     newInput.id_session = Number(seq_session);
+                //     newInput.action_type = 'insert';
+                //     newInput.action_change = 1;
 
-                    var newInput = clone_arr_newrow($scope.data_workers_def)[0];
-                    newInput.seq = seq;
-                    newInput.id = seq;
-                    newInput.no = (0);
-                    newInput.id_session = Number(seq_session);
-                    newInput.action_type = 'insert';
-                    newInput.action_change = 1;
+                //     newInput.user_name = employee_name;
+                //     newInput.user_displayname = employee_displayname;
+                //     newInput.user_title = employee_position;
+                //     newInput.user_img = employee_img;
 
-                    newInput.user_name = employee_name;
-                    newInput.user_displayname = employee_displayname;
-                    newInput.user_title = employee_position;
-                    newInput.user_img = employee_img;
+                //     $scope.data_workers.push(newInput);
+                //     running_no_level1($scope.data_workers, null, null);
 
-                    $scope.data_workers.push(newInput);
-                    running_no_level1($scope.data_workers, null, null);
+                //     $scope.MaxSeqdataWorkers = Number($scope.MaxSeqdataWorkers + 1);
 
-                    $scope.MaxSeqdataWorkers = Number($scope.MaxSeqdataWorkers + 1);
+                // }
 
-                }
-
-                console.log("$scope.data_workers",$scope.data_workers)
+                // console.log("$scope.data_workers",$scope.data_workers)
             }
             apply();
 
@@ -5208,14 +5218,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 });
 
                 if (arrdelete.length > 0) { $scope.data_memberteam_delete.push(arrdelete[0]); }
-    
+
                 $scope.data_memberteam = $filter('filter')($scope.data_memberteam, function (item) {
                     return !(item.seq == seq && item.id_session == seq_session);
                 });
                 //if delete row 1 clear to null
                 if ($scope.data_memberteam.length == 1 || $scope.data_memberteam.no == 1) {
                     var keysToClear = ['user_name', 'user_displayname'];
-    
+
                     keysToClear.forEach(function (key) {
                         $scope.data_memberteam[0][key] = null;
                     });
@@ -5232,7 +5242,22 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 
             }
 
-;
+            if (actions == 'manage') {
+                var data =  $scope.selectedData;
+
+                if(!data) return;
+
+                data.responder_user_displayname = null
+                data.responder_action_type = null
+                data.responder_user_email = null
+                data.responder_user_name = null
+                data.responder_user_img = null
+                data.responder_user_id = null
+                data.action_change = 1;
+                console.log(data)
+            }
+
+    ;
             apply();
     };
 
@@ -5244,7 +5269,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             text: ''
         }        
             //$scope.formData_outsider = [];
-    };
+        };
     
         $scope.removeDataApprover = function (seq, seq_session) {
 
@@ -5819,7 +5844,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
         }
     }
-
+    
     $scope.Matrix_Frequency_Rating = function () {
          
         $('#modalMatrix_Frequency_Rating').modal('show');
