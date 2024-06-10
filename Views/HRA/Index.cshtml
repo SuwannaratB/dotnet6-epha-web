@@ -2912,37 +2912,7 @@
                         <span class="me-2 text-primary"><B>|</B></span> {{ selectDatFormType === 'member' ? 'Member Team' : 'Approver' }}
                     </h5>
                 </div>
-<<<<<<< HEAD
-
-                <div class="modal-body h-50"  
-                    ng-if="(selectDatFormType !== 'owner' &&  params !== 'edit_approver' && (data_memberteam || data_approver).length > 1 )">
-                    <div class="col-auto py-2" ng-repeat="item2 in (selectDatFormType === 'member' ? data_memberteam : data_approver) | toArray | filter:{id_session: selectdata_session }"
-                        ng-if="!(item2.user_displayname == '' || item2.user_displayname == null)">
-                        <div class="d-flex align-items-center p-1" style="height: 20px;">
-                             <button class="btn btn-outline-secondary p-1" 
-                                    style="color: #ff2828; background-color: #f1f2f4; border-color: #ff2828; width: 25px; height:25px;"
-                                    data-toggle="tooltip" 
-                                    data-placement="top" 
-                                    title="Remove"
-                                    ng-click="removeDataEmployee(item2.seq, selectdata_session)">
-                                <span class="fa-regular fa-trash-can fa-lg"></span>
-                            </button>                            
-                            <div class="form-check mb-0 ms-2 text-1100 fw-bold d-flex align-contents-center" ng-if="selectDatFormType == 'approver'">
-                                <input class="form-check-input disabled-link rounded-2 cursor-pointer" 
-                                    style="width: 24px; height:24px;"
-                                    type="checkbox" 
-                                    ng-if="item2.approver_type =='approver'" 
-                                    checked 
-                                    ng-click="actionChangeSafety(item2, item2.seq)">
-                                <input class="form-check-input rounded-2 cursor-pointer" 
-                                    type="checkbox" 
-                                    style="width: 24px; height:24px;"
-                                    ng-model="item2.verified"
-                                    ng-checked="item2.verified"
-                                    ng-click="actionVerified(item2)">
-                                <label class="form-check-label m-auto fw-bold" for="">(Verrified)</label>
-=======
-              
+       
                 <div class="modal-body" 
                     ng-if="(selectDatFormType !== 'owner' && (
                                 data_memberteam.length > 1 || 
@@ -2977,9 +2947,8 @@
                                         ng-click="actionVerified(item2)">
                                     <label class="form-check-label m-auto fw-bold" for="">(Verrified)</label>
                                 </div>                           
-                                <label class="mb-0 ms-3 text-1100 fw-bold" style="width: 80%; border-color: #f1f2f4;">
-                                    {{ item2.user_displayname }}
-                                </label>
+                                <label class="mb-0 ms-3 text-1100 fw-bold" style="width: 30%; border-color: #f1f2f4;">{{ item2.user_displayname }}</label>
+                                <label class="mb-0 text-1100 fw-bold" style="width: 25%; border-color: #f1f2f4;">{{ item2.user_title }}</label>
                             </div>
                         </div>
                     </div>
@@ -3008,13 +2977,11 @@
                                         ng-click="actionVerified(item2)">
                                     <label class="form-check-label m-auto fw-bold" for="">(Verrified)</label>
                                 </div>                           
-                                <label class="mb-0 ms-3 text-1100 fw-bold" style="width: 80%; border-color: #f1f2f4;">
+                                <label class="mb-0 ms-3 text-1100 fw-bold" style="width: 30%; border-color: #f1f2f4;">
                                     {{ item2.user_displayname }}
                                 </label>
->>>>>>> 5b2da5dd266e9bd8452ea97c8f98b330ea6f1123
+                                <label class="mb-0 text-1100 fw-bold" style="width: 25%; border-color: #f1f2f4;">{{ item2.user_title }}</label>
                             </div>
-                            <label class="mb-0 ms-3 text-1100 fw-bold" style="width: 25%; border-color: #f1f2f4;">{{ item2.user_displayname }}</label>
-                            <label class="mb-0 text-1100 fw-bold" style="width: 25%; border-color: #f1f2f4;">{{ item2.user_title }}</label>
                         </div>
                     </div>
                     @* list manage *@
