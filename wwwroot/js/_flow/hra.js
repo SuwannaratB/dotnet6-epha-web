@@ -583,6 +583,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             { id: 'High\r\n', name: 'High' },
         ];
 
+        $scope.disTypeHazard = [];
+
         // สร้างชั่วโมง (0-23)
         $scope.master_hours = [];
         for (var i = 0; i < 24; i++) {
@@ -605,9 +607,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             { name: 'areas', action_part: 2, title: 'List of Areas to Be Assessed and Health Hazards or Risk Factors', isActive: false, isShow: false },
             { name: 'worker', action_part: 3, title: 'List of Worker Groups and Description of Tasks', isActive: false, isShow: false },
             //{ name: 'ram', action_part: 4, title: 'RAM', isActive: false, isShow: false },
-            { name: 'list_name', action_part: 4, title: 'List of Name', isActive: false, isShow: false },
             { name: 'worksheet', action_part: 5, title: $scope.sub_software + ' Worksheet', isActive: false, isShow: false },
             { name: 'manage', action_part: 6, title: 'Manage Recommendations', isActive: false, isShow: false },
+            { name: 'list_name', action_part: 7, title: 'List of Name', isActive: false, isShow: false },
             //{ name: 'approver', action_part: 7, title: 'Assessment Team Leader (QMTS)', isActive: false, isShow: false },
             { name: 'report', action_part: 8, title: 'Report', isActive: false, isShow: false }
         ];
@@ -1064,8 +1066,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         $scope.master_subarea = JSON.parse(replace_hashKey_arr(arr.subarea));
                         $scope.master_subarea_location = JSON.parse(replace_hashKey_arr(arr.subarea_location));
                         $scope.master_hazard_type = JSON.parse(replace_hashKey_arr(arr.hazard_type));
+                        $scope.master_hazard_type = setup_master_hazard_type($scope.master_hazard_type);
                         $scope.master_hazard_riskfactors = JSON.parse(replace_hashKey_arr(arr.hazard_riskfactors));
-                        $scope.master_hazard_riskfactors_list = JSON.parse(replace_hashKey_arr(arr.hazard_riskfactors));
+                        $scope.master_hazard_riskfactors_list = JSON.parse(replace_hashKey_arr(arr.hazard_standard));
                         // moc master_hazard_riskfactors
                         $scope.filter_hazard_riskfactors = setup_master_hazard_riskfactors();
 
@@ -1221,10 +1224,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                             { name: 'general', action_part: 1, title: 'General Information', isActive: true, isShow: false },
                             { name: 'list_areas', action_part: 2, title: 'List of Areas to Be Assessed and Health Hazards or Risk Factors', isActive: false, isShow: false },
                             { name: 'list_worker', action_part: 3, title: 'List of Worker Groups and Description of Tasks', isActive: false, isShow: false },
-                            { name: 'list_name', action_part: 4, title: 'List of Name', isActive: false, isShow: false },
                             { name: 'worksheet', action_part: 5, title: $scope.sub_software + ' Worksheet', isActive: false, isShow: false },
                             { name: 'manage', action_part: 6, title: 'Manage Recommendations', isActive: false, isShow: false },
-                            { name: 'approver', action_part: 7, title: 'Assessment Team Leader (QMTS)', isActive: false, isShow: false },
+                            // { name: 'approver', action_part: 7, title: 'Assessment Team Leader (QMTS)', isActive: false, isShow: false },
+                            { name: 'list_name', action_part: 7, title: 'List of Name', isActive: false, isShow: false },
                             { name: 'report', action_part: 8, title: 'Report', isActive: false, isShow: false }
                         ];
 
@@ -1504,6 +1507,20 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             data.tasks[0].descriptions[0].action_type = 'insert'
         }
         return data.tasks;
+    }
+
+    function setup_master_hazard_type(data) {
+        var list_type = data;
+
+        if(list_type.length < 1) return list_type;
+
+        for (let i = 0; i < list_type.length; i++) {
+            list_type[i].disabled = false;
+            list_type[i].checks = [];
+            
+        }
+
+        return list_type
     }
 
     function setup_master_hazard_riskfactors() {
@@ -4706,7 +4723,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.selectDatFormType = form_type;//member, approver, owner
             $scope.employeelist_show = [];
             $scope.searchText = '';
-            console.log(' $scope.selectdata_session', $scope.selectdata_session)
+
+            if($scope.selectDatFormType == 'worker')
+                $scope.data_worker_list = item.worker_list
+
+            console.log('selectedWorker ', $scope.data_worker_list)
             apply();
 
             $('#modalEmployeeAdd').modal({
@@ -5024,6 +5045,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 $scope.removeDataApprover(seq, seq_session)
             }
 
+            if (actions == 'worker') {
+                
+            }
+
 ;
             apply();
         };
@@ -5288,15 +5313,21 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
         
         } else if (type == 'type_hazard') {
-            console.log('type hazard',hazard)
             var arrText = $filter('filter')($scope.master_hazard_type, function (item) {
                 return (item.id == hazard.id_type_hazard);
             });
+            // disable type hazard
+            var alreadyExists = arrText[0].checks.some(function(check) {
+                return check.id_subarea === hazard.id_subareas;
+            });
+            if(!alreadyExists)
+                arrText[0].checks.push({id_subarea: hazard.id_subareas});
+
+            // set value
             if (arrText.length > 0) {
                 hazard.type_hazard = arrText[0].name;
                 hazard.action_change = 1;
             }
-            console.log('edit type hazard',hazard)
             // worksheet
             $scope.data_worksheet_list.forEach(element => {
                 element.worksheet.forEach(el => {
@@ -5305,9 +5336,26 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     }
                 });
             });
+            console.log('master_hazard_type',$scope.master_hazard_type)
+        
+        } else if (type == 'disabled_type_hazard') {
+            // disabled
+            // var arrText = $filter('filter')($scope.master_hazard_type, function (item) {
+            //     return (item.id == hazard.id_type_hazard);
+            // });
+            $scope.master_hazard_type.forEach(element => {
+                element.checks.forEach(chk => {
+                    if (chk.id_subarea == hazard.id_subareas) {
+                        return element.disabled = true;
+                    }else {
+                        return element.disabled = false;
+                    }
+                }); 
+            });
+
+            console.log('disabled',$scope.master_hazard_type)
         }
-
-
+        
         console.log(' subArea', subArea)
         console.log('all worksheet', $scope.data_worksheet_list)
     }
@@ -5343,8 +5391,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         var list = $filter('filter')($scope.hazard_standard, function (item) { 
             return (item.id == hazard.id_health_hazard); 
         })[0];
-
-        console.log('list',list)
 
         if (list) {
             hazard.health_hazard = list.name;
@@ -5404,10 +5450,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     $scope.fillterRisk = function () {
         if (!$scope.keywords.text) {
-            return  $scope.master_hazard_riskfactors_list = angular.copy($scope.master_hazard_riskfactors);
+            return  $scope.master_hazard_riskfactors_list = angular.copy($scope.hazard_standard);
         }
 
-        $scope.master_hazard_riskfactors_list = $filter('filter')($scope.master_hazard_riskfactors, function (item) { 
+        $scope.master_hazard_riskfactors_list = $filter('filter')($scope.hazard_standard, function (item) { 
             return item.name.toLowerCase().includes($scope.keywords.text.toLowerCase()); 
         });
     }
