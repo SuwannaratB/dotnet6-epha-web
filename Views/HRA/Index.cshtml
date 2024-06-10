@@ -65,6 +65,13 @@
                             <span> {{data_header[0].pha_status_displayname}}</span>
                         </div>
 
+                        <div class="col-auto" ><!----ng-class="{ 'd-none': (minutes > 9) }"------>
+                            <div class="col-auto">
+                                <b>Auto-Save Interval :</b> <br>
+                                <span ng-class="{ 'blinking-text': (minutes <= 10) }">{{counterText}} </span>
+                            </div>
+                       </div>
+
                     </div>
 
                     <div class="row">
@@ -211,31 +218,12 @@
                                         </select>
                                     </div>
                                     <!-- sections -->
-
-                                    <!-------Verified By--------->
-                                    <div class="col-md-2 ">
-                                        <label class="form-label ps-0" for="">
-                                            <b class="text-danger d-none"> * </b>
-                                            Verified By 
-                                        </label>
-                                        <select class="form-control"
-                                                ng-class="{'disabled-link':(!tab_general_active)}"
-                                                data-choices="data-choices"
-                                                data-options='{"removeItemButton":true,"placeholder":true}'
-                                                @* ng-model="" *@
-                                                >
-                                            <option 
-                                                ng-value="">
-                                            </option>
-                                        </select>
-                                    </div>
                                 </div>
 
                                 <div class="mx-1 row g-3 align-items-center" ng-repeat="item in data_general ">
 
                                     <!-- company -->
                                     <div class="col-md-2 ">
-
                                         <label class="form-label ps-0" for="expense_type">
                                             <b class="text-danger d-none"> * </b>Company
                                         </label>
@@ -243,8 +231,8 @@
                                             <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
                                                data-bs-placement="top" name="company" title="" data-bs-html="true"></a>
                                         </label>
-
-                                        <select class="form-control js-choice-company "
+                                        <select class="form-control js-choice-company " 
+                                                disabled
                                                 ng-class="{'disabled-link':(!tab_general_active)}"
                                                 data-choices="data-choices"
                                                 data-options='{"removeItemButton":true,"placeholder":true}'
@@ -253,7 +241,6 @@
                                                 {{item2.name}}
                                             </option>
                                         </select>
-
                                     </div>
                                     <!-- company -->
                                     <!-- area -->
@@ -270,12 +257,12 @@
                                                 </label>
                                                 <label class="form-label ps-0" for="area"></label>
                                                 <select class="form-control js-choice-apu"
-                                                        ng-class="{'disabled-link':(!tab_general_active)}"
+                                                        ng-class="{'disabled-\link':(!tab_general_active)}"
                                                         data-choices="data-choices"
                                                         data-options='{"removeItemButton":true,"placeholder":true}'
-                                                        ng-change="actionChange(item,item.seq,'')" 
-                                                        ng-model="item.id_apu">
-                                                    <option ng-repeat="item2 in master_apu" ng-value="item2.id">
+                                                        ng-change="actionChange(item,item.seq,'apu')" ng-model="item.id_apu">
+                                                    <option ng-repeat="item2 in master_apu" 
+                                                            ng-value="item2.id">
                                                         {{item2.name}}
                                                     </option>
                                                 </select>
@@ -304,7 +291,7 @@
                                                     <option ng-repeat="item2 in master_toc"
                                                             ng-value="item2.id"
                                                             value="item2.id"
-                                                            ng-if="item2.id_company == item.id_company && item2.id_area == item.id_apu">
+                                                            ng-if="item2.id_area == item.id_apu">
                                                         {{item2.name}}
                                                     </option>
                                                 </select>
@@ -324,19 +311,19 @@
                                                 data-bs-html="true">
                                                </a>
                                         </label>
-
                                         <select class="form-control col-auto js-choice-unit_no"
                                                 ng-class="{'disabled-link':(!tab_general_active)}"
                                                 data-choices="data-choices"
                                                 data-options='{"removeItemButton":true,"placeholder":true}'
-                                                ng-change="actionChange(item,item.seq,'unit_no')" 
+                                                ng-change="actionChange(item,item.seq,'unit_no');
+                                                        item.id_toc = (master_unit_no_list | filter:{id: item.id_unit_no})[0].id_plant_area;
+                                                        item.id_company = (master_unit_no_list | filter:{id: item.id_unit_no})[0].id_company"
                                                 ng-model="item.id_unit_no">
                                             <option ng-selected="item.id_unit_no == item2.id"
-                                                    ng-repeat="item2 in master_unit_no" 
+                                                    ng-repeat="item2 in master_unit_no_list" 
                                                     ng-value="item2.id"
-                                                    ng-if="item2.id_company == item.id_company &&
-                                                            item2.id_apu == item.id_apu">
-                                                {{item2.name}}
+                                                    ng-if="item2.id_apu == item.id_apu">
+                                                 {{ item2.name }}
                                             </option>
                                         </select>
 
@@ -526,24 +513,49 @@
                                                     @* Member Team *@
                                                     <td class="align-top col-auto" style="min-width: 500px;">
                                                         <div class="row d-flex">
+                                                            <!-- Member Team/Attendees Section -->
                                                             <div class="col-6">
-                                                                <div class="row" ng-class="{'d-none':(!tab_general_active)}">
-
-                                                                    <button class="btn btn-outline-secondary p-0 cursor-pointer col-auto" style="color: #2445fc; background-color: #f1f2f4; border-color: #f1f2f4;"
+                                                                <div class="row">
+                                                                    <button class="btn btn-outline-secondary p-0 cursor-pointer col-auto" 
+                                                                            ng-class="{'d-none':(!tab_general_active)}"
+                                                                            style="color: #2445fc; background-color: #f1f2f4; border-color: #f1f2f4;"
                                                                             ng-click="openDataEmployeeAdd(item,'member')">
-                                                                        <span class="far fa-address-book fa-lg pe-1"></span>Add Member Team
+                                                                        <span class="far fa-address-book fa-lg pe-1"></span>
+                                                                        Add Member Team/Attendees
                                                                     </button>
-
+                                                                    <h6 class="text-primary ps-0" ng-class="{'d-none':(tab_general_active)}">Member Team/Attendees</h6>
                                                                 </div>
-
-                                                                <div class="row" ng-repeat="item2 in data_memberteam | filter:{id_session:item.seq }">
-
-                                                                    <div class="row align-items-center  p-1">
+                                                                <div class="row" ng-repeat="item2 in data_memberteam" 
+                                                                     ng-if="(item2.user_name !== null && item2.user_displayname !== null) && item2.id_session === item.seq">
+                                                                    <div class="col-8 align-items-center  p-1">
                                                                         <label class="mb-0 text-1100 fw-bold"
-                                                                               style="width:80%;border-color: #f1f2f4;">{{ item2.user_displayname}}</label>
-
+                                                                                style="width:100%;border-color: #f1f2f4;">
+                                                                                {{ item2.user_displayname}}
+                                                                        </label>
+                                                                    </div>
+                                                                    <div class="col-4 align-items-center  p-1">
+                                                                        <label class="mb-0 text-1100 fw-bold"
+                                                                                style="width:80%;border-color: #f1f2f4;">
+                                                                                {{ item2.user_title}}
+                                                                        </label>
                                                                     </div>
                                                                 </div>
+                                                                <!-- data_relatedpeople_outsider -->
+                                                                <div class="row" ng-repeat="item2 in data_relatedpeople_outsider | toArray | filter:{user_type: 'member'}" 
+                                                                    ng-if="(item2.user_displayname !== null) && item2.id_session === item.seq">
+                                                                    <div class="col-8 align-items-center  p-1">
+                                                                        <label class="mb-0 text-1100 fw-bold"
+                                                                            style="width:80%;border-color: #f1f2f4;">
+                                                                            {{ item2.user_displayname}}
+                                                                        </label>
+                                                                    </div>
+                                                                    <div class="col-4 align-items-center  p-1">
+                                                                        <label class="mb-0 text-1100 fw-bold"
+                                                                                style="width:80%;border-color: #f1f2f4;">
+                                                                                {{ item2.user_title}}
+                                                                        </label>
+                                                                    </div>                                                                    
+                                                                </div>                                                                
                                                             </div>
 
                                                             <div class="col-6" ng-if="!(data_general[0].expense_type=='MOC')">
@@ -656,7 +668,7 @@
                                                             <div class="float-end">
                                                                 <span class="mx-1">
                                                                     <button class="btn btn-outline-secondary p-2" style="color: #ff2828; background-color: #f1f2f4; border-color: #ff2828;"
-                                                                            ng-click=removeDataSession(item.seq,$index)>
+                                                                            ng-click="triggerRemove(item.seq,$index,'session')">
                                                                         <span class="fa-regular fa-trash-can fa-lg"></span>
                                                                     </button>
                                                                 </span>
@@ -839,7 +851,7 @@
                                                                 <span class="mx-1">
                                                                     <button class="btn btn-outline-secondary p-2" 
                                                                             style="color: #ff2828; background-color: #f1f2f4; border-color: #ff2828;"
-                                                                            ng-click=removeDrawingDoc(item.seq,$index-1)
+                                                                            ng-click=triggerRemove(item.seq,$index-1,'DrawingDoc')
                                                                             data-toggle="tooltip" 
                                                                             data-placement="top" 
                                                                             title="Remove">
@@ -2765,45 +2777,29 @@
          aria-hidden="true" style="display: none;">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content scrollbar" style="max-height: calc(100vh - 100px); overflow-y:auto;"">
-                <div class="modal-header">
-                    <h5 class="text-900 mb-0" data-anchor="data-anchor" id="modalEmployeeCheckLabel">
-                        <span class=" me-2 text-primary"><B>|</B></span> 
-                        Search Employee/Contract
-                    </h5>
-                    <button class="btn p-1" type="button" data-bs-dismiss="modal" aria-label="Close">
+                <div class="modal-header" > <!----ng-if="selectDatFormType === 'member' || selectDatFormType === 'approver' || params === 'edit_approver'"---->
+                     <!-- For form_type === 'member' or 'approver' -->
+                    <div > <!------ng-if="selectDatFormType === 'member' || selectDatFormType === 'approver'"----->
+                        <h5 class="text-900 mb-0" data-anchor="data-anchor" id="modalEmployeeCheckLabel">
+                            <span class="me-2 text-primary"><B>|</B></span> Search Employee/Contract
+                        </h5>
+                    </div>
+
+                    <button class="btn p-1" type="button" data-bs-dismiss="modal" aria-label="Close" ng-click="clearFormData()">
                         <svg class="svg-inline--fa fa-xmark fs--1" aria-hidden="true" focusable="false" data-prefix="fas"
-                             data-icon="xmark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"
-                             data-fa-i2svg="">
+                                data-icon="xmark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"
+                                data-fa-i2svg="">
                             <path fill="currentColor"
-                                  d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z">
+                                    d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z">
                             </path>
                         </svg>
                     </button>
+
                 </div>
 
                 <div class="modal-body">
                     <div class="mb-4">
                         <div class="row g-3">
-                            @*<div class="col-auto">
-                                <label for="" style="font-size: 14px; font-weight: bold; padding-left: 4px;">Employee</label>
-                                <div class="search-box position-relative">
-                                    <input class="form-control search-input search"
-                                           ng-model="searchText" 
-                                           placeholder="Search"
-                                           ng-change="fillterDataEmployeeAdd()" />
-                                    <span class="fas fa-search search-box-icon"></span>
-                                </div>
-                            </div>
-                            <div class="col-auto">
-                                <label for="" style="font-size: 14px; font-weight: bold; padding-left: 4px;">Indicator</label>
-                                <div class="search-box position-relative">
-                                    <input class="form-control search-input search"
-                                           ng-model="searchIndicator.text" 
-                                           placeholder="Search"
-                                           ng-change="fillterDataEmployeeAdd()" />
-                                    <span class="fas fa-search search-box-icon"></span>
-                                </div>
-                            </div>*@
                             <div class="col-auto">
                                 <label for="" style="font-size: 14px; font-weight: bold; padding-left: 4px;">Indicator</label>
                                 <div class="search-box position-relative">
@@ -2895,7 +2891,7 @@
                                         </tr>                                   
                                     </tbody>
                                 </table>
-                                <div class="pagination-container" ng-show="employeelist_page.length > 10">
+                                <div class="pagination-container" ng-show="employeelist_show.length > 1">
                                     <button class="pagination-button" ng-disabled="currentPage === 1" ng-click="action_changepage('prevPage')">Previous</button>
                                     <!-- Page numbers -->
                                     <span class="pagination-info">Page {{currentPage }} of {{ totalPages}}</span>
@@ -2908,80 +2904,122 @@
                         @* end แสดงข้อมูลที่ ค้นหาตาม textsearch*@
                 </div>
 
-                <div class="modal-header bg-soft" ng-if="(selectDatFormType !== 'owner' && (data_memberteam || data_approver || data_workers).length > 1 )">
+                <!------------show name after add   --------------->
+                <div class="modal-header bg-soft" ng-if="(selectDatFormType !== 'owner' &&  params !== 'edit_approver' && (data_memberteam || data_approver).length > 1 )">
                     <h5 class="text-900 mb-0">
-                        <span class="me-2 text-primary"><B>|</B></span> 
-                        {{ selectDatFormType === 'member' ? 'Member Team' :  selectDatFormType === 'worker' ? 'Worker':'Assessment Team Leader' }}
+                        <span class="me-2 text-primary"><B>|</B></span> {{ selectDatFormType === 'member' ? 'Member Team' : 'Approver' }}
                     </h5>
                 </div>
-              
-                <div class="modal-body" 
-                    ng-if="(selectDatFormType !== 'owner' && (data_memberteam.length > 1 || data_approver.length > 1 || data_worker_list.length > 1))">
-                    
-                    <div class="body-default" ng-if="selectDatFormType != 'worker'">
-                        <div class="col-auto py-2" 
-                            ng-repeat="item2 in (
-                                selectDatFormType === 'member' 
-                                    ? data_memberteam 
-                                    : data_approver
-                                ) | filter:{id_session: selectdata_session }"
-                            ng-if="!(item2.user_displayname == '' || item2.user_displayname == null)">
-                            <div class="d-flex align-items-center p-1" style="height: 20px;">
-                                <button class="btn btn-outline-secondary p-1" 
-                                        style="color: #ff2828; background-color: #f1f2f4; border-color: #ff2828; width: 25px; height:25px;"
-                                        data-toggle="tooltip" 
-                                        data-placement="top" 
-                                        title="Remove"
-                                        ng-click="removeDataEmployee(item2.seq, selectdata_session)">
-                                    <span class="fa-regular fa-trash-can fa-lg"></span>
-                                </button> 
-                                <div class="form-check mb-0 ms-2 text-1100 fw-bold d-flex align-contents-center gap-2" ng-if="selectDatFormType == 'approver'">
-                                    <input class="form-check-input rounded-2 cursor-pointer" 
-                                        type="checkbox" 
-                                        style="width: 24px; height:24px;"
-                                        ng-model="item2.verified"
-                                        ng-checked="item2.verified"
-                                        ng-click="actionVerified(item2)">
-                                    <label class="form-check-label m-auto fw-bold" for="">(Verrified)</label>
-                                </div>                           
-                                <label class="mb-0 ms-3 text-1100 fw-bold" style="width: 80%; border-color: #f1f2f4;">
-                                    {{ item2.user_displayname }}
-                                </label>
-                            </div>
-                        </div>
-                    </div>
 
-                    <div class="body-worker"  ng-if="selectDatFormType == 'worker'">
-                        <div class="col-auto py-2" 
-                            ng-repeat="item2 in data_worker_list"
-                            ng-if="!(item2.user_displayname == '' || item2.user_displayname == null)">
-                            <div class="d-flex align-items-center p-1" style="height: 20px;">
-                                <button class="btn btn-outline-secondary p-1" 
-                                        style="color: #ff2828; background-color: #f1f2f4; border-color: #ff2828; width: 25px; height:25px;"
-                                        data-toggle="tooltip" 
-                                        data-placement="top" 
-                                        title="Remove"
-                                        ng-click="removeDataEmployee(item2, selectdata_session)"
-                                        ng-if="item2.id_tasks">
-                                    <span class="fa-regular fa-trash-can fa-lg"></span>
-                                </button> 
-                                <div ng-if="!item2.id_tasks" style=" width: 25px; height:25px;"></div>
-                                <div class="form-check mb-0 ms-2 text-1100 fw-bold d-flex align-contents-center gap-2" ng-if="selectDatFormType == 'approver'">
-                                    <input class="form-check-input rounded-2 cursor-pointer" 
-                                        type="checkbox" 
-                                        style="width: 24px; height:24px;"
-                                        ng-model="item2.verified"
-                                        ng-checked="item2.verified"
-                                        ng-click="actionVerified(item2)">
-                                    <label class="form-check-label m-auto fw-bold" for="">(Verrified)</label>
-                                </div>                           
-                                <label class="mb-0 ms-3 text-1100 fw-bold" style="width: 80%; border-color: #f1f2f4;">
-                                    {{ item2.user_displayname }}
-                                </label>
+                <div class="modal-body h-50"  
+                    ng-if="(selectDatFormType !== 'owner' &&  params !== 'edit_approver' && (data_memberteam || data_approver).length > 1 )">
+                    <div class="col-auto py-2" ng-repeat="item2 in (selectDatFormType === 'member' ? data_memberteam : data_approver) | toArray | filter:{id_session: selectdata_session }"
+                        ng-if="!(item2.user_displayname == '' || item2.user_displayname == null)">
+                        <div class="d-flex align-items-center p-1" style="height: 20px;">
+                             <button class="btn btn-outline-secondary p-1" 
+                                    style="color: #ff2828; background-color: #f1f2f4; border-color: #ff2828; width: 25px; height:25px;"
+                                    data-toggle="tooltip" 
+                                    data-placement="top" 
+                                    title="Remove"
+                                    ng-click="removeDataEmployee(item2.seq, selectdata_session)">
+                                <span class="fa-regular fa-trash-can fa-lg"></span>
+                            </button>                            
+                            <div class="form-check mb-0 ms-2 text-1100 fw-bold d-flex align-contents-center" ng-if="selectDatFormType == 'approver'">
+                                <input class="form-check-input disabled-link rounded-2 cursor-pointer" 
+                                    style="width: 24px; height:24px;"
+                                    type="checkbox" 
+                                    ng-if="item2.approver_type =='approver'" 
+                                    checked 
+                                    ng-click="actionChangeSafety(item2, item2.seq)">
+                                <input class="form-check-input rounded-2 cursor-pointer" 
+                                    type="checkbox" 
+                                    style="width: 24px; height:24px;"
+                                    ng-model="item2.verified"
+                                    ng-checked="item2.verified"
+                                    ng-click="actionVerified(item2)">
+                                <label class="form-check-label m-auto fw-bold" for="">(Verrified)</label>
                             </div>
+                            <label class="mb-0 ms-3 text-1100 fw-bold" style="width: 25%; border-color: #f1f2f4;">{{ item2.user_displayname }}</label>
+                            <label class="mb-0 text-1100 fw-bold" style="width: 25%; border-color: #f1f2f4;">{{ item2.user_title }}</label>
                         </div>
                     </div>
                 </div>
+
+                <!------------contractor/out source-------------->
+                <div class="modal-header bg-soft" ng-if="!(selectDatFormType =='approver'|| selectDatFormType =='reviewer') && (showContractor || (data_relatedpeople_outsider | toArray | filter:{user_type: selectDatFormType}).length > 1)">
+                    <h5 class="text-900 mb-0"> 
+                        <span class=" me-2 text-primary"><B>|</B></span>Contracter/Outsouce (if concern)
+                    </h5>
+                </div>
+                <div class="modal-body" 
+                    ng-show="(selectDatFormType == 'attendees' || selectDatFormType == 'specialist' || selectDatFormType == 'member') && (showContractor || (data_relatedpeople_outsider | toArray | filter:{user_type: selectDatFormType}).length > 1)">
+                    <div class="bg-white border-top border-bottom border-200 position-relative top-1">
+                        <div class="table-responsive scrollbar-overlay mx-n1 px-1">
+                            <table class="table table-sm fs--1 mb-0">
+                                <thead class="text-uppercase">
+                                    <tr>
+                                        <th style="width: 90px;"></th>
+                                        <th class="pe-5">Name (ชื่อ-นามสกุล)</th>
+                                        <th class="pe-5">Title (ตำแหน่ง)</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="list">
+                                    @*Free text*@
+                                    <tr class="hover-actions-trigger btn-reveal-trigger position-static repeated-item"
+                                        ng-repeat="itemRel in data_relatedpeople_outsider | toArray | filter:{id_session: selectdata_session, user_type: selectDatFormType}"> <!--------------------, user_type:selectDatFormType--------->
+                                        <td class="d-flex  justify-content-start">
+                                            @* <button id="del-{{item2.seq}}" class="btn btn-link text-danger p-0 text-end" style="width:140px;"
+                                                    ng-class="{'d-none':(!tab_general_active)}"
+                                                    ng-click="removeDataRelatedpeopleOutsider(itemRel.seq)">
+                                                Remove
+                                            </button> *@
+                                            <span class="mx-1">
+                                                <button class="btn btn-outline-secondary p-2" 
+                                                        style="color: #ff2828; background-color: #f1f2f4; border-color: #ff2828;"
+                                                        data-toggle="tooltip" 
+                                                        data-placement="top" 
+                                                        title="Remove"
+                                                        ng-click=removeDataRelatedpeopleOutsider(itemRel.seq)>
+                                                    <span class="fa-regular fa-trash-can fa-lg"></span>
+                                                </button>
+                                            </span>
+                                            <span class="mx-1">
+                                                <button class="btn btn-outline-secondary p-2" 
+                                                        style="color: #0abe0a; background-color: #f1f2f4; border-color: #0abe0a;"
+                                                        data-toggle="tooltip" 
+                                                        data-placement="top" 
+                                                        title="Add Other Contract"
+                                                        ng-click=addnewFreebox(itemRel.seq)>
+                                                    <span class="fa-solid fa-user-plus fa-lg"></span>
+                                                </button>
+                                            </span>
+
+                                            @* <button id="add-{{item2.seq}}" class="btn btn-link text-primary p-0 text-end" style="width:140px;"
+                                                    ng-class="{'d-none':(!tab_general_active)}"
+                                                    ng-click="addnewFreebox(itemRel.seq)"
+                                                    ng-if="$last">
+                                                Add Other Contract
+                                            </button> *@
+                                        </td>
+                                        <td class="">
+                                            <input type="text" class="form-control form-control-sm" placeholder="Name"
+                                                style="width: 100%;"
+                                                ng-model="itemRel.user_displayname"
+                                                ng-change="actionChange(itemRel,itemRel.seq,'')">
+                                        </td>
+                                        <td class="">
+                                            <input type="text" class="form-control form-control-sm" placeholder="Title"
+                                                    style="width: 100%;"
+                                                    ng-model="itemRel.user_title"
+                                                    ng-change="actionChange(itemRel,itemRel.seq,'')">
+                                        </td>
+                                    </tr>                                    
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
 
                 @*<div class="modal-header bg-soft" ng-if="!(selectDatFormType =='owner' )">
 
@@ -3967,6 +4005,7 @@
     <!--Modal Check Send e-Mail ปุ่ม Submit TA2 Approver-->
     
     <!----------------------------------------------->
+    <!----------------------------------------------->
     <div class="modal fade" id="unsavedChangesModal" tabindex="-1" role="dialog" 
         aria-labelledby="unsavedChangesModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -3989,6 +4028,84 @@
             </div>
         </div>
     </div>
+
+
+    @* Modal Confirm *@
+    <div class="modal fade" id="modalConfirm" tabindex="-1" aria-labelledby="modalConfirm" aria-hidden="true"
+         style="display: none;">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="text-900 mb-0" data-anchor="data-anchor" id="modalConfirm">
+                        <span class=" me-2 text-primary"><B>|</B></span> Invite collaborator?
+                    </h5>
+
+                    <button class="btn p-1" type="button" data-bs-dismiss="modal" aria-label="Close">
+                        <svg class="svg-inline--fa fa-xmark fs--1" aria-hidden="true" focusable="false"
+                             data-prefix="fas" data-icon="xmark" role="img" xmlns="http://www.w3.org/2000/svg"
+                             viewBox="0 0 320 512" data-fa-i2svg="">
+                            <path fill="currentColor"
+                                  d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 
+                                  301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 
+                                  0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 
+                                  210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z">
+                            </path>
+                        </svg>
+                    </button>
+
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to invite <span class="fw-bold">{{selected_TA3.employee_displayname}}</span> to join and assist with tasks? Please confirm.</p>
+                    <div class="col-auto" style="float:right">
+                        <button style="width:100px;" class="btn btn-primary me-1 mb-1" type="button" ng-click="confirm()">Yes</button>
+                        <button style="width:100px;" class="btn btn-outline-secondary me-1 mb-1" type="button" data-bs-dismiss="modal" aria-label="Close">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>    
+
+<!-------- Modal Before Remove ------------->
+<div class="modal fade" id="removeModal" tabindex="-1" role="dialog" aria-labelledby="removeModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="removeModalLabel">Confirm Removal</h5>
+                    <button class="btn p-1" type="button" data-bs-dismiss="modal" aria-label="Close">
+                        <svg class="svg-inline--fa fa-xmark fs--1" aria-hidden="true" focusable="false"
+                             data-prefix="fas" data-icon="xmark" role="img" xmlns="http://www.w3.org/2000/svg"
+                             viewBox="0 0 320 512" data-fa-i2svg="">
+                            <path fill="currentColor"
+                                  d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 
+                                  301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 
+                                  0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 
+                                  210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z">
+                            </path>
+                        </svg>
+                    </button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to remove this item?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" ng-click="action_remove('yes')">Yes</button>
+                <button type="button" class="btn btn-primary" ng-click="action_remove('no')">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal autosaveModal" id="autosaved" tabindex="-1" role="dialog" aria-labelledby="autosavedModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="background-color: #dff0d8;">
+            <div class="modal-body">
+                <strong>Success!</strong> Your work has been successfully saved.
+            </div>
+        </div>
+    </div>
+</div>
 
 
 </div>

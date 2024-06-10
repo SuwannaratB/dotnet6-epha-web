@@ -4924,9 +4924,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }); page_load();
 
     //relatedpeople start 
-    $scope.actionChangeSafety = function (item, seq) {
 
-    }
     $scope.actionChangeSafetyUnCheck = function (item, seq) {
 
         for (const value of $scope.data_approver) {

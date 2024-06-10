@@ -837,7 +837,7 @@
                                                                             style="color: #ff2828; background-color: #f1f2f4; border-color: #ff2828;"
                                                                             ng-disabled="!((data_approver.length && data_approver[0].user_name !== null) || 
                                                                                             (data_memberteam.length && data_memberteam[0].user_name !== null))"
-                                                                            ng-click=triggerRemove(item.seq,$index,'session')>
+                                                                            ng-click="triggerRemove(item.seq,$index,'session')">
                                                                         <span class="fa-regular fa-trash-can fa-lg"></span>
                                                                     </button>
                                                                 </span>
