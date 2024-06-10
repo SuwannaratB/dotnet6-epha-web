@@ -2015,9 +2015,7 @@
                                             
                                             <td>
                                                 <div class="d-flex flex-column" ng-repeat="item_sub in item.sub_areas">
-                                                    <div class="box" 
-                                                        @* ng-style="{'margin-bottom': (item_sub.hazard.length * 56) + 'px'}" *@
-                                                        >
+                                                    <div class="box">
                                                         {{ item_sub.sub_area }}
                                                     </div>
                                                     <div class="box empty" ng-repeat="n in [].constructor(item_sub.hazard.length - 1) track by $index">
@@ -2108,17 +2106,17 @@
 
                                             @*action owb=ner*@
                                             <td class="align-top rating white-space-nowrap">
-                                                <div class="box">
+                                                <div class="box" ng-repeat="ws in item.worksheet">
                                                     <div class="d-flex justify-content-start w-100" ng-show="item.id_worker_group">
                                                         <button class="btn btn-outline-secondary p-1 cursor-pointer col-auto" 
                                                             style="color: #2445fc; background-color: #f1f2f4; border-color: #f1f2f4;"
-                                                            ng-click="openDataEmployeeAdd(item,'manage')">
+                                                            ng-click="openDataEmployeeAdd(ws,'manage')">
                                                             <span class="far fa-address-book fa-lg pe-1"></span>
                                                             Add action owner
                                                         </button>
                                                     </div>  
-                                                    <div class="d-flex justify-content-start w-100 ps-2">
-                                                        <p class="text-1100 text-start fw-bold">{{item.user_displayname}}</p>
+                                                    <div class="d-flex justify-content-start w-100 mt-2">
+                                                        <p class="text-1100 text-start fw-bold">{{ws.responder_user_displayname}}</p>
                                                     </div>
                                                 </div>
                                             </td>
@@ -2171,27 +2169,31 @@
                                             </td>
 
                                             <td class="align-top rating white-space-nowrap">
-                                                <input type="date" class="form-control datetimepicker rounded-1" ng-class="{'disabled-link':(!tab_managerecom_active)}"
-                                                       placeholder="Start Date dd/mm/yyyy"
-                                                       ng-model="item.estimated_start_date"
-                                                       ng-change="actionChangeWorksheet(item,item.seq,'')">
-
-
-                                                <div id="valid-nodeworksheet-estimated-start-{{item.seq}}"
-                                                     class="invalid-feedback text-danger">
-                                                    Please provide a valid Estimated Start Date.
-                                                </div>
+                                               <div class="box" ng-repeat="ws in item.worksheet">
+                                                    <input type="date" class="form-control datetimepicker rounded-1" 
+                                                        @* ng-class="{'disabled-link':(!tab_managerecom_active)}" *@
+                                                        placeholder="Start Date dd/mm/yyyy"
+                                                        ng-model="ws.estimated_start_date"
+                                                        ng-change="actionChangeWorksheet(ws,ws.seq,'')">
+                                                    <div id="valid-nodeworksheet-estimated-start-{{ws.seq}}"
+                                                        class="invalid-feedback text-danger">
+                                                        Please provide a valid Estimated Start Date.
+                                                    </div>
+                                               </div>
                                             </td>
 
                                             <td class="align-top rating white-space-nowrap">
-                                                <input type="date" class="form-control  datetimepicker rounded-1" ng-class="{'disabled-link':(!tab_managerecom_active)}"
-                                                       placeholder="End Date dd/mm/yyyy"
-                                                       ng-model="item.estimated_end_date"
-                                                       ng-change="actionChangeWorksheet(item,item.seq,'')">
-                                                <div id="valid-nodeworksheet-estimated-end-{{item.seq}}"
-                                                     class="invalid-feedback text-danger">
-                                                    Please provide a valid Estimated End Date.
-                                                </div>
+                                               <div class="box" ng-repeat="ws in item.worksheet">
+                                                    <input type="date" class="form-control  datetimepicker rounded-1" 
+                                                        @* ng-class="{'disabled-link':(!tab_managerecom_active)}" *@
+                                                        placeholder="End Date dd/mm/yyyy"
+                                                        ng-model="ws.estimated_end_date"
+                                                        ng-change="actionChangeWorksheet(ws,ws.seq,'')">
+                                                    <div id="valid-nodeworksheet-estimated-end-{{ws.seq}}"
+                                                        class="invalid-feedback text-danger">
+                                                        Please provide a valid Estimated End Date.
+                                                    </div>
+                                               </div>
                                             </td>
 
                                             <td class="align-top  px-0" style=" width: 80px;">
@@ -2916,9 +2918,14 @@
                 </div>
               
                 <div class="modal-body" 
-                    ng-if="(selectDatFormType !== 'owner' && (data_memberteam.length > 1 || data_approver.length > 1 || data_worker_list.length > 1))">
-                    
-                    <div class="body-default" ng-if="selectDatFormType != 'worker'">
+                    ng-if="(selectDatFormType !== 'owner' && (
+                                data_memberteam.length > 1 || 
+                                data_approver.length > 1 || 
+                                data_worker_list.length > 1 ||
+                                selectedData.responder_user_displayname )
+                            )">
+                    @* list default *@
+                    <div class="body-default" ng-if="selectDatFormType == 'member' || selectDatFormType == 'approver'">
                         <div class="col-auto py-2" 
                             ng-repeat="item2 in (
                                 selectDatFormType === 'member' 
@@ -2950,7 +2957,7 @@
                             </div>
                         </div>
                     </div>
-
+                    @* list worker *@
                     <div class="body-worker"  ng-if="selectDatFormType == 'worker'">
                         <div class="col-auto py-2" 
                             ng-repeat="item2 in data_worker_list"
@@ -2978,6 +2985,25 @@
                                 <label class="mb-0 ms-3 text-1100 fw-bold" style="width: 80%; border-color: #f1f2f4;">
                                     {{ item2.user_displayname }}
                                 </label>
+                            </div>
+                        </div>
+                    </div>
+                    @* list manage *@
+                    <div class="body-manage"  ng-if="selectDatFormType == 'manage'">
+                        <div class="col-auto py-2" ng-if="selectedData.responder_user_displayname">
+                            <div class="d-flex align-items-center p-1" style="height: 20px;">
+                                <button class="btn btn-outline-secondary p-1" 
+                                        style="color: #ff2828; background-color: #f1f2f4; border-color: #ff2828; width: 25px; height:25px;"
+                                        data-toggle="tooltip" 
+                                        data-placement="top" 
+                                        title="Remove"
+                                        ng-click="removeDataEmployee(item2, selectdata_session)"
+                                        ng-if="selectedData.responder_user_displayname">
+                                    <span class="fa-regular fa-trash-can fa-lg"></span>
+                                </button>                  
+                                <div class="mb-0 ms-3 text-1100 fw-bold" style="width: 80%; border-color: #f1f2f4;">
+                                    {{ selectedData.responder_user_displayname }}
+                                </div>
                             </div>
                         </div>
                     </div>
