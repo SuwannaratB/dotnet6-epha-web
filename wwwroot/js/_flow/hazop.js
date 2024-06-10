@@ -5092,8 +5092,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                     if (true) {
                         arr_chk = $scope.data_nodeworksheet;
-                        console.log(arr_chk)
-                        for (var i = 0; i < arr_chk.length; i++) {
+                        console.log("arr_chk",arr_chk)
+                        /*for (var i = 0; i < arr_chk.length; i++) {
 
                             if (set_valid_items(arr_chk[i].causes, 'nodeworksheet-causes-' + arr_chk[i].seq)) { bCheckValid_Worksheet = true; }
                             if (set_valid_items(arr_chk[i].consequences, 'nodeworksheet-consequences-' + arr_chk[i].seq)) { bCheckValid_Worksheet = true; }
@@ -5105,6 +5105,29 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                             if (set_valid_items(arr_chk[i].major_accident_event, 'nodeworksheet-major_accident_event-' + arr_chk[i].seq)) { bCheckValid_Worksheet = true; }
                             if (set_valid_items(arr_chk[i].existing_safeguards, 'nodeworksheet-existing_safeguards-' + arr_chk[i].seq)) { bCheckValid_Worksheet = true; }
                             // if (set_valid_items(arr_chk[i].recommendations, 'nodeworksheet-recommendations-' + arr_chk[i].seq)) { bCheckValid_Worksheet = true; }
+                        }*/
+
+                        if (true) {
+                            arr_chk = $scope.data_nodeworksheet;
+                            console.log(arr_chk)
+                            for (var i = 0; i < arr_chk.length; i++) {
+                                let item = arr_chk[i];
+                                if (!validateFields(item, 'causes', ['consequences', 'category_type', 'major_accident_event', 'existing_safeguards','ram_risk_after_action','ram_after_risk_action'])) {
+                                    bCheckValid_Worksheet = true;
+                                }
+                                if (!validateFields(item, 'consequences', ['causes', 'category_type', 'major_accident_event', 'existing_safeguards','ram_risk_after_action','ram_after_risk_action'])) {
+                                    bCheckValid_Worksheet = true;
+                                }
+                                if (!validateFields(item, 'category_type', ['causes', 'consequences', 'major_accident_event', 'existing_safeguards','ram_risk_after_action','ram_after_risk_action'])) {
+                                    bCheckValid_Worksheet = true;
+                                }
+                                if (!validateFields(item, 'major_accident_event', ['causes', 'consequences', 'category_type', 'existing_safeguards','ram_risk_after_action','ram_after_risk_action'])) {
+                                    bCheckValid_Worksheet = true;
+                                }
+                                if (!validateFields(item, 'existing_safeguards', ['causes', 'consequences', 'category_type', 'major_accident_event','ram_risk_after_action','ram_after_risk_action'])) {
+                                    bCheckValid_Worksheet = true;
+                                }
+                            }
                         }
                     }
 
@@ -5248,8 +5271,20 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
 
         $scope.unsavedChanges = false;
-        save_data_create(action, action_def);
+        //save_data_create(action, action_def);
 
+    }
+
+
+    
+    function validateFields(item, mainField, requiredFields) {
+        console.log(`Validating main field: ${mainField}, Item:`, item);
+        if (item[mainField] !== null && item[mainField] !== '') {
+            requiredFields.forEach(field => {
+                set_valid_items(item[field], 'nodeworksheet-' + field + '-' + item.seq);
+            });
+        }
+        
     }
 
     function validateSelect(field, errorId) {
@@ -5329,17 +5364,22 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     function set_valid_items(_item, field) {
         try {
             var id_valid = document.getElementById('valid-' + field);
-
-            if (_item == '' || _item == null) {
+            console.log(`Validating field: ${field}, Value: ${_item}`);
+    
+            if (_item === '' || _item === null) {
                 id_valid.className = "feedback text-danger";
-                id_valid.focus();
+                id_valid.style.display = "block"; 
+                console.log(`Validation failed for field: ${field}`);
                 return true;
-            } else { 
-                id_valid.className = "invalid-feedback text-danger"; 
-                return false; 
+            } else {
+                id_valid.className = "invalid-feedback text-danger";
+                id_valid.style.display = "none"; 
+                return false;
             }
-
-        } catch (ex) { }
+        } catch (ex) {
+            console.error(`Error validating field: ${field}`, ex);
+        }
+        return false
     }
 
     function clear_valid_items(field) {
@@ -6133,7 +6173,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     $scope.recommentAction = function(index) {
         var item = $scope.data_nodeworksheet[index];
-        var data = item.responder_user_name;
+        var data = item.responder_user_name || item.project_team_text;
         if (!item.recommendations) {
             data = 'true';
         }
@@ -6142,7 +6182,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     $scope.recommentAction_valid = function(item) {
         $scope.recomment_clear_valid = 'nodeworksheet-responder-' + item.seq;
-        // clear_valid_items('nodeworksheet-responder-' + item.seq)
+        clear_valid_items('nodeworksheet-responder-' + item.seq)
     }
 
     $scope.filterResultHistory = function (fieldText, fieldName, fieldID) {

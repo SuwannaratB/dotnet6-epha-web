@@ -130,13 +130,13 @@
                         Submit and Closed
                     </button>
                     <button class="btn btn-success btn-sm" style="width: 150px;"
-                            ng-if=" data_header[0].pha_status == 12" ng-click="confirmSave('submit_conduct')">
+                            ng-if=" data_header[0].pha_status == 12 || data_header[0].pha_status == 22" ng-click="confirmSave('submit_conduct')">
                         Submit
                     </button>
-                    <button class="btn btn-success btn-sm" style="width: 150px;"
+                    @*<button class="btn btn-success btn-sm" style="width: 150px;"
                             ng-if=" data_header[0].pha_status == 22" ng-click="confirmSave('submit_conduct')">
                         Submit
-                    </button>
+                    </button>*@
                 </span>
             </div>
 
@@ -2253,7 +2253,8 @@
                                         <tbody class="">
                                             <tr class="rowwork border border-dashed" ng-if="( data_node.length == 1 ? (data_node[0].node == null ? false : true) : true) "
                                                 ng-repeat="item in data_nodeworksheet | toArray | filter:{id_node : selectedItemNodeView} | sortNodeworksheet"> <!-----no---->
-                                                <td class="align-top border border-light border-end-0  border-start-0  border-top-0 d-flex " style="padding: 0 !important; width: 80px;">
+                                                <td class="align-top border border-light border-active " style="padding: 0 !important; width: 80px;"
+                                                    rowspan="{{ (data_nodeworksheet | filter:{deviations: item.deviations}).length }}">
                                                     @* {{item.index_rows}} *@
                                                     @*<p class=" mx-1 ms-0  text-1100 fw-bold max-w-100 " ng-if="( item.causes_no == 1 && item.consequences_no == 1) && item.row_type == 'causes' ">{{item.guidewords_no +'.'+  (item.deviations == null? item.guidewords : item.deviations +' '+ item.guidewords  )   }}  </p>*@
                                                     <p class=" mx-1 ms-0  text-1100 fw-bold max-w-100 " ng-if="( item.causes_no == 1 && item.consequences_no == 1) && item.row_type == 'causes' ">
@@ -2261,13 +2262,15 @@
                                                     </p>
                                                 </td>
 
-                                                <td class="align-top border border-light border-end-0  border-start-0  border-top-0 d-none" style="padding: 0 !important; width: 80px;">
+                                                <td class="align-top border border-light border-active d-none" style="padding: 0 !important; width: 80px;">
                                                     <p class=" mx-1  text-1100 fw-bold " ng-if="( item.causes_no == 1 && item.consequences_no == 1) && item.row_type == 'causes' ">{{ item.deviations }}  </p>
                                                 </td>
 
                                                 @* causes *@
-                                                <td class="align-top border border-light border-end-0  border-start-0  border-top-0 " style="padding: 0 !important;">
-                                                    <div class="d-flex align-items-top w-100" ng-if="item.row_type =='causes' ">
+                                                <td class="align-top border border-light border-active " style="padding: 0 !important;">
+                                                    <div class="d-flex align-items-top w-100"
+                                                         ng-if="item.row_type === 'causes'" 
+                                                        rowspan="{{ (data_nodeworksheet | filter:{causes_no: item.causes_no}).length }}">
                                                         <div>
                                                             <p class="p-0 m-0 me-1 text-end">{{item.guidewords_no +'.' + item.causes_no +'.'}}</p>
                                                             <div class="" ng-class="{'d-none': !(tab_worksheet_active)}">
@@ -2315,8 +2318,8 @@
                                                             </div>
                                                         </div>
                                                         <div class="autocomplete-container" style=" width: 100%; " ng-class="{'disabled-link':(!tab_worksheet_active)}">
-                                                            <textarea class="form-control form-control-sm rounded-1 p-0 m-0 w-100 border border-end-0 border-top-0" 
-                                                                      style=" width: 100vh; font-size: 10px;"
+                                                            <textarea class="form-control form-control-sm rounded-1 p-0 m-0 w-100 border border-0" 
+                                                                      style=" width: 100vh; font-size: 10px; resize: none;"
                                                                       id="causes_worksheet_{{item.seq}}" 
                                                                       name="causes_worksheet_{{item.seq}}"
                                                                       placeholder="Causes" 
@@ -2341,8 +2344,10 @@
                                                 </td>
 
                                                 @* consequences *@
-                                                <td class="align-top border border-light border-end-0  border-start-0  border-top-0 " style="padding: 0 !important;">
-                                                    <div class="d-flex align-items-top w-100" ng-if="item.row_type =='causes' || item.row_type =='consequences'">
+                                                <td class="align-top border border-light border-active" style="padding: 0 !important;">
+                                                    <div class="d-flex align-items-top w-100" 
+                                                        ng-if="item.row_type =='causes' || item.row_type =='consequences'" 
+                                                        rowspan="{{ (data_listworksheet | filter:{causes_no: item.causes_no,consequences_no: item.consequences_no}).length }}">
                                                         <div>
                                                             <p class="p-0 m-0 me-1 text-end">{{item.guidewords_no +'.' + item.causes_no +'.'+item.consequences_no +'.'}}</p>
                                                             <div class="" ng-class="{'d-none':(!tab_worksheet_active)}">
@@ -2392,8 +2397,8 @@
                                                             </div>
                                                         </div>
                                                         <div class="autocomplete-container" style=" width: 100%; " ng-class="{'disabled-link':(!tab_worksheet_active)}">
-                                                            <textarea class="form-control form-control-sm rounded-1 p-0 m-0 w-100 border border-end-0 border-top-0"
-                                                                      style=" width: 200px; font-size: 10px;"
+                                                            <textarea class="form-control form-control-sm rounded-1 p-0 m-0 w-100 border-0"
+                                                                      style=" width: 200px; font-size: 10px; resize: none;"
                                                                       id="consequences_worksheet_{{item.seq}}" 
                                                                       name="consequences_worksheet_{{item.seq}}"
                                                                       placeholder="Consequences" 
@@ -2417,7 +2422,7 @@
                                                     </div>
                                                 </td>
 
-                                                <td class="align-top border border-light border-end-0  border-start-0  border-top-0 "
+                                                <td class="align-top border border-light border-active "
                                                     style="padding: 0 !important; width: 70px;"
                                                     ng-if="select_columns_level == 5">
                                                     <div class="d-flex align-items-top px-0" style="width: 70px;">
@@ -2467,7 +2472,7 @@
                                                     </div>
                                                 </td>
 
-                                                <td class="align-top border border-light border-end-0  border-start-0  border-top-0 "
+                                                <td class="align-top border border-light border-end-0 border-top-0 "
                                                     style="padding: 0 !important; width: 20px;">
                                                     <div class="align-items-center text-end mt-1" style=" width: 20px;"
                                                          ng-class="{'disabled-link':(!tab_worksheet_active)}">
@@ -2478,7 +2483,7 @@
                                                     </div>
                                                 </td>
 
-                                                <td class="align-top border border-light border-end-0  border-start-0  border-top-0 "
+                                                <td class="align-top border border-light border-end-0 border-top-0"
                                                     style="padding: 0 !important; width: 20px;">
                                                     <div class="align-items-center text-end mt-1" style=" width: 20px;"
                                                          ng-class="{'disabled-link':(!tab_worksheet_active)}">
@@ -2493,7 +2498,7 @@
                                                     </div>
                                                 </td>
 
-                                                <td class="align-top border border-light border-end-0  border-start-0  border-top-0 "
+                                                <td class="align-top border border-light border-active "
                                                     style="padding: 0 !important; width: 30px; height:30;">
                                                     <div class="align-items-center text-end mt-1" style=" width: 30px;">
                                                         <button ng-style=" { 'background-color' : ((item.ram_befor_risk == 'H') ? 'red' : ((item.ram_befor_risk == 'M') ? 'yellow' : ((item.ram_befor_risk == 'L') ? 'green' : '#D3D3D3')) ) }"
@@ -2510,7 +2515,7 @@
                                                     </div>
                                                 </td>
 
-                                                <td class="align-top border border-light border-end-0  border-start-0  border-top-0 " style="padding: 0 !important; width: 40px;">
+                                                <td class="align-top border border-lightborder-active" style="padding: 0 !important; width: 40px;">
                                                     <div class="d-flex align-items-center text-end mt-1"
                                                          ng-class="{'disabled-link':(!tab_worksheet_active)}">
                                                         <select class="form-select rounded-1 mx-1 p-1  border-start-0  border-end-0 border-top-0 " 
@@ -2528,7 +2533,7 @@
                                                     </div>
                                                 </td>
 
-                                                <td class="align-top border border-light border-end-0  border-start-0  border-top-0 " 
+                                                <td class="align-top border border-light border-active " 
                                                     style="padding: 0 !important; width: 40px;"
                                                     ng-if="data_header[0].safety_critical_equipment_show==1">
                                                     <div class="d-flex align-items-center text-end mt-1"
@@ -2544,12 +2549,12 @@
                                                     </div>
                                                 </td>
 
-                                                <td id="td_existing_safeguards" class="align-top border border-light border-end-0  border-start-0  border-top-0 " style="padding: 0 !important;">
+                                                <td id="td_existing_safeguards" class="align-top border border-light border-active" style="padding: 0 !important;">
                                                     <div class="d-flex align-items-center w-100" ng-if="item.row_type =='causes' || item.row_type =='consequences'">
                                                         <div class="autocomplete-container" style=" width: 100%; " ng-class="{'disabled-link':(!tab_worksheet_active)}">
                                                             <!--Modal RAM Start-->         
-                                                            <textarea class="form-control form-control-sm rounded-1 p-0 m-0 w-100 border border-end-0 border-top-0"
-                                                                    style=" width: 400px; font-size: 10px;"
+                                                            <textarea class="form-control form-control-sm rounded-1 p-0 m-0 w-100 border-0"
+                                                                    style=" width: 400px; font-size: 10px; resize: none;"
                                                                     id="existing_safeguards_worksheet_{{item.seq}}" 
                                                                     name="existing_safeguards_worksheet_{{item.seq}}"
                                                                     placeholder=" Protection/Mitigation Barriers" 
@@ -2575,7 +2580,7 @@
                                                     </div>
                                                 </td>
 
-                                                <td class="align-top border border-light border-end-0  border-start-0  border-top-0 "
+                                                <td class="align-top border border-light border-right-0 "
                                                     style="padding: 0 !important; width: 20px;">
                                                     <div class="align-items-center text-end mt-1" style=" width: 20px;" ng-class="{'disabled-link':(!tab_worksheet_active)}">
                                                         <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end"
@@ -2589,7 +2594,7 @@
                                                     </div>
                                                 </td>
 
-                                                <td class="align-top border border-light border-end-0  border-start-0  border-top-0 "
+                                                <td class="align-top border border-light border-right-0"
                                                     style="padding: 0 !important; width: 20px;">
                                                     <div class="align-items-center text-end mt-1" style=" width: 20px;" ng-class="{'disabled-link':(!tab_worksheet_active)}">
                                                         <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end"
@@ -2603,7 +2608,7 @@
                                                     </div>
                                                 </td>
 
-                                                <td class="align-top border border-light border-end-0  border-start-0  border-top-0 "
+                                                <td class="align-top border border-light border-active "
                                                     style="padding: 0 !important; width: 30px; heigh:30px">
                                                     <div class="align-items-center text-end mt-1" style=" width: 30px;">
                                                         <button ng-style=" { 'background-color' : ((item.ram_after_risk == 'H') ? 'red' : ((item.ram_after_risk == 'M') ? 'yellow' : ((item.ram_after_risk == 'L') ? 'green' : '#D3D3D3')) ) }"
@@ -2620,14 +2625,14 @@
                                                     </div>
                                                 </td>
 
-                                                <td class="align-top border border-light border-end-0  border-start-0  border-top-0 " style="padding: 0 !important;">
+                                                <td class="align-top border border-light border-active" style="padding: 0 !important;">
                                                     <div class="d-flex align-items-top w-100">
                                                         <div class="autocomplete-container" 
                                                             style=" width: 100%; " 
                                                             ng-class="{'disabled-link':(!tab_worksheet_active)}"
                                                             ng-if="item.recommendations!=''">
-                                                            <textarea class="form-control form-control-sm rounded-1 p-0 m-0 w-100 border border-end-0 border-top-0 text-center"
-                                                                      style=" width: 50px; font-size: 10px;"
+                                                            <textarea class="form-control form-control-sm rounded-1 p-0 m-0 w-100 border-0 text-center"
+                                                                      style=" width: 50px; font-size: 10px;resize: none;"
                                                                       placeholder="No" 
                                                                       rows="1"
                                                                       ng-model="item.recommendations_no"
@@ -2637,7 +2642,7 @@
                                                     </div>
                                                 </td>
 
-                                                <td class="align-top border border-light border-end-0  border-start-0  border-top-0 " style="padding: 0 !important;">
+                                                <td class="align-top border border-lightborder-active" style="padding: 0 !important;">
                                                     <div class="d-flex align-items-top w-100">
                                                         <span class=" font-sans-serif btn-reveal-trigger position-static pt-1 disabled-link  d-none" ng-class="{'d-none':(!tab_worksheet_active)}">
                                                             <button data-bs-toggle="modal" 
@@ -2670,7 +2675,7 @@
                                                     </div>
                                                 </td>
 
-                                                <td class="align-top border border-light border-end-0  border-start-0  border-top-0 " style="padding: 0 !important;"
+                                                <td class="align-top border border-light border-active" style="padding: 0 !important;"
                                                     ng-if="data_header[0].safety_critical_equipment_show==1">
                                                     <div class="d-flex align-items-top w-100">
                                                         <div class="autocomplete-container" style=" width: 100%; " ng-class="{'disabled-link':(!tab_worksheet_active)}">
@@ -2696,7 +2701,7 @@
                                                     </div>
 
                                                 </td>
-                                                <td class="align-top border border-light border-end-0  border-start-0  border-top-0 " style="padding: 0 !important; width: 120px;">
+                                                <td class="align-top border border-light border-active" style="padding: 0 !important; width: 120px;">
                                                     <div class="d-flex align-items-center ">
                                                         <div ng-class="{'disabled-link': (!action_owner_active) || (item.action_status === 'Responed')}">
                                                             <button ng-click="openDataEmployeeAdd(item, 'owner'); recommentAction_valid(item);" 
@@ -2726,7 +2731,7 @@
                                                     </div>
                                                 </td>
 
-                                                <td class="align-top border border-light border-end-0  border-start-0  border-top-0 "
+                                                <td class="align-top border border-light border-active"
                                                     style="padding: 0 !important; width: 50px;">
                                                     <div class="align-items-center text-end mt-1" style="width: 50px;" ng-if="!item.action_project_team">
                                                         <button ng-style="{ 'background-color': (item.action_status === 'Closed' ? 'success' : 'secondary') }"

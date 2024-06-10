@@ -179,7 +179,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 $scope.confirmSave ('save');
                 
                 $scope.stopTimer();
-                startTimer(); // เริ่มนับใหม่
+                //startTimer(); // เริ่มนับใหม่
             }
         }, 1000);
     
