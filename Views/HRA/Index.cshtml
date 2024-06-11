@@ -573,13 +573,19 @@
                                                                             ng-if=" (item2.approver_type=='approver' && item2.user_displayname)">
                                                                                {{ '(QMTS)' + item2.user_displayname}}
                                                                         </label> *@
-                                                                        <label class="mb-0 text-1100 fw-bold" 
-                                                                            style="width:80%;border-color: #f1f2f4;"
-                                                                            >
+                                                                    <div class="col-8 align-items-center  p-1">
+                                                                        <label class="mb-0 text-1100 fw-bold"
+                                                                                style="width:100%;border-color: #f1f2f4;">
                                                                             {{ item2.verified ? '(Verified)' : '' }}
-                                                                            {{ item2.approver_type == 'approver' && item2.user_displayname ? '(QMTS)' : ''}}  
-                                                                            {{ item2.user_displayname}}
+                                                                            {{ item2.approver_type == 'approver' && item2.user_displayname ? '' : ''}}  
+                                                                            {{ item2.user_displayname}}                                                                        </label>
+                                                                    </div>
+                                                                    <div class="col-4 align-items-center  p-1">
+                                                                        <label class="mb-0 text-1100 fw-bold"
+                                                                                style="width:80%;border-color: #f1f2f4;">
+                                                                                {{ item2.user_title}}
                                                                         </label>
+                                                                    </div>                                                                        
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -915,6 +921,7 @@
                                     <p ng-repeat="item2 in master_unit_no | filter:{
                                         id: data_general[0].id_unit_no, 
                                         id_apu: data_general[0].id_apu,
+                                        id_plant_area: data_general[0].id_toc,
                                         id_company: data_general[0].id_company} ">
                                         <b>UNIT: &nbsp;</b>{{item2.name}}
                                     </p>
