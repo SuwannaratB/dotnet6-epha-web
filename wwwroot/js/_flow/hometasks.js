@@ -19,14 +19,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
 
     $scope.subSoftwateChange = function () {
-        $scope.data_resultes = $filter('filter')($scope.data , function(item) { 
-            return ( item.pha_type == $scope.select_pha_type )
+        $scope.data_resultes = $filter('filter')($scope.data, function (item) {
+            return (item.pha_type == $scope.select_pha_type)
         });
     }
 
     $scope.actionReqChange = function () {
-        $scope.data_resultes = $filter('filter')($scope.data, function(item) {
-            
+        $scope.data_resultes = $filter('filter')($scope.data, function (item) {
+
             if ($scope.select_actionReq_type === 'all') {
                 return true; // Return true for all items
             } else {
@@ -35,7 +35,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             }
         });
     }
-    
+
 
     //  scroll  table header freezer 
     $scope.handleScroll = function () {
@@ -99,6 +99,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         get_data(true);
     }
     function get_data(page_load) {
+
         var user_name = $scope.user_name;
         var token_doc = '';
         var sub_software = '';
@@ -127,9 +128,17 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                 // $scope.data_resultes = arr.resultes;
                 $scope.data = arr.resultes;
 
-                // Assuming pha_type_filter is the variable storing the pha_type you want to filter
-                $scope.select_pha_type = 'HAZOP';
-                $scope.select_actionReq_type ='all'
+                // Assuming pha_type_filter is the variable storing the pha_type you want to filter 
+                let phaTypes = ['HAZOP', 'JSEA', 'WHATIF', 'HRA'];
+                $scope.select_pha_type = null; 
+                for (let type of phaTypes) {
+                    arr_module = $filter('filter')(arr.resultes, item => item.pha_type === type);
+                    if (arr_module?.length > 0) {
+                        $scope.select_pha_type = type;
+                        break;
+                    }
+                } 
+                $scope.select_actionReq_type = 'all'
                 $scope.subSoftwateChange();
 
                 apply();
@@ -315,7 +324,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         var user_name = $scope.user_name;
 
         var action_export_report_type = "export_" + sub_software + "_report";
-          
+
         $.ajax({
             url: url_ws + "Flow/" + action_export_report_type,
             data: '{"sub_software":"hazop","user_name":"' + user_name + '","seq":"' + seq + '","export_type":"' + data_type + '"}',

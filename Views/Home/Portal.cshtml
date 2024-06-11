@@ -32,7 +32,7 @@
                                     <h3 class="mt-2 text-center">MY TASKS</h3>
 
                                 </a>
-                                <a id="menu_hazop" href="hazop/followup" ng-if="menu_hazop"
+                                <a id="menu_hazop" ng-click="selected_menu('hazop')" ng-if="menu_hazop"
                                    class="col-xxl-3 col-xl-3 col-lg-4 col-md-6 col-sm-9 col-12 text-decoration-none">
 
                                     <div class="card border-0 rounded shadow p-3 mb-3 aspect-ratio aspect-ratio-4x3"
@@ -43,7 +43,7 @@
                                     <h3 class="mt-2 text-center">HAZOP</h3>
 
                                 </a>
-                                <a id="menu_jsea" href="jsea/index" ng-if="menu_jsea"
+                                <a id="menu_jsea" ng-click="selected_menu('jsea')" ng-if="menu_jsea"
                                    class="col-xxl-3 col-xl-3 col-lg-4 col-md-6 col-sm-9 col-12 text-decoration-none">
 
                                     <div class="card border-0 rounded shadow p-3 mb-3 aspect-ratio aspect-ratio-4x3"
@@ -55,7 +55,7 @@
 
                                 </a>
 
-                                <a id="menu_whatif" href="whatif/followup" ng-if="menu_whatif"
+                                <a id="menu_whatif" ng-click="selected_menu('whatif')" ng-if="menu_whatif"
                                    class="col-xxl-3 col-xl-3 col-lg-4 col-md-6 col-sm-9 col-12 text-decoration-none">
 
                                     <div class="card border-0 rounded shadow p-3 mb-3 aspect-ratio aspect-ratio-4x3"
@@ -66,7 +66,7 @@
                                     <h3 class="mt-2 text-center">WHAT'S IF</h3>
 
                                 </a>
-                                <a id="menu_hra" href="hra/index" ng-if="menu_hra"
+                                <a id="menu_hra" ng-click="selected_menu('hra')" ng-if="menu_hra"
                                    class="col-xxl-3 col-xl-3 col-lg-4 col-md-6 col-sm-9 col-12 text-decoration-none">
 
                                     <div class="card border-0 rounded shadow p-3 mb-3 aspect-ratio aspect-ratio-4x3"

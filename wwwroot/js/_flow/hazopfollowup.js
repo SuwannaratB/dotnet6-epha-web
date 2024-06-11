@@ -193,6 +193,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         $scope.selectViewTypeFollowup = true;
         $scope.action_part = 1;
         $scope.user_name = conFig.user_name();
+        $scope.pha_sub_software = conFig.pha_sub_software();
+    
 
         $scope.data_all = [];
 
@@ -241,12 +243,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         var user_name = $scope.user_name;
         var token_doc = '';
 
-        var sub_software = 'hazop';
+        var sub_software = $scope.pha_sub_software.toLowerCase();
         var type_doc = 'search';
 
         $.ajax({
             url: url_ws + "Flow/load_follow_up",
-            data: '{"sub_software":"hazop","user_name":"' + user_name + '","token_doc":"' + token_doc + '","type_doc":"' + type_doc + '"}',
+            data: '{"sub_software":"' + sub_software +'","user_name":"' + user_name + '","token_doc":"' + token_doc + '","type_doc":"' + type_doc + '"}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
             beforeSend: function () {
                 $("#divLoading").show();
@@ -261,39 +263,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                 if (page_load) { 
 
                     $scope.data_all = arr;
-                    $scope.master_apu = arr.apu;
-                    $scope.master_business_unit = arr.business_unit;
-                    $scope.master_unit_no = arr.unit_no;
-                    $scope.master_functional = arr.functional;
-                    $scope.master_functional_audition = arr.functional;//ใช้ใน functional audition 
-
-                    $scope.master_ram = arr.ram;
-                    $scope.master_ram_level = arr.ram_level;
-                    $scope.master_ram_color = arr.ram_color;
-                    $scope.master_security_level = arr.security_level;
-                    $scope.master_likelihood_level = arr.likelihood_level;
-
-                    $scope.master_guidwords = arr.guidwords;
-
-                    $scope.employeelist = arr.employee;
-                    $scope.master_approver = arr.employee;
- 
-                    var json = JSON.stringify(arr.apu, function (key, value) {
-                        if (key === "$$hashKey") {
-                            return undefined;
-                        }
-                        return value;
-                    });
-                    $scope.master_apu = JSON.parse(json);
-                    try { 
-                    var json = JSON.stringify(arr.his_approver, function (key, value) {
-                        if (key === "$$hashKey") {
-                            return undefined;
-                        }
-                        return value;
-                    });
-                        $scope.his_approver = JSON.parse(json);
-                    } catch { }
+               
                 }
 
                 var iNoNew = 1;
@@ -340,46 +310,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
                 //admin,request,responder,approver
                 if ($scope.flow_role_type == 'admin') { $scope.tabChange = 'worksheet'; } else { $scope.tabChange = 'responder'; }
-
-                $scope.master_unit_no_show = $filter('filter')($scope.master_unit_no, function (item) { return (item.id_apu == $scope.master_apu[0].id); });
-
-                if ($scope.data_general[0].master_apu == null || $scope.data_general[0].master_apu == '') {
-                    $scope.data_general[0].master_apu = null;
-                    var arr_clone_def = { id: $scope.data_general[0].master_apu, name: 'Please select' };
-                    $scope.master_apu.splice(0, 0, arr_clone_def);
-                }
-                if ($scope.data_general[0].master_functional == null || $scope.data_general[0].master_functional == '') {
-                    $scope.data_general[0].master_functional = null;
-                    var arr_clone_def = { id: $scope.data_general[0].master_functional, name: 'Please select' };
-                    $scope.master_functional.splice(0, 0, arr_clone_def);
-                }
-                if ($scope.data_general[0].id_business_unit == null) {
-                    $scope.data_general[0].id_business_unit = null;
-                    var arr_clone_def = { id: $scope.data_general[0].id_business_unit, name: 'Please select' };
-                    $scope.master_business_unit.splice(0, 0, arr_clone_def);
-                }
-                if ($scope.data_general[0].master_unit_no == null || $scope.data_general[0].master_unit_no == '') {
-                    $scope.data_general[0].master_unit_no = null;
-                    var arr_clone_def = { id: $scope.data_general[0].master_unit_no, name: 'Please select' };
-                    $scope.master_unit_no.splice(0, 0, arr_clone_def);
-                }
-                if ($scope.master_approver[0].employee_name == null || $scope.master_approver[0].employee_name == '') {
-                    $scope.master_approver[0].employee_name = null;
-                    var arr_clone_def = { id: $scope.master_approver[0].employee_name, name: 'Please select' };
-                    $scope.master_approver.splice(0, 0, arr_clone_def);
-                }
-
+  
                 apply();
-                console.log($scope);
-                try {
-                    const choicesapu = new Choices('.js-choice-apu');
-                    const choicesfunc = new Choices('.js-choice-functional');
-                    const choicesbu = new Choices('.js-choice-business_unit');
-                    const choicesunit = new Choices('.js-choice-unit_no');
-
-                    const choicesapprover = new Choices('.js-choice-approver');
-                } catch { }
-
+               
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 if (jqXHR.status == 500) {
@@ -400,7 +333,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
         $scope.tabUpdateFollowUp = true;
 
-        var controller_text = 'hazop';//fix เนื่องจากมีหน้าเดียวใช้ด้วยกัน
+        var sub_software = $scope.pha_sub_software.toLowerCase();
+        var controller_text = 'Hazop';//fix เนื่องจากมีหน้าเดียวใช้ด้วยกัน
         var pha_type_doc = 'followupupdate';
         var pha_sub_software = arr.pha_sub_software;
         var pha_seq = arr.pha_seq;

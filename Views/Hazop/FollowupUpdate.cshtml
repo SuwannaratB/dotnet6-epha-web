@@ -35,11 +35,10 @@
                             <div class="row g-3 justify-content-between align-items-center pt-2 pb-3">
 
                                 <div class="col-8 col-md">
-                                    
+
                                     <div class="row">
                                         <div class="col-auto">
                                             <b>PHA No.:</b> <br>
-                                            @* <span class="text-uppercase text-primary cursor-pointer" ng-click="selectDocPreview()"> {{ (data_header[0].pha_version>0 ? data_header[0].pha_no : data_header[0].pha_sub_software + '-2023-00000XX')}}</span> *@
                                             <span class="text-uppercase" ng-click="selectDocPreview()"> {{ (data_header[0].pha_version>0 ? data_header[0].pha_no : data_header[0].pha_sub_software + '-2023-00000XX')}}</span>
 
                                         </div>
@@ -55,15 +54,15 @@
                                         </div>
                                         <div class="col-auto">
                                             <b>{{data_header[0].txt_project_name_header }} :</b> <br>
-                                            <span> {{data_header[0].txt_project_name}}</span> 
+                                            <span> {{data_header[0].txt_project_name}}</span>
                                         </div>
 
-                                    </div> 
+                                    </div>
 
                                 </div>
                                 <div class="col-auto">
                                     <div class="d-flex align-items-center py-2 gap-4  justify-content-end">
-                                        <div class="d-flex align-items-center gap-2"  ng-class="{ 'd-none': (data_general[0].pha_status != 13)}">
+                                        <div class="d-flex align-items-center gap-2" ng-class="{ 'd-none': (data_general[0].pha_status != 13)}">
                                             <label class="switch">
                                                 <input type="checkbox" ng-model="toggleStatus" ng-change="toggleChanged()">
                                                 <span class="slider round"></span>
@@ -85,36 +84,36 @@
                                     <div class="float-end pe-3">
                                         <div class="form-check form-switch cursor-pointer">
                                             <input class="form-check-input cursor-pointer" name="" id=""
-                                                    type="checkbox"
-                                                    ng-click="toggleTasksView()" />
+                                                   type="checkbox"
+                                                   ng-click="toggleTasksView()" />
                                             <label class="form-check-label cursor-pointer" for="" style="color:#a1a1a6">Show </label>
                                         </div>
                                     </div>
-                                </div>                                                              
+                                </div>
 
                                 <div class="col-12 col-md mx-1 ">
 
                                     <div class="table-responsive scrollbar tableFixHead ">
-                                        <table class="table fs--2 mb-0 table-bordered " cellpadding="0" cellspacing="0">
-                                            <thead class="text-uppercase  bg-light-secondary" >
+                                        <table ng-if="!(pha_sub_software == 'hra')" class="table fs--2 mb-0 table-bordered " cellpadding="0" cellspacing="0">
+                                            <thead class="text-uppercase  bg-light-secondary">
 
                                                 @*follow up*@
                                                 <tr class="text-center" ng-if="flow_status !== 14">
                                                     <th class="sort align-middle" colspan="1" rowspan="3">
-                                                        {{ pha_sub_software == 'hra' ? "Sub Area No." : 'Recommendations No' }}
+                                                        {{ pha_sub_software == 'hra' ? "Job Type/Change Type" : 'Recommendations No' }}
                                                     </th>
                                                     <th class="sort align-middle" colspan="1" rowspan="3" scope="col">
                                                         {{ pha_sub_software == 'whatif' ? 'Task' : pha_sub_software == 'hra' ? 'Group No' : 'Node' }}
                                                     </th>
                                                     <th class="sort align-middle" colspan="1" rowspan="3" scope="col">
-                                                        {{ pha_sub_software == 'whatif' ? "What's if(Cause)" : pha_sub_software == 'hra' ? "Risk Factor No." : 'Cause No' }}
+                                                        {{ pha_sub_software == 'whatif' ? "What's if(Cause)" : pha_sub_software == 'hra' ? "Task or Activity" : 'Cause No' }}
                                                     </th>
 
                                                     @* Action Owner 13 *@
                                                     <th class="sort align-middle " colspan="1" rowspan="3" scope="col" ng-if="flow_status != 14">
                                                         {{ pha_sub_software == 'hra' ? "Worker Group" : 'Action Owner' }}
                                                     </th>
-      
+
                                                     <th class="sort align-middle " colspan="1" rowspan="3" ng-if="flow_status != 14">
                                                         {{ pha_sub_software == 'hra' ? "Commnets" : 'Recommendations' }}
                                                     </th>
@@ -128,7 +127,7 @@
                                                     <th class="sort align-middle " colspan="1" rowspan="3" scope="col" ng-if="flow_status != 14">
                                                         Implement
                                                     </th>
-                                                    <th class="sort align-middle " colspan="1" rowspan="3" scope="col" >
+                                                    <th class="sort align-middle " colspan="1" rowspan="3" scope="col">
                                                         Remark
                                                     </th>
                                                     @* Hazop recommendations responded sheet 13 *@
@@ -137,7 +136,7 @@
                                                     </th>
                                                     @* Status 13 *@
                                                     @* <th class="sort align-middle " colspan="1" rowspan="3" scope="col" ng-if="!(flow_status == 13)">
-                                                        Action<br />Status<br />(Items)
+                                                    Action<br />Status<br />(Items)
                                                     </th> *@
                                                     <th class="sort align-middle " colspan="2" rowspan="1" scope="col">
                                                         Recommendations Close Plan
@@ -189,12 +188,12 @@
                                                         Risk Assessment Matrix
                                                     </th>
 
-                                                    <th class="sort align-middle " colspan="1" rowspan="3" scope="col" >
+                                                    <th class="sort align-middle " colspan="1" rowspan="3" scope="col">
                                                         Remark
                                                     </th>
                                                     @* Status 13 *@
                                                     @* <th class="sort align-middle " colspan="1" rowspan="3" scope="col" ng-if="!(flow_status == 13)">
-                                                        Action<br />Status<br />(Items)
+                                                    Action<br />Status<br />(Items)
                                                     </th> *@
                                                     <th class="sort align-middle " colspan="2" rowspan="1" scope="col">
                                                         Recommendations Close Plan
@@ -211,13 +210,13 @@
                                                     </th>
 
                                                     <th class="sort align-middle " colspan="1" rowspan="3"></th>
-                                                </tr>                                                
+                                                </tr>
 
                                                 <tr class="text-center">
-                                                    <th class="sort align-middle" scope="col" title="MITIGATED RISK ASSESSMENT MATRIX">                                                        
+                                                    <th class="sort align-middle" scope="col" title="MITIGATED RISK ASSESSMENT MATRIX">
                                                         {{ pha_sub_software == 'hra' ? "Initial" : 'Before Action' }}
                                                     </th>
-                                                    <th class="sort align-middle" scope="col">                                                        
+                                                    <th class="sort align-middle" scope="col">
                                                         {{ pha_sub_software == 'hra' ? "Residual" : 'After Action' }}
                                                     </th>
                                                     <th class="sort align-middle   bg-light-secondary" scope="col" rowspan="2" style="width:50%">
@@ -274,9 +273,9 @@
                                                 </tr>
 
                                             </thead>
-                                         
+
                                             <tbody class="list" id="customer-rating-table-body text-1100 ">
-                                                <tr ng-repeat="item_d in data_details"  
+                                                <tr ng-repeat="item_d in data_details"
                                                     ng-class="{ '': canAccess(item_d), '': !canAccess(item_d) }"
                                                     class="hover-actions-trigger btn-reveal-trigger position-static px-0 text-center">
                                                     <td class="align-top  px-1">
@@ -301,9 +300,9 @@
                                                         </div>
                                                     </td>
 
-                                                     @* Hazop recommendations responded sheet 14 *@
-                                                    <td class="align-top px-1" style="min-width:200px;"  ng-if="flow_status == 14">
-                                                        <div class=" p-0 cursor-pointer " 
+                                                    @* Hazop recommendations responded sheet 14 *@
+                                                    <td class="align-top px-1" style="min-width:200px;" ng-if="flow_status == 14">
+                                                        <div class=" p-0 cursor-pointer "
                                                              ng-repeat="item_x in data_drawingworksheet | filter:{id_worksheet:item_d.seq, action_type : '!delete'}">
                                                             <div class="d-flex flex-nowrap"
                                                                  ng-if="!((flow_status == 14 ? item_d.reviewer_action_type : item_d.responder_action_type) == 2)">
@@ -320,71 +319,71 @@
                                                                             Add
                                                                         </a>
                                                                         <div class="dropdown-divider"></div>
-                                                                        <a class="dropdown-item text-danger"ng-click=removeDataWorksheetDrawing(item_x,item_d.seq)>
+                                                                        <a class="dropdown-item text-danger" ng-click=removeDataWorksheetDrawing(item_x,item_d.seq)>
                                                                             <span class="fas fa-times-circle"></span> Remove
                                                                         </a>
                                                                     </div>
                                                                 </div>
                                                                 <div class="align-items-center">
                                                                     @*<div class="uploadbox ">
-                                                                        <span class="nametext ms-3 filename-text me-2" 
-                                                                            id="filename{{item_x.seq}}">
-                                                                            {{(item_x.document_file_size>0? item_x.document_file_name + '('+  item_x.document_file_size + 'KB)' : '')}}
-                                                                        </span>
-                                                                        <label class="uploadfile dz-message-text text-info fw-bold p-2" 
-                                                                                for="attfile-{{item_x.seq}}"
-                                                                               style="cursor: pointer;">
-                                                                            <i class="fa-solid fa-arrow-up-from-bracket fa-xl me-1"></i>
-                                                                            <span class="upload-text d-none d-lg-inline">Upload File</span>
-                                                                        </label>
-                                                                        <input type="file" id="attfile-{{item_x.seq}}"
-                                                                               name="file{{item_x.seq}}"
-                                                                               onchange="
-                                                                               angular.element(this).scope().fileSelect(this);"
-                                                                               ng-click="
-                                                                               alert(item_x.seq);
-                                                                               setSeqUpload(item_d.seq)" 
-                                                                               style="display:none" 
-                                                                               />
+                                                                    <span class="nametext ms-3 filename-text me-2"
+                                                                    id="filename{{item_x.seq}}">
+                                                                    {{(item_x.document_file_size>0? item_x.document_file_name + '('+  item_x.document_file_size + 'KB)' : '')}}
+                                                                    </span>
+                                                                    <label class="uploadfile dz-message-text text-info fw-bold p-2"
+                                                                    for="attfile-{{item_x.seq}}"
+                                                                    style="cursor: pointer;">
+                                                                    <i class="fa-solid fa-arrow-up-from-bracket fa-xl me-1"></i>
+                                                                    <span class="upload-text d-none d-lg-inline">Upload File</span>
+                                                                    </label>
+                                                                    <input type="file" id="attfile-{{item_x.seq}}"
+                                                                    name="file{{item_x.seq}}"
+                                                                    onchange="
+                                                                    angular.element(this).scope().fileSelect(this);"
+                                                                    ng-click="
+                                                                    alert(item_x.seq);
+                                                                    setSeqUpload(item_d.seq)"
+                                                                    style="display:none"
+                                                                    />
                                                                     </div>*@
                                                                     <div class="btn-group mb-2" style="height:60px;">
                                                                         <div class="icon-button border p-3" style="border-color: #0d6efd; background-color: #0d6efd;">
                                                                             <span class="fa-solid fa-arrow-up-from-bracket fa-lg" style="color: #ffffff;"></span>
                                                                         </div>
-                                                                        <button class="Upload-button btn ps-3"  ng-if="!item_x.document_file_size">
-                                                                            <label class="dz-message-text fw-bold cursor-pointer" for="attfile-{{item_x.seq}}" ng-class="{'d-none':(!tab_general_active)}" 
-                                                                                style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; max-width: 150px;">
+                                                                        <button class="Upload-button btn ps-3" ng-if="!item_x.document_file_size">
+                                                                            <label class="dz-message-text fw-bold cursor-pointer" for="attfile-{{item_x.seq}}" ng-class="{'d-none':(!tab_general_active)}"
+                                                                                   style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; max-width: 150px;">
                                                                                 Upload File (Word, Excel, PDF, Image)
                                                                             </label>
                                                                             <input type="file" id="attfile-{{item_x.seq}}"
-                                                                                name="file{{item_x.seq}}"
-                                                                                onchange="
+                                                                                   name="file{{item_x.seq}}"
+                                                                                   onchange="
                                                                                 angular.element(this).scope().fileSelect(this);"
-                                                                                ng-click="
+                                                                                   ng-click="
                                                                                 alert(item_x.seq);
-                                                                                setSeqUpload(item_d.seq)" 
-                                                                                style="display:none" />
+                                                                                setSeqUpload(item_d.seq)"
+                                                                                   style="display:none" />
                                                                         </button>
                                                                         <button class="Upload-button btn ps-3" ng-if="item_x.document_file_size > 0">
                                                                             <div class="d-flex align-items-center">
                                                                                 <span class="mr-3 nametext"
-                                                                                    id="filename{{item_x.seq}}" 
-                                                                                    ng-class="{'d-none':(!tab_general_active)}"
-                                                                                    ng-click="downloadFile(item_x)"
-                                                                                    ng-if="item_x.document_file_size>0">
+                                                                                      id="filename{{item_x.seq}}"
+                                                                                      ng-class="{'d-none':(!tab_general_active)}"
+                                                                                      ng-click="downloadFile(item_x)"
+                                                                                      ng-if="item_x.document_file_size>0">
                                                                                     <b style="font-size:x-small;">
                                                                                         {{truncateFilename(item_x.document_file_name, 20)}} ({{item_x.document_file_size}} KB)
                                                                                     </b>
                                                                                 </span>
                                                                                 <a id="deluploadfile-{{item_x.seq}}" class="btn btn-link text-danger p-0 ms-2"
-                                                                                        ng-class="{'d-none':(!tab_general_active)}"
-                                                                                        ng-click="clearFileName(item_x.seq)">
+                                                                                   ng-class="{'d-none':(!tab_general_active)}"
+                                                                                   ng-click="clearFileName(item_x.seq)">
                                                                                     <span class="fa-regular fa-trash-can fa-lg"></span>
                                                                                 </a>
 
                                                                             </div>
-                                                                        </button> 
-                                                                    </div>                                                                     
+                                                                        </button>
+                                                                    </div>
                                                                 </div>
                                                             </div>
 
@@ -406,15 +405,15 @@
                                                     <td class="align-top px-0" ng-if="flow_status == 14">
                                                         <div class="d-flex align-items-center justify-content-center position-relative" style="min-height: 52px;">
                                                             <input type="checkbox"
-                                                                ng-model="item_d.implement"
-                                                                style="cursor: not-allowed; width: 20px; height: 20px;">
+                                                                   ng-model="item_d.implement"
+                                                                   style="cursor: not-allowed; width: 20px; height: 20px;">
                                                             <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; cursor: not-allowed;"></div>
                                                         </div>
                                                     </td>
 
 
                                                     @* action owner responded 14 *@
-                                                    <td class="align-top  px-1"  ng-if="flow_status == 14">
+                                                    <td class="align-top  px-1" ng-if="flow_status == 14">
                                                         <div class="align-items-center ">
                                                             <p class="mb-0 ms-3 fw-bold" style="width: 120px;">
                                                                 {{item_d.responder_user_displayname}}
@@ -441,7 +440,7 @@
 
                                                             <textarea class="form-control form-control-sm rounded-1 p-0 mt-1 w-100 border border-end-0 border-top-0"
                                                                       style=" width: 100vh; font-size: 10px;"
-                                                                      placeholder="Comment" 
+                                                                      placeholder="Comment"
                                                                       rows="1"
                                                                       ng-model="item_d.reviewer_comment"
                                                                       ng-if="!((flow_status == 14 ? item_d.reviewer_action_type : item_d.responder_action_type) == 2)">
@@ -459,7 +458,7 @@
                                                     </td>
 
                                                     @* action owner 13 *@
-                                                    <td class="align-top  px-1"  ng-if="flow_status != 14">
+                                                    <td class="align-top  px-1" ng-if="flow_status != 14">
                                                         <div class="align-items-center ">
                                                             <p class="mb-0 ms-3 fw-bold" style="width: 120px;">
                                                                 {{item_d.responder_user_displayname}}
@@ -496,21 +495,21 @@
                                                             </div>
 
                                                             <div class="align-items-center text-end mt-1"
-                                                                ng-class="{ 'no-drop': !canAccess(item_d), 'cursor-pointer': canAccess(item_d) }"
-                                                                style=" width: 30px;height:30px">
-                                                                <button
-                                                                    ng-style=" { 'background-color' : ((item_d.ram_after_risk == 'H') ? 'red' : ((item_d.ram_after_risk == 'M') ? 'yellow' : ((item_d.ram_after_risk == 'L') ? 'green' : '#D3D3D3')) ) }"
-                                                                    class="btn btn-sm dropdown-toggle h-100 dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end"
-                                                                    ng-class="{ 'cant-Access': !canAccess(item_d) }"
-                                                                    type="button"
-                                                                    style="width: 30px;">
+                                                                 ng-class="{ 'no-drop': !canAccess(item_d), 'cursor-pointer': canAccess(item_d) }"
+                                                                 style=" width: 30px;height:30px">
+                                                                <button ng-style=" { 'background-color' : ((item_d.ram_after_risk == 'H') ? 'red' : ((item_d.ram_after_risk == 'M') ? 'yellow' : ((item_d.ram_after_risk == 'L') ? 'green' : '#D3D3D3')) ) }"
+                                                                        class="btn btn-sm dropdown-toggle h-100 dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end"
+                                                                        ng-class="{ 'cant-Access': !canAccess(item_d) }"
+                                                                        type="button"
+                                                                        style="width: 30px;">
                                                                     <div class="d-flex text-center"
-                                                                        style=" width: 25px;">
+                                                                         style=" width: 25px;">
                                                                         <h6 class="me-1 text-center"
                                                                             style=" width: 30px;">
-                                                                            {{item_d.ram_after_risk}}</h6>
+                                                                            {{item_d.ram_after_risk}}
+                                                                        </h6>
                                                                         @*<span class="fas fa-pencil-alt fa-sm "
-                                                                            style=" width: 8px;"></span>*@
+                                                                        style=" width: 8px;"></span>*@
                                                                     </div><!---ng-click="openModalDataRAM('r',item_d,'after',item_d.id_ram,true)"--->
                                                                 </button>
                                                             </div>
@@ -535,23 +534,23 @@
                                                                     {{item_d.ram_action_likelihood}}
                                                                 </h6>
                                                             </div>
-                                                            <div class="align-items-center text-end mt-1" 
+                                                            <div class="align-items-center text-end mt-1"
                                                                  ng-class="{ 'no-drop': !canAccess(item_d), 'cursor-pointer': canAccess(item_d) }"
                                                                  style=" width: 30px;height:30px">
-                                                                <button
-                                                                    ng-style=" { 'background-color' : ((item_d.ram_action_risk == 'H') ? 'red' : ((item_d.ram_action_risk == 'M') ? 'yellow' : ((item_d.ram_action_risk == 'L') ? 'green' : '#D3D3D3')) ) }"
-                                                                    class="btn btn-sm dropdown-toggle h-100 dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end"
-                                                                    ng-class="{ 'cant-Access': !canAccess(item_d) }"
-                                                                    type="button"
-                                                                    ng-click="openModalDataRAM('r',item_d,'action',item_d.id_ram,false)"
-                                                                    style="width: 30px;">
+                                                                <button ng-style=" { 'background-color' : ((item_d.ram_action_risk == 'H') ? 'red' : ((item_d.ram_action_risk == 'M') ? 'yellow' : ((item_d.ram_action_risk == 'L') ? 'green' : '#D3D3D3')) ) }"
+                                                                        class="btn btn-sm dropdown-toggle h-100 dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end"
+                                                                        ng-class="{ 'cant-Access': !canAccess(item_d) }"
+                                                                        type="button"
+                                                                        ng-click="openModalDataRAM('r',item_d,'action',item_d.id_ram,false)"
+                                                                        style="width: 30px;">
                                                                     <div class="d-flex text-center"
-                                                                        style=" width: 25px;">
+                                                                         style=" width: 25px;">
                                                                         <h6 class="me-1 text-center"
                                                                             style=" width: 30px;">
-                                                                            {{item_d.ram_action_risk}}</h6>
+                                                                            {{item_d.ram_action_risk}}
+                                                                        </h6>
                                                                         <span class="fas fa-pencil-alt fa-sm "
-                                                                            style=" width: 8px;"></span>
+                                                                              style=" width: 8px;"></span>
                                                                     </div>
                                                                 </button>
                                                             </div>
@@ -576,35 +575,34 @@
                                                         <div class="d-flex justify-content-center align-items-center h-100 w-100 p-2">
                                                             <div class="m-auto" ng-class="{ 'no-drop': !canAccess(item_d), 'cursor-pointer': canAccess(item_d) }">
                                                                 <input type="checkbox" ng-model="item_d.implement"
-                                                                    class="round-3"
-                                                                    ng-class="{ 'cant-Access': !canAccess(item_d)}"
-                                                                    ng-click="actionImplement(item_d)"
-                                                                    style="cursor: pointer; width: 20px; height: 20px;">
+                                                                       class="round-3"
+                                                                       ng-class="{ 'cant-Access': !canAccess(item_d)}"
+                                                                       ng-click="actionImplement(item_d)"
+                                                                       style="cursor: pointer; width: 20px; height: 20px;">
                                                             </div>
                                                         </div>
                                                     </td>
 
-                                                    <td class="align-top  px-0" style=" min-width:200px;" >
+                                                    <td class="align-top  px-0" style=" min-width:200px;">
                                                         <div ng-class="{ 'no-drop': !canAccess(item_d), 'cursor-pointer': canAccess(item_d) }">
                                                             <textarea class="form-control form-control-sm rounded-1 p-0 mt-1 w-100 border border-end-0 border-top-0"
-                                                                    style=" width: 100vh; font-size: 10px;"
-                                                                    ng-class="{ 'cant-Access': !canAccess(item_d)}"
-                                                                    placeholder="Remark" 
-                                                                    rows="1"
-                                                                    ng-change="actionInput(item_d)"
-                                                                    ng-model="item_d.responder_comment"
-                                                                    >
+                                                                      style=" width: 100vh; font-size: 10px;"
+                                                                      ng-class="{ 'cant-Access': !canAccess(item_d)}"
+                                                                      placeholder="Remark"
+                                                                      rows="1"
+                                                                      ng-change="actionInput(item_d)"
+                                                                      ng-model="item_d.responder_comment">
                                                             </textarea>
                                                             <div id="valid-remark-{{item_d.seq}}"
-                                                                class="invalid-feedback text-danger">
+                                                                 class="invalid-feedback text-danger">
                                                                 Please provide a valid Remark.
                                                             </div>
                                                         </div>
                                                     </td>
 
-                                                     @* Hazop recommendations responded sheet 13 *@
-                                                    <td class="align-top px-1" style="min-width:200px;"  ng-if="flow_status != 14">
-                                                        <div class=" p-0 cursor-pointer " 
+                                                    @* Hazop recommendations responded sheet 13 *@
+                                                    <td class="align-top px-1" style="min-width:200px;" ng-if="flow_status != 14">
+                                                        <div class=" p-0 cursor-pointer "
                                                              ng-repeat="item_x in data_drawingworksheet | filter:{id_worksheet:item_d.seq, action_type : '!delete'}">
                                                             <div class="d-flex flex-nowrap"
                                                                  ng-class="{ 'no-drop': !canAccess(item_d), 'cursor-pointer': canAccess(item_d) }"
@@ -624,79 +622,78 @@
                                                                         </a>
                                                                         <div class="dropdown-divider"></div>
                                                                         <a class="dropdown-item text-danger" ng-click=removeDataWorksheetDrawing(item_x,item_d.seq)>
-                                                                            <span class="fas fa-times-circle"></span> 
+                                                                            <span class="fas fa-times-circle"></span>
                                                                             Remove
                                                                         </a>
                                                                     </div>
                                                                 </div>
                                                                 <div class="align-items-center" style="width: 280px">
                                                                     @*<div class="uploadbox ">
-                                                                        <span class="nametext ms-3 filename-text me-2" 
-                                                                            id="filename{{item_x.seq}}">
-                                                                            {{(item_x.document_file_size>0? item_x.document_file_name + '('+  item_x.document_file_size + 'KB)' : '')}}
-                                                                        </span>
-                                                                        <label class="uploadfile dz-message-text text-info fw-bold p-2" 
-                                                                                for="attfile-{{item_x.seq}}"
-                                                                               style="cursor: pointer; min-width: 100px;">
-                                                                            <i class="fa-solid fa-arrow-up-from-bracket fa-xl me-1"></i>
-                                                                            <span class="upload-text d-none d-lg-inline">Upload File</span>
-                                                                        </label>
-                                                                        <input type="file" id="attfile-{{item_x.seq}}"
-                                                                               name="file{{item_x.seq}}"
-                                                                               onchange="
-                                                                               angular.element(this).scope().fileSelect(this);"
-                                                                               ng-click="
-                                                                               alert(item_x.seq);
-                                                                               setSeqUpload(item_d.seq)" 
-                                                                               style="display:none" 
-                                                                               />
+                                                                    <span class="nametext ms-3 filename-text me-2"
+                                                                    id="filename{{item_x.seq}}">
+                                                                    {{(item_x.document_file_size>0? item_x.document_file_name + '('+  item_x.document_file_size + 'KB)' : '')}}
+                                                                    </span>
+                                                                    <label class="uploadfile dz-message-text text-info fw-bold p-2"
+                                                                    for="attfile-{{item_x.seq}}"
+                                                                    style="cursor: pointer; min-width: 100px;">
+                                                                    <i class="fa-solid fa-arrow-up-from-bracket fa-xl me-1"></i>
+                                                                    <span class="upload-text d-none d-lg-inline">Upload File</span>
+                                                                    </label>
+                                                                    <input type="file" id="attfile-{{item_x.seq}}"
+                                                                    name="file{{item_x.seq}}"
+                                                                    onchange="
+                                                                    angular.element(this).scope().fileSelect(this);"
+                                                                    ng-click="
+                                                                    alert(item_x.seq);
+                                                                    setSeqUpload(item_d.seq)"
+                                                                    style="display:none"
+                                                                    />
                                                                     </div>*@
 
-                                                                   <div class="btn-group mb-2 w-100" style="height:60px;">
+                                                                    <div class="btn-group mb-2 w-100" style="height:60px;">
                                                                         <div class="icon-button border p-3" style="border-color: #0d6efd; background-color: #0d6efd;">
                                                                             <span class="fa-solid fa-arrow-up-from-bracket fa-lg" style="color: #ffffff;"></span>
                                                                         </div>
 
-                                                                        <button class="Upload-button btn ps-3"  ng-if="!item_d.document_file_size">
-                                                                            <label class="dz-message-text fw-bold cursor-pointer" for="attfile-{{item_x.seq}}" ng-class="{'d-none':(!tab_general_active)}" 
-                                                                                style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; max-width: 150px;">
+                                                                        <button class="Upload-button btn ps-3" ng-if="!item_d.document_file_size">
+                                                                            <label class="dz-message-text fw-bold cursor-pointer" for="attfile-{{item_x.seq}}" ng-class="{'d-none':(!tab_general_active)}"
+                                                                                   style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; max-width: 150px;">
                                                                                 Upload File
                                                                             </label>
                                                                             <input type="file" id="attfile-{{item_x.seq}}"
-                                                                                name="file{{item_x.seq}}"
-                                                                                onchange="
+                                                                                   name="file{{item_x.seq}}"
+                                                                                   onchange="
                                                                                 angular.element(this).scope().fileSelect(this);"
-                                                                                ng-click="
+                                                                                   ng-click="
                                                                                 alert(item_x.seq);
-                                                                                setSeqUpload(item_d.seq)" 
-                                                                                style="display:none" 
-                                                                                />
+                                                                                setSeqUpload(item_d.seq)"
+                                                                                   style="display:none" />
                                                                         </button>
                                                                         {{item_d.document_file_size}}                                                                        {{item_x.document_file_size}}
                                                                         {{item_x.document_file_size}}
                                                                         <button class="Upload-button btn ps-3" ng-if="item_d.document_file_size > 0">
                                                                             <div class="d-flex align-items-center">
                                                                                 <span class="mr-3 nametext"
-                                                                                    id="filename{{item_x.seq}}" 
-                                                                                    ng-class="{'d-none':(!tab_general_active)}"
-                                                                                    ng-click="downloadFile(item_x)"
-                                                                                    ng-if="item_x.document_file_size>0">
+                                                                                      id="filename{{item_x.seq}}"
+                                                                                      ng-class="{'d-none':(!tab_general_active)}"
+                                                                                      ng-click="downloadFile(item_x)"
+                                                                                      ng-if="item_x.document_file_size>0">
                                                                                     <b style="font-size:x-small;">
                                                                                         {{truncateFilename(item_x.document_file_name, 20)}} ({{item_x.document_file_size}} KB)
                                                                                     </b>
                                                                                 </span>
                                                                                 <a id="deluploadfile-{{item_x.seq}}" class="btn btn-link text-danger p-0 ms-2"
-                                                                                        ng-class="{'d-none':(!tab_general_active)}"
-                                                                                        ng-click="clearFileName(item_x.seq)">
+                                                                                   ng-class="{'d-none':(!tab_general_active)}"
+                                                                                   ng-click="clearFileName(item_x.seq)">
                                                                                     <span class="fa-regular fa-trash-can fa-lg"></span>
                                                                                 </a>
 
                                                                             </div>
-                                                                        </button> 
-                                                                    </div>                                                                      
+                                                                        </button>
+                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                            
+
                                                             <div class="text-start p-0 cursor-pointer d-flex flex-nowrap" ng-if="item_d.responder_action_type === 2">
                                                                 <div ng-repeat="responder in data_drawingworksheet_responder">
                                                                     <a class="nametext ms-3 filename-text me-2" ng-if="flow_status == 13 && item_x.document_file_size > 0 && item_d.id === responder.id_worksheet" ng-click="downloadFile(item_x)">
@@ -704,13 +701,13 @@
                                                                     </a>
                                                                 </div>
                                                                 @*<a class="nametext ms-3 filename-text me-2" ng-if="flow_status == 14 && item_x.document_file_size > 0 && item_x.id === data_drawingworksheet_reviewer.id_worksheet" ng-click="downloadFile(item_x)">
-                                                                    <i class="far fa-file-pdf text-danger"></i> {{ data_drawingworksheet_reviewer.document_file_name }} ({{ data_drawingworksheet_reviewer.document_file_size }}KB)
+                                                                <i class="far fa-file-pdf text-danger"></i> {{ data_drawingworksheet_reviewer.document_file_name }} ({{ data_drawingworksheet_reviewer.document_file_size }}KB)
                                                                 </a>*@
                                                             </div>
 
                                                         </div>
                                                         @* <div ng-class="{'invalid-feedback text-danger': !(form_valid.valid_document_file==true && item_d.seq == id_worksheet_select), 'feedback text-danger': form_valid.valid_document_file}">
-                                                            Please provide a valid document file.
+                                                        Please provide a valid document file.
                                                         </div> *@
                                                         <div id="valid-upload_file-{{item_d.seq}}" class="invalid-feedback text-danger text-start">
                                                             Please provide a valid Document file.
@@ -718,36 +715,6 @@
                                                     </td>
 
                                                     @* status 13 *@
-                                                    @* <td class="align-top  px-1" ng-if="!(flow_status == 13)">
-                                                        <div class="align-items-start " style=" width: 95px;">
-                                                            <select class="form-select form-select-sm p-1"
-                                                                    ng-model="item_d.action_status"
-                                                                    ng-change="actionChangedData(item_d)"
-                                                                    ng-if="!((flow_status == 14 ? item_d.reviewer_action_type : item_d.responder_action_type) == 2)">
-                                                                <option id="Open" ng-if="flow_status == 13">Open</option>
-                                                                <option id="Responed">Responed</option>
-                                                                <option id="Closed" ng-if="flow_status >= 14 || flow_role_type =='admin'">Closed</option>
-                                                                <option id="Condition">Close with condition</option>
-                                                            </select>
-
-                                                            <textarea class="form-control form-control-sm rounded-1 p-0 mt-1 w-100 border border-end-0 border-top-0"
-                                                                      style=" width: 100vh; font-size: 10px;"
-                                                                      placeholder="Comment" 
-                                                                      rows="1"
-                                                                      ng-model="item_d.reviewer_comment"
-                                                                      ng-if="!((flow_status == 14 ? item_d.reviewer_action_type : item_d.responder_action_type) == 2)">
-                                                            </textarea>
-
-                                                            <div class="row" ng-if="((flow_status == 14 ? item_d.reviewer_action_type : item_d.responder_action_type) == 2)">
-                                                                <h6><b>{{item_d.action_status}}</b></h6>
-                                                                <p>Comment: {{item_d.reviewer_comment}}</p>
-                                                            </div>
-                                                            <div id="valid-comment-{{item_d.seq}}" class="invalid-feedback text-danger text-start">
-                                                                Please provide a valid Comment file.
-                                                            </div>
-                                                        </div>
-
-                                                    </td> *@
 
                                                     <td class="align-top  px-0" style=" width: 70px;">
                                                         <div class="align-items-center ">
@@ -775,7 +742,7 @@
 
                                                     <td class="align-top px-0 pt-0 ">
                                                         <div class="d-flex" ng-class="{ 'no-drop': !canAccess(item_d), 'cursor-pointer': canAccess(item_d) }">
-                                                            <button class="btn btn-outline text-primary  p-1 m-2 me-0" 
+                                                            <button class="btn btn-outline text-primary  p-1 m-2 me-0"
                                                                     ng-class="{ 'cant-Access': !canAccess(item_d)}"
                                                                     style=" background-color: #f1f2f4; width:50px;"
                                                                     ng-click="actionSave(item_d)"
@@ -801,29 +768,476 @@
                                             </tbody>
                                         </table>
 
+
+                                        @* เนื่องจากโครงสร้างตาราง ต่างจาก hazop และ what's if   *@
+                                        <table ng-if="(pha_sub_software == 'hra')" class="table fs--2 mb-0 table-bordered " cellpadding="0" cellspacing="0">
+                                            <thead class="text-uppercase  bg-light-secondary">
+
+                                                @*follow up*@
+                                                <tr class="text-center" >
+                                                    <th class="sort align-middle" colspan="1" rowspan="3">
+                                                        Job Type/Change Type
+                                                    </th>
+                                                    <th class="sort align-middle" colspan="1" rowspan="3" scope="col">
+                                                        Task or Activity
+                                                    </th>
+                                                    <th class="sort align-middle" colspan="1" rowspan="3" scope="col">
+                                                        Sub Area
+                                                    </th>
+
+                                                    @* Exposure Indicator => Type of Hazard - Health Hazard or Risk Factor*@
+                                                    <th class="sort align-middle" colspan="2" rowspan="1" scope="col">
+                                                        Exposure Indicator
+                                                    </th>
+                                                    @* Health Effect Rating *@
+                                                    <th class="sort align-middle" colspan="1" rowspan="3" scope="col" ">
+                                                        Health Effect Rating
+                                                    </th>
+                                                    @* Risk Rating => Initial Risk Rating - Residual Risk Rating *@
+                                                    <th class="sort align-middle" colspan="2" rowspan="1" scope="col" ">
+                                                        Risk Rating
+                                                    </th>
+
+                                                    @* Recommendations *@
+                                                    <th class="sort align-middle " colspan="1" rowspan="3">
+                                                        Commnets
+                                                    </th>
+                                                    @* Action Owner 13 *@
+                                                    <th class="sort align-middle " colspan="1" rowspan="3" scope="col">
+                                                        Action Owner
+                                                    </th>
+
+                                                    @* Recommendations responded sheet -> Status 13 *@
+                                                    <th class="sort align-middle " colspan="1" rowspan="3" scope="col">
+                                                        Recommendations responded sheet
+                                                    </th>
+
+                                                    @* Action Type status  *@
+                                                    <th class="sort align-middle " colspan="1" rowspan="3" scope="col" ng-if="flow_status == 14">
+                                                        Action<br />Status<br />(Items)
+                                                    </th>
+
+                                                    @* Recommendations Close Plan  *@
+                                                    <th class="sort align-middle " colspan="2" rowspan="1" scope="col">
+                                                        Recommendations Close Plan
+                                                    </th>
+
+                                                    <th class="sort align-middle " colspan="1" rowspan="3">
+                                                        Over Due (Day)
+                                                    </th>
+
+                                                    <th class="sort align-middle " colspan="1" rowspan="3"></th>
+                                                </tr>
+                                                <tr class="text-center">
+                                                    @* Exposure Indicator => Type of Hazard - Health Hazard or Risk Factor*@
+                                                    <th class="sort align-middle" scope="col" rowspan="2" title="Type of Hazard">
+                                                        Type of Hazard
+                                                    </th>
+                                                    <th class="sort align-middle" scope="col" rowspan="2" title="Health Hazard or Risk Factor">
+                                                        Health Hazard or Risk Factor
+                                                    </th>
+
+                                                    @* Risk Rating => Initial Risk Rating - Residual Risk Rating *@
+                                                    <th class="sort align-middle" scope="col" rowspan="2" title="Initial Risk Rating">
+                                                        Initial Risk Rating
+                                                    </th>
+                                                    <th class="sort align-middle" scope="col" rowspan="2" title="Residual Risk Rating">
+                                                        Residual Risk Rating
+                                                    </th>
+
+                                                    @* Recommendations Close Plan *@
+                                                    <th class="sort align-middle   bg-light-secondary" scope="col" rowspan="2" style="width:50%">
+                                                        Start<br />Date
+                                                    </th>
+                                                    <th class="sort align-middle   bg-light-secondary" scope="col" rowspan="2" style="width:50%">
+                                                        End<br />Date
+                                                    </th>
+                                                </tr>
+
+
+                                            </thead>
+
+                                            <tbody class="list" id="customer-rating-table-body text-1100 ">
+                                                <tr ng-repeat="item_d in data_details"
+                                                    ng-class="{ '': canAccess(item_d), '': !canAccess(item_d) }"
+                                                    class="hover-actions-trigger btn-reveal-trigger position-static px-0 text-center">
+                                                    <td class="align-top  px-1">
+                                                        <div class="text-center">
+                                                            <p class="mb-0 ms-3 fw-bold" style="width: 30px;" rows="3">
+                                                                {{ item_d.worker_group ? item_d.worker_group : 'Not found' }}
+                                                            </p>
+                                                        </div>
+                                                    </td>
+
+                                                    @* Task or Activity *@
+                                                    <td class="align-top  px-1">
+                                                        <div class="d-flex text-start">
+                                                            <p class="mb-0 ms-3 fw-bold" style="width: 30px;" rows="3">
+                                                                {{ item_d.descriptions ? item_d.descriptions : 'Not found' }}
+                                                            </p>
+                                                        </div>
+                                                    </td>
+
+                                                    <td class="align-top  px-1">
+                                                        <div class="align-items-center ">
+                                                            <p class="mb-0 ms-3 fw-bold" style="width: 30px;" rows="3">
+                                                                {{ item_d.sub_area ? item_d.sub_area : 'Not found' }}
+                                                            </p>
+                                                        </div>
+                                                    </td>
+                                                    <td class="align-top  px-1">
+                                                        <div class="align-items-center ">
+                                                            <p class="mb-0 ms-3 fw-bold" style="width: 30px;" rows="3">
+                                                                {{ item_d.type_hazard ? item_d.type_hazard : 'Not found' }}
+                                                            </p>
+                                                        </div>
+                                                    </td>
+                                                    <td class="align-top  px-1">
+                                                        <div class="align-items-center ">
+                                                            <p class="mb-0 ms-3 fw-bold" style="width: 30px;" rows="3">
+                                                                {{ item_d.riskfactors ? item_d.riskfactors : 'Not found' }}
+                                                            </p>
+                                                        </div>
+                                                    </td>
+
+                                                    <td class="align-top  px-1">
+                                                        <div class="align-items-center ">
+                                                            <p class="mb-0 ms-3 fw-bold" style="width: 30px;" rows="3">
+                                                                {{ item_d.health_effect_rating ? item_d.health_effect_rating : 'Not found' }}
+                                                            </p>
+                                                        </div>
+                                                    </td>
+
+                                                    @*Initial risk*@
+                                                    <td class="align-top text-center">
+                                                        <div class="p-1 rounded-3" style="background-color: #ccffcc; color: #006600" ng-if="item.remaining > 3">
+                                                            <h6 class="fw-semi-bold">{{item.initail_risk}}</h6>
+                                                        </div>
+                                                    </td>
+
+                                                    @*Residual risk*@
+                                                    <td class="align-top text-center">
+                                                        <div class="p-1 rounded-3" style="background-color: #ccffcc; color: #006600" ng-if="item.remaining > 3">
+                                                            <h6 class="fw-semi-bold">{item.residual_risk}}</h6>
+                                                        </div>
+                                                    </td>
+
+                                                    @* Recommendations*@
+                                                    <td class="align-top  px-1" ng-if="flow_status != 14">
+                                                        <div class="d-flex text-start">
+                                                            <p class="mb-0 ms-3 fw-bold" style="width: 120px;" rows="3">
+                                                                {{item_d.recommendations}}
+                                                            </p>
+                                                        </div>
+                                                    </td>
+
+                                                    @* action owner responded => status 13 *@
+                                                    <td class="align-top  px-1" ng-if="flow_status != 14">
+                                                        <div class="align-items-center ">
+                                                            <p class="mb-0 ms-3 fw-bold" style="width: 120px;">
+                                                                {{item_d.responder_user_displayname}}
+                                                            </p>
+                                                            <a class="nametext ms-3 filename-text me-2" ng-if="flow_status == 14" ng-click="downloadFileOwner(item_d)">
+                                                                <i class="far fa-file-pdf text-danger"></i> Document File
+                                                            </a>
+                                                        </div>
+                                                    </td>
+                                                    @* Recommendations responded sheet  => status 13 *@
+                                                    <td class="align-top px-1" style="min-width:200px;" ng-if="flow_status != 14">
+                                                        <div class=" p-0 cursor-pointer "
+                                                             ng-repeat="item_x in data_drawingworksheet | filter:{id_worksheet:item_d.seq, action_type : '!delete'}">
+                                                            <div class="d-flex flex-nowrap"
+                                                                 ng-class="{ 'no-drop': !canAccess(item_d), 'cursor-pointer': canAccess(item_d) }"
+                                                                 ng-if="!((flow_status == 14 ? item_d.reviewer_action_type : item_d.responder_action_type) == 2)">
+                                                                <div class="font-sans-serif btn-reveal-trigger position-static me-1">
+                                                                    <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 p-1"
+                                                                            ng-class="{ 'cant-Access': !canAccess(item_d) }"
+                                                                            type="button" data-bs-toggle="dropdown" data-boundary="window"
+                                                                            aria-haspopup="true" aria-expanded="false" data-bs-reference="parent">
+                                                                        <span class="fas fa-cog text-info"></span>
+                                                                    </button>
+                                                                    <div class="dropdown-menu dropdown-menu-end py-2">
+                                                                        <a class="dropdown-item text-success"
+                                                                           ng-click=addDataWorksheetDrawing(item_x,item_d.seq)>
+                                                                            <span class="fas fa-copy"></span>
+                                                                            Add
+                                                                        </a>
+                                                                        <div class="dropdown-divider"></div>
+                                                                        <a class="dropdown-item text-danger" ng-click=removeDataWorksheetDrawing(item_x,item_d.seq)>
+                                                                            <span class="fas fa-times-circle"></span>
+                                                                            Remove
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="align-items-center" style="width: 280px">
+                                                                    <div class="btn-group mb-2 w-100" style="height:60px;">
+                                                                        <div class="icon-button border p-3" style="border-color: #0d6efd; background-color: #0d6efd;">
+                                                                            <span class="fa-solid fa-arrow-up-from-bracket fa-lg" style="color: #ffffff;"></span>
+                                                                        </div>
+
+                                                                        <button class="Upload-button btn ps-3" ng-if="!item_d.document_file_size">
+                                                                            <label class="dz-message-text fw-bold cursor-pointer" for="attfile-{{item_x.seq}}" ng-class="{'d-none':(!tab_general_active)}"
+                                                                                   style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; max-width: 150px;">
+                                                                                Upload File
+                                                                            </label>
+                                                                            <input type="file" id="attfile-{{item_x.seq}}"
+                                                                                   name="file{{item_x.seq}}"
+                                                                                   onchange="
+                                                                                angular.element(this).scope().fileSelect(this);"
+                                                                                   ng-click="
+                                                                                alert(item_x.seq);
+                                                                                setSeqUpload(item_d.seq)"
+                                                                                   style="display:none" />
+                                                                        </button>
+                                                                        {{item_d.document_file_size}}                                                                        {{item_x.document_file_size}}
+                                                                        {{item_x.document_file_size}}
+                                                                        <button class="Upload-button btn ps-3" ng-if="item_d.document_file_size > 0">
+                                                                            <div class="d-flex align-items-center">
+                                                                                <span class="mr-3 nametext"
+                                                                                      id="filename{{item_x.seq}}"
+                                                                                      ng-class="{'d-none':(!tab_general_active)}"
+                                                                                      ng-click="downloadFile(item_x)"
+                                                                                      ng-if="item_x.document_file_size>0">
+                                                                                    <b style="font-size:x-small;">
+                                                                                        {{truncateFilename(item_x.document_file_name, 20)}} ({{item_x.document_file_size}} KB)
+                                                                                    </b>
+                                                                                </span>
+                                                                                <a id="deluploadfile-{{item_x.seq}}" class="btn btn-link text-danger p-0 ms-2"
+                                                                                   ng-class="{'d-none':(!tab_general_active)}"
+                                                                                   ng-click="clearFileName(item_x.seq)">
+                                                                                    <span class="fa-regular fa-trash-can fa-lg"></span>
+                                                                                </a>
+
+                                                                            </div>
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="text-start p-0 cursor-pointer d-flex flex-nowrap" ng-if="item_d.responder_action_type === 2">
+                                                                <div ng-repeat="responder in data_drawingworksheet_responder">
+                                                                    <a class="nametext ms-3 filename-text me-2" ng-if="flow_status == 13 && item_x.document_file_size > 0 && item_d.id === responder.id_worksheet" ng-click="downloadFile(item_x)">
+                                                                        <i class="far fa-file-pdf text-danger"></i> {{ item_x.document_file_name }} ({{ item_x.document_file_size }}KB)
+                                                                    </a>
+                                                                </div>
+                                                                @*<a class="nametext ms-3 filename-text me-2" ng-if="flow_status == 14 && item_x.document_file_size > 0 && item_x.id === data_drawingworksheet_reviewer.id_worksheet" ng-click="downloadFile(item_x)">
+                                                                <i class="far fa-file-pdf text-danger"></i> {{ data_drawingworksheet_reviewer.document_file_name }} ({{ data_drawingworksheet_reviewer.document_file_size }}KB)
+                                                                </a>*@
+                                                            </div>
+
+                                                        </div>
+                                                        <div id="valid-upload_file-{{item_d.seq}}" class="invalid-feedback text-danger text-start">
+                                                            Please provide a valid Document file.
+                                                        </div>
+                                                    </td>
+
+                                                    @* action owner responded => status 14 *@
+                                                    <td class="align-top  px-1" ng-if="flow_status == 14">
+                                                        <div class="align-items-center ">
+                                                            <p class="mb-0 ms-3 fw-bold" style="width: 120px;">
+                                                                {{item_d.responder_user_displayname}}
+                                                            </p>
+                                                            <a class="nametext ms-3 filename-text me-2" ng-if="flow_status == 14" ng-click="downloadFileOwner(item_d)">
+                                                                <i class="far fa-file-pdf text-danger"></i> Document File
+                                                            </a>
+                                                            <p>{{item_d.responder_comment}}</p>
+                                                        </div>
+                                                    </td>
+
+                                                    @* Recommendations responded sheet => status 14 *@
+                                                    <td class="align-top px-1" style="min-width:200px;" ng-if="flow_status == 14">
+                                                        <div class=" p-0 cursor-pointer "
+                                                             ng-repeat="item_x in data_drawingworksheet | filter:{id_worksheet:item_d.seq, action_type : '!delete'}">
+                                                            <div class="d-flex flex-nowrap"
+                                                                 ng-if="!((flow_status == 14 ? item_d.reviewer_action_type : item_d.responder_action_type) == 2)">
+                                                                <div class="font-sans-serif btn-reveal-trigger position-static me-1">
+                                                                    <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 p-1"
+                                                                            type="button" data-bs-toggle="dropdown" data-boundary="window"
+                                                                            aria-haspopup="true" aria-expanded="false" data-bs-reference="parent">
+                                                                        <span class="fas fa-cog text-info"></span>
+                                                                    </button>
+                                                                    <div class="dropdown-menu dropdown-menu-end py-2">
+                                                                        <a class="dropdown-item text-success"
+                                                                           ng-click=addDataWorksheetDrawing(item_x,item_d.seq)>
+                                                                            <span class="fas fa-copy"></span>
+                                                                            Add
+                                                                        </a>
+                                                                        <div class="dropdown-divider"></div>
+                                                                        <a class="dropdown-item text-danger" ng-click=removeDataWorksheetDrawing(item_x,item_d.seq)>
+                                                                            <span class="fas fa-times-circle"></span> Remove
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="align-items-center">
+                                                                    <div class="btn-group mb-2" style="height:60px;">
+                                                                        <div class="icon-button border p-3" style="border-color: #0d6efd; background-color: #0d6efd;">
+                                                                            <span class="fa-solid fa-arrow-up-from-bracket fa-lg" style="color: #ffffff;"></span>
+                                                                        </div>
+                                                                        <button class="Upload-button btn ps-3" ng-if="!item_x.document_file_size">
+                                                                            <label class="dz-message-text fw-bold cursor-pointer" for="attfile-{{item_x.seq}}" ng-class="{'d-none':(!tab_general_active)}"
+                                                                                   style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; max-width: 150px;">
+                                                                                Upload File (Word, Excel, PDF, Image)
+                                                                            </label>
+                                                                            <input type="file" id="attfile-{{item_x.seq}}"
+                                                                                   name="file{{item_x.seq}}"
+                                                                                   onchange="
+                                                                                angular.element(this).scope().fileSelect(this);"
+                                                                                   ng-click="
+                                                                                alert(item_x.seq);
+                                                                                setSeqUpload(item_d.seq)"
+                                                                                   style="display:none" />
+                                                                        </button>
+                                                                        <button class="Upload-button btn ps-3" ng-if="item_x.document_file_size > 0">
+                                                                            <div class="d-flex align-items-center">
+                                                                                <span class="mr-3 nametext"
+                                                                                      id="filename{{item_x.seq}}"
+                                                                                      ng-class="{'d-none':(!tab_general_active)}"
+                                                                                      ng-click="downloadFile(item_x)"
+                                                                                      ng-if="item_x.document_file_size>0">
+                                                                                    <b style="font-size:x-small;">
+                                                                                        {{truncateFilename(item_x.document_file_name, 20)}} ({{item_x.document_file_size}} KB)
+                                                                                    </b>
+                                                                                </span>
+                                                                                <a id="deluploadfile-{{item_x.seq}}" class="btn btn-link text-danger p-0 ms-2"
+                                                                                   ng-class="{'d-none':(!tab_general_active)}"
+                                                                                   ng-click="clearFileName(item_x.seq)">
+                                                                                    <span class="fa-regular fa-trash-can fa-lg"></span>
+                                                                                </a>
+
+                                                                            </div>
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="text-start p-0 cursor-pointer d-flex flex-nowrap" ng-if="item_d.data_drawingworksheet_reviewer === 2">
+                                                                <div ng-repeat="reviewer in data_drawingworksheet_reviewer">
+                                                                    <a class="nametext ms-3 filename-text me-2" ng-if="flow_status == 14 && item_x.document_file_size > 0 && item_d.id === reviewer.id_worksheet" ng-click="downloadFile(item_x)">
+                                                                        <i class="far fa-file-pdf text-danger"></i> {{ item_x.document_file_name }} ({{ item_x.document_file_size }}KB)
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                        <div id="valid-upload_file-{{item_d.seq}}" class="invalid-feedback text-danger text-start">
+                                                            Please provide a valid Document file.
+                                                        </div>
+                                                    </td>
+
+
+                                                    @* Action Type status  => status 14 *@
+                                                    <td class="align-top  px-1" ng-if="flow_status == 14">
+                                                        <div class="align-items-start " style=" width: 95px;">
+                                                            <select class="form-select form-select-sm p-1"
+                                                                    ng-model="item_d.action_status"
+                                                                    ng-change="actionChangedData(item_d)"
+                                                                    ng-if="!((flow_status == 14 ? item_d.reviewer_action_type : item_d.responder_action_type) == 2)">
+                                                                <option id="Open" ng-if="flow_status == 13">Open</option>
+                                                                <option id="Responed">Responed</option>
+                                                                <option id="Closed" ng-if="flow_status >= 14 || flow_role_type =='admin'">Closed</option>
+                                                                <option id="Condition">Close with condition</option>
+                                                            </select>
+
+                                                            <textarea class="form-control form-control-sm rounded-1 p-0 mt-1 w-100 border border-end-0 border-top-0"
+                                                                      style=" width: 100vh; font-size: 10px;"
+                                                                      placeholder="Comment"
+                                                                      rows="1"
+                                                                      ng-model="item_d.reviewer_comment"
+                                                                      ng-if="!((flow_status == 14 ? item_d.reviewer_action_type : item_d.responder_action_type) == 2)">
+                                                            </textarea>
+
+                                                            <div class="row" ng-if="((flow_status == 14 ? item_d.reviewer_action_type : item_d.responder_action_type) == 2)">
+                                                                <h6><b>{{item_d.action_status}}</b></h6>
+                                                                <p>Comment: {{item_d.reviewer_comment}}</p>
+                                                            </div>
+                                                            <div id="valid-comment-{{item_d.seq}}" class="invalid-feedback text-danger text-start">
+                                                                Please provide a valid Comment file.
+                                                            </div>
+                                                        </div>
+
+                                                    </td>
+
+
+                                                    @* Recommendations Close Plan*@
+                                                    <td class="align-top  px-0" style=" width: 70px;">
+                                                        <div class="align-items-center ">
+                                                            <p><b>{{item_d.estimated_start_date_text}}</b></p>
+                                                        </div>
+                                                    </td>
+
+                                                    <td class="align-top  px-0" style=" width: 70px;">
+                                                        <div class="align-items-center ">
+                                                            <p><b>{{item_d.estimated_end_date_text}}</b></p>
+                                                        </div>
+                                                    </td>
+
+                                                    <td class="align-top  px-0" style=" width: 70px;" ng-if="!(flow_status == 13)">
+                                                        <div class="align-items-center ">
+                                                            <p><b>{{item_d.reviewer_date}}</b></p>
+                                                        </div>
+                                                    </td>
+
+                                                    <td class="align-top  px-0">
+                                                        <div class="align-items-center ">
+                                                            <p class="text-danger"><b>{{item_d.over_due}}</b></p>
+                                                        </div>
+                                                    </td>
+
+                                                    <td class="align-top px-0 pt-0 ">
+                                                        <div class="d-flex" ng-class="{ 'no-drop': !canAccess(item_d), 'cursor-pointer': canAccess(item_d) }">
+                                                            <button class="btn btn-outline text-primary  p-1 m-2 me-0"
+                                                                    ng-class="{ 'cant-Access': !canAccess(item_d)}"
+                                                                    style=" background-color: #f1f2f4; width:50px;"
+                                                                    ng-click="actionSave(item_d)"
+                                                                    ng-if="!((flow_status == 14 ? item_d.reviewer_action_type : item_d.responder_action_type) == 2)">
+                                                                <span class="fa fa-save text-primary fa-lg"></span><br />
+                                                                <span style="font-size:8px">Save</span>
+                                                            </button>
+
+                                                            <button class="btn btn-outline text-success  p-1 m-2 ms-1"
+                                                                    ng-class="{ 'cant-Access': !canAccess(item_d)}"
+                                                                    style="background-color: #f1f2f4; width:80px; "
+                                                                    ng-click="showConfirmDialogSubmit(item_d,'submit')"
+                                                                    ng-if="!((flow_status == 14 ? item_d.reviewer_action_type : item_d.responder_action_type) == 2)">
+                                                                <span class="fa fa-save text-success fa-lg"></span><br />
+                                                                <span style="font-size:8px">
+                                                                    {{flow_status == 14 ?'Approve and Close' : 'Submit to Reviewer' }}
+                                                                </span>
+                                                            </button>
+
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+
+
+
                                         <div class="d-flex align-items-center jujustify-content-end py-4 text-primary" style="cursor: pointer;">
                                             <span class="fa-solid far fa-file-pdf text-danger p-2" ng-click="openModalTempletes()"></span>
-                                            <a ng-click="openModalTempletes('pdf')">Please attach HAZOP Recommendation worksheet (QMTS-SFR-25) with line manager/MOC focal point signature</a>
+                                            <a ng-if="pha_sub_software == 'hazop'" ng-click="openModalTempletes('pdf')">Please attach HAZOP Recommendation worksheet (QMTS-SFR-25) with line manager/MOC focal point signature</a>
+                                            <a ng-if="pha_sub_software == 'whatif'" ng-click="openModalTempletes('pdf')">Please attach What's If Recommendation worksheet with line manager/MOC focal point signature</a>
+                                            <a ng-if="pha_sub_software == 'hra'" ng-click="openModalTempletes('pdf')">Please attach HRA Recommendation worksheet with line manager/MOC focal point signature</a>
                                         </div>
                                     </div>
 
                                     <div class="d-none" ng-if="(flow_status >= 13 && flow_role_type =='admin')">
                                         <label class="form-label ps-0" for="description_general">Comment :</label>
                                         <label class="form-label ps-0" ng-if="select_history_tracking_record">
-                                            <a class="form-label far fa-comment-alt text-warning cursor-pointer" 
+                                            <a class="form-label far fa-comment-alt text-warning cursor-pointer"
                                                data-bs-toggle="tooltip"
-                                               data-bs-placement="top" 
-                                               title="" 
+                                               data-bs-placement="top"
+                                               title=""
                                                data-bs-html="true">
                                             </a>
                                         </label>
                                         <textarea class="form-control rounded-1" ng-class="{'disabled-link':(!tab_general_active)}"
-                                                id="review_folow_comment" 
-                                                name="review_folow_comment"
-                                                placeholder="Comment" 
-                                                style="height: 100px"
-                                                ng-model="data_general[0].review_folow_comment"
-                                                ng-change="actionChangedDataComment(data_general[0])">
+                                                  id="review_folow_comment"
+                                                  name="review_folow_comment"
+                                                  placeholder="Comment"
+                                                  style="height: 100px"
+                                                  ng-model="data_general[0].review_folow_comment"
+                                                  ng-change="actionChangedDataComment(data_general[0])">
                                         </textarea>
                                     </div>
 
@@ -841,15 +1255,17 @@
 
     @* Modal RAM Start *@
     <div class="modal fade modal-xl shadow-sm p-3 mb-5  rounded" id="modalRAM" tabindex="-1"
-        aria-labelledby="modalRAMLabel" aria-hidden="true" style="display: none;">
+         aria-labelledby="modalRAMLabel" aria-hidden="true" style="display: none;">
         <div class="modal-dialog modal-dialog-centered">
 
             <div class="modal-content">
                 <div class="modal-header">
 
-                    <h5 class="modal-title" id="modalRAMLabel">Risk Assessment Matrix
+                    <h5 class="modal-title" id="modalRAMLabel">
+                        Risk Assessment Matrix
                         (RAM){{(selectedDataNodeWorksheetRamType =='s'?' : Security':(selectedDataNodeWorksheetRamType
-                        =='l'?' : Likelihood':''))}}</h5>
+                        =='l'?' : Likelihood':''))}}
+                    </h5>
 
 
                     <div class="col-auto ms-auto" style="zoom:1.5">
@@ -857,13 +1273,13 @@
                         <b class="pe-1 me-1"> Likelihood : {{cal_ram_action_likelihood}}</b>
                         <b class="pe-1 me-1"> Risk : </b>
                         <label class="pe-1 me-1 text-center" style="width:100px"
-                            ng-style=" { 'background-color' : ((cal_ram_action_risk == 'H') ? 'red' : ((cal_ram_action_risk == 'M') ? 'yellow' : ((cal_ram_action_risk == 'L') ? 'green' : '#D3D3D3')) ) }">{{cal_ram_action_risk}}</label>
+                               ng-style=" { 'background-color' : ((cal_ram_action_risk == 'H') ? 'red' : ((cal_ram_action_risk == 'M') ? 'yellow' : ((cal_ram_action_risk == 'L') ? 'green' : '#D3D3D3')) ) }">{{cal_ram_action_risk}}</label>
                     </div>
 
                     <button class="btn p-1" type="button" data-bs-dismiss="modal" aria-label="Close" ng-click="closeModalDataRAM_Worksheet()">
                         <svg class="svg-inline--fa fa-xmark fs--1" aria-hidden="true" focusable="false" data-prefix="fas"
-                            data-icon="xmark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"
-                            data-fa-i2svg="">
+                             data-icon="xmark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"
+                             data-fa-i2svg="">
                             <path fill="currentColor" d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z">
                             </path>
                         </svg>
@@ -879,14 +1295,16 @@
                             <div class="col-5 d-flex justify-content-start gap-10">
                                 <span class="mx-1 d-flex pt-5">
                                     <a class="m-1 text-info cursor-pointer" href="{{y.document_definition_file_path}}"
-                                        target="_blank"
-                                        ng-repeat="y in master_ram | filter:{id: data_details[0].id_ram}">Definition
-                                        Consequence Rating<span class="fas fa-file-pdf fa-lg ms-1"></span></a>
+                                       target="_blank"
+                                       ng-repeat="y in master_ram | filter:{id: data_details[0].id_ram}">
+                                        Definition
+                                        Consequence Rating<span class="fas fa-file-pdf fa-lg ms-1"></span>
+                                    </a>
                                 </span>
                             </div>
                             <div class="col-5 d-flex justify-content-center" style="padding: 10px 10px;gap: 65px;">
                                 <div class="d-flex justify-content-end align-items-center flex-column"
-                                    ng-repeat="item_ram in master_likelihood_level | filter:{id_ram:data_details[0].id_ram,columns_level:item_ram.columns_level}">
+                                     ng-repeat="item_ram in master_likelihood_level | filter:{id_ram:data_details[0].id_ram,columns_level:item_ram.columns_level}">
                                     <label for="likelihood"><b>{{item_ram.likelihood_level}}</b></label>
                                     <input type="radio"
                                            id="likelihood"
@@ -900,9 +1318,9 @@
                         </div>
 
                         <div class="col-1 d-flex flex-column justify-content-end"
-                            style="gap: 40px; padding: 0px;  padding-bottom: 20px;">
+                             style="gap: 40px; padding: 0px;  padding-bottom: 20px;">
                             <div class="d-flex justify-content-end align-items-center gap-2"
-                                ng-repeat="item_ram in master_security_level | filter:{id_ram:data_details[0].id_ram,category_type:item_ram.category_type}">
+                                 ng-repeat="item_ram in master_security_level | filter:{id_ram:data_details[0].id_ram,category_type:item_ram.category_type}">
                                 <label for="security_level"><b>{{item_ram.security_level}}</b></label>
                                 <input type="radio"
                                        id="security_level"
@@ -915,7 +1333,7 @@
 
                         <div class="col-11">
                             <div class="cursor-pointer "
-                                ng-repeat="itemRam in master_ram | filter:{id: data_details[0].id_ram}">
+                                 ng-repeat="itemRam in master_ram | filter:{id: data_details[0].id_ram}">
                                 <img src="{{itemRam.document_file_path}}" style="width:100%;" />
                             </div>
                         </div>
@@ -925,33 +1343,33 @@
                             <div class="col-4 d-flex justify-content-end gap-10">
                             </div>
                             <div class="col-8 d-flex justify-content-center"
-                                style="padding: 20px 20px 20px 50px; gap: 160px">
+                                 style="padding: 20px 20px 20px 50px; gap: 160px">
                                 <div class="d-flex justify-content-end align-items-center flex-column"
-                                    ng-repeat="item_ram in master_likelihood_level | filter:{id_ram:data_details[0].id_ram,columns_level:item_ram.columns_level}">
+                                     ng-repeat="item_ram in master_likelihood_level | filter:{id_ram:data_details[0].id_ram,columns_level:item_ram.columns_level}">
                                     <label for="likelihood"><b>{{item_ram.likelihood_level}}</b></label>
                                     <input type="radio" id="likelihood"
-                                        checked="{{cal_ram_action_likelihood == item_ram.likelihood_level}}"
-                                        name="likelihood" ng-click="selectDataRAM('l',item_ram.likelihood_level)"
-                                        style="cursor: pointer;width:30px; height:30px;">
+                                           checked="{{cal_ram_action_likelihood == item_ram.likelihood_level}}"
+                                           name="likelihood" ng-click="selectDataRAM('l',item_ram.likelihood_level)"
+                                           style="cursor: pointer;width:30px; height:30px;">
                                 </div>
                             </div>
                         </div>
 
                         <div class="col-1 d-flex flex-column justify-content-end"
-                            style="gap: 63px; padding-bottom: 20px;">
+                             style="gap: 63px; padding-bottom: 20px;">
                             <div class="d-flex justify-content-end align-items-center gap-2"
-                                ng-repeat="item_ram in master_security_level | filter:{id_ram:data_details[0].id_ram,category_type:item_ram.category_type}">
+                                 ng-repeat="item_ram in master_security_level | filter:{id_ram:data_details[0].id_ram,category_type:item_ram.category_type}">
                                 <label for="security_level"><b>{{item_ram.security_level}}</b></label>
                                 <input type="radio" id="security_level"
-                                    checked="{{cal_ram_action_security == item_ram.security_level}}"
-                                    name="security_level" ng-click="selectDataRAM('s',item_ram.security_level)"
-                                    style="cursor: pointer;width:30px; height:30px;">
+                                       checked="{{cal_ram_action_security == item_ram.security_level}}"
+                                       name="security_level" ng-click="selectDataRAM('s',item_ram.security_level)"
+                                       style="cursor: pointer;width:30px; height:30px;">
                             </div>
                         </div>
 
                         <div class="col-11">
                             <div class="cursor-pointer "
-                                ng-repeat="itemRam in master_ram | filter:{id: data_details[0].id_ram}">
+                                 ng-repeat="itemRam in master_ram | filter:{id: data_details[0].id_ram}">
                                 <img src="{{itemRam.document_file_path}}" style="width:100%;" />
                             </div>
                         </div>
@@ -964,7 +1382,6 @@
         </div>
     </div>
     @* Modal RAM End *@
-
 
     <div class="modal fade" id="modalMsgConfirm" tabindex="-1" aria-labelledby="modalMsgConfirmLabel" aria-hidden="true"
          style="display: none;">
@@ -1010,7 +1427,7 @@
                             Do you want to update and close the item?
                         </h5>
                         <h5 ng-if="ready_to_complate" title="Popup แจ้งกรณีที่เป็นการ Approve รายการสุดท้าย" class="modal-title mb-0 text-center"
-                        id="modalConfirmSubmitLabel" style="font-size: 25px; font-weight: bold;">
+                            id="modalConfirmSubmitLabel" style="font-size: 25px; font-weight: bold;">
                             {{pha_sub_software =='whatif'?"What's If": pha_sub_software }} Ready to complate. <br />Do you want to update and close the item?
                         </h5>
                     </div>
@@ -1021,23 +1438,23 @@
                         <!-- เพิ่ม class justify-content-between เพื่อจัดปุ่มไปทางขวาและซ้าย -->
                         <div class=" col-auto">
                             <span class="mx-1" ng-if="submit_type">
-                                <button class="btn btn-success btn-sm col-auto" 
-                                    ng-if="!(flow_status == 14)" 
-                                    ng-click="ConfirmDialogSubmit('confirm_submit_reviewer')">
+                                <button class="btn btn-success btn-sm col-auto"
+                                        ng-if="!(flow_status == 14)"
+                                        ng-click="ConfirmDialogSubmit('confirm_submit_reviewer')">
                                     Submit to Reviewer
                                 </button>
-                                <button class="btn btn-success btn-sm col-auto" 
-                                    ng-if="(flow_status == 14)" 
-                                    ng-click="ConfirmDialogSubmit('confirm_approve_close')">
+                                <button class="btn btn-success btn-sm col-auto"
+                                        ng-if="(flow_status == 14)"
+                                        ng-click="ConfirmDialogSubmit('confirm_approve_close')">
                                     Approve and Close
                                 </button>
                             </span>
                         </div>
                         <div class=" col-auto justify-content-end">
                             <span class="mx-1" ng-if="submit_type">
-                                <button class="btn btn-default btn-sm col-auto" 
-                                    style="background-color: #c9c5c5;" 
-                                    ng-click="ConfirmDialogSubmit('confirm_cancel')">
+                                <button class="btn btn-default btn-sm col-auto"
+                                        style="background-color: #c9c5c5;"
+                                        ng-click="ConfirmDialogSubmit('confirm_cancel')">
                                     Cancel
                                 </button>
                             </span>
@@ -1103,7 +1520,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="bg-white position-relative top-1"
-                        ng-repeat="item_x in filteredData = (data_drawingworksheet_responder | filter:{id_worksheet:id_worksheet_select})">
+                         ng-repeat="item_x in filteredData = (data_drawingworksheet_responder | filter:{id_worksheet:id_worksheet_select})">
                         <div ng-if="$index === 0 || item_x.id_worksheet !== filteredData[$index - 1].id_worksheet">
                             <a href="{{item_x.document_file_path}}" target="_blank">
                                 {{item_x.document_file_name}}
@@ -1180,8 +1597,7 @@
         </div>
     </div>
     <!--Modal Save End-->
-
-     @* Modal Export Templates Start*@
+    @* Modal Export Templates Start*@
     <div class="modal fade" id="modalTemplates" tabindex="-1" aria-labelledby="modalmodalTemplatesLabel"
          aria-hidden="true" style="display: none;">
         <div class="modal-dialog modal-dialog-centered">

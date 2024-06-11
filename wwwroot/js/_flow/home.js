@@ -1,8 +1,10 @@
 /*const { apply } = require("core-js/fn/reflect");*/
 
+//const { upperCase } = require("lodash");
+
 AppMenuPage.controller("ctrlAppPage", function ($scope, $http, conFig) {
     var url_ws = conFig.service_api_url();
-
+     
     role_menu();
 
     function role_menu() {
@@ -21,15 +23,15 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, conFig) {
 
         if ($scope.role_type == 'admin') {
             $scope.menu_report = true;
-        } else { 
+        } else {
             $scope.menu_report = false;
-        } 
+        }
 
         //call api
         var user_name = $scope.user_name;
-     
+
         $.ajax({
-            url: url_ws + "Login/check_authorization_page",
+            url: url_ws + "Login/check_authorization_page_fix",
             data: '{"user_name":"' + user_name + '"}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
             beforeSend: function () {
@@ -48,7 +50,16 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, conFig) {
                     $scope.menu_bowtie = arr.some(item => item.page_controller === 'bowtie');
                     $scope.menu_report = arr.some(item => item.page_controller === 'report');
                     $scope.menu_master = arr.some(item => item.page_controller === 'master');
+
+                    $scopefollowup_page_hazop = arr.some(item => item.page_controller === 'hazop' && item.followup_page === 1);
+                    $scopefollowup_page_jsea = arr.some(item => item.page_controller === 'jsea' && item.followup_page === 1);
+                    $scopefollowup_page_whatif = arr.some(item => item.page_controller === 'whatif' && item.followup_page === 1);
+                    $scopefollowup_page_hra = (arr.some(item => item.page_controller === 'hra' && item.followup_page === 1) ? 1 : 0);
+                    $scopefollowup_page_bowtie = arr.some(item => item.page_controller === 'bowtie' && item.followup_page === 1);
+                    $scopefollowup_page_report = arr.some(item => item.page_controller === 'report' && item.followup_page === 1);
+                    $scopefollowup_page_master = arr.some(item => item.page_controller === 'master' && item.followup_page === 1);
                 }
+
                 apply();
             },
             error: function (jqXHR, textStatus, errorThrown) {
@@ -59,7 +70,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, conFig) {
                 }
             }
 
-        }); 
+        });
     };
 
     function apply() {
@@ -70,19 +81,37 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, conFig) {
         } catch { }
     }
     $scope.selected_menu = function (page) {
-        // alert(page);
-        //var pha_no = $scope.pha_no;
-        //var pha_status = $scope.pha_status;
-        //HAZOP--> create, draft, conduct, follow, review
-        //HAZOP CAPEX--> create, draft, conduct, approve, reject, follow, review
+      
+        var controller_action_befor = 'Home/Portal'; 
+        var controller_text = "home";
+        var pha_type_doc = 'followup_from_portal'; 
+        var pha_sub_software = page.toUpperCase();  
 
-        conFig.controller_action_befor = 'Home/Portal';
+        $.ajax({
+            url: controller_text + "/next_page",
+            data: '{"controller_action_befor":"' + controller_action_befor + '","pha_type_doc":"' + pha_type_doc + '","pha_sub_software":"' + pha_sub_software + '"}',
+            type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+            beforeSend: function () {
+                //$("#divLoading").show();
+            },
+            complete: function () {
+                //$("#divLoading").hide();
+            },
+            success: function (data) {
+                var arr = data;
+                window.open(data.page, "_top");
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                if (jqXHR.status == 500) {
+                    alert('Internal error: ' + jqXHR.responseText);
+                } else {
+                    alert('Unexpected ' + textStatus);
+                }
+            }
 
-        page = page + "/index"
-        window.open(`@Url.Content("~/")${page}`, "_top")
+        });
 
         return true;
-    };
-
+    }; 
 
 });

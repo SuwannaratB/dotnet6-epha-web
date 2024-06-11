@@ -2012,7 +2012,8 @@
                                                 @* workstep *@
                                                 <td class="align-top "
                                                     style="padding: 0 !important; width: 200px; max-width:300px;"
-                                                    ng-if="item.row_type === 'workstep'" rowspan="{{ (data_listworksheet | filter:{workstep_no: item.workstep_no}).length }}"
+                                                    ng-if="item.row_type === 'workstep'" 
+                                                    rowspan="{{ (data_listworksheet | filter:{workstep_no: item.workstep_no}).length }}"
                                                     ng-class="{ 'border-active': 
                                                                 ( item.taskdesc_no == item.no - item.index_rows ) && 
                                                                 ( item.potentailhazard_no == item.no - item.index_rows ) &&
