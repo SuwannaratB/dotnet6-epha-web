@@ -2251,26 +2251,28 @@
 
 
                                         <tbody class="">
-                                            <tr class="rowwork border border-dashed" ng-if="( data_node.length == 1 ? (data_node[0].node == null ? false : true) : true) "
+                                            <tr class="rowwork border border-dashed" 
+                                                ng-if="( data_node.length == 1 ? (data_node[0].node == null ? false : true) : true) "
                                                 ng-repeat="item in data_nodeworksheet | toArray | filter:{id_node : selectedItemNodeView} | sortNodeworksheet"> <!-----no---->
                                                 <td class="align-top border border-light border-active " style="padding: 0 !important; width: 80px;"
+                                                    ng-if="( item.causes_no == 1 && item.consequences_no == 1) && item.row_type == 'causes' "
                                                     rowspan="{{ (data_nodeworksheet | filter:{deviations: item.deviations}).length }}">
                                                     @* {{item.index_rows}} *@
                                                     @*<p class=" mx-1 ms-0  text-1100 fw-bold max-w-100 " ng-if="( item.causes_no == 1 && item.consequences_no == 1) && item.row_type == 'causes' ">{{item.guidewords_no +'.'+  (item.deviations == null? item.guidewords : item.deviations +' '+ item.guidewords  )   }}  </p>*@
-                                                    <p class=" mx-1 ms-0  text-1100 fw-bold max-w-100 " ng-if="( item.causes_no == 1 && item.consequences_no == 1) && item.row_type == 'causes' ">
+                                                    <p class=" mx-1 ms-0  text-1100 fw-bold max-w-100 " >
                                                         {{ item.deviations }}
                                                     </p>
                                                 </td>
 
-                                                <td class="align-top border border-light border-active d-none" style="padding: 0 !important; width: 80px;">
+                                                @*<td class="align-top border border-light border-active d-none" style="padding: 0 !important; width: 80px;">
                                                     <p class=" mx-1  text-1100 fw-bold " ng-if="( item.causes_no == 1 && item.consequences_no == 1) && item.row_type == 'causes' ">{{ item.deviations }}  </p>
-                                                </td>
+                                                </td>*@
 
                                                 @* causes *@
-                                                <td class="align-top border border-light border-active " style="padding: 0 !important;">
-                                                    <div class="d-flex align-items-top w-100"
-                                                         ng-if="item.row_type === 'causes'" 
-                                                        rowspan="{{ (data_nodeworksheet | filter:{causes_no: item.causes_no}).length }}">
+                                                <td class="align-top border border-light border-active " style="padding: 0 !important;"
+                                                    ng-if="item.row_type === 'causes'" 
+                                                    rowspan="{{ (data_nodeworksheet | filter:{deviations: item.deviations,causes_no: item.causes_no}).length }}">
+                                                    <div class="d-flex align-items-top w-100">
                                                         <div>
                                                             <p class="p-0 m-0 me-1 text-end">{{item.guidewords_no +'.' + item.causes_no +'.'}}</p>
                                                             <div class="" ng-class="{'d-none': !(tab_worksheet_active)}">
@@ -2342,12 +2344,11 @@
                                                         Please provide a valid Causes.
                                                     </div>
                                                 </td>
-
                                                 @* consequences *@
-                                                <td class="align-top border border-light border-active" style="padding: 0 !important;">
-                                                    <div class="d-flex align-items-top w-100" 
-                                                        ng-if="item.row_type =='causes' || item.row_type =='consequences'" 
-                                                        rowspan="{{ (data_listworksheet | filter:{causes_no: item.causes_no,consequences_no: item.consequences_no}).length }}">
+                                                <td class="align-top border border-light border-active " style="padding: 0 !important;"
+                                                    ng-if="item.row_type === 'causes' || item.row_type =='consequences' " 
+                                                    rowspan="{{ (data_nodeworksheet | filter:{deviations: item.deviations,causes_no: item.causes_no,consequences_no: item.consequences_no}).length }}">
+                                                    <div class="d-flex align-items-top w-100" >
                                                         <div>
                                                             <p class="p-0 m-0 me-1 text-end">{{item.guidewords_no +'.' + item.causes_no +'.'+item.consequences_no +'.'}}</p>
                                                             <div class="" ng-class="{'d-none':(!tab_worksheet_active)}">
@@ -2424,7 +2425,8 @@
 
                                                 <td class="align-top border border-light border-active "
                                                     style="padding: 0 !important; width: 70px;"
-                                                    ng-if="select_columns_level == 5">
+                                                    ng-if="select_columns_level == 5"
+                                                    rowspan="{{ (data_nodeworksheet | filter:{deviations: item.deviations,causes_no: item.causes_no,consequences_no: item.consequences_no,category_no:item.category_no}).length }}">
                                                     <div class="d-flex align-items-top px-0" style="width: 70px;">
                                                         <div class="align-top font-sans-serif btn-reveal-trigger position-static pt-1 mx-0 px-0" style="width: 20px;">
                                                             <p class="p-0 m-0 me-1 text-end d-none">
@@ -2549,7 +2551,9 @@
                                                     </div>
                                                 </td>
 
-                                                <td id="td_existing_safeguards" class="align-top border border-light border-active" style="padding: 0 !important;">
+                                                <td id="td_existing_safeguards" class="align-top border border-light border-active" style="padding: 0 !important;"
+                                                    ng-if="item.row_type === 'causes' || item.row_type =='consequences' " 
+                                                    rowspan="{{ (data_nodeworksheet | filter:{deviations: item.deviations,causes_no: item.causes_no,consequences_no: item.consequences_no}).length }}">
                                                     <div class="d-flex align-items-center w-100" ng-if="item.row_type =='causes' || item.row_type =='consequences'">
                                                         <div class="autocomplete-container" style=" width: 100%; " ng-class="{'disabled-link':(!tab_worksheet_active)}">
                                                             <!--Modal RAM Start-->         
