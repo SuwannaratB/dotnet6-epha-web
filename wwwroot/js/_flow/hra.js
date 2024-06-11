@@ -5653,6 +5653,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         // $scope.hazard_standard_list = $filter('filter')($scope.hazard_standard, function (item) { 
         //     return (item.name == $scope.select_hazard.health_hazard); 
         // });
+        $scope.select_hazard_type = item_hazard.id_type_hazard
+        console.log("select_hazard_type",$scope.select_hazard_type)
         $('#modalRisk').modal('show');
     };
 

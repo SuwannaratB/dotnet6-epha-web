@@ -2727,7 +2727,7 @@
                                 <thead class=" text-uppercase bg-white">
                                     <tr class="text-center">
                                         <th class="text-center" style="width: 10%;">Select</th>
-                                        <th class="text-start" style="width: 70%;">RISK FACTOR ({{master_hazard_riskfactors_list.length}})</th>
+                                        <th class="text-start" style="width: 70%;">RISK FACTOR ({{ (master_hazard_riskfactors_list | filter:{id_hazard_type: select_hazard_type}).length }})</th>
                                         <th class="text-center" style="width: 10%;">Rating</th>
                                         <th class="text-center" style="width: 10%;">TLV STD</th>
                                         @* <th class="text-center" style="width: 10%;">Type</th> *@
@@ -2735,8 +2735,7 @@
                                 </thead>
                                 <tbody class=" list">
                                     <tr class="hover-actions-trigger btn-reveal-trigger position-static text-center"
-                                        ng-repeat="item in master_hazard_riskfactors_list">
-
+                                        ng-repeat="item in master_hazard_riskfactors_list | filter:{id_hazard_type: select_hazard_type}">
                                         <td class="text-center" style="width: 10%;">
                                             <input type="radio" 
                                                 id="risk"
@@ -2745,8 +2744,7 @@
                                                 ng-value="item.id"
                                                 style="cursor: pointer; width: 22px; height: 22px;"
                                                 ng-change="changeRisk(select_hazard, $index)"
-                                                @* ng-click="changeRisk(select_hazard, $index)" *@
-                                            >
+                                                @* ng-click="changeRisk(select_hazard, $index)" *@ >
                                        </td>
 
                                         <td class="text-start" style="width: 70%;">{{item.name}}</td>
