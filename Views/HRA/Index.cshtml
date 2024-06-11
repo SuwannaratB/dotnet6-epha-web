@@ -914,10 +914,12 @@
                         <div style="background-color: #ffffff;">
                             <div class="mx-3 row  g-3 align-items-top ">
                                 <div class="d-flex gap-4">
-                                    <p ng-repeat="item2 in master_apu | filter:{
-                                        id: data_general[0].id_apu}">
-                                         <b>AREA: &nbsp;</b>{{item2.name}}
+                                    <p  ng-repeat="item2 in master_apu | filter:{
+                                        id: data_general[0].id_apu}"
+                                        ng-if="item2.id !== null">
+                                         <b>AREA: &nbsp;</b>{{item2.name }}
                                     </p>
+                                    
                                     <p ng-repeat="item2 in master_unit_no | filter:{
                                         id: data_general[0].id_unit_no, 
                                         id_apu: data_general[0].id_apu,
