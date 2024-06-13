@@ -64,7 +64,7 @@
                                 <span> {{data_header[0].pha_status_displayname}}</span>
                             </div>
                         </div>
-                        <div class="col-auto" ><!----ng-class="{ 'd-none': (minutes > 9) }"------>
+                        <div class="col-auto" ng-if="data_header[0].pha_status === 11 || data_header[0].pha_status === 11"><!----ng-class="{ 'd-none': (minutes > 9) }"------>
                             <div class="col-auto">
                                 <b>Auto-Save Interval :</b> <br>
                                 <span ng-class="{ 'blinking-text': (minutes <= 10) }">{{counterText}} </span>
@@ -94,6 +94,12 @@
                 </span>
                 <span class="mx-2" ng-if="save_type">
                     <button class="btn btn-primary btn-sm" style="width: 100px;" ng-click="confirmSave('save')">SAVE</button>
+                </span>
+                <span class="mx-2" ng-if="data_header[0].pha_status == 21 && isMainApprover">
+                    <button class="btn btn-primary btn-sm" 
+                        ng-click="confirmSave('save')">
+                        Edit Worksheet
+                    </button>
                 </span>
                 <span class="mx-2" ng-if="action_to_review_type">
                     <button class="btn btn-warning btn-sm" style="width: 200px;"
@@ -2049,9 +2055,12 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="" style=" width: 100%;min-height: 100% " ng-class="{'disabled-link':(!tab_worksheet_active)}">
+                                                        <div class="" style=" width: 100%;min-height: 100% " 
+                                                            ng-class="{'disabled-link': !tab_worksheet_active && !tab_general && !(data_header[0].pha_status === 21 
+                                                                    && user_name === (data_approver | filter: {approver_type: 'approver'})[0].user_name)}">
                                                             <textarea class="form-control worksheetscroll rounded-1 p-0 m-0 w-100 border border-0"
-                                                                      style=" width: 100%; font-size: 10px;height: calc(1.49em + 5rem + 10px); resize: none;"
+                                                                      style=" width: 100%; font-size: 10px;resize: none;"
+                                                                      ng-style="{'min-height': (30 * (data_listworksheet | filter:{workstep_no: item.workstep_no}).length) + 'px'}"
                                                                       id="workstep_worksheet_{{item.seq}}" 
                                                                       name="workstep_worksheet_{{item.seq}}"
                                                                       placeholder="Work Step" 
@@ -2080,12 +2089,11 @@
                                                 </td>
 
                                                 @* taskdesc *@
-                                                <td class="align-top border-col2-active border-active" 
+                                                <td class="align-top border-col2-active border-active h-100" 
                                                     style="padding: 0 !important; width: 200px; max-width:300px;"
                                                     ng-if="item.row_type =='workstep' || item.row_type =='taskdesc' " 
                                                     rowspan="{{ (data_listworksheet | filter:{workstep_no: item.workstep_no,taskdesc_no: item.taskdesc_no}).length }}">
-
-                                                     <!------ng-class="{ 'border-active': ( item.potentailhazard_no == item.no - item.index_rows ) && ( item.possiblecase_no == item.no - item.index_rows )}" ----->
+                                                    <!------ng-class="{ 'border-active': ( item.potentailhazard_no == item.no - item.index_rows ) && ( item.possiblecase_no == item.no - item.index_rows )}" ----->
                                                     <div class="d-flex align-items-top w-100"">
                                                         <div>
                                                             <p class="p-0 m-0 me-1 text-end">{{item.workstep_no +'.'+item.taskdesc_no +'.'}}</p>
@@ -2117,19 +2125,23 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="autocomplete-container" style=" width: 100%; " ng-class="{'disabled-link':(!tab_worksheet_active)}">                                                     
+                                                        <div class="autocomplete-container" style=" width: 100%; " 
+                                                            ng-class="{'disabled-link': !tab_worksheet_active && !tab_general && !(data_header[0].pha_status === 21 
+                                                                    && user_name === (data_approver | filter: {approver_type: 'approver'})[0].user_name)}">                                                     
                                                             <textarea class="form-control form-control-sm worksheetscroll rounded-1 p-0 m-0 w-100 border border-0 border-top-0"
                                                                       style=" width: 200px; font-size: 10px;resize: none;"
                                                                       id="taskdesc_worksheet_{{item.seq}}" 
                                                                       name="taskdesc_worksheet_{{item.seq}}"
                                                                       placeholder="taskdesc" 
                                                                       rows="3"
+                                                                      ng-style="{'min-height': (30 * (data_listworksheet | filter:{workstep_no: item.workstep_no, taskdesc_no: item.taskdesc_no}).length) + 'px'}"
                                                                       ng-model="item.taskdesc"
                                                                       ng-keyup="filterResultHistory(item.taskdesc, 'taskdesc', 'taskdesc_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')">
                                                             </textarea>
                                                             <div class="autocomplete-dropdown" style="position: absolute;"
                                                                  ng-class="{'ng-show' : (filteredArr[0].fieldID == ('taskdesc_worksheet_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('taskdesc_worksheet_'+item.seq)) }">
                                                                 <div class="autocomplete-option"
+                                                                     ng-hide="!isMainApprover"
                                                                      ng-repeat="result in filteredResults | toArray | filter:{field:'taskdesc'}"
                                                                      ng-click="selectResult(result,item,'taskdesc')">
                                                                     {{ result.name }}
@@ -2151,7 +2163,8 @@
                                                     <div class="d-flex align-items-top w-100">
                                                         <div>
                                                             <p class="p-0 m-0 me-1 text-end">{{item.workstep_no  + '.'+item.taskdesc_no + '.'+item.potentailhazard_no +'.'}}</p>
-                                                            <div class="" ng-class="{'d-none':(!tab_worksheet_active)}">
+                                                            <div class="" 
+                                                            ng-class="{'d-none':(!tab_worksheet_active)}">
                                                                 <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 text-align-end p-1"
                                                                         type="button" 
                                                                         data-bs-toggle="dropdown" 
@@ -2179,19 +2192,24 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="autocomplete-container" style=" width: 100%; " ng-class="{'disabled-link':(!tab_worksheet_active)}">
+                                                        <div class="autocomplete-container" style=" width: 100%; " >
+                                                            <!---ng-class="{'disabled-link': !tab_worksheet_active && !tab_general && !(data_header[0].pha_status === 21 
+                                                                    && user_name === (data_approver | filter: {approver_type: 'approver'})[0].user_name)}"----->
                                                             <textarea class="form-control form-control-sm worksheetscroll rounded-1 p-0 m-0 w-100 border border-0 border-top-0"
-                                                                      style=" width: 200px; font-size: 10px;resize: none;"
+                                                                      style=" width: 200px; font-size: 10px;resize: none; overflow: auto;"
                                                                       id="potentailhazard_worksheet_{{item.seq}}" 
                                                                       name="potentailhazard_worksheet_{{item.seq}}"
                                                                       placeholder="potentailhazard" 
                                                                       rows="3"
                                                                       ng-model="item.potentailhazard"
+                                                                      ng-readonly="(data_header[0].pha_status === 21 ? !isMainApprover : false)"
                                                                       ng-keyup="filterResultHistory(item.potentailhazard, 'potentailhazard', 'potentailhazard_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')">
                                                             </textarea>
                                                             <div class="autocomplete-dropdown" style="position: absolute;"
+                                                                 ng-hide="!tab_worksheet_active && !tab_general &&!isMainApprover"
                                                                  ng-class="{'ng-show' : (filteredArr[0].fieldID == ('potentailhazard_worksheet_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('potentailhazard_worksheet_'+item.seq)) }">
                                                                 <div class="autocomplete-option"
+                                                                     ng-hide="!isMainApprover"
                                                                      ng-repeat="result in filteredResults | toArray | filter:{field:'potentailhazard'}"
                                                                      ng-click="selectResult(result,item,'potentailhazard')">
                                                                     {{ result.name }}
@@ -2241,19 +2259,23 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="autocomplete-container" style=" width: 100%; " ng-class="{'disabled-link':(!tab_worksheet_active)}">
+                                                        <div class="autocomplete-container" style=" width: 100%; " 
+                                                            ng-class="{'disabled-link': !tab_worksheet_active && !tab_general && !(data_header[0].pha_status === 21 
+                                                                    && user_name === (data_approver | filter: {approver_type: 'approver'})[0].user_name)}">
                                                             <textarea class="form-control form-control-sm worksheetscroll rounded-1 p-0 m-0 w-100 border border-0 border-top-0"
                                                                       style=" width: 200px; font-size: 10px;resize: none;"
                                                                       id="possiblecase_worksheet_{{item.seq}}" 
                                                                       name="possiblecase_worksheet_{{item.seq}}"
                                                                       placeholder="possiblecase" 
                                                                       rows="3"
+                                                                      ng-readonly="(data_header[0].pha_status === 21 ? !isMainApprover : false)"
                                                                       ng-model="item.possiblecase"
                                                                       ng-keyup="filterResultHistory(item.possiblecase, 'possiblecase', 'possiblecase_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')">
                                                             </textarea>
                                                             <div class="autocomplete-dropdown" style="position: absolute;"
                                                                  ng-class="{'ng-show' : (filteredArr[0].fieldID == ('possiblecase_worksheet_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('possiblecase_worksheet_'+item.seq)) }">
                                                                 <div class="autocomplete-option"
+                                                                     ng-hide="!isMainApprover"
                                                                      ng-repeat="result in filteredResults | toArray | filter:{field:'possiblecase'}"
                                                                      ng-click="selectResult(result,item,'possiblecase')">
                                                                     {{ result.name }}
@@ -2325,7 +2347,8 @@
                                                 <td class="align-top border border-light border-end-0  border-start-0  border-top-0 border-active"
                                                     style="padding: 0 !important; width: 20px;">
                                                     <div class="align-items-center text-end mt-1" style=" width: 20px;"
-                                                         ng-class="{'disabled-link':(!tab_worksheet_active)}">
+                                                        ng-class="{'disabled-link': !tab_worksheet_active && !tab_general && !(data_header[0].pha_status === 21 
+                                                                    && user_name === (data_approver | filter: {approver_type: 'approver'})[0].user_name)}">
                                                         <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end"
                                                                 type="button" 
                                                                 ng-click="openModalDataRAM_Worksheet(item,'l',item.seq,'befor')">
@@ -2345,13 +2368,15 @@
                                                     <div class="align-items-center text-end mt-1" style=" width: 30px;">
                                                         <button ng-style=" { 'background-color' : ((item.ram_befor_risk == 'H') ? 'red' : ((item.ram_befor_risk == 'M') ? 'yellow' : ((item.ram_befor_risk == 'L') ? 'green' : '#D3D3D3')) ) }"
                                                                 class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end h-100"
-                                                                ng-class="{'disabled-link':(!tab_worksheet_active)}"
                                                                 type="button" 
                                                                 ng-click="openModalDataRAM_Worksheet(item,'r',item.seq,'befor')" 
                                                                 style="width: 30px;height:30px !important;">
                                                             <div class="d-flex text-center" style=" width: 20px;">
                                                                 <h6 class="me-1 text-center" style=" width: 20px;">{{item.ram_befor_risk}}</h6>
-                                                                <span class="fas fa-pencil-alt fa-sm " style=" width: 8px;"></span>
+                                                                @*staus 11 12 ,admin edit ,Approver*@
+                                                                <span ng-class="{'disabled-link': !tab_worksheet_active && !tab_general && !isMainApprover}"
+                                                                    ng-hide="!isMainApprover"
+                                                                    class="fas fa-pencil-alt fa-sm " style=" width: 8px;"></span>
                                                             </div>
                                                         </button>
                                                     </div>
@@ -2370,17 +2395,21 @@
                                                             </button>
                                                         </span>
 
-                                                        <div class="autocomplete-container" style=" width: 100%; " ng-class="{'disabled-link':(!tab_worksheet_active)}">
+                                                        <div class="autocomplete-container" style=" width: 100%; " >
+                                                            <!----ng-class="{'disabled-link': !tab_worksheet_active && !tab_general && !(data_header[0].pha_status === 21 
+                                                                    && user_name === (data_approver | filter: {approver_type: 'approver'})[0].user_name)}">--->
                                                             <textarea class="form-control form-control-sm worksheetscroll rounded-1 p-0 m-0 w-100 border border-0 border-top-0"
                                                                       style="min-width: 200px !important; max-width: 400px !important; font-size: 10px;resize: none;"
                                                                       id="recommendations_worksheet_{{item.seq}}" name="recommendations_worksheet_{{item.seq}}"
                                                                       placeholder="Recommendations" rows="3"
                                                                       ng-model="item.recommendations"
+                                                                      ng-readonly="(data_header[0].pha_status === 21 ? !isMainApprover : false)"
                                                                       ng-keyup="filterResultHistory(item.recommendations, 'recommendations', 'recommendations_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')"></textarea>
 
                                                             <div class="autocomplete-dropdown col-auto" style="position: absolute;"
                                                                  ng-class="{'ng-show' : (filteredArr[0].fieldID == ('recommendations_worksheet_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('recommendations_worksheet_'+item.seq)) }">
                                                                 <div class="autocomplete-option"
+                                                                     ng-hide="!isMainApprover"
                                                                      ng-repeat="result in filteredResults | toArray | filter:{field:'recommendations'}"
                                                                      ng-click="selectResult(result,item,'recommendations')">
                                                                     {{ result.name }}
@@ -2401,12 +2430,15 @@
                                                     <div class="d-flex align-items-top w-100"
                                                          ng-if="item.row_type =='workstep' || item.row_type =='taskdesc' || item.row_type =='potentailhazard' || item.row_type =='possiblecase' ">
                                                         @* {{item.responder_action_by}} *@
-                                                        <div class="autocomplete-container" style=" width: 100%; " ng-class="{'disabled-link':(!tab_worksheet_active)}">
+                                                        <div class="autocomplete-container" style=" width: 100%; " 
+                                                            ng-class="{'disabled-link': !tab_worksheet_active && !tab_general && !(data_header[0].pha_status === 21 
+                                                                    && user_name === (data_approver | filter: {approver_type: 'approver'})[0].user_name)}">
                                                             <textarea class="form-control form-control-sm worksheetscroll rounded-1 p-0 m-0 w-100 border border-end-0 border-top-0 resize: none;"
                                                                       style=" min-width: 200px !important; max-width: 300px !important; font-size: 10px; resize:none;"
                                                                       id="responder_action_by_worksheet_{{item.seq}}" name="responder_action_by_worksheet_{{item.seq}}"
                                                                       placeholder="Action by" rows="3"
                                                                       ng-model="item.responder_action_by"
+                                                                      ng-readonly="(data_header[0].pha_status === 21 ? !isMainApprover : false)"
                                                                       ng-keyup="filterResultHistory(item.responder_action_by, 'responder_action_by', 'responder_action_by_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')"></textarea>
 
                                                             <div class="autocomplete-dropdown col-auto" style="position: absolute;"
@@ -2438,7 +2470,9 @@
 
                                                 <td class="align-top border border-light border-end-0  border-start-0  border-top-0 border-active"
                                                     style="padding: 0 !important; width: 20px;">
-                                                    <div class="align-items-center text-end mt-1" style=" width: 20px;" ng-class="{'disabled-link':(!tab_worksheet_active)}">
+                                                    <div class="align-items-center text-end mt-1" style=" width: 20px;" 
+                                                            ng-class="{'disabled-link': !tab_worksheet_active && !tab_general && !(data_header[0].pha_status === 21 
+                                                                    && user_name === (data_approver | filter: {approver_type: 'approver'})[0].user_name)}">
                                                         <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end"
                                                                 type="button" ng-click="openModalDataRAM_Worksheet(item,'l',item.seq,'after')">
                                                             <div class="d-flex">
@@ -2457,12 +2491,15 @@
                                                         <button ng-style=" { 'background-color' : ((item.ram_after_risk == 'H') ? 'red' : ((item.ram_after_risk == 'M') ? 'yellow' : ((item.ram_after_risk == 'L') ? 'green' : '#D3D3D3')) ) }"
                                                                 class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end"
                                                                 type="button" 
-                                                                ng-class="{'disabled-link':(!tab_worksheet_active)}"
                                                                 ng-click="openModalDataRAM_Worksheet(item,'r',item.seq,'after')" 
                                                                 style="width: 30px; height:30px !important;">
+                                                                <!--- ng-class="{'disabled-link': !tab_worksheet_active && !tab_general && !(data_header[0].pha_status === 21 
+                                                                    && user_name === (data_approver | filter: {approver_type: 'approver'})[0].user_name)}"---->
                                                             <div class="d-flex text-center" style=" width: 25px;">
                                                                 <h6 class="me-1 text-center" style=" width: 30px;">{{item.ram_after_risk}}</h6>
-                                                                <span class="fas fa-pencil-alt fa-sm " style=" width: 8px;"></span>
+                                                                <span ng-class="{'disabled-link': !tab_worksheet_active && !tab_general && !isMainApprover}"
+                                                                    ng-hide="!isMainApprover"
+                                                                class="fas fa-pencil-alt fa-sm " style=" width: 8px;"></span>
                                                             </div>
                                                         </button>
                                                     </div>
@@ -2547,10 +2584,10 @@
                                                         ng-class="{ 'no-drop': !canAccess, 'cursor-pointer': canAccess }"
                                                         ng-if="!(item.approver_action_type == 2 || data_header[0].pha_status != 21)   ">
                                                         <div class="form-check form-check-inline cursor-pointer p-0">
-                                                            <span class="fa-solid far fa-file-pdf text-danger" style="font-size:15px;"
-                                                                  ng-click="confirmExport('jsea_report','pdf')"></span>
+                                                            <span class="fa-solid far fa-file-excel text-success" style="font-size:15px;"
+                                                                  ng-click="confirmExport('jsea_worksheet','excel')"></span>
                                                             <b>
-                                                                JSEA Report
+                                                                JOB SAFETY ENVIRONMENTAL ANALYSIS (JSEA) WORKSHEET
                                                             </b>
                                                         </div><br />
                                                         <div class="form-check form-check-inline" ng-class="{ 'cant-Access': !canAccess }"
@@ -2576,15 +2613,14 @@
 
                                                     <div class="col-md-12 p-1 text-start" ng-if="(item.approver_action_type == 2 || data_header[0].pha_status != 21)">
                                                         <div class="form-check form-check-inline cursor-pointer p-0">
-                                                            <span class="fa-solid far fa-file-pdf text-danger" style="font-size:15px;"
-                                                                  ng-click="confirmExport('jsea_report','pdf')"></span>
+                                                            <span class="fa-solid far fa-file-excel text-success" style="font-size:15px;"
+                                                                  ng-click="confirmExport('jsea_worksheet','excel')"></span>
                                                             <b>
-                                                                JSEA Report
+                                                                JOB SAFETY ENVIRONMENTAL ANALYSIS (JSEA) WORKSHEET
                                                             </b>
                                                         </div><br />
                                                         <p>{{item.action_status =='approve' ? 'Approve' : 'Send back with Comment' }}</p>
                                                     </div>
-
                                                 </td>
                                                 <td class="align-top white-space-nowrap text-start" ng-class="{'disabled-link':(!tab_approver_active)}">
 
@@ -3451,6 +3487,7 @@
                                     <input type="radio"
                                            id="likelihood"
                                            name="likelihood"
+                                           ng-hide="data_header[0].pha_status === 21 ? !isMainApprover : false"
                                            ng-checked="cal_ram_action_likelihood == item_ram.likelihood_level"
                                            ng-click="selectDataRAM('l',item_ram.likelihood_level)"
                                            style="cursor: pointer; width:25px; height:25px;">
@@ -3465,6 +3502,7 @@
                                 <input type="radio"
                                        id="security_level"
                                        name="security_level"
+                                       ng-hide="data_header[0].pha_status === 21 ? !isMainApprover : false"
                                        ng-checked="cal_ram_action_security == item_ram.security_level"
                                        ng-click="selectDataRAM('s',item_ram.security_level)"
                                        style="cursor: pointer; width:25px; height:25px;">
@@ -3996,6 +4034,39 @@
         </div>
     </div>
 
+    @* Modal Confirm *@
+    <div class="modal fade" id="modalEditConfirm" tabindex="-1" aria-labelledby="modalEditConfirm" aria-hidden="true"
+         style="display: none;">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="text-900 mb-0" data-anchor="data-anchor" id="modalEditConfirm">
+                        <span class=" me-2 text-primary"><B>|</B></span> Do you want to confirm to change?
+                    </h5>
+
+                    <button class="btn p-1" type="button" data-bs-dismiss="modal" aria-label="Close">
+                        <svg class="svg-inline--fa fa-xmark fs--1" aria-hidden="true" focusable="false"
+                             data-prefix="fas" data-icon="xmark" role="img" xmlns="http://www.w3.org/2000/svg"
+                             viewBox="0 0 320 512" data-fa-i2svg="">
+                            <path fill="currentColor"
+                                  d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 
+                                  301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 
+                                  0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 
+                                  210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z">
+                            </path>
+                        </svg>
+                    </button>
+
+                </div>
+                <div class="modal-body">
+                    <div class="col-auto" style="float:right">
+                        <button style="width:100px;" class="btn btn-success me-1 mb-1" type="button" ng-click="actionEdit('yes')">Yes</button>
+                        <button style="width:100px;" class="btn btn-outline-secondary me-1 mb-1" ng-click="actionEdit('no')" type="button">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 <!-------- Modal Before Remove ------------->
 <div class="modal fade" id="removeModal" tabindex="-1" role="dialog" aria-labelledby="removeModalLabel" aria-hidden="true">

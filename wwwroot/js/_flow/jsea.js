@@ -110,7 +110,6 @@ AppMenuPage.directive('hidePlaceholderOption', function() {
 
 AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) {
       
-
     //search list function
     $scope.autoComplete = function (DataFilter, idinput) {
 
@@ -156,9 +155,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 });
 
 
+
+
 AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, $document, $interval,$rootScope,$window,$timeout,$sce) {
 
     $scope.unsavedChanges  = false;
+    $scope.dataLoaded = false;
+
 
     // Track location changes
     $rootScope.$on('$locationChangeStart', function(event, next, current) {
@@ -168,7 +171,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         //.log($window.location.href)
 
-        if (unsavedChanges) {
+        if ($scope.unsavedChanges) {
             var confirmLeave = $window.confirm("You have unsaved changes. Are you sure you want to leave?");
             if (!confirmLeave) {
                 $timeout(function() {
@@ -189,7 +192,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     // close tab / browser window
     $window.addEventListener('beforeunload', function(event) {
         //console.log("Trigger Ec=vent",event)
-        if (unsavedChanges) {
+        if ($scope.unsavedChanges) {
             var confirmationMessage = 'You have unsaved changes. Are you sure you want to leave?';
     
             $('.open-modal').click(function(e)
@@ -203,41 +206,74 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
     });
 
-    
+    var interval; // Declare interval variable
 
-    function startTimer() {
-        $scope.counter = 900; // 1800 วินาทีเท่ากับ 30 นาที
+    // Initialize the timer
+    $scope.startTimer = function() {
+        $scope.counter = 900; // 900 seconds equals 15 minutes
         $scope.autosave = false;
 
-        var interval = $interval(function () {
-            var minutes = Math.floor($scope.counter / 60); // หานาทีที่เหลืออยู่
-            var seconds = $scope.counter % 60; // หาวินาทีที่เหลืออยู่
+        if (angular.isDefined(interval)) {
+            $interval.cancel(interval); // Cancel any existing interval
+        }
+
+        interval = $interval(function () {
+            var minutes = Math.floor($scope.counter / 60); // Get remaining minutes
+            var seconds = $scope.counter % 60; // Get remaining seconds
     
-            // แสดงเวลาที่เหลืออยู่ในรูปแบบนาทีและวินาที
+            // Display remaining time in minutes and seconds
             $scope.counterText = minutes + ' min. ' + seconds + ' sec.';
-            $scope.minutes = minutes
+            $scope.minutes = minutes;
     
-            // ลดเวลาลงทีละหนึ่งวินาที
+            // Decrement the counter by one second
             $scope.counter--;
     
-            if ($scope.counter == 0) {
-                // เมื่อเวลาครบ 0 ให้แสดงแจ้งเตือน
+            if ($scope.counter === 0) {
+                // When the counter reaches 0, show a notification
                 $scope.autosave = true;
-                // set_alert("Warning", "Please save the information.")          
+                // set_alert("Warning", "Please save the information.");
                 $scope.confirmSave('save');
                 
                 $scope.stopTimer();
-                //startTimer(); // เริ่มนับใหม่
+                // $scope.startTimer(); // Uncomment to restart the timer automatically
             }
         }, 1000);
-    
-        $scope.stopTimer = function () {
+    };
+
+    // Function to stop the timer
+    $scope.stopTimer = function() {
+        if (angular.isDefined(interval)) {
             $interval.cancel(interval);
-        };
+            interval = undefined; // Clear the interval variable
+        }
+    };
+    
+    // Define a function to handle changes and update timer and unsavedChanges
+    function setupWatch(watchExpression) {
+        $scope.$watch(watchExpression, function(newValues, oldValues) {
+            if (!$scope.dataLoaded) {
+                console.log("Data not yet loaded, skipping watch callback.");
+                return;
+            }
+
+            console.log("Watcher triggered change for", watchExpression);
+
+            if($scope.data_header[0].pha_status === 11 || $scope.data_header[0].pha_status === 12){
+                $scope.stopTimer();
+                $scope.startTimer();
+                $scope.unsavedChanges = true;
+            }
+
+        }, true);
     }
-    
-    $scope.startTimer = startTimer;
-    
+
+    setupWatch('data_general');
+    setupWatch('data_approver');
+    setupWatch('data_memberteam');
+    setupWatch('data_relatedpeople');
+    setupWatch('data_relatedpeople_outsider');
+    setupWatch('data_tasks_worksheet');
+
 
     $scope.formatTo24Hour = function (_time) {
 
@@ -487,7 +523,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                                     $scope.data_listworksheet_def = clone_arr_newrow(array.tasks_worksheet);
                                 }
                             } 
-                            $scope.unsavedChanges  = true;
                             apply();
 
                             //set_alert('Warning', "Upload Data Success.");
@@ -1189,11 +1224,19 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
     function apply() {
         try {
-            if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
+            if ($scope.$root.$$phase !== '$apply' && $scope.$root.$$phase !== '$digest') {
                 $scope.$apply();
             }
-        } catch { }
+        } catch (e) {
+            console.error("Error applying changes:", e);
+            // Attempt to force digest cycle using $timeout as fallback
+            $timeout(function() {
+                $scope.$digest();
+            });
+        }
     }
+    
+
     function replace_hashKey_arr(_arr) {
         var json = JSON.stringify(_arr, function (key, value) {
             if (key === "$$hashKey") {
@@ -1547,9 +1590,60 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         });
 
     }
+
+    function save_data_editworksheet(action) {
+
+        var user_name = $scope.user_name;
+        var token_doc = $scope.token_doc + "";
+        var pha_seq = $scope.data_header[0].seq;
+        var pha_status = $scope.data_header[0].pha_status;
+        var flow_role_type = $scope.flow_role_type;
+
+        //submit, submit_without, submit_complete
+
+        var flow_action = action;
+        var json_worksheet = check_data_listworksheet();
+
+        $.ajax({
+            url: url_ws + "flow/edit_worksheet",
+            data: '{"sub_software":"jsea","user_name":"' + user_name + '","role_type":"' + flow_role_type + '","action":"' + flow_action + '","token_doc":"' + pha_seq + '","pha_status":"' + pha_status + '"'
+                + ', "json_worksheet": ' + JSON.stringify(json_worksheet)
+                + '}',
+            type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+            beforeSend: function () {
+                $("#divLoading").show();
+
+            },
+            complete: function () {
+                $("#divLoading").hide();
+            },
+            success: function (data) {
+                var arr = data;
+                console.log(arr);
+         
+
+                $scope.pha_seq = arr[0].pha_seq;
+                set_alert('Success', 'Data has been successfully saved.');
+
+                get_data_after_save(false, false, $scope.pha_seq);
+
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                if (jqXHR.status == 500) {
+                    alert('Internal error: ' + jqXHR.responseText);
+                } else {
+                    alert('Unexpected ' + textStatus);
+                }
+            }
+
+        });
+
+    }
+
     function get_data(page_load, action_submit) {
         var user_name = conFig.user_name();
         var pha_seq = conFig.pha_seq();
+
         if (page_load == true) {
             $scope.pha_seq = pha_seq;
             $scope.user_name = user_name;
@@ -1563,7 +1657,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
     function call_api_load(page_load, action_submit, user_name, pha_seq) {
         var type_doc = $scope.pha_type_doc;//review_document
-
 
         $scope.params = get_params();
 
@@ -1759,7 +1852,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         } else { inputs[i].checked = false; }
                     }
                 }
-                console.log("$scope.tab_approver_active",$scope.tab_approver_active)
 
 
                 arr.header[0].flow_mail_to_member = (arr.header[0].flow_mail_to_member == null ? 0 : arr.header[0].flow_mail_to_member);
@@ -1769,6 +1861,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 if($scope.params != 'edit_approver'){
                     $scope.action_owner_active = true;
                 }  
+                console.log("will show params",$scope.params)
 
                 if($scope.params !== null){
                     console.log("$scope.params",$scope.params)
@@ -1805,10 +1898,21 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     
                         $scope.save_type = true;
                     }
+                } else if ($scope.params === null && arr.header[0].pha_status === 21) {
+                    if (Array.isArray($scope.data_approver)) {
+                        let mainApprover = $scope.data_approver.find(item => item.approver_type === 'approver' && item.user_name === $scope.user_name);
+                
+                        if (mainApprover) {
+                            $scope.isMainApprover = true;
+                        } else {
+                            $scope.isMainApprover = false;
+                        }
+                    } else {
+                        console.log('$scope.data_approver is not an array or is undefined.');
+                        $scope.isMainApprover = false; 
+                    }
                 }
-
-                console.log("$scope.tab_approver_active",$scope.tab_approver_active)
-
+                
 
                 //ตรวจสอบเพิ่มเติม
                 if (arr.user_in_pha_no[0].pha_no == '' && $scope.flow_role_type != 'admin') {
@@ -1834,9 +1938,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         $scope.submit_type = false;
                     }
                 }
-
-                console.log("$scope.tab_approver_active",$scope.tab_approver_active)
-
 
                 if (true) {
 
@@ -1901,9 +2002,16 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         }
 
                     } catch (ex) { alert(ex); console.clear(); }
+                    
+                    $scope.dataLoaded = true;
+                    console.log("$scope.dataLoaded",$scope.dataLoaded)
+                    if($scope.data_header[0].pha_status === 11 || $scope.data_header[0].pha_status === 12){
+                        $scope.startTimer();  
+                    }
 
                     $scope.$apply();
-                    startTimer();   
+
+
                     try {
                         if (page_load == true || true) {
                             //const choices0 = new Choices('.js-choice-company');
@@ -1919,6 +2027,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                 addDefaultMember();
                 $scope.unsavedChanges= false;
+
 
             },
             error: function (jqXHR, textStatus, errorThrown) {
@@ -4183,9 +4292,42 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
         }
 
+        if(action = 'save' && $scope.isMainApprover){
+            return $('#modalEditConfirm').modal('show');
+        }
         save_data_create(action, action_def);
         $scope.unsavedChanges  = false;
     }
+
+    $scope.actionEdit = function (type) {
+        if(type = 'yes'){
+            var action = ''
+            if ($scope.params == 'edit') {
+                action = 'edit_worksheet'
+            }else if($scope.params == 'edit_action_owner'){
+                action = 'change_action_owner'
+            }else if($scope.params == 'edit_approver'){
+                action = 'change_approver'
+            }else{
+                $('#modalEditConfirm').modal('hide');
+
+                action = "save_worksheet"
+                setTimeout(function() {
+                    save_data_editworksheet(action);
+                }, 200); 
+
+                return;
+            }
+            $('#modalEditConfirm').modal('hide');
+            setTimeout(function() {
+                save_data_create(action, 'save');
+            }, 200); 
+        }else{
+            $('#modalEditConfirm').modal('hide');
+        }
+
+    }
+
 
     $scope.confirmDialogApprover = function (_item, action) {
         $scope.data_drawing_approver.forEach(function(item) {
@@ -4669,6 +4811,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     //start Update Action Type null to Update 
     $scope.actionChange = function (_arr, _seq, type_text) {
 
+        console.log("now we change data ")
         if (type_text == "meeting_date") {
 
             if ($scope.data_general[0].target_start_date == null) {
@@ -4694,7 +4837,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             set_master_ram_likelihood(_arr.id_ram);
         }
 
-        $scope.unsavedChanges  = true;
         apply();
     }
     $scope.actionChangeWorksheet = function (_arr, _seq, type_text) {
@@ -4718,8 +4860,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         if (arr_submit.length > 0) { $scope.submit_type = true; } else { $scope.submit_type = false; }
 
         apply();
-
-        $scope.unsavedChanges  = true;
 
     }
     $scope.actionChangeRelatedPeople = function (_arr, _seq, type_text) {
@@ -5839,7 +5979,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 $scope.formattedText = convertText($scope.editedText.text, false);
                 
                 $scope.editing = false;
-                $scope.unsavedChanges  = true;
 
                 break;
             case 'refresh':
@@ -5883,6 +6022,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         //originator cant edit?
         return false;
     };
+    
     
 
 });

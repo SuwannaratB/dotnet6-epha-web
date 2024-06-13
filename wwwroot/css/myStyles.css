@@ -417,3 +417,26 @@ background-color: #3e8e41;
 
 
 /*Modal*/
+
+/*read only content*/
+.form-control[readonly] {
+  cursor: default;
+  background-color: transparent;
+  border: none;
+  resize: none; 
+}
+.form-control[readonly]:focus {
+  outline: none; 
+  box-shadow: none; 
+  border-color: initial; 
+  cursor: context-menu !important; 
+}
+
+.form-control[readonly]:hover {
+  cursor: pointer; 
+}
+.disabled-link textarea[readonly] {
+  pointer-events: none; 
+  cursor: context-menu !important; 
+
+}
