@@ -1515,7 +1515,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         if(list_type.length < 1) return list_type;
 
         for (let i = 0; i < list_type.length; i++) {
-            list_type[i].disabled = false;
+            // list_type[i].disabled = false;
             list_type[i].checks = [];
             
         }
@@ -1570,7 +1570,15 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
             item.count_riskfactors = 1;
             item.sort_health_hazard  = false;
+            item.no_type_hazard ? null : item.no_type_hazard =  1;
+            // add disable select type hazard
+            var arrText = $filter('filter')($scope.master_hazard_type, function (ms) {
+                return (ms.id == item.id_type_hazard);
+            });
+            addDisabledOption(arrText, item);
         });
+        console.log('setup master_hazard_type', $scope.master_hazard_type)
+        console.log('setup hazard', hazard)
         return hazard;
     }
 
@@ -2301,8 +2309,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             newInput.hazard[0].no = 1;
             newInput.hazard[0].action_change = 0;
             newInput.hazard[0].action_new_row = 0;
-            newInput.hazard[0].sub_area =  newInput.seq;
+            newInput.hazard[0].id_subareas = newInput.seq;
+            newInput.hazard[0].sub_area =  newInput.sub_area;
             newInput.hazard[0].no_subareas = (item.no + 1);
+            newInput.hazard[0].no_type_hazard =  item.no;
+            // type ? newInput.no_type_hazard = item_hazard.no_type_hazard : newInput.no_type_hazard = item_hazard.no_type_hazard + 1 ;
             // newInput.hazard[0].health_hazard_list  =  $scope.filter_hazard_riskfactors;
             var parent = angular.copy($scope.data_subareas_list);
             var index_push = parent.length;
@@ -2322,6 +2333,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                     for (let j = 0; j < parent[i].hazard.length; j++) {
                         parent[i].hazard[j].no_subareas = i + 1;
+                        parent[i].hazard[j].action_change = 1;
                     }
                 }
             }
@@ -2443,16 +2455,47 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             console.log('data_worksheet_list', $scope.data_worksheet_list)
         };
 
-        $scope.addDataHazardList = function (item_area, item_hazard, last_number_seq) {
+        function findLastIndex(arr, key, value) {
+            for (let i = arr.length - 1; i >= 0; i--) {
+                if (arr[i][key] === value) {
+                    return i;
+                }
+            }
+            return -1; 
+        }
+
+        function findLastIndexWs(arr, key, value) {
+            var getIndexWs = arr.findIndex(function (item) {
+                return (item[key] == value.seq);
+            });
+        
+            return getIndexWs; 
+        }
+
+        function findLastItem(arr, key, value) {
+            var last_list = $filter('filter')(arr.hazard, function (item) {
+                return (item[key] == value.no_type_hazard);
+            });
+            
+            if(last_list.length < 1) return null;
+            
+            return last_list[last_list.length - 1]; 
+        }
+
+        $scope.addDataHazardList = function (item_area, item_hazard, type) {
+            // last item
+            const lastItemHazard = findLastItem(item_area, 'no_type_hazard', item_hazard)
+            console.log('item',item_area)
             $scope.MaxSeqdataHazard = Number($scope.MaxSeqdataHazard) + 1;
             var xValues = $scope.MaxSeqdataHazard;
             var newInput = clone_arr_newrow($scope.data_hazard_default)[0];
-            console.log('item_area',item_area)
             newInput.seq = xValues;
             newInput.id = xValues;
-            newInput.no = (item_hazard.no + 1);
+            newInput.no = (lastItemHazard.no + 1);
+            // newInput.no = (item_hazard.no + 1);
             newInput.index_rows = item_area.no;
-            newInput.id_subareas = item_area.seq;
+            newInput.id_subareas = item_hazard.id_subareas;
+            // newInput.id_subareas = item_area.seq;
             newInput.id_pha = $scope.data_header[0].seq;
             newInput.sub_area = item_area.sub_area;
             newInput.no_subareas = item_area.no;
@@ -2460,19 +2503,36 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             newInput.action_change = 0;
             newInput.action_new_row = 0;
             newInput.work_of_task = item_area.work_of_task;
-            console.log('new input',newInput)
-            // newInput.health_hazard_list  =  $scope.filter_hazard_riskfactors;
+            type ? newInput.no_type_hazard = item_hazard.no_type_hazard : newInput.no_type_hazard = item_hazard.no_type_hazard + 1 ;
+            type ? newInput.id_type_hazard = item_hazard.id_type_hazard : null
+            type ? newInput.type_hazard = item_hazard.type_hazard : null
+
             // add
             var parent = angular.copy($scope.data_subareas_list[item_area.no - 1]);
-
+            const lastIndex = findLastIndex(item_area.hazard, "no_type_hazard", item_hazard.no_type_hazard);
             var index_push = parent.hazard.length;
-            var index_current = item_hazard.no - 1;
+            var index_current =  type ? item_hazard.no - 1 : lastIndex;
+            // var index_current = item_hazard.no - 1;
             var isSort = false;
 
             if (index_current + 1 != index_push  ) {
                 index_push = index_current + 1;
                 isSort = true;
             }
+
+            if (isSort && !type) {
+                var count = item_hazard.no_type_hazard + 1;
+                for (let i = 0; i < parent.hazard.length; i++) {
+                    if (parent.hazard[i].no_type_hazard == count) {
+                        parent.hazard[i].no_type_hazard = parent.hazard[i].no_type_hazard + 1;
+
+                    } else if (parent.hazard[i].no_type_hazard > count) {
+                        parent.hazard[i].no_type_hazard = parent.hazard[i].no_type_hazard + 1;
+                        count ++;
+                    }
+                    parent.hazard[i].action_change = 1;
+                }
+            } 
             // add
             parent.hazard.splice(index_push, 0, newInput);
             // sort number
@@ -2483,7 +2543,15 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
             $scope.data_subareas_list[item_area.no - 1] = parent;
             $scope.selectdata_hazard = xValues;
+            console.log('data_subareas_list', $scope.data_subareas_list)
+
             // worksheet
+            // last item
+            var last_list = $filter('filter')(item_area.hazard, function (item) {
+                return (item.no_type_hazard == item_hazard.no_type_hazard);
+            });
+            const lastItemWs = last_list[last_list.length - 1];
+
             $scope.data_worksheet_list.forEach(element => {
                 $scope.MaxSeqdataWorksheet = Number($scope.MaxSeqdataWorksheet) + 1;
                 var xValues = $scope.MaxSeqdataWorksheet;
@@ -2501,25 +2569,33 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 new_ws.id_tasks =  element.seq
                 new_ws.seq_tasks =  element.seq
                 new_ws.tasks_no =  element.no
-                new_ws.hazard_no =  newInput.no
+                type ?  new_ws.hazard_no = newInput.no - 1 : new_ws.hazard_no = lastItemWs.no + 1
+                type ? new_ws.type_hazard = newInput.type_hazard : null
+                // new_ws.hazard_no =  newInput.no
                 new_ws.sub_area =  newInput.sub_area
 
-                var getIndexWs = element.worksheet.findIndex(function (item) {
-                    return item.subarea_no == new_ws.subarea_no && item.seq_hazard == item_hazard.seq;
-                });
+                // var getIndexWs = element.worksheet.findIndex(function (item) {
+                //     return item.subarea_no == new_ws.subarea_no && item.seq_hazard == item_hazard.seq;
+                // });
+                // const lastIndexWs = findLastIndex(item_area.hazard, "no_type_hazard", item_hazard.no_type_hazard);
 
+                // get no worksheet
+                var item_ws = $filter('filter')(element.worksheet, function (item) {
+                    return (item.seq_hazard == item_hazard.seq);
+                })[0];
+                // item_ws.no = item_ws.no - 1;
+    
+                console.log('item_ws',item_ws)
+                var lastIndexWs = findLastIndexWs(element.worksheet, 'seq_hazard', lastItemWs)
                 var index_push_2 = element.worksheet.length;
-                var index_current_2 =  getIndexWs + 1;
+                var index_current_2 = type ? item_ws.no : lastIndexWs + 1 ;
                 var isSort_2 = false;
 
                 if (index_current_2 != index_push_2  ) {
                     index_push_2 = index_current_2;
                     isSort_2 = true;
                 }
-                console.log('index_current',index_current_2)
-                console.log('index_push',index_push_2)
                 // add
-                console.log(isSort_2)
                 if (isSort_2) {
                     var check =  new_ws.hazard_no;
                     for (let i = 0; i < element.worksheet.length; i++) {
@@ -2531,7 +2607,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         }
                     }
                }
-                new_ws.no =  getIndexWs + 2;
+                new_ws.no =  type ? item_ws.no : lastIndexWs + 1;
+                // new_ws.no =  getIndexWs + 2;
+                console.log('lastIndexWs',lastIndexWs)
+                console.log('index_push_2',index_push_2)
                 element.worksheet.splice(index_push_2, 0, new_ws);
                 // sort number
                 if (isSort_2) {
@@ -2552,10 +2631,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 //         }
                 //     }
                 // }
-                console.log('new_ws',new_ws)
             });
             console.log('all worksheet list',$scope.data_worksheet_list)
-            console.log('item_hazard ',item_hazard)
+            // console.log('item_hazard ',item_hazard)
             // addWorksheet('sub_area', item_area, newInput)
             apply();
         }
@@ -2605,6 +2683,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             console.log('data_worksheet_delete', $scope.data_worksheet_delete)
             console.log('data_worksheet_list', $scope.data_worksheet_list)
         };
+
+        $scope.addDataHealthHazardList = function () {
+            
+        }
 
         $scope.addDataSubAreas = function (item, index) {
             $scope.MaxSeqdataSubareas = Number($scope.MaxSeqdataSubareas) + 1;
@@ -5261,44 +5343,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
 
     // dev
-    function initHazard(item_area, item_hazard,) {
-        $scope.MaxSeqdataHazard = Number($scope.MaxSeqdataHazard) + 1;
-        var xValues = $scope.MaxSeqdataHazard;
-        var newInput = clone_arr_newrow($scope.data_hazard_default)[0];
-
-        newInput.seq = xValues;
-        newInput.id = xValues;
-        newInput.no = (item_hazard.no + 1);
-        newInput.index_rows = item_area.no;
-        newInput.id_subareas = item_area.id_sub_area;
-        newInput.id_pha = $scope.data_header[0].seq;
-        newInput.sub_area = item_area.sub_area;
-        newInput.no_subareas = item_area.no;
-        newInput.action_type = 'insert';
-        newInput.action_change = 0;
-        newInput.action_new_row = 0;
-        // newInput.health_hazard_list  =  $scope.filter_hazard_riskfactors;
-        // add
-        var parent = angular.copy($scope.data_subareas_list[item_area.no - 1]);
-
-        var index_push = parent.hazard.length;
-        var index_current = item_hazard.no - 1;
-        var isSort = false;
-
-        if (index_current + 1 != index_push  ) {
-            index_push = index_current + 1;
-            isSort = true;
-        }
-        // add
-        parent.hazard.splice(index_push, 0, newInput);
-        // sort number
-        if (isSort) {
-            for (let i = 0; i < parent.hazard.length; i++) {
-                parent.hazard[i].no = i + 1;
-            }
-        }
-        console.log('initHazard', parent)
-    }
 
     $scope.actionChangeTabArea = function (type, subArea, hazard) {
         if (!type) {
@@ -5341,18 +5385,23 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             var arrText = $filter('filter')($scope.master_hazard_type, function (item) {
                 return (item.id == hazard.id_type_hazard);
             });
-            // disable type hazard
-            var alreadyExists = arrText[0].checks.some(function(check) {
-                return check.id_subarea === hazard.id_subareas;
-            });
-            if(!alreadyExists)
-                arrText[0].checks.push({id_subarea: hazard.id_subareas});
+            // add disable type hazard
+            addDisabledOption(arrText, hazard);
+            // change and set default
+            changeDisabledOption(subArea, hazard.id_subareas, hazard.id)
 
             // set value
             if (arrText.length > 0) {
                 hazard.type_hazard = arrText[0].name;
                 hazard.action_change = 1;
             }
+            // health hazard
+            subArea.hazard.forEach(element => {
+                if (element.no_type_hazard == hazard.no_type_hazard) {
+                    element.id_type_hazard = hazard.id_type_hazard
+                    element.type_hazard = hazard.type_hazard
+                }
+            });
             // worksheet
             $scope.data_worksheet_list.forEach(element => {
                 element.worksheet.forEach(el => {
@@ -5362,27 +5411,159 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 });
             });
             console.log('master_hazard_type',$scope.master_hazard_type)
+            // console.log('hazard',hazard)
         
         } else if (type == 'disabled_type_hazard') {
             // disabled
-            // var arrText = $filter('filter')($scope.master_hazard_type, function (item) {
-            //     return (item.id == hazard.id_type_hazard);
-            // });
-            $scope.master_hazard_type.forEach(element => {
-                element.checks.forEach(chk => {
-                    if (chk.id_subarea == hazard.id_subareas) {
-                        return element.disabled = true;
-                    }else {
-                        return element.disabled = false;
-                    }
-                }); 
-            });
-
-            console.log('disabled',$scope.master_hazard_type)
+            const id_subarea = hazard.id_subareas;
+            const id_hazard = hazard.seq;
+            const id_type_hazard = hazard.id_type_hazard;
+            console.log('id_subarea',hazard.id_subareas)
+            console.log('id_type_hazard',hazard.id_type_hazard)
+            // set diabled
+            setDisabledOption(id_subarea, id_hazard);
         }
         
-        console.log(' subArea', subArea)
-        console.log('all worksheet', $scope.data_worksheet_list)
+        // console.log(' subArea', subArea)
+        // console.log('all worksheet', $scope.data_worksheet_list)
+    }
+
+    function addDisabledOption(arrText, hazard) {
+        if (arrText.length > 0) {
+            var alreadyExists = arrText[0].checks.some(function(check) {
+                return check.id_subarea === hazard.id_subareas;
+            });
+            if(!alreadyExists){
+                const newData = {
+                    id_subarea: hazard.id_subareas,
+                    id_hazard: hazard.seq,
+                    id_type_hazard: hazard.id_type_hazard
+                }
+                // for (let i = 0; i < $scope.master_hazard_type.length; i++) {
+                //     var tmp = [];
+                //     for (let j = 0; j < $scope.master_hazard_type[i].checks.length; j++) {
+                //         if (
+                //             $scope.master_hazard_type[i].checks[j].id_hazard != newData.id_hazard 
+                //         ) {
+                //             tmp.push($scope.master_hazard_type[i].checks[j]);
+                //         }
+                //     }
+                //     $scope.master_hazard_type[i].checks = tmp;
+                // }
+                arrText[0].checks.push(newData);
+            }
+        }
+    }
+
+    function setDisabledOption(id_subarea, id_hazard) {
+        // เช็คว่า area ที่เลือก dropdown ว่ามีช้อมูลไหม 
+        var tmp_subarea = [];
+        for (let i = 0; i < $scope.master_hazard_type.length; i++) {
+            var result = $filter('filter')($scope.master_hazard_type[i].checks, function (item) {
+                return (item.id_subarea == id_subarea);
+            });
+            if(result) tmp_subarea = [...tmp_subarea, ...result]
+        }
+        console.log('tmp_subarea',tmp_subarea)
+        // เช็คว่า id มีอยู่ใน checks[] หรือไม่ ถ้ามีแสดงว่าเคยเลือก type hazard นี้แล้ว ทำการ diabled
+        if (tmp_subarea.length > 0) {
+            for (let i = 0; i < tmp_subarea.length; i++) {
+                for (let j = 0; j < $scope.master_hazard_type.length; j++) {
+                   if (tmp_subarea[i].id_type_hazard ==  $scope.master_hazard_type[j].id) {
+                        // set disabled
+                        const optionEl = document.getElementById(`option_${id_subarea}_${id_hazard}_${$scope.master_hazard_type[j].id}`);
+                        optionEl.disabled = true;
+                        // if (processedValue) {
+                            //     for (let i = 0; i < $scope.master_hazard_type.length; i++) {
+                            //         var tmp = [];
+                            //         for (let j = 0; j < $scope.master_hazard_type[i].checks.length; j++) {
+                            //             if (
+                            //                 $scope.master_hazard_type[i].checks[j].id_type_hazard == processedValue
+                            //             ) {
+                            //                 console.log('prev ',$scope.master_hazard_type[i].checks[j])
+                            //                 const id_subarea = $scope.master_hazard_type[i].checks[j].id_subarea
+                            //                 const id_hazard = $scope.master_hazard_type[i].checks[j].id_hazard
+                            //                 const id_type_hazard = $scope.master_hazard_type[i].checks[j].id_type_hazard
+
+                            //                 var subAsreaList = $filter('filter')($scope.data_subareas_list, function (item) {
+                            //                     return (item.id == id_subarea);
+                            //                 })[0];
+                            //                 for (let k = 0; k < subAsreaList.hazard.length; k++) {
+                            //                     const optionsEl = document.getElementById(
+                            //                         `option_${id_subarea}_${subAsreaList.hazard[k].id}_${id_type_hazard}`
+                            //                     );
+                            //                     console.log(optionsEl)
+                            //                     if(optionsEl) optionsEl.disabled = false;
+                            //                 }
+                            //             } else {
+                            //                 tmp.push($scope.master_hazard_type[i].checks[j]);
+                            //             }
+                            //         }
+                            //         $scope.master_hazard_type[i].checks = tmp;
+                            //     }
+                            // }
+                   }
+                }
+            }
+        } 
+    }
+
+    function changeDisabledOption(subArea, id_subarea, id_hazard) {
+        
+        const prev = getPrevSelect(id_subarea, id_hazard)
+
+        if(!prev) return;
+
+        for (let i = 0; i < subArea.hazard.length; i++) {
+            const optionsEl = document.getElementById(`option_${id_subarea}_${subArea.hazard[i].id}_${prev.id_type_hazard}`);
+            if(optionsEl) optionsEl.disabled = false;
+        }
+
+        for (let i = 0; i < $scope.master_hazard_type.length; i++) {
+            const result = $scope.master_hazard_type[i].checks.filter(item => {
+                return !(item.id_subarea === prev.id_subarea && 
+                        item.id_hazard === prev.id_hazard && 
+                        item.id_type_hazard === prev.id_type_hazard);
+            });
+            $scope.master_hazard_type[i].checks = result;
+        }
+    }
+
+    function getValueSelect(id_subarea, id_hazard) {
+        const selectEl = document.getElementById(`select_${id_subarea}_${id_hazard}`);
+        if (selectEl) {
+            const optionValue = selectEl.value;
+            const processedValue = optionValue.split(':')[1];
+            const value = parseInt(processedValue);
+            return value;
+        }
+
+        return null
+    }
+    
+    function getPrevSelect(id_subarea, id_hazard) {
+        var tmp = [];
+        for (let i = 0; i < $scope.master_hazard_type.length; i++) {
+            var result = $filter('filter')($scope.master_hazard_type[i].checks, function (item) {
+                return (
+                        item.id_subarea == id_subarea && 
+                        item.id_hazard == id_hazard 
+                    );
+            });
+            tmp = [...tmp, ...result];
+        }
+
+        if(tmp.length < 2) return console.log('Not Found Data Prev')
+
+        const id = getValueSelect(id_subarea, id_hazard);
+
+        var prev = $filter('filter')(tmp, function (item) {
+            return (item.id_type_hazard != id);
+        })[0];
+
+        if(!prev) return null;
+
+        return prev
     }
 
     $scope.chooseRating = function (value, index) {
