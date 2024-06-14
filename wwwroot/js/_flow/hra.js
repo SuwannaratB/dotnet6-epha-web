@@ -2312,7 +2312,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             newInput.hazard[0].id_subareas = newInput.seq;
             newInput.hazard[0].sub_area =  newInput.sub_area;
             newInput.hazard[0].no_subareas = (item.no + 1);
-            newInput.hazard[0].no_type_hazard =  item.no;
+            newInput.hazard[0].no_type_hazard =  1;
             newInput.hazard[0].index_rows =  0;
             // type ? newInput.no_type_hazard = item_hazard.no_type_hazard : newInput.no_type_hazard = item_hazard.no_type_hazard + 1 ;
             // newInput.hazard[0].health_hazard_list  =  $scope.filter_hazard_riskfactors;
