@@ -1481,11 +1481,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         } else { set_alert('Error', 'No Data.'); return; }
         var json_drawing_approver = check_data_drawing_approver(id_session);
+        var json_approver = check_data_approver();
 
         $.ajax({
             url: url_ws + "flow/set_approve",
             data: '{"sub_software":"jsea","user_name":"' + user_name + '","role_type":"' + flow_role_type + '","action":"' + flow_action + '","token_doc":"' + pha_seq + '","pha_status":"' + pha_status + '"'
                 + ',"id_session":"' + id_session + '","seq":"' + seq + '","action_status":"' + action_status + '","comment":"' + comment + '","user_approver":"' + user_approver + '"'
+                + ', "json_approver": ' + JSON.stringify(json_approver)
                 + ', "json_drawing_approver": ' + JSON.stringify(json_drawing_approver)
                 + '}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
@@ -1861,7 +1863,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 if($scope.params != 'edit_approver'){
                     $scope.action_owner_active = true;
                 }  
-                console.log("will show params",$scope.params)
 
                 if($scope.params !== null){
                     console.log("$scope.params",$scope.params)
@@ -4292,7 +4293,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
         }
 
-        if(action = 'save' && $scope.isMainApprover){
+        if(action === 'save' && $scope.isMainApprover){
             return $('#modalEditConfirm').modal('show');
         }
         save_data_create(action, action_def);
@@ -4828,6 +4829,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 arr_check[0].action_new_row = 1;
                 $scope.data_general[0].target_start_date = _arr.meeting_date;
             }
+        }
+
+        if(type_text = "action_date"){
+            console.log("data aprrover" ,$scope.data_approver)
         }
 
         action_type_changed(_arr, _seq);

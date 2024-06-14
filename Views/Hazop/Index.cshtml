@@ -102,6 +102,12 @@
                         SAVE
                     </button>
                 </span>
+                <span class="mx-2" ng-if="data_header[0].pha_status == 21 && isMainApprover">
+                    <button class="btn btn-primary btn-sm" 
+                        ng-click="confirmSave('save')">
+                        Edit Worksheet
+                    </button>
+                </span>
                 <span class="mx-2" ng-if="params == 'edit_action_owner' && data_header[0].pha_status == 13 && action_part == 5">
                     <button class="btn btn-primary btn-sm" 
                         ng-click="confirmSave('save')">
@@ -2320,18 +2326,21 @@
                                                             </div>
                                                         </div>
                                                         <div class="autocomplete-container" style=" width: 100%; " ng-class="{'disabled-link':(!tab_worksheet_active)}">
-                                                            <textarea class="form-control form-control-sm rounded-1 p-0 m-0 w-100 border border-0" 
+                                                            <textarea class="form-control form-control-sm worksheetscroll rounded-1 p-0 m-0 w-100 border border-0" 
                                                                       style=" width: 100vh; font-size: 10px; resize: none;"
                                                                       id="causes_worksheet_{{item.seq}}" 
                                                                       name="causes_worksheet_{{item.seq}}"
                                                                       placeholder="Causes" 
                                                                       rows="3"
+                                                                      ng-style="{'min-height': (30 * (data_nodeworksheet | filter:{deviations: item.deviations,causes_no: item.causes_no}).length) + 'px'}"
+                                                                      ng-readonly="(data_header[0].pha_status === 21 && params !== 'edit' ? !isMainApprover : false)"
                                                                       ng-model="item.causes"
                                                                       ng-keyup="filterResultHistory(item.causes, 'causes', 'causes_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')">
                                                             </textarea>
                                                             <div class="autocomplete-dropdown" style="position: absolute;" ng-show="isShow == 'causes_worksheet_'+ item.seq"
                                                                  ng-class="{'ng-show' : (filteredArr[0].fieldID == ('causes_worksheet_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('causes_worksheet_'+item.seq)) }">
                                                                 <div class="autocomplete-option"
+                                                                     ng-hide="data_header[0].pha_status === 21 && params !== 'edit' ? !isMainApprover : false"
                                                                      ng-repeat="result in filteredResults | toArray | filter:{field:'causes'}"
                                                                      ng-click="selectResult(result,item,'causes')">
                                                                     {{ result.name }}
@@ -2404,12 +2413,15 @@
                                                                       name="consequences_worksheet_{{item.seq}}"
                                                                       placeholder="Consequences" 
                                                                       rows="3"
+                                                                      ng-style="{'min-height': (30 * (data_nodeworksheet | filter:{deviations: item.deviations,causes_no: item.causes_no,consequences_no: item.consequences_no}).length) + 'px'}"
+                                                                      ng-readonly="(data_header[0].pha_status === 21 && params !== 'edit' ? !isMainApprover : false)"                                                                      
                                                                       ng-model="item.consequences"
                                                                       ng-keyup="filterResultHistory(item.consequences, 'consequences', 'consequences_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')">
                                                             </textarea>
                                                             <div class="autocomplete-dropdown" style="position: absolute;" ng-show="isShow == 'consequences_worksheet_'+ item.seq"
                                                                  ng-class="{'ng-show' : (filteredArr[0].fieldID == ('consequences_worksheet_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('consequences_worksheet_'+item.seq)) }">
                                                                 <div class="autocomplete-option"
+                                                                     ng-hide="data_header[0].pha_status === 21 && params !== 'edit' ? !isMainApprover : false"
                                                                      ng-repeat="result in filteredResults | toArray | filter:{field:'consequences'}"
                                                                      ng-click="selectResult(result,item,'consequences')">
                                                                     {{ result.name }}
@@ -2563,6 +2575,8 @@
                                                                     name="existing_safeguards_worksheet_{{item.seq}}"
                                                                     placeholder=" Protection/Mitigation Barriers" 
                                                                     rows="3"
+                                                                      ng-style="{'min-height': (30 * (data_nodeworksheet | filter:{deviations: item.deviations,causes_no: item.causes_no,consequences_no: item.consequences_no}).length) + 'px'}"
+                                                                      ng-readonly="(data_header[0].pha_status === 21 && params !== 'edit' ? !isMainApprover : false)"     
                                                                     ng-model="item.existing_safeguards"
                                                                     ng-keyup="filterResultHistory(item.existing_safeguards, 'existing_safeguards', 'existing_safeguards_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')">
                                                             </textarea>
@@ -2571,6 +2585,7 @@
                                                                 ng-show="isShow == 'existing_safeguards_worksheet_'+ item.seq"
                                                                 ng-class="{'ng-show' : (filteredArr[0].fieldID == ('existing_safeguards_worksheet_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('existing_safeguards_worksheet_'+item.seq)) }">
                                                                 <div class="autocomplete-option"
+                                                                     ng-hide="data_header[0].pha_status === 21 && params !== 'edit' ? !isMainApprover : false"
                                                                      ng-repeat="result in filteredResults | toArray | filter:{field:'existing_safeguards'}"
                                                                      ng-click="selectResult(result,item,'existing_safeguards')">
                                                                     {{ result.name }}
@@ -4699,6 +4714,7 @@
                                     <input type="radio"
                                            id="likelihood"
                                            name="likelihood"
+                                           ng-hide="data_header[0].pha_status === 21 ? !isMainApprover : false"
                                            ng-checked="cal_ram_action_likelihood == item_ram.likelihood_level"
                                            ng-click="selectDataRAM('l',item_ram.likelihood_level)"
                                            style="cursor: pointer; width:25px; height:25px;">
@@ -4713,6 +4729,7 @@
                                 <input type="radio"
                                        id="security_level"
                                        name="security_level"
+                                       ng-hide="data_header[0].pha_status === 21 ? !isMainApprover : false "
                                        ng-checked="cal_ram_action_security == item_ram.security_level"
                                        ng-click="selectDataRAM('s',item_ram.security_level)"
                                        style="cursor: pointer; width:25px; height:25px;">
@@ -4735,6 +4752,7 @@
                                     <input type="radio"
                                            id="likelihood" 
                                            name="likelihood"
+                                           ng-hide="data_header[0].pha_status === 21 ? !isMainApprover : false"
                                            ng-checked="cal_ram_action_likelihood == item_ram.likelihood_level"
                                            ng-click="selectDataRAM('l',item_ram.likelihood_level)"
                                            style="cursor: pointer;width:30px; height:30px;">
@@ -4748,6 +4766,7 @@
                                 <input type="radio"
                                        id="security_level" 
                                        ng-checked="cal_ram_action_security == item_ram.security_level"
+                                       ng-hide="data_header[0].pha_status === 21 ? !isMainApprover : false "
                                        name="security_level"
                                        ng-click="selectDataRAM('s',item_ram.security_level)"
                                        style="cursor: pointer;width:30px; height:30px;">
@@ -5367,8 +5386,8 @@
                 </div>
                 <div class="modal-body">
                     <div class="col-auto" style="float:right">
-                        <button style="width:100px;" class="btn btn-success me-1 mb-1" type="button" ng-click="confirmEdit()">Yes</button>
-                        <button style="width:100px;" class="btn btn-outline-secondary me-1 mb-1" ng-click="cancelEdit()" type="button">Cancel</button>
+                        <button style="width:100px;" class="btn btn-success me-1 mb-1" type="button" ng-click="actionEdit('yes')">Yes</button>
+                        <button style="width:100px;" class="btn btn-outline-secondary me-1 mb-1" ng-click="actionEdit('no')" type="button">Cancel</button>
                     </div>
                 </div>
             </div>
