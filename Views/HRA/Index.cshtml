@@ -993,11 +993,11 @@
                                                 <td class="align-top px-1 text-center">
                                                     <div class="py-2">
                                                         <select class="form-control"
-                                                                ng-class="{'disabled-link':(!tab_general_active || !(tab_general_active && data_header[0].pha_status<=12 ))}"
-                                                                @* ng-change="actionChange(item,item.seq,'sub_area')" *@
-                                                                ng-change="actionChangeTabArea('sub_area', item)"
-                                                                ng-model="item.sub_area"
-                                                                ng-if="tab_general_active">
+                                                            ng-class="{'disabled-link':(!tab_general_active || !(tab_general_active && data_header[0].pha_status<=12 ))}"
+                                                            @* ng-change="actionChange(item,item.seq,'sub_area')" *@
+                                                            ng-change="actionChangeTabArea('sub_area', item)"
+                                                            ng-model="item.sub_area"
+                                                            ng-if="tab_general_active">
                                                             <option value="" disabled>Please select</option>
                                                             <option ng-repeat="item_m in master_subarea" 
                                                                     ng-value="item_m.name">
@@ -1006,14 +1006,14 @@
                                                         </select>
                                                     </div>
                                                     <textarea class="form-control rounded-1" 
-                                                            ng-if="item.sub_area"
-                                                            ng-class="{'disabled-link':(!tab_general_active) || !item.sub_area}"
-                                                            id="description_general" 
-                                                            name="description_general"
-                                                            placeholder="Sub Area" 
-                                                            style="height: 100px"
-                                                            ng-change="actionChangeSubArae(item)"
-                                                            ng-model="item.work_of_task">
+                                                        ng-if="item.sub_area"
+                                                        ng-class="{'disabled-link':(!tab_general_active) || !item.sub_area}"
+                                                        id="description_general" 
+                                                        name="description_general"
+                                                        placeholder="Sub Area" 
+                                                        style="height: 100px"
+                                                        ng-change="actionChangeSubArae(item)"
+                                                        ng-model="item.work_of_task">
                                                     </textarea>
                                                     @* <b class="p-2 d-flex align-items-start text-start px-">{{item.work_of_task}}</b> *@
                                                 </td>
@@ -1023,14 +1023,17 @@
                                                         style="width: 100%;"
                                                         ng-repeat="(index, item_list) in item.hazard">
                                                         @* number *@
-                                                        <div class="" style="padding-left: 4px; width: 10%">
+                                                        <div style="padding-left: 4px; width: 10%">
                                                             <div class="align-top ">
-                                                                <div class="font-sans-serif btn-reveal-trigger position-static ">
-                                                                    <span class="px-1">{{item_list.no_subareas}}.{{ item_list.no }}</span>
+                                                                <div class="font-sans-serif btn-reveal-trigger position-static "
+                                                                    ng-class="{'d-none': (item_list.no_type_hazard == item.hazard[$index - 1].no_type_hazard)}">
+                                                                    <span class="px-1">{{item_list.no_subareas}}.{{ item_list.no_type_hazard }}</span>
                                                                 </div>
                                                             </div>
 
-                                                            <div class="font-sans-serif btn-reveal-trigger position-static" ng-class="{'d-none': !(tab_general_active)}">
+                                                            <div class="font-sans-serif btn-reveal-trigger position-static" 
+                                                                ng-class="{'d-none': !(tab_general_active),
+                                                                        'd-none': (item_list.no_type_hazard == item.hazard[$index - 1].no_type_hazard)}">
                                                                 <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 p-1"
                                                                         type="button" 
                                                                         data-bs-toggle="dropdown" 
@@ -1042,7 +1045,8 @@
                                                                 </button>
                                                                 <div class="dropdown-menu dropdown-menu-end py-2">
                                                                     <a class="dropdown-item text-success" 
-                                                                        ng-click="addDataHazardList(item, item_list, MaxSeqdataSubareas)">
+                                                                        @* ng-if="index != master_hazard_type.length " *@
+                                                                        ng-click="addDataHazardList(item, item_list)">
                                                                         <span class="fas fa-copy"></span>
                                                                         Add
                                                                     </a>
@@ -1058,31 +1062,37 @@
                                                         </div>
                                                         
                                                         @* master_hazard_type *@
-                                                        <select class="form-control"
+                                                        <select id="{{'select_' +  item_list.id_subareas + '_' + item_list.seq}}"
+                                                            class="form-control"
                                                             style="width: 32%;"
-                                                            ng-class="{'disabled-link':(!tab_general_active || !(tab_general_active && data_header[0].pha_status<=12 ))}"
+                                                            ng-class="{
+                                                                'disabled-link':(!tab_general_active || !(tab_general_active && data_header[0].pha_status<=12 )),
+                                                                'd-none': (item_list.no_type_hazard == item.hazard[$index - 1].no_type_hazard)}"
                                                             ng-change="actionChangeTabArea('type_hazard', item, item_list)"
-                                                            @* ng-click="actionChangeTabArea('disabled_type_hazard', item, item_list)" *@
+                                                            ng-click="actionChangeTabArea('disabled_type_hazard', item, item_list)"
                                                             ng-model="item_list.id_type_hazard"
                                                             ng-if="tab_general_active">
                                                             <option value="" disabled>Please select</option>
                                                             <option ng-repeat="item_m in master_hazard_type" 
-                                                                    ng-if="!item_m.disabled"
-                                                                    ng-value="item_m.id">
+                                                                    ng-value="item_m.id"
+                                                                    id="{{'option_' + item_list.id_subareas + '_' + item_list.seq+ '_' + item_m.id}}">
                                                                 {{item_m.name}}
                                                             </option>
                                                         </select> 
+                                                        
+                                                        <div  style="width: 32%;" ng-if="item_list.no_type_hazard == item.hazard[$index - 1].no_type_hazard">
+
+                                                        </div>
 
                                                         @* number *@
                                                         <div class="" style="padding-left: 4px; width: 10%">
                                                             <div class="align-top">
                                                                 <div class="font-sans-serif btn-reveal-trigger position-static ">
-                                                                    <span class="px-1"> </span>
-                                                                    @* <span class="px-1">{{item_list.no_subareas}}.{{ item_list.no }}</span> *@
+                                                                    @* <span class="">{{item_list.no_subareas}}.{{item_list.no_type_hazard}}.{{ item_list.no }}</span> *@
                                                                 </div>
                                                             </div>
 
-                                                            <div class="font-sans-serif btn-reveal-trigger position-static" ng-class="{'d-none': !(tab_general_active)}">
+                                                            <div class="mt-3 font-sans-serif btn-reveal-trigger position-static" ng-class="{'d-none': !(tab_general_active)}">
                                                                 <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 p-1"
                                                                         type="button" 
                                                                         data-bs-toggle="dropdown" 
@@ -1094,14 +1104,14 @@
                                                                 </button>
                                                                 <div class="dropdown-menu dropdown-menu-end py-2">
                                                                     <a class="dropdown-item text-success" 
-                                                                        ng-click="addDataHazardList(item, item_list, MaxSeqdataSubareas)">
+                                                                        ng-click="addDataHazardList(item, item_list, 'health')">
                                                                         <span class="fas fa-copy"></span>
                                                                         Add
                                                                     </a>
-                                                                    <div class="dropdown-divider" ng-if="!(item_list.no == 1)"></div>
+                                                                    <div class="dropdown-divider"  ng-if="(item_list.no_type_hazard == item.hazard[$index - 1].no_type_hazard)"></div>
                                                                     <a class="dropdown-item text-danger" 
-                                                                        ng-if="!(item_list.no == 1)"
-                                                                        ng-click="removeDataHazardList(item, item_list, $index)">
+                                                                        ng-if="(item_list.no_type_hazard == item.hazard[$index - 1].no_type_hazard)"
+                                                                        ng-click="removeDataHealthHazard(item, item_list, $index)">
                                                                         <span class="fas fa-times-circle"></span>
                                                                         Remove
                                                                     </a>
@@ -1519,7 +1529,8 @@
                                                                 ? item.worksheet[$index - 1].sub_area == ws.sub_area 
                                                                     ? '' 
                                                                     : ws.sub_area 
-                                                                : 'Not found'}}
+                                                                : 'Not found'
+                                                            }}
                                                         </div>
                                                     </td>
                                                     @* <td>
@@ -1535,8 +1546,13 @@
                                                     </td> *@
 
                                                     <td>
-                                                        <div class="d-flex flex-col box" ng-repeat="hazard in item.worksheet" style="min-width: max-content;">
-                                                            {{ hazard.type_hazard ? hazard.type_hazard : 'Not found'}}
+                                                        <div class="d-flex flex-col box" ng-repeat="ws in item.worksheet" style="min-width: max-content;">
+                                                            {{ ws.type_hazard
+                                                            ? item.worksheet[$index - 1].type_hazard == ws.type_hazard && item.worksheet[$index - 1].subarea_no == ws.subarea_no
+                                                                ? '' 
+                                                                : ws.type_hazard 
+                                                            : 'Not found'
+                                                        }}
                                                         </div>
                                                     </td>
 
@@ -1991,7 +2007,7 @@
                                             <th class=" align-middle" colspan="1" rowspan="2">JOB TYPE/CHANGE TYPE</th>
                                             <th class=" align-middle" colspan="1" rowspan="2">TASK OR ACTIVITY</th>
                                             <th class=" align-middle" colspan="1" rowspan="2">SUB AREA</th>
-                                            <th class=" align-middle" colspan="1" rowspan="2">Exposure Indicator</th>
+                                            <th class=" align-middle" colspan="2" rowspan="1">Exposure Indicator</th>
                                             <th class=" align-middle" colspan="1" rowspan="2">HEALTH EFFECT RATING</th>
                                             <th class=" align-middle text-center" colspan="2" rowspan="1">
                                                 <b class="text-danger"> * </b>RISK RATING
@@ -2006,6 +2022,8 @@
                                             <th class=" align-middle" colspan="1" rowspan="2">Action Close Date</th>
                                         </tr>
                                         <tr>
+                                            <th class=" align-middle" scope="col" >TYPE OF HAZARD</th>
+                                            <th class=" align-middle" scope="col" >HEALTH HAZARDS OR RISK FACTOR</th>
                                             <th class=" align-middle" scope="col" >INITIAL RISK RATING</th>
                                             <th class=" align-middle" scope="col" >RESIDUAL RISK RATING</th>
                                             <th class=" align-middle" scope="col" >Start Date</th>
@@ -2046,24 +2064,38 @@
                                             </td>
 
                                             <td>
-                                                <div class="d-flex flex-col"  ng-repeat="hazard in item.hazards">
+                                                <div class="d-flex flex-col"  ng-repeat="ws in item.worksheet">
                                                     <div class="box" >
-                                                        {{ hazard.type_hazard }}
+                                                        @* {{ ws.type_hazard }} *@
+                                                        {{ ws.type_hazard
+                                                            ? item.worksheet[$index - 1].type_hazard == ws.type_hazard 
+                                                                ? '' 
+                                                                : ws.type_hazard 
+                                                            : 'Not found'
+                                                        }}
+                                                    </div>
+                                                </div>
+                                            </td>
+
+                                            <td>
+                                                <div class="d-flex flex-col"  ng-repeat="ws in item.worksheet">
+                                                    <div class="box" >
+                                                        {{ ws.health_hazard }}
                                                     </div>
                                                 </div>
                                             </td>
 
                                             <td>
                                                 <div class="d-flex justify-content-center box" 
-                                                    ng-repeat="hazard in item.hazards">
-                                                    <div ng-if="hazard.health_effect_rating">
+                                                    ng-repeat="ws in item.worksheet">
+                                                    <div ng-if="ws.health_effect_rating">
                                                         <div class="effect-rating "
                                                             @* ng-click="openModalRisk(hazard, $index)" *@
                                                             ng-class="{
-                                                                    'bg-success': (hazard.health_effect_rating == '1' || hazard.health_effect_rating == '2'),
-                                                                    'bg-warning': (hazard.health_effect_rating == '3') 
+                                                                    'bg-success': (ws.health_effect_rating == '1' || ws.health_effect_rating == '2'),
+                                                                    'bg-warning': (ws.health_effect_rating == '3') 
                                                             }" >
-                                                            {{ hazard.health_effect_rating }}
+                                                            {{ ws.health_effect_rating }}
                                                         </div>
                                                     </div>
                                                 </div>
@@ -2086,7 +2118,7 @@
                                                 <div class="box" 
                                                     style="min-width: max-content; padding-top: 7px; font-size: 13px; text-align: center;"
                                                     ng-repeat="ws in item.worksheet">
-                                                    {{ ws.initial_risk_rating }}
+                                                    {{ ws.action_status == 'Close' ? ws.initial_risk_rating : '' }}
                                                 </div>                                            
                                             </td>
   
@@ -2111,16 +2143,15 @@
                                                 </div>                                                 
                                             </td>
 
-
                                             <td class="" >
-                                                <div class="box" ng-repeat="hazard in item.hazards">
+                                                <div class="box" ng-repeat="ws in item.worksheet">
                                                              @* <p class="pe-1 text-1100 fw-bold">{{ (hazard.recommendations_no +'.') }}</p> *@
                                                     <textarea class="form-control form-control-sm " 
                                                             rows="2" 
                                                             type="text"
                                                             style="width: 200px;"
                                                             placeholder="Comments"
-                                                            ng-model="hazard.recommendations">
+                                                            ng-model="ws.recommendations">
                                                     </textarea>
                                                 </div>
                                             </td>                                            
@@ -2170,21 +2201,12 @@
                                                         <i class="far fa-file-pdf text-danger"></i>The Reviewer has attached the file.
                                                     </a>
                                                 </div>
-
                                             </td>
 
                                             <td class="align-top rating white-space-nowrap">
-                                                <div class="ms-3">
-                                                    <label>
-                                                        {{item.recommendations}} 
-                                                    </label>
-                                                </div>
-                                            </td>
-
-                                            <td class="align-top rating white-space-nowrap">
-                                                <div class="ms-3">
-                                                    <label>
-                                                        {{item.action_status}}
+                                                <div class="box" ng-repeat="ws in item.worksheet">
+                                                    <label  style="font-size: 12px; font-weight: bold; padding: 5px 0;">
+                                                        {{ws.action_status}}
                                                     </label>
                                                 </div>
                                             </td>
@@ -2218,8 +2240,10 @@
                                             </td>
 
                                             <td class="align-top  px-0" style=" width: 80px;">
-                                                <div class="align-items-center ">
-                                                    <p><b>{{item.reviewer_date}}</b></p>
+                                                <div class="box" ng-repeat="ws in item.worksheet">
+                                                    <label  style="font-size: 12px; font-weight: bold; padding: 5px 0;">
+                                                        {{ws.reviewer_action_date}}
+                                                    </label>
                                                 </div>
                                             </td>
 
