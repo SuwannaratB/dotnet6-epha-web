@@ -281,7 +281,7 @@
                                             Unit No 
                                              <span class="text-danger" style="font-size:10px;">(กรณีที่ไม่มี Unit No ต้องเลือก TAG ID )</span>
                                         </label>
-                                        <div class="dropdown">
+                                        <div class="dropdown" ng-class="{'disabled-link':(!tab_general_active)}">
                                             <button id="dropdown_unit_no" class="dropbtn" >
                                                 {{item.unit_no_name}}
                                             </button>
@@ -289,6 +289,7 @@
                                                 <input id="dropdown_input" 
                                                 class="dropdown_input" 
                                                 type="text" 
+                                                ng-class="{'disabled-link':(!tab_general_active)}"
                                                 placeholder="Search.." 
                                                 ng-model="search_keywords.unit_no"
                                                 ng-change="filterFunction('unit_no')">
@@ -328,7 +329,7 @@
                                             <b class="text-danger d-none"> * </b>
                                             TAG ID/EQUIPMENT
                                         </label>
-                                        <div class="dropdown">
+                                        <div class="dropdown" ng-class="{'disabled-link':(!tab_general_active)}">
                                             <button ng-repeat="item2 in master_tagid | toArray | filter: { id: item.id_tagid }" 
                                                 id="dropdown_tag_id" 
                                                 class="dropbtn" >
@@ -2065,6 +2066,7 @@
                                                                       name="workstep_worksheet_{{item.seq}}"
                                                                       placeholder="Work Step" 
                                                                       ng-model="item.workstep"
+                                                                      ng-readonly="(data_header[0].pha_status === 21 ? !isMainApprover : false)"
                                                                       ng-keyup="filterResultHistory(item.workstep, 'workstep', 'workstep_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'');
                                                                                 (contentModified && item.workstep.trim() !== '') ? updateWorksheetChanges(item, item.seq, '') : null"
                                                                       ng-mouseenter="showTooltip = true" 
@@ -2073,6 +2075,7 @@
                                                             <div class="autocomplete-dropdown" style="position: absolute;"
                                                                  ng-class="{'ng-show' : (filteredArr[0].fieldID == ('workstep_worksheet_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('workstep_worksheet_'+item.seq)) }">
                                                                 <div class="autocomplete-option"
+                                                                     ng-hide="!isMainApprover"
                                                                      ng-repeat="result in filteredResults | toArray | filter:{field:'workstep'}"
                                                                      ng-click="selectResult(result,item,'workstep')">
                                                                     {{ result.name }}
@@ -2134,6 +2137,7 @@
                                                                       name="taskdesc_worksheet_{{item.seq}}"
                                                                       placeholder="taskdesc" 
                                                                       rows="3"
+                                                                      ng-readonly="(data_header[0].pha_status === 21 ? !isMainApprover : false)"
                                                                       ng-style="{'min-height': (30 * (data_listworksheet | filter:{workstep_no: item.workstep_no, taskdesc_no: item.taskdesc_no}).length) + 'px'}"
                                                                       ng-model="item.taskdesc"
                                                                       ng-keyup="filterResultHistory(item.taskdesc, 'taskdesc', 'taskdesc_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')">
