@@ -1024,6 +1024,7 @@
                                                                 </button>
                                                                 <div class="dropdown-menu dropdown-menu-end py-2">
                                                                     <a class="dropdown-item text-success" 
+                                                                        @* ng-if="index != master_hazard_type.length " *@
                                                                         ng-click="addDataHazardList(item, item_list)">
                                                                         <span class="fas fa-copy"></span>
                                                                         Add
@@ -1086,10 +1087,10 @@
                                                                         <span class="fas fa-copy"></span>
                                                                         Add
                                                                     </a>
-                                                                    <div class="dropdown-divider" ng-if="!(item_list.no == 1)"></div>
+                                                                    <div class="dropdown-divider"  ng-if="(item_list.no_type_hazard == item.hazard[$index - 1].no_type_hazard)"></div>
                                                                     <a class="dropdown-item text-danger" 
-                                                                        ng-if="!(item_list.no == 1)"
-                                                                        ng-click="removeDataHazardList(item, item_list, $index)">
+                                                                        ng-if="(item_list.no_type_hazard == item.hazard[$index - 1].no_type_hazard)"
+                                                                        ng-click="removeDataHealthHazard(item, item_list, $index)">
                                                                         <span class="fas fa-times-circle"></span>
                                                                         Remove
                                                                     </a>
@@ -1526,7 +1527,7 @@
                                                     <td>
                                                         <div class="d-flex flex-col box" ng-repeat="ws in item.worksheet" style="min-width: max-content;">
                                                             {{ ws.type_hazard
-                                                            ? item.worksheet[$index - 1].type_hazard == ws.type_hazard 
+                                                            ? item.worksheet[$index - 1].type_hazard == ws.type_hazard && item.worksheet[$index - 1].subarea_no == ws.subarea_no
                                                                 ? '' 
                                                                 : ws.type_hazard 
                                                             : 'Not found'
