@@ -1998,7 +1998,6 @@
                     @* <!-- manage recment start--> *@
                     <div class="" ng-class="{'tab-pane fade show active':(action_part==6),'tab-pane fade':(action_part!==6)}"
                          id="tab-manage" role="tabpanel" aria-labelledby="manage-tab">
-
                         <div class=" border-bottom border-200 my-0" id="NodeTable">
                             <div class="table-responsive scrollbar">
                                 <table class="table fs--2 mb-0">
@@ -2033,7 +2032,7 @@
                                     </thead>
 
                                     <tbody class="list" id="customer-rating-table-body">
-                                        <tr ng-repeat="item in data_worksheet_list | orderBy:['index_rows']" 
+                                        <tr ng-repeat="item in data_worksheet_list | filter: filterInitialRiskRatingMain | orderBy:['index_rows']" 
                                             class="hover-actions-trigger btn-reveal-trigger position-static text-center">
 
                                             <td class="align-top rating white-space-nowrap text-start">
@@ -2053,18 +2052,20 @@
                                             </td>
                                             
                                             <td>
-                                                <div class="d-flex flex-column" ng-repeat="item_sub in item.sub_areas">
-                                                    <div class="box">
-                                                        {{ item_sub.sub_area }}
-                                                    </div>
-                                                    <div class="box empty" ng-repeat="n in [].constructor(item_sub.hazard.length - 1) track by $index">
-                                                        &nbsp;
-                                                    </div>
+                                                <div class="d-flex flex-column box" ng-repeat="ws in item.worksheet | filter: filterInitialRiskRating" 
+                                                    style="min-width: max-content;">
+                                                    {{ ws.sub_area
+                                                        ? item.worksheet[$index - 1].sub_area == ws.sub_area 
+                                                            ? '' 
+                                                            : ws.sub_area 
+                                                        : 'Not found'
+                                                    }}
                                                 </div>
                                             </td>
 
                                             <td>
-                                                <div class="d-flex flex-col"  ng-repeat="ws in item.worksheet">
+                                                <div class="d-flex flex-col"  
+                                                    ng-repeat="ws in item.worksheet | filter: filterInitialRiskRating">
                                                     <div class="box" >
                                                         @* {{ ws.type_hazard }} *@
                                                         {{ ws.type_hazard
@@ -2078,7 +2079,8 @@
                                             </td>
 
                                             <td>
-                                                <div class="d-flex flex-col"  ng-repeat="ws in item.worksheet">
+                                                <div class="d-flex flex-col"  
+                                                    ng-repeat="ws in item.worksheet | filter: filterInitialRiskRating">
                                                     <div class="box" >
                                                         {{ ws.health_hazard }}
                                                     </div>
@@ -2087,7 +2089,7 @@
 
                                             <td>
                                                 <div class="d-flex justify-content-center box" 
-                                                    ng-repeat="ws in item.worksheet">
+                                                    ng-repeat="ws in item.worksheet | filter: filterInitialRiskRating">
                                                     <div ng-if="ws.health_effect_rating">
                                                         <div class="effect-rating "
                                                             @* ng-click="openModalRisk(hazard, $index)" *@
@@ -2117,12 +2119,11 @@
 
                                                 <div class="box" 
                                                     style="min-width: max-content; padding-top: 7px; font-size: 13px; text-align: center;"
-                                                    ng-repeat="ws in item.worksheet">
+                                                    ng-repeat="ws in item.worksheet | filter: filterInitialRiskRating">
                                                     {{ ws.action_status == 'Close' ? ws.initial_risk_rating : '' }}
                                                 </div>                                            
                                             </td>
   
-                                            <!-- if status close show this --->
                                             <td class="align-top rating white-space-nowrap text-start">
                                                 @* <div class="d-flex justify-content-center box" >
                                                     <div ng-if="hazard.health_effect_rating">
@@ -2138,13 +2139,13 @@
                                                 </div>    *@
                                                  <div class="box" 
                                                     style="min-width: max-content; padding-top: 7px; font-size: 13px; text-align: center;"
-                                                    ng-repeat="ws in item.worksheet">
+                                                    ng-repeat="ws in item.worksheet | filter: filterInitialRiskRating">
                                                     {{ ws.residual_risk_rating }}
                                                 </div>                                                 
                                             </td>
 
                                             <td class="" >
-                                                <div class="box" ng-repeat="ws in item.worksheet">
+                                                <div class="box" ng-repeat="ws in item.worksheet | filter: filterInitialRiskRating">
                                                              @* <p class="pe-1 text-1100 fw-bold">{{ (hazard.recommendations_no +'.') }}</p> *@
                                                     <textarea class="form-control form-control-sm " 
                                                             rows="2" 
@@ -2156,9 +2157,8 @@
                                                 </div>
                                             </td>                                            
 
-                                            @*action owb=ner*@
                                             <td class="align-top rating white-space-nowrap">
-                                                <div class="box" ng-repeat="ws in item.worksheet">
+                                                <div class="box" ng-repeat="ws in item.worksheet | filter: filterInitialRiskRating">
                                                     <div class="d-flex justify-content-start w-100" ng-show="item.id_worker_group">
                                                         <button class="btn btn-outline-secondary p-1 cursor-pointer col-auto" 
                                                             style="color: #2445fc; background-color: #f1f2f4; border-color: #f1f2f4;"
@@ -2175,8 +2175,9 @@
 
                                             <td class="align-top rating white-space-nowrap" ng-if="data_header[0].pha_status >12">
                                                 <div class="ms-3 text-start d-none">
-                                                    <a class="nametext ms-3 filename-text me-2 cursor-pointer" ng-click="downloadFileOwner(item)"
-                                                       ng-if="!(item.document_file_path =='' || item.document_file_path == null)">
+                                                    <a class="nametext ms-3 filename-text me-2 cursor-pointer" 
+                                                        ng-click="downloadFileOwner(item)"
+                                                        ng-if="!(item.document_file_path =='' || item.document_file_path == null)">
                                                         <i class="far fa-file-pdf text-danger"></i>The Responder has attached the file.
                                                     </a>
                                                     <br ng-if="!(item.document_file_admin_path =='')" />
@@ -2204,7 +2205,7 @@
                                             </td>
 
                                             <td class="align-top rating white-space-nowrap">
-                                                <div class="box" ng-repeat="ws in item.worksheet">
+                                                <div class="box" ng-repeat="ws in item.worksheet | filter: filterInitialRiskRating">
                                                     <label  style="font-size: 12px; font-weight: bold; padding: 5px 0;">
                                                         {{ws.action_status}}
                                                     </label>
@@ -2212,7 +2213,7 @@
                                             </td>
 
                                             <td class="align-top rating white-space-nowrap">
-                                               <div class="box" ng-repeat="ws in item.worksheet">
+                                               <div class="box" ng-repeat="ws in item.worksheet | filter: filterInitialRiskRating">
                                                     <input type="date" class="form-control datetimepicker rounded-1" 
                                                         @* ng-class="{'disabled-link':(!tab_managerecom_active)}" *@
                                                         placeholder="Start Date dd/mm/yyyy"
@@ -2226,7 +2227,7 @@
                                             </td>
 
                                             <td class="align-top rating white-space-nowrap">
-                                               <div class="box" ng-repeat="ws in item.worksheet">
+                                               <div class="box" ng-repeat="ws in item.worksheet | filter: filterInitialRiskRating">
                                                     <input type="date" class="form-control  datetimepicker rounded-1" 
                                                         @* ng-class="{'disabled-link':(!tab_managerecom_active)}" *@
                                                         placeholder="End Date dd/mm/yyyy"
@@ -2240,7 +2241,7 @@
                                             </td>
 
                                             <td class="align-top  px-0" style=" width: 80px;">
-                                                <div class="box" ng-repeat="ws in item.worksheet">
+                                                <div class="box" ng-repeat="ws in item.worksheet | filter: filterInitialRiskRating">
                                                     <label  style="font-size: 12px; font-weight: bold; padding: 5px 0;">
                                                         {{ws.reviewer_action_date}}
                                                     </label>

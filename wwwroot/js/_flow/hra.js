@@ -1225,6 +1225,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         $scope.data_worksheet_old = (arr.worksheet);
 
                         $scope.data_worksheet_list = setup_worksheet($scope.data_subareas_list, $scope.data_tasks);
+                        $scope.data_recommentdations_list = setup_recommentdations($scope.data_worksheet_list );
                     }
 
                     //Approver
@@ -1434,6 +1435,26 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         });
 
     }
+
+    $scope.filterInitialRiskRatingMain = function(item) {
+        for (let i = 0; i < item.worksheet.length; i++) {
+            let element = item.worksheet[i];
+            if (element.initial_risk_rating === 'Meduim' || 
+                element.initial_risk_rating === 'High' ||
+                element.initial_risk_rating === 'High\r\n'
+            ) {
+                return true;
+            }
+        }
+        return false;
+    };
+    
+
+    $scope.filterInitialRiskRating = function(item) {
+        return item.initial_risk_rating === 'Meduim' || 
+                item.initial_risk_rating === 'High' ||
+                item.initial_risk_rating === 'High\r\n';
+    };
     
 
     function setup_worksheet(subArea_list, worker_list) {
@@ -1534,26 +1555,21 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
       
     }
 
-    // function setup_ws(worksheet_list) {
-    //     var hazard_list = [];
-    //     for (let i = 0; i < worksheet_list.length; i++) {
+    function setup_recommentdations(worksheet) {
+        if(worksheet.length < 1) return null;
+        
+        var new_recomment = angular.copy(worksheet);
+        
+        new_recomment.forEach(item => {
+            item.worksheet = $filter('filter')(item.worksheet, function (item) {
+                return (item.initial_risk_rating == 'Meduim' || item.initial_risk_rating == 'High');
+            });
+        });
+        console.log('return recommentdations_list', new_recomment)
+        return new_recomment;
 
-    //         for (let j = 0; j < worksheet_list[i].hazards.length; j++) {
-    //             hazard_list.push(worksheet_list[i].hazards[j])
-    //         }
-    //     }
+    }
 
-    //     if (hazard_list.length != $scope.data_worksheet.length) {
-    //         const num = hazard_list.length - $scope.data_worksheet.length;
-
-    //         for (let i = 0; i < num; i++) {
-    //             $scope.data_worksheet.push(clone_arr_newrow(worksheet_list));
-    //         }
-
-    //     }
-    //     console.log('setup hazard', $scope.data_hazard)
-    //     console.log('setup_ws', $scope.data_worksheet)
-    // }
 
     function setup_tasks(data) {
         // $scope.MaxSeqdataDescriptions = Number($scope.MaxSeqdataDescriptions) + 1;
