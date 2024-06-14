@@ -4586,6 +4586,25 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
         }
 
+        for (var i = 0; i < $scope.data_approver.length; i++) {
+            try {
+                if (!$scope.data_approver[i].date_review && $scope.data_approver[i].action_status == 'approve') {
+                    var today = new Date();
+                    var date_review_utc = new Date(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()));
+                    $scope.data_approver[i].date_review = date_review_utc.toISOString().split('T')[0];
+                } else {
+                    var date_review = new Date($scope.data_approver[i].date_review);
+                    var date_review_utc = new Date(Date.UTC(date_review.getFullYear(), date_review.getMonth(), date_review.getDate()));
+                    $scope.data_approver[i].date_review = date_review_utc.toISOString().split('T')[0];
+                }
+                console.log("Formatted date:", $scope.data_approver[i].date_review);  // Debugging output
+            } catch (error) {
+                console.error("date_review error:", error);
+            }
+        }
+        
+             
+
         //check จากข้อมูลเดิมที่เคยบันทึกไว้ถ้าไม่มีในของเดิมให้ delete ออกด้วย
         for (var i = 0; i < $scope.data_approver_old.length; i++) {
             var arr_check = $filter('filter')($scope.data_approver, function (item) {
