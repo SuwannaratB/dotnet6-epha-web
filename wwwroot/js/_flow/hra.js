@@ -1483,6 +1483,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         for (let i = 0; i < item.worksheet.length; i++) {
             let element = item.worksheet[i];
             if (element.initial_risk_rating === 'Meduim' || 
+                element.initial_risk_rating === 'Meduim\r\n' || 
                 element.initial_risk_rating === 'High' ||
                 element.initial_risk_rating === 'High\r\n'
             ) {
@@ -1495,8 +1496,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     $scope.filterInitialRiskRating = function(item) {
         return item.initial_risk_rating === 'Meduim' || 
-                item.initial_risk_rating === 'High' ||
-                item.initial_risk_rating === 'High\r\n';
+            item.initial_risk_rating === 'Meduim\r\n' || 
+            item.initial_risk_rating === 'High' ||
+            item.initial_risk_rating === 'High\r\n';
     };
     
 
