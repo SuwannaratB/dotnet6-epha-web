@@ -114,7 +114,8 @@ AppMenuPage.filter('toArray', function() {
 AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, $document, $element,$rootScope,$window,$timeout,$interval) {
 
     $scope.unsavedChanges = false;
-
+    $scope.dataLoaded = false;
+    
     // Track location changes
     $rootScope.$on('$locationChangeStart', function(event, next, current) {
         console.log('Location is changing from:', current, 'to:', next);
@@ -139,38 +140,76 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
     });
 
-    function startTimer() {
-        $scope.counter = 900; // 1800 วินาทีเท่ากับ 30 นาที
+    var interval; 
+
+    // Initialize the timer
+    $scope.startTimer = function() {
+        $scope.counter = 900; 
         $scope.autosave = false;
 
-        var interval = $interval(function () {
-            var minutes = Math.floor($scope.counter / 60); // หานาทีที่เหลืออยู่
-            var seconds = $scope.counter % 60; // หาวินาทีที่เหลืออยู่
+        if (angular.isDefined(interval)) {
+            $interval.cancel(interval);
+        }
+
+        interval = $interval(function () {
+            var minutes = Math.floor($scope.counter / 60); 
+            var seconds = $scope.counter % 60;
     
-            // แสดงเวลาที่เหลืออยู่ในรูปแบบนาทีและวินาที
+            // Display remaining time in minutes and seconds
             $scope.counterText = minutes + ' min. ' + seconds + ' sec.';
-            $scope.minutes = minutes
+            $scope.minutes = minutes;
     
-            // ลดเวลาลงทีละหนึ่งวินาที
             $scope.counter--;
     
-            if ($scope.counter == 0) {
-                // เมื่อเวลาครบ 0 ให้แสดงแจ้งเตือน
+            if ($scope.counter === 0) {
+                // When the counter reaches 0, show a notification
                 $scope.autosave = true;
-                // set_alert("Warning", "Please save the information.")          
-                //$scope.confirmSave('save');
+                // set_alert("Warning", "Please save the information.");
+                $scope.confirmSave('save');
                 
                 $scope.stopTimer();
-                startTimer(); // เริ่มนับใหม่
+                // $scope.startTimer(); // Uncomment to restart the timer automatically
             }
         }, 1000);
-    
-        $scope.stopTimer = function () {
+    };
+
+    // Function to stop the timer
+    $scope.stopTimer = function() {
+        if (angular.isDefined(interval)) {
             $interval.cancel(interval);
-        };
+            interval = undefined; 
+        }
+    };
+    
+    // Define a function to handle changes and update timer and unsavedChanges
+    function setupWatch(watchExpression) {
+        $scope.$watch(watchExpression, function(newValues, oldValues) {
+            if (!$scope.dataLoaded) {
+                console.log("Data not yet loaded, skipping watch callback.");
+                return;
+            }
+
+            console.log("Watcher triggered change for", watchExpression);
+
+            if($scope.data_header[0].pha_status === 11 || $scope.data_header[0].pha_status === 12){
+                $scope.stopTimer();
+                $scope.startTimer();
+                $scope.unsavedChanges = true;
+            }
+
+        }, true);
     }
 
-    $scope.startTimer = startTimer;
+    setupWatch('data_general');
+    setupWatch('data_session');
+    setupWatch('data_approver');
+    setupWatch('data_memberteam');
+    setupWatch('data_relatedpeople');
+    setupWatch('data_relatedpeople_outsider');
+    //
+    setupWatch('data_subareas_list');
+    setupWatch('data_tasks');
+    setupWatch('data_worksheet_list');
 
     //All
     if (true) {
@@ -1419,9 +1458,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     } catch (ex) { alert(ex); }
                 }
 
+                $scope.dataLoaded = true;
+                if($scope.data_header[0].pha_status === 11 || $scope.data_header[0].pha_status === 12){
+                    $scope.startTimer();  
+                }
+
 
                 $scope.$apply();
-                startTimer();
 
             },
             error: function (jqXHR, textStatus, errorThrown) {
