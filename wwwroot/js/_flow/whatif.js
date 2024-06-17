@@ -2406,9 +2406,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         } catch { }
         return arr_clone;
-    }
+    }    
     function running_index_level1_lv1(arr_items, iNo, iRow, newInput) {
-
+        console.log("newInput",newInput)
         arr_items.sort((a, b) => a.index_rows - b.index_rows);
         var first_row = true;
         var iNoNew = iNo;
@@ -2434,7 +2434,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             //if (iRow > 0) { newInput.no = Number(newInput.no) + 0.1; } 
             arr_items.push(newInput);
         }
+
         arr_items.sort((a, b) => a.index_rows - b.index_rows);
+        
+        console.log("arr_items",arr_items)
+
 
     }
     function running_no_level1_lv1(arr_items, iNo, iRow, newInput) {
@@ -3367,6 +3371,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
     $scope.adddata_listworksheet_lv1 = function (row_type, item, index) {
 
+        console.log(item)
         if (true) {
             //if (row_type.indexOf('list_system') > -1) { row_type = 'list'; }
             //else if (row_type.indexOf('list_sub_system') > -1) { row_type = 'listsub'; }
@@ -3395,6 +3400,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 item.seq_category = $scope.MaxSeqdata_listworksheetcategory;
             }
         }
+
+        //this row thaa click to add new data
+        console.log("list_system_no",item.list_system_no)
+        console.log("list_sub_system_no",item.list_sub_system_no)
+        console.log("causes_no",item.causes_no)
+        console.log("consequences_no",item.consequences_no)
+        console.log("category_no",item.category_no)
 
         var seq_list = item.id_list;
         //seq_workstep, seq_taskdesc, seq_potentailhazard, seq_category, seq_category
@@ -3472,7 +3484,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
         }
 
-
         $scope.MaxSeqdata_listworksheet = Number($scope.MaxSeqdata_listworksheet) + 1;
         var xseq = $scope.MaxSeqdata_listworksheet;
 
@@ -3523,6 +3534,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
 
 
+        console.log("=======================After set new no===================")
+        console.log("row_type",row_type)
+        console.log("list_system_no",list_system_no)
+        console.log("list_sub_system_no",list_sub_system_no)
+        console.log("causes_no",causes_no)
+        console.log("consequences_no",consequences_no)
+        console.log("category_no",category_no)
+
         var arr_list = $filter('filter')($scope.data_tasklist, function (_item) {
             return (_item.seq == seq_list);
         });
@@ -3547,7 +3566,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         newInput.index_rows = (index_rows + 0.5);
         newInput.no = (no + 0.5);
         newInput.list_system_no = list_system_no;
+        console.log("now will set list_system_no",list_system_no)
+        console.log("now will set newInput.list_system_no",newInput.list_system_no)
         newInput.list_sub_system_no = list_sub_system_no;
+        console.log("now will set list_system_no",list_sub_system_no)
+        console.log("now will set newInput.list_system_no",newInput.list_sub_system_no)        
         newInput.causes_no = causes_no;
         newInput.consequences_no = consequences_no;
         newInput.category_no = category_no;
@@ -3582,16 +3605,37 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         running_index_worksheet(seq);
         index = index_rows;
 
-        console.clear();
-
+        
         running_index_level1_lv1($scope.data_listworksheet, iNo, index, newInput);
+        console.log(iNo, index, newInput)
 
-        if (!(row_type == "cat")) {
+        if (row_type == "list_system") {
             running_no_list(seq_list);
-            running_no_listsub(seq_list, seq_list_system);
-            running_no_causes(seq_list, seq_list_system, seq_list_sub_system);
-            running_no_consequences(seq_list, seq_list_system, seq_list_sub_system, seq_causes);
+        } else if (row_type == "list_sub_system") {
+            running_no_listsub(seq_list_system);
+        } else if (row_type == "causes") {
+            running_no_causes(seq_list_system, seq_list_sub_system);
+        } else if (row_type == "consequences") {
+            running_no_consequences(seq_list_system, seq_list_sub_system, seq_causes);
         }
+    
+
+        console.log("After set this data to use",$scope.data_listworksheet)
+
+        //re-sort all again
+        $scope.data_listworksheet.sort((a, b) => {
+            if (a.list_system_no !== b.list_system_no) {
+              return a.list_system_no - b.list_system_no;
+            } else if (a.list_sub_system_no !== b.list_sub_system_no) {
+              return a.list_sub_system_no - b.list_sub_system_no;
+            } else if (a.causes_no !== b.causes_no) {
+                return a.causes_no - b.causes_no;
+            } else if (a.consequences_no !== b.consequences_no) {
+                return a.consequences_no - b.consequences_no;
+            }  else {
+              return a.category_no - b.category_no;
+            }
+        });
 
         apply();
 
@@ -3777,34 +3821,56 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         return _index;
     }
 
-
-    function running_no_list(seq_list) {
-        var arr_items = $filter('filter')($scope.data_listworksheet, function (item) {
-            return ((item.seq_list == seq_list && item.row_type == 'list_system'));
-        });
-        arr_items.sort((a, b) => a.no - b.no);
-        var first_row = true;
-        var iNoNew = 1;
-
-        for (let i = 0; i < arr_items.length; i++) {
-            arr_items[i].list_system_no = (iNoNew);
-            iNoNew++;
-            if (i == 0) { arr_items[i].row_type == 'list_system'; }
-            else { arr_items[i].row_type == ''; }
-        };
-
-        arr_items.sort((a, b) => a.list_system_no - b.list_system_no);
-
-        arr_items = $filter('filter')($scope.data_listworksheet, function (item) {
-            return (item.seq_list == seq_list);
-        });
-
-        var bfor = ''; var after = ''; iNoNew = 1;
-        for (let i = 0; i < arr_items.length; i++) {
-            arr_items[i].no = (iNoNew);
-            iNoNew++;
-        };
+    function updateIndices(data, key) {
+    for (let i = 0; i < data.length; i++) {
+        data[i][key] = i + 1;
     }
+}
+
+function running_no_list(seq_list) {
+    // Filter items that match seq_list and row_type 'list_system'
+    var arr_items = $filter('filter')($scope.data_listworksheet, function (item) {
+        return ((item.seq_list == seq_list && item.row_type == 'list_system'));
+    });
+
+    // Sort items based on the 'no' property
+    arr_items.sort((a, b) => a.no - b.no);
+
+    console.log("Filtered and sorted arr_items by no:", arr_items);
+
+    var iNoNew = 1;
+
+    // Update list_system_no and ensure the first row has the correct row_type
+    for (let i = 0; i < arr_items.length; i++) {
+        arr_items[i].list_system_no = iNoNew;
+        iNoNew++;
+        if (i == 0) { 
+            arr_items[i].row_type = 'list_system'; 
+        } else { 
+            arr_items[i].row_type = ''; 
+        }
+    }
+
+    console.log("Updated arr_items with list_system_no:", arr_items);
+
+    // Filter items again to get all items matching seq_list
+    arr_items = $filter('filter')($scope.data_listworksheet, function (item) {
+        return (item.seq_list == seq_list);
+    });
+
+    console.log("Re-filtered arr_items:", arr_items);
+
+    iNoNew = 1;
+
+    // Update the 'no' property for all filtered items
+    for (let i = 0; i < arr_items.length; i++) {
+        arr_items[i].no = iNoNew;
+        iNoNew++;
+    }
+
+    console.log("Final arr_items with updated no:", arr_items);
+}
+
     function running_no_listsub(seq_list, seq_list_system) {
         //row_type;//list,listsub,causes,consequences        
         var arr_items = $filter('filter')($scope.data_listworksheet, function (item) {
