@@ -5108,16 +5108,18 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             $scope.MaxSeqdata_relatedpeople_outsider = Number($scope.MaxSeqdata_relatedpeople_outsider) + 1
         };
+
         $scope.updateSelectedItems = function () {
             $scope.selectedData = $scope.employeelist.filter(function (item) {
                 return item.selected;
             });
         };
+
         $scope.selectedItems = function (item) {
             $scope.selectedData = item;
         };
-        $scope.openDataEmployeeAdd = function (item, form_type) {
 
+        $scope.openDataEmployeeAdd = function (item, form_type) {
             $scope.selectedData = item;
             $scope.selectdata_session = item.seq;
             $scope.selectDatFormType = form_type;//member, approver, owner
@@ -5527,11 +5529,16 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
 
         $scope.actionVerified = function (item) {
-            // console.log(item);
             $scope.data_approver.forEach(el => {
                 if (el.verified) {
                     el.verified = false;
                 }
+            });
+        }
+
+        $scope.actioChangenVerified = function (item) {
+            $scope.data_approver.sort((a, b) => {
+                return (b.verified === true) - (a.verified === true);
             });
         }
 

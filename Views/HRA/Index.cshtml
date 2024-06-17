@@ -560,8 +560,9 @@
 
                                                             <div class="col-6" ng-if="!(data_general[0].expense_type=='MOC')">
                                                                 <div class="row" ng-class="{'d-none':(!tab_general_active)}">
-                                                                    <button class="btn btn-outline-secondary p-0 cursor-pointer col-auto" style="color: #2445fc; background-color: #f1f2f4; border-color: #f1f2f4;"
-                                                                            ng-click="openDataEmployeeAdd(item,'approver')">
+                                                                    <button class="btn btn-outline-secondary p-0 cursor-pointer col-auto" 
+                                                                        style="color: #2445fc; background-color: #f1f2f4; border-color: #f1f2f4;"
+                                                                        ng-click="openDataEmployeeAdd(item,'approver')">
                                                                         <span class="far fa-address-book fa-lg"></span>
                                                                         Add Assessment Team Leader
                                                                     </button>
@@ -574,8 +575,7 @@
                                                                                {{ '(QMTS)' + item2.user_displayname}}
                                                                         </label> *@
                                                                     <div class="col-8 align-items-center  p-1">
-                                                                        <label class="mb-0 text-1100 fw-bold"
-                                                                                style="width:100%;border-color: #f1f2f4;">
+                                                                        <label class="mb-0 text-1100 fw-bold" tyle="width:100%;border-color: #f1f2f4;">
                                                                             {{ item2.verified ? '(Verified)' : '' }}
                                                                             {{ item2.approver_type == 'approver' && item2.user_displayname ? '' : ''}}  
                                                                             {{ item2.user_displayname}}                                                                        </label>
@@ -963,7 +963,10 @@
                                                             </div>
                                                         </div>
 
-                                                        <div class="font-sans-serif btn-reveal-trigger position-static" ng-class="{'d-none': !(tab_general_active)}">
+                                                        <div class="font-sans-serif btn-reveal-trigger position-static" 
+                                                            ng-class="{
+                                                            'disabled-link':(!tab_general_active || !(tab_general_active && data_header[0].pha_status<=12 )),
+                                                            'd-none': !(tab_general_active)}">
                                                             <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 p-1"
                                                                 type="button" 
                                                                 data-bs-toggle="dropdown" 
@@ -1007,7 +1010,8 @@
                                                     </div>
                                                     <textarea class="form-control rounded-1" 
                                                         ng-if="item.sub_area"
-                                                        ng-class="{'disabled-link':(!tab_general_active) || !item.sub_area}"
+                                                        ng-class="{
+                                                        'disabled-link':(!tab_general_active || !(tab_general_active && data_header[0].pha_status<=12 ))}"
                                                         id="description_general" 
                                                         name="description_general"
                                                         placeholder="Sub Area" 
@@ -1030,10 +1034,11 @@
                                                                     <span class="px-1">{{item_list.no_subareas}}.{{ item_list.no_type_hazard }}</span>
                                                                 </div>
                                                             </div>
-
                                                             <div class="font-sans-serif btn-reveal-trigger position-static" 
-                                                                ng-class="{'d-none': !(tab_general_active),
-                                                                        'd-none': (item_list.no_type_hazard == item.hazard[$index - 1].no_type_hazard)}">
+                                                                ng-class="{
+                                                                'disabled-link':(!tab_general_active || !(tab_general_active && data_header[0].pha_status<=12 )),
+                                                                'd-none': !(tab_general_active),
+                                                                'd-none': (item_list.no_type_hazard == item.hazard[$index - 1].no_type_hazard)}">
                                                                 <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 p-1"
                                                                         type="button" 
                                                                         data-bs-toggle="dropdown" 
@@ -1094,6 +1099,7 @@
 
                                                             <div class="mt-3 font-sans-serif btn-reveal-trigger position-static" ng-class="{'d-none': !(tab_general_active)}">
                                                                 <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 p-1"
+                                                                        ng-class="{'disabled-link':(!tab_general_active || !(tab_general_active && data_header[0].pha_status<=12 ))}"
                                                                         type="button" 
                                                                         data-bs-toggle="dropdown" 
                                                                         data-boundary="window" 
@@ -1122,6 +1128,7 @@
                                                         @* master_hazard_riskfactors *@
                                                         <div class="mx-2"  style="width: 32%;">
                                                             <button ng-if="!item_list.health_hazard" 
+                                                                ng-class="{'disabled-link':(!tab_general_active || !(tab_general_active && data_header[0].pha_status<=12 ))}"
                                                                 ng-disabled="!item_list.id_type_hazard"
                                                                 class="btn btn-outline-secondary btn-sm w-100 h-100" 
                                                                 style="border: 1px solid #cbd0dd " 
@@ -1129,6 +1136,7 @@
                                                                 Please select
                                                             </button>
                                                             <button ng-if="item_list.health_hazard" 
+                                                                ng-class="{'disabled-link':(!tab_general_active || !(tab_general_active && data_header[0].pha_status<=12 ))}"
                                                                 ng-disabled="!item_list.id_type_hazard"
                                                                 class="btn btn-outline-secondary btn-sm w-100 h-100" 
                                                                 style="border: 1px solid #cbd0dd " 
@@ -1139,7 +1147,8 @@
 
                                                         @* health_effect_rating *@
                                                         <div class="d-flex align-items-center justify-content-center gap-2"  
-                                                                style="width: 8%;">
+                                                            ng-class="{'disabled-link':(!tab_general_active || !(tab_general_active && data_header[0].pha_status<=12 ))}"
+                                                            style="width: 8%;">
                                                             @* rating *@
                                                             <div class="effect-rating" 
                                                                 @* ng-class="{'mr-27': (item_list.count_riskfactors <= 1)}" *@
@@ -1258,6 +1267,7 @@
                                                                  ng-class="{'d-none': !(tab_general_active)}"
                                                                  ng-if="item.tasks_type_other == 0">
                                                                 <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 p-1"
+                                                                        ng-class="{'disabled-link':(!tab_general_active || !(tab_general_active && data_header[0].pha_status<=12 ))}"
                                                                         type="button" 
                                                                         data-bs-toggle="dropdown" 
                                                                         data-boundary="window" 
@@ -1338,6 +1348,7 @@
                                                                         <div class="font-sans-serif btn-reveal-trigger position-static" 
                                                                             ng-class="{'d-none': !(tab_general_active && item.tasks_type_other == 0)}">
                                                                             <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 p-1" 
+                                                                                    ng-class="{'disabled-link':(!tab_general_active || !(tab_general_active && data_header[0].pha_status<=12 ))}"
                                                                                     type="button" 
                                                                                     data-bs-toggle="dropdown" 
                                                                                     data-boundary="window" 
@@ -1368,35 +1379,14 @@
                                                             </div>
                                                         </div>
                                                         <input class="form-control rounded-1" 
-                                                                ng-class="{'disabled-link':(!tab_general_active)}" 
-                                                                type="text" 
-                                                                placeholder="Work or Task" 
-                                                                ng-model="item_d.descriptions"
-                                                                ng-change="changeDescription(item_d)" 
-                                                                @* ng-keyup="filterResultGeneral(item_d.descriptions, 'work_or_task')" *@
-                                                                >
-                                                        @* <ul class="list-group mt-2 w-25" 
-                                                            style="position: absolute;" 
-                                                            ng-show="(showResults && tab_general_active)">
-                                                            <li class="list-group-item" 
-                                                                ng-repeat="result in filteredResults | filter:{field:'work_or_task'}" 
-                                                                ng-click="selectResult(result, task, 'work_or_taske')">
-                                                                {{ result.name }}
-                                                            </li>
-                                                        </ul> *@
+                                                            ng-class="{'disabled-link':(!tab_general_active || !(tab_general_active && data_header[0].pha_status<=12 ))}" 
+                                                            type="text" 
+                                                            placeholder="Work or Task" 
+                                                            ng-model="item_d.descriptions"
+                                                            ng-change="changeDescription(item_d)" 
+                                                            @* ng-keyup="filterResultGeneral(item_d.descriptions, 'work_or_task')" *@
+                                                            >
                                                     </div>
-                                                    @* <ng-container ng-if="item.work_or_task">
-                                                        <div ng-repeat="task in item.work_or_task">
-                                                            <ng-container ng-include="'workTaskInputTemplate'"></ng-container>
-                                                        </div>
-                                                    </ng-container>
-                                                    <ng-container ng-if="!item.work_or_task">
-                                                        <ng-container ng-include="'workTaskInputTemplate'"></ng-container>
-                                                    </ng-container>
-
-                                                    <script type="text/ng-template" id="workTaskInputTemplate">
-                                                        
-                                                    </script> *@
                                                 </td>
 
                                                 <td class="align-top status text-center px-1" ><!----span same id work group? same no. ----->
@@ -1405,6 +1395,7 @@
                                                             data-toggle="tooltip" 
                                                             data-placement="top" 
                                                             title="Copy Description of Work or Tasks"
+                                                            ng-disabled="(!tab_general_active || !(tab_general_active && data_header[0].pha_status<=12 ))"
                                                             ng-click=copyDescription(item)>
                                                             <span class="fas fa-copy fa-lg"></span>
                                                             Copy
@@ -2811,14 +2802,12 @@
          aria-hidden="true" style="display: none;">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content scrollbar" style="max-height: calc(100vh - 100px); overflow-y:auto;"">
-                <div class="modal-header" > <!----ng-if="selectDatFormType === 'member' || selectDatFormType === 'approver' || params === 'edit_approver'"---->
-                     <!-- For form_type === 'member' or 'approver' -->
-                    <div > <!------ng-if="selectDatFormType === 'member' || selectDatFormType === 'approver'"----->
+                <div class="modal-header" >
+                    <div > 
                         <h5 class="text-900 mb-0" data-anchor="data-anchor" id="modalEmployeeCheckLabel">
                             <span class="me-2 text-primary"><B>|</B></span> Search Employee/Contract
                         </h5>
                     </div>
-
                     <button class="btn p-1" type="button" data-bs-dismiss="modal" aria-label="Close" ng-click="clearFormData()">
                         <svg class="svg-inline--fa fa-xmark fs--1" aria-hidden="true" focusable="false" data-prefix="fas"
                                 data-icon="xmark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"
@@ -2976,7 +2965,8 @@
                                         style="width: 24px; height:24px;"
                                         ng-model="item2.verified"
                                         ng-checked="item2.verified"
-                                        ng-click="actionVerified(item2)">
+                                        ng-click="actionVerified(item2)"
+                                        ng-change="actioChangenVerified(item2)">
                                     <label class="form-check-label m-auto fw-bold" for="">(Verrified)</label>
                                 </div>                           
                                 <label class="mb-0 ms-3 text-1100 fw-bold" style="width: 30%; border-color: #f1f2f4;">{{ item2.user_displayname }}</label>
