@@ -698,8 +698,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             { name: 'worksheet', action_part: 5, title: $scope.sub_software + ' Worksheet', isActive: false, isShow: false },
             { name: 'manage', action_part: 6, title: 'Manage Recommendations', isActive: false, isShow: false },
             { name: 'list_name', action_part: 7, title: 'List of Name', isActive: false, isShow: false },
-            //{ name: 'approver', action_part: 7, title: 'Assessment Team Leader (QMTS)', isActive: false, isShow: false },
-            { name: 'report', action_part: 8, title: 'Report', isActive: false, isShow: false }
+            //{ name: 'approver', action_part: 8, title: 'Assessment Team Leader (QMTS)', isActive: false, isShow: false },
+            { name: 'report', action_part: 9, title: 'Report', isActive: false, isShow: false }
         ];
 
     }
@@ -1330,9 +1330,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                             { name: 'list_worker', action_part: 3, title: 'List of Worker Groups and Description of Tasks', isActive: false, isShow: false },
                             { name: 'worksheet', action_part: 5, title: $scope.sub_software + ' Worksheet', isActive: false, isShow: false },
                             { name: 'manage', action_part: 6, title: 'Manage Recommendations', isActive: false, isShow: false },
-                            // { name: 'approver', action_part: 7, title: 'Assessment Team Leader (QMTS)', isActive: false, isShow: false },
+                            { name: 'approver', action_part: 8, title: 'Assessment Team Leader (QMTS)', isActive: false, isShow: false },
                             { name: 'list_name', action_part: 7, title: 'List of Name', isActive: false, isShow: false },
-                            { name: 'report', action_part: 8, title: 'Report', isActive: false, isShow: false }
+                            { name: 'report', action_part: 9, title: 'Report', isActive: false, isShow: false }
                         ];
 
                     }
@@ -1396,7 +1396,21 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     
                         $scope.save_type = true;
                     }
+                } else if ($scope.params === null && arr.header[0].pha_status === 21) {
+                    if (Array.isArray($scope.data_approver)) {
+                        let mainApprover = $scope.data_approver.find(item => item.approver_type === 'approver' && item.user_name === $scope.user_name);
+                
+                        if (mainApprover) {
+                            $scope.isMainApprover = true;
+                        } else {
+                            $scope.isMainApprover = false;
+                        }
+                    } else {
+                        console.log('$scope.data_approver is not an array or is undefined.');
+                        $scope.isMainApprover = false; 
+                    }
                 }
+                
 
 
                 //ตรวจสอบเพิ่มเติม workflow
@@ -1480,17 +1494,25 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
 
     $scope.filterInitialRiskRatingMain = function(item) {
+        console.log("Function called with item:", item);
+        
         for (let i = 0; i < item.worksheet.length; i++) {
             let element = item.worksheet[i];
+            console.log("Checking element:", element);
+            
             if (element.initial_risk_rating === 'Meduim' || 
                 element.initial_risk_rating === 'High' ||
                 element.initial_risk_rating === 'High\r\n'
             ) {
+                console.log("Matched element:", element);
                 return true;
             }
         }
+        
+        console.log("No matching elements found.");
         return false;
     };
+    
     
 
     $scope.filterInitialRiskRating = function(item) {
@@ -4040,11 +4062,44 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 }
             }
 
-            save_data_create(action);
-
+            if(action === 'save' && $scope.isMainApprover){
+                return $('#modalEditConfirm').modal('show');
+            }
+            save_data_create(action, action_def);
+            $scope.unsavedChanges  = false;
 
         }
 
+        
+    $scope.actionEdit = function (type) {
+        if(type = 'yes'){
+            var action = ''
+            if ($scope.params == 'edit') {
+                action = 'edit_worksheet'
+            }else if($scope.params == 'edit_action_owner'){
+                action = 'change_action_owner'
+            }else if($scope.params == 'edit_approver'){
+                action = 'change_approver'
+            }else{
+                $('#modalEditConfirm').modal('hide');
+
+                action = "save_worksheet"
+                setTimeout(function() {
+                    save_data_editworksheet(action);
+                }, 200); 
+
+                return;
+            }
+            $('#modalEditConfirm').modal('hide');
+            setTimeout(function() {
+                save_data_create(action, 'save');
+            }, 200); 
+        }else{
+            $('#modalEditConfirm').modal('hide');
+        }
+
+    }
+    
         $scope.confirmDialogApprover = function (_item, action) {
 
 
@@ -6245,4 +6300,22 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $('#modalMatrix_Exposure_Rating').modal('show');
     };
 
+    
+    $scope.Access_check = function(task) {
+        console.log("Checking access for task:", task);
+
+        // If user is an admin, allow access
+        if ($scope.flow_role_type === 'admin') {
+            return true;
+        }
+
+        // If user is an employee and the task belongs to them, allow access
+        if ($scope.flow_role_type === 'employee' && $scope.user_name === task.user_name) {
+            return true;
+        }
+
+        // Default to no access
+        return false;
+    };
+    
 });

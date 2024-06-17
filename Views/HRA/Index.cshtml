@@ -2365,7 +2365,7 @@
                     </div>
 
                     @* <!-- Assessment Team Leader (QMTS) Appeover start--> *@
-                    @* <div class="" ng-class="{'tab-pane fade show active':(action_part==7),'tab-pane fade':(action_part!==7)}"
+                    <div class="" ng-class="{'tab-pane fade show active':(action_part==8),'tab-pane fade':(action_part!==8)}"
                          id="tab-approver" role="tabpanel" aria-labelledby="approver-tab">
                         <div class="m-3 row  gx-0 align-items-center">
                             <div class=" border-bottom border-200 my-0" id="ApproverTable">
@@ -2383,13 +2383,15 @@
                                             </tr>
                                         </thead>
                                         <tbody class="list" id="customer-rating-table-body">
-                                            <tr ng-repeat="item in data_approver | orderBy:['no']"
-                                                ng-if="(item.user_name == user_name ) || (flow_role_type == 'admin')"
-                                                class="hover-actions-trigger btn-reveal-trigger position-static text-center">
+                                            <tr ng-repeat="item in data_approver | orderBy:['no']" 
+                                                ng-init="canAccess = Access_check(item)"
+                                                ng-style="{ 'background-color': canAccess ? '' : '#f9fbff' }"
+                                                ng-class="{ 'task-highlight':  canAccess}"                                                
+                                                class="hover-actions-trigger btn-reveal-trigger position-static text-center ">
                                                 <td class="align-top white-space-nowrap">
                                                     <div class="col-md-12 p-1 ps-3">
                                                         <label class="text-1100 fw-bold ">
-                                                            {{item.no}}
+                                                            {{$index + 1}}
                                                         </label>
                                                     </div>
                                                 </td>
@@ -2408,15 +2410,21 @@
                                                                 HRA Report
                                                             </b>
                                                         </div><br />
-                                                        <div class="form-check form-check-inline">
+                                                        <div class="form-check form-check-inline" ng-hide="!canAccess"
+                                                             ng-class="{ 'no-drop': !canAccess, 'cursor-pointer': canAccess }">
                                                             <input class="form-check-input" id="inlineRadio-{{item.seq}}" type="radio"
-                                                                   name="inlineRadioOptions-{{item.seq}}"
+                                                                   name="inlineRadioOptions-{{item.seq}}" 
+                                                                   ng-class="{ 'cant-Access': !canAccess }"
+                                                                   
                                                                    value="approve" checked ng-model="item.action_status" />
                                                             <label class="form-check-label" for="inlineRadioApprove-{{item.seq}}"> Approve</label>
                                                         </div>
-                                                        <div class="form-check form-check-inline">
+                                                        <div class="form-check form-check-inline" ng-hide="!canAccess"
+                                                             ng-class="{ 'no-drop': !canAccess, 'cursor-pointer': canAccess }">
                                                             <input class="form-check-input" id="inlineRadioOptions-{{item.seq}}" type="radio"
-                                                                   name="inlineRadioOptions-{{item.seq}}"
+                                                                   name="inlineRadioOptions-{{item.seq}}" 
+                                                                   ng-class="{ 'cant-Access': !canAccess }"
+                                                                   ng-disabled="!canAccess"
                                                                    value="reject" ng-model="item.action_status" />
                                                             <label class="form-check-label" for="inlineRadioReject-{{item.seq}}"> Send back with Comment</label>
                                                         </div>
@@ -2431,29 +2439,49 @@
                                                         </label>
                                                     </div>
 
+                                                    <div class="col-md-12 p-1 ps-3 text-start" ng-if="(item.approver_action_type == 2 || data_header[0].pha_status != 21)">
+                                                        <div class="form-check form-check-inline cursor-pointer p-0">
+                                                            <span class="fa-solid far fa-file-pdf text-danger" style="font-size:15px;" ng-click="confirmExport('hazop_report','pdf')"></span>
+                                                            <b>
+                                                                HAZOP Report
+                                                            </b>
+                                                        </div><br />
+                                                        <p>{{item.action_status =='approve' ? 'Approve' : 'Send back with Comment' }}</p>
+                                                    </div>
+
                                                 </td>
-                                                <td class="align-top white-space-nowrap text-start">
+                                                <td class="align-top white-space-nowrap text-start" ng-class="{'disabled-link':(!tab_approver_active)}">
 
-                                                    <div class="col-md-12 p-1 ps-3" ng-if="!(item.approver_action_type == 2 || data_header[0].pha_status != 21)">
-                                                        <textarea class="form-control rounded-1" id="floatingTextarea2" placeholder="Enter your comment"
-                                                                  ng-model="item.comment">  </textarea>
-
+                                                    <div class="col-md-12 p-1 ps-3" ng-if="!(item.approver_action_type == 2 || data_header[0].pha_status != 21)" 
+                                                         ng-class="{ 'no-drop': !canAccess }">
+                                                            <textarea class="form-control rounded-1" 
+                                                                    id="floatingTextarea2" 
+                                                                    placeholder="{{ canAccess ? 'Enter your comment' : '' }}"
+                                                                    ng-class="{ 'cant-Access': !canAccess }"
+                                                                    ng-hide="!canAccess"
+                                                                    ng-disabled="!canAccess"
+                                                                    ng-style="{ 'background-color': canAccess ? '' : '#f9fbff' }"
+                                                                    ng-model="item.comment"></textarea>
                                                         <div id="valid-approver-comment-{{item.seq}}" class="invalid-feedback text-danger">
                                                             Please select a valid comment.
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-12 p-1 ps-3 text-start" ng-if="(item.approver_action_type == 2 || data_header[0].pha_status != 21)">
-                                                        <label class="text-1100 fw-bold ">
-                                                            {{item.comment}}
-                                                        </label>
+                                                    <div class="col-md-12 p-1 ps-3" ng-if="(item.approver_action_type == 2 || data_header[0].pha_status != 21 )">
+
+                                                        <p class="fw-bold" ng-class="{'disabled-link': !tab_approver_active || !canAccess}" >Comment : 
+                                                            <span>{{item.comment}}</span>
+                                                        </p>
                                                     </div>
                                                 </td>
                                                 <td class="align-top px-1 text-start" style="min-width:200px;">
                                                     <div class=" p-0 cursor-pointer "
                                                          ng-repeat="item_x in data_drawing_approver  | filter:{id_approver : item.seq}  ">
-                                                        <div class="d-flex flex-nowrap" ng-if="!(item.approver_action_type == 2 || data_header[0].pha_status != 21)">
+                                                        <div class="d-flex flex-nowrap" ng-if="!(item.approver_action_type == 2 || data_header[0].pha_status != 21)" 
+                                                             ng-class="{ 'no-drop': !canAccess ,'ps-2': !canAccess }">
                                                             <div class="font-sans-serif btn-reveal-trigger position-static me-1">
                                                                 <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 p-1"
+                                                                        ng-class="{ 'cant-Access': !canAccess }"
+                                                                        ng-hide="!canAccess"
                                                                         type="button" data-bs-toggle="dropdown" data-boundary="window"
                                                                         aria-haspopup="true" aria-expanded="false" data-bs-reference="parent">
                                                                     <span class="fas fa-cog text-info"></span>
@@ -2464,40 +2492,49 @@
                                                                         <span class="fas fa-copy"></span>
                                                                         Add
                                                                     </a>
-                                                                    <div class="dropdown-divider"></div><a class="dropdown-item text-danger"
-                                                                                                           ng-click=removeDataApproverDrawing(item_x,item_d.seq)>
-                                                                        <span class="fas fa-times-circle"></span> Remove
+                                                                    <div class="dropdown-divider"></div>
+                                                                    <a class="dropdown-item text-danger"
+                                                                        ng-click=removeDataApproverDrawing(item_x,item_d.seq)>
+                                                                        <span class="fas fa-times-circle"></span> 
+                                                                        Remove
                                                                     </a>
                                                                 </div>
                                                             </div>
-                                                            <div class="btn-group my-2" ng-class="{ 'no-drop': !canAccess(item), 'cursor-pointer': canAccess(item) }">
-                                                                <div class="icon-button border p-3" style="border-color: #0d6efd; background-color: #0d6efd;">
+                                                            <div class="btn-group my-2" ng-style="{ 'opacity': !canAccess ? 0.5 : 1}"
+                                                                ng-hide="!canAccess"
+                                                                ng-class="{ 'no-drop': !canAccess, 'ps-2': !canAccess, 'cursor-pointer': canAccess }">
+                                                                <div class="icon-button border p-3" style="border-color: #0d6efd; background-color: #0d6efd;"
+                                                                    ng-style="{ 'opacity': !canAccess ? 0.5 : 1}" ng-hide="!canAccess && !item_x.document_file_size">
                                                                     <span class="fa-solid fa-arrow-up-from-bracket fa-lg" style="color: #ffffff;"></span>
                                                                 </div>
-                                                                <button class="Upload-button btn ps-3 cursor-pointer" 
-                                                                        ng-class="{ 'no-drop': !canAccess(item), 'cursor-pointer': canAccess(item) }" 
+                                                                <button class="Upload-button btn ps-3" 
+                                                                        ng-style="{ 'background-color': canAccess ? '' : '#f5f7fa' }"
+                                                                        ng-class="{ 'no-drop': !canAccess, 'cursor-pointer': canAccess }" 
                                                                         ng-if="!item_x.document_file_size">
                                                                     <span class="nametext ms-3 filename-text me-2 d-none" id="filename-approver-{{item_x.seq}}">
                                                                         {{(item_x.document_file_size>0? item_x.document_file_name + '('+  item_x.document_file_size + 'KB)' : '')}}
                                                                     </span>
-                                                                    <label class="dz-message-text fw-bold p-1 cursor-pointer" for="attfile-{{item_x.seq}}">
+                                                                    <label class="dz-message-text fw-bold p-1 " for="attfile-{{item_x.seq}}"
+                                                                        ng-class="{ 'no-drop': !canAccess, 'cursor-pointer': canAccess }"
+                                                                        ng-style="{ 'background-color': canAccess ? '' : '#f5f7fa' }">
                                                                         Upload File (Max size 10mb)
                                                                     </label>
                                                                     <input type="file" id="attfile-{{item_x.seq}}"
-                                                                           class="cursor-pointer"
-                                                                           name="file{{item_x.seq}}"
-                                                                           ng-class="{ 'cant-Access': !canAccess(item) }"
-                                                                           onchange="angular.element(this).scope().fileSelectApprover(this,'approver')"
-                                                                           style="display:none" />
+                                                                        name="file{{item_x.seq}}"
+                                                                        ng-class="{ 'disabled-link': !canAccess, 'cursor-pointer' : canAccess }"
+                                                                        ng-disabled="!canAccess"
+                                                                        onchange="angular.element(this).scope().fileSelectApprover(this, 'approver')"
+                                                                        style="display:none" />
+
                                                                 </button>
                                                                 <button class="Upload-button btn cursor-pointer" style="width:250px;" ng-if="item_x.document_file_size > 0">
                                                                     <div class="d-flex align-items-center">
                                                                         <span class="nametext filename-text me-2 cursor-pointer">
-                                                                            {{truncateFilename(item_x.document_file_name, 20)}} ({{item_x.document_file_size}} KB)
+                                                                            {{ item_x.document_file_name }} ({{ item_x.document_file_size }} KB)
                                                                         </span>
                                                                     </div>
                                                                 </button>
-                                                            </div>       
+                                                            </div>     
                                                         </div>
                                                         <div class="text-start p-0 cursor-pointer d-flex flex-nowrap" ng-if="item_x.document_file_size>0 ">
                                                             <a class="nametext ms-3 filename-text me-2" ng-click="downloadFile(item_x)">
@@ -2517,21 +2554,30 @@
                                                         </label>
                                                     </div>
                                                 </td>
-                                                <td class="align-top px-0 pt-0 ">
-                                                    <div class="d-flex">
+                                                <td class="align-top px-1 py-3" ng-class="{'disabled-link':(!tab_approver_active)}">
+                                                    <div class="d-flex"                                                          
+                                                         ng-class="{ 'no-drop': !canAccess, 'cursor-pointer': canAccess }">
 
-                                                        <button class="btn btn-outline text-primary  p-1 m-2 me-0" style=" background-color: #f1f2f4; width:50px;"
+                                                        <button class="btn btn-outline text-primary  p-1 m-2 me-0" 
+                                                                style=" background-color: #f1f2f4; width:50px;"
                                                                 ng-click="confirmDialogApprover(item,'save')"
+                                                                ng-class="{ 'cant-Access': !canAccess}"
+                                                                ng-hide="!canAccess"
                                                                 ng-if="!(item.approver_action_type == 2 || data_header[0].pha_status != 21)">
-                                                            <span class="fa fa-save text-primary fa-lg"></span><br /><span style="font-size:8px">Save</span>
+                                                            <span class="fa fa-save text-primary fa-lg"></span><br />
+                                                            <span style="font-size:8px">Save</span>
                                                         </button>
-
+                                                        @* confirmSave('submit_approver') *@
                                                         <button class="btn btn-outline text-success  p-1 m-2 ms-1"
                                                                 style="background-color: #f1f2f4; width:80px; "
                                                                 ng-click="confirmDialogApprover(item,'submit')"
+                                                                ng-class="{ 'cant-Access': !canAccess}"
+                                                                ng-hide="!canAccess"
                                                                 ng-if="!(item.approver_action_type == 2 || data_header[0].pha_status != 21)">
-                                                            <span class="fa fa-save text-success fa-lg"></span><br /><span style="font-size:8px">Submit</span>
+                                                            <span class="fa fa-save text-success fa-lg"></span><br />
+                                                            <span style="font-size:8px">Submit</span>
                                                         </button>
+
                                                     </div>
                                                 </td>
                                             </tr>
@@ -2540,10 +2586,11 @@
                                 </div>
                             </div>
                         </div>
-                    </div> *@
+                    </div> 
 
                     @* Report start *@
-                    <div class="" ng-class="{'tab-pane fade show active':(action_part==8),'tab-pane fade':(action_part!==8)}"
+                    <div class="" ng-class="{'tab-pane fade show active':(action_part==9),'tab-pane fade':(action_part!==9)}"
+                        ng-if="data_general[0].expense_type !== 'MOC' && data_header[0].pha_status === 21"
                          id="tab-report" role="tabpanel" aria-labelledby="report-tab" ng-if="export_type==true">
 
                         <div class="m-3 row  gx-0 align-items-center">
@@ -4149,7 +4196,41 @@
                 </div>
             </div>
         </div>
-    </div>    
+    </div> 
+
+        @* Modal Confirm *@
+    <div class="modal fade" id="modalEditConfirm" tabindex="-1" aria-labelledby="modalEditConfirm" aria-hidden="true"
+         style="display: none;">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="text-900 mb-0" data-anchor="data-anchor" id="modalEditConfirm">
+                        <span class=" me-2 text-primary"><B>|</B></span> Do you want to confirm to change?
+                    </h5>
+
+                    <button class="btn p-1" type="button" data-bs-dismiss="modal" aria-label="Close">
+                        <svg class="svg-inline--fa fa-xmark fs--1" aria-hidden="true" focusable="false"
+                             data-prefix="fas" data-icon="xmark" role="img" xmlns="http://www.w3.org/2000/svg"
+                             viewBox="0 0 320 512" data-fa-i2svg="">
+                            <path fill="currentColor"
+                                  d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 
+                                  301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 
+                                  0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 
+                                  210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z">
+                            </path>
+                        </svg>
+                    </button>
+
+                </div>
+                <div class="modal-body">
+                    <div class="col-auto" style="float:right">
+                        <button style="width:100px;" class="btn btn-success me-1 mb-1" type="button" ng-click="actionEdit('yes')">Yes</button>
+                        <button style="width:100px;" class="btn btn-outline-secondary me-1 mb-1" ng-click="actionEdit('no')" type="button">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>   
 
 <!-------- Modal Before Remove ------------->
 <div class="modal fade" id="removeModal" tabindex="-1" role="dialog" aria-labelledby="removeModalLabel" aria-hidden="true">
