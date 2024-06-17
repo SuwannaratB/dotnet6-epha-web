@@ -208,6 +208,7 @@ AppMenuPage.directive('hidePlaceholderOption', function() {
 AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, $document, $interval,$rootScope,$window,$q,$timeout) { 
 
     $scope.unsavedChanges = false;
+    $scope.dataLoaded = false;
 
     // Track location changes
     $rootScope.$on('$locationChangeStart', function(event, next, current) {
@@ -296,6 +297,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     
     // Define a function to handle changes and update timer and unsavedChanges
     function setupWatch(watchExpression) {
+        console.log("will watch")
         $scope.$watch(watchExpression, function(newValues, oldValues) {
             if (!$scope.dataLoaded) {
                 console.log("Data not yet loaded, skipping watch callback.");
@@ -2036,7 +2038,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     } 
 
                     $scope.$apply();
-                    startTimer();
                     try {
                         if (page_load == true || true) {
                             const choices1 = new Choices('.js-choice-apu');
@@ -2050,6 +2051,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                 }
 
+                $scope.dataLoaded = true;
+                if($scope.data_header[0].pha_status === 11 || $scope.data_header[0].pha_status === 12){
+                    $scope.startTimer();  
+                }
 
                 $scope.unsavedChanges= false;
 

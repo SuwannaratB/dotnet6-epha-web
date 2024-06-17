@@ -60,7 +60,7 @@
                                 <span> {{data_header[0].pha_status_displayname}}</span>
                             </div>
                         </div>
-                        <div class="col-auto" ><!----ng-class="{ 'd-none': (minutes > 9) }"------>
+                        <div class="col-auto" ng-if="data_header[0].pha_status === 11 || data_header[0].pha_status === 11"><!----ng-class="{ 'd-none': (minutes > 9) }"------>
                             <div class="col-auto">
                                 <b>Auto-Save Interval :</b> <br>
                                 <span ng-class="{ 'blinking-text': (minutes <= 10) }">{{counterText}} </span>
