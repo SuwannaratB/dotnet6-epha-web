@@ -212,7 +212,8 @@
                                                 >
                                             <option value="">Please select</option>
                                             <option ng-repeat="item2 in data_sections" 
-                                                ng-value="item2.sections">
+                                                ng-value="item2.sections"
+                                                ng-if="item2.departments == item.id_departments">
                                                 {{item2.sections}}
                                             </option>
                                         </select>
@@ -1267,7 +1268,7 @@
                                                                  ng-class="{'d-none': !(tab_general_active)}"
                                                                  ng-if="item.tasks_type_other == 0">
                                                                 <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 p-1"
-                                                                        ng-class="{'disabled-link':(!tab_general_active || !(tab_general_active && data_header[0].pha_status<=12 ))}"
+                                                                        @* ng-class="{'disabled-link':(!tab_general_active || !(tab_general_active && data_header[0].pha_status<=12 ))}" *@
                                                                         type="button" 
                                                                         data-bs-toggle="dropdown" 
                                                                         data-boundary="window" 
@@ -1346,9 +1347,10 @@
                                                                             </div>
                                                                         </div>
                                                                         <div class="font-sans-serif btn-reveal-trigger position-static" 
-                                                                            ng-class="{'d-none': !(tab_general_active && item.tasks_type_other == 0)}">
+                                                                            ng-class="{'d-none': !(tab_general_active && item.tasks_type_other == 0)}"
+                                                                            >
                                                                             <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 p-1" 
-                                                                                    ng-class="{'disabled-link':(!tab_general_active || !(tab_general_active && data_header[0].pha_status<=12 ))}"
+                                                                                    @* ng-class="{'disabled-link':(!tab_general_active || !(tab_general_active && data_header[0].pha_status<=12 ))}" *@
                                                                                     type="button" 
                                                                                     data-bs-toggle="dropdown" 
                                                                                     data-boundary="window" 
@@ -1379,7 +1381,7 @@
                                                             </div>
                                                         </div>
                                                         <input class="form-control rounded-1" 
-                                                            ng-class="{'disabled-link':(!tab_general_active || !(tab_general_active && data_header[0].pha_status<=12 ))}" 
+                                                            @* ng-class="{'disabled-link':(!tab_general_active || !(tab_general_active && data_header[0].pha_status<=12 ))}"  *@
                                                             type="text" 
                                                             placeholder="Work or Task" 
                                                             ng-model="item_d.descriptions"
@@ -1485,13 +1487,13 @@
                                                     <th class=" align-top" >
                                                         Exposure<br/>Level = [3.7] <br/>vs [3.8]
                                                     </th>
-                                                    <th class=" align-top cursor-pointer">
+                                                    <th class=" align-top cursor-pointer" ng-click="Matrix_Exposure_Rating()">
                                                         Exposure<br/>Rating = [3.6] <br/>vs [3.9]
-                                                        <a ng-click="Matrix_Exposure_Rating()" class="fa-solid fa-subtitles" style="color: #1985a1"></a>
+                                                        <a class="fa-solid fa-subtitles" style="color: #1985a1"></a>
                                                     </th>
-                                                    <th class=" align-top cursor-pointer">
+                                                    <th class=" align-top cursor-pointer" ng-click="Matrix_Frequency_Rating()">
                                                         Initial Risk<br/>Rating = [3.5]<br/>vs [3.10]
-                                                        <a ng-click="Matrix_Frequency_Rating()" class="fa-solid fa-subtitles" style="color: #fa6607"></a>
+                                                        <a class="fa-solid fa-subtitles" style="color: #fa6607"></a>
                                                     </th>
                                                     <th class=" align-top" >Hierarchy of Control (ALARP)</th>
                                                     <th class=" align-top" >Effective?</th>
@@ -1509,7 +1511,7 @@
                                                     </td>
 
                                                     <td>
-                                                        <div class="box" ng-repeat="item_dec in item.descriptions">
+                                                        <div class="" ng-repeat="item_dec in item.descriptions">
                                                               {{ item_dec.descriptions ? item_dec.descriptions : 'Not found' }}
                                                         </div>
                                                     </td>
