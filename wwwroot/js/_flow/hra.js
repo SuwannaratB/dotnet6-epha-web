@@ -1784,9 +1784,16 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     function set_form_action(action_part_befor, action_save, page_load) {
 
+        //แสดง tab ตาม flow
+        $scope.tab_general_show = true;
+        $scope.tab_worksheet_show = false;
+        $scope.tab_approver_show = false;
+
+
         //เปิดให้แก้ไขข้อมูลในแต่ละ tab ตาม flow
         $scope.tab_general_active = true;
         $scope.tab_worksheet_active = true;
+        $scope.tab_approver_active = true;
 
         $scope.action_part = action_part_befor;
 
@@ -4067,7 +4074,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             if(action === 'save' && $scope.isMainApprover){
                 return $('#modalEditConfirm').modal('show');
             }
-            save_data_create(action, action_def);
+            save_data_create(action);
             $scope.unsavedChanges  = false;
 
         }

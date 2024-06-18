@@ -31,7 +31,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
 
 
     //  add file 
-    $scope.clearFileName = function (inputId) {
+    $scope.clearFileName = function (detail_seq,inputId) {
 
         /*var fileUpload = document.getElementById('attfile-' + inputId);
         var fileNameDisplay = document.getElementById('filename' + inputId);
@@ -71,6 +71,25 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
             arr[0].action_change = 1;
             apply();
         }
+
+        var arr_details = $filter('filter')($scope.data_details, function (item) { return (item.seq == detail_seq); });
+        console.log("arr_details",arr_details)
+        if (arr_details.length > 0 ) {
+            if($scope.data_header[0].pha_status === 13){
+                arr_details[0].document_file_name_owner = null;
+                arr_details[0].document_file_size_owner = null;
+                arr_details[0].document_file_path_owner = null;
+                arr_details[0].action_change = 1;
+                apply();
+            }else if($scope.data_header[0].pha_status === 14){
+                arr_details[0].document_file_name = null;
+                arr_details[0].document_file_size = null;
+                arr_details[0].document_file_path = null
+                arr_details[0].action_change = 1;
+                apply();
+            }
+        }
+
     };
 
     $scope.fileSelect = function (input, file_part) {
@@ -119,8 +138,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
         } else {
             fileInfoSpan.textContent = "";
         }
-        // $("#divLoading").hide(); 
     }   
+
     function uploadFile(file_obj, seq, file_name, file_size) {
 
         var fd = new FormData();
@@ -164,6 +183,24 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                             var file_name = jsonArray[0].ATTACHED_FILE_NAME;
                             var file_path = jsonArray[0].ATTACHED_FILE_PATH;
 
+                            var arr_details = $filter('filter')($scope.data_details, function (item) { return (item.seq == $scope.seqUpload); });
+                            console.log("arr_details",arr_details)
+                            if (arr_details.length > 0 ) {
+                                if($scope.data_header[0].pha_status === 13){
+                                    arr_details[0].document_file_name_owner = file_name;
+                                    arr_details[0].document_file_size_owner = file_size;
+                                    arr_details[0].document_file_path_owner = (url_ws.replace('/api/', '')) + file_path;// (url_ws.replace('/api/', '/')) + 'AttachedFileTemp/Hazop/' + file_name;
+                                    arr_details[0].action_change = 1;
+                                    apply();
+                                }else if($scope.data_header[0].pha_status === 14){
+                                    arr_details[0].document_file_name = file_name;
+                                    arr_details[0].document_file_size = file_size;
+                                    arr_details[0].document_file_path = (url_ws.replace('/api/', '')) + file_path;// (url_ws.replace('/api/', '/')) + 'AttachedFileTemp/Hazop/' + file_name;
+                                    arr_details[0].action_change = 1;
+                                    apply();
+                                }
+                            }
+
                             var arr = $filter('filter')($scope.data_drawingworksheet, function (item) { return (item.seq == seq); });
                             if (arr.length > 0) {
                                 arr[0].document_file_name = file_name;
@@ -176,6 +213,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                                 apply();
 
                             }
+
+
+
+                            console.log("arr_details => ",arr_details)
                         } else {
                             // กรณีเกิดข้อผิดพลาดในการร้องขอไปยัง server
                             console.error('มีข้อผิดพลาด: ' + request.status);
@@ -724,6 +765,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
     }
 
     $scope.setSeqUpload = function (seq) {
+
         $scope.seqUpload = seq;
     }
 
@@ -743,10 +785,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
     }
 
     function clear_valid_items(field) {
+        console.log("field",field)
+        console.log("$scope.seqUpload",$scope.seqUpload)
         var id_valid = document.getElementById('valid-' + field);
+        console.log("id_valid",id_valid)
+
         id_valid.className = "invalid-feedback text-danger";
     }
-
     $scope.showConfirmDialogSubmit = function (item, action) {
         clear_form_valid();
 
@@ -767,12 +812,22 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
 
             // check implement
             if (item.implement) {
-                // const validRemark = set_valid_items(item.responder_comment, 'remark-'+ item.seq);
-                const validUploadFile = set_valid_items($scope.fileInfoSpan, 'upload_file-'+ item.seq);
-
-                if (validUploadFile) {
-                    console.log('im save')
-                    return;
+                if ($scope.data_header[0].pha_status === 13) {
+                    if (!item.document_file_name_owner) {
+                        const validUploadFile = set_valid_items(item.document_file_name, 'upload_file-' + item.seq);
+                        if (validUploadFile) {
+                            console.log('im save');
+                            return;
+                        }
+                    }
+                } else if ($scope.data_header[0].pha_status === 14) {
+                    if (!item.document_file_name) {
+                        const validUploadFile = set_valid_items(item.document_file_name, 'upload_file-' + item.seq);
+                        if (validUploadFile) {
+                            console.log('im save');
+                            return;
+                        }
+                    }
                 }
 
             }else {
@@ -792,7 +847,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
 
             if ($scope.data_drawingworksheet.length > 0) {
                 var arr_drawing = $filter('filter')($scope.data_drawingworksheet, function (item) {
-                    return (item.id_worksheet == $scope.id_worksheet_select && item.document_file_name != null);
+                    return (item.id_worksheet == $scope.id_worksheet_select); /* && item.document_file_name != null*/
                 });
                 if (arr_drawing.length == 0) { $scope.form_valid.valid_document_file = true; return; } else {
                     //document_file_name 
@@ -1402,7 +1457,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
     };
 
     //access each role
-    $scope.canAccess = function(task) {
+    $scope.Access_check = function(task) {
         // If user is an admin, allow access
         if ($scope.flow_role_type === 'admin') {
             return true;
@@ -1413,9 +1468,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
             return true;
         }
         
-        // Originator can't edit?
+        //originator cant edit?
         return false;
     };
+    
+
 
     
 });
