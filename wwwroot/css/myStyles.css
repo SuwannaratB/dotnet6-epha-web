@@ -411,6 +411,27 @@ background-color: #3e8e41;
     text-align: right;
   }
 
+  .btn-copy {
+    color: #2445fc; 
+    background-color: #f1f2f4; 
+    border-color: #f1f2f4;
+    padding: 8px;
+  }
+
+  .btn-paste {
+    color: #25b003; 
+    background-color: #f1f2f4; 
+    border-color: #f1f2f4;
+    padding: 8px;
+  }
+
+  .card-initial {
+    background: red;
+    color: white;
+    padding: 4px 14px;
+    border-radius: 6px
+  }
+
   /* add worker group */
   .container-add-staff {
     display: flex;
