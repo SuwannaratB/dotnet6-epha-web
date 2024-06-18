@@ -1494,23 +1494,20 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
 
     $scope.filterInitialRiskRatingMain = function(item) {
-        console.log("Function called with item:", item);
-        
+        // console.log("Function called with item:", item);
         for (let i = 0; i < item.worksheet.length; i++) {
             let element = item.worksheet[i];
-            console.log("Checking element:", element);
-            
+            // console.log("Checking element:", element);
             if (element.initial_risk_rating === 'Meduim' || 
                 element.initial_risk_rating === 'Meduim\r\n' || 
                 element.initial_risk_rating === 'High' ||
                 element.initial_risk_rating === 'High\r\n'
             ) {
-                console.log("Matched element:", element);
+                // console.log("Matched element:", element);
                 return true;
             }
         }
-        
-        console.log("No matching elements found.");
+        // console.log("No matching elements found.");
         return false;
     };
     
@@ -6095,9 +6092,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     $scope.openModalRisk = function (item_hazard, index) {
         $scope.select_hazard = item_hazard;
         $scope.select_hazard_index = index;
-        // $scope.hazard_standard_list = $filter('filter')($scope.hazard_standard, function (item) { 
-        //     return (item.name == $scope.select_hazard.health_hazard); 
-        // });
         $scope.select_hazard_type = item_hazard.id_type_hazard
         console.log("select_hazard_type",$scope.select_hazard_type)
         $('#modalRisk').modal('show');
@@ -6113,24 +6107,30 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         });
     }
 
-    $scope.addStaff = function(item) {
-        var new_staff = {
-            id: 0,
-            id_worker_group: 0,
-            name: item.text_add,
-            user_name: item.text_add.toUpperCase(),
-            user_displayname :item.text_add,
-            remove: true
-        }
+    $('#modalRisk').on('shown.bs.modal', function () {
+        scrollToRow($scope.select_hazard)
+    });
 
-        item.worker_list.push(new_staff)
-        item.text_add = "";
-    }
 
-    $scope.removeStaff = function(item, index) {
-        item.worker_list = $filter('filter')(item.worker_list, function (item,idx) { 
-            return (idx != index); 
+    function scrollToRow(item) {
+        if (!item || !item.id_health_hazard) return console.log('Not Found');
+
+        var list = $filter('filter')($scope.master_hazard_riskfactors_list, function (_item) { 
+            return _item.id_hazard_type == item.id_type_hazard; 
         });
+
+        var index = list.findIndex(function(_item) {
+            return _item.id == item.id_health_hazard;
+        });
+
+        if(index == -1) return console.log('Index Not Found')
+
+        $timeout(function() {
+            var row = document.getElementById('row-' + index);
+            if (row) {
+                row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }, 0);
     }
 
     $scope.processExposure = function (hazard){

@@ -2750,7 +2750,6 @@
                         <span class=" me-2 text-primary"><B>|</B></span> 
                         HEALTH HAZARDS OR RISK FACTOR
                     </h5>
-
                     <button class="btn p-1" type="button" data-bs-dismiss="modal" aria-label="Close">
                         <svg class="svg-inline--fa fa-xmark fs--1" aria-hidden="true" focusable="false" data-prefix="fas"
                              data-icon="xmark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"
@@ -2760,31 +2759,20 @@
                             </path>
                         </svg>
                     </button>
-
                 </div>
-
                 <div class="modal-body">
-
                     <div class="mb-4">
-
                         <div class="row g-3">
-
                             <div class="col-auto">
-
                                 <div class="search-box position-relative">
-
                                     <input class="form-control search-input search"
                                            ng-model="keywords.text" placeholder="Search"
                                            ng-change="fillterRisk()" />
                                     <span class="fas fa-search search-box-icon"></span>
                                 </div>
-
                             </div>
-
                         </div>
-
                     </div>
-
                     <div class="bg-white border-top border-bottom border-200 position-relative top-1">
                         <div class="table-responsive scrollbar-overlay mx-n1 px-1" style="max-height: 320px; min-height:320px;">
                             <table class="table table-sm fs--1 mb-0">
@@ -2794,12 +2782,12 @@
                                         <th class="text-start" style="width: 70%;">RISK FACTOR ({{ (master_hazard_riskfactors_list | filter:{id_hazard_type: select_hazard_type}).length }})</th>
                                         <th class="text-center" style="width: 10%;">Rating</th>
                                         <th class="text-center" style="width: 10%;">TLV STD</th>
-                                        @* <th class="text-center" style="width: 10%;">Type</th> *@
                                     </tr>
                                 </thead>
                                 <tbody class=" list">
                                     <tr class="hover-actions-trigger btn-reveal-trigger position-static text-center"
-                                        ng-repeat="item in master_hazard_riskfactors_list | filter:{id_hazard_type: select_hazard_type}">
+                                        ng-repeat="item in master_hazard_riskfactors_list | filter:{id_hazard_type: select_hazard_type}"
+                                        id="row-{{$index}}">
                                         <td class="text-center" style="width: 10%;">
                                             <input type="radio" 
                                                 id="risk"
@@ -2828,11 +2816,7 @@
                                                 </div>
                                             </div>
                                         </td>
-
                                         <td class="text-center" style="width: 10%;">{{item.standard_value}} {{item.standard_unit}}</td>
-                                        
-                                        @* <td class="text-center" style="width: 10%;">{{item.standard_type_text}}</td> *@
-
                                     </tr>
                                 </tbody>
                             </table>
