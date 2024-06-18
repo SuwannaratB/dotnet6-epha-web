@@ -913,7 +913,7 @@
                          id="tab-areas" role="tabpanel" aria-labelledby="areas-tab">
 
                         <div style="background-color: #ffffff;">
-                            <div class="mx-3 row  g-3 align-items-top ">
+                            <div class="mx-3 row g-3 align-items-top">
                                 <div class="d-flex gap-4">
                                     <p  ng-repeat="item2 in master_apu | filter:{
                                         id: data_general[0].id_apu}"
@@ -930,25 +930,27 @@
                                     </p>
                                 </div>
                                 <!------ NAME OF SUB AREA :------>
-                                <div class="table-responsive scrollbar mb-3" id="table-container">
-
+                                <div class="table-responsive scrollbar mb-3" id="table-container" style="max-height: 62vh;">
                                     <table class="table fs--2 mb-0 table-bordered">
                                         <thead class=" text-uppercase  text-center bg-soft">
                                             <tr>
-                                                <th class="sort align-middle text-center px-0" style="width: 6%;">
+                                                <th class="sort align-middle text-center px-0" style="width: 5%;">
 
                                                 </th>
-                                                <th class="sort align-middle text-start px-1" style="width: 26%;">
+                                                <th class="sort align-middle text-start px-1" style="width: 20%;">
                                                     NAME OF SUB AREA
                                                 </th>
-                                                <th class="sort align-middle px-0" style="width: 30%;">
+                                                <th class="sort align-middle px-0" style="width: 25%;">
                                                     TYPE OF HAZARD
                                                 </th>
-                                                <th class="sort align-middle px-0" style="width: 30%;">
+                                                <th class="sort align-middle px-0" style="width: 25%;">
                                                     HEALTH HAZARDS OR RISK FACTOR
                                                 </th>
-                                                <th class="sort align-middle px-0" style="width: 8%;">
+                                                <th class="sort align-middle px-0" style="width: 10%;">
                                                     HEALTH EFFECT RATING
+                                                </th>
+                                                <th class="sort align-middle px-0" style="width: 15%;">
+                                                    ACTION
                                                 </th>
                                             </tr>
                                         </thead>
@@ -1023,12 +1025,12 @@
                                                     @* <b class="p-2 d-flex align-items-start text-start px-">{{item.work_of_task}}</b> *@
                                                 </td>
 
-                                                <td class="align-top text-center px-1" colspan="3">
+                                                <td class="align-top text-center px-1" colspan="4">
                                                     <div class="d-flex gap-2 py-2" 
                                                         style="width: 100%;"
                                                         ng-repeat="(index, item_list) in item.hazard">
                                                         @* number *@
-                                                        <div style="padding-left: 4px; width: 10%">
+                                                        <div style="padding-left: 4px; width: 5%">
                                                             <div class="align-top ">
                                                                 <div class="font-sans-serif btn-reveal-trigger position-static "
                                                                     ng-class="{'d-none': (item_list.no_type_hazard == item.hazard[$index - 1].no_type_hazard)}">
@@ -1069,8 +1071,8 @@
                                                         
                                                         @* master_hazard_type *@
                                                         <select id="{{'select_' +  item_list.id_subareas + '_' + item_list.seq}}"
-                                                            class="form-control"
-                                                            style="width: 32%;"
+                                                            class="form-control mx-2"
+                                                            style="width: 28%;"
                                                             ng-class="{
                                                                 'disabled-link':(!tab_general_active || !(tab_general_active && data_header[0].pha_status<=12 )),
                                                                 'd-none': (item_list.no_type_hazard == item.hazard[$index - 1].no_type_hazard)}"
@@ -1086,19 +1088,18 @@
                                                             </option>
                                                         </select> 
                                                         
-                                                        <div  style="width: 32%;" ng-if="item_list.no_type_hazard == item.hazard[$index - 1].no_type_hazard">
+                                                        <div class="mx-2" style="width: 28%; padding: 16px" ng-if="item_list.no_type_hazard == item.hazard[$index - 1].no_type_hazard">
 
                                                         </div>
 
                                                         @* number *@
-                                                        <div class="" style="padding-left: 4px; width: 10%">
-                                                            <div class="align-top">
-                                                                <div class="font-sans-serif btn-reveal-trigger position-static ">
-                                                                    @* <span class="">{{item_list.no_subareas}}.{{item_list.no_type_hazard}}.{{ item_list.no }}</span> *@
+                                                        <div class="" style=" width: 5%">
+                                                             <div class="align-top ">
+                                                                <div class="font-sans-serif btn-reveal-trigger position-static">
+                                                                    <span class="px-1">{{item_list.no_subareas}}.{{ item_list.no_type_hazard }}.{{ getCustomIndex($index, item_list.no_type_hazard, item.hazard) }}</span>
                                                                 </div>
                                                             </div>
-
-                                                            <div class="mt-3 font-sans-serif btn-reveal-trigger position-static" ng-class="{'d-none': !(tab_general_active)}">
+                                                            <div class="font-sans-serif btn-reveal-trigger position-static" ng-class="{'d-none': !(tab_general_active)}">
                                                                 <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 p-1"
                                                                         ng-class="{'disabled-link':(!tab_general_active || !(tab_general_active && data_header[0].pha_status<=12 ))}"
                                                                         type="button" 
@@ -1127,7 +1128,7 @@
                                                         </div>
 
                                                         @* master_hazard_riskfactors *@
-                                                        <div class="mx-2"  style="width: 32%;">
+                                                        <div class="mx-2"  style="width: 28%;">
                                                             <button ng-if="!item_list.health_hazard" 
                                                                 ng-class="{'disabled-link':(!tab_general_active || !(tab_general_active && data_header[0].pha_status<=12 ))}"
                                                                 ng-disabled="!item_list.id_type_hazard"
@@ -1149,7 +1150,7 @@
                                                         @* health_effect_rating *@
                                                         <div class="d-flex align-items-center justify-content-center gap-2"  
                                                             ng-class="{'disabled-link':(!tab_general_active || !(tab_general_active && data_header[0].pha_status<=12 ))}"
-                                                            style="width: 8%;">
+                                                            style="width: 13%;">
                                                             @* rating *@
                                                             <div class="effect-rating" 
                                                                 @* ng-class="{'mr-27': (item_list.count_riskfactors <= 1)}" *@
@@ -1193,14 +1194,37 @@
                                                                 </div>
                                                             </div>
                                                         </div>
+
+                                                        @* functions *@
+                                                        <div class="d-flex justify-content-center align-items-center gap-2" style="width: 21%;">
+                                                            <button class="btn btn-copy" 
+                                                                ng-class="{ 'd-none': (item_list.no_type_hazard == item.hazard[$index - 1].no_type_hazard) }"
+                                                                data-toggle="tooltip" 
+                                                                data-placement="top" 
+                                                                title="Copy Description of Work or Tasks"
+                                                                ng-disabled="(!tab_general_active || !(tab_general_active && data_header[0].pha_status<=12 ))"
+                                                                @* ng-click=copyDescription(item) *@
+                                                                >
+                                                                <span class="fas fa-copy fa-lg"></span>
+                                                                Copy
+                                                            </button>
+                                                            <button class="btn btn-paste" 
+                                                                ng-class="{ 'd-none': (item_list.no_type_hazard == item.hazard[$index - 1].no_type_hazard) }"
+                                                                data-toggle="tooltip" 
+                                                                data-placement="top" 
+                                                                title="Copy Description of Work or Tasks"
+                                                                @* ng-click="pasteDescription(item)" *@
+                                                                ng-disabled="!dec_copy_status">
+                                                                <span class="fa-solid fa-clipboard fa-lg"></span>
+                                                                Paste 
+                                                            </button>
+                                                        </div>
                                                     </div>
                                                 </td>
                                             </tr>
                                         </tbody>
                                     </table>
-
                                 </div>
-
                             </div>
                         </div>
                     </div>
@@ -1391,9 +1415,9 @@
                                                     </div>
                                                 </td>
 
-                                                <td class="align-top status text-center px-1" ><!----span same id work group? same no. ----->
-                                                    <div class="d-flex justify-content-center gap-2">
-                                                        <button class="btn btn-outline-primary p-2" 
+                                                <td class="align-middle pt-1" ><!----span same id work group? same no. ----->
+                                                    <div class="d-flex justify-content-center align-items-center gap-2">
+                                                        <button class="btn btn-copy" 
                                                             data-toggle="tooltip" 
                                                             data-placement="top" 
                                                             title="Copy Description of Work or Tasks"
@@ -1402,7 +1426,7 @@
                                                             <span class="fas fa-copy fa-lg"></span>
                                                             Copy
                                                         </button>
-                                                        <button class="btn btn-outline-success p-2" 
+                                                        <button class="btn btn-paste" 
                                                             data-toggle="tooltip" 
                                                             data-placement="top" 
                                                             title="Copy Description of Work or Tasks"
@@ -1647,10 +1671,17 @@
 
                                                     <td class="td-custom " >
                                                         <div class="box" 
-                                                            style="min-width: max-content; padding-top: 15px; text-align: center;"
+                                                            style="min-width: max-content; padding-top: 10px; text-align: center;"
                                                             ng-repeat="ws in item.worksheet"
                                                             ng-class="{'unbox': (item.worksheet[item.worksheet.length - 1].seq == ws.seq)}">
-                                                            {{ ws.initial_risk_rating }}
+                                                            <div class="card-initial" 
+                                                                ng-if="ws.initial_risk_rating"
+                                                                ng-class="{
+                                                                    'bg-success': (ws.initial_risk_rating == 'Low' || ws.initial_risk_rating == 'Low\r\n'),
+                                                                    'bg-warning': (ws.initial_risk_rating == 'Meduim' || ws.initial_risk_rating == 'Meduim\r\n') 
+                                                                    }" >
+                                                                {{ ws.initial_risk_rating }}
+                                                            </div>
                                                         </div>
                                                     </td>
 
@@ -1680,6 +1711,7 @@
                                                                     name="ef-{{item.index_rows}}-{{idx}}" 
                                                                     id="effective-{{item.index_rows}}-{{idx}}" 
                                                                     style="width: 20px;"
+                                                                    ng-disabled="hazard.initial_risk_rating == 'Low' || hazard.initial_risk_rating == 'Low\r\n'"
                                                                     value="0"
                                                                     ng-change="actionChangEffective(hazard)"
                                                                     ng-model="hazard.effective">
@@ -1690,6 +1722,7 @@
                                                                     name="ef-{{item.index_rows}}-{{idx}}" 
                                                                     id="ineffective-{{item.index_rows}}-{{idx}}" 
                                                                     style="width: 20px;"
+                                                                    ng-disabled="hazard.initial_risk_rating == 'Low' || hazard.initial_risk_rating == 'Low\r\n'"
                                                                     value="1"
                                                                     ng-change="actionChangEffective(hazard)"
                                                                     ng-model="hazard.effective">
@@ -1709,7 +1742,7 @@
                                                                 ng-change="actionChangeFrequencyLevel(hazard)"
                                                                 ng-model="hazard.residual_risk_rating" 
                                                                 style="min-width: 100px; font-size: 10.24px;"
-                                                                ng-disabled="!hazard.exposure_status">
+                                                                ng-disabled="!hazard.exposure_status || hazard.initial_risk_rating == 'Low' || hazard.initial_risk_rating == 'Low\r\n'">
                                                                 <option ng-repeat="item_m in data_residual_risk" ng-value="item_m.id">
                                                                     {{item_m.name}}
                                                                 </option>
@@ -1718,7 +1751,6 @@
                                                                 <option>High</option>
                                                             </select>
                                                         </div>
-                                                        
                                                     </td>
 
                                                     <td class="td-custom" >
@@ -2027,14 +2059,14 @@
 
                                             <td class="align-top rating white-space-nowrap text-start">
                                                 <div class="ms-3">
-                                                    <label>
+                                                    <label class="pt-2">
                                                         {{item.worker_group}} 
                                                     </label>
                                                 </div>
                                             </td>
                                             
                                             <td class="align-top rating white-space-nowrap">
-                                                 <div style="min-width: 100px; height: max-content; overflow: auto;">
+                                                 <div class="pt-2" style="min-width: 100px; height: max-content; overflow: auto;">
                                                     <div class="d-flex flex-column gap-1 text-start" ng-repeat="item_dec in item.descriptions">
                                                         {{ item_dec.descriptions ? item_dec.descriptions : 'Not found' }}
                                                     </div>
@@ -2094,27 +2126,19 @@
                                             </td>
 
                                             <td class="align-top rating white-space-nowrap text-start">
-                                                @* <div class="d-flex justify-content-center box" >
-                                                    <div ng-if="hazard.health_effect_rating">
-                                                        <div class="effect-rating "
-                                                            ng-class="{
-                                                                    'bg-success': (item.initial_risk_rating == 'Low' ),
-                                                                    'bg-warning': (item.initial_risk_rating == 'Medium')
-                                                                    'bg-danger': (item.initial_risk_rating == 'High') 
-                                                            }" >
-                                                            {{item.initial_risk_rating }}
-                                                        </div>
-                                                    </div>
-                                                </div>     *@
-
                                                 <div class="box-recom " 
-                                                    style="min-width: max-content; padding-top: 7px; font-size: 13px; text-align: center;"
+                                                    style="min-width: max-content; padding-top: 7px; text-align: center;"
                                                     ng-repeat="ws in item.worksheet | filter: filterInitialRiskRating">
-                                                    {{ ws.action_status == 'Close' ? ws.initial_risk_rating : '' }}
+                                                    <div class="card-initial"
+                                                        ng-class="{
+                                                            'bg-success': (ws.initial_risk_rating == 'Low' || ws.initial_risk_rating == 'Low\r\n'),
+                                                            'bg-warning': (ws.initial_risk_rating == 'Meduim' || ws.initial_risk_rating == 'Meduim\r\n') }" >
+                                                        {{ ws.initial_risk_rating }}
+                                                    </div>
                                                 </div>                                            
                                             </td>
   
-                                            <td class="align-top rating white-space-nowrap text-start">
+                                            <td class="">
                                                 @* <div class="d-flex justify-content-center box" >
                                                     <div ng-if="hazard.health_effect_rating">
                                                         <div class="effect-rating "
@@ -2127,11 +2151,27 @@
                                                         </div>
                                                     </div>
                                                 </div>    *@
-                                                 <div class="box-recom " 
+                                                 @* <div class="box-recom " 
                                                     style="min-width: max-content; padding-top: 7px; font-size: 13px; text-align: center;"
                                                     ng-repeat="ws in item.worksheet | filter: filterInitialRiskRating">
-                                                    {{ ws.residual_risk_rating }}
-                                                </div>                                                 
+                                                    {{ ws.action_status == 'Close' ? ws.residual_risk_rating : '' }}
+                                                </div>                                                  *@
+                                                <div class="box-recom" ng-repeat="ws in item.worksheet | filter: filterInitialRiskRating">
+                                                    <select class="form-select form-select-sm rounded-1" 
+                                                        ng-if="tab_worksheet_active"
+                                                        ng-class="{'disabled-link':(!tab_worksheet_active)}"
+                                                        @* ng-change="actionChangeWorksheet(item,item.seq,'frequency_level')" *@
+                                                        ng-change="actionChangeFrequencyLevel(ws)"
+                                                        ng-model="ws.residual_risk_rating" 
+                                                        style="min-width: 100px; font-size: 10.24px;">
+                                                        <option ng-repeat="item_m in data_residual_risk" ng-value="item_m.id">
+                                                            {{item_m.name}}
+                                                        </option>
+                                                        <option>Low</option>
+                                                        <option>Medieum</option>
+                                                        <option>High</option>
+                                                    </select>
+                                                </div>
                                             </td>
 
                                             <td class="" >
@@ -2587,7 +2627,7 @@
 
                     @* Report start *@
                     <div class="" ng-class="{'tab-pane fade show active':(action_part==9),'tab-pane fade':(action_part!==9)}"
-                        ng-if="data_general[0].expense_type !== 'MOC' && data_header[0].pha_status === 21"
+                        @* ng-if="data_general[0].expense_type !== 'MOC' && data_header[0].pha_status === 21" *@
                          id="tab-report" role="tabpanel" aria-labelledby="report-tab" ng-if="export_type==true">
 
                         <div class="m-3 row  gx-0 align-items-center">
