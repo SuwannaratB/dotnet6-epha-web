@@ -1445,7 +1445,7 @@
                                         <div class="col-12">
                                             <div class="row" style="background-color : #F8F8F8 ; width:80%"
                                                  ng-repeat="itemRam in master_ram | toArray | filter:{id: data_general[0].id_ram}">
-                                                <img src="{{itemRam.document_file_path}}" class="cursor-pointer" />
+                                                <img ng-src="{{itemRam.document_file_path}}" class="cursor-pointer" />
                                             </div>
                                         </div>
                                     </div>
@@ -1484,7 +1484,7 @@
                                                         <i class="fas fa-expand" style="color: #a1a1a6"></i>
                                                     </button>
                                                     <div id="fullscreenzone_ram" style="z-index:998">
-                                                        <img src="{{itemRam.document_file_path}}" class="cursor-pointer" style="width: 80%; " ng-click="toggleFullscreen_ram()" />
+                                                        <img ng-src="{{itemRam.document_file_path}}" class="cursor-pointer" style="width: 80%; " ng-click="toggleFullscreen_ram()" />
                                                     </div>
                                                 </div>
 
@@ -1984,7 +1984,7 @@
                                 <div class="row">
                                     <div class="col-12 d-flex justify-content-center">
                                         <div class="row" style="background-color : #F8F8F8 ; width:75%;">
-                                            <img src="{{itemRam.document_file_path}}" class="cursor-pointer" />
+                                            <img ng-src="{{itemRam.document_file_path}}" class="cursor-pointer" />
                                         </div>
                                     </div>
                                 </div>
@@ -4737,7 +4737,7 @@
                         </div>
                         <div class="col-11">
                             <div class="cursor-pointer " ng-repeat="itemRam in master_ram | toArray | filter:{id: data_general[0].id_ram}">
-                                <img src="{{itemRam.document_file_path}}" style="width:100%;" />
+                                <img ng-src="{{itemRam.document_file_path}}" style="width:100%;" />
                             </div>
                         </div>
                     </div>
@@ -4775,7 +4775,7 @@
 
                         <div class="col-11">
                             <div class="cursor-pointer " ng-repeat="itemRam in master_ram | toArray | filter:{id: data_general[0].id_ram}">
-                                <img src="{{itemRam.document_file_path}}" style="width:100%;" />
+                                <img ng-src="{{itemRam.document_file_path}}" style="width:100%;" />
                             </div>
                         </div>
                     </div>

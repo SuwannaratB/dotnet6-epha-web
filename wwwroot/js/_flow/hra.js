@@ -377,12 +377,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         };
 
         $scope.fileSelect = function (input, file_part) {
-            //drawing, responder, approver
             var file_doc = $scope.data_header[0].pha_no;
             const fileInput = input;
             const fileSeq = fileInput.id.split('-')[1];
             const fileInfoSpan = document.getElementById('filename' + fileSeq);
-    
+        
             // Function to truncate file name
             function truncateFilename(filename, length) {
                 if (!filename) return '';
@@ -391,48 +390,47 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 const end = filename.slice(-Math.floor(length / 2));
                 return `${start}.......${end}`;
             }
-    
+        
             if (fileInput.files.length > 0) {
                 const file = fileInput.files[0];
                 const fileName = file.name;
                 const fileSize = Math.round(file.size / 1024);
                 try {
-                    //fileInfoSpan.textContent = `${fileName} (${fileSize} KB)`;
-                    /*let shortenedFileName = fileName.length > 20 ? fileName.substring(0, 20) + '...' : fileName;
-                    fileInfoSpan.textContent = `${shortenedFileName} (${fileSize} KB)`;*/
                     const truncatedFileName = truncateFilename(fileName, 20);
-                    fileInfoSpan.textContent = `${truncatedFileName} (${fileSize} KB)`;
+                    if (fileInfoSpan) {
+                        fileInfoSpan.textContent = `${truncatedFileName} (${fileSize} KB)`;
+                    }
                 } catch (error) {
                     console.error('Error updating file info:', error);
                 }
-    
+        
                 if (file) {
-                    const allowedFileTypes = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'jpg', 'png', 'gif']; // รายการของประเภทของไฟล์ที่อนุญาตให้แนบ
-    
-                    const fileExtension = fileName.split('.').pop().toLowerCase(); // นำนามสกุลของไฟล์มาเปลี่ยนเป็นตัวพิมพ์เล็กทั้งหมดเพื่อให้เป็น case-insensitive
-    
+                    const allowedFileTypes = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'jpg', 'png', 'gif'];
+                    const fileExtension = fileName.split('.').pop().toLowerCase();
+        
                     if (allowedFileTypes.includes(fileExtension)) {
-                        // ทำการแนบไฟล์
-                        //set_alert("File attached successfully.");
+                        // Proceed with file attachment
                     } else {
                         $('#modalMsgFileError').modal({
                             backdrop: 'static',
-                            keyboard: false 
+                            keyboard: false
                         }).modal('show');
-                        //set_alert('Warning', "Please select a PDF, Word or Excel, Image file.");
                     }
                 } else {
                     console.log("No file selected.");
                 }
-    
-    
+        
                 var file_path = uploadFile(file, fileSeq, fileName, fileSize, file_part, file_doc);
-    
+        
             } else {
-                fileInfoSpan.textContent = "";
+                if (fileInfoSpan) {
+                    fileInfoSpan.textContent = "";
+                } else {
+                    console.error('fileInfoSpan element not found');
+                }
             }
-            // $("#divLoading").hide(); 
-        }              
+        }
+                  
         function uploadFile(file_obj, seq, file_name, file_size, file_part, file_doc) {
 
             var fd = new FormData();

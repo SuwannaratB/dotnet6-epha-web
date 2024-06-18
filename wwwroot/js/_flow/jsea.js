@@ -565,11 +565,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             const fileName = file.name;
             const fileSize = Math.round(file.size / 1024);
             try {
-                //fileInfoSpan.textContent = `${fileName} (${fileSize} KB)`;
-                /*let shortenedFileName = fileName.length > 20 ? fileName.substring(0, 20) + '...' : fileName;
-                fileInfoSpan.textContent = `${shortenedFileName} (${fileSize} KB)`;*/
                 const truncatedFileName = truncateFilename(fileName, 20);
-                fileInfoSpan.textContent = `${truncatedFileName} (${fileSize} KB)`;
+                if (fileInfoSpan) {
+                    fileInfoSpan.textContent = `${truncatedFileName} (${fileSize} KB)`;
+                }
             } catch (error) {
                 console.error('Error updating file info:', error);
             }

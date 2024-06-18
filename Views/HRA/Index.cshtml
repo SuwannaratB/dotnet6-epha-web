@@ -3542,7 +3542,7 @@
                         <div class="col-12 mt-1 pt-1" style="zoom:0.7;">
 
                             <div class="text-center cursor-pointer " ng-repeat="itemRam in master_ram | filter:{id: data_general[0].id_ram}">
-                                <img src="{{itemRam.document_file_path}}" style="width: 400px;  height:300px;" />
+                                <img ng-src="{{itemRam.document_file_path}}" style="width: 400px;  height:300px;" />
                             </div>
 
                         </div>
@@ -3569,7 +3569,7 @@
 
 
                         <div class="text-center cursor-pointer " ng-repeat="itemRam in master_ram | filter:{id: data_general[0].id_ram}">
-                            <img src="{{itemRam.document_file_path}}" style="width: 400px;  height:300px;" />
+                            <img ng-src="{{itemRam.document_file_path}}" style="width: 400px;  height:300px;" />
                         </div>
 
 

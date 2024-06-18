@@ -7,8 +7,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
 
     // Track location changes
     $rootScope.$on('$locationChangeStart', function(event, next, current) {
-        console.log('Location is changing from:', current, 'to:', next);
-
         if (unsavedChanges) {
             var confirmLeave = $window.confirm("You have unsaved changes. Are you sure you want to leave?");
             if (!confirmLeave) {
@@ -19,7 +17,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
 
     // close tab / browser window
     $window.addEventListener('beforeunload', function(event) {
-        console.log("Trigger Ec=vent",event)
         if (unsavedChanges) {
             var confirmationMessage = 'You have unsaved changes. Are you sure you want to leave?';
     
@@ -73,7 +70,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
         }
 
         var arr_details = $filter('filter')($scope.data_details, function (item) { return (item.seq == detail_seq); });
-        console.log("arr_details",arr_details)
         if (arr_details.length > 0 ) {
             if($scope.data_header[0].pha_status === 13){
                 arr_details[0].document_file_name_owner = null;
@@ -112,6 +108,15 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
             const file = fileInput.files[0];
             const fileName = file.name;
             const fileSize = Math.round(file.size / 1024);
+            try {
+                const truncatedFileName = truncateFilename(fileName, 20);
+                if (fileInfoSpan) {
+                    fileInfoSpan.textContent = `${truncatedFileName} (${fileSize} KB)`;
+                }
+            } catch (error) {
+                console.error('Error updating file info:', error);
+            }
+
 
             if (file) {
                 const allowedFileTypes = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'jpg', 'png', 'gif']; // รายการของประเภทของไฟล์ที่อนุญาตให้แนบ
@@ -214,9 +219,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
 
                             }
 
-
-
-                            console.log("arr_details => ",arr_details)
                         } else {
                             // กรณีเกิดข้อผิดพลาดในการร้องขอไปยัง server
                             console.error('มีข้อผิดพลาด: ' + request.status);
@@ -643,8 +645,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                     
                 }   
                 
-                console.log($scope);
-
                 // a.seq, a.pha_no, a.pha_version, a.pha_status, ms.descriptions
                 $scope.flow_status = arr.pha_doc[0].pha_status;
                 $scope.DetailsShow = '' + arr.pha_doc[0].pha_no + ' (' + arr.pha_doc[0].pha_request_name + ')';
@@ -687,7 +687,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                 const validUploadFile = set_valid_items($scope.fileInfoSpan, 'upload_file-'+ item.seq);
 
                 if (!validUploadFile) {
-                    console.log('im save')
                     $scope.confirmSaveFollowup('save', item);
                 }
             }else {
@@ -701,7 +700,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                 const validUploadFile = set_valid_items(docfiles.document_file_name, 'upload_file-'+ item.seq);
                 const validComment= set_valid_items(item.reviewer_comment, 'comment-'+ item.seq);
                 if (!validRemark && !validUploadFile && !validComment) {
-                    console.log('save')
                     $scope.confirmSaveFollowup('save', item);
                 }
             }
@@ -710,7 +708,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
             item.action_change = 1;
 
             if (item.action_status == 'Close with condition') {
-                console.log(item.reviewer_comment)
                 const validComment = set_valid_items(item.reviewer_comment, 'comment-'+ item.seq);
 
                 if(validComment) return
@@ -785,10 +782,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
     }
 
     function clear_valid_items(field) {
-        console.log("field",field)
-        console.log("$scope.seqUpload",$scope.seqUpload)
         var id_valid = document.getElementById('valid-' + field);
-        console.log("id_valid",id_valid)
 
         id_valid.className = "invalid-feedback text-danger";
     }
@@ -816,7 +810,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                     if (!item.document_file_name_owner) {
                         const validUploadFile = set_valid_items(item.document_file_name, 'upload_file-' + item.seq);
                         if (validUploadFile) {
-                            console.log('im save');
                             return;
                         }
                     }
@@ -824,7 +817,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                     if (!item.document_file_name) {
                         const validUploadFile = set_valid_items(item.document_file_name, 'upload_file-' + item.seq);
                         if (validUploadFile) {
-                            console.log('im save');
                             return;
                         }
                     }
@@ -871,8 +863,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                 }
 
             }
-
-            console.log(item, action)
 
             //item$scope.isSelectFile = true;
 
@@ -1047,7 +1037,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
     }
     $scope.confirmSaveReviewFollowup = function (action, _item) {
           
-        console.log(action, _item)
         var json_drawingworksheet = check_data_drawingworksheet(_item.seq);
 
         var arr_active = [];
@@ -1300,13 +1289,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
 
                 var safety_critical_equipment = 'N';
                 var id_ram = ($scope.data_general[0].id_ram === undefined || $scope.data_general[0].id_ram === null) ? '5' : $scope.data_general[0].id_ram;
-                console.log(id_ram,"show",$scope.master_ram_level,"ram_likelihood",ram_likelihood,"ram_security",ram_security)
 
                 var arr_items = $filter('filter')($scope.master_ram_level, function (item) {
                     return (item.id_ram == id_ram && item.security_level == ram_security);
                 });
 
-                console.log(arr_items,"ram_likelihood",ram_likelihood,"ram_security",ram_security)
                 if (arr_items.length > 0) {
                     //check ram_likelihood ว่าตก columns ไหน เพื่อหา ram1_priority
                     if (ram_likelihood == arr_items[0].likelihood1_level) { ram_risk = arr_items[0].ram1_priority; safety_critical_equipment = arr_items[0].likelihood1_criterion; }
