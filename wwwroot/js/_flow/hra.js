@@ -4064,7 +4064,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             if(action === 'save' && $scope.isMainApprover){
                 return $('#modalEditConfirm').modal('show');
             }
-            save_data_create(action, action_def);
+            save_data_create(action);
             $scope.unsavedChanges  = false;
 
         }
