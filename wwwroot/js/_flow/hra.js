@@ -736,7 +736,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         //     var tabElement = angular.element(ev);
         //     tabElement[0].focus();
         // } catch (error) { }
-
+        console.log(selectedTab)
         check_tab(selectedTab.name);
 
 
@@ -1499,7 +1499,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             if (element.initial_risk_rating === 'Meduim' || 
                 element.initial_risk_rating === 'Meduim\r\n' || 
                 element.initial_risk_rating === 'High' ||
-                element.initial_risk_rating === 'High\r\n'
+                element.initial_risk_rating === 'High\r\n' ||
+                element.initial_risk_rating === 'Very High' ||
+                element.initial_risk_rating === 'Very High\r\n'
             ) {
                 // console.log("Matched element:", element);
                 return true;
@@ -1515,7 +1517,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         return item.initial_risk_rating === 'Meduim' || 
             item.initial_risk_rating === 'Meduim\r\n' || 
             item.initial_risk_rating === 'High' ||
-            item.initial_risk_rating === 'High\r\n';
+            item.initial_risk_rating === 'High\r\n'||
+            item.initial_risk_rating === 'Very High' ||
+            item.initial_risk_rating === 'Very High\r\n';
     };
     
 
@@ -6116,6 +6120,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         scrollToRow($scope.select_hazard)
     });
 
+    $('#modalRisk').on('hidden.bs.modal', function () {
+        $scope.keywords.text = '';
+        $scope.fillterRisk();
+    });
 
     function scrollToRow(item) {
         if (!item || !item.id_health_hazard) return console.log('Not Found');
@@ -6296,6 +6304,20 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
         }
     }
+
+    $scope.getCustomIndex = function(currentIndex, currentTypeHazard, hazardList) {
+        let customIndex = 1;  // เริ่มต้นนับจาก 1
+    
+        // ตรวจสอบแต่ละรายการก่อน currentIndex เพื่อคำนวณค่า customIndex
+        for (let i = 0; i < currentIndex; i++) {
+            if (hazardList[i].no_type_hazard === currentTypeHazard) {
+                customIndex++;
+            }
+        }
+    
+        return customIndex;
+    };
+    
     
     $scope.Matrix_Frequency_Rating = function () {
          
