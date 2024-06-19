@@ -1197,13 +1197,14 @@
 
                                                         @* functions *@
                                                         <div class="d-flex justify-content-center align-items-center gap-2" style="width: 21%;">
-                                                            <button class="btn btn-copy" 
+                                                            <button class="btn btn-copy"  
                                                                 ng-class="{ 'd-none': (item_list.no_type_hazard == item.hazard[$index - 1].no_type_hazard) }"
                                                                 data-toggle="tooltip" 
                                                                 data-placement="top" 
                                                                 title="Copy Description of Work or Tasks"
-                                                                ng-disabled="(!tab_general_active || !(tab_general_active && data_header[0].pha_status<=12 ))"
-                                                                @* ng-click=copyDescription(item) *@
+                                                                @* ng-disabled="(!tab_general_active || !(tab_general_active && data_header[0].pha_status<=12 ))" *@
+                                                                disabled
+                                                                ng-click="copyHazard(item, item_list)"
                                                                 >
                                                                 <span class="fas fa-copy fa-lg"></span>
                                                                 Copy
@@ -1213,8 +1214,8 @@
                                                                 data-toggle="tooltip" 
                                                                 data-placement="top" 
                                                                 title="Copy Description of Work or Tasks"
-                                                                @* ng-click="pasteDescription(item)" *@
-                                                                ng-disabled="!dec_copy_status">
+                                                                ng-click="pasteHazard(item, item_list)"
+                                                                ng-disabled="isPasteHazard != item_list.no_type_hazard">
                                                                 <span class="fa-solid fa-clipboard fa-lg"></span>
                                                                 Paste 
                                                             </button>
