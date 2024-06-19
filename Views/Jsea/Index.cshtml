@@ -886,7 +886,22 @@
                                                                 </div>
 
                                                                 <!-- Specialist from data_relatedpeople_outsider -->
-                                                                <div class="row" ng-repeat="item2 in data_relatedpeople_outsider | toArray | filter:{id_session: selectdata_session,user_type:'specialist', user_type: 'reviewer'}" 
+                                                                <div class="row" ng-repeat="item2 in data_relatedpeople_outsider | toArray | filter:{ user_type: 'reviewer'}" 
+                                                                    ng-if="item2.user_displayname !== null && item2.id_session === item.seq">   
+                                                                    <div class="col-8 align-items-center  p-1">
+                                                                        <label class="mb-0 text-1100 fw-bold"
+                                                                            style="width:80%;border-color: #f1f2f4;">
+                                                                            {{ item2.user_displayname}}
+                                                                        </label>
+                                                                    </div>
+                                                                    <div class="col-4 align-items-center  p-1">
+                                                                        <label class="mb-0 text-1100 fw-bold"
+                                                                                style="width:80%;border-color: #f1f2f4;">
+                                                                                {{ item2.user_title}}
+                                                                        </label>
+                                                                    </div>                                                                       
+                                                                </div>
+                                                                <div class="row" ng-repeat="item2 in data_relatedpeople_outsider | toArray | filter:{user_type:'specialist'}" 
                                                                     ng-if="item2.user_displayname !== null && item2.id_session === item.seq">   
                                                                     <div class="col-8 align-items-center  p-1">
                                                                         <label class="mb-0 text-1100 fw-bold"
@@ -905,91 +920,6 @@
                                                         
                                                         </div>
 
-                                                        <div class="row d-flex pt-2 d-none" style="background-color:#F8F8F8; zoom:0.8;">
-                                                            <div class="col-6  mt-1">
-                                                                <div class="row" ng-class="{'d-none':(!tab_general_active)}">
-                                                                    <button class="btn btn-outline-secondary p-0 cursor-pointer col-auto" 
-                                                                            style="color: #2445fc; background-color: #f1f2f4; border-color: #f1f2f4;"
-                                                                            ng-click="openDataEmployeeAdd(item,'attendees')" 
-                                                                            title=" ผู้จัดทำ">
-                                                                        <span class="far fa-address-book fa-lg pe-1"></span>
-                                                                        Add Attendees:
-                                                                    </button>
-                                                                </div>
-                                                                <div class="row" ng-repeat="item2 in data_relatedpeople | toArray | filter:{id_session:item.seq, user_type:'attendees'}"
-                                                                    ng-if="item2.user_name !== null && item2.id_session === item.seq">
-                                                                    <div class="col-8 align-items-center  p-1">
-                                                                        <label class="mb-0 text-1100 fw-bold"
-                                                                                style="width:100%;border-color: #f1f2f4;">
-                                                                                {{ item2.user_displayname}}
-                                                                        </label>
-                                                                    </div>
-                                                                    <div class="col-4 align-items-center  p-1">
-                                                                        <label class="mb-0 text-1100 fw-bold"
-                                                                                style="width:80%;border-color: #f1f2f4;">
-                                                                                {{ item2.user_title}}
-                                                                        </label>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="row" ng-repeat="item2 in data_relatedpeople_outsider | toArray | filter:{id_session:item.seq, user_type:'attendees'}"
-                                                                    ng-if="item2.user_name !== null && item2.id_session === item.seq">
-                                                                    <div class="row align-items-center  p-1">
-                                                                        <label class="mb-0 text-1100 fw-bold"
-                                                                               style="width:80%;border-color: #f1f2f4;">
-                                                                            {{ item2.user_displayname}}
-                                                                        </label>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="col-6  mt-1 d-none">
-                                                                <div class="row" ng-class="{'d-none':(!tab_general_active)}">
-                                                                    <button class="btn btn-outline-secondary p-0 cursor-pointer col-auto" style="color: #2445fc; background-color: #f1f2f4; border-color: #f1f2f4;"
-                                                                            ng-click="openDataEmployeeAdd(item,'reviewer')">
-                                                                        <span class="far fa-address-book fa-lg pe-1"></span>Add Approver AE or AGSI:
-                                                                    </button>
-                                                                </div>
-                                                                <div class="row" ng-repeat="item2 in data_relatedpeople | toArray | filter:{id_session:item.seq, user_type:'reviewer'}"
-                                                                    ng-if="item2.user_name !== null && item2.id_session === item.seq">
-                                                                    <div class="row align-items-center  p-1">
-                                                                        <label class="mb-0 text-1100 fw-bold"
-                                                                               style="width:80%;border-color: #f1f2f4;">
-                                                                               {{ item2.user_displayname}}
-                                                                        </label>
-                                                                    </div>
-                                                                </div>
-
-                                                            </div>
-
-                                                            <div class="col-6  mt-1">
-                                                                <div class="row" ng-class="{'d-none':(!tab_general_active)}">
-                                                                    <button class="btn btn-outline-secondary p-0 cursor-pointer col-auto" 
-                                                                            style="color: #2445fc; background-color: #f1f2f4; border-color: #f1f2f4;"
-                                                                            ng-click="openDataEmployeeAdd(item,'specialist')">
-                                                                        <span class="far fa-address-book fa-lg pe-1"></span>
-                                                                        Add ผู้เชี่ยวชาญเฉพาะด้าน (ถ้ามี):
-                                                                    </button>
-                                                                </div>
-                                                                <div class="row" ng-repeat="item2 in data_relatedpeople | toArray | filter:{id_session:item.seq, user_type:'specialist'}"
-                                                                    ng-if="item2.user_name !== null && item2.id_session === item.seq">
-                                                                    <div class="row align-items-center  p-1">
-                                                                        <label class="mb-0 text-1100 fw-bold" 
-                                                                                style="width:80%;border-color: #f1f2f4;">
-                                                                            {{ item2.user_displayname}}
-                                                                        </label>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="row" ng-repeat="item2 in data_relatedpeople_outsider | toArray | filter:{id_session:item.seq, user_type:'specialist'}">
-                                                                    <div class="row align-items-center  p-1">
-                                                                        <label class="mb-0 text-1100 fw-bold"
-                                                                               style="width:80%;border-color: #f1f2f4;">
-                                                                               {{item2.user_title}}
-                                                                        </label>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                        </div>
                                                     </td>
 
                                                     @* Session Date *@
@@ -2056,17 +1986,17 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="" style=" width: 100%;min-height: 100% " 
-                                                            ng-class="{'disabled-link': !tab_worksheet_active && !tab_general && !(data_header[0].pha_status === 21 
-                                                                    && user_name === (data_approver | filter: {approver_type: 'approver'})[0].user_name)}">
+                                                        <div class="" style=" width: 100%;min-height: 100% " >
+                                                            <!----ng-class="{'disabled-link': !tab_worksheet_active && !tab_general && !(data_header[0].pha_status === 21 
+                                                                    && user_name === (data_approver | filter: {approver_type: 'approver'})[0].user_name)}">--->                                                            
                                                             <textarea class="form-control worksheetscroll rounded-1 p-0 m-0 w-100 border border-0"
                                                                       style=" width: 100%; font-size: 10px;resize: none;"
-                                                                      
+                                                                      ng-style="{'min-height': (34 * (data_listworksheet | filter:{workstep_no: item.workstep_no}).length) + 'px'}"
                                                                       id="workstep_worksheet_{{item.seq}}" 
                                                                       name="workstep_worksheet_{{item.seq}}"
                                                                       placeholder="Work Step" 
                                                                       ng-model="item.workstep"
-                                                                      ng-readonly="(data_header[0].pha_status === 21 && params !== 'edit' ? !isMainApprover : false)"
+                                                                      ng-readonly="(data_header[0].pha_status === 21 && params !== 'edit' && !isMainApprover? true : false)"
                                                                       ng-keyup="filterResultHistory(item.workstep, 'workstep', 'workstep_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'');
                                                                                 (contentModified && item.workstep.trim() !== '') ? updateWorksheetChanges(item, item.seq, '') : null"
                                                                       ng-mouseenter="showTooltip = true" 
@@ -2128,17 +2058,17 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="autocomplete-container" style=" width: 100%; " 
-                                                            ng-class="{'disabled-link': !tab_worksheet_active && !tab_general && !(data_header[0].pha_status === 21 
-                                                                    && user_name === (data_approver | filter: {approver_type: 'approver'})[0].user_name)}">                                                     
+                                                        <div class="autocomplete-container" style=" width: 100%; " >  
+                                                            <!----ng-class="{'disabled-link': !tab_worksheet_active && !tab_general && !(data_header[0].pha_status === 21 
+                                                                    && user_name === (data_approver | filter: {approver_type: 'approver'})[0].user_name)}">--->                                                                                                               
                                                             <textarea class="form-control form-control-sm worksheetscroll rounded-1 p-0 m-0 w-100 border border-0 border-top-0"
                                                                       style=" width: 200px; font-size: 10px;resize: none;"
                                                                       id="taskdesc_worksheet_{{item.seq}}" 
                                                                       name="taskdesc_worksheet_{{item.seq}}"
                                                                       placeholder="taskdesc" 
                                                                       rows="3"
-                                                                      ng-readonly="(data_header[0].pha_status === 21 && params !== 'edit' ? !isMainApprover : false)"
-                                                                      ng-style="{'min-height': (30 * (data_listworksheet | filter:{workstep_no: item.workstep_no, taskdesc_no: item.taskdesc_no}).length) + 'px'}"
+                                                                      ng-readonly="(data_header[0].pha_status === 21 && params !== 'edit' && !isMainApprover? true : false)"
+                                                                      ng-style="{'min-height': (34 * (data_listworksheet | filter:{workstep_no: item.workstep_no, taskdesc_no: item.taskdesc_no}).length) + 'px'}"
                                                                       ng-model="item.taskdesc"
                                                                       ng-keyup="filterResultHistory(item.taskdesc, 'taskdesc', 'taskdesc_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')">
                                                             </textarea>
@@ -2206,7 +2136,7 @@
                                                                       placeholder="potentailhazard" 
                                                                       rows="3"
                                                                       ng-model="item.potentailhazard"
-                                                                      ng-readonly="(data_header[0].pha_status === 21 && params !== 'edit' ? !isMainApprover : false)"
+                                                                      ng-readonly="(data_header[0].pha_status === 21 && params !== 'edit' && !isMainApprover? true : false)"
                                                                       ng-keyup="filterResultHistory(item.potentailhazard, 'potentailhazard', 'potentailhazard_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')">
                                                             </textarea>
                                                             <div class="autocomplete-dropdown" style="position: absolute;"
@@ -2263,16 +2193,16 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="autocomplete-container" style=" width: 100%; " 
-                                                            ng-class="{'disabled-link': !tab_worksheet_active && !tab_general && !(data_header[0].pha_status === 21 
-                                                                    && user_name === (data_approver | filter: {approver_type: 'approver'})[0].user_name)}">
+                                                        <div class="autocomplete-container" style=" width: 100%; " >
+                                                            <!---ng-class="{'disabled-link': !tab_worksheet_active && !tab_general && !(data_header[0].pha_status === 21 
+                                                            && user_name === (data_approver | filter: {approver_type: 'approver'})[0].user_name)}"------>
                                                             <textarea class="form-control form-control-sm worksheetscroll rounded-1 p-0 m-0 w-100 border border-0 border-top-0"
                                                                       style=" width: 200px; font-size: 10px;resize: none;"
                                                                       id="possiblecase_worksheet_{{item.seq}}" 
                                                                       name="possiblecase_worksheet_{{item.seq}}"
                                                                       placeholder="possiblecase" 
                                                                       rows="3"
-                                                                      ng-readonly="(data_header[0].pha_status === 21 && params !== 'edit' ? !isMainApprover : false)"
+                                                                      ng-readonly="(data_header[0].pha_status === 21 && params !== 'edit' && !isMainApprover? true : false)"
                                                                       ng-model="item.possiblecase"
                                                                       ng-keyup="filterResultHistory(item.possiblecase, 'possiblecase', 'possiblecase_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')">
                                                             </textarea>
@@ -2379,8 +2309,9 @@
                                                                 <h6 class="me-1 text-center" style=" width: 20px;">{{item.ram_befor_risk}}</h6>
                                                                 @*staus 11 12 ,admin edit ,Approver*@
                                                                 <span ng-class="{'disabled-link': !tab_worksheet_active && !tab_general && !isMainApprover}"
-                                                                    ng-hide="!isMainApprover"
-                                                                    class="fas fa-pencil-alt fa-sm " style=" width: 8px;"></span>
+                                                                    ng-hide="data_header[0].pha_status === 21 && !isMainApprover"
+                                                                    class="fas fa-pencil-alt fa-sm" style="width: 8px;"></span>
+
                                                             </div>
                                                         </button>
                                                     </div>
@@ -2407,7 +2338,7 @@
                                                                       id="recommendations_worksheet_{{item.seq}}" name="recommendations_worksheet_{{item.seq}}"
                                                                       placeholder="Recommendations" rows="3"
                                                                       ng-model="item.recommendations"
-                                                                      ng-readonly="(data_header[0].pha_status === 21 && params !== 'edit' ? !isMainApprover : false)"
+                                                                      ng-readonly="(data_header[0].pha_status === 21 && params !== 'edit' && !isMainApprover? true : false)"
                                                                       ng-keyup="filterResultHistory(item.recommendations, 'recommendations', 'recommendations_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')"></textarea>
 
                                                             <div class="autocomplete-dropdown col-auto" style="position: absolute;"
@@ -2434,15 +2365,15 @@
                                                     <div class="d-flex align-items-top w-100"
                                                          ng-if="item.row_type =='workstep' || item.row_type =='taskdesc' || item.row_type =='potentailhazard' || item.row_type =='possiblecase' ">
                                                         @* {{item.responder_action_by}} *@
-                                                        <div class="autocomplete-container" style=" width: 100%; " 
-                                                            ng-class="{'disabled-link': !tab_worksheet_active && !tab_general && !(data_header[0].pha_status === 21 
-                                                                    && user_name === (data_approver | filter: {approver_type: 'approver'})[0].user_name)}">
+                                                        <div class="autocomplete-container" style=" width: 100%; " >
+                                                            <!----ng-class="{'disabled-link': !tab_worksheet_active && !tab_general && !(data_header[0].pha_status === 21 
+                                                                    && user_name === (data_approver | filter: {approver_type: 'approver'})[0].user_name)}">--->                                                            
                                                             <textarea class="form-control form-control-sm worksheetscroll rounded-1 p-0 m-0 w-100 border border-end-0 border-top-0 resize: none;"
                                                                       style=" min-width: 200px !important; max-width: 300px !important; font-size: 10px; resize:none;"
                                                                       id="responder_action_by_worksheet_{{item.seq}}" name="responder_action_by_worksheet_{{item.seq}}"
                                                                       placeholder="Action by" rows="3"
                                                                       ng-model="item.responder_action_by"
-                                                                      ng-readonly="(data_header[0].pha_status === 21 && params !== 'edit' ? !isMainApprover : false)"
+                                                                      ng-readonly="(data_header[0].pha_status === 21 && params !== 'edit' && !isMainApprover? true : false)"
                                                                       ng-keyup="filterResultHistory(item.responder_action_by, 'responder_action_by', 'responder_action_by_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')"></textarea>
 
                                                             <div class="autocomplete-dropdown col-auto" style="position: absolute;"
@@ -2475,8 +2406,7 @@
                                                 <td class="align-top border border-light border-end-0  border-start-0  border-top-0 border-active"
                                                     style="padding: 0 !important; width: 20px;">
                                                     <div class="align-items-center text-end mt-1" style=" width: 20px;" 
-                                                            ng-class="{'disabled-link': !tab_worksheet_active && !tab_general && !(data_header[0].pha_status === 21 
-                                                                    && user_name === (data_approver | filter: {approver_type: 'approver'})[0].user_name)}">
+>
                                                         <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end"
                                                                 type="button" ng-click="openModalDataRAM_Worksheet(item,'l',item.seq,'after')">
                                                             <div class="d-flex">

@@ -463,25 +463,40 @@ background-color: #3e8e41;
 
 /*Modal*/
 
-/*read only content*/
+/* Style for all readonly textareas */
 .form-control[readonly] {
-  cursor: default;
-  background-color: transparent;
-  border: none;
-  resize: none; 
+  cursor: default !important;
+  background-color: transparent !important;
+  border: none !important;
+  resize: none !important;
 }
+
 .form-control[readonly]:focus {
-  outline: none; 
-  box-shadow: none; 
-  border-color: initial; 
-  cursor: context-menu !important; 
+  outline: none !important;
+  box-shadow: none !important;
+  border-color: initial !important;
+  cursor: context-menu !important;
 }
 
 .form-control[readonly]:hover {
-  cursor: pointer; 
+  cursor: pointer !important;
 }
-.disabled-link textarea[readonly] {
-  pointer-events: none; 
-  cursor: context-menu !important; 
 
+/* Additional styles when within an element with the 'disabled-link' class */
+.disabled-link .form-control[readonly] {
+  cursor: default !important;
+  background-color: transparent !important;
+  border: none !important;
+  resize: none !important;
+}
+
+.disabled-link .form-control[readonly]:focus {
+  outline: none !important;
+  box-shadow: none !important;
+  border-color: initial !important;
+  cursor: context-menu !important;
+}
+
+.disabled-link .form-control[readonly]:hover {
+  cursor: pointer !important;
 }
