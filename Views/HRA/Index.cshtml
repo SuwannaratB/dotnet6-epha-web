@@ -302,7 +302,6 @@
                                     <!-- toc -->
                                     <!-- Unit No -->
                                     <div class="col-md-3 p-1 align-items-top" ng-if="item.id_company != '9999' ">
-
                                         <label class="form-label ps-0" for="unit"><b class="text-danger"> * </b>Name of Area </label>
                                         <label class="form-label ps-0" ng-if="select_history_tracking_record">
                                             <a class="form-label far fa-comment-alt text-warning cursor-pointer" 
@@ -352,6 +351,7 @@
                                             <option id="5YEAR">5YEAR</option>
                                         </select>
                                     </div>
+
                                     @* Reference Number  *@
                                     <div class="col-md-3 ">
                                         <div class="row g-0 align-items-center">
@@ -376,7 +376,6 @@
 
                                 <div class="mx-1 row  g-3 align-items-center" ng-repeat="item in data_general"
                                      ng-class="{'disabled-link':(!tab_general_active)}">
-
                                     <!-- Project Name -->
                                     <div class="col-md-5 p-1">
 
@@ -577,8 +576,7 @@
                                                                         </label> *@
                                                                     <div class="col-8 align-items-center  p-1">
                                                                         <label class="mb-0 text-1100 fw-bold" tyle="width:100%;border-color: #f1f2f4;">
-                                                                            {{ item2.verified ? '(Verified)' : '' }}
-                                                                            {{ item2.approver_type == 'approver' && item2.user_displayname ? '' : ''}}  
+                                                                            {{ item2.approver_type == 'section_head' && item2.user_displayname ? '(Verified)' : ''}}  
                                                                             {{ item2.user_displayname}}                                                                        </label>
                                                                     </div>
                                                                     <div class="col-4 align-items-center  p-1">
@@ -2998,12 +2996,16 @@
                 </div>
 
                 <!------------show name after add   --------------->
-                <div class="modal-header bg-soft" ng-if="(selectDatFormType !== 'owner' &&  params !== 'edit_approver' && (data_memberteam || data_approver).length > 1 )">
+                <div class="modal-header bg-soft" 
+                    ng-if="selectDatFormType !== 'owner' && params !== 'edit_approver' && 
+                            ((selectDatFormType === 'member' && data_memberteam.length > 1) || 
+                            (selectDatFormType === 'approver' && data_approver.length > 1))">
                     <h5 class="text-900 mb-0">
-                        <span class="me-2 text-primary"><B>|</B></span> {{ selectDatFormType === 'member' ? 'Member Team' : 'Approver' }}
+                        <span class="me-2 text-primary"><b>|</b></span> 
+                        {{ selectDatFormType === 'member' ? 'Member Team' : 'Approver' }}
                     </h5>
                 </div>
-       
+
                 <div class="modal-body" 
                     ng-if="(selectDatFormType !== 'owner' && (
                                 data_memberteam.length > 1 || 
@@ -3029,16 +3031,35 @@
                                         ng-click="removeDataEmployee(item2.seq, selectdata_session)">
                                     <span class="fa-regular fa-trash-can fa-lg"></span>
                                 </button> 
-                                <div class="form-check mb-0 ms-2 text-1100 fw-bold d-flex align-contents-center gap-2" ng-if="selectDatFormType == 'approver'">
+                                @*<div class="form-check mb-0 ms-2 text-1100 fw-bold d-flex align-contents-center gap-2" ng-if="selectDatFormType == 'approver'">
+                                    <input class="form-check-input disabled-link rounded-2 cursor-pointer"
+                                        style="width: 24px; height:24px;"
+                                        type="checkbox"
+                                        ng-if="item2.approver_type === 'section_head'"
+                                        ng-checked="item2.isSectionHead"
+                                        ng-click="actionChangeQMTS(item2, item2.seq)">
+                                    <input class="form-check-input rounded-2 cursor-pointer"
+                                        type="checkbox"
+                                        style="width: 24px; height:24px;"
+                                        ng-if="item2.approver_type !== 'section_head'"
+                                        ng-checked="!item2.isSectionHead"
+                                        ng-click="actionChangeQMTSUnCheck(item2, item2.seq)">
+                                    <label class="form-check-label m-auto fw-bold" for="approver_section_head">(Verified)</label>
+                                </div>*@
+                                <div class="form-check mb-0 ms-2 text-1100 fw-bold d-flex align-contents-center" ng-if="selectDatFormType == 'approver'">
+                                    <input class="form-check-input disabled-link rounded-2 cursor-pointer" 
+                                        style="width: 24px; height:24px;"
+                                        type="checkbox" 
+                                        ng-if="item2.approver_type =='section_head'" 
+                                        checked 
+                                        ng-click="actionChangeSafety(item2, item2.seq)">
                                     <input class="form-check-input rounded-2 cursor-pointer" 
                                         type="checkbox" 
                                         style="width: 24px; height:24px;"
-                                        ng-model="item2.verified"
-                                        ng-checked="item2.verified"
-                                        ng-click="actionVerified(item2)"
-                                        ng-change="actioChangenVerified(item2)">
-                                    <label class="form-check-label m-auto fw-bold" for="">(Verrified)</label>
-                                </div>                           
+                                        ng-if="!(item2.approver_type =='section_head')" 
+                                        ng-click="actionChangeSafetyUnCheck(item2, item2.seq)">
+                                    <label class="form-check-label m-auto fw-bold" for="approver_safety">(Verified)</label>                                    
+                                </div>                                
                                 <label class="mb-0 ms-3 text-1100 fw-bold" style="width: 30%; border-color: #f1f2f4;">{{ item2.user_displayname }}</label>
                                 <label class="mb-0 text-1100 fw-bold" style="width: 25%; border-color: #f1f2f4;">{{ item2.user_title }}</label>
                             </div>
@@ -3061,13 +3082,25 @@
                                 </button> 
                                 <div ng-if="!item2.id_tasks" style=" width: 25px; height:25px;"></div>
                                 <div class="form-check mb-0 ms-2 text-1100 fw-bold d-flex align-contents-center gap-2" ng-if="selectDatFormType == 'approver'">
-                                    <input class="form-check-input rounded-2 cursor-pointer" 
+                                    @*<input class="form-check-input rounded-2 cursor-pointer" 
                                         type="checkbox" 
                                         style="width: 24px; height:24px;"
                                         ng-model="item2.verified"
                                         ng-checked="item2.verified"
                                         ng-click="actionVerified(item2)">
-                                    <label class="form-check-label m-auto fw-bold" for="">(Verrified)</label>
+                                    <label class="form-check-label m-auto fw-bold" for="">(Verrified)</label>*@
+                                    <input class="form-check-input disabled-link rounded-2 cursor-pointer" 
+                                        style="width: 24px; height:24px;"
+                                        type="checkbox" 
+                                        ng-if="item2.approver_type =='section_head'" 
+                                        checked 
+                                        ng-click="actionChangeQMTS(item2, item2.seq)">
+                                    <input class="form-check-input rounded-2 cursor-pointer" 
+                                        type="checkbox" 
+                                        style="width: 24px; height:24px;"
+                                        ng-if="!(item2.approver_type =='section_head')" 
+                                        ng-click="actionChangeQMTSUnCheck(item2, item2.seq)">
+                                    <label class="form-check-label m-auto fw-bold" for="approver_section_head">(Verrified)</label>                                    
                                 </div>                           
                                 <label class="mb-0 ms-3 text-1100 fw-bold" style="width: 30%; border-color: #f1f2f4;">
                                     {{ item2.user_displayname }}
@@ -3098,7 +3131,8 @@
                 </div>
 
                 <!------------contractor/out source-------------->
-                <div class="modal-header bg-soft" ng-if="!(selectDatFormType =='approver'|| selectDatFormType =='reviewer') && (showContractor || (data_relatedpeople_outsider | toArray | filter:{user_type: selectDatFormType}).length > 1)">
+                <div class="modal-header bg-soft" 
+                    ng-if="!(selectDatFormType =='approver'|| selectDatFormType =='reviewer') && (showContractor || (data_relatedpeople_outsider | toArray | filter:{user_type: selectDatFormType}).length > 1)">
                     <h5 class="text-900 mb-0"> 
                         <span class=" me-2 text-primary"><B>|</B></span>Contracter/Outsouce (if concern)
                     </h5>
@@ -3449,10 +3483,7 @@
         </div>
     </div>
     <!--Modal Export & Import Data End-->
-    @*
 
-
-    *@
     @* RAM *@
 
     <!--Modal RAM Start-->

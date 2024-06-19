@@ -1157,6 +1157,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         $scope.master_apu = JSON.parse(replace_hashKey_arr(arr.apu));
                         $scope.master_toc = JSON.parse(replace_hashKey_arr(arr.toc));
                         $scope.master_unit_no = JSON.parse(replace_hashKey_arr(arr.unit_no)); // NAME OF AREA --> เลือกจากตาราง epha_m_business_unit
+                        //defualt unit no
+                        $scope.master_unit_no_list = $scope.master_unit_no;
 
                         $scope.master_subarea = JSON.parse(replace_hashKey_arr(arr.subarea));
                         $scope.master_subarea_location = JSON.parse(replace_hashKey_arr(arr.subarea_location));
@@ -3903,8 +3905,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
         $scope.confirmSave = function (action) {
 
-
-            console.log("$scope.data_tasks",$scope.data_tasks)
             //check required field 
             var pha_status = $scope.data_header[0].pha_status;
             //11	DF	Draft
@@ -4858,6 +4858,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             if (type_text == "meeting_date") { }
             if (type_text == "unit_no") {
+
+                //update id_apu ด้วย 
+                //$scope.data_general[0].id_apu = _arr;
+
+                console.log("==> _arr",_arr)
                 var arrText = $filter('filter')($scope.master_unit_no, function (item) {
                     return (item.id == _arr.id_unit_no);
                 });
@@ -4866,15 +4871,22 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 }
             }
             if(type_text == "apu"){
+               //update id_apu ด้วย 
+                $scope.data_general[0].id_apu = _arr.id_apu;
+
                 $scope.master_toc_list = $scope.master_toc.filter(item => item.id_apu === _arr.id_apu);
 
                 var master = $scope.master_unit_no.filter(item => 
                     item.id_apu === _arr.id_apu && 
                     $scope.master_toc_list.some(toc => toc.id === item.id_plant_area)
                 );
-                
-                console.log("master",master)
+
+
+
+                console.log("update ap",$scope.data_general)
+                console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",)
                 $scope.master_unit_no_list = angular.copy(master);
+
             }
             if (type_text == "sub_area") {
                 var arrText = $filter('filter')($scope.master_subarea_location, function (item) {
@@ -5622,30 +5634,30 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             apply();
         };
 
-        $scope.actionChangeQMTS = function (item, seq) {
-
-        }
-        $scope.actionChangeQMTSUnCheck = function (item, seq) {
-
+        $scope.actionChangeSafety = function(item, seq){
+        }   
+    
+        $scope.actionChangeSafetyUnCheck = function (item, seq) {
+    
             for (const value of $scope.data_approver) {
-                value.approver_type = 'section_head';
+                value.approver_type = 'approver';
             }
-            item.approver_type = 'approver';
-            apply();
-        }
-
-        $scope.actionVerified = function (item) {
-            $scope.data_approver.forEach(el => {
-                if (el.verified) {
-                    el.verified = false;
-                }
+            item.approver_type = 'section_head';
+    
+            $scope.data_approver.sort(function(a, b) {
+                if (a.approver_type === "section_head") return -1;
+                if (b.approver_type === "section_head") return 1;
+                return 0;
             });
-        }
 
-        $scope.actioChangenVerified = function (item) {
-            $scope.data_approver.sort((a, b) => {
-                return (b.verified === true) - (a.verified === true);
+            $scope.data_approver.forEach(function(approver) {
+                approver.action_change = 1;
+                approver.action_type = 'update';
             });
+                
+            $timeout(function() {
+                apply();
+            }, 100);
         }
 
     }
