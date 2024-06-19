@@ -364,23 +364,26 @@
                             <!-- Unit No -->
                             <div class="col-md-3 p-1 align-items-top" 
                                 ng-if="item.id_company != '9999' "
+                                ng-class="{'disabled-link':(!tab_general_active)}"
                                 style="display: flex; flex-direction: column; padding-top: 2px;">
                                     <label class="form-label ps-0" style="margin-top: 4px;" for="unit">
                                         <b class="text-danger d-none"> * </b>
                                         Unit No 
                                     </label>
                                     <div class="dropdown">
-                                        <button id="dropdown_unit_no" class="dropbtn" >
+                                        <button id="dropdown_unit_no" class="dropbtn" ng-class="{'disabled-link':(!tab_general_active)}">
                                             {{item.unit_no_name}}
                                         </button>
                                         <div id="unit_no" class="dropdown-content">
                                             <input id="dropdown_input" 
+                                                ng-class="{'disabled-link':(!tab_general_active)}"
                                                 class="dropdown_input" 
                                                 type="text" 
                                                 placeholder="Search.." 
                                                 ng-model="search_keywords.unit_no"
                                                 ng-change="filterFunction('unit_no')">
                                             <a  ng-repeat="item2 in master_unit_no_list" 
+                                                ng-class="{'disabled-link':(!tab_general_active)}"
                                                 ng-if="item2.id_apu == item.id_apu"
                                                 ng-click="changeUnitNo(item2)"
                                                 value="item2.id" >
@@ -437,23 +440,26 @@
                                     <!-- functional location -->
                                     <div class="col-md-3 p-1 align-items-top" 
                                         ng-if="item.id_company != '9999' "
+                                        ng-class="{'disabled-link':(!tab_general_active)}"
                                         style="display: flex; flex-direction: column; padding-top: 2px;">
                                             <label class="form-label ps-0" style="margin-top: 4px;" for="unit">
                                                 <b class="text-danger d-none"> * </b>
                                                 Functional Location
                                             </label>
                                             <div class="dropdown">
-                                                <button id="dropdown_functional" class="dropbtn" >
+                                                <button id="dropdown_functional" class="dropbtn" ng-class="{'disabled-link':(!tab_general_active)}">
                                                     {{item.functional_location}}
                                                 </button>
                                                 <div id="functional" class="dropdown-content">
                                                     <input id="dropdown_input" 
                                                         class="dropdown_input" 
+                                                        ng-class="{'disabled-link':(!tab_general_active)}"
                                                         type="text" 
                                                         placeholder="Search.." 
                                                         ng-model="search_keywords.functional"
                                                         ng-change="filterFunction('functional')">
                                                     <a  ng-repeat="item2 in master_functional_list" 
+                                                        ng-class="{'disabled-link':(!tab_general_active)}"
                                                         ng-click="changeTFunctional(item2)"
                                                         value="item2.id" >
                                                         {{item2.name}}
@@ -484,11 +490,13 @@
                                                     hide-placeholder-option>
                                                 <option value="" selected ng-if="!placeholderHidden">Please select</option>
                                                 <option ng-repeat="item2 in master_functional" 
+                                                        ng-class="{'disabled-link':(!tab_general_active)}"
                                                         ng-value="item2.id">{{item2.name}}
                                                 </option>
                                             </select>
                                             <select class="form-control disabled-link"
                                                     ng-model='item.functional_location'
+                                                    ng-class="{'disabled-link':(!tab_general_active)}"
                                                     ng-if="!tab_general_active && !(item.expense_type=='CAPEX' && (item.sub_expense_type=='Study' || item.sub_expense_type=='Internal Study'))">
                                                 <option ng-repeat="item2 in master_functional" ng-value="item2.id">{{item2.name}}</option>
                                             </select>

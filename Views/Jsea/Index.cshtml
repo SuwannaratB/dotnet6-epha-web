@@ -337,6 +337,7 @@
                                             </button>
                                             <div id="tag_id" class="dropdown-content">
                                                 <input id="dropdown_input" 
+                                                ng-class="{'disabled-link':(!tab_general_active)}"
                                                 class="dropdown_input" 
                                                 type="text" 
                                                 placeholder="Search.." 
@@ -344,7 +345,7 @@
                                                 ng-change="filterFunction('tag_id')">
                                                 <a  ng-repeat="item2 in master_tagid_list" 
                                                     ng-if="item2.name != 'Please select'"
-                                                    ng-class="{'bg-primary text-white':(item.id_tagid == item2.id)}"
+                                                    ng-class="{'bg-primary text-white':(item.id_tagid == item2.id),'disabled-link':(!tab_general_active)}"
                                                     ng-click="changeTagId(item2)"
                                                     value="item2.id" >
                                                     {{item2.name}}

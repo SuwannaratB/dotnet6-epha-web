@@ -403,31 +403,32 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 } catch (error) {
                     console.error('Error updating file info:', error);
                 }
-        
+    
+    
                 if (file) {
-                    const allowedFileTypes = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'jpg', 'png', 'gif'];
-                    const fileExtension = fileName.split('.').pop().toLowerCase();
-        
+                    const allowedFileTypes = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'jpg', 'png', 'gif']; // รายการของประเภทของไฟล์ที่อนุญาตให้แนบ
+    
+                    const fileExtension = fileName.split('.').pop().toLowerCase(); // นำนามสกุลของไฟล์มาเปลี่ยนเป็นตัวพิมพ์เล็กทั้งหมดเพื่อให้เป็น case-insensitive
+    
                     if (allowedFileTypes.includes(fileExtension)) {
-                        // Proceed with file attachment
+                        // ทำการแนบไฟล์
+                        //set_alert("File attached successfully.");
                     } else {
                         $('#modalMsgFileError').modal({
                             backdrop: 'static',
-                            keyboard: false
+                            keyboard: false 
                         }).modal('show');
+                        //set_alert('Warning', "Please select a PDF, Word or Excel, Image file.");
                     }
                 } else {
                     console.log("No file selected.");
                 }
-        
+    
+    
                 var file_path = uploadFile(file, fileSeq, fileName, fileSize, file_part, file_doc);
-        
+    
             } else {
-                if (fileInfoSpan) {
-                    fileInfoSpan.textContent = "";
-                } else {
-                    console.error('fileInfoSpan element not found');
-                }
+                fileInfoSpan.textContent = "";
             }
         }
                   
@@ -1044,7 +1045,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             url: url_ws + "flow/set_approve",
             data: '{"sub_software":"hra","user_name":"' + user_name + '","role_type":"' + flow_role_type + '","action":"' + flow_action + '","token_doc":"' + pha_seq + '","pha_status":"' + pha_status + '"'
                 + ',"id_session":"' + id_session + '","seq":"' + seq + '","action_status":"' + action_status + '","comment":"' + comment + '","user_approver":"' + user_approver + '"'
-                + ', "json_drawingapprover": ' + JSON.stringify(json_drawingapprover)
+                + ', "json_drawing_approver": ' + JSON.stringify(json_drawingapprover)
                 + '}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
             beforeSend: function () {
@@ -1201,6 +1202,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         $scope.data_approver = arr.approver;
                         $scope.data_approver_def = clone_arr_newrow(arr.approver);
                         $scope.data_approver_old = (arr.approver);
+
+                        $scope.data_approver.sort(function(a, b) {
+                            if (a.approver_type === "section_head") return -1;
+                            if (b.approver_type === "section_head") return 1;
+                            return 0;
+                        });
 
                         $scope.data_relatedpeople_outsider = arr.relatedpeople_outsider;
                         $scope.data_relatedpeople_outsider_def = clone_arr_newrow(arr.relatedpeople_outsider);
@@ -4763,16 +4770,29 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             for (var i = 0; i < $scope.data_worksheet.length; i++) {
                 $scope.data_worksheet[i].id = Number($scope.data_worksheet[i].seq);
                 $scope.data_worksheet[i].id_pha = pha_seq;
-
-                //estimated_start_date, estimated_end_date
+    
                 try {
-                    var date_value = $scope.data_worksheet[i].estimated_start_date.toISOString().split('T');
-                    if (date_value.length > 0) { $scope.data_worksheet[i].estimated_start_date = date_value[0]; }
-                } catch { }
+                    if (!$scope.data_worksheet[i].estimated_start_date) {
+                        var today = new Date();
+                        var start_date_utc = new Date(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()));
+                        $scope.data_worksheet[0].estimated_start_date = start_date_utc.toISOString().split('T')[0];
+                    } else {
+                        var start_date = new Date($scope.data_worksheet[i].estimated_start_date);
+                        if (!isNaN(start_date.getTime())) {
+                            var start_date_utc = new Date(Date.UTC(start_date.getFullYear(), start_date.getMonth(), start_date.getDate()));
+                            $scope.data_worksheet[i].estimated_start_date = start_date_utc.toISOString().split('T')[0];
+                        }
+                    }
+                } catch (error) {} 
                 try {
-                    var date_value = $scope.data_worksheet[i].estimated_end_date.toISOString().split('T');
-                    if (date_value.length > 0) { $scope.data_worksheet[i].estimated_end_date = date_value[0]; }
-                } catch { }
+                    if ($scope.data_worksheet[i].estimated_start_date !== null) {
+                        var end_date = new Date($scope.data_worksheet[i].estimated_end_date);
+                        if (!isNaN(end_date.getTime())) { 
+                            var end_date_utc = new Date(Date.UTC(end_date.getFullYear(), end_date.getMonth(), end_date.getDate()));
+                            $scope.data_worksheet[i].estimated_end_date = end_date_utc.toISOString().split('T')[0];
+                        }
+                    } else {}
+                } catch (error) {}     
             }
 
             var arr_active = [];
@@ -4816,6 +4836,41 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
 
             return angular.toJson(arr_json);
+        }
+    }
+
+    //set data
+    if(true){
+        function set_data_managerecom() {
+
+            if (true) {
+                var arr_worksheet = $scope.data_worksheet;
+                for (var w = 0; w < arr_worksheet.length; w++) {
+    
+                    //recommendations_no
+                    arr_worksheet[w].recommendations_no = (arr_worksheet[w].recommendations_no == null ? arr_worksheet[w].taskdesc_no : null);
+    
+                    //Estimated Date  
+                    try {
+                        if (arr_worksheet[w].estimated_start_date !== null) {
+                            const x = (arr_worksheet[w].estimated_start_date.split('T')[0]).split("-");
+                            if (x[0] > 2000) {
+                                arr_worksheet[w].estimated_start_date = new Date(x[0], x[1] - 1, x[2]);
+                            }
+                        }
+                    } catch { }
+                    try {
+                        if (arr_worksheet[w].estimated_end_date !== null) {
+                            const x = (arr_worksheet[w].estimated_end_date.split('T')[0]).split("-");
+                            if (x[0] > 2000) {
+                                arr_worksheet[w].estimated_end_date = new Date(x[0], x[1] - 1, x[2]);
+                            }
+                        }
+                    } catch { }
+    
+                }
+            }
+    
         }
     }
 
@@ -5428,7 +5483,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     newInput.action_change = 1;
 
                     //approver or section_head
-                    newInput.approver_type = (arr_items_all.length == 0 ? 'approver' : 'section_head');
+                    newInput.approver_type = (arr_items_all.length == 0 ? 'section_head' : 'approver');
 
                     newInput.user_name = employee_name;
                     newInput.user_displayname = employee_displayname;
@@ -5440,7 +5495,16 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                     newInput.no == 0 ? newInput.verified = true : newInput.verified = false;
                     $scope.MaxSeqdataApprover = Number($scope.MaxSeqdataApprover) + 1
+
+                    $scope.data_approver.sort(function(a, b) {
+                        if (a.approver_type === "section_head") return -1;
+                        if (b.approver_type === "section_head") return 1;
+                        return 0;
+                    });
+
                     console.log('data_approver ',$scope.data_approver)
+
+                    
                 }
 
             }
@@ -5650,11 +5714,15 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 return 0;
             });
 
-            $scope.data_approver.forEach(function(approver) {
-                approver.action_change = 1;
-                approver.action_type = 'update';
-            });
-                
+            console.log("$scope.data_approver$scope.data_approver$scope.data_approver$scope.data_approver$scope.data_approver",$scope.data_approver)
+
+            if($scope.data_approver[0].action_type === "update"){
+                $scope.data_approver.forEach(function(approver) {
+                    approver.action_change = 1;
+                    approver.action_type = 'update';
+                });
+            }
+
             $timeout(function() {
                 apply();
             }, 100);
