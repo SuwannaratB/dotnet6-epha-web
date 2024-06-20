@@ -717,6 +717,31 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                     // genareate_worksheet();
                 }
+                if(selectedTab.name === 'manage'){
+                    
+                    console.log($scope.data_worksheet_list);
+
+                    for (let i = 0; i < $scope.data_worksheet_list.length; i++) {
+                        let worksheet = $scope.data_worksheet_list[i].worksheet; // Access the worksheet property for the current item
+                        for (let j = 0; j < worksheet.length; j++) {
+                            let element = worksheet[j];
+                            let riskRating = element.initial_risk_rating.trim(); // Trim any extra spaces or newline characters
+                            if (riskRating === 'Medium' || 
+                                riskRating === 'High' || 
+                                riskRating === 'Very High'
+                            ) {
+                                if (!element.estimated_start_date) {
+                                    var today = new Date();
+                                    var start_date_utc = new Date(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()));
+                                    element.estimated_start_date = start_date_utc;
+                                }
+                            }
+                        }
+                    }
+                    
+                    console.log($scope.data_worksheet_list);                    
+
+                }
             }
 
 
@@ -1501,10 +1526,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
 
     $scope.filterInitialRiskRatingMain = function(item) {
-        // console.log("Function called with item:", item);
         for (let i = 0; i < item.worksheet.length; i++) {
             let element = item.worksheet[i];
-            // console.log("Checking element:", element);
             if (element.initial_risk_rating === 'Meduim' || 
                 element.initial_risk_rating === 'Meduim\r\n' || 
                 element.initial_risk_rating === 'High' ||
@@ -1512,11 +1535,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 element.initial_risk_rating === 'Very High' ||
                 element.initial_risk_rating === 'Very High\r\n'
             ) {
-                // console.log("Matched element:", element);
+
+
                 return true;
             }
         }
-        // console.log("No matching elements found.");
         return false;
     };
     
