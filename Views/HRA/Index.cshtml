@@ -390,7 +390,8 @@
                                                type="text" placeholder="Project Name"
                                                name="project_name"
                                                ng-model="item.pha_request_name"
-                                               ng-keyup="filterResultGeneral(item.pha_request_name, 'pha_request_name')">
+                                               @* ng-keyup="filterResultGeneral(item.pha_request_name, 'pha_request_name')" *@
+                                               >
                                         <ul class="list-group mt-2 w-25" style="position: absolute;" ng-show="showResults">
                                             <li class="list-group-item "
                                                 ng-repeat="result in filteredResults | filter:{field:'pha_request_name'}"
@@ -1213,7 +1214,7 @@
                                                                 data-placement="top" 
                                                                 title="Copy Description of Work or Tasks"
                                                                 ng-click="pasteHazard(item, item_list)"
-                                                                ng-disabled="isPasteHazard != item_list.no_type_hazard">
+                                                                ng-disabled="!isCopyHazard || isCopyHazard == item_list.seq || ( item_list.id_type_hazard && isPasteHazard != item_list.id_type_hazard)">
                                                                 <span class="fa-solid fa-clipboard fa-lg"></span>
                                                                 Paste 
                                                             </button>
