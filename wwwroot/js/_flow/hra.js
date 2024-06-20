@@ -2992,10 +2992,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             var result = $filter('filter')(subArea.hazard, function (_item) { 
                 return (_item.no_type_hazard == no_type_hazard); 
             });
+            $scope.isCopyHazard = item.seq ;
             $scope.isPasteHazard = item.no_type_hazard;
             $scope.data_copy_hazard = angular.copy(result);
             console.log('data_copy_hazard', $scope.data_copy_hazard)
-
             // data_copy_worksheet
             var seqs = $scope.data_copy_hazard.map(function(hazard) {
                 return hazard.seq;
@@ -3028,38 +3028,78 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 return console.log('data copy not found')
 
             var data = angular.copy($scope.data_copy_hazard)
-            var data_ws = angular.copy($scope.data_copy_worksheet)
-
-            data.forEach(el => {
-                $scope.MaxSeqdataHazard = Number($scope.MaxSeqdataHazard) + 1;
-                var xValues = $scope.MaxSeqdataHazard;
-                el.id = xValues
-                el.seq = xValues
-                el.id_subareas = item.id_subareas
-                el.index_rows = item.index_rows
-                el.no_subareas = item.no_subareas
-                el.no_type_hazard = item.no_type_hazard
-                el.sub_area = item.sub_area
-                el.work_of_task = item.work_of_task
-            });
-            subArea.hazard = data;
+            for (let i = 0; i < data.length; i++) {
+                if (subArea.hazard[i]) {
+                    // update
+                    subArea.hazard[i].type_hazard = data[i].type_hazard
+                    subArea.hazard[i].id_type_hazard = data[i].id_type_hazard
+                    subArea.hazard[i].health_hazard = data[i].health_hazard
+                    subArea.hazard[i].id_health_hazard = data[i].id_health_hazard
+                    subArea.hazard[i].health_effect_rating = data[i].health_effect_rating
+                    subArea.hazard[i].standard_type_text = data[i].standard_type_text
+                    subArea.hazard[i].standard_value = data[i].standard_value
+                    subArea.hazard[i].standard_unit = data[i].standard_unit
+                    subArea.hazard[i].action_change = 1
+                    subArea.hazard[i].action_type == 'update'
+                       ? subArea.hazard[i].action_type = 'update'
+                       : subArea.hazard[i].action_type = 'insert'
+                }else {
+                    // new
+                    $scope.MaxSeqdataHazard = Number($scope.MaxSeqdataHazard) + 1;
+                    var xValues = $scope.MaxSeqdataHazard;
+                    data[i].id = xValues
+                    data[i].seq = xValues
+                    data[i].id_subareas = item.id_subareas
+                    data[i].no_subareas = item.no_subareas
+                    data[i].no_type_hazard = item.no_type_hazard
+                    data[i].sub_area = item.sub_area
+                    data[i].work_of_task = item.work_of_task
+                    data[i].index_rows = subArea.hazard[i - 1].index_rows + 1 
+                    data[i].action_type = 'insert'
+                    subArea.hazard.splice(i, 0, data[i])
+                }
+            }
+            // subArea.hazard = data;
             console.log('All SubAreac',$scope.data_subareas_list)
 
             // paste worksheet
-            console.log('data',data)
-            // for (let i = 0; i < $scope.data_worksheet_list.length; i++) {
+            var data_ws = angular.copy($scope.data_copy_worksheet)
 
-            //     for (let j = 0; j < $scope.data_worksheet_list[i].worksheet.length; j++) {
-
-            //         if ($scope.data_worksheet_list[i].worksheet[j]) {
-                        
-            //         }
-                    
-            //     }
-                
-            // }
+            for (let i = 0; i < $scope.data_worksheet_list.length; i++) {
+                // check ข้อมูล worksheet เก่าที่จะวางทับ มีข้อมูลหรือไม่
+                if (item_prev.length > 0) {
+                    var ws_prev = [];
+                    for (let j = 0; j < item_prev.length; j++) {
+                        var list = $filter('filter')($scope.data_worksheet_list[i].worksheet, function (_item) { 
+                            return (_item.seq_hazard == item_prev[j].seq); 
+                        });
+                        ws_prev.push(...list);
+                    }
+                    // นำข้อมูล worksheet เก่าที่จะวางทับมาอัพเดท ตามข้อมูลที่ copy มา
+                    for (let k = 0; k < data_ws.length; k++) {
+                        for (let l = 0; l < data_ws[k].worksheet.length; l++) {
+                            if (ws_prev[l]) {
+                                // update
+                                ws_prev[l].health_effect_rating = data_ws[k].worksheet[l].health_effect_rating
+                                ws_prev[l].health_hazard = data_ws[k].worksheet[l].health_hazard
+                                ws_prev[l].type_hazard = data_ws[k].worksheet[l].type_hazard
+                            }else {
+                                // new
+                                $scope.MaxSeqdataWorksheet = Number($scope.MaxSeqdataWorksheet) + 1;
+                                var xValues = $scope.MaxSeqdataWorksheet;
+                                data_ws[k].worksheet[l].id = xValues
+                                data_ws[k].worksheet[l].seq = xValues
+                                data_ws[k].worksheet[l].action_type = 'insert'
+                                $scope.data_worksheet_list[i].worksheet.push(data_ws[k].worksheet[l])
+                                // $scope.data_worksheet_list[i].worksheet.splice(i, 0, data[l])
+                            }
+                        }
+                    }
+                }   
+            }
 
             console.log('item_prev ',item_prev)
+            console.log('data_worksheet_list ',$scope.data_worksheet_list)
         }
 
 
