@@ -739,7 +739,26 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         }
                     }
                     
-                    console.log($scope.data_worksheet_list);                    
+                    console.log($scope.data_worksheet);     
+                    //after that set for worksheet 
+                    for (let i = 0; i < $scope.data_worksheet.length; i++) {
+                        let element = $scope.data_worksheet[i];
+                        let riskRating = element.initial_risk_rating.trim()
+                        if (riskRating === 'Medium' || 
+                            riskRating === 'High' || 
+                            riskRating === 'Very High'
+                        ) {
+                            if (!element.estimated_start_date) {
+                                var today = new Date();
+                                var start_date_utc = new Date(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()));
+                                element.estimated_start_date = start_date_utc.toISOString().split('T')[i];;
+                            }
+                        }
+                    }
+
+                    console.log($scope.data_worksheet);     
+
+
 
                 }
             }
