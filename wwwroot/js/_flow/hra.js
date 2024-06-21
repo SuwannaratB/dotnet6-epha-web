@@ -1291,7 +1291,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         $scope.data_worksheet_old = (arr.worksheet);
 
                         $scope.data_worksheet_list = setup_worksheet($scope.data_subareas_list, $scope.data_tasks);
-                        $scope.data_recommentdations_list = setup_recommentdations($scope.data_worksheet_list );
                     }
 
                     //Approver
@@ -1647,22 +1646,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
       
     }
-
-    function setup_recommentdations(worksheet) {
-        if(worksheet.length < 1) return null;
-        
-        var new_recomment = angular.copy(worksheet);
-        
-        new_recomment.forEach(item => {
-            item.worksheet = $filter('filter')(item.worksheet, function (item) {
-                return (item.initial_risk_rating == 'Meduim' || item.initial_risk_rating == 'High');
-            });
-        });
-        console.log('return recommentdations_list', new_recomment)
-        return new_recomment;
-
-    }
-
 
     function setup_tasks(data) {
         // $scope.MaxSeqdataDescriptions = Number($scope.MaxSeqdataDescriptions) + 1;
@@ -3038,7 +3021,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 return (_item.no_type_hazard == no_type_hazard); 
             });
             $scope.isCopyHazard = item.seq ;
-            $scope.isPasteHazard = item.no_type_hazard;
+            $scope.isPasteHazard = item.id_type_hazard;
             $scope.data_copy_hazard = angular.copy(result);
             console.log('data_copy_hazard', $scope.data_copy_hazard)
             // data_copy_worksheet
@@ -3074,7 +3057,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             var data = angular.copy($scope.data_copy_hazard)
             for (let i = 0; i < data.length; i++) {
-                if (subArea.hazard[i]) {
+                if (subArea.hazard[i] && subArea.hazard[i].id_type_hazard == data[i].id_type_hazard) {
                     // update
                     subArea.hazard[i].type_hazard = data[i].type_hazard
                     subArea.hazard[i].id_type_hazard = data[i].id_type_hazard
@@ -3099,9 +3082,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     data[i].no_type_hazard = item.no_type_hazard
                     data[i].sub_area = item.sub_area
                     data[i].work_of_task = item.work_of_task
-                    data[i].index_rows = subArea.hazard[i - 1].index_rows + 1 
+                    data[i].index_rows = subArea.hazard[i - 1] ? subArea.hazard[i - 1].index_rows + 1 : 0
                     data[i].action_type = 'insert'
-                    subArea.hazard.splice(i, 0, data[i])
+                    // subArea.hazard.splice(i, 0, data[i])
                 }
             }
             // subArea.hazard = data;
@@ -3120,14 +3103,20 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         });
                         ws_prev.push(...list);
                     }
+                    console.log('ws_prev',ws_prev)
                     // นำข้อมูล worksheet เก่าที่จะวางทับมาอัพเดท ตามข้อมูลที่ copy มา
                     for (let k = 0; k < data_ws.length; k++) {
+                        var index = -1;
                         for (let l = 0; l < data_ws[k].worksheet.length; l++) {
                             if (ws_prev[l]) {
                                 // update
                                 ws_prev[l].health_effect_rating = data_ws[k].worksheet[l].health_effect_rating
                                 ws_prev[l].health_hazard = data_ws[k].worksheet[l].health_hazard
                                 ws_prev[l].type_hazard = data_ws[k].worksheet[l].type_hazard
+                                // find index in worksheet
+                                index =  $scope.data_worksheet_list[i].worksheet.findIndex(function (item) {
+                                    return (ws_prev[l].seq == item.seq);
+                                });
                             }else {
                                 // new
                                 $scope.MaxSeqdataWorksheet = Number($scope.MaxSeqdataWorksheet) + 1;
@@ -3135,8 +3124,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                                 data_ws[k].worksheet[l].id = xValues
                                 data_ws[k].worksheet[l].seq = xValues
                                 data_ws[k].worksheet[l].action_type = 'insert'
-                                $scope.data_worksheet_list[i].worksheet.push(data_ws[k].worksheet[l])
-                                // $scope.data_worksheet_list[i].worksheet.splice(i, 0, data[l])
+                                console.log('index ',index)
+                                // $scope.data_worksheet_list[i].worksheet.push(data_ws[k].worksheet[l])
+                                $scope.data_worksheet_list[i].worksheet.splice(index, 0, data_ws[k].worksheet[l])
                             }
                         }
                     }
