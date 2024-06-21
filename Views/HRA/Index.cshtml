@@ -2237,31 +2237,30 @@
                                             </td>
 
                                             <td class="align-top rating white-space-nowrap">
-                                               <div class="box-recom " ng-repeat="ws in item.worksheet | filter: filterInitialRiskRating">
+                                                <div class="box-recom" ng-repeat="ws in item.worksheet | filter: filterInitialRiskRating">
                                                     <input type="date" class="form-control datetimepicker rounded-1" 
-                                                        @* ng-class="{'disabled-link':(!tab_managerecom_active)}" *@
                                                         placeholder="Start Date dd/mm/yyyy"
                                                         ng-model="ws.estimated_start_date"
-                                                        ng-change="actionChangeWorksheet(ws,ws.seq,'')">
+                                                        ng-change="actionChangeWorksheet(ws, ws.seq, '')">
                                                     <div id="valid-nodeworksheet-estimated-start-{{ws.seq}}"
                                                         class="invalid-feedback text-danger">
                                                         Please provide a valid Estimated Start Date.
                                                     </div>
-                                               </div>
+                                                </div>
                                             </td>
 
                                             <td class="align-top rating white-space-nowrap">
-                                               <div class="box-recom " ng-repeat="ws in item.worksheet | filter: filterInitialRiskRating">
-                                                    <input type="date" class="form-control  datetimepicker rounded-1" 
-                                                        @* ng-class="{'disabled-link':(!tab_managerecom_active)}" *@
+                                                <div class="box-recom" ng-repeat="ws in item.worksheet | filter: filterInitialRiskRating">
+                                                    <input type="date" class="form-control datetimepicker rounded-1" 
                                                         placeholder="End Date dd/mm/yyyy"
                                                         ng-model="ws.estimated_end_date"
-                                                        ng-change="actionChangeWorksheet(ws,ws.seq,'')">
+                                                        ng-min="ws.estimated_start_date | date:'yyyy-MM-dd'"
+                                                        ng-change="actionChangeWorksheet(ws, ws.seq, 'end_date')">
                                                     <div id="valid-nodeworksheet-estimated-end-{{ws.seq}}"
                                                         class="invalid-feedback text-danger">
                                                         Please provide a valid Estimated End Date.
                                                     </div>
-                                               </div>
+                                                </div>
                                             </td>
 
                                             <td class="align-top  px-0" style=" width: 80px;">

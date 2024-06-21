@@ -1858,62 +1858,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 arr.header[0].flow_mail_to_member = (arr.header[0].flow_mail_to_member == null ? 0 : arr.header[0].flow_mail_to_member);
                 $scope.data_header = JSON.parse(replace_hashKey_arr(arr.header));
                 set_form_action(action_part_befor, !action_submit, page_load);
+                set_access_formaction(arr)
 
-                if($scope.params != 'edit_approver'){
-                    $scope.action_owner_active = true;
-                }  
+                console.log("at this line general will",$scope.tab_general_active)
 
-                if($scope.params !== null){
-                    console.log("$scope.params",$scope.params)
-
-                    if($scope.params != 'edit_approver'){
-                        $scope.action_owner_active = true;
-                    }  
-                    
-    
-                    if($scope.params !== 'edit') {
-                        $scope.tab_general_active = false;
-                        $scope.tab_node_active = false;
-                        $scope.tab_worksheet_active = false;
-                        $scope.tab_managerecom_active = false;
-                        $scope.tab_approver_active = false;
-    
-                        if($scope.params === 'edit_action_owner'){
-                            $scope.action_owner_active = true;
-                        } 
-    
-                        if($scope.params === 'edit_approver'){
-                            $scope.action_owner_active = false;
-    
-                        }  
-    
-                    }
-    
-                    if($scope.params === 'edit' && $scope.flow_role_type === 'admin') {
-                        $scope.tab_general_active = true;
-                        $scope.tab_node_active = true;
-                        $scope.tab_worksheet_active = true;
-                        $scope.tab_managerecom_active = true;
-                        $scope.tab_approver_active = true;
-    
-                        $scope.save_type = true;
-                    }
-                } else if ($scope.params === null && arr.header[0].pha_status === 21) {
-                    if (Array.isArray($scope.data_approver)) {
-                        let mainApprover = $scope.data_approver.find(item => item.approver_type === 'approver' && item.user_name === $scope.user_name);
                 
-                        if (mainApprover) {
-                            $scope.isMainApprover = true;
-                        } else {
-                            $scope.isMainApprover = false;
-                        }
-                    } else {
-                        console.log('$scope.data_approver is not an array or is undefined.');
-                        $scope.isMainApprover = false; 
-                    }
-                }
-                
-
                 //ตรวจสอบเพิ่มเติม
                 if (arr.user_in_pha_no[0].pha_no == '' && $scope.flow_role_type != 'admin') {
                     if (arr.data_header[0].action_type != 'insert') {
@@ -1939,6 +1888,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     }
                 }
 
+                console.log("at this line general will",$scope.tab_general_active)
                 if (true) {
 
 
@@ -2253,6 +2203,80 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.save_type = false;
             $scope.submit_type = false;
             $scope.submit_review = false;
+        }
+    }
+    function set_access_formaction(arr){
+
+        //params === admin action
+
+        //pha_status
+        /*
+        11 D => allow active all
+        12 Con => active all
+        21 approver => active approver tab  && isMain can edit worksheet
+        13 floow up => !active all
+        14 floow up => !active all
+        */
+       
+        if($scope.params != 'edit_approver'){
+            $scope.action_owner_active = true;
+        }  
+
+        if($scope.params !== null){
+            console.log("$scope.params",$scope.params)
+
+            if($scope.params != 'edit_approver'){
+                $scope.action_owner_active = true;
+            }  
+            
+
+            if($scope.params !== 'edit') {
+                $scope.tab_general_active = false;
+                $scope.tab_node_active = false;
+                $scope.tab_worksheet_active = false;
+                $scope.tab_managerecom_active = false;
+                $scope.tab_approver_active = false;
+
+                if($scope.params === 'edit_action_owner'){
+                    $scope.action_owner_active = true;
+                } 
+
+                if($scope.params === 'edit_approver'){
+                    $scope.action_owner_active = false;
+
+                }  
+
+            }
+
+            if($scope.params === 'edit' && $scope.flow_role_type === 'admin') {
+                $scope.tab_general_active = true;
+                $scope.tab_node_active = true;
+                $scope.tab_worksheet_active = true;
+                $scope.tab_managerecom_active = true;
+                $scope.tab_approver_active = true;
+
+                $scope.save_type = true;
+            }
+        } else if ($scope.params === null && arr.header[0].pha_status === 21) {
+            if (Array.isArray($scope.data_approver)) {
+                let mainApprover = $scope.data_approver.find(item => item.approver_type === 'approver' && item.user_name === $scope.user_name);
+        
+                if (mainApprover) {
+                    $scope.isMainApprover = true;
+                } else {
+                    $scope.isMainApprover = false;
+                }
+
+                
+                $scope.tab_general_active = false;
+                $scope.tab_worksheet_active = false;
+                $scope.tab_managerecom_active = false;
+                $scope.tab_approver_active = true;
+
+            } else {
+                console.log('$scope.data_approver is not an array or is undefined.');
+                $scope.isMainApprover = false; 
+            }
         }
     }
     function check_case_member_review() {
@@ -4403,37 +4427,50 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         //แปลง date to yyyyMMdd
         //แปลง time to hh:mm
 
+        var copy_data_target = angular.copy($scope.data_general);
+
         try {
-            if (!$scope.data_general[0].target_start_date) {
-                var today = new Date();
-                var target_start_date_utc = new Date(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()));
-                $scope.data_general[0].target_start_date = target_start_date_utc.toISOString().split('T')[0];
-            } else {
-                var target_start_date = new Date($scope.data_general[0].target_start_date);
-                var target_start_date_utc = new Date(Date.UTC(target_start_date.getFullYear(), target_start_date.getMonth(), target_start_date.getDate()));
-                $scope.data_general[0].target_start_date = target_start_date_utc.toISOString().split('T')[0];
+            if (copy_data_target[0].target_start_date) {
+                var target_start_date = new Date(copy_data_target[i].target_start_date);
+                if (!isNaN(target_start_date.getTime())) {
+                    var target_start_date_utc = new Date(Date.UTC(target_start_date.getFullYear(), target_start_date.getMonth(), target_start_date.getDate()));
+                    copy_data_target[0].target_start_date = target_start_date_utc.toISOString().split('T')[0];
+                }
             }
-        } catch (error) {
-            console.error("target_start_date error :", error);
-        }
+        } catch {} 
+
+        try {
+            if (copy_data_target[0].target_end_date) {
+                var target_end_date = new Date(copy_data_target[i].target_end_date);
+                if (!isNaN(target_end_date.getTime())) {
+                    var target_end_date_utc = new Date(Date.UTC(target_end_date.getFullYear(), target_end_date.getMonth(), target_end_date.getDate()));
+                    copy_data_target[0].target_end_date = target_end_date_utc.toISOString().split('T')[0];
+                }
+            }
+        } catch {}    
+        
+
+        var copy_data_actual = angular.copy($scope.data_general);
+
+        try {
+            if (copy_data_actual[0].actual_start_date) {
+                var actual_start_date = new Date(copy_data_actual[0].actual_start_date);
+                if (!isNaN(actual_start_date.getTime())) {
+                    var actual_start_date_utc = new Date(Date.UTC(actual_start_date.getFullYear(), actual_start_date.getMonth(), actual_start_date.getDate()));
+                    copy_data_actual[0].actual_start_date = actual_start_date_utc.toISOString().split('T')[0];
+                }
+            }
+        } catch {} 
         
         try {
-            var target_end_date = new Date($scope.data_general[0].target_end_date);
-            var target_end_date_utc = new Date(Date.UTC(target_end_date.getFullYear(), target_end_date.getMonth(), target_end_date.getDate()));
-            $scope.data_general[0].target_end_date = target_end_date_utc.toISOString().split('T')[0];
-        } catch (error) {}
-        
-        try {
-            var actual_start_date = new Date($scope.data_general[0].actual_start_date);
-            var actual_start_date_utc = new Date(Date.UTC(actual_start_date.getFullYear(), actual_start_date.getMonth(), actual_start_date.getDate()));
-            $scope.data_general[0].actual_start_date = actual_start_date_utc.toISOString().split('T')[0];
-        } catch (error) {}
-        
-        try {
-            var actual_end_date = new Date($scope.data_general[0].actual_end_date);
-            var actual_end_date_utc = new Date(Date.UTC(actual_end_date.getFullYear(), actual_end_date.getMonth(), actual_end_date.getDate()));
-            $scope.data_general[0].actual_end_date = actual_end_date_utc.toISOString().split('T')[0];
-        } catch (error) {}
+            if (copy_data_actual[0].actual_end_date) {
+                    var actual_end_date = new Date(copy_data_actual[0].actual_end_date);
+                if (!isNaN(actual_end_date.getTime())) {
+                    var actual_end_date_utc = new Date(Date.UTC(actual_end_date.getFullYear(), actual_end_date.getMonth(), actual_end_date.getDate()));
+                    copy_data_actual[0].actual_end_date = actual_end_date_utc.toISOString().split('T')[0];
+                }
+            }
+        } catch {} 
     }
     function check_master_ram() {
         // return angular.toJson($scope.master_ram);
@@ -4474,34 +4511,36 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     function check_data_session() {
 
         var pha_seq = $scope.data_header[0].seq;
-        for (var i = 0; i < $scope.data_session.length; i++) {
-            $scope.data_session[i].id = $scope.data_session[i].seq;
-            $scope.data_session[i].id_pha = pha_seq;
+        var data_session = angular.copy($scope.data_session)
+        
+        for (var i = 0; i < data_session.length; i++) {
+            data_session[i].id = data_session[i].seq;
+            data_session[i].id_pha = pha_seq;
 
             try {
-                if($scope.data_session[0].meeting_date ){
-                    var meeting_date = new Date($scope.data_session[0].meeting_date);
+                if(data_session[0].meeting_date ){
+                    var meeting_date = new Date(data_session[0].meeting_date);
                     var meeting_date_utc = new Date(Date.UTC(meeting_date.getFullYear(), meeting_date.getMonth(), meeting_date.getDate()));
-                    $scope.data_session[0].meeting_date = meeting_date_utc.toISOString().split('T')[0];
+                    data_session[0].meeting_date = meeting_date_utc.toISOString().split('T')[0];
                 }
             } catch {} 
             try {
                 //12/31/1969 7:55:00 PM 
-                var hh = $scope.data_session[i].meeting_start_time_hh; var mm = $scope.data_session[i].meeting_start_time_mm;
+                var hh = data_session[i].meeting_start_time_hh; var mm = data_session[i].meeting_start_time_mm;
                 var valtime = "1970-01-01T" + (hh).substring(hh.length - 2) + ":" + (mm).substring(mm.length - 2) + ":00.000Z";
 
-                $scope.data_session[i].meeting_start_time = new Date(valtime);
+                data_session[i].meeting_start_time = new Date(valtime);
             } catch { }
             try {
                 //12/31/1969 7:55:00 PM
-                var hh = $scope.data_session[i].meeting_end_time_hh; var mm = $scope.data_session[i].meeting_end_time_mm;
+                var hh =data_session[i].meeting_end_time_hh; var mm =data_session[i].meeting_end_time_mm;
                 var valtime = "1970-01-01T" + (hh).substring(hh.length - 2) + ":" + (mm).substring(mm.length - 2) + ":00.000Z";
-                $scope.data_session[i].meeting_end_time = new Date(valtime);
+                data_session[i].meeting_end_time = new Date(valtime);
             } catch { }
         }
 
         var arr_active = [];
-        angular.copy($scope.data_session, arr_active);
+        angular.copy(data_session, arr_active);
         var arr_json = $filter('filter')(arr_active, function (item) {
             return ((item.action_type == 'update' && item.action_change == 1) || item.action_type == 'insert');
         });
@@ -4585,7 +4624,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
         }
 
-        for (var i = 0; i < $scope.data_approver.length; i++) {
+        /*for (var i = 0; i < $scope.data_approver.length; i++) {
             try {
                 if (!$scope.data_approver[i].date_review && $scope.data_approver[i].action_status == 'approve') {
                     var today = new Date();
@@ -4596,14 +4635,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     var date_review_utc = new Date(Date.UTC(date_review.getFullYear(), date_review.getMonth(), date_review.getDate()));
                     $scope.data_approver[i].date_review = date_review_utc.toISOString().split('T')[0];
                 }
-                console.log("Formatted date:", $scope.data_approver[i].date_review);  // Debugging output
             } catch (error) {
                 console.error("date_review error:", error);
             }
-        }
+        }*/
         
-             
-
         //check จากข้อมูลเดิมที่เคยบันทึกไว้ถ้าไม่มีในของเดิมให้ delete ออกด้วย
         for (var i = 0; i < $scope.data_approver_old.length; i++) {
             var arr_check = $filter('filter')($scope.data_approver, function (item) {
@@ -4729,7 +4765,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         var pha_seq = $scope.data_header[0].seq;
 
 
-        for (var i = 0; i < $scope.data_listworksheet.length; i++) {
+        /*for (var i = 0; i < $scope.data_listworksheet.length; i++) {
             $scope.data_listworksheet[i].id = Number($scope.data_listworksheet[i].seq);
             $scope.data_listworksheet[i].id_pha = pha_seq;
 
@@ -4751,7 +4787,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     }                    
                 }
             } catch (error) {}
-        }
+        }*/
 
         var arr_active = [];
         angular.copy($scope.data_listworksheet, arr_active);

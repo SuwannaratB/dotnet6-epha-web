@@ -500,3 +500,10 @@ background-color: #3e8e41;
 .disabled-link .form-control[readonly]:hover {
   cursor: pointer !important;
 }
+
+
+
+/*end date start date validate*/
+.ng-invalid-min {
+  border-color: red; /* Change border color to red */
+}
