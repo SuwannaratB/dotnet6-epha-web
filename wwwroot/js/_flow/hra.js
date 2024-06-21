@@ -717,54 +717,29 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                     // genareate_worksheet();
                 }
-                if(selectedTab.name === 'manage'){
-                    
-                    console.log($scope.data_worksheet_list);
-
+                
+                if (selectedTab.name === 'manage') {
+            
                     for (let i = 0; i < $scope.data_worksheet_list.length; i++) {
-                        let worksheet = $scope.data_worksheet_list[i].worksheet; // Access the worksheet property for the current item
+                        let worksheet = $scope.data_worksheet_list[i].worksheet;
                         for (let j = 0; j < worksheet.length; j++) {
                             let element = worksheet[j];
-                            let riskRating = element.initial_risk_rating.trim(); // Trim any extra spaces or newline characters
-                            if (riskRating === 'Medium' || 
-                                riskRating === 'High' || 
-                                riskRating === 'Very High'
-                            ) {
+                            let riskRating = element.initial_risk_rating.trim();
+                
+                            if (riskRating === 'Medium' || riskRating === 'High' || riskRating === 'Very High' ||
+                                riskRating === 'Meduim\r\n' || riskRating === 'High\r\n' || riskRating === 'Very High\r\n') {
                                 if (!element.estimated_start_date) {
                                     var today = new Date();
                                     var start_date_utc = new Date(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()));
                                     element.estimated_start_date = start_date_utc;
+                                    element.action_change = 1;
                                 }
                             }
                         }
                     }
-                    
-                    console.log($scope.data_worksheet);     
-                    //after that set for worksheet 
-                    for (let i = 0; i < $scope.data_worksheet.length; i++) {
-                        let element = $scope.data_worksheet[i];
-                        let riskRating = element.initial_risk_rating.trim()
-                        if (riskRating === 'Medium' || 
-                            riskRating === 'High' || 
-                            riskRating === 'Very High'
-                        ) {
-                            if (!element.estimated_start_date) {
-                                var today = new Date();
-                                var start_date_utc = new Date(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()));
-                                element.estimated_start_date = start_date_utc.toISOString().split('T')[i];;
-                            }
-                        }
-                    }
-
-                    console.log($scope.data_worksheet);     
-
-
-
+                
                 }
             }
-
-
-
 
         } catch (error) { }
 
@@ -781,7 +756,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         //     var tabElement = angular.element(ev);
         //     tabElement[0].focus();
         // } catch (error) { }
-        console.log(selectedTab)
+        console.log("selectedTab",selectedTab)
+        console.log("+++++++++++++++++++++++++++++++", $scope.data_worksheet);
+
         check_tab(selectedTab.name);
 
 
@@ -1281,7 +1258,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                         // set 
                         $scope.data_subareas_list = arr.subareas;
-                        // $scope.data_subareas_list = $scope.backup.subareas;
                         $scope.data_subareas_list[0].hazard = arr.hazard;
                         // backup
                         $scope.data_subareas_default = arr.subareas;
@@ -1310,7 +1286,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                     //HRA Worksheet
                     if (true) {
-                        $scope.data_worksheet = arr.worksheet;
+                        $scope.data_worksheet = set_data_managerecom(arr.worksheet);
                         $scope.data_worksheet_def = clone_arr_newrow(arr.worksheet);
                         $scope.data_worksheet_old = (arr.worksheet);
 
@@ -2011,11 +1987,21 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
     function set_format_date_time() {
 
+        //data_general
         if ($scope.data_general[0].target_start_date !== null) {
             const x = ($scope.data_general[0].target_start_date.split('T')[0]).split("-");
             $scope.data_general[0].target_start_date = new Date(x[0], x[1], x[2]);
+            
         }
 
+
+        if ($scope.data_general[0].target_end_date !== null) {
+            const x = ($scope.data_general[0].target_end_date.split('T')[0]).split("-");
+            $scope.data_general[0].target_end_date = new Date(x[0], x[1] - 1, x[2]);                
+        }
+
+
+        //session
         for (let i = 0; i < $scope.data_session.length; i++) {
             $scope.data_session[i].no = (i + 1);
 
@@ -2039,6 +2025,23 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
 
         return;
+
+
+        //Worksheet
+        for (let i = 0; i < $scope.data_session.length; i++) {
+
+            if ($scope.data_worksheet[i].estimated_start_date !== null) {
+                const x = ($scope.data_worksheet[i].estimated_start_date.split('T')[0]).split("-");
+                $scope.data_worksheet[i].estimated_start_date = new Date(x[0], x[1] - 1, x[2]);
+                
+            }
+    
+            if ($scope.data_worksheet[i].estimated_end_date !== null) {
+                const x = ($scope.data_worksheet[i].estimated_end_date.split('T')[0]).split("-");
+                $scope.data_worksheet[i].estimated_end_date = new Date(x[0], x[1] - 1, x[2]);                
+            }
+        }        
+
     }
 
     //general information -> Session zone
@@ -4364,45 +4367,44 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             //แปลง date to yyyyMMdd
             //แปลง time to hh:mm
-            try {
-                $scope.data_general[0].target_start_date = $scope.data_general[0].target_start_date.toISOString().split('T')[0];
-            } catch { }
-            try {
-                $scope.data_general[0].target_end_date = $scope.data_general[0].target_end_date.toISOString().split('T')[0];
-            } catch { }
-            try {
+            actual_start_date_utc.toISOString().split('T')[0];
+            /*try {
                 $scope.data_general[0].actual_start_date = $scope.data_general[0].actual_start_date.toISOString().split('T')[0];
             } catch { }
             try {
                 $scope.data_general[0].actual_end_date = $scope.data_general[0].actual_end_date.toISOString().split('T')[0];
-            } catch { }
+            } catch { }*/
         }
         function check_data_session() {
 
             var pha_seq = $scope.data_header[0].seq;
-            for (var i = 0; i < $scope.data_session.length; i++) {
-                $scope.data_session[i].id = $scope.data_session[i].seq;
-                $scope.data_session[i].id_pha = pha_seq;
+
+            var copy_data_session = angular.copy($scope.data_session);
+
+
+            for (var i = 0; i < copy_data_session.length; i++) {
+                copy_data_session[i].id = copy_data_session[i].seq;
+                copy_data_session[i].id_pha = pha_seq;
                 try {
-                    $scope.data_session[0].meeting_date = $scope.data_session[0].meeting_date.toISOString().split('T')[0];
+                    $copy_data_session[0].meeting_date = copy_data_session[0].meeting_date.toISOString().split('T')[0];
                 } catch { }
                 try {
                     //12/31/1969 7:55:00 PM 
-                    var hh = $scope.data_session[i].meeting_start_time_hh; var mm = $scope.data_session[i].meeting_start_time_mm;
+                    var hh = copy_data_session[i].meeting_start_time_hh; var mm = copy_data_session[i].meeting_start_time_mm;
                     var valtime = "1970-01-01T" + (hh).substring(hh.length - 2) + ":" + (mm).substring(mm.length - 2) + ":00.000Z";
 
-                    $scope.data_session[i].meeting_start_time = new Date(valtime);
+                    copy_data_session[i].meeting_start_time = new Date(valtime);
                 } catch { }
                 try {
                     //12/31/1969 7:55:00 PM
-                    var hh = $scope.data_session[i].meeting_end_time_hh; var mm = $scope.data_session[i].meeting_end_time_mm;
+                    var hh = copy_data_session[i].meeting_end_time_hh; var mm = copy_data_session[i].meeting_end_time_mm;
                     var valtime = "1970-01-01T" + (hh).substring(hh.length - 2) + ":" + (mm).substring(mm.length - 2) + ":00.000Z";
-                    $scope.data_session[i].meeting_end_time = new Date(valtime);
+                    copy_data_session[i].meeting_end_time = new Date(valtime);
                 } catch { }
             }
 
             var arr_active = [];
-            angular.copy($scope.data_session, arr_active);
+            angular.copy(copy_data_session, arr_active);
             var arr_json = $filter('filter')(arr_active, function (item) {
                 return ((item.action_type == 'update' && item.action_change == 1) || item.action_type == 'insert');
             });
@@ -4825,9 +4827,34 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 }
             }
 
-            var arr_json = $filter('filter')(ws, function (item) {
+            var copy_data_ws = angular.copy(ws);
+
+            for (var i = 0; i < copy_data_ws.length; i++) {
+                try {
+                    if (copy_data_ws[i].estimated_start_date) {
+                        var start_date = new Date(copy_data_ws[i].estimated_start_date);
+                        if (!isNaN(start_date.getTime())) {
+                            var start_date_utc = new Date(Date.UTC(start_date.getFullYear(), start_date.getMonth(), start_date.getDate()));
+                            copy_data_ws[i].estimated_start_date = start_date_utc.toISOString().split('T')[0];
+                        }
+                    }
+                } catch (error) {} 
+
+                try {
+                    if (copy_data_ws[i].estimated_end_date) {
+                        var end_date = new Date(copy_data_ws[i].estimated_end_date);
+                        if (!isNaN(end_date.getTime())) {
+                            var end_date_utc = new Date(Date.UTC(end_date.getFullYear(), end_date.getMonth(), end_date.getDate()));
+                            copy_data_ws[i].estimated_end_date = end_date_utc.toISOString().split('T')[0];
+                        }
+                    }
+                } catch (error) {}     
+            }
+            
+            var arr_json = $filter('filter')(copy_data_ws, function (item) {
                 return ((item.action_type == 'update' && item.action_change == 1) || item.action_type == 'insert');
             });
+            
 
             // var arr_json = $filter('filter')(arr.hazards, function (item) {
             //     return (item.sub_area && type_hazard && health_hazard );
@@ -4911,11 +4938,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             var pha_seq = $scope.data_header[0].seq;
 
 
+            
             for (var i = 0; i < $scope.data_worksheet.length; i++) {
                 $scope.data_worksheet[i].id = Number($scope.data_worksheet[i].seq);
                 $scope.data_worksheet[i].id_pha = pha_seq;
     
-                try {
+                /*try {
                     if (!$scope.data_worksheet[i].estimated_start_date) {
                         var today = new Date();
                         var start_date_utc = new Date(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()));
@@ -4927,16 +4955,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                             $scope.data_worksheet[i].estimated_start_date = start_date_utc.toISOString().split('T')[0];
                         }
                     }
-                } catch (error) {} 
-                try {
-                    if ($scope.data_worksheet[i].estimated_start_date !== null) {
-                        var end_date = new Date($scope.data_worksheet[i].estimated_end_date);
-                        if (!isNaN(end_date.getTime())) { 
-                            var end_date_utc = new Date(Date.UTC(end_date.getFullYear(), end_date.getMonth(), end_date.getDate()));
-                            $scope.data_worksheet[i].estimated_end_date = end_date_utc.toISOString().split('T')[0];
-                        }
-                    } else {}
-                } catch (error) {}     
+                } catch (error) {} */
+                 
+  
             }
 
             var arr_active = [];
@@ -4985,37 +5006,31 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     //set data
     if(true){
-        function set_data_managerecom() {
 
-            if (true) {
-                var arr_worksheet = $scope.data_worksheet;
-                for (var w = 0; w < arr_worksheet.length; w++) {
-    
-                    //recommendations_no
-                    arr_worksheet[w].recommendations_no = (arr_worksheet[w].recommendations_no == null ? arr_worksheet[w].taskdesc_no : null);
-    
-                    //Estimated Date  
-                    try {
-                        if (arr_worksheet[w].estimated_start_date !== null) {
-                            const x = (arr_worksheet[w].estimated_start_date.split('T')[0]).split("-");
-                            if (x[0] > 2000) {
-                                arr_worksheet[w].estimated_start_date = new Date(x[0], x[1] - 1, x[2]);
-                            }
+
+        function set_data_managerecom(item) {
+            var arr_worksheet = item;
+            for (var w = 0; w < arr_worksheet.length; w++) {
+                try {
+                    if (arr_worksheet[w].estimated_start_date !== null) {
+                        const x = (arr_worksheet[w].estimated_start_date.split('T')[0]).split("-");
+                        if (x[0] > 2000) {
+                            arr_worksheet[w].estimated_start_date = new Date(x[0], x[1] - 1, x[2]);
                         }
-                    } catch { }
-                    try {
-                        if (arr_worksheet[w].estimated_end_date !== null) {
-                            const x = (arr_worksheet[w].estimated_end_date.split('T')[0]).split("-");
-                            if (x[0] > 2000) {
-                                arr_worksheet[w].estimated_end_date = new Date(x[0], x[1] - 1, x[2]);
-                            }
+                    }
+                } catch { }
+                try {
+                    if (arr_worksheet[w].estimated_end_date !== null) {
+                        const x = (arr_worksheet[w].estimated_end_date.split('T')[0]).split("-");
+                        if (x[0] > 2000) {
+                            arr_worksheet[w].estimated_end_date = new Date(x[0], x[1] - 1, x[2]);
                         }
-                    } catch { }
-    
-                }
+                    }
+                } catch { }
             }
-    
+            return arr_worksheet; 
         }
+        
     }
 
     //set_alert
@@ -5239,6 +5254,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         $scope.actionChangeWorksheet = function (_arr, _seq, type_text) {
 
+            console.log('Start Date:', _arr.estimated_start_date);
+            console.log('End Date:', _arr.estimated_end_date);
+            
             //if (_arr.recommendations == null || _arr.recommendations == '') {
             //    if (_arr.recommendations_no == null || _arr.recommendations_no == '') {
             //        //recommendations != '' ให้ running action no  
@@ -5276,6 +5294,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 }
                 calulateExposureRating(_arr); 
             }
+
 
 
             //check action submit
