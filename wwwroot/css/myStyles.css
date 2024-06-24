@@ -432,6 +432,32 @@ background-color: #3e8e41;
     border-radius: 6px
   }
 
+  
+  .card-copy {
+    border: 1px dashed #3874ff;
+    animation: borderColorChange 2s infinite;
+  }
+
+  .card-copy-rmt {
+    border-top: none;
+  }
+
+  .card-copy-rmb {
+    border-bottom: none;
+  }
+
+  @keyframes borderColorChange {
+    0% {
+        border-color: #75bcf6;
+    }
+    50% {
+        border-color: #38a2ff;
+    }
+    100% {
+        border-color: #224eb5;
+    }
+  }
+  
   /* add worker group */
   .container-add-staff {
     display: flex;
