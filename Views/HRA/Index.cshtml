@@ -1027,7 +1027,12 @@
                                                 <td class="align-top text-center px-1" colspan="4">
                                                     <div class="d-flex gap-2 py-2" 
                                                         style="width: 100%;"
-                                                        ng-repeat="(index, item_list) in item.hazard">
+                                                        ng-repeat="(index, item_list) in item.hazard"
+                                                        ng-class="{
+                                                            'card-copy': item_list.no_type_hazard == data_copy_hazard[0].no_type_hazard 
+                                                                        && item_list.id_subareas == data_copy_hazard[0].id_subareas,
+                                                            'card-copy-rmt': item.hazard[index - 1].no_type_hazard == item_list.no_type_hazard,
+                                                            'card-copy-rmb': item.hazard[index + 1].no_type_hazard == item_list.no_type_hazard}">
                                                         @* number *@
                                                         <div style="padding-left: 4px; width: 5%">
                                                             <div class="align-top ">
@@ -1201,8 +1206,8 @@
                                                                 data-toggle="tooltip" 
                                                                 data-placement="top" 
                                                                 title="Copy Description of Work or Tasks"
-                                                                @* ng-disabled="(!tab_general_active || !(tab_general_active && data_header[0].pha_status<=12 ))" *@
-                                                                disabled
+                                                                ng-disabled="(!tab_general_active || !(tab_general_active && data_header[0].pha_status<=12 ))"
+                                                                @* disabled *@
                                                                 ng-click="copyHazard(item, item_list)"
                                                                 >
                                                                 <span class="fas fa-copy fa-lg"></span>
@@ -1213,8 +1218,11 @@
                                                                 data-toggle="tooltip" 
                                                                 data-placement="top" 
                                                                 title="Copy Description of Work or Tasks"
-                                                                ng-click="pasteHazard(item, item_list)"
-                                                                ng-disabled="!isCopyHazard || isCopyHazard == item_list.seq || ( item_list.id_type_hazard && isPasteHazard != item_list.id_type_hazard)">
+                                                                ng-click="pasteHazardV2(item, item_list)"
+                                                                ng-disabled="!isCopyHazard || 
+                                                                            isCopyHazard == item_list.seq || 
+                                                                            ( item_list.id_type_hazard && isPasteHazard != item_list.id_type_hazard) ||
+                                                                            isDubEmptyType(item, item_list)">
                                                                 <span class="fa-solid fa-clipboard fa-lg"></span>
                                                                 Paste 
                                                             </button>
