@@ -704,9 +704,6 @@
                                                             </div>
 
                                                         </div>
-                                                        @* <div ng-class="{'invalid-feedback text-danger': !(form_valid.valid_document_file==true && item_d.seq == id_worksheet_select), 'feedback text-danger': form_valid.valid_document_file}">
-                                                        Please provide a valid document file.
-                                                        </div> *@
                                                         <div id="valid-upload_file-{{item_d.seq}}" class="invalid-feedback text-danger text-start">
                                                             Please provide a valid Document file.
                                                         </div>
@@ -861,8 +858,8 @@
                                                     ng-init="canAccess = Access_check(item_d)"
                                                     class="hover-actions-trigger btn-reveal-trigger position-static px-0 text-center">
                                                     <td class="align-top  px-1">
-                                                        <div class="text-center">
-                                                            <p class="mb-0 ms-3 fw-bold" style="width: 30px;" rows="3">
+                                                        <div class="text-center"  style="width: 70px !important;">
+                                                            <p class="mb-0 ms-3 fw-bold"  rows="3">
                                                                 {{ item_d.worker_group ? item_d.worker_group : 'Not found' }}
                                                             </p>
                                                         </div>
@@ -871,7 +868,7 @@
                                                     @* Task or Activity *@
                                                     <td class="align-top  px-1">
                                                         <div class="d-flex text-start">
-                                                            <p class="mb-0 ms-3 fw-bold" style="width: 30px;" rows="3">
+                                                            <p class="mb-0 ms-3 fw-bold" rows="3">
                                                                 {{ item_d.descriptions ? item_d.descriptions : 'Not found' }}
                                                             </p>
                                                         </div>
@@ -893,7 +890,7 @@
                                                     </td>
                                                     <td class="align-top  px-1">
                                                         <div class="align-items-center ">
-                                                            <p class="mb-0 ms-3 fw-bold" style="width: 30px;" rows="3">
+                                                            <p class="mb-0 ms-3 fw-bold" style="width: 80px;" rows="3">
                                                                 {{ item_d.riskfactors ? item_d.riskfactors : 'Not found' }}
                                                             </p>
                                                         </div>
@@ -909,21 +906,49 @@
 
                                                     @*Initial risk*@
                                                     <td class="align-top text-center">
-                                                        <div class="p-1 rounded-3" style="background-color: #ccffcc; color: #006600" ><!---ng-if="item.remaining > 3"--->
-                                                            <h6 class="fw-semi-bold">{{item_d.initail_risk}}</h6>
+                                                        <div class="p-1 rounded-3" 
+                                                             style="width: 80px;"
+                                                             ng-class="{
+                                                                    'bg-danger': (item_d.initial_risk_rating == 'High' || item_d.initial_risk_rating == 'High\r\n' 
+                                                                    || item_d.initial_risk_rating == 'Very High' || item_d.initial_risk_rating == 'Very High\r\n'),
+                                                                    'bg-warning': (item_d.initial_risk_rating == 'Meduim' || item_d.initial_risk_rating == 'Meduim\r\n') 
+                                                                }"><!---ng-if="item.remaining > 3"--->
+                                                            <h6 class="fw-semi-bold text-white">{{item_d.initail_risk}}</h6>
                                                         </div>
                                                     </td>
 
                                                     @*Residual risk*@
                                                     <td class="align-top text-center">
-                                                        <div class="p-1 rounded-3" style="background-color: #ccffcc; color: #006600" ><!----ng-if="item.remaining > 3"--->
-                                                            <h6 class="fw-semi-bold">{{item_d.residual_risk}}</h6>
+                                                        <div class="box mt-0 p-0" 
+                                                            style="width: 60px;"
+                                                            ng-if="item_d.action_status !== 'Closed' && canAccess"
+                                                            ng-class="{'unbox': (item.worksheet[item.worksheet.length - 1].seq == hazard.seq)}">
+                                                            <select class="form-select form-select-sm rounded-1" 
+                                                                ng-model="item_d.residual_risk" 
+                                                                ng-change="actionChangedRisk(item_d)"
+                                                                style="min-width: 60px; font-size: 10.24px;">
+                                                                <option value="Low">Low</option>
+                                                                <option value="Meduim" >Meduim</option>
+                                                                <option value="High" >High</option>
+                                                            </select>
+                                                        </div>        
+                                                        <!---ng-if="item_d.action_status !== 'Closed' || (item_d.action_status === 'Responed' && !canAccess)"---->
+                                                        <div class="p-1 rounded-3" 
+                                                            style="width: 80px;"
+                                                            ng-show="(item_d.action_status !== 'Closed' && !canAccess) || (item_d.action_status === 'Responed' && !canAccess)"
+                                                            ng-class="{
+                                                                'bg-danger': (item_d.residual_risk == 'High' || item_d.residual_risk == 'High\r\n'), 
+                                                                'bg-warning': (item_d.residual_risk == 'Meduim' || item_d.residual_risk == 'Meduim\r\n'),
+                                                                'bg-success': (item_d.residual_risk == 'Low' || item_d.residual_risk == 'Low\r\n') 
+                                                            }">
+                                                            <h6 class="fw-semi-bold text-white">{{item_d.residual_risk}}</h6>
                                                         </div>
+
                                                     </td>
 
                                                     @* Recommendations*@
                                                     <td class="align-top  px-1" ng-if="flow_status != 14">
-                                                        <div class="d-flex text-start">
+                                                        <div class="d-flex text-start" style="width: 140px;">
                                                             <p class="mb-0 ms-3 fw-bold" style="width: 120px;" rows="3">
                                                                 {{item_d.recommendations}}
                                                             </p>
@@ -951,7 +976,7 @@
                                                                 <div class="font-sans-serif btn-reveal-trigger position-static me-1">
                                                                     <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 p-1"
                                                                             ng-class="{ 'cant-Access': !canAccess }"
-                                                                            ng-disable="!canAccess"
+                                                                            ng-hide="!canAccess"
                                                                             type="button" data-bs-toggle="dropdown" data-boundary="window"
                                                                             aria-haspopup="true" aria-expanded="false" data-bs-reference="parent">
                                                                         <span class="fas fa-cog text-info"></span>
@@ -970,13 +995,13 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="align-items-center" style="width: 280px">
-                                                                    <div class="btn-group my-2 w-100" ng-style="{ 'opacity': !canAccess ? 0.5 : 1}"
-                                                                        ng-class="{ 'no-drop': !canAccess, 'ps-2': !canAccess, 'cursor-pointer': canAccess }">
+                                                                    <div class="btn-group my-2 w-100" >
                                                                         <div class="icon-button border p-3" style="border-color: #0d6efd; background-color: #0d6efd;"
-                                                                            ng-style="{ 'opacity': !canAccess ? 0.5 : 1}" >
+                                                                            ng-hide="!canAccess">
                                                                             <span class="fa-solid fa-arrow-up-from-bracket fa-lg" style="color: #ffffff;"></span>
                                                                         </div>
                                                                         <button class="Upload-button btn ps-3" 
+                                                                                ng-hide="!canAccess"
                                                                                 ng-style="{ 'background-color': canAccess ? '' : '#f5f7fa' }"
                                                                                 ng-class="{ 'no-drop': !canAccess, 'cursor-pointer': canAccess }" 
                                                                                 ng-if="!item_x.document_file_size">
@@ -992,12 +1017,14 @@
                                                                                 name="file{{item_x.seq}}"
                                                                                 ng-class="{ 'disabled-link': !canAccess, 'cursor-pointer' : canAccess }"
                                                                                 ng-disabled="!canAccess"
-                                                                                onchange="angular.element(this).scope().fileSelectApprover(this, 'approver')"
+                                                                                onchange="angular.element(this).scope().fileSelect(this)"
+                                                                                ng-click="setSeqUpload(item_d.seq)"
                                                                                 style="display:none" />
-
                                                                         </button>
-                                                                        <button class="Upload-button btn cursor-pointer" style="width:250px;" ng-if="item_x.document_file_size > 0">
-                                                                            <div class="d-flex align-items-center">
+                                                                        <button class="Upload-button btn cursor-pointer" style="width:250px;" 
+                                                                            ng-hide="!canAccess"
+                                                                            ng-if="item_x.document_file_size > 0">
+                                                                            <div class="d-flex align-items-center" >
                                                                                 <span class="nametext filename-text me-2 cursor-pointer">
                                                                                     {{ item_x.document_file_name }} ({{ item_x.document_file_size }} KB)
                                                                                 </span>
@@ -1006,22 +1033,17 @@
                                                                     </div>   
                                                                 </div>
                                                             </div>
-
-                                                            <div class="text-start p-0 cursor-pointer d-flex flex-nowrap" ng-if="item_d.responder_action_type === 2">
+                                                            <div class="text-start p-0 cursor-pointer d-flex flex-nowrap">
                                                                 <div ng-repeat="responder in data_drawingworksheet_responder">
-                                                                    <a class="nametext ms-3 filename-text me-2" ng-if="flow_status == 13 && item_x.document_file_size > 0 && item_d.id === responder.id_worksheet" ng-click="downloadFile(item_x)">
+                                                                    <a class="nametext ms-3 filename-text me-2" ng-if="item_x.document_file_size > 0 && item_d.id === responder.id_worksheet && responder.seq === item_x.id" ng-click="downloadFile(item_x)">
                                                                         <i class="far fa-file-pdf text-danger"></i> {{ item_x.document_file_name }} ({{ item_x.document_file_size }}KB)
                                                                     </a>
                                                                 </div>
-                                                                @*<a class="nametext ms-3 filename-text me-2" ng-if="flow_status == 14 && item_x.document_file_size > 0 && item_x.id === data_drawingworksheet_reviewer.id_worksheet" ng-click="downloadFile(item_x)">
-                                                                <i class="far fa-file-pdf text-danger"></i> {{ data_drawingworksheet_reviewer.document_file_name }} ({{ data_drawingworksheet_reviewer.document_file_size }}KB)
-                                                                </a>*@
                                                             </div>
-
                                                         </div>
-                                                        <div id="valid-upload_file-{{item_d.seq}}" class="invalid-feedback text-danger text-start">
+                                                        @*<div id="valid-upload_file-{{item_d.seq}}" class="invalid-feedback text-danger text-start">
                                                             Please provide a valid Document file.
-                                                        </div>
+                                                        </div>*@
                                                     </td>
 
                                                     @* action owner responded => status 14 *@
@@ -1079,13 +1101,14 @@
                                                                             <label class="dz-message-text fw-bold p-1 " for="attfile-{{item_x.seq}}"
                                                                                 ng-class="{ 'no-drop': !canAccess, 'cursor-pointer': canAccess }"
                                                                                 ng-style="{ 'background-color': canAccess ? '' : '#f5f7fa' }">
-                                                                                Upload File (Word, Excel, PDF, Image)
-                                                                            </label>
+                                                                                Upload File 
+                                                                            </label><!---(Word, Excel, PDF, Image)----->
                                                                             <input type="file" id="attfile-{{item_x.seq}}"
                                                                                 name="file{{item_x.seq}}"
                                                                                 ng-class="{ 'disabled-link': !canAccess, 'cursor-pointer' : canAccess }"
                                                                                 ng-disabled="!canAccess"
-                                                                                onchange="angular.element(this).scope().fileSelectApprover(this, 'approver')"
+                                                                                onchange="angular.element(this).scope().fileSelect(this)"
+                                                                                ng-click="setSeqUpload(item_d.seq)"
                                                                                 style="display:none" />
 
                                                                         </button>
@@ -1100,18 +1123,18 @@
                                                                 </div>
                                                             </div>
 
-                                                            <div class="text-start p-0 cursor-pointer d-flex flex-nowrap" ng-if="item_d.data_drawingworksheet_reviewer === 2">
+                                                            <div class="text-start p-0 cursor-pointer d-flex flex-nowrap">
                                                                 <div ng-repeat="reviewer in data_drawingworksheet_reviewer">
-                                                                    <a class="nametext ms-3 filename-text me-2" ng-if="flow_status == 14 && item_x.document_file_size > 0 && item_d.id === reviewer.id_worksheet" ng-click="downloadFile(item_x)">
+                                                                    <a class="nametext ms-3 filename-text me-2" ng-if="flow_status == 14 && item_x.document_file_size > 0 
+                                                                        && item_d.id === reviewer.id_worksheet  && reviewer.seq === item_x.id" ng-click="downloadFile(item_x)">
                                                                         <i class="far fa-file-pdf text-danger"></i> {{ item_x.document_file_name }} ({{ item_x.document_file_size }}KB)
                                                                     </a>
                                                                 </div>
                                                             </div>
-
                                                         </div>
-                                                        <div id="valid-upload_file-{{item_d.seq}}" class="invalid-feedback text-danger text-start">
+                                                        @*<div id="valid-upload_file-{{item_d.seq}}" class="invalid-feedback text-danger text-start">
                                                             Please provide a valid Document file.
-                                                        </div>
+                                                        </div>*@
                                                     </td>
 
 
@@ -1180,18 +1203,18 @@
                                                     <td class="align-top px-0 pt-0 ">
                                                         <div class="d-flex" ng-class="{ 'no-drop': !canAccess, 'cursor-pointer': canAccess}">
                                                             <button class="btn btn-outline text-primary  p-1 m-2 me-0"
-                                                                    ng-class="{ 'cant-Access': !canAccess}"
                                                                     style=" background-color: #f1f2f4; width:50px;"
                                                                     ng-click="actionSave(item_d)"
+                                                                    ng-hide="!canAccess"
                                                                     ng-if="!((flow_status == 14 ? item_d.reviewer_action_type : item_d.responder_action_type) == 2)">
                                                                 <span class="fa fa-save text-primary fa-lg"></span><br />
                                                                 <span style="font-size:8px">Save</span>
                                                             </button>
 
                                                             <button class="btn btn-outline text-success  p-1 m-2 ms-1"
-                                                                    ng-class="{ 'cant-Access': !canAccess}"
                                                                     style="background-color: #f1f2f4; width:80px; "
                                                                     ng-click="showConfirmDialogSubmit(item_d,'submit')"
+                                                                    ng-hide="!canAccess"
                                                                     ng-if="!((flow_status == 14 ? item_d.reviewer_action_type : item_d.responder_action_type) == 2)">
                                                                 <span class="fa fa-save text-success fa-lg"></span><br />
                                                                 <span style="font-size:8px">

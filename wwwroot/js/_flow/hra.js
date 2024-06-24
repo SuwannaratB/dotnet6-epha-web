@@ -4357,7 +4357,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             //แปลง date to yyyyMMdd
             //แปลง time to hh:mm
-            actual_start_date_utc.toISOString().split('T')[0];
+            //var copy_actual_start_date = angular.copy( $scope.data_general);
+
+            //actual_start_date_utc.toISOString().split('T')[0];
             /*try {
                 $scope.data_general[0].actual_start_date = $scope.data_general[0].actual_start_date.toISOString().split('T')[0];
             } catch { }

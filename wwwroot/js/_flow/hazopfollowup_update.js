@@ -188,6 +188,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                             var file_name = jsonArray[0].ATTACHED_FILE_NAME;
                             var file_path = jsonArray[0].ATTACHED_FILE_PATH;
 
+                            console.log("$scope.seqUpload",$scope.seqUpload)
                             var arr_details = $filter('filter')($scope.data_details, function (item) { return (item.seq == $scope.seqUpload); });
                             console.log("arr_details",arr_details)
                             if (arr_details.length > 0 ) {
@@ -377,6 +378,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
 
     $scope.actionChangedData = function (item) {
         clear_form_valid();
+        item.action_change = 1;
+        apply();
+    }
+    $scope.actionChangedRisk = function (item) {
+        console.log(item)
+        item.residual_risk_rating = item.residual_risk;
         item.action_change = 1;
         apply();
     }
@@ -784,7 +791,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
     function clear_valid_items(field) {
         var id_valid = document.getElementById('valid-' + field);
 
-        id_valid.className = "invalid-feedback text-danger";
+        try{
+            id_valid.className = "invalid-feedback text-danger";
+
+        }catch{}
     }
     $scope.showConfirmDialogSubmit = function (item, action) {
         clear_form_valid();
@@ -944,6 +954,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
             var arr_json = $filter('filter')(arr_active, function (item) {
                 return (item.seq == _item.seq);
             });
+
+            for (let i = 0; i < arr_json.length; i++) {
+                arr_json[i].responder_action_type = arr_json[i].responder_action_type = 2;
+                arr_json[i].action_change = arr_json[i].action_change = 1;
+            }    
         }
 
         // Set item.implement bfor save
@@ -951,6 +966,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
             arr_json[i].implement = arr_json[i].implement === true ? 1 : 0;
         }        
 
+        console.log("arr_json",arr_json)
         var json_managerecom = angular.toJson(arr_json);
         var json_drawingworksheet = check_data_drawingworksheet(_item.seq);
 
@@ -1014,6 +1030,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                             return (item.responder_action_type == 2);
                         });
 
+                        console.log("=>",arr)
                         if (arr.length == $scope.data_details.length) {
                             window.open("Home/Portal", "_top");
                         } else { 
@@ -1037,6 +1054,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
     }
     $scope.confirmSaveReviewFollowup = function (action, _item) {
           
+        console.log(action, _item)
         var json_drawingworksheet = check_data_drawingworksheet(_item.seq);
 
         var arr_active = [];
@@ -1050,6 +1068,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                     arr_json[i].action_change = 1;
                 };
             }
+        console.log("arr_json",arr_json)
+
+
         } else {
             var arr_json = $filter('filter')(arr_active, function (item) {
                 return (item.seq == _item.seq);
@@ -1065,6 +1086,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
         for (let i = 0; i < arr_json.length; i++) {
             arr_json[i].implement = arr_json[i].implement === true ? 1 : 0;
         }  
+
+        console.log("arr_json",arr_json)
 
         var json_managerecom = angular.toJson(arr_json);
 
