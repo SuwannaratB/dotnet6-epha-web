@@ -864,7 +864,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         token_doc = pha_seq;
 
         var json_header = angular.toJson($scope.data_header);
-        var json_general = angular.toJson([$scope.data_general[0]]);
+        //var json_general = angular.toJson([$scope.data_general[0]]);
+        var json_general =  check_data_general();
+
         // var json_general = angular.toJson($scope.data_general);
 
         var flow_action = (action == 'submit_complete' ? 'submit' : action);
@@ -1965,7 +1967,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         //data_general
         if ($scope.data_general[0].target_start_date !== null) {
             const x = ($scope.data_general[0].target_start_date.split('T')[0]).split("-");
-            $scope.data_general[0].target_start_date = new Date(x[0], x[1], x[2]);
+            $scope.data_general[0].target_start_date = new Date(x[0], x[1] - 1, x[2]);
             
         }
 
@@ -1982,7 +1984,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             if ($scope.data_session[i].meeting_date !== null) {
                 const x = ($scope.data_session[i].meeting_date.split('T')[0]).split("-");
-                $scope.data_session[i].meeting_date = new Date(x[0], x[1], x[2]);
+                $scope.data_session[i].meeting_date = new Date(x[0], x[1] - 1, x[2]);
             }
             if ($scope.data_session[i].meeting_start_time !== null) {
                 //12/31/1969 7:55:00 PM 
@@ -4425,18 +4427,55 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     if (true) {
         //alert(1111);
         function check_data_general() {
-
             //แปลง date to yyyyMMdd
             //แปลง time to hh:mm
-            //var copy_actual_start_date = angular.copy( $scope.data_general);
-
-            //actual_start_date_utc.toISOString().split('T')[0];
-            /*try {
-                $scope.data_general[0].actual_start_date = $scope.data_general[0].actual_start_date.toISOString().split('T')[0];
-            } catch { }
+            //set timezone offset
+            var copy_data_general = angular.copy($scope.data_general);
+    
             try {
-                $scope.data_general[0].actual_end_date = $scope.data_general[0].actual_end_date.toISOString().split('T')[0];
-            } catch { }*/
+                if (copy_data_general[0].target_start_date !== null) {
+                    var target_start_date = new Date(copy_data_general[0].target_start_date);
+                    if (!isNaN(target_start_date.getTime())) {
+                        var target_start_date_utc = new Date(Date.UTC(target_start_date.getFullYear(), target_start_date.getMonth(), target_start_date.getDate()));
+                        copy_data_general[0].target_start_date = target_start_date_utc.toISOString().split('T')[0];
+                    }
+                }
+            } catch {} 
+    
+            try {
+                if (copy_data_general[0].target_end_date !== null) {
+                    var target_end_date = new Date(copy_data_general[0].target_end_date);
+                    if (!isNaN(target_end_date.getTime())) {
+                        var target_end_date_utc = new Date(Date.UTC(target_end_date.getFullYear(), target_end_date.getMonth(), target_end_date.getDate()));
+                        copy_data_general[0].target_end_date = target_end_date_utc.toISOString().split('T')[0];
+                    }
+                }
+            } catch {}    
+            
+            /*try {
+                if (copy_data_general[0].actual_start_date) {
+                    var actual_start_date = new Date(copy_data_general[0].actual_start_date);
+                    if (!isNaN(actual_start_date.getTime())) {
+                        var actual_start_date_utc = new Date(Date.UTC(actual_start_date.getFullYear(), actual_start_date.getMonth(), actual_start_date.getDate()));
+                        copy_data_general[0].actual_start_date = actual_start_date_utc.toISOString().split('T')[0];
+                    }
+                }
+            } catch {} 
+            
+            try {
+                if (copy_data_general[0].actual_end_date) {
+                        var actual_end_date = new Date(copy_data_general[0].actual_end_date);
+                    if (!isNaN(actual_end_date.getTime())) {
+                        var actual_end_date_utc = new Date(Date.UTC(actual_end_date.getFullYear(), actual_end_date.getMonth(), actual_end_date.getDate()));
+                        copy_data_general[0].actual_end_date = actual_end_date_utc.toISOString().split('T')[0];
+                    }
+                }
+            } catch {} */
+    
+    
+            console.log("copy_data_general",copy_data_general)
+            
+            return angular.toJson(copy_data_general);
         }
         function check_data_session() {
 

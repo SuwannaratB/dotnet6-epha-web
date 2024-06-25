@@ -427,6 +427,7 @@
                                                 </label>
                                                 <input type="date" name="te_date" ng-model="item.target_end_date"
                                                        ng-keyup="actionChange(item,item.seq,'')"
+                                                       min="{{ item.target_start_date | date:'yyyy-MM-dd' }}"
                                                        class="form-control rounded-1 datetimepicker" ng-class="{'disabled-link':(!tab_general_active)}"
                                                        id="tgs_date"
                                                        placeholder="dd/mm/yyyy">
@@ -736,7 +737,7 @@
                                                 <tr>
                                                     <th class="align-middle text-center" style="font-size: 10px;">No</th>
                                                     <th class="align-middle" style="font-size: 10px;">Document Name</th>
-                                                    <th class="align-middle d-none" style="font-size: 10px;"><b class="text-danger"> * </b>Drawing No</th>
+                                                    <th class="align-middle" style="font-size: 10px;"><b class="text-danger"> * </b>Drawing No</th>
                                                     <th class="align-middle" style="font-size: 10px;"><b class="text-danger"> * </b>Document File</th>
                                                     <th class="align-middle" style="font-size: 10px;">Comment </th>
                                                     <th class="align-middle" style="font-size: 10px;"> </th>
@@ -2250,6 +2251,7 @@
                                                     <input type="date" class="form-control datetimepicker rounded-1" 
                                                         placeholder="Start Date dd/mm/yyyy"
                                                         ng-model="ws.estimated_start_date"
+                                                        max="{{ws.estimated_end_date | date:'yyyy-MM-dd' }}"
                                                         ng-change="actionChangeWorksheet(ws, ws.seq, '')">
                                                     <div id="valid-nodeworksheet-estimated-start-{{ws.seq}}"
                                                         class="invalid-feedback text-danger">
@@ -2264,6 +2266,7 @@
                                                         placeholder="End Date dd/mm/yyyy"
                                                         ng-model="ws.estimated_end_date"
                                                         ng-min="ws.estimated_start_date | date:'yyyy-MM-dd'"
+                                                        min="{{ws.estimated_start_date | date:'yyyy-MM-dd' }}"
                                                         ng-change="actionChangeWorksheet(ws, ws.seq, 'end_date')">
                                                     <div id="valid-nodeworksheet-estimated-end-{{ws.seq}}"
                                                         class="invalid-feedback text-danger">
