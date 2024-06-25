@@ -410,6 +410,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
 
     $scope.changeTab = function (selectedTab) {
+        $scope.action_part = selectedTab.action_part;
+
         try {
 
             if ($scope.data_header[0].pha_status == 11) {
@@ -418,8 +420,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     || selectedTab.name == 'report'
                 ) {
 
-                    console.log("$scope.status_upload",$scope.status_upload)
-                    console.log("$scope.data_drawing",$scope.data_drawing)
+
                     if ($scope.data_general[0].sub_expense_type == 'Normal') {
                         
                         if (!$scope.data_general[0].expense_type ||
@@ -428,6 +429,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         ) {
                             $scope.tab_worksheet_show = true;
                             $scope.tab_managerecom_show = true;
+                            $scope.goback_tab = 'general';
+                            
                             return set_alert('Warning', 'Please select a valid General Information');
                         }
 
@@ -435,6 +438,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         //|| !$scope.status_upload
                         $scope.tab_worksheet_show = true;
                         $scope.tab_managerecom_show = true;
+                        $scope.goback_tab = 'node';
+
                         return set_alert('Warning', 'Please select a valid Drawing');
                     }
 
@@ -443,6 +448,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         ) {
                             $scope.tab_worksheet_show = true;
                             $scope.tab_managerecom_show = true;
+                            $scope.goback_tab = 'node';
+
                             return set_alert('Warning', 'Please select a valid Node');
                         }
                         
@@ -482,28 +489,49 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.oldTab = selectedTab;
         apply();
     };
+    $scope.goBackToTab = function (){
+
+        var tag_name = $scope.goback_tab;
+
+        var arr_tab = $filter('filter')($scope.tabs, function (item) {
+            return ((item.name == tag_name));
+        });
+
+        console.log("tag_name",tag_name)
+        console.log("arr_tab",arr_tab)
+        $scope.changeTab_Focus(arr_tab, tag_name);
+    }
 
     $scope.editWorksheet = function (tab_worksheet_active) {
         $scope.tab_worksheet_active = !tab_worksheet_active;
     }
 
     $scope.changeTab_Focus = function (selectedTab, nameTab) {
+
+        console.log("selectedTab",selectedTab)
+        console.log("nameTab",nameTab)
         angular.forEach($scope.tabs, function (tab) {
             tab.isActive = false;
         });
         selectedTab[0].isActive = true;
+        console.log(selectedTab)
 
         // Set focus to the clicked tab element
-        try {
+        /*try {
             document.getElementById(selectedTab[0].name + "-tab").addEventListener("click", function (event) {
                 ev = event.target
             });
 
             var tabElement = angular.element(ev);
+            console.log("tabElement",tabElement)
+
             tabElement[0].focus();
-        } catch (error) { }
+
+        } catch (error) { }*/
 
         check_tab(selectedTab[0].name);
+
+        console.log($scope.tabs)
 
         apply();
     };
@@ -1217,10 +1245,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
 
     function save_data_create(action, action_def) {
-        console.log('save ==> ',$scope.data_nodeworksheet)
         if ($scope.action_part != 4) { set_data_managerecom(); }
 
-        check_data_general();
         check_data_functional_audition();
 
         var action_part = $scope.action_part;
@@ -1233,7 +1259,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
 
         var json_header = angular.toJson($scope.data_header);
-        var json_general = angular.toJson($scope.data_general);
+        var json_general =  check_data_general();
         var json_functional_audition = angular.toJson($scope.data_functional_audition);
 
         var json_session = check_data_session();
@@ -1780,8 +1806,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     $scope.data_approver_ta3_def = clone_arr_newrow(arr.approver_ta3);
                     $scope.data_approver_ta3_old = (arr.approver_ta3);
 
-                    console.log("$scope.data_approver_ta3",$scope.data_approver_ta3)
-
                     $scope.data_drawing = arr.drawing;
                     $scope.data_drawing_def = clone_arr_newrow(arr.drawing);
 
@@ -1808,12 +1832,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         $scope.data_nodeguidwords_def = clone_arr_newrow(arr.nodeguidwords);
                     }
 
-                    //set action_project_team will set to 0 if that data null? 
-                    /*for (let i = 0; i < arr.nodeworksheet.length; i++) {
-                        if (arr.nodeworksheet[i].action_project_team !== null) {
-                            arr.nodeworksheet[i].action_project_team = arr.nodeworksheet[i].action_project_team === 1 ? false : true;                           
-                        }
-                    }*/
 
                     $scope.data_nodeworksheet = arr.nodeworksheet;
 
@@ -2426,12 +2444,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
 
     }
-
-    function formatDate(input) {
-        const dateParts = input.value.split('/');
-        const formattedDate = `${dateParts[0]}/${dateParts[1]}/${dateParts[2]}`;
-        // Now use the formattedDate as needed
-      }
       
       
     $scope.getGuidWordById = function (id_guide_word) {
@@ -2453,6 +2465,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.data_general[0].target_start_date = new Date(year, parseInt(startDateParts[1]) - 1, parseInt(startDateParts[2]));
             console.log( $scope.data_general[0].target_start_date)
         }
+
+        console.log("$scope.data_general[0].target_end_date",$scope.data_general[0].target_end_date)
 
         if ($scope.data_general[0].target_end_date !== null) {
             const endDateParts = $scope.data_general[0].target_end_date.split('T')[0].split("-");
@@ -2939,12 +2953,67 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     }
 
-    $scope.triggerRemove = function(seq, index, type) {
+    $scope.triggerRemove = function(data,seq, index, type) {
+        console.log("data",data)
+        console.log("index, type",index, type)
         if (seq !== null && index !== null) {
             $scope.seqToRemove = seq;
             $scope.indexToRemove = index;
             $scope.typeToRemove = type;
-            $('#removeModal').modal('show');
+            switch($scope.typeToRemove) {
+                case 'session':
+                    var shouldShowModal = false;
+
+                    console.log("$scope.data_memberteam",$scope.data_memberteam)
+                    console.log("$scope.data_approver",$scope.data_approver)
+
+                    for (var i = 0; i < $scope.data_memberteam.length; i++) {
+                        var member = $scope.data_memberteam[i];
+                        if ((member.id_session === seq && member.user_displayname !== null)) {
+                            shouldShowModal = true;
+                            break; 
+                        }
+                    }
+
+                    for (var i = 0; i < $scope.data_approver.length; i++){
+                        var approver = $scope.data_approver[i];
+
+                        if ((approver.id_session === seq && approver.user_displayname !== null)) {
+                            shouldShowModal = true;
+                            break; 
+                        }                        
+                    }
+
+                    if (shouldShowModal || data.meeting_date !== null ) {
+                        $('#removeModal').modal('show');
+                    } else {
+                        $scope.removeDataSession($scope.seqToRemove, $scope.indexToRemove);
+                    }
+                    break;
+                case 'DrawingDoc':
+                    if(data.document_file_name !== null || data.document_file_path !== null || data.descriptions !== null || data.document_name !== null){
+                        $('#removeModal').modal('show');
+                    }else{
+                        $scope.removeDrawingDoc($scope.seqToRemove, $scope.indexToRemove);
+                    }
+                    break;
+                case 'nodelist' :
+                    if(data.design_conditions !== null || data.design_intent !== null || data.node !== null || data.node_boundary !== null || data.operating_conditions !== null){
+                        $('#removeModal').modal('show');
+                    }else{
+                        $scope.removeDataNodeList($scope.seqToRemove, $scope.indexToRemove);
+                    }
+                    break;
+                case 'NodeDrawing' :
+                    if(data.descriptions !== null || data.id_drawing !== null ){
+                        $('#removeModal').modal('show');
+                    }else{
+                        $scope.removeDataNodeDrawing($scope.seqToRemove, $scope.indexToRemove);
+                    }                                        
+                    break;
+                default:
+                    $('#removeModal').modal('show');
+            }
         } else {
             console.error('is null');
         }
@@ -2960,7 +3029,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     $scope.removeDrawingDoc($scope.seqToRemove, $scope.indexToRemove);
                     break;
                 case 'nodelist' :
-                    $scope.removeDataNodeList($scope.seqToRemove, $scope.indexToRemove)
+                    $scope.removeDataNodeList($scope.seqToRemove, $scope.indexToRemove);
+                    break;
+                case 'NodeDrawing' :
+                    $scope.removeDataNodeDrawing($scope.seqToRemove, $scope.indexToRemove);
+                    break;
                 default:
                     console.error('Unknown type:', $scope.typeToRemove);
             }
@@ -3564,21 +3637,55 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     };
     $scope.removeDataNodeDrawing = function (seq, seq_node) {
-
-        var arrdelete = $filter('filter')($scope.data_nodedrawing, function (item) {
+        var arrdelete = $filter('filter')($scope.data_nodedrawing, function(item) {
             return (item.seq == seq && item.action_type == 'update');
         });
-        if (arrdelete.length > 0) { $scope.data_nodedrawing_delete.push(arrdelete[0]); }
+        if (arrdelete.length > 0) {
+            $scope.data_nodedrawing_delete.push(arrdelete[0]);
+        }
 
-        $scope.data_nodedrawing = $filter('filter')($scope.data_nodedrawing, function (item) {
-            return !(item.seq == seq);
-        });
+        // Step 1: Find the node with the given seq to get the id_node
+        var targetNode = $filter('filter')($scope.data_nodedrawing, function(item) {
+            return item.seq === seq;
+        })[0];
+        
+        if (targetNode) {
+            var id_node = targetNode.id_node;
+        
+            var sameIdNodes = $filter('filter')($scope.data_nodedrawing, function(item) {
+                return item.id_node === id_node;
+            });
+        
+            if (sameIdNodes.length > 1) {
+
+                $scope.data_nodedrawing = $filter('filter')($scope.data_nodedrawing, function(item) {
+                    return item.seq !== seq;
+                });
+
+            } else if (sameIdNodes.length === 1) {
+
+                $scope.data_nodedrawing = $filter('filter')($scope.data_nodedrawing, function(item) {
+                    if (item.seq === seq) {
+                        item.page_end_first = null;
+                        item.page_end_second = null;
+                        item.page_end_third = null;
+                        item.page_start_first = null;
+                        item.page_start_second = null;
+                        item.page_start_third = null;
+                        item.id_drawing = null;
+                    }
+                    return true;  
+                });
+            }
+        
+        }
 
         if ($scope.data_nodedrawing.length == 0) {
             $scope.MaxSeqDataNodeList = Number($scope.MaxSeqDataNodeList) + 1;
             $scope.addDataNodeDrawing($scope.MaxSeqDataNodeDrawing, seq_node);
         }
     };
+
     $scope.updateDataNodeDrawing = function (seq, seq_node, seq_drawing) {
 
         var arr_def = $filter('filter')($scope.data_nodedrawing, function (item) {
@@ -4019,6 +4126,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         running_index_worksheet(seq);
         index = index_rows;
 
+        console.log("seq_node",seq_node)
         // console.clear();
         running_index_level1_lv1($scope.data_nodeworksheet, iNo, index, newInput);
 
@@ -5115,7 +5223,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     requiredFields.forEach(function (item) {
                         if (!arr_chk[0][item.field]) {
                             set_alert('Warning', 'Please select a valid General Information');
-                            console.log("will ser alert for",item.field)
                             validateSelect(item.field, item.errorId);
                             invalidFieldFound = true; 
                         }
@@ -5198,7 +5305,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                         if (true) {
                             var arr_chk = $scope.data_nodeworksheet;
-                            console.log("Array to validate:", arr_chk);
                         
                             var bCheckValid_Worksheet = false;
                         
@@ -5218,18 +5324,23 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                                     } else if (item['category_type'] !== undefined && item['category_type'] !== null && item['category_type'] !== '') {
                                         valid = validateFields(item, 'category_type', ['causes', 'consequences', 'major_accident_event', 'existing_safeguards']);
                                     }
-                                } else {
-                                    bCheckValid_Worksheet = true; 
+
+                                    if(!valid){
+                                        bCheckValid_Worksheet = true; 
+                                    }
+
+
+
+                                } /*else {
+                                    bCheckValid_Worksheet = false; 
                                     continue; 
-                                }
-                                                        
-                                if (!valid) {
-                                    bCheckValid_Worksheet = true; 
-                                }
+                                }*/
                             }
                         
             
                             if (bCheckValid_Worksheet) {
+                                $scope.goback_tab = 'worksheet'
+                                
                                 set_alert('Warning', 'Please provide valid data in the worksheet');
                                 return; 
                             }
@@ -5434,20 +5545,22 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     valid = false;
                     console.log(`Missing required field '${field}' in item:`, item);
                 }else{
-                    allFieldsPresent = false;
+                    if(valid){
+                        allFieldsPresent = false;
+                    }
 
                 }
+
             });
+
     
             if (allFieldsPresent) {
                 requiredFields.forEach(field => {
                     set_valid_items(item[field], 'nodeworksheet-' + field + '-' + item.seq);
                 });
-            } else {
-                console.log('Not all required fields are present:', item);
             }
         } else {
-            console.log(`Main field '${mainField}' is null or empty in item:`, item);
+
             valid = false;
         }
     
@@ -5552,35 +5665,52 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         //แปลง date to yyyyMMdd
         //แปลง time to hh:mm
         //set timezone offset
+        var copy_data_general = angular.copy($scope.data_general);
+
         try {
-            if ($scope.data_general[0].target_start_date) {
-                var target_start_date = new Date($scope.data_general[0].target_start_date);
-                var target_start_date_utc = new Date(Date.UTC(target_start_date.getFullYear(), target_start_date.getMonth(), target_start_date.getDate()));
-                $scope.data_general[0].target_start_date = target_start_date_utc.toISOString().split('T')[0];
-            } else {}
-        } catch (error) {}
-        
-        try {
-            if ($scope.data_general[0].target_start_date) {
-                var target_start_date = new Date($scope.data_general[0].target_start_date);
-                var target_start_date_utc = new Date(Date.UTC(target_start_date.getFullYear(), target_start_date.getMonth(), target_start_date.getDate()));
-                $scope.data_general[0].target_start_date = target_start_date_utc.toISOString().split('T')[0];
+            if (copy_data_general[0].target_start_date !== null) {
+                var target_start_date = new Date(copy_data_general[0].target_start_date);
+                if (!isNaN(target_start_date.getTime())) {
+                    var target_start_date_utc = new Date(Date.UTC(target_start_date.getFullYear(), target_start_date.getMonth(), target_start_date.getDate()));
+                    copy_data_general[0].target_start_date = target_start_date_utc.toISOString().split('T')[0];
+                }
             }
-        } catch (error) {}
+        } catch {} 
+
+        try {
+            if (copy_data_general[0].target_end_date !== null) {
+                var target_end_date = new Date(copy_data_general[0].target_end_date);
+                if (!isNaN(target_end_date.getTime())) {
+                    var target_end_date_utc = new Date(Date.UTC(target_end_date.getFullYear(), target_end_date.getMonth(), target_end_date.getDate()));
+                    copy_data_general[0].target_end_date = target_end_date_utc.toISOString().split('T')[0];
+                }
+            }
+        } catch {}    
+        
+        /*try {
+            if (copy_data_general[0].actual_start_date) {
+                var actual_start_date = new Date(copy_data_general[0].actual_start_date);
+                if (!isNaN(actual_start_date.getTime())) {
+                    var actual_start_date_utc = new Date(Date.UTC(actual_start_date.getFullYear(), actual_start_date.getMonth(), actual_start_date.getDate()));
+                    copy_data_general[0].actual_start_date = actual_start_date_utc.toISOString().split('T')[0];
+                }
+            }
+        } catch {} 
         
         try {
-            var actual_start_date = new Date($scope.data_general[0].actual_start_date);
-            var actual_start_date_utc = new Date(Date.UTC(actual_start_date.getFullYear(), actual_start_date.getMonth(), actual_start_date.getDate()));
-            $scope.data_general[0].actual_start_date = actual_start_date_utc.toISOString().split('T')[0];
-        } catch (error) {}
+            if (copy_data_general[0].actual_end_date) {
+                    var actual_end_date = new Date(copy_data_general[0].actual_end_date);
+                if (!isNaN(actual_end_date.getTime())) {
+                    var actual_end_date_utc = new Date(Date.UTC(actual_end_date.getFullYear(), actual_end_date.getMonth(), actual_end_date.getDate()));
+                    copy_data_general[0].actual_end_date = actual_end_date_utc.toISOString().split('T')[0];
+                }
+            }
+        } catch {} */
+
+
+        console.log("copy_data_general",copy_data_general)
         
-        try {
-            var actual_end_date = new Date($scope.data_general[0].actual_end_date);
-            var actual_end_date_utc = new Date(Date.UTC(actual_end_date.getFullYear(), actual_end_date.getMonth(), actual_end_date.getDate()));
-            $scope.data_general[0].actual_end_date = actual_end_date_utc.toISOString().split('T')[0];
-        } catch (error) {}
-        
-          
+        return angular.toJson(copy_data_general);
     }
 
     function check_master_ram() {
@@ -5624,33 +5754,32 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     function check_data_session() {
 
         var pha_seq = $scope.data_header[0].seq;
-        for (var i = 0; i < $scope.data_session.length; i++) {
-            $scope.data_session[i].id = $scope.data_session[i].seq;
-            $scope.data_session[i].id_pha = pha_seq;
+        var copy_data_session = angular.copy($scope.data_session);
+
+        for (var i = 0; i < copy_data_session.length; i++) {
+            copy_data_session[i].id = copy_data_session[i].seq;
+            copy_data_session[i].id_pha = pha_seq;
             try {
-                var meeting_date = new Date($scope.data_session[0].meeting_date);
-                var meeting_date_utc = new Date(Date.UTC(meeting_date.getFullYear(), meeting_date.getMonth(), meeting_date.getDate()));
-                $scope.data_session[0].meeting_date = meeting_date_utc.toISOString().split('T')[0];
-            } catch {} 
-     
+                copy_data_session[0].meeting_date = copy_data_session[0].meeting_date.toISOString().split('T')[0];
+            } catch { }
             try {
                 //12/31/1969 7:55:00 PM 
-                var hh = $scope.data_session[i].meeting_start_time_hh; var mm = $scope.data_session[i].meeting_start_time_mm;
+                var hh = copy_data_session[i].meeting_start_time_hh; var mm = copy_data_session[i].meeting_start_time_mm;
                 var valtime = "1970-01-01T" + (hh).substring(hh.length - 2) + ":" + (mm).substring(mm.length - 2) + ":00.000Z";
-  
-                $scope.data_session[i].meeting_start_time = new Date(valtime);
+
+                copy_data_session[i].meeting_start_time = new Date(valtime);
             } catch { }
-  
             try {
                 //12/31/1969 7:55:00 PM
-                var hh = $scope.data_session[i].meeting_end_time_hh; var mm = $scope.data_session[i].meeting_end_time_mm;
+                var hh = copy_data_session[i].meeting_end_time_hh; var mm = copy_data_session[i].meeting_end_time_mm;
                 var valtime = "1970-01-01T" + (hh).substring(hh.length - 2) + ":" + (mm).substring(mm.length - 2) + ":00.000Z";
-                $scope.data_session[i].meeting_end_time = new Date(valtime);
+                copy_data_session[i].meeting_end_time = new Date(valtime);
             } catch { }
         }
-  
+
         var arr_active = [];
-        angular.copy($scope.data_session, arr_active);
+        angular.copy(copy_data_session, arr_active);
+
         var arr_json = $filter('filter')(arr_active, function (item) {
             return ((item.action_type == 'update' && item.action_change == 1) || item.action_type == 'insert');
         });
@@ -5935,37 +6064,31 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         //}
 
         console.log("check_data_nodeworksheet",$scope.data_nodeworksheet)
-        for (var i = 0; i < $scope.data_nodeworksheet.length; i++) {
-            $scope.data_nodeworksheet[i].id = Number($scope.data_nodeworksheet[i].seq);
-            $scope.data_nodeworksheet[i].id_pha = pha_seq;
+
+        var copy_data_nodeworksheet = angular.copy($scope.data_nodeworksheet);
+
+        for (var i = 0; i < copy_data_nodeworksheet.length; i++) {
+            copy_data_nodeworksheet[i].id = Number(copy_data_nodeworksheet[i].seq);
+            copy_data_nodeworksheet[i].id_pha = pha_seq;
 
             // action_project_team
-            if ($scope.data_nodeworksheet[i].action_project_team !== undefined) {
-                $scope.data_nodeworksheet[i].action_project_team = $scope.data_nodeworksheet[i].action_project_team ? 1 : 0;
+            if (copy_data_nodeworksheet[i].action_project_team !== undefined) {
+                copy_data_nodeworksheet[i].action_project_team = copy_data_nodeworksheet[i].action_project_team ? 1 : 0;
             }
             
-
-            //ram_action_security, ram_action_likelihood, ram_action_risk, estimated_start_date, estimated_end_date, document_file_path, document_file_name, action_status, responder_action_type, responder_user_name, responder_user_displayname
-
             try {
-                if (!$scope.data_nodeworksheet[i].estimated_start_date) {
-                    var today = new Date();
+                if (copy_data_nodeworksheet[i].estimated_start_date) {
+                    var today = new Date(copy_data_nodeworksheet[i].estimated_start_date);
                     var start_date_utc = new Date(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()));
-                    $scope.data_nodeworksheet[0].estimated_start_date = start_date_utc.toISOString().split('T')[0];
-                } else {
-                    var start_date = new Date($scope.data_nodeworksheet[i].estimated_start_date);
-                    if (!isNaN(start_date.getTime())) {
-                        var start_date_utc = new Date(Date.UTC(start_date.getFullYear(), start_date.getMonth(), start_date.getDate()));
-                        $scope.data_nodeworksheet[i].estimated_start_date = start_date_utc.toISOString().split('T')[0];
-                    }
-                }
+                    copy_data_nodeworksheet[i].estimated_start_date = start_date_utc.toISOString().split('T')[0];
+                } 
             } catch (error) {} 
             try {
-                if ($scope.data_nodeworksheet[i].estimated_start_date !== null) {
-                    var end_date = new Date($scope.data_nodeworksheet[i].estimated_end_date);
+                if (copy_data_nodeworksheet[i].estimated_start_date !== null) {
+                    var end_date = new Date(copy_data_nodeworksheet[i].estimated_end_date);
                     if (!isNaN(end_date.getTime())) { 
                         var end_date_utc = new Date(Date.UTC(end_date.getFullYear(), end_date.getMonth(), end_date.getDate()));
-                        $scope.data_nodeworksheet[i].estimated_end_date = end_date_utc.toISOString().split('T')[0];
+                        copy_data_nodeworksheet[i].estimated_end_date = end_date_utc.toISOString().split('T')[0];
                     }
                 } else {}
             } catch (error) {}                                    
@@ -5973,22 +6096,22 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             if (pha_status == "11" || pha_status == "12" || pha_status == "22") {
                 try {
-                    if ($scope.data_nodeworksheet[i].reviewer_action_date !== null) {
-                        var reviewer_date = new Date($scope.data_nodeworksheet[i].reviewer_action_date);
+                    if (copy_data_nodeworksheet[i].reviewer_action_date !== null) {
+                        var reviewer_date = new Date(copy_data_nodeworksheet[i].reviewer_action_date);
                         if (!isNaN(reviewer_date.getTime())) {
                             var reviewer_date_utc = new Date(Date.UTC(reviewer_date.getFullYear(), reviewer_date.getMonth(), reviewer_date.getDate()));
-                            $scope.data_nodeworksheet[i].reviewer_action_date = reviewer_date_utc.toISOString().split('T')[0];
+                            copy_data_nodeworksheet[i].reviewer_action_date = reviewer_date_utc.toISOString().split('T')[0];
                         }
                     }                 
 
                 } catch (error) {}
                 
                 try {
-                    if ($scope.data_nodeworksheet[i].responder_action_date !== null) {
-                        var responder_date = new Date($scope.data_nodeworksheet[i].responder_action_date);
+                    if (copy_data_nodeworksheet[i].responder_action_date !== null) {
+                        var responder_date = new Date(copy_data_nodeworksheet[i].responder_action_date);
                         if (!isNaN(responder_date.getTime())) { 
                             var responder_date_utc = new Date(Date.UTC(responder_date.getFullYear(), responder_date.getMonth(), responder_date.getDate()));
-                            $scope.data_nodeworksheet[i].responder_action_date = responder_date_utc.toISOString().split('T')[0];
+                            copy_data_nodeworksheet[i].responder_action_date = responder_date_utc.toISOString().split('T')[0];
                         }
                     }                      
 
@@ -5996,10 +6119,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
 
         }
-        console.log("check_data_nodeworksheet",$scope.data_nodeworksheet)
-
         var arr_active = [];
-        angular.copy($scope.data_nodeworksheet, arr_active);
+        angular.copy(copy_data_nodeworksheet, arr_active);
         var arr_json = $filter('filter')(arr_active, function (item) {
             return ((item.action_type == 'update' && item.action_change == 1) || item.action_type == 'insert');
         });
@@ -6008,9 +6129,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             arr_json.push($scope.data_nodeworksheet_delete[i]);
         }
         
-
-        console.log('return ',arr_json)
-
         return angular.toJson(arr_json);
     }
 
@@ -6066,6 +6184,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }).modal('show');
     }
 
+
     function set_alert_warning(header, detail) {
         $scope.$apply(function () {
             $scope.Action_Msg_Header = header;
@@ -6092,25 +6211,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     //start Update Action Type null to Update 
     $scope.actionChange = function (_arr, _seq, type_text) {
-        console.log(_arr, _seq, type_text)
         action_type_changed(_arr, _seq);
-
-        // Adjust to local timezone before sending to backend
-        /*if (_arr.target_start_date) {
-            var startDate = new Date(_arr.target_start_date);
-            var startOffset = startDate.getTimezoneOffset() * 60000; 
-            var adjustedStartDate = new Date(startDate.getTime() - startOffset);
-            _arr.target_start_date = adjustedStartDate.toISOString().substring(0, 10);
-        }
-        if (_arr.target_end_date) {
-            var endDate = new Date(_arr.target_end_date);
-            var endOffset = endDate.getTimezoneOffset() * 60000;
-            var adjustedEndDate = new Date(endDate.getTime() - endOffset);
-            _arr.target_end_date = adjustedEndDate.toISOString().substring(0, 10);
-        }*/
-
-        //console.log( "start",_arr.target_start_date,"end",_arr.target_end_date)
-
 
         var arr_submit = $filter('filter')($scope.data_node, function (item) {
             return ((item.action_type !== '' || item.action_type !== null));
@@ -6788,7 +6889,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                        
                         // Save and send
                         setTimeout(function() {
-                            console.log("Calling save_data_approver_ta3");
                             save_data_approver_ta3("submit");
                         }, 200);
                     }

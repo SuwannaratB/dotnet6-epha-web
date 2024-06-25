@@ -1271,7 +1271,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         token_doc = pha_seq;
 
         var json_header = angular.toJson($scope.data_header);
-        var json_general = angular.toJson($scope.data_general);
+        var json_general =  check_data_general();
         //var json_tagid_audition = angular.toJson($scope.data_tagid_audition);
         var json_functional_audition = angular.toJson($scope.data_tagid_audition);
 
@@ -4426,51 +4426,49 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         //แปลง date to yyyyMMdd
         //แปลง time to hh:mm
-
-        var copy_data_target = angular.copy($scope.data_general);
+        var copy_data_general = angular.copy($scope.data_general);
 
         try {
-            if (copy_data_target[0].target_start_date) {
-                var target_start_date = new Date(copy_data_target[i].target_start_date);
+            if (copy_data_general[0].target_start_date) {
+                var target_start_date = new Date(copy_data_general[0].target_start_date);
                 if (!isNaN(target_start_date.getTime())) {
                     var target_start_date_utc = new Date(Date.UTC(target_start_date.getFullYear(), target_start_date.getMonth(), target_start_date.getDate()));
-                    copy_data_target[0].target_start_date = target_start_date_utc.toISOString().split('T')[0];
+                    copy_data_general[0].target_start_date = target_start_date_utc.toISOString().split('T')[0];
                 }
             }
         } catch {} 
 
         try {
-            if (copy_data_target[0].target_end_date) {
-                var target_end_date = new Date(copy_data_target[i].target_end_date);
+            if (copy_data_general[0].target_end_date) {
+                var target_end_date = new Date(copy_data_general[0].target_end_date);
                 if (!isNaN(target_end_date.getTime())) {
                     var target_end_date_utc = new Date(Date.UTC(target_end_date.getFullYear(), target_end_date.getMonth(), target_end_date.getDate()));
-                    copy_data_target[0].target_end_date = target_end_date_utc.toISOString().split('T')[0];
+                    copy_data_general[0].target_end_date = target_end_date_utc.toISOString().split('T')[0];
                 }
             }
         } catch {}    
         
-
-        var copy_data_actual = angular.copy($scope.data_general);
-
         try {
-            if (copy_data_actual[0].actual_start_date) {
-                var actual_start_date = new Date(copy_data_actual[0].actual_start_date);
+            if (copy_data_general[0].actual_start_date) {
+                var actual_start_date = new Date(copy_data_general[0].actual_start_date);
                 if (!isNaN(actual_start_date.getTime())) {
                     var actual_start_date_utc = new Date(Date.UTC(actual_start_date.getFullYear(), actual_start_date.getMonth(), actual_start_date.getDate()));
-                    copy_data_actual[0].actual_start_date = actual_start_date_utc.toISOString().split('T')[0];
+                    copy_data_general[0].actual_start_date = actual_start_date_utc.toISOString().split('T')[0];
                 }
             }
         } catch {} 
         
         try {
-            if (copy_data_actual[0].actual_end_date) {
-                    var actual_end_date = new Date(copy_data_actual[0].actual_end_date);
+            if (copy_data_general[0].actual_end_date) {
+                    var actual_end_date = new Date(copy_data_general[0].actual_end_date);
                 if (!isNaN(actual_end_date.getTime())) {
                     var actual_end_date_utc = new Date(Date.UTC(actual_end_date.getFullYear(), actual_end_date.getMonth(), actual_end_date.getDate()));
-                    copy_data_actual[0].actual_end_date = actual_end_date_utc.toISOString().split('T')[0];
+                    copy_data_general[0].actual_end_date = actual_end_date_utc.toISOString().split('T')[0];
                 }
             }
         } catch {} 
+        
+        return angular.toJson(copy_data_general);
     }
     function check_master_ram() {
         // return angular.toJson($scope.master_ram);

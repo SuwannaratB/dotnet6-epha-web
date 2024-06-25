@@ -4457,7 +4457,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 copy_data_session[i].id = copy_data_session[i].seq;
                 copy_data_session[i].id_pha = pha_seq;
                 try {
-                    $copy_data_session[0].meeting_date = copy_data_session[0].meeting_date.toISOString().split('T')[0];
+                    copy_data_session[0].meeting_date = copy_data_session[0].meeting_date.toISOString().split('T')[0];
                 } catch { }
                 try {
                     //12/31/1969 7:55:00 PM 

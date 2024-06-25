@@ -164,7 +164,7 @@
 
                 <div class="card-header mb-0 pb-0 border border-bottom-0 ">
 
-                @*     <ul class="nav nav-underline border-3 border-primary border-bottom " id="myTab" role="tablist">
+                    @*<ul class="nav nav-underline border-3 border-primary border-bottom " id="myTab" role="tablist">
 
                         <li ng-repeat="tab in tabs" class="mx-2 " ng-if="tab.isShow || true">
                             <a ng-click="changeTab(tab)"
@@ -181,15 +181,16 @@
 
                         <li ng-repeat="tab in tabs" class="mx-2 " ng-if="tab.isShow || true">
                             <a ng-click="changeTab(tab)"
-                               class="btn btn-outline-primary border border-0 "
-                               ng-class="{'btn btn-outline-primary border border-0 active': (tab.isActive==true),'btn btn-outline-primary border border-0 ': (tab.isActive==false) }"
-                               style="border-radius: 10px 10px 0px 0px !important;"
+                               class="btn-outline-primary border border-0 px"
+                               ng-class="{'btn  active': (tab.isActive === true)}"
+                               style="border-radius: 10px 10px 0px 0px; padding: 0.625rem 1.5rem; font-size: 0.8rem; font-weight: 700; line-height: 1.2; text-align: center; display: inline-block; vertical-align: middle;"
                                id="{{tab.name}}-tab" name="{{tab.name}}-tab"
-                               data-bs-toggle="tab" href="#tab-{{tab.name}}" role="tab"
+                               data-bs-toggle="tab" 
+                               href="#tab-{{tab.name}}" role="tab"
                                aria-controls="tab-{{tab.name}}"
-                               aria-selected="tab.isActive">{{ tab.title }}</a>
+                               aria-selected="{{tab.isActive}}">{{ tab.title }}</a>
                         </li>
-                    </ul>
+                    </ul><!----ng-class="{'active': (tab.isActive === true),'': (tab.isActive === false) }"   ng-class="{'active': (tab.isActive === true)}"--->
 
                 </div>
 
@@ -601,11 +602,11 @@
                                         <input type="date"
                                             ng-model="item.target_start_date"
                                             ng-keyup="actionChange(item, item.seq, '')"
+                                            ng-max="item.target_end_date"
+                                            max="{{ item.target_end_date | date:'yyyy-MM-dd' }}"
                                             class="form-control rounded-1 datetimepicker cursor-pointer"
                                             ng-class="{'disabled-link': (!tab_general_active)}"
-                                            placeholder="dd/mm/yyyy"
-                                            onchange="formatDate(this)">
-
+                                            placeholder="dd/mm/yyyy">
                                     </div>
 
                                     <div class="col-md-auto p-1">
@@ -617,6 +618,8 @@
                                         <input type="date" name="te_date" ng-model="item.target_end_date"
                                         <input type="date" ng-model="item.target_end_date"
                                             ng-keyup="actionChange(item,item.seq,'')"
+                                            ng-min="item.target_start_date"
+                                            min="{{ item.target_start_date | date:'yyyy-MM-dd' }}"
                                             class="form-control rounded-1 datetimepicker cursor-pointer"
                                             ng-class="{'disabled-link':(!tab_general_active)}"
                                             placeholder="dd/mm/yyyy">
@@ -708,7 +711,7 @@
 
                                                     <td class="text-center" style="width: 30px;">
                                                         <div class="pt-1 ">
-                                                            <h6 class="fw-semi-bold">{{item.no}}</h6>
+                                                            <h6 class="fw-semi-bold">{{$index + 1}}</h6>
                                                         </div>
                                                     </td>
                                                     <td class="align-top col-auto" style="min-width: 400px;">
@@ -849,9 +852,10 @@
                                                                             data-placement="top" 
                                                                             title="Remove"
                                                                             style="color: #ff2828; background-color: #f1f2f4; border-color: #ff2828;"
-                                                                            ng-disabled="!((data_approver.length && data_approver[0].user_name !== null) || 
-                                                                                            (data_memberteam.length && data_memberteam[0].user_name !== null))"
-                                                                            ng-click="triggerRemove(item.seq,$index,'session')">
+                                                                            ng-disabled="$first && 
+                                                                                        ((data_approver.length === 0 || data_approver[0].user_name === null) && 
+                                                                                        (data_memberteam.length === 0 || data_memberteam[0].user_name === null))"
+                                                                            ng-click="triggerRemove(item,item.seq,$index,'session')">
                                                                         <span class="fa-regular fa-trash-can fa-lg"></span>
                                                                     </button>
                                                                 </span>
@@ -862,6 +866,8 @@
                                                                             data-toggle="tooltip" 
                                                                             data-placement="top" 
                                                                             title="Copy"
+                                                                            ng-disabled="!((data_approver.length && data_approver[0].user_name !== null) || 
+                                                                                            (data_memberteam.length && data_memberteam[0].user_name !== null))"                                                                            
                                                                             ng-click=copyDataSession(item.seq,$index)>
                                                                         <span class="fas fa-copy fa-lg"></span>
                                                                     </button>
@@ -1053,7 +1059,7 @@
                                                                 <span class="mx-1">
                                                                     <button class="btn btn-outline-secondary p-2" 
                                                                             style="color: #ff2828; background-color: #f1f2f4; border-color: #ff2828;"
-                                                                            ng-click=triggerRemove(item.seq,$index-1,'DrawingDoc')
+                                                                            ng-click="triggerRemove(item,item.seq,$index-1,'DrawingDoc')"
                                                                             data-toggle="tooltip" 
                                                                             data-placement="top" 
                                                                             title="Remove">
@@ -1174,8 +1180,7 @@
                                                                         </a>
                                                                         <div class="dropdown-divider"></div>
                                                                         <a class="dropdown-item text-danger"
-                                                                            ng-click= $scope.triggerRemove(item.seq,$index,'nodelist')
-                                                                           >
+                                                                            ng-click= "triggerRemove(item,item.seq,$index,'nodelist')">
                                                                             <span class="fas fa-times-circle"></span>
                                                                             Remove
                                                                         </a>
@@ -1332,7 +1337,7 @@
                                                                             Add
                                                                         </a>
                                                                         <div class="dropdown-divider"></div>
-                                                                        <a class="dropdown-item text-danger" ng-click=removeDataNodeDrawing(item2.seq,item.seq)>
+                                                                        <a class="dropdown-item text-danger" ng-click="triggerRemove(item2,item2.seq,item.seq,'NodeDrawing')">
                                                                             <span class="fas fa-times-circle"></span> 
                                                                             Remove
                                                                         </a>
@@ -2267,14 +2272,15 @@
                                         <tbody class="">
                                             <tr class="rowwork border border-dashed" 
                                                 ng-if="( data_node.length == 1 ? (data_node[0].node == null ? false : true) : true) "
-                                                ng-repeat="item in data_nodeworksheet | toArray | filter:{id_node : selectedItemNodeView} | sortNodeworksheet"> <!-----no---->
+                                                ng-repeat="item in data_nodeworksheet | toArray | filter:{id_node : selectedItemNodeView} | sortNodeworksheet"> 
+                                                <!-----no---->
                                                 <td class="align-top border border-light border-active " style="padding: 0 !important; width: 80px;"
                                                     ng-if="( item.causes_no == 1 && item.consequences_no == 1) && item.row_type == 'causes' "
-                                                    rowspan="{{ (data_nodeworksheet | filter:{deviations: item.deviations}).length }}">
-                                                    @* {{item.index_rows}} *@
+                                                    rowspan="{{ (data_nodeworksheet | filter:{id_node : selectedItemNodeView,deviations: item.deviations}).length }}">
+                                                    
                                                     @*<p class=" mx-1 ms-0  text-1100 fw-bold max-w-100 " ng-if="( item.causes_no == 1 && item.consequences_no == 1) && item.row_type == 'causes' ">{{item.guidewords_no +'.'+  (item.deviations == null? item.guidewords : item.deviations +' '+ item.guidewords  )   }}  </p>*@
                                                     <p class=" mx-1 ms-0  text-1100 fw-bold max-w-100 " >
-                                                        {{ item.deviations }}
+                                                        {{$index + 1}} {{ item.deviations }}
                                                     </p>
                                                 </td>
 
@@ -2285,7 +2291,7 @@
                                                 @* causes *@
                                                 <td class="align-top border border-light border-active " style="padding: 0 !important;"
                                                     ng-if="item.row_type === 'causes'" 
-                                                    rowspan="{{ (data_nodeworksheet | filter:{deviations: item.deviations,causes_no: item.causes_no}).length }}">
+                                                    rowspan="{{ (data_nodeworksheet | filter:{id_node : selectedItemNodeView,deviations: item.deviations,causes_no: item.causes_no}).length }}">
                                                     <div class="d-flex align-items-top w-100">
                                                         <div>
                                                             <p class="p-0 m-0 me-1 text-end">{{item.guidewords_no +'.' + item.causes_no +'.'}}</p>
@@ -2364,7 +2370,7 @@
                                                 @* consequences *@
                                                 <td class="align-top border border-light border-active " style="padding: 0 !important;"
                                                     ng-if="item.row_type === 'causes' || item.row_type =='consequences' " 
-                                                    rowspan="{{ (data_nodeworksheet | filter:{deviations: item.deviations,causes_no: item.causes_no,consequences_no: item.consequences_no}).length }}">
+                                                    rowspan="{{ (data_nodeworksheet | filter:{id_node : selectedItemNodeView,deviations: item.deviations,causes_no: item.causes_no,consequences_no: item.consequences_no}).length }}">
                                                     <div class="d-flex align-items-top w-100" >
                                                         <div>
                                                             <p class="p-0 m-0 me-1 text-end">{{item.guidewords_no +'.' + item.causes_no +'.'+item.consequences_no +'.'}}</p>
@@ -2445,8 +2451,8 @@
 
                                                 <td class="align-top border border-light border-active "
                                                     style="padding: 0 !important; width: 70px;"
-                                                    ng-if="select_columns_level == 5"
-                                                    rowspan="{{ (data_nodeworksheet | filter:{deviations: item.deviations,causes_no: item.causes_no,consequences_no: item.consequences_no,category_no:item.category_no}).length }}">
+                                                    ng-if="select_columns_level == 5">
+                                                    <!----rowspan="{{ (data_nodeworksheet | filter:{deviations: item.deviations,causes_no: item.causes_no,consequences_no: item.consequences_no,category_no:item.category_no}).length }}"----->
                                                     <div class="d-flex align-items-top px-0" style="width: 70px;">
                                                         <div class="align-top font-sans-serif btn-reveal-trigger position-static pt-1 mx-0 px-0" style="width: 20px;">
                                                             <p class="p-0 m-0 me-1 text-end d-none">
@@ -2573,7 +2579,7 @@
 
                                                 <td id="td_existing_safeguards" class="align-top border border-light border-active" style="padding: 0 !important;"
                                                     ng-if="item.row_type === 'causes' || item.row_type =='consequences' " 
-                                                    rowspan="{{ (data_nodeworksheet | filter:{deviations: item.deviations,causes_no: item.causes_no,consequences_no: item.consequences_no}).length }}">
+                                                    rowspan="{{ (data_nodeworksheet | filter:{id_node : selectedItemNodeView,deviations: item.deviations,causes_no: item.causes_no,consequences_no: item.consequences_no}).length }}">
                                                     <div class="d-flex align-items-center w-100" ng-if="item.row_type =='causes' || item.row_type =='consequences'">
                                                         <div class="autocomplete-container" style=" width: 100%; " ng-class="{'disabled-link':(!tab_worksheet_active)}">
                                                             <!--Modal RAM Start-->         
@@ -3239,6 +3245,7 @@
                                                         class="form-control  datetimepicker rounded-1" 
                                                        ng-class="{'disabled-link':(!tab_managerecom_active)}"
                                                        placeholder="End Date dd/mm/yyyy"
+                                                       min="{{ item.estimated_start_date | date:'yyyy-MM-dd' }}"
                                                        ng-model="item.estimated_end_date"
                                                        ng-change="actionChangeWorksheet(item,item.seq,'')">
                                                 <div id="valid-nodeworksheet-estimated-end-{{item.seq}}"
@@ -3335,7 +3342,7 @@
                                             <td class="align-top rating white-space-nowrap">
                                                 <div class="ms-3">
                                                     <label>
-                                                        {{item.action_status === 'wait_for_design' ? 'waiting for detail design' : item.action_status}}
+                                                        {{item.action_status === 'Wait_for_design' ? 'waiting for detail design' : item.action_status}}
                                                     </label>
                                                 </div>
                                             </td>
@@ -4019,7 +4026,8 @@
                         </p>
                     </div>
                     <div class="d-flex flex-column align-items-center" ng-if="!Action_Msg_Confirm">
-                        <button class="btn p-2 px-8 text-white" type="button" data-bs-dismiss="modal" aria-label="Close"
+                        <button class="btn p-2 px-8 text-white" type="button" data-bs-dismiss="modal" aria-label="Close" 
+                                ng-click="goBackToTab()"
                                 ng-class="{ 'bg-warning' : (Action_Msg_Header == 'Warning'? true :false),'bg-primary' : (Action_Msg_Header == 'Warning'? false :true) }">
                             {{ Action_Msg_Header == 'Warning' ? 'Go back' : 'OK' }}
                         </button>
