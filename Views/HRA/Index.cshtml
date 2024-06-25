@@ -1536,7 +1536,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody class="list" id="customer-rating-table-body">
-                                                <tr ng-repeat="item in data_worksheet_list">
+                                                <tr ng-repeat="(index, item) in data_worksheet_list">
                                                     
                                                     <td class="td-custom">
                                                         <div class="text-center" style="border: none; padding: 8px">
@@ -1711,31 +1711,31 @@
                                                         </div>
                                                     </td>
 
-                                                    <td class="td-custom " >
+                                                    <td class="td-custom">
                                                         <div class="box" 
                                                             ng-repeat="(idx,hazard) in item.worksheet"
                                                             ng-class="{'unbox': (item.worksheet[item.worksheet.length - 1].seq == hazard.seq)}">
                                                             <div class="d-flex gap-2 mb-2" style="min-width: max-content;">
                                                                 <input type="radio" 
-                                                                    name="ef-{{item.index_rows}}-{{idx}}" 
-                                                                    id="effective-{{item.index_rows}}-{{idx}}" 
+                                                                    name="ef-{{index}}-{{idx}}" 
+                                                                    id="effective-{{index}}-{{idx}}"
                                                                     style="width: 20px;"
                                                                     ng-disabled="hazard.initial_risk_rating == 'Low' || hazard.initial_risk_rating == 'Low\r\n'"
                                                                     value="0"
                                                                     ng-change="actionChangEffective(hazard)"
                                                                     ng-model="hazard.effective">
-                                                                <label for="effective">Effective</label>
+                                                                <label for="effective-{{index}}-{{idx}}">Effective</label>
                                                             </div>
                                                             <div class="d-flex gap-2" style="min-width: max-content;">
                                                                 <input type="radio" 
-                                                                    name="ef-{{item.index_rows}}-{{idx}}" 
-                                                                    id="ineffective-{{item.index_rows}}-{{idx}}" 
+                                                                    name="ef-{{index}}-{{idx}}" 
+                                                                    id="ineffective-{{index}}-{{idx}}"
                                                                     style="width: 20px;"
                                                                     ng-disabled="hazard.initial_risk_rating == 'Low' || hazard.initial_risk_rating == 'Low\r\n'"
                                                                     value="1"
                                                                     ng-change="actionChangEffective(hazard)"
                                                                     ng-model="hazard.effective">
-                                                                <label for="ineffective">Ineffective</label>
+                                                                <label for="ineffective-{{index}}-{{idx}}">Ineffective</label>
                                                             </div>
                                                         </div>
                                                     </td>
@@ -3975,7 +3975,7 @@
         </div>
     </div>
     <!--Modal Check Send e-Mail Case Save for PHA Conduct -->
-    <!--Modal กรณีที่ Draft เมื่อกด Tab JSEA Worksheet-->
+    <!--Modal กรณีที่ Draft เมื่อกด Tab HRA Worksheet-->
     <div class="modal fade" id="modalPleaseRegister" tabindex="-1"
          aria-labelledby="modalPleaseRegisterLabel"
          aria-hidden="true" style="display: none;">
@@ -3990,7 +3990,7 @@
                 <div class="modal-body">
                     <div class="d-flex justify-content-center align-items-center mb-5">
                         <h5 class="modal-title mb-0 text-center" id="modalPleaseRegisterLabel" style="font-size: 20px; font-weight: bold;">
-                            Please register task before fill in JSEA Worksheet.
+                            Please register task before fill in HRA Worksheet.
                         </h5>
 
                     </div>
@@ -4010,7 +4010,7 @@
             </div>
         </div>
     </div>
-    <!--Modal กรณีที่ Draft เมื่อกด Tab JSEA Worksheet-->
+    <!--Modal กรณีที่ Draft เมื่อกด Tab HRA Worksheet-->
     <!--Modal Check Send e-Mail ปุ่ม Submit ที่ Status WPC -->
     <div class="modal fade" id="modalSendMailConduct" tabindex="-1" aria-labelledby="modalSendMailConductLabel"
          aria-hidden="true" style="display: none;">
@@ -4025,7 +4025,7 @@
                 <div class="modal-body">
                     <div class="d-flex justify-content-center align-items-center mb-5">
                         <h6 class="modal-title mb-0 text-center" id="modalSendMailConductLabel" style="font-size: 40px; font-weight: bold;">
-                            Complete JSEA Worksheet for all sessions?
+                            Complete HRA Worksheet for all sessions?
                         </h6>
                     </div>
                     <div class="justify-content-center align-items-center mb-5" ng-if=" data_header[0].pha_status == 22">
@@ -4161,7 +4161,7 @@
                 <div class="modal-body">
                     <div class="d-flex justify-content-center align-items-center mb-5">
                         <h5 class="modal-title mb-0 text-center" id="modalSendMailApproverLabel" style="font-size: 40px; font-weight: bold;">
-                            Submit JSEA Worksheet for all sessions?
+                            Submit HRA Worksheet for all sessions?
                         </h5>
                     </div>
                 </div>

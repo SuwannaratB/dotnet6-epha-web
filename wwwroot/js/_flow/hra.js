@@ -864,7 +864,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         token_doc = pha_seq;
 
         var json_header = angular.toJson($scope.data_header);
-        var json_general = angular.toJson($scope.data_general);
+        var json_general = angular.toJson([$scope.data_general[0]]);
+        // var json_general = angular.toJson($scope.data_general);
 
         var flow_action = (action == 'submit_complete' ? 'submit' : action);
 
@@ -1503,6 +1504,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     $scope.startTimer();  
                 }
 
+                setDeafaultEffective();
 
                 $scope.$apply();
 
@@ -1517,6 +1519,20 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         });
 
+    }
+
+    function setDeafaultEffective() {
+        for (let i = 0; i <  $scope.data_worksheet_list.length; i++) {
+            for (let j = 0; j < $scope.data_worksheet_list[i].worksheet.length; j++) {
+                var type = 'effective'
+
+                if($scope.data_worksheet_list[i].worksheet[j].effective == '1') type = 'ineffective'
+
+                 const myElement = document.getElementById(`${type}-${i}-${j}`);
+                 myElement.checked = true
+            }
+             
+         }
     }
 
     $scope.filterInitialRiskRatingMain = function(item) {
@@ -1609,37 +1625,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                             $scope.data_worksheet[j].health_hazard = hazardFilter.health_hazard;
                             $scope.data_worksheet[j].type_hazard = hazardFilter.type_hazard;
                             $scope.data_worksheet[j].sub_area = hazardFilter.sub_area;
+                            // $scope.data_worksheet[j].effective = parseInt($scope.data_worksheet[j].effective);
                             worksheet_list[i].worksheet.push($scope.data_worksheet[j])
                         }
                     }
                 }
             }
 
-            // setup test
-            // var ws = angular.copy($scope.data_worksheet);
-            // for (let i = 0; i < ws.length; i++) {
-            //     var tasks_ls = $filter('filter')($scope.data_tasks, function (item) {
-            //         return (parseInt(item.seq) == parseInt(ws[i].seq_tasks));
-            //     })[0];
-                // add tasks
-            //     if (tasks_ls) {
-            //         ws[i].worker_group = tasks_ls.worker_group;
-            //         ws[i].descriptions = tasks_ls.descriptions;
-            //         ws[i].sub_areas = subArea_list;
-            //         ws[i].hazards = convertSubAreaToHazard();
-            //         ws[i].tasks = tasks_ls;
-            //     }
-                
-            //     if (ws[i].action_type == 'new' && ws[i].hazards.length > 0) {
-            //         ws[i].action_type = 'insert'
-            //         ws[i].subarea_no = 1
-            //     }
-
-            //     if (ws[i].action_type = 'insert' && ws[i].seq_hazard && ws[i].seq_tasks) {
-            //         ws[i].action_type = 'update'
-            //     }
-            // }
-            // console.log('data_worksheet', ws)
             console.log('return worksheet_list', worksheet_list)
             // setup_ws(worksheet_list);
             return worksheet_list;
