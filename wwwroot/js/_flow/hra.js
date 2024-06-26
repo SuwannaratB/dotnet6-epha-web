@@ -2588,20 +2588,32 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             $scope.selectdata_session = xValues;
 
-            var arr_copy = [];
-            angular.copy($scope.data_memberteam, arr_copy);
-            var arrmember = $filter('filter')(arr_copy, function (item) { return (item.id_session == seq); });
-            for (let i = 0; i < arrmember.length; i++) {
-                arrmember[i].id_session = Number(id_session);
-                arrmember[i].action_type = 'insert';
-                arrmember[i].action_change = 1;
-
-                arrmember[i].seq = $scope.selectdata_memberteam;
-                arrmember[i].id = $scope.selectdata_memberteam;
-
-                $scope.data_memberteam.push(arrmember[i]);
-                $scope.selectdata_memberteam += 1;
+            function processData(sourceArray, seq, id_session) {
+                let arr_copy = [];
+                angular.copy(sourceArray, arr_copy);
+                let arrmember = $filter('filter')(arr_copy, function(item) {
+                    return (item.id_session == seq);
+                });
+            
+                for (let i = 0; i < arrmember.length; i++) {
+                    arrmember[i].id_session = Number(id_session);
+                    arrmember[i].action_type = 'insert';
+                    arrmember[i].action_change = 1;
+            
+                    arrmember[i].seq = $scope.selectdata_memberteam;
+                    arrmember[i].id = $scope.selectdata_memberteam;
+            
+                    sourceArray.push(arrmember[i]);
+                    $scope.selectdata_memberteam += 1;
+                }
             }
+            
+            processData($scope.data_memberteam, seq, id_session);
+            processData($scope.data_approver, seq, id_session);
+            //processData($scope.data_relatedpeople, seq, id_session);
+            processData($scope.data_relatedpeople_outsider, seq, id_session);
+    
+            console.log("$scope.data_approver",$scope.data_approver)
 
         }
         $scope.removeDataSession = function (seq, index) {
