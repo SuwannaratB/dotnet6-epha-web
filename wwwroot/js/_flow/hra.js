@@ -826,25 +826,22 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 }
                 
                 if (selectedTab.name === 'manage') {
-            
                     for (let i = 0; i < $scope.data_worksheet_list.length; i++) {
-                        let worksheet = $scope.data_worksheet_list[i].worksheet;
-                        for (let j = 0; j < worksheet.length; j++) {
-                            let element = worksheet[j];
-                            let riskRating = element.initial_risk_rating.trim();
-                
-                            if (riskRating === 'Medium' || riskRating === 'High' || riskRating === 'Very High' ||
-                                riskRating === 'Meduim\r\n' || riskRating === 'High\r\n' || riskRating === 'Very High\r\n') {
-                                if (!element.estimated_start_date) {
+                        for (let j = 0; j < $scope.data_worksheet_list[i].worksheet.length; j++) {
+                            let riskRating = $scope.data_worksheet_list[i].worksheet[j].initial_risk_rating;
+                            
+                            if (riskRating === 'Meduim' || riskRating === 'High' || riskRating === 'Very High' ||
+                                riskRating === 'Meduim\r\n' || riskRating === 'High\r\n' || riskRating === 'Very High\r\n'
+                            ){
+                                if (!$scope.data_worksheet_list[i].worksheet[j].estimated_start_date) {
                                     var today = new Date();
                                     var start_date_utc = new Date(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()));
-                                    element.estimated_start_date = start_date_utc;
-                                    element.action_change = 1;
+                                    $scope.data_worksheet_list[i].worksheet[j].estimated_start_date = start_date_utc;
+                                    $scope.data_worksheet_list[i].worksheet[j].action_change = 1;
                                 }
                             }
                         }
                     }
-                
                 }
             }
 
@@ -1115,21 +1112,24 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         return;
                     }
                     else {
-
+                        console.log('open else')
                         set_alert('Success', 'Data has been successfully submitted.');
                         window.open('hazop/search', "_top");
                         return;
                     }
 
                 } else {
+                    console.log('else')
                     apply();
                     set_alert('Error', arr[0].status);
                 }
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 if (jqXHR.status == 500) {
+                    console.log('error 500')
                     alert('Internal error: ' + jqXHR.responseText);
                 } else {
+                    console.log('error Unexpected')
                     alert('Unexpected ' + textStatus);
                 }
             }
