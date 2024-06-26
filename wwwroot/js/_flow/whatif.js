@@ -134,11 +134,15 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         { id:12, title_th: '', title_en: 'Action Status' },
     ]
 
+    $scope.unsavedChanges = false;
+    $scope.dataLoaded = false;
+    $scope.leavePage = false;
+    
     // Track location changes
     $rootScope.$on('$locationChangeStart', function(event, next, current) {
         console.log('Location is changing from:', current, 'to:', next);
 
-        if ($scope.unsavedChanges) {
+        if (unsavedChanges) {
             var confirmLeave = $window.confirm("You have unsaved changes. Are you sure you want to leave?");
             if (!confirmLeave) {
                 event.preventDefault();
@@ -149,7 +153,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     // close tab / browser window
     $window.addEventListener('beforeunload', function(event) {
         console.log("Trigger Ec=vent",event)
-        if ($scope.unsavedChanges) {
+        if (unsavedChanges) {
             var confirmationMessage = 'You have unsaved changes. Are you sure you want to leave?';
     
             event.preventDefault();
@@ -158,37 +162,170 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
     });
 
-    function startTimer() {
-        $scope.counter = 900; // 1800 วินาทีเท่ากับ 30 นาที
+    var interval; 
+
+    // Initialize the timer
+    $scope.startTimer = function() {
+        $scope.counter = 900; 
         $scope.autosave = false;
 
-        var interval = $interval(function () {
-            var minutes = Math.floor($scope.counter / 60); // หานาทีที่เหลืออยู่
-            var seconds = $scope.counter % 60; // หาวินาทีที่เหลืออยู่
+        if (angular.isDefined(interval)) {
+            $interval.cancel(interval);
+        }
+
+        interval = $interval(function () {
+            var minutes = Math.floor($scope.counter / 60); 
+            var seconds = $scope.counter % 60;
     
-            // แสดงเวลาที่เหลืออยู่ในรูปแบบนาทีและวินาที
+            // Display remaining time in minutes and seconds
             $scope.counterText = minutes + ' min. ' + seconds + ' sec.';
-            $scope.minutes = minutes
+            $scope.minutes = minutes;
     
-            // ลดเวลาลงทีละหนึ่งวินาที
             $scope.counter--;
     
-            if ($scope.counter == 0) {
-                // เมื่อเวลาครบ 0 ให้แสดงแจ้งเตือน
+            if ($scope.counter === 0) {
+                // When the counter reaches 0, show a notification
                 $scope.autosave = true;
-                $scope.confirmSave ('save');
+                // set_alert("Warning", "Please save the information.");
+                $scope.confirmSave('save');
                 
                 $scope.stopTimer();
-                //startTimer(); // เริ่มนับใหม่
+                // $scope.startTimer(); // Uncomment to restart the timer automatically
             }
         }, 1000);
-    
-        $scope.stopTimer = function () {
-            $interval.cancel(interval);
-        };
-    }
+    };
 
-    $scope.startTimer = startTimer;
+    // Function to stop the timer
+    $scope.stopTimer = function() {
+        if (angular.isDefined(interval)) {
+            $interval.cancel(interval);
+            interval = undefined; 
+        }
+    };
+    
+
+    
+    function isEqual(arr1, arr2, path = '') {
+        if (arr1 === arr2) return true;
+
+        if (!Array.isArray(arr1) || !Array.isArray(arr2)) {
+            console.log(`Expected arrays, found ${typeof arr1} and ${typeof arr2}`);
+            return false;
+        }
+    
+        if (arr1.length !== arr2.length) {
+            console.log(`Arrays have different lengths at ${path || 'root'}: ${arr1.length} !== ${arr2.length}`);
+            return false;
+        }
+    
+        const filterKeys = (obj, path) => {
+            const ignoreKeyPaths = ['data_memberteam', 'approver'];
+            return Object.keys(obj).reduce((acc, key) => {
+                if (key !== '$$hashKey' && key !== 'action_change' && !(key === 'no' && ignoreKeyPaths.some(ignorePath => path.includes(ignorePath)))) {
+                    acc[key] = obj[key];
+                }
+                return acc;
+            }, {});
+        };
+    
+        let differencesFound = false;
+    
+        for (let i = 0; i < arr1.length; i++) {
+            const filteredObj1 = filterKeys(arr1[i], path);
+            const filteredObj2 = filterKeys(arr2[i], path);
+    
+            if (!isObjectEqual(filteredObj1, filteredObj2, `${path}[${i}]`)) {
+                differencesFound = true;
+            }
+        }
+    
+        return !differencesFound;
+    }
+    
+    function isObjectEqual(obj1, obj2, path = '') {
+        const keys1 = Object.keys(obj1);
+        const keys2 = Object.keys(obj2);
+    
+        const allKeys = new Set([...keys1, ...keys2]);
+    
+        let differencesFound = false;
+    
+        for (let key of allKeys) {
+            if (!keys1.includes(key)) {
+                console.log(`Key ${key} not found in first object at ${path || 'root'}`);
+                differencesFound = true;
+                continue;
+            }
+            if (!keys2.includes(key)) {
+                console.log(`Key ${key} not found in second object at ${path || 'root'}`);
+                differencesFound = true;
+                continue;
+            }
+    
+            const val1 = obj1[key];
+            const val2 = obj2[key];
+    
+            if (key === 'action_change' && val1 !== 1 && val2 !== 1) {
+                continue;
+            }
+    
+            if (!_.isEqual(val1, val2)) {
+                console.log(`Difference found at ${path ? path + '.' + key : key}:`);
+                console.log(`   ${key}:`);
+                console.log(`      obj1: ${val1}`);
+                console.log(`      obj2: ${val2}`);
+                differencesFound = true;
+            }
+    
+            if (typeof val1 === 'object' && val1 !== null && typeof val2 === 'object' && val2 !== null) {
+                if (!isObjectEqual(val1, val2, path ? path + '.' + key : key)) {
+                    differencesFound = true;
+                }
+            }
+        }
+    
+        return !differencesFound;
+    }
+    
+    function setupWatch(data) {
+        $scope.$watch(data, function(newValues, oldValues) {
+            if (!$scope.dataLoaded) {
+                console.log("Data not yet loaded, skipping watch callback.");
+                return;
+            }
+    
+            console.log("Watcher triggered change for : ", data);
+    
+            if ($scope.data_header[0].pha_status === 11 || $scope.data_header[0].pha_status === 12) {
+                $scope.stopTimer();
+                $scope.startTimer();
+    
+                if (Array.isArray(newValues) && Array.isArray(oldValues)) {
+                    if (!isEqual(newValues, oldValues, data)) {
+                        console.log("newValues", newValues);
+                        console.log("oldValues", oldValues);
+                        console.log("new !== old");
+    
+                        $scope.unsavedChanges = true;
+                    }
+                } else if (!_.isEqual(newValues, oldValues)) {
+                    console.log("newValues", newValues);
+                    console.log("oldValues", oldValues);
+                    console.log("new !== old");
+    
+                    $scope.unsavedChanges = true;
+                }
+            }
+    
+        }, true);
+    }
+    
+    setupWatch('data_general');
+    setupWatch('data_session');
+    setupWatch('data_memberteam');
+    setupWatch('data_relatedpeople');
+    setupWatch('data_relatedpeople_outsider');
+
 
     $scope.formatTo24Hour = function (_time) {
 
@@ -1207,6 +1344,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                             },
                             success: function (data) {
 
+                                if ($scope.leavePage) {
+                                    window.open("home/portal", "_top");
+                                    return;
+                                }
+
                                 get_data_after_save(false, (flow_action == 'submit' ? true : false), $scope.pha_seq);
 
                                 if ($scope.autosave === true) {
@@ -1815,7 +1957,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                     $scope.$apply(); 
 
-                   startTimer();
+                    $scope.dataLoaded = true;
+                    $scope.leavePage = false;
+                    console.log("$scope.data_header[0].pha_status",$scope.data_header[0].pha_status)
+                    if($scope.data_header[0].pha_status === 11 || $scope.data_header[0].pha_status === 12){
+                        $scope.startTimer();  
+                    }
+    
+                    $scope.unsavedChanges= false;
 
                     try {
                         if (page_load == true || true) {
@@ -4375,48 +4524,43 @@ function running_no_list(seq_list) {
 
     $scope.confirmBack = function () {
 
-        window.open("home/portal", "_top");
+        console.log("scope.unsavedChanges",$scope.unsavedChanges)
 
+        if(!$scope.unsavedChanges){
+            window.open("home/portal", "_top");
+        }else{
+            $('#unsavedChangesModal').modal({
+                backdrop: 'static',
+                keyboard: false 
+            }).modal('show');
+        }
+        
         return;
-        //var page = conFig.controller_action_befor();
-        //conFig.pha_seq = null;
-        //conFig.pha_type_doc = '';
-        //window.open(page, "_top")
+    };
+    
+    $scope.action_leavePage = function(action) {
+        switch (action) {
+            case 'leave':
+                $scope.unsavedChanges = true;
 
-        var pha_type_doc = 'back';
-        var pha_status = "";
+                window.open("home/portal", "_top");
+                break;
+    
+            case 'leaveWithsave': 
+                $('#unsavedChangesModal').modal('hide');
 
-        var page = conFig.controller_action_befor();
-        var controller_text = "whatif";
-        conFig.pha_seq = null;
-        conFig.pha_type_doc = pha_type_doc;
+                $scope.leavePage = true;
+                $scope.confirmSave('save')
+                break;
+    
+            case 'stay':
+                $scope.dataLoaded = true;
 
-        $.ajax({
-            url: controller_text + "/next_page",
-            data: '{"controller_action_befor":"' + page + '","pha_type_doc":"' + pha_type_doc + '"}',
-            type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
-            beforeSend: function () {
-                $("#divLoading").show();
-            },
-            complete: function () {
-                $("#divLoading").hide();
-            },
-            success: function (data) {
-                var arr = data;
-                window.open(data.page, "_top");
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                if (jqXHR.status == 500) {
-                    alert('Internal error: ' + jqXHR.responseText);
-                } else {
-                    alert('Unexpected ' + textStatus);
-                }
-            }
+                $('#unsavedChangesModal').modal('hide');
+                break;
+        }
+    };
 
-        });
-        return;
-
-    }
     $scope.confirmMailtoMemberReview = function (action) {
 
         if (action == 'submit') {

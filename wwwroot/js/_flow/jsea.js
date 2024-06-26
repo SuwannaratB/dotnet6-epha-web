@@ -161,71 +161,51 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     $scope.unsavedChanges  = false;
     $scope.dataLoaded = false;
+    $scope.leavePage = false;
 
 
     // Track location changes
     $rootScope.$on('$locationChangeStart', function(event, next, current) {
-        //console.log('Location is changing from:', current, 'to:', next,"with",event);
-        var url = $location.url();
-        //console.log(url)
 
-        //.log($window.location.href)
-
-        if ($scope.unsavedChanges) {
+        if (unsavedChanges) {
             var confirmLeave = $window.confirm("You have unsaved changes. Are you sure you want to leave?");
             if (!confirmLeave) {
-                $timeout(function() {
-                    $('#unsavedChangesModal').modal('show');
-                }, 500);
-
-   
-    
-                                
                 event.preventDefault();
-
             }
         }
-
-        //console.log("unsavedChanges",unsavedChanges)
     });
 
     // close tab / browser window
     $window.addEventListener('beforeunload', function(event) {
-        //console.log("Trigger Ec=vent",event)
-        if ($scope.unsavedChanges) {
+        if (unsavedChanges) {
             var confirmationMessage = 'You have unsaved changes. Are you sure you want to leave?';
     
-            $('.open-modal').click(function(e)
-            {
-                e.preventDefault();
-                alert('will open modal');
-                $('#unsavedChangesModal').modal('show');
-            });
+            event.preventDefault();
             event.returnValue = confirmationMessage;
             return confirmationMessage;
         }
     });
 
-    var interval; // Declare interval variable
+
+    var interval; 
 
     // Initialize the timer
     $scope.startTimer = function() {
-        $scope.counter = 900; // 900 seconds equals 15 minutes
+        $scope.counter = 900; 
         $scope.autosave = false;
 
         if (angular.isDefined(interval)) {
-            $interval.cancel(interval); // Cancel any existing interval
+            $interval.cancel(interval);
         }
 
         interval = $interval(function () {
-            var minutes = Math.floor($scope.counter / 60); // Get remaining minutes
-            var seconds = $scope.counter % 60; // Get remaining seconds
+            var minutes = Math.floor($scope.counter / 60); 
+            var seconds = $scope.counter % 60;
     
             // Display remaining time in minutes and seconds
             $scope.counterText = minutes + ' min. ' + seconds + ' sec.';
             $scope.minutes = minutes;
     
-            // Decrement the counter by one second
             $scope.counter--;
     
             if ($scope.counter === 0) {
@@ -244,26 +224,124 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     $scope.stopTimer = function() {
         if (angular.isDefined(interval)) {
             $interval.cancel(interval);
-            interval = undefined; // Clear the interval variable
+            interval = undefined; 
         }
     };
     
-    // Define a function to handle changes and update timer and unsavedChanges
-    function setupWatch(watchExpression) {
-        $scope.$watch(watchExpression, function(newValues, oldValues) {
+
+    
+    function isEqual(arr1, arr2, path = '') {
+        if (arr1 === arr2) return true;
+
+        if (!Array.isArray(arr1) || !Array.isArray(arr2)) {
+            console.log(`Expected arrays, found ${typeof arr1} and ${typeof arr2}`);
+            return false;
+        }
+    
+        if (arr1.length !== arr2.length) {
+            console.log(`Arrays have different lengths at ${path || 'root'}: ${arr1.length} !== ${arr2.length}`);
+            return false;
+        }
+    
+        const filterKeys = (obj, path) => {
+            const ignoreKeyPaths = ['data_memberteam', 'approver'];
+            return Object.keys(obj).reduce((acc, key) => {
+                if (key !== '$$hashKey' && key !== 'action_change' && !(key === 'no' && ignoreKeyPaths.some(ignorePath => path.includes(ignorePath)))) {
+                    acc[key] = obj[key];
+                }
+                return acc;
+            }, {});
+        };
+    
+        let differencesFound = false;
+    
+        for (let i = 0; i < arr1.length; i++) {
+            const filteredObj1 = filterKeys(arr1[i], path);
+            const filteredObj2 = filterKeys(arr2[i], path);
+    
+            if (!isObjectEqual(filteredObj1, filteredObj2, `${path}[${i}]`)) {
+                differencesFound = true;
+            }
+        }
+    
+        return !differencesFound;
+    }
+    
+    function isObjectEqual(obj1, obj2, path = '') {
+        const keys1 = Object.keys(obj1);
+        const keys2 = Object.keys(obj2);
+    
+        const allKeys = new Set([...keys1, ...keys2]);
+    
+        let differencesFound = false;
+    
+        for (let key of allKeys) {
+            if (!keys1.includes(key)) {
+                console.log(`Key ${key} not found in first object at ${path || 'root'}`);
+                differencesFound = true;
+                continue;
+            }
+            if (!keys2.includes(key)) {
+                console.log(`Key ${key} not found in second object at ${path || 'root'}`);
+                differencesFound = true;
+                continue;
+            }
+    
+            const val1 = obj1[key];
+            const val2 = obj2[key];
+    
+            if (key === 'action_change' && val1 !== 1 && val2 !== 1) {
+                continue;
+            }
+    
+            if (!_.isEqual(val1, val2)) {
+                console.log(`Difference found at ${path ? path + '.' + key : key}:`);
+                console.log(`   ${key}:`);
+                console.log(`      obj1: ${val1}`);
+                console.log(`      obj2: ${val2}`);
+                differencesFound = true;
+            }
+    
+            if (typeof val1 === 'object' && val1 !== null && typeof val2 === 'object' && val2 !== null) {
+                if (!isObjectEqual(val1, val2, path ? path + '.' + key : key)) {
+                    differencesFound = true;
+                }
+            }
+        }
+    
+        return !differencesFound;
+    }
+    
+    function setupWatch(data) {
+        $scope.$watch(data, function(newValues, oldValues) {
             if (!$scope.dataLoaded) {
                 console.log("Data not yet loaded, skipping watch callback.");
                 return;
             }
-
-            console.log("Watcher triggered change for", watchExpression);
-
-            if($scope.data_header[0].pha_status === 11 || $scope.data_header[0].pha_status === 12){
+    
+            console.log("Watcher triggered change for : ", data);
+    
+            if ($scope.data_header[0].pha_status === 11 || $scope.data_header[0].pha_status === 12) {
                 $scope.stopTimer();
                 $scope.startTimer();
-                $scope.unsavedChanges = true;
+    
+                if (Array.isArray(newValues) && Array.isArray(oldValues)) {
+                    if (!isEqual(newValues, oldValues, data)) {
+                        console.log("newValues", newValues);
+                        console.log("oldValues", oldValues);
+                        console.log("new !== old");
+    
+                        $scope.unsavedChanges = true;
+                    }
+                } else if (!_.isEqual(newValues, oldValues)) {
+                    console.log("newValues", newValues);
+                    console.log("oldValues", oldValues);
+                    console.log("new !== old");
+    
+                    $scope.unsavedChanges = true;
+                }
             }
-
+    
         }, true);
     }
 
@@ -1347,6 +1425,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                             },
                             success: function (data) {
 
+                                
+                                if ($scope.leavePage) {
+                                    window.open("home/portal", "_top");
+                                    return;
+                                }
+
                                 get_data_after_save(false, (flow_action == 'submit' ? true : false), $scope.pha_seq);
 
                                 console.log("auto save will call auto save modal")
@@ -1954,7 +2038,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     } catch (ex) { alert(ex); console.clear(); }
                     
                     $scope.dataLoaded = true;
-                    console.log("$scope.dataLoaded",$scope.dataLoaded)
+                    $scope.leavePage = false;
+
                     if($scope.data_header[0].pha_status === 11 || $scope.data_header[0].pha_status === 12){
                         $scope.startTimer();  
                     }
@@ -4047,22 +4132,25 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     }
 
+
     $scope.action_leavePage = function(action) {
         switch (action) {
             case 'leave':
                 $scope.unsavedChanges = true;
+
                 window.open("home/portal", "_top");
                 break;
     
             case 'leaveWithsave': 
                 $('#unsavedChangesModal').modal('hide');
 
-                $scope.confirmSave('save', function() {
-                    window.open("home/portal", "_top");
-                });
+                $scope.leavePage = true;
+                $scope.confirmSave('save')
                 break;
     
             case 'stay':
+                $scope.dataLoaded = true;
+
                 $('#unsavedChangesModal').modal('hide');
                 break;
         }

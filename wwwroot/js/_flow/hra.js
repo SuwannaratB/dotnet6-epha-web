@@ -115,6 +115,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     $scope.unsavedChanges = false;
     $scope.dataLoaded = false;
+    $scope.leavePage = false;
     
     // Track location changes
     $rootScope.$on('$locationChangeStart', function(event, next, current) {
@@ -181,25 +182,123 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
     };
     
-    // Define a function to handle changes and update timer and unsavedChanges
-    function setupWatch(watchExpression) {
-        $scope.$watch(watchExpression, function(newValues, oldValues) {
+
+    
+    function isEqual(arr1, arr2, path = '') {
+        if (arr1 === arr2) return true;
+
+        if (!Array.isArray(arr1) || !Array.isArray(arr2)) {
+            console.log(`Expected arrays, found ${typeof arr1} and ${typeof arr2}`);
+            return false;
+        }
+    
+        if (arr1.length !== arr2.length) {
+            console.log(`Arrays have different lengths at ${path || 'root'}: ${arr1.length} !== ${arr2.length}`);
+            return false;
+        }
+    
+        const filterKeys = (obj, path) => {
+            const ignoreKeyPaths = ['data_memberteam', 'approver'];
+            return Object.keys(obj).reduce((acc, key) => {
+                if (key !== '$$hashKey' && key !== 'action_change' && !(key === 'no' && ignoreKeyPaths.some(ignorePath => path.includes(ignorePath)))) {
+                    acc[key] = obj[key];
+                }
+                return acc;
+            }, {});
+        };
+    
+        let differencesFound = false;
+    
+        for (let i = 0; i < arr1.length; i++) {
+            const filteredObj1 = filterKeys(arr1[i], path);
+            const filteredObj2 = filterKeys(arr2[i], path);
+    
+            if (!isObjectEqual(filteredObj1, filteredObj2, `${path}[${i}]`)) {
+                differencesFound = true;
+            }
+        }
+    
+        return !differencesFound;
+    }
+    
+    function isObjectEqual(obj1, obj2, path = '') {
+        const keys1 = Object.keys(obj1);
+        const keys2 = Object.keys(obj2);
+    
+        const allKeys = new Set([...keys1, ...keys2]);
+    
+        let differencesFound = false;
+    
+        for (let key of allKeys) {
+            if (!keys1.includes(key)) {
+                console.log(`Key ${key} not found in first object at ${path || 'root'}`);
+                differencesFound = true;
+                continue;
+            }
+            if (!keys2.includes(key)) {
+                console.log(`Key ${key} not found in second object at ${path || 'root'}`);
+                differencesFound = true;
+                continue;
+            }
+    
+            const val1 = obj1[key];
+            const val2 = obj2[key];
+    
+            if (key === 'action_change' && val1 !== 1 && val2 !== 1) {
+                continue;
+            }
+    
+            if (!_.isEqual(val1, val2)) {
+                console.log(`Difference found at ${path ? path + '.' + key : key}:`);
+                console.log(`   ${key}:`);
+                console.log(`      obj1: ${val1}`);
+                console.log(`      obj2: ${val2}`);
+                differencesFound = true;
+            }
+    
+            if (typeof val1 === 'object' && val1 !== null && typeof val2 === 'object' && val2 !== null) {
+                if (!isObjectEqual(val1, val2, path ? path + '.' + key : key)) {
+                    differencesFound = true;
+                }
+            }
+        }
+    
+        return !differencesFound;
+    }
+    
+    function setupWatch(data) {
+        $scope.$watch(data, function(newValues, oldValues) {
             if (!$scope.dataLoaded) {
                 console.log("Data not yet loaded, skipping watch callback.");
                 return;
             }
-
-            console.log("Watcher triggered change for", watchExpression);
-
-            if($scope.data_header[0].pha_status === 11 || $scope.data_header[0].pha_status === 12){
+    
+            console.log("Watcher triggered change for : ", data);
+    
+            if ($scope.data_header[0].pha_status === 11 || $scope.data_header[0].pha_status === 12) {
                 $scope.stopTimer();
                 $scope.startTimer();
-                $scope.unsavedChanges = true;
+    
+                if (Array.isArray(newValues) && Array.isArray(oldValues)) {
+                    if (!isEqual(newValues, oldValues, data)) {
+                        console.log("newValues", newValues);
+                        console.log("oldValues", oldValues);
+                        console.log("new !== old");
+    
+                        $scope.unsavedChanges = true;
+                    }
+                } else if (!_.isEqual(newValues, oldValues)) {
+                    console.log("newValues", newValues);
+                    console.log("oldValues", oldValues);
+                    console.log("new !== old");
+    
+                    $scope.unsavedChanges = true;
+                }
             }
-
+    
         }, true);
     }
-
+    
     setupWatch('data_general');
     setupWatch('data_session');
     setupWatch('data_approver');
@@ -209,7 +308,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     //
     setupWatch('data_subareas_list');
     setupWatch('data_tasks');
-    setupWatch('data_worksheet_list');
+    setupWatch('data_worksheet');
 
     //All
     if (true) {
@@ -915,9 +1014,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             success: function (data) {
                 var arr = data;
 
-                console.log("data",data)
-
                 if (arr[0].status == 'true') {
+                    $scope.unsavedChanges  = false;
+
                     $scope.pha_type_doc = 'update';
                     if (action == 'save') {
 
@@ -942,6 +1041,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                                 $("#divLoading").hide();
                             },
                             success: function (data) {
+
+                                if ($scope.leavePage) {
+                                    window.open("home/portal", "_top");
+                                    return;
+                                }
 
                                 get_data_after_save(false, (flow_action == 'submit' ? true : false), $scope.pha_seq);
 
@@ -1019,6 +1123,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     apply();
                     set_alert('Error', arr[0].status);
                 }
+
+
+                
+
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 if (jqXHR.status == 500) {
@@ -1502,11 +1610,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 }
 
                 $scope.dataLoaded = true;
+                $scope.leavePage = false;
                 if($scope.data_header[0].pha_status === 11 || $scope.data_header[0].pha_status === 12){
                     $scope.startTimer();  
                 }
 
                 setDeafaultEffective();
+
+                $scope.unsavedChanges = false;
 
                 $scope.$apply();
 
@@ -3956,6 +4067,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         $scope.confirmBack = function () {
 
+            console.log("scope.unsavedChanges",$scope.unsavedChanges)
+
             if(!$scope.unsavedChanges){
                 window.open("home/portal", "_top");
             }else{
@@ -3972,18 +4085,20 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             switch (action) {
                 case 'leave':
                     $scope.unsavedChanges = true;
+
                     window.open("home/portal", "_top");
                     break;
         
                 case 'leaveWithsave': 
                     $('#unsavedChangesModal').modal('hide');
     
-                    $scope.confirmSave('save', function() {
-                        window.open("home/portal", "_top");
-                    });
+                    $scope.leavePage = true;
+                    $scope.confirmSave('save')
                     break;
         
                 case 'stay':
+                    $scope.dataLoaded = true;
+
                     $('#unsavedChangesModal').modal('hide');
                     break;
             }
@@ -4291,7 +4406,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 return $('#modalEditConfirm').modal('show');
             }
             save_data_create(action);
-            $scope.unsavedChanges  = false;
+
+
+            console.log(" $scope.unsavedChanges$scope.unsavedChanges$scope.unsavedChanges$scope.unsavedChanges$scope.unsavedChanges$scope.unsavedChanges", $scope.unsavedChanges)
 
         }
 
@@ -4327,8 +4444,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     
         $scope.confirmDialogApprover = function (_item, action) {
 
-
-            
             $scope.data_drawing_approver.forEach(function(item) {
                 item.action_type === 'new' ? 'insert' : item.action_type;
             });
@@ -4626,14 +4741,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             });
 
             var pha_seq = $scope.data_header[0].seq;
-            for (var i = 0; i < $scope.data_relatedpeople_outsider.length; i++) {
+            /*for (var i = 0; i < $scope.data_relatedpeople_outsider.length; i++) {
                 $scope.data_relatedpeople_outsider[i].id = $scope.data_relatedpeople_outsider[i].seq;
                 $scope.data_relatedpeople_outsider[i].id_pha = pha_seq;
                 $scope.data_relatedpeople_outsider[i].no = (i + 1);
                 try {
                     $scope.data_relatedpeople_outsider[i].reviewer_date = $scope.data_relatedpeople_outsider[i].reviewer_date.toISOString().split('T')[0];
                 } catch { $scope.data_relatedpeople_outsider[i].reviewer_date = null; }
-            }
+            }*/
     
             var arr_active = [];
             angular.copy($scope.data_relatedpeople_outsider, arr_active);
