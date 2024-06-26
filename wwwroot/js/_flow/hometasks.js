@@ -28,9 +28,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         $scope.data_resultes = $filter('filter')($scope.data, function (item) {
 
             if ($scope.select_actionReq_type === 'all') {
-                return true; // Return true for all items
+                return (item.pha_type == $scope.select_pha_type)
             } else {
-                var matches = item.action_required === $scope.select_actionReq_type;
+                var matches = item.action_required === $scope.select_actionReq_type && item.pha_type == $scope.select_pha_type;
                 return matches;
             }
         });
