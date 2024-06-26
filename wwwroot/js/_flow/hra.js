@@ -6772,6 +6772,31 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     
         return customIndex;
     };
+
+    $scope.removeDataRelatedpeopleOutsider = function (seq) {
+        var user_type = $scope.selectDatFormType;
+        var seq_session = $scope.selectdata_session;
+        // == 1 not delete
+        var check_list = $filter('filter')($scope.data_relatedpeople_outsider, function (item) {
+            return (item.user_type == user_type);
+        });
+        if (check_list.length == 1) {
+            return check_list[0].user_displayname = null
+        }
+
+        var arrdelete = $filter('filter')($scope.data_relatedpeople_outsider, function (item) {
+            return (item.user_type == user_type && item.seq == seq && item.action_type == 'update');
+        });
+
+        if (arrdelete.length > 0) { $scope.data_relatedpeople_outsider_delete.push(arrdelete[0]); }
+
+        $scope.data_relatedpeople_outsider = $filter('filter')($scope.data_relatedpeople_outsider, function (item) {
+            return !(item.user_type == user_type && item.seq == seq && item.id_session == seq_session);
+        });
+
+        running_no_level1($scope.data_relatedpeople_outsider, null, null);
+        apply();
+    };
     
     
     $scope.Matrix_Frequency_Rating = function () {
