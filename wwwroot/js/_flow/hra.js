@@ -889,7 +889,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             { id: 'High\r\n', name: 'High' },
         ];
 
-        $scope.disTypeHazard = [];
+        $scope.riskfactors_duplicate = [];
 
         // สร้างชั่วโมง (0-23)
         $scope.master_hours = [];
@@ -1363,9 +1363,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     }
                     else {
                         set_alert('Success', 'Data has been successfully submitted.');
-
                         if (arr[0].pha_status == '13') {
                             //กรณีที่ TA2 approve all
+                            if($scope.flow_role_type == 'admin') {
+                                return page_load();
+                            }
                             window.open('hazop/search', "_top");
                         } else if (arr[0].pha_status == '22') {
                             //กรณีที่ TA2 approve reject
@@ -1541,6 +1543,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         $scope.data_hazard_default = arr.hazard;
                         
                         $scope.data_subareas_list = groupHazardList(arr.hazard);
+
+                        // $scope.riskfactors_duplicate = setup_riskfactors_duplicate($scope.master_hazard_riskfactors_list);
+                        // console.log('setup_riskfactors_duplicate',$scope.riskfactors_duplicate)
                     }
 
                     //List of Worker Groups and Description of Tasks
@@ -1823,8 +1828,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 element.initial_risk_rating === 'Very High' ||
                 element.initial_risk_rating === 'Very High\r\n'
             ) {
-
-
                 return true;
             }
         }
@@ -2007,6 +2010,33 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         console.log('setup master_hazard_type', $scope.master_hazard_type)
         console.log('setup hazard', hazard)
         return hazard;
+    }
+
+    function setup_riskfactors_duplicate(data){
+        console.log('default => ',$scope.data_subareas_list)
+        for (let i = 0; i < $scope.data_subareas_list.length; i++) {
+
+            for (let j = 0; j < $scope.data_subareas_list[i].hazard.length; j++) {
+                if ($scope.data_subareas_list[i].hazard[j].id_health_hazard) {
+
+                    var old = $filter('filter')($scope.riskfactors_duplicate, function (_item) {
+                        return (_item.id_health_hazard == $scope.data_subareas_list[i].hazard[j].id_health_hazard);
+                    })[0];
+
+                    if (!old) {
+                        var newData = {
+                            id_health_hazard: $scope.data_subareas_list[i].hazard[j].id_health_hazard,
+                            health_hazard: $scope.data_subareas_list[i].hazard[j].health_hazard
+                        }
+                        $scope.riskfactors_duplicate.push(newData)
+                    }
+
+                }
+                
+            }
+            
+        }
+        return data
     }
 
     $scope.chooseRiskRating = function (hazard) {
@@ -4466,6 +4496,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                                 }
 
                             }
+                            // check data recommentdations
+                            var isRecom = false;
+                            for (let i = 0; i < $scope.data_worksheet_list.length; i++) {
+                                isRecom = $scope.filterInitialRiskRatingMain($scope.data_worksheet_list[i])
+
+                                if(isRecom) break;
+                            }
+                            if (!isRecom) return set_alert('Warning','Please provide a valid Manage Recommendations')
                         }
 
                     }
@@ -4622,12 +4660,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
     
         $scope.confirmDialogApprover = function (_item, action) {
-
             $scope.data_drawing_approver.forEach(function(item) {
                 item.action_type === 'new' ? 'insert' : item.action_type;
             });
-            
-
             var arr_chk = _item;
             $scope.item_approver_active = [];
             $scope.item_approver_active.push(_item);
@@ -4639,7 +4674,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
 
             if (action == 'submit') {
-
                 if (arr_chk.action_status == 'reject') {
                     if (arr_chk.comment == '' || arr_chk.comment == null || arr_chk.comment == undefined) {
                         //set_alert('Warning', 'Please enter your comment'); 
@@ -6470,8 +6504,16 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 if (element.no_type_hazard == hazard.no_type_hazard) {
                     element.id_type_hazard = hazard.id_type_hazard
                     element.type_hazard = hazard.type_hazard
+                    // reset health hazard
+                    element.id_health_hazard = null
+                    element.health_hazard = null
+                    element.health_effect_rating = null
+                    element.standard_type_text = null
+                    element.standard_unit = null
+                    element.standard_value = null
                 }
             });
+
             // worksheet
             $scope.data_worksheet_list.forEach(element => {
                 element.worksheet.forEach(el => {
