@@ -598,10 +598,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.changeTab_Focus(arr_tab, tag_name);
     }
 
-    $scope.editWorksheet = function (tab_worksheet_active) {
-        $scope.tab_worksheet_active = !tab_worksheet_active;
-    }
-
     $scope.changeTab_Focus = function (selectedTab, nameTab) {
 
         console.log("selectedTab",selectedTab)
@@ -631,6 +627,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         apply();
     };
+    $scope.editWorksheet = function (tab_worksheet_active) {
+        $scope.tab_worksheet_active = !tab_worksheet_active;
+    }
 
     /*$scope.fileSelect = function (input, file_part) {
         //drawing, responder, approver

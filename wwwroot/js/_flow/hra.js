@@ -706,6 +706,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             if(!$scope.data_general[0].expense_type) $scope.validMessage = 'Please select a valid Project Type'
             if(!$scope.data_general[0].id_unit_no) $scope.validMessage = 'Please select a valid  Name of Area'
 
+            $scope.goback_tab = 'general';
+
             return false
         }
         $scope.validMessage = ''
@@ -726,6 +728,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 if(!$scope.data_session[i].meeting_start_time_hh) $scope.validMessage = 'Please select a valid Meeting Start Time HH'
                 if(!$scope.data_session[i].meeting_date) $scope.validMessage = 'Please select a valid Meeting Date'
     
+                $scope.goback_tab = 'general';
+
                 return false
             }
         }
@@ -741,6 +745,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 if(!$scope.data_drawing[i].document_file_name) $scope.validMessage = 'Please select a valid Document File'
                 if(!$scope.data_drawing[i].document_no) $scope.validMessage = 'Please select a valid Document No'
     
+                $scope.goback_tab = 'general';
+
                 return false
             }
         }
@@ -754,6 +760,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             if (!$scope.data_subareas_list[i].sub_area) {
                 if(!$scope.data_subareas_list[i].sub_area) $scope.validMessage = 'Please select a valid Sub Area'
     
+                $scope.goback_tab = 'areas';
+
                 return false
             }
             // hazard
@@ -764,6 +772,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     if(!$scope.data_subareas_list[i].hazard[j].id_health_hazard) $scope.validMessage = 'Please select a valid Health Hazard'
                     if(!$scope.data_subareas_list[i].hazard[j].id_type_hazard) $scope.validMessage = 'Please select a valid Type Hazard'
         
+                    $scope.goback_tab = 'areas';
+
                     return false
                 }
             }
@@ -778,6 +788,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             if (!$scope.data_tasks[i].id_worker_group) {
                 if(!$scope.data_tasks[i].id_worker_group) $scope.validMessage = 'Please select a valid Worker Group'
     
+                $scope.goback_tab = 'worker';
+
                 return false
             }
             // descriptions
@@ -785,6 +797,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 if (!$scope.data_tasks[i].descriptions[j].descriptions) {
                     if(!$scope.data_tasks[i].descriptions[j].descriptions) $scope.validMessage = 'Please select a valid Descriptions'
         
+                    $scope.goback_tab = 'worker';
+
                     return false
                 }
             }
@@ -966,7 +980,50 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         apply();
     };
+    $scope.goBackToTab = function (){
 
+        var tag_name = $scope.goback_tab;
+
+        var arr_tab = $filter('filter')($scope.tabs, function (item) {
+            return ((item.name == tag_name));
+        });
+
+        console.log("tag_name",tag_name)
+        console.log("arr_tab",arr_tab)
+        $scope.changeTab_Focus(arr_tab, tag_name);
+    }
+
+
+
+    $scope.changeTab_Focus = function (selectedTab, nameTab) {
+
+        console.log("selectedTab",selectedTab)
+        console.log("nameTab",nameTab)
+        angular.forEach($scope.tabs, function (tab) {
+            tab.isActive = false;
+        });
+        selectedTab[0].isActive = true;
+        console.log(selectedTab)
+
+        // Set focus to the clicked tab element
+        /*try {
+            document.getElementById(selectedTab[0].name + "-tab").addEventListener("click", function (event) {
+                ev = event.target
+            });
+
+            var tabElement = angular.element(ev);
+            console.log("tabElement",tabElement)
+
+            tabElement[0].focus();
+
+        } catch (error) { }*/
+
+        check_tab(selectedTab[0].name);
+
+        console.log($scope.tabs)
+
+        apply();
+    };
     function check_tab(val) {
 
         $scope.action_part = 1;
@@ -4379,33 +4436,33 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     var arr_chk = $scope.data_general;
                     if (pha_status == "11" && false) {
 
-                        if (arr_chk[0].id_company == '' || arr_chk[0].id_company == null) { set_alert('Warning', 'Please select a valid Company'); return; }
-                        if (arr_chk[0].id_apu == '' || arr_chk[0].id_apu == null) { set_alert('Warning', 'Please select a valid Area Process Unit'); return; }
-                        if (arr_chk[0].pha_request_name == '' || arr_chk[0].id_company == null) { set_alert('Warning', 'Please select a valid Company'); return; }
+                        if (arr_chk[0].id_company == '' || arr_chk[0].id_company == null) { $scope.goback_tab = 'general';set_alert('Warning', 'Please select a valid Company'); return; }
+                        if (arr_chk[0].id_apu == '' || arr_chk[0].id_apu == null) { $scope.goback_tab = 'general';set_alert('Warning', 'Please select a valid Area Process Unit'); return; }
+                        if (arr_chk[0].pha_request_name == '' || arr_chk[0].id_company == null) { $scope.goback_tab = 'general';set_alert('Warning', 'Please select a valid Company'); return; }
 
                     }
                     else if (pha_status == "12") {
 
                         if (false) {
-                            if (arr_chk[0].id_company == '' || arr_chk[0].id_company == null) { set_alert('Warning', 'Please select a valid Company'); return; }
-                            if (arr_chk[0].id_apu == '' || arr_chk[0].id_apu == null) { set_alert('Warning', 'Please select a valid Area Process Unit'); return; }
+                            if (arr_chk[0].id_company == '' || arr_chk[0].id_company == null) { $scope.goback_tab = 'general';set_alert('Warning', 'Please select a valid Company'); return; }
+                            if (arr_chk[0].id_apu == '' || arr_chk[0].id_apu == null) { $scope.goback_tab = 'general';set_alert('Warning', 'Please select a valid Area Process Unit'); return; }
                         }
 
                         if (true) {
                             arr_chk = $scope.data_memberteam;
-                            if (arr_chk.length == 0) { set_alert('Warning', 'Please provide a valid Session List'); return; }
+                            if (arr_chk.length == 0) { $scope.goback_tab = 'session';set_alert('Warning', 'Please provide a valid Session List'); return; }
                             else {
                                 var irows_last = arr_chk.length - 1;
-                                if (arr_chk[irows_last].user_name == null) { set_alert('Warning', 'Please provide a valid Session List'); return; }
+                                if (arr_chk[irows_last].user_name == null) { $scope.goback_tab = 'session';set_alert('Warning', 'Please provide a valid Session List'); return; }
                             }
 
                             if ($scope.data_header[0].request_approver > 0) {
 
                                 arr_chk = $scope.data_approver;
-                                if (arr_chk.length == 0) { set_alert('Warning', 'Please provide a valid Assessment Team Leader List'); return; }
+                                if (arr_chk.length == 0) { $scope.goback_tab = 'general';set_alert('Warning', 'Please provide a valid Assessment Team Leader List'); return; }
                                 else {
                                     var irows_last = arr_chk.length - 1;
-                                    if (arr_chk[irows_last].user_name == null) { set_alert('Warning', 'Please provide a valid Assessment Team Leader List'); return; }
+                                    if (arr_chk[irows_last].user_name == null) { $scope.goback_tab = 'general';set_alert('Warning', 'Please provide a valid Assessment Team Leader List'); return; }
                                 }
 
                             }
