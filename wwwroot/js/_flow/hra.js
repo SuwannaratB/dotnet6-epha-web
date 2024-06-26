@@ -590,7 +590,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     function validBeforRegister() {
         if (validGeneral() &&
             validSessions() &&
-            validDrawing()   
+            validDrawing() &&
+            validSubArea() &&
+            validTasks()
         ) {
             return true
         }
@@ -641,6 +643,51 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 if(!$scope.data_drawing[i].document_no) $scope.validMessage = 'Please select a valid Document No'
     
                 return false
+            }
+        }
+        $scope.validMessage = ''
+        return true
+    }
+
+    function validSubArea(){
+        for (let i = 0; i < $scope.data_subareas_list.length; i++) {
+            // subarea
+            if (!$scope.data_subareas_list[i].sub_area) {
+                if(!$scope.data_subareas_list[i].sub_area) $scope.validMessage = 'Please select a valid Sub Area'
+    
+                return false
+            }
+            // hazard
+            for (let j = 0; j < $scope.data_subareas_list[i].hazard.length; j++) {
+                if (!$scope.data_subareas_list[i].hazard[j].id_type_hazard ||
+                    !$scope.data_subareas_list[i].hazard[j].id_health_hazard
+                ) {
+                    if(!$scope.data_subareas_list[i].hazard[j].id_health_hazard) $scope.validMessage = 'Please select a valid Health Hazard'
+                    if(!$scope.data_subareas_list[i].hazard[j].id_type_hazard) $scope.validMessage = 'Please select a valid Type Hazard'
+        
+                    return false
+                }
+            }
+        }
+        $scope.validMessage = ''
+        return true
+    }
+
+    function validTasks(){
+        for (let i = 0; i < $scope.data_tasks.length; i++) {
+            // worker group
+            if (!$scope.data_tasks[i].id_worker_group) {
+                if(!$scope.data_tasks[i].id_worker_group) $scope.validMessage = 'Please select a valid Worker Group'
+    
+                return false
+            }
+            // descriptions
+            for (let j = 0; j < $scope.data_tasks[i].descriptions.length; j++) {
+                if (!$scope.data_tasks[i].descriptions[j].descriptions) {
+                    if(!$scope.data_tasks[i].descriptions[j].descriptions) $scope.validMessage = 'Please select a valid Descriptions'
+        
+                    return false
+                }
             }
         }
         $scope.validMessage = ''
@@ -766,12 +813,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         try {
             if ($scope.data_header[0].pha_status == 11) {
                 if (selectedTab.name == 'worksheet') {
-                    console.log(selectedTab)
-                    console.log($scope.tabs)
                     if(!validBeforRegister()) 
                         return set_alert('Warning',$scope.validMessage)
                     
-                    // $scope.confirmSave('confirm_submit_register_without')
+                    $scope.confirmSave('confirm_submit_register_without')
                     return; 
                 }
             } else if ($scope.data_header[0].pha_status == 12 || $scope.data_header[0].pha_status == 22) {
@@ -1584,12 +1629,15 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     function setDeafaultEffective() {
         for (let i = 0; i <  $scope.data_worksheet_list.length; i++) {
             for (let j = 0; j < $scope.data_worksheet_list[i].worksheet.length; j++) {
-                var type = 'effective'
+                var type = ''
 
+                if($scope.data_worksheet_list[i].worksheet[j].effective == '0') type = 'effective'
                 if($scope.data_worksheet_list[i].worksheet[j].effective == '1') type = 'ineffective'
 
-                 const myElement = document.getElementById(`${type}-${i}-${j}`);
-                 myElement.checked = true
+                if (type) {
+                    const myElement = document.getElementById(`${type}-${i}-${j}`);
+                    myElement.checked = true
+                }
             }
              
          }
@@ -4180,6 +4228,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             var pha_status = $scope.data_header[0].pha_status;
             // reset data_copy_hazard
             $scope.data_copy_hazard = null
+
             //11	DF	Draft
             //12	WP	Waiting PHA Conduct
             //13	PC	PHA Conduct
@@ -4277,6 +4326,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                     $('#modalSendMailRegister').modal('hide');
                 } else if (action == 'confirm_submit_register_without') {
+                    if(!validBeforRegister()) 
+                        return set_alert('Warning',$scope.validMessage)
+
                     $scope.Action_Msg_Confirm = true;
                     action = 'submit_without';
                     $('#modalSendMail').modal('hide');

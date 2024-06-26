@@ -101,6 +101,10 @@
                     </button>
                 </span>
                 <span class="mx-2" ng-if="submit_type">
+                    <button class="btn btn-success btn-sm" style="width: 150px;"
+                            ng-if=" data_header[0].pha_status == 11 " ng-click="confirmSave('confirm_submit_register_without')">
+                        Task Register
+                    </button>
                     <button class="btn btn-success btn-sm d-none" style="width: 150px;"
                             ng-if=" data_header[0].pha_status == 11" ng-click="confirmSave('submit_register')">
                         Save for PHA Conduct
@@ -144,7 +148,7 @@
                                id="{{tab.name}}-tab" name="{{tab.name}}-tab"
                                data-bs-toggle="tab" href="#tab-{{tab.name}}" role="tab"
                                aria-controls="tab-{{tab.name}}"
-                               aria-selected="tab.isActive">{{ tab.title }}-{{action_part}}</a>
+                               aria-selected="tab.isActive">{{ tab.title }}</a>
                         </li>
                     </ul>
 
