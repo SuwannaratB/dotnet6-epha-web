@@ -810,31 +810,6 @@
                                                                     </div>
                                                                 </button> 
                                                             </div>                                                                                                                                                                            
-                                                            @*<div class=" align-items-center p-1 cursor-pointer ">
-
-                                                                <br ng-if="item.document_file_size>0">
-                                                                <label class="dz-message-text text-primary fw-bold cursor-pointer"
-                                                                       for="attfile-{{item.seq}}" ng-class="{'d-none':(!tab_general_active)}">
-                                                                    <i class="fa-solid fa-arrow-up-from-bracket fa-xl me-3"></i>Upload File(Word, Excel, PDF, Image)
-                                                                </label>
-                                                                <input type="file" id="attfile-{{item.seq}}"
-                                                                       name="file{{item.seq}}"
-                                                                       onchange="angular.element(this).scope().fileSelect(this,'drawing')"
-                                                                       style="display:none" />
-                                                                <button id="del-{{item.seq}}" class="btn btn-link text-danger"
-                                                                        ng-class="{'d-none':(!tab_general_active)}"
-                                                                        ng-click="clearFileName(item.seq)"
-                                                                        ng-if="item.document_file_size>0">
-                                                                    <span class="fa-regular fa-trash-can fa-lg"></span>
-                                                                </button>
-                                                                <br>
-                                                                <a class="nametext ms-3 filename-text me-2"
-                                                                   ng-class="{'d-none':(tab_general_active)}"
-                                                                   ng-click="downloadFile(item)">
-                                                                    <i class="far fa-file-pdf text-danger"></i> 
-                                                                    {{(item.document_file_size>0? item.document_file_name + '('+  item.document_file_size + 'KB)' : '')}}
-                                                                </a>
-                                                            </div>*@
                                                         </div>
 
                                                         <div id="drawing-document-file-{{item.seq}}"
@@ -910,7 +885,6 @@
 
                     </div>
                     @* general information end*@
-
 
                     @* List of Areas to Be Assessed and Health Hazards or Risk Factors start*@
                     <div class="" ng-class="{'tab-pane fade show active':(action_part==2),'tab-pane fade':(action_part!==2)}"
@@ -1004,7 +978,6 @@
                                                     <div class="py-2">
                                                         <select class="form-control"
                                                             ng-class="{'disabled-link':(!tab_general_active || !(tab_general_active && data_header[0].pha_status<=12 ))}"
-                                                            @* ng-change="actionChange(item,item.seq,'sub_area')" *@
                                                             ng-change="actionChangeTabArea('sub_area', item)"
                                                             ng-model="item.sub_area"
                                                             ng-if="tab_general_active">
@@ -3799,13 +3772,14 @@
                         </h6>
                     </div>
                     <div class="justify-content-center align-items-center mb-5" ng-if=" data_header[0].pha_status == 22">
-
                         <label class="form-label ps-0" for="expense_type">Note to Approver</label>
-                        <textarea class="form-control rounded-1" placeholder="Note"
-                                  ng-repeat="item in data_node | filter:{id:selectedItemNodeView}"
-                                  ng-model="item.descriptions"
-                                  ng-if=" data_header[0].pha_status == 22"
-                                  style="height: 50px"></textarea>
+                        <textarea class="form-control rounded-1"
+                            placeholder="Note"
+                            ng-repeat="item in data_node | filter:{id:selectedItemNodeView}"
+                            ng-model="item.descriptions"
+                            ng-if=" data_header[0].pha_status == 22"
+                            style="height: 50px">
+                        </textarea>
                     </div>
                 </div>
                 <div class="modal-footer">

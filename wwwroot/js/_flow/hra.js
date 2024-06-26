@@ -1655,8 +1655,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 element.initial_risk_rating === 'Very High' ||
                 element.initial_risk_rating === 'Very High\r\n'
             ) {
-
-
                 return true;
             }
         }
@@ -4282,6 +4280,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                                 }
 
                             }
+                            // check data recommentdations
+                            var isRecom = false;
+                            for (let i = 0; i < $scope.data_worksheet_list.length; i++) {
+                                isRecom = $scope.filterInitialRiskRatingMain($scope.data_worksheet_list[i])
+
+                                if(isRecom) break;
+                            }
+                            if (!isRecom) return set_alert('Warning','Please provide a valid Manage Recommendations')
                         }
 
                     }
@@ -6286,8 +6292,16 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 if (element.no_type_hazard == hazard.no_type_hazard) {
                     element.id_type_hazard = hazard.id_type_hazard
                     element.type_hazard = hazard.type_hazard
+                    // reset health hazard
+                    element.id_health_hazard = null
+                    element.health_hazard = null
+                    element.health_effect_rating = null
+                    element.standard_type_text = null
+                    element.standard_unit = null
+                    element.standard_value = null
                 }
             });
+
             // worksheet
             $scope.data_worksheet_list.forEach(element => {
                 element.worksheet.forEach(el => {
