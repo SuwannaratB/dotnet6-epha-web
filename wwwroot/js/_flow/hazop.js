@@ -527,6 +527,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                             $scope.tab_managerecom_show = true;
                             $scope.goback_tab = 'general';
                             
+                            angular.forEach($scope.tabs, function (tab) {
+                                tab.isActive = false;
+                            });
+                            selectedTab.isActive = true;
+
                             return set_alert('Warning', 'Please select a valid General Information');
                         }
 
@@ -535,6 +540,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         $scope.tab_worksheet_show = true;
                         $scope.tab_managerecom_show = true;
                         $scope.goback_tab = 'node';
+
+                        angular.forEach($scope.tabs, function (tab) {
+                            tab.isActive = false;
+                        });
+                        selectedTab.isActive = true;
 
                         return set_alert('Warning', 'Please select a valid Drawing');
                     }
@@ -546,6 +556,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                             $scope.tab_managerecom_show = true;
                             $scope.goback_tab = 'node';
 
+                            angular.forEach($scope.tabs, function (tab) {
+                                tab.isActive = false;
+                            });
+                            selectedTab.isActive = true;
+                            
                             return set_alert('Warning', 'Please select a valid Node');
                         }
                         
