@@ -188,12 +188,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         if (arr1 === arr2) return true;
 
         if (!Array.isArray(arr1) || !Array.isArray(arr2)) {
-            console.log(`Expected arrays, found ${typeof arr1} and ${typeof arr2}`);
             return false;
         }
     
         if (arr1.length !== arr2.length) {
-            console.log(`Arrays have different lengths at ${path || 'root'}: ${arr1.length} !== ${arr2.length}`);
             return false;
         }
     
@@ -231,12 +229,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     
         for (let key of allKeys) {
             if (!keys1.includes(key)) {
-                // console.log(`Key ${key} not found in first object at ${path || 'root'}`);
                 differencesFound = true;
                 continue;
             }
             if (!keys2.includes(key)) {
-                // console.log(`Key ${key} not found in second object at ${path || 'root'}`);
                 differencesFound = true;
                 continue;
             }
@@ -249,10 +245,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
     
             if (!_.isEqual(val1, val2)) {
-                // console.log(`Difference found at ${path ? path + '.' + key : key}:`);
-                // console.log(`   ${key}:`);
-                // console.log(`      obj1: ${val1}`);
-                // console.log(`      obj2: ${val2}`);
                 differencesFound = true;
             }
     
@@ -269,11 +261,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     function setupWatch(data) {
         $scope.$watch(data, function(newValues, oldValues) {
             if (!$scope.dataLoaded) {
-                // console.log("Data not yet loaded, skipping watch callback.");
                 return;
             }
-    
-            // console.log("Watcher triggered change for : ", data);
     
             if ($scope.data_header[0].pha_status === 11 || $scope.data_header[0].pha_status === 12) {
                 $scope.stopTimer();
@@ -281,17 +270,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     
                 if (Array.isArray(newValues) && Array.isArray(oldValues)) {
                     if (!isEqual(newValues, oldValues, data)) {
-                        // console.log("newValues", newValues);
-                        // console.log("oldValues", oldValues);
-                        // console.log("new !== old");
     
                         $scope.unsavedChanges = true;
                     }
                 } else if (!_.isEqual(newValues, oldValues)) {
-                    // console.log("newValues", newValues);
-                    // console.log("oldValues", oldValues);
-                    // console.log("new !== old");
-    
                     $scope.unsavedChanges = true;
                 }
             }

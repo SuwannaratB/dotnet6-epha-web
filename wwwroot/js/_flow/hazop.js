@@ -361,10 +361,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
     
             if (!_.isEqual(val1, val2)) {
-                console.log(`Difference found at ${path ? path + '.' + key : key}:`);
-                console.log(`   ${key}:`);
-                console.log(`      obj1: ${val1}`);
-                console.log(`      obj2: ${val2}`);
+
                 differencesFound = true;
             }
     
@@ -560,7 +557,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                                 tab.isActive = false;
                             });
                             selectedTab.isActive = true;
-                            
+
                             return set_alert('Warning', 'Please select a valid Node');
                         }
                         
@@ -1370,12 +1367,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         var json_header = angular.toJson($scope.data_header);
         var json_general =  check_data_general();
-            console.log("=====>>>>>",json_general)
         var json_functional_audition = angular.toJson($scope.data_functional_audition);
 
         var json_session = check_data_session();
-        console.log("=====>>>>>",json_session)
-
         var json_memberteam = check_data_memberteam();
         var json_approver = check_data_approver();
         var json_drawing = check_data_drawing();
@@ -1407,6 +1401,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
 
         console.log("flow_action",flow_action)
+        
+
         $.ajax({
             url: url_ws + "Flow/set_hazop",
             data: '{"user_name":"' + user_name + '","token_doc":"' + token_doc + '","pha_status":"' + pha_status + '","pha_version":"' + pha_version + '","action_part":"' + action_part + '"'
@@ -1451,7 +1447,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 }catch{}
 
                 if (arr[0].status == 'true') {
+                    $scope.unsavedChanges  = false;
+
                     $scope.pha_type_doc = 'update';
+
+                    console.log("confirm_submit_complete",flow_action)
+                    
                     if (action == 'save' || action == 'submit_moc'
                         || action_def == "confirm_submit_register"
                         || action_def == "confirm_submit_register_without") {
@@ -1553,11 +1554,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         });
 
 
+                    }else if (action == 'submit'){
+                        set_alert('Success', 'Data has been successfully submitted.')
+                        return window.open('hazop/search', "_top");
                     }
                     else {
 
                         set_alert('Success', 'Data has been successfully submitted.');
-                         get_data_after_save(false, false, $scope.pha_seq);
+                        get_data_after_save(false, false, $scope.pha_seq);
                         // window.open('hazop/search', "_top");
                         return;
                     }
@@ -5358,6 +5362,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     var invalidFieldFound = false;
                     requiredFields.forEach(function (item) {
                         if (!arr_chk[0][item.field]) {
+
+                            $scope.goback_tab = 'general';
+                            
+                            $scope.tabs = $scope.tabs.map(tab => {
+                                tab.isActive = (tab.name === 'general');
+                                return tab;
+                            });
+
                             set_alert('Warning', 'Please select a valid General Information');
                             validateSelect(item.field, item.errorId);
                             invalidFieldFound = true; 
@@ -5381,6 +5393,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     var invalidFieldFound = false;
                     requiredFields.forEach(function (item) {
                         if (!arr_chk[0][item.field]) {
+                            $scope.goback_tab = 'general';
+                            
+                            $scope.tabs = $scope.tabs.map(tab => {
+                                tab.isActive = (tab.name === 'general');
+                                return tab;
+                            });
+
                             set_alert('Warning', 'Please select a valid General Information');
                             validateSelect(item.field, item.errorId);
                             invalidFieldFound = true; 
@@ -5389,19 +5408,51 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                     if (true) {
                         arr_chk = $scope.data_memberteam;
-                        if (arr_chk.length == 0) { set_alert('Warning', 'Please provide a valid Session List'); return; }
+                        if (arr_chk.length == 0) { 
+                            $scope.goback_tab = 'session';
+                            
+                            $scope.tabs = $scope.tabs.map(tab => {
+                                tab.isActive = (tab.name === 'session');
+                                return tab;
+                            })
+                            
+                            set_alert('Warning', 'Please provide a valid Session List'); return; }
                         else {
                             var irows_last = arr_chk.length - 1;
-                            if (arr_chk[irows_last].user_name == null) { set_alert('Warning', 'Please provide a valid Session List'); return; }
+                            if (arr_chk[irows_last].user_name == null) { 
+                                $scope.goback_tab = 'session';
+                            
+                                $scope.tabs = $scope.tabs.map(tab => {
+                                    tab.isActive = (tab.name === 'session');
+                                    return tab;
+                                })
+
+                                set_alert('Warning', 'Please provide a valid Session List'); return; }
                         }
 
                         if ($scope.data_header[0].request_approver > 0) {
 
                             arr_chk = $scope.data_approver;
-                            if (arr_chk.length == 0) { set_alert('Warning', 'Please provide a valid ApproverTA2 List'); return; }
+                            if (arr_chk.length == 0) { 
+                                $scope.goback_tab = 'session';
+                            
+                                $scope.tabs = $scope.tabs.map(tab => {
+                                    tab.isActive = (tab.name === 'session');
+                                    return tab;
+                                })
+                                
+                                set_alert('Warning', 'Please provide a valid ApproverTA2 List'); return; }
                             else {
                                 var irows_last = arr_chk.length - 1;
-                                if (arr_chk[irows_last].user_name == null) { set_alert('Warning', 'Please provide a valid ApproverTA2 List'); return; }
+                                if (arr_chk[irows_last].user_name == null) { 
+                                    $scope.goback_tab = 'session';
+                            
+                                    $scope.tabs = $scope.tabs.map(tab => {
+                                        tab.isActive = (tab.name === 'session');
+                                        return tab;
+                                    })
+
+                                    set_alert('Warning', 'Please provide a valid ApproverTA2 List'); return; }
                             }
 
                         }
@@ -5410,13 +5461,29 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     if (true) {
 
                         arr_chk = $scope.data_drawing;
-                        if (arr_chk.length == 0) { set_alert('Warning', 'Please provide a valid Drawing List'); return; }
+                        if (arr_chk.length == 0) { 
+                            $scope.goback_tab = 'node';
+                            
+                            $scope.tabs = $scope.tabs.map(tab => {
+                                tab.isActive = (tab.name === 'node');
+                                return tab;
+                            })
+                            
+                            set_alert('Warning', 'Please provide a valid Drawing List'); return; }
                         for (var i = 0; i < arr_chk.length; i++) {
                             if (set_valid_items(arr_chk[i].node, 'drawing-document-file-' + arr_chk[i].seq)) { bCheckValid_Node = true; }
                         }
 
                         arr_chk = $scope.data_node;
-                        if (arr_chk.length == 0) { set_alert('Warning', 'Please provide a valid Node List'); return; }
+                        if (arr_chk.length == 0) { 
+                            $scope.goback_tab = 'node';
+                            
+                            $scope.tabs = $scope.tabs.map(tab => {
+                                tab.isActive = (tab.name === 'node');
+                                return tab;
+                            })
+
+                            set_alert('Warning', 'Please provide a valid Node List'); return; }
                         for (var i = 0; i < arr_chk.length; i++) {
                             if (set_valid_items(arr_chk[i].node, 'node-node-' + arr_chk[i].seq)) { bCheckValid_Node = true; }
                         }
@@ -5476,6 +5543,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             
                             if (bCheckValid_Worksheet) {
                                 $scope.goback_tab = 'worksheet'
+                            
+                                $scope.tabs = $scope.tabs.map(tab => {
+                                    tab.isActive = (tab.name === 'worksheet');
+                                    return tab;
+                                })
 
                                 set_alert('Warning', 'Please provide valid data in the worksheet');
                                 return; 
@@ -5629,9 +5701,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         if (action === 'save' && $scope.isMainApprover) {
             return $('#modalEditConfirm').modal('show');
         }
-                
-        $scope.unsavedChanges = false;
-        
+                        
         save_data_create(action, action_def);
         
 
@@ -6199,8 +6269,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         //    }
         //}
 
-        console.log("check_data_nodeworksheet",$scope.data_nodeworksheet)
-
         var copy_data_nodeworksheet = angular.copy($scope.data_nodeworksheet);
 
         for (var i = 0; i < copy_data_nodeworksheet.length; i++) {
@@ -6314,10 +6382,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.Action_Msg_Header = header;
         $scope.Action_Msg_Detail = detail;
 
-        $('#modalMsg').modal({
-            backdrop: 'static',
-            keyboard: false 
-        }).modal('show');
+        $('#modalMsg').modal('show');
     }
 
 
