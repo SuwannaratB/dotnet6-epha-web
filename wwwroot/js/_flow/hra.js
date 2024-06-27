@@ -650,15 +650,18 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                             var file_path = jsonArray[0].ATTACHED_FILE_PATH;
 
                             var arr = $filter('filter')($scope.data_drawing_approver, function (item) { return (item.seq == seq); });
+                            console.log(arr)
                             if (arr.length > 0) {
                                 arr[0].document_file_name = file_name;
                                 arr[0].document_file_size = file_size;
                                 arr[0].document_file_path = (url_ws.replace('/api/', '')) + file_path;// (url_ws.replace('/api/', '/')) + 'AttachedFileTemp/Hazop/' + file_name;
                                 arr[0].document_module = 'approver';
                                 arr[0].action_change = 1;
+                                arr[0].action_type = arr[0].action_type === 'new' ? 'insert' : arr[0].action_type;
                                 apply();
 
                             }
+
                         } else {
                             // กรณีเกิดข้อผิดพลาดในการร้องขอไปยัง server
                             console.error('มีข้อผิดพลาด: ' + request.status);
@@ -1305,6 +1308,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     function save_data_approver(action) {
 
+        console.log("call to submit 2")
+
+
         var user_name = $scope.user_name;
         var token_doc = $scope.token_doc + "";
         var pha_seq = $scope.data_header[0].seq;
@@ -1360,8 +1366,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                         set_alert('Success', 'Data has been successfully saved.');
                         apply();
+
+
+                        return get_data_after_save(false, false, $scope.pha_seq);
                     }
-                    else {
+                    else if('submit'){
                         set_alert('Success', 'Data has been successfully submitted.');
                         if (arr[0].pha_status == '13') {
                             //กรณีที่ TA2 approve all
@@ -4660,6 +4669,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
     
         $scope.confirmDialogApprover = function (_item, action) {
+            console.log("call to submit 1")
             $scope.data_drawing_approver.forEach(function(item) {
                 item.action_type === 'new' ? 'insert' : item.action_type;
             });
@@ -4686,6 +4696,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     return;
                 }
             }
+
 
             save_data_approver(action);
         }
@@ -5430,6 +5441,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 }
             }
 
+            console.log("arr_jsonarr_jsonarr_jsonarr_jsonarr_jsonarr_json",arr_json)
             return angular.toJson(arr_json);
         }
     }
@@ -6363,6 +6375,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         //add Drawing
         $scope.addDataApproverDrawing = function (item_draw, seq_approver, id_session) {
+            console.log("call add new row")
             //item_draw = data_drawing_approver
             var user_name = $scope.user_name;
             var flow_role_type = $scope.flow_role_type;
@@ -6400,6 +6413,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             for (const value of $scope.data_drawing_approver) {
                 value.no = ino; ino++;
             }
+
+            $scope.data_drawing_approver
+
+            console.log($scope.data_drawing_approver)
+
             apply();
         }
 
