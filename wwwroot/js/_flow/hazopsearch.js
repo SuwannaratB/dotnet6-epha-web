@@ -147,7 +147,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                 $scope.data_conditions = arr.conditions;
                 if ($scope.data_conditions[0].pha_sub_software == null) {
                     $scope.data_conditions[0].pha_sub_software = sub_software.toUpperCase();
-                    $scope.data_conditions[0].expense_type = 'OPEX';
+                    $scope.data_conditions[0].expense_type = null;
+                    $scope.data_conditions[0].sub_expense_type = null;
                     $scope.data_conditions[0].id_apu = null;
                     $scope.data_conditions[0].approver_user_name = null;
                 }
@@ -174,7 +175,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                     $scope.master_unit_no.splice(0, 0, arr_clone_def);
                 }*/
 
-                if (sub_software == "JSEA") {
+                if (sub_software == "HAZOP") {
+                    $scope.data_conditions[0].expense_type = $scope.data_conditions[0].expense_type || "ALL";
+                    $scope.data_conditions[0].sub_expense_type = $scope.data_conditions[0].sub_expense_type || "ALL";
+
+                    console.log("$scope.data_conditions",$scope.data_conditions)
+
+                } else if (sub_software == "JSEA") {
                     $scope.data_conditions[0].id_company = $scope.data_conditions[0].id_company || "ALL";
                     $scope.data_conditions[0].id_apu = $scope.data_conditions[0].id_apu || "ALL";
                     $scope.data_conditions[0].id_toc = $scope.data_conditions[0].id_toc || "ALL";
@@ -291,9 +298,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                             : item.expense_type == _item.expense_type) 
                         : true
                     )
+                    &&  (item.sub_expense_type
+                        ? ( item.sub_expense_type == 'ALL'
+                            ? item.sub_expense_type != null
+                            : (item.sub_expense_type.toLowerCase() == _item.sub_expense_type.toLowerCase())) 
+                        : true
+                    )
 
-
-                    && (item.sub_expense_type.toLowerCase() == _item.sub_expense_type.toLowerCase()) 
                     // status
                     && (item.pha_status
                         ? (parseInt(item.pha_status) == parseInt(_item.pha_status)) 
@@ -334,6 +345,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                                     ? 'x' 
                                 : item.emp_active_search.toLowerCase()))
                         : true)
+
                     // --- JSEA SEARCH ---
                     // company
                     &&  (item.id_company
