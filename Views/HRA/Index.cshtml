@@ -538,13 +538,15 @@
                                                             <div class="col-6">
                                                                 <div class="row">
                                                                     <button class="btn btn-outline-secondary p-0 cursor-pointer col-auto" 
-                                                                            ng-class="{'d-none':(!tab_general_active)}"
+                                                                            ng-show="tab_general_active || (data_header[0].pha_status === 22 && flow_role_type === 'admin')"
                                                                             style="color: #2445fc; background-color: #f1f2f4; border-color: #f1f2f4;"
-                                                                            ng-click="openDataEmployeeAdd(item,'member')">
+                                                                            ng-click="openDataEmployeeAdd(item, 'member')">
                                                                         <span class="far fa-address-book fa-lg pe-1"></span>
                                                                         Add Member Team/Attendees
                                                                     </button>
-                                                                    <h6 class="text-primary ps-0" ng-class="{'d-none':(tab_general_active)}">Member Team/Attendees</h6>
+                                                                    <h6 class="text-primary ps-0" ng-show="!tab_general_active && (data_header[0].pha_status !== 22 || flow_role_type !== 'admin')">
+                                                                        Member Team/Attendees
+                                                                    </h6>
                                                                 </div>
                                                                 <div class="row" ng-repeat="item2 in data_memberteam" 
                                                                      ng-if="(item2.user_name !== null && item2.user_displayname !== null) && item2.id_session === item.seq">
@@ -580,13 +582,16 @@
                                                             </div>
 
                                                             <div class="col-6" ng-if="!(data_general[0].expense_type=='MOC')">
-                                                                <div class="row" ng-class="{'d-none':(!tab_general_active)}">
+                                                                <div class="row" ng-show="tab_general_active || (data_header[0].pha_status === 22 && flow_role_type === 'admin')">
                                                                     <button class="btn btn-outline-secondary p-0 cursor-pointer col-auto" 
                                                                         style="color: #2445fc; background-color: #f1f2f4; border-color: #f1f2f4;"
                                                                         ng-click="openDataEmployeeAdd(item,'approver')">
                                                                         <span class="far fa-address-book fa-lg"></span>
                                                                         Add Assessment Team Leader
                                                                     </button>
+                                                                    <h6 class="text-primary ps-0" ng-show="!tab_general_active && (data_header[0].pha_status !== 22 || flow_role_type !== 'admin')">
+                                                                        Assessment Team Leader
+                                                                    </h6>
                                                                 </div>
                                                                 <div class="row" ng-repeat="item2 in data_approver | filter:{id_session:item.seq }">
                                                                     <div class="row align-items-center  p-1">
@@ -617,8 +622,8 @@
                                                     @* Session Date *@
                                                     <td class="align-top">
 
-                                                        <div class="row g-2" ng-class="{'disabled-link':(!tab_general_active)}">
-
+                                                        <div class="row g-2" 
+                                                            ng-class="{'disabled-link': !tab_general_active && !(data_header[0].pha_status === 22 && flow_role_type === 'admin')}">
                                                             <span class="row ms-1 p-0">
 
                                                                 <span class="col-md-4  p-1 ">
@@ -688,13 +693,14 @@
                                                     </td>
 
                                                     @* Buton Action *@
-                                                    <td class="align-top " style="width: 158px;" ng-class="{'d-none': (!tab_general_active)}">
+                                                    <td class="align-top " style="width: 158px;" 
+                                                         ng-disable="tab_general_active || (data_header[0].pha_status === 22 && flow_role_type === 'admin')">
 
                                                         <div class="col-12" style="width: 158px;">
                                                             <div class="float-end">
                                                                 <span class="mx-1">
                                                                     <button class="btn btn-outline-secondary p-2" style="color: #ff2828; background-color: #f1f2f4; border-color: #ff2828;"
-                                                                            ng-click="triggerRemove(item.seq,$index,'session')">
+                                                                            ng-click="triggerRemove(item,item.seq,$index,'session')">
                                                                         <span class="fa-regular fa-trash-can fa-lg"></span>
                                                                     </button>
                                                                 </span>
@@ -852,7 +858,7 @@
                                                                 <span class="mx-1">
                                                                     <button class="btn btn-outline-secondary p-2" 
                                                                             style="color: #ff2828; background-color: #f1f2f4; border-color: #ff2828;"
-                                                                            ng-click=triggerRemove(item.seq,$index-1,'DrawingDoc')
+                                                                            ng-click=triggerRemove(item,item.seq,$index-1,'DrawingDoc')
                                                                             data-toggle="tooltip" 
                                                                             data-placement="top" 
                                                                             title="Remove">
@@ -2265,7 +2271,7 @@
                                                     </div>
                                                     <div class="col-md-12 p-1 ps-3" ng-if="(item.approver_action_type == 2 || data_header[0].pha_status != 21 )">
 
-                                                        <p class="fw-bold" ng-class="{'disabled-link': !tab_approver_active || !canAccess}" >Comment : 
+                                                        <p class="fw-bold" ng-if="item.comment" ng-class="{'disabled-link': !tab_approver_active || !canAccess}" >Comment : 
                                                             <span>{{item.comment}}</span>
                                                         </p>
                                                     </div>

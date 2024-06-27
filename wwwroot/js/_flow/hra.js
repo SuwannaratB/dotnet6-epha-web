@@ -1672,59 +1672,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                 }
 
-                if($scope.params != 'edit_approver'){
-                    $scope.action_owner_active = true;
-                }  
-
-                if($scope.params !== null){
-                    console.log("$scope.params",$scope.params)
-
-                    if($scope.params != 'edit_approver'){
-                        $scope.action_owner_active = true;
-                    }  
-                    
-    
-                    if($scope.params !== 'edit') {
-                        $scope.tab_general_active = false;
-                        $scope.tab_node_active = false;
-                        $scope.tab_worksheet_active = false;
-                        $scope.tab_managerecom_active = false;
-                        $scope.tab_approver_active = false;
-    
-                        if($scope.params === 'edit_action_owner'){
-                            $scope.action_owner_active = true;
-                        } 
-    
-                        if($scope.params === 'edit_approver'){
-                            $scope.action_owner_active = false;
-    
-                        }  
-    
-                    }
-    
-                    if($scope.params === 'edit' && $scope.flow_role_type === 'admin') {
-                        $scope.tab_general_active = true;
-                        $scope.tab_node_active = true;
-                        $scope.tab_worksheet_active = true;
-                        $scope.tab_managerecom_active = true;
-                        $scope.tab_approver_active = true;
-    
-                        $scope.save_type = true;
-                    }
-                } else if ($scope.params === null && arr.header[0].pha_status === 21) {
-                    if (Array.isArray($scope.data_approver)) {
-                        let mainApprover = $scope.data_approver.find(item => item.approver_type === 'approver' && item.user_name === $scope.user_name);
-                
-                        if (mainApprover) {
-                            $scope.isMainApprover = true;
-                        } else {
-                            $scope.isMainApprover = false;
-                        }
-                    } else {
-                        console.log('$scope.data_approver is not an array or is undefined.');
-                        $scope.isMainApprover = false; 
-                    }
-                }
 
                 //ตรวจสอบเพิ่มเติม workflow
                 if (true) {
@@ -1758,6 +1705,75 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         }
                     }catch{}
 
+                }
+
+                if(true){
+                    if($scope.params != 'edit_approver'){
+                        $scope.action_owner_active = true;
+                    }  
+    
+                    if($scope.params !== null){    
+                        if($scope.params != 'edit_approver'){
+                            $scope.action_owner_active = true;
+                        }  
+                        
+        
+                        if($scope.params !== 'edit') {
+                            $scope.tab_general_active = false;
+                            $scope.tab_node_active = false;
+                            $scope.tab_worksheet_active = false;
+                            $scope.tab_managerecom_active = false;
+                            $scope.tab_approver_active = false;
+        
+                            if($scope.params === 'edit_action_owner'){
+                                $scope.action_owner_active = true;
+                            } 
+        
+                            if($scope.params === 'edit_approver'){
+                                $scope.action_owner_active = false;
+        
+                            }  
+        
+                        }
+        
+                        if($scope.params === 'edit' && $scope.flow_role_type === 'admin') {
+                            $scope.tab_general_active = true;
+                            $scope.tab_node_active = true;
+                            $scope.tab_worksheet_active = true;
+                            $scope.tab_managerecom_active = true;
+                            $scope.tab_approver_active = true;
+        
+                            $scope.save_type = true;
+                        }
+                    } else if ($scope.params === null && arr.header[0].pha_status === 21) {
+                        if (Array.isArray($scope.data_approver)) {
+                            let mainApprover = $scope.data_approver.find(item => item.approver_type === 'approver' && item.user_name === $scope.user_name);
+                    
+                            if (mainApprover) {
+                                $scope.isMainApprover = true;
+                            } else {
+                                $scope.isMainApprover = false;
+                            }
+                        } else {
+                            console.log('$scope.data_approver is not an array or is undefined.');
+                            $scope.isMainApprover = false; 
+                        }
+                    } else if ($scope.params === null && arr.header[0].pha_status === 22) {
+                        console.log("will set page access for like conduct")
+    
+                        $scope.tab_general_active = false;
+                        $scope.tab_node_active = false;
+                        $scope.tab_worksheet_active = true;
+                        $scope.tab_managerecom_active = true;
+                        $scope.tab_approver_active = true;
+
+                        //set true for general
+                        $scope.tabs[0].isActive = true;  
+                        console.log("$scope.tabs",$scope.tabs)
+
+                        //admin can see and active $scope.flow_role_type === 'admin' 
+                        //general session active
+                    }
                 }
 
                 //add Please select in list master
@@ -1819,8 +1835,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 if($scope.data_worksheet_list[i].worksheet[j].effective == '1') type = 'ineffective'
 
                 if (type) {
-                    const myElement = document.getElementById(`${type}-${i}-${j}`);
-                    myElement.checked = true
+                    try{
+                        const myElement = document.getElementById(`${type}-${i}-${j}`);
+                        myElement.checked = true
+                    }catch{}
+
                 }
             }
              
@@ -2597,12 +2616,63 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
         }
 
-        $scope.triggerRemove = function(seq, index, type) {
+        $scope.triggerRemove = function(data,seq, index, type) {
+            console.log("data",data)
+            console.log("index, type",index, type)
             if (seq !== null && index !== null) {
                 $scope.seqToRemove = seq;
                 $scope.indexToRemove = index;
                 $scope.typeToRemove = type;
-                $('#removeModal').modal('show');
+                switch($scope.typeToRemove) {
+                    case 'session':
+                        var shouldShowModal = false;
+                        for (var i = 0; i < $scope.data_memberteam.length; i++) {
+                            var member = $scope.data_memberteam[i];
+                            if ((member.id_session === seq && member.user_displayname !== null)) {
+                                shouldShowModal = true;
+                                break; 
+                            }
+                        }
+    
+                        for (var i = 0; i < $scope.data_approver.length; i++){
+                            var approver = $scope.data_approver[i];
+    
+                            if ((approver.id_session === seq && approver.user_displayname !== null)) {
+                                shouldShowModal = true;
+                                break; 
+                            }                        
+                        }
+    
+                        if (shouldShowModal || data.meeting_date !== null ) {
+                            $('#removeModal').modal('show');
+                        } else {
+                            $scope.removeDataSession($scope.seqToRemove, $scope.indexToRemove);
+                        }
+                        break;
+                    case 'DrawingDoc':
+                        if(data.document_file_name !== null || data.document_file_path !== null || data.descriptions !== null || data.document_name !== null){
+                            $('#removeModal').modal('show');
+                        }else{
+                            $scope.removeDrawingDoc($scope.seqToRemove, $scope.indexToRemove);
+                        }
+                        break;
+                    case 'nodelist' :
+                        if(data.design_conditions !== null || data.design_intent !== null || data.node !== null || data.node_boundary !== null || data.operating_conditions !== null){
+                            $('#removeModal').modal('show');
+                        }else{
+                            $scope.removeDataNodeList($scope.seqToRemove, $scope.indexToRemove);
+                        }
+                        break;
+                    case 'NodeDrawing' :
+                        if(data.descriptions !== null || data.id_drawing !== null ){
+                            $('#removeModal').modal('show');
+                        }else{
+                            $scope.removeDataNodeDrawing($scope.seqToRemove, $scope.indexToRemove);
+                        }                                        
+                        break;
+                    default:
+                        $('#removeModal').modal('show');
+                }
             } else {
                 console.error('is null');
             }
@@ -2617,8 +2687,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     case 'DrawingDoc':
                         $scope.removeDrawingDoc($scope.seqToRemove, $scope.indexToRemove);
                         break;
+                    case 'nodelist' :
+                        $scope.removeDataNodeList($scope.seqToRemove, $scope.indexToRemove);
+                        break;
+                    case 'NodeDrawing' :
+                        $scope.removeDataNodeDrawing($scope.seqToRemove, $scope.indexToRemove);
+                        break;
                     default:
-                        console.error('Unknown type:', $scope.typeToRemove);
+                        console.error('Unknown type:', $scope.typeToRemove)
                 }
                 $('#removeModal').modal('hide');
             } else {
