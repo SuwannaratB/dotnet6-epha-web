@@ -231,12 +231,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     
         for (let key of allKeys) {
             if (!keys1.includes(key)) {
-                console.log(`Key ${key} not found in first object at ${path || 'root'}`);
+                // console.log(`Key ${key} not found in first object at ${path || 'root'}`);
                 differencesFound = true;
                 continue;
             }
             if (!keys2.includes(key)) {
-                console.log(`Key ${key} not found in second object at ${path || 'root'}`);
+                // console.log(`Key ${key} not found in second object at ${path || 'root'}`);
                 differencesFound = true;
                 continue;
             }
@@ -249,10 +249,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
     
             if (!_.isEqual(val1, val2)) {
-                console.log(`Difference found at ${path ? path + '.' + key : key}:`);
-                console.log(`   ${key}:`);
-                console.log(`      obj1: ${val1}`);
-                console.log(`      obj2: ${val2}`);
+                // console.log(`Difference found at ${path ? path + '.' + key : key}:`);
+                // console.log(`   ${key}:`);
+                // console.log(`      obj1: ${val1}`);
+                // console.log(`      obj2: ${val2}`);
                 differencesFound = true;
             }
     
@@ -269,11 +269,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     function setupWatch(data) {
         $scope.$watch(data, function(newValues, oldValues) {
             if (!$scope.dataLoaded) {
-                console.log("Data not yet loaded, skipping watch callback.");
+                // console.log("Data not yet loaded, skipping watch callback.");
                 return;
             }
     
-            console.log("Watcher triggered change for : ", data);
+            // console.log("Watcher triggered change for : ", data);
     
             if ($scope.data_header[0].pha_status === 11 || $scope.data_header[0].pha_status === 12) {
                 $scope.stopTimer();
@@ -281,16 +281,16 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     
                 if (Array.isArray(newValues) && Array.isArray(oldValues)) {
                     if (!isEqual(newValues, oldValues, data)) {
-                        console.log("newValues", newValues);
-                        console.log("oldValues", oldValues);
-                        console.log("new !== old");
+                        // console.log("newValues", newValues);
+                        // console.log("oldValues", oldValues);
+                        // console.log("new !== old");
     
                         $scope.unsavedChanges = true;
                     }
                 } else if (!_.isEqual(newValues, oldValues)) {
-                    console.log("newValues", newValues);
-                    console.log("oldValues", oldValues);
-                    console.log("new !== old");
+                    // console.log("newValues", newValues);
+                    // console.log("oldValues", oldValues);
+                    // console.log("new !== old");
     
                     $scope.unsavedChanges = true;
                 }
@@ -1553,8 +1553,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         
                         $scope.data_subareas_list = groupHazardList(arr.hazard);
 
-                        // $scope.riskfactors_duplicate = setup_riskfactors_duplicate($scope.master_hazard_riskfactors_list);
-                        // console.log('setup_riskfactors_duplicate',$scope.riskfactors_duplicate)
+                        $scope.riskfactors_duplicate = setup_riskfactors_duplicate($scope.master_hazard_riskfactors_list);
                     }
 
                     //List of Worker Groups and Description of Tasks
@@ -1835,11 +1834,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 if($scope.data_worksheet_list[i].worksheet[j].effective == '1') type = 'ineffective'
 
                 if (type) {
-                    try{
-                        const myElement = document.getElementById(`${type}-${i}-${j}`);
-                        myElement.checked = true
-                    }catch{}
-
+                    const myElement = document.getElementById(`${type}-${i}-${j}`);
+                    if(myElement) myElement.checked = true
+                    
                 }
             }
              
@@ -2041,30 +2038,23 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
 
     function setup_riskfactors_duplicate(data){
-        console.log('default => ',$scope.data_subareas_list)
+        var result = [];
         for (let i = 0; i < $scope.data_subareas_list.length; i++) {
 
             for (let j = 0; j < $scope.data_subareas_list[i].hazard.length; j++) {
                 if ($scope.data_subareas_list[i].hazard[j].id_health_hazard) {
-
-                    var old = $filter('filter')($scope.riskfactors_duplicate, function (_item) {
-                        return (_item.id_health_hazard == $scope.data_subareas_list[i].hazard[j].id_health_hazard);
+                    // add riskfactors_duplicate
+                    var risk = $filter('filter')($scope.hazard_standard, function (_item) {
+                        return (_item.id == $scope.data_subareas_list[i].hazard[j].id_health_hazard);
                     })[0];
-
-                    if (!old) {
-                        var newData = {
-                            id_health_hazard: $scope.data_subareas_list[i].hazard[j].id_health_hazard,
-                            health_hazard: $scope.data_subareas_list[i].hazard[j].health_hazard
-                        }
-                        $scope.riskfactors_duplicate.push(newData)
-                    }
-
+                    var newRiskDup = angular.copy(risk)
+                    newRiskDup.id_subareas = $scope.data_subareas_list[i].hazard[j].id_subareas
+                    newRiskDup.id_hazard = $scope.data_subareas_list[i].hazard[j].seq
+                    result.push(newRiskDup)
                 }
-                
             }
-            
         }
-        return data
+        return result
     }
 
     $scope.chooseRiskRating = function (hazard) {
@@ -3055,6 +3045,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         
                     }
                 }
+                // riskfactors duplicate 
+                delItem.hazard.forEach(element => {
+                    $scope.riskfactors_duplicate = $filter('filter')($scope.riskfactors_duplicate, function (_item) {
+                        return (_item.id_hazard != element.seq);
+                    });
+                });
+    
 
                 // remove worksheet
                 if (delItem.hazard) {
@@ -3091,26 +3088,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         }
                     }
                 }
-                // remove worksheet
-                // for (let i = 0; i < $scope.data_worksheet_list.length; i++) {
-                //     var list = [];
-                //     for (let j = 0; j < $scope.data_worksheet_list[i].worksheet.length; j++) {
-                //         if ($scope.data_worksheet_list[i].worksheet[j].subarea_no == delItem.no) {
-                //             $scope.data_worksheet_delete.push($scope.data_worksheet_list[i].worksheet[j])
-                //         }else {
-                //             list.push($scope.data_worksheet_list[i].worksheet[j])
-                //         }
-                //     }
-                //     $scope.data_worksheet_list[i].worksheet = list;
-                // }
-                // sort number
-                // for (let i = 0; i < $scope.data_worksheet_list.length; i++) {
-                //     for (let j = 0; j < $scope.data_worksheet_list[i].worksheet.length; j++) {
-                //         $scope.data_worksheet_list[i].worksheet[j].no = j + 1;
-                //         $scope.data_worksheet_list[i].worksheet[j].action_change = 1;
-                //         $scope.data_worksheet_list[i].worksheet[j].subarea_no = delItem.no;
-                //     }
-                // }
             }
 
 
@@ -3198,6 +3175,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     item_area.hazard = $filter('filter')(item_area.hazard, function (item, idx) {
                         return (item.seq != element.seq);
                     });
+                    // riskfactors duplicate 
+                    $scope.riskfactors_duplicate = $filter('filter')($scope.riskfactors_duplicate, function (_item) {
+                        return (_item.id_hazard != element.seq);
+                    });
                 });
                 // sort number
                 for (let i = 0; i < item_area.hazard.length; i++) {
@@ -3274,6 +3255,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 for (let i = 0; i < item_area.hazard.length; i++) {
                     item_area.hazard[i].no = i + 1;
                 }
+                // riskfactors duplicate 
+                $scope.riskfactors_duplicate = $filter('filter')($scope.riskfactors_duplicate, function (_item) {
+                    return (_item.id_hazard != delItem.seq);
+                });
 
                 // remove worksheet
                 for (let i = 0; i < $scope.data_worksheet_list.length; i++) {
@@ -3351,6 +3336,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 return item.no_type_hazard == current_hazard.no_type_hazard;
             }).length;
             // ถ้า rows น้อยกว่าให้เพิ่ม rows
+            console.log(`row default: ${rows_hazard} row copy: ${copy_hazard.length}`)
             if (rows_hazard < copy_hazard.length) {
                 $scope.addDataHazardList(current_subArea, current_hazard, 'health')
             }
@@ -6679,35 +6665,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         // set disabled
                         const optionEl = document.getElementById(`option_${id_subarea}_${id_hazard}_${$scope.master_hazard_type[j].id}`);
                         optionEl.disabled = true;
-                        // if (processedValue) {
-                            //     for (let i = 0; i < $scope.master_hazard_type.length; i++) {
-                            //         var tmp = [];
-                            //         for (let j = 0; j < $scope.master_hazard_type[i].checks.length; j++) {
-                            //             if (
-                            //                 $scope.master_hazard_type[i].checks[j].id_type_hazard == processedValue
-                            //             ) {
-                            //                 console.log('prev ',$scope.master_hazard_type[i].checks[j])
-                            //                 const id_subarea = $scope.master_hazard_type[i].checks[j].id_subarea
-                            //                 const id_hazard = $scope.master_hazard_type[i].checks[j].id_hazard
-                            //                 const id_type_hazard = $scope.master_hazard_type[i].checks[j].id_type_hazard
-
-                            //                 var subAsreaList = $filter('filter')($scope.data_subareas_list, function (item) {
-                            //                     return (item.id == id_subarea);
-                            //                 })[0];
-                            //                 for (let k = 0; k < subAsreaList.hazard.length; k++) {
-                            //                     const optionsEl = document.getElementById(
-                            //                         `option_${id_subarea}_${subAsreaList.hazard[k].id}_${id_type_hazard}`
-                            //                     );
-                            //                     console.log(optionsEl)
-                            //                     if(optionsEl) optionsEl.disabled = false;
-                            //                 }
-                            //             } else {
-                            //                 tmp.push($scope.master_hazard_type[i].checks[j]);
-                            //             }
-                            //         }
-                            //         $scope.master_hazard_type[i].checks = tmp;
-                            //     }
-                            // }
                    }
                 }
             }
@@ -6845,32 +6802,37 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     }
                 });
             });
-            // if(hazard.standard_value) $scope.processExposure(hazard);
+            // add riskfactors_duplicate
+            var newRiskDup = angular.copy(list)
+            newRiskDup.id_subareas = hazard.id_subareas
+            newRiskDup.id_hazard = hazard.seq
+            var list_dup = $filter('filter')($scope.riskfactors_duplicate, function (_item) { 
+                return _item.id_hazard != newRiskDup.id_hazard 
+            });
+            list_dup.push(newRiskDup)
+            $scope.riskfactors_duplicate = [...list_dup]
+
             console.log('hazard ==> ',hazard)
             console.log('all ==> ',$scope.data_worksheet_list)
         }
+    };
 
-        // console.log('hazard',hazard)
-        // let set;
-        // for (let i = 0; i < $scope.data_subareas_list[0].hazard.length; i++) {
-        //     if (hazard_index == i) {
-        //         $scope.data_subareas_list[0].hazard[i] = hazard;
-        //         set = true;
-        //     }
-        // }
+    $scope.filterRiskfactorDuplicates = function(item) {
+        // filter by type hazard
+        if (item.id_hazard_type != $scope.select_hazard_type)  return false
+        // current
+        if (item.id == $scope.select_hazard.id_health_hazard) return true
+        // filter by duplicate
+        for (let i = 0; i < $scope.riskfactors_duplicate.length; i++) {
+           
+            if ($scope.riskfactors_duplicate[i].id == item.id && 
+                $scope.riskfactors_duplicate[i].id_subareas == $scope.select_hazard.id_subareas
+            ) {
+                return false;
+            }
+        }
 
-        // if (set) {
-        //     $scope.data_worksheet_list = setup_worksheet($scope.data_subareas_list, $scope.data_tasks);
-        // }
-
-        // $scope.hazard_standard_list = $filter('filter')($scope.hazard_standard, function (item) { 
-        //     return (item.name == hazard.health_hazard); 
-        // });
-        // console.log($scope.hazard_standard_list)
-        // hazard.id_health_hazard = $scope.hazard_standard_list[0].id
-        // hazard.health_hazard = $scope.hazard_standard_list[0].name
-        // hazard.healthng_effect_rating = $scope.hazard_standard_list[0].hazards_rating
-        // hazard.action_chae = 1
+        return true
     };
 
     $scope.openModalRisk = function (item_hazard, index) {

@@ -2591,7 +2591,7 @@
                                 </thead>
                                 <tbody class=" list">
                                     <tr class="hover-actions-trigger btn-reveal-trigger position-static text-center"
-                                        ng-repeat="item in master_hazard_riskfactors_list | filter:{id_hazard_type: select_hazard_type}"
+                                        ng-repeat="item in master_hazard_riskfactors_list | filter: filterRiskfactorDuplicates"
                                         id="row-{{$index}}">
                                         <td class="text-center" style="width: 10%;">
                                             <input type="radio" 
