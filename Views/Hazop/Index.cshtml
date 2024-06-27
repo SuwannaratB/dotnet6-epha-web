@@ -285,7 +285,7 @@
                                                 data-options='{"removeItemButton":true,"placeholder":true}'
                                                 ng-change="actionChange(item,item.seq,'area')"
                                                 ng-model="item.id_apu"
-                                                ng-if="tab_general_active"
+                                                ng-disabled="!tab_general_active || !(tab_general_active && data_header[0].pha_status <= 12)"
                                                 hide-placeholder-option>
                                             @*<option value="" selected ng-if="!placeholderHidden">Please select</option>*@
                                             <option ng-repeat="item2 in master_apu" ng-value="item2.id" >

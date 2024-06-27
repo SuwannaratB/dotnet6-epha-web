@@ -1568,6 +1568,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 }
                 else {
                     set_alert('Error', arr[0].status);
+                    //ไป 404 page
                     apply();
                 }
 
