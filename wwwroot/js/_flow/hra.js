@@ -929,6 +929,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         try {
             if ($scope.data_header[0].pha_status == 11) {
                 if (selectedTab.name == 'worksheet') {
+                    angular.forEach($scope.tabs, function (tab) {
+                        tab.isActive = false;
+                    });
+                    selectedTab.isActive = true;
+
                     if(!validBeforRegister()) 
                         return set_alert('Warning',$scope.validMessage)
                     
@@ -1024,7 +1029,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         check_tab(selectedTab[0].name);
 
         console.log($scope.tabs)
-
+        console.log( $scope.action_part )
         apply();
     };
     function check_tab(val) {
