@@ -1616,8 +1616,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 var arr = data;
                 console.log("=>",arr);
 
-                return;
-
                 if (arr[0].status == 'true') {
                     $scope.pha_type_doc = 'update';
 
@@ -1625,13 +1623,19 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                         set_alert('Success', 'Data has been successfully saved.');
                         apply();
+
+
+                        return get_data_after_save(false, false, $scope.pha_seq);
                     }
                     else {
                         set_alert('Success', 'Data has been successfully submitted.');
 
                         if (arr[0].pha_status == '13') {
                             //กรณีที่ TA2 approve all
-                            window.open('hazop/search', "_top");
+                            if($scope.flow_role_type == 'admin') {
+                                return page_load();
+                            }
+
                         } else if (arr[0].pha_status == '22') {
                             //กรณีที่ TA2 approve reject
                             window.open('hazop/search', "_top");
@@ -2126,6 +2130,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                             $scope.master_apu.splice(0, 0, arr_clone_def);
                         }
                     }catch{}
+
+
+                    console.log("$scope.data_general$scope.data_general$scope.data_general",$scope.data_general)
                     /*try {
                         $scope.master_apu = JSON.parse(replace_hashKey_arr(arr.apu));
                         $scope.master_functional = JSON.parse(replace_hashKey_arr(arr.functional));
