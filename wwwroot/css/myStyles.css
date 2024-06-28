@@ -553,3 +553,23 @@ background-color: #3e8e41;
 .ng-invalid-min {
   border-color: red; /* Change border color to red */
 }
+
+.is-invalid {
+  border-color: #dc3545; /* Red border for invalid fields */
+}
+
+.ng-invalid .ng-invalid-required{
+  border-color: #dc3545; /* Red border for invalid fields */
+}
+
+.invalid-feedback {
+  color: #dc3545; /* Red text for error messages */
+  font-size: 10px;
+  display: none;
+}
+
+.invalid-feedback.ng-show {
+  display: block; /* Show error message when validation fails */
+}
+
+

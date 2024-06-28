@@ -1568,7 +1568,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 }
                 else {
                     set_alert('Error', arr[0].status);
-                    //ไป 404 page
+                    //shold go 404 page but now go to search 
+                    window.open('hazop/search', "_top");
                     apply();
                 }
 
@@ -2190,18 +2191,73 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         $scope.save_type = false;
                     } 
 
-                    $scope.$apply();
-                    try {
-                        if (page_load == true || true) {
+                    $timeout(function() {
+                        try {
+                            if (typeof page_load !== 'undefined' && page_load === true) {
+                                initializeChoices();
+                            }
+                        } catch (e) {
+                            console.error('Error initializing Choices.js:', e);
+                        }
+            
+                        function initializeChoices() {
+                            console.log("now choice load to show");
                             const choices1 = new Choices('.js-choice-apu');
                             const choices2 = new Choices('.js-choice-functional');
                             const choices5 = new Choices('.js-choice-functional_audition');
-
-                            //const choices3 = new Choices('.js-choice-business_unit');
-                            //const choices4 = new Choices('.js-choice-unit_no');
+                
+                            // Uncomment and initialize other Choices instances if needed
+                            // const choices2 = new Choices('.js-choice-apu');
+                            // const choices3 = new Choices('.js-choice-functional');
                         }
-                    } catch { }
+                    }, 0);
 
+
+                    $timeout(function() {
+                        try {
+                            if (typeof page_load !== 'undefined' && page_load === true) {
+                                console.log("master_functional_auditionmaster_functional_auditionmaster_functional_audition",$scope.master_functional_audition)
+                                var element = document.querySelector('.js-choice-functional_audition');
+                                    if (element.tagName.toLowerCase() === 'select') {
+                                        console.log('Element is a <select> element');
+                                    }
+
+                                    var element = document.querySelector('.js-choice-functional_audition');
+                                    if (element.tagName.toLowerCase() === 'select' && element.multiple) {
+                                        console.log('Element is a <select> element with multiple selection');
+                                    }
+                                    
+
+                                initializeChoices();
+                            }
+                        } catch (e) {
+                            //console.error('Error initializing Choices.js:', e);
+                        }
+            
+                        function initializeChoices() {
+            
+                            initializeChoiceElement('.js-choice-functional_audition');
+                            initializeChoiceElement('.js-choice-apu');
+                            initializeChoiceElement('.js-choice-functional');
+                        }
+            
+                        function initializeChoiceElement(selector) {
+                            var element = document.querySelector(selector);
+                            if (element && (element.tagName.toLowerCase() === 'select' || element.type === 'text')) {
+                                if (!element.classList.contains('choices__input')) {
+                                    new Choices(element);
+                                } else {
+                                    console.warn(`Choices.js already initialized on ${selector}`);
+                                }
+                            } else {
+                                //console.error(`Element ${selector} not found or not a valid type`);
+                            }
+                        }
+
+                    }, 0);
+
+                    $scope.$apply();
+                    
                 }
 
                 $scope.dataLoaded = true;
