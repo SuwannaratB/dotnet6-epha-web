@@ -1402,7 +1402,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         console.log("flow_action",flow_action)
         
-
         $.ajax({
             url: url_ws + "Flow/set_hazop",
             data: '{"user_name":"' + user_name + '","token_doc":"' + token_doc + '","pha_status":"' + pha_status + '","pha_version":"' + pha_version + '","action_part":"' + action_part + '"'
@@ -1450,8 +1449,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     $scope.unsavedChanges  = false;
 
                     $scope.pha_type_doc = 'update';
-
-                    console.log("confirm_submit_complete",flow_action)
                     
                     if (action == 'save' || action == 'submit_moc'
                         || action_def == "confirm_submit_register"
@@ -1539,6 +1536,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                                 get_data_after_save(false, (flow_action == 'submit' ? true : false), $scope.pha_seq);
 
                                 set_alert('Success', 'Data has been successfully saved for PHA Conduct.');
+                                
                                 apply();
 
                                 $scope.stopTimer();
@@ -5670,6 +5668,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             } else if (action == 'confirm_submit_register_without') {
                 $scope.Action_Msg_Confirm = true;
                 action = 'submit_without';
+
+                $('#modalSendMailRegister').modal('hide');
+
                 $('#modalSendMail').modal('hide');
 
             } else if (action == 'confirm_submit_complete') {
