@@ -746,7 +746,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 !$scope.data_drawing[i].document_file_name
             ) {
                 if(!$scope.data_drawing[i].document_file_name) $scope.validMessage = 'Please select a valid Document File'
-                if(!$scope.data_drawing[i].document_no) $scope.validMessage = 'Please select a valid Document No'
+                if(!$scope.data_drawing[i].document_no) $scope.validMessage = 'Please select a valid Drawing No'
     
                 $scope.goback_tab = 'general';
 
@@ -807,6 +807,21 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
         }
         $scope.validMessage = ''
+        return true
+    }
+
+    function validWorksheet(){
+        var isRecom = false;
+        for (let i = 0; i < $scope.data_worksheet_list.length; i++) {
+            isRecom = $scope.filterInitialRiskRatingMain($scope.data_worksheet_list[i])
+
+            if(isRecom) break;
+        }
+        if (!isRecom) {
+            $scope.goback_tab = 'worksheet';
+            return false
+        } 
+        
         return true
     }
 
@@ -928,17 +943,33 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     $scope.changeTab = function (selectedTab) {
         try {
             if ($scope.data_header[0].pha_status == 11) {
-                if (selectedTab.name == 'worksheet') {
-                    angular.forEach($scope.tabs, function (tab) {
-                        tab.isActive = false;
-                    });
-                    selectedTab.isActive = true;
+                // set tab
+                angular.forEach($scope.tabs, function (tab) {
+                    tab.isActive = false;
+                });
+                selectedTab.isActive = true;
 
-                    if(!validBeforRegister()) 
+                if (selectedTab.name == 'worksheet') {
+                    if(!validBeforRegister()) {
+                        $scope.action_part = 5
                         return set_alert('Warning',$scope.validMessage)
-                    
+                    }
                     $scope.confirmSave('confirm_submit_register_without')
                     return; 
+                }
+                if (selectedTab.name == 'manage') {
+                    if(!validBeforRegister()) {
+                        $scope.action_part = 6
+                        return set_alert('Warning',$scope.validMessage)
+                    }
+                    // if(!validWorksheet()) 
+                    //     return set_alert('Warning','Please provide a valid Worksheet')
+                }
+                if (selectedTab.name == 'list_name') {
+                    if(!validBeforRegister()) {
+                        $scope.action_part = 7
+                        return set_alert('Warning',$scope.validMessage)
+                    }
                 }
             } else if ($scope.data_header[0].pha_status == 12 || $scope.data_header[0].pha_status == 22) {
                 if (selectedTab.name == 'worksheet') {
@@ -988,6 +1019,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         apply();
     };
+
     $scope.goBackToTab = function (){
 
         var tag_name = $scope.goback_tab;
@@ -1000,8 +1032,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         console.log("arr_tab",arr_tab)
         $scope.changeTab_Focus(arr_tab, tag_name);
     }
-
-
 
     $scope.changeTab_Focus = function (selectedTab, nameTab) {
 
@@ -1032,6 +1062,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         console.log( $scope.action_part )
         apply();
     };
+
     function check_tab(val) {
 
         $scope.action_part = 1;
@@ -1458,8 +1489,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 var action_part_befor = $scope.action_part;
                 var tabs_befor = (page_load == false ? $scope.tabs : null);
                 var arr = data;
+
                 $scope.backup = angular.copy(data);
-                // console.log($scope.backup.hazard)
+
+                // set isDisableStatus PHA STATUS > 12 (waitting follow up)
+                $scope.isDisableStatus = setup_isDisabledPHAStatus(arr.header[0])
+
                 if (true) {
                     $scope.data_all = arr;
                     arr.company.push({ id: 9999, name: 'Other' })
@@ -2060,6 +2095,15 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
         }
         return result
+    }
+
+    function setup_isDisabledPHAStatus(header){
+        if (header.pha_status > 12) {
+            console.log(`PHA status: ${header.pha_status} isDisableStatus: true`)
+            return true
+        }
+        console.log(`PHA status: ${header.pha_status} isDisableStatus: false`)
+        return false
     }
 
     $scope.chooseRiskRating = function (hazard) {
@@ -7098,7 +7142,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     
     $scope.Access_check = function(task) {
-        console.log("Checking access for task:", task);
+        // console.log("Checking access for task:", task);
 
         // If user is an admin, allow access
         if ($scope.flow_role_type === 'admin') {
