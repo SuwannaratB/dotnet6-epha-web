@@ -153,7 +153,7 @@
                     </ul>*@
 
                     <ul class="nav nav-underline border-3 border-primary border-bottom " id="myTab" role="tablist" style="position: relative;">
-                        
+
                         <li ng-repeat="tab in tabs" class="mx-2 " ng-if="tab.isShow || true">
                             <a ng-click="changeTab(tab)"
                                class="btn-outline-primary border border-0 px"
@@ -180,6 +180,7 @@
                         @* General Start*@
                         <div class="m-3 row  gx-0 align-items-center ">
                             <div class="card border-0">
+                                @* rows 1 *@
                                 <div class="mx-1 row g-3 align-items-center" ng-repeat="item in data_general ">
                                     <!-- company -->
                                     <div class="col-md-2 ">
@@ -190,14 +191,14 @@
                                         <label class="form-label ps-0" ng-if="select_history_tracking_record">
                                             <a class="form-label far fa-comment-alt text-warning cursor-pointer" 
                                                 data-bs-toggle="tooltip"
-                                               data-bs-placement="top" 
-                                               name="departments" 
-                                               title="" 
-                                               data-bs-html="true">
+                                                data-bs-placement="top" 
+                                                name="departments" 
+                                                title="" 
+                                                data-bs-html="true">
                                             </a>
                                         </label>
                                         <select class="form-control"
-                                                ng-class="{'disabled-link':(!tab_general_active)}"
+                                                ng-class="{'disabled-link': isDisableStatus}"
                                                 data-choices="data-choices"
                                                 data-options='{"removeItemButton":true,"placeholder":true}'
                                                 @* ng-change="actionChange(item,item.seq,'')"  *@
@@ -226,12 +227,11 @@
                                             </a>
                                         </label>
                                         <select class="form-control"
-                                                ng-class="{'disabled-link':(!tab_general_active)}"
-                                                data-choices="data-choices"
-                                                data-options='{"removeItemButton":true,"placeholder":true}'
-                                                @* ng-change="actionChange(item,item.seq,'')"  *@
-                                                ng-model="item.id_sections"
-                                                >
+                                            ng-class="{'disabled-link': isDisableStatus}"
+                                            data-choices="data-choices"
+                                            data-options='{"removeItemButton":true,"placeholder":true}'
+                                            @* ng-change="actionChange(item,item.seq,'')"  *@
+                                            ng-model="item.id_sections">
                                             <option value="">Please select</option>
                                             <option ng-repeat="item2 in data_sections" 
                                                 ng-value="item2.sections"
@@ -242,24 +242,29 @@
                                     </div>
                                     <!-- sections -->
                                 </div>
-
+                                @* rows 2 *@
                                 <div class="mx-1 row g-3 align-items-center" ng-repeat="item in data_general ">
-
                                     <!-- company -->
                                     <div class="col-md-2 ">
                                         <label class="form-label ps-0" for="expense_type">
                                             <b class="text-danger d-none"> * </b>Company
                                         </label>
                                         <label class="form-label ps-0" ng-if="select_history_tracking_record">
-                                            <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
-                                               data-bs-placement="top" name="company" title="" data-bs-html="true"></a>
+                                            <a class="form-label far fa-comment-alt text-warning cursor-pointer" 
+                                                data-bs-toggle="tooltip"
+                                                data-bs-placement="top" 
+                                                name="company" 
+                                                title="" 
+                                                data-bs-html="true">
+                                            </a>
                                         </label>
                                         <select class="form-control js-choice-company " 
                                                 disabled
-                                                ng-class="{'disabled-link':(!tab_general_active)}"
+                                                ng-class="{'disabled-link': isDisableStatus}"
                                                 data-choices="data-choices"
                                                 data-options='{"removeItemButton":true,"placeholder":true}'
-                                                ng-change="actionChange(item,item.seq,'')" ng-model="item.id_company">
+                                                ng-change="actionChange(item,item.seq,'')" 
+                                                ng-model="item.id_company">
                                             <option ng-repeat="item2 in master_company | orderBy:'id'" ng-value="item2.id">
                                                 {{item2.name}}
                                             </option>
@@ -272,15 +277,16 @@
                                             <div class="col-12 p-1  ">
                                                 <label class="form-label ps-0" for="area"><b class="text-danger d-none"> * </b>Area Process Unit </label>
                                                 <label class="form-label ps-0" ng-if="select_history_tracking_record">
-                                                    <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
-                                                       data-bs-placement="top" 
-                                                       title=" Area Process Unit : A" 
-                                                       data-bs-html="true">
+                                                    <a class="form-label far fa-comment-alt text-warning cursor-pointer" 
+                                                        data-bs-toggle="tooltip"
+                                                        data-bs-placement="top" 
+                                                        title=" Area Process Unit : A" 
+                                                        data-bs-html="true">
                                                     </a>
                                                 </label>
                                                 <label class="form-label ps-0" for="area"></label>
                                                 <select class="form-control js-choice-apu"
-                                                        ng-class="{'disabled-link':(!tab_general_active)}"
+                                                        ng-class="{'disabled-link': isDisableStatus}"
                                                         data-choices="data-choices"
                                                         data-options='{"removeItemButton":true,"placeholder":true}'
                                                         ng-change="actionChange(item,item.seq,'apu')" ng-model="item.id_apu">
@@ -299,18 +305,25 @@
                                     <div class="col-md-auto p-1 d-none" ng-if="item.id_company != '9999' ">
                                         <div class="row g-0 align-items-center">
                                             <div class="col-12 p-1  ">
-
-                                                <label class="form-label ps-0" for="toc"><b class="text-danger d-none"> * </b>Thaioil Complex </label>
+                                                <label class="form-label ps-0" for="toc">
+                                                    <b class="text-danger d-none"> * </b>
+                                                    Thaioil Complex 
+                                                </label>
                                                 <label class="form-label ps-0" ng-if="select_history_tracking_record">
-                                                    <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
-                                                       data-bs-placement="top" title="Thaioil Complex" data-bs-html="true"></a>
+                                                    <a class="form-label far fa-comment-alt text-warning cursor-pointer" 
+                                                        data-bs-toggle="tooltip"
+                                                        data-bs-placement="top" 
+                                                        title="Thaioil Complex" 
+                                                        data-bs-html="true">
+                                                    </a>
                                                 </label>
                                                 <label class="form-label ps-0" for="toc"></label>
                                                 <select class="form-control js-choice-toc"
-                                                        ng-class="{'disabled-link':(!tab_general_active)}"
+                                                        ng-class="{'disabled-link': isDisableStatus}"
                                                         data-choices="data-choices"
                                                         data-options='{"removeItemButton":true,"placeholder":true}'
-                                                        ng-change="actionChange(item,item.seq,'')" ng-model="item.id_toc">
+                                                        ng-change="actionChange(item,item.seq,'')" 
+                                                        ng-model="item.id_toc">
                                                     <option ng-repeat="item2 in master_toc"
                                                             ng-value="item2.id"
                                                             value="item2.id"
@@ -334,7 +347,7 @@
                                                </a>
                                         </label>
                                         <select class="form-control col-auto js-choice-unit_no"
-                                                ng-class="{'disabled-link':(!tab_general_active)}"
+                                                ng-class="{'disabled-link': isDisableStatus}"
                                                 data-choices="data-choices"
                                                 data-options='{"removeItemButton":true,"placeholder":true}'
                                                 ng-change="actionChange(item,item.seq,'unit_no');
@@ -355,65 +368,78 @@
                                     <div class="col-md-2">
                                         <label class="form-label ps-0" for="expense_type"><b class="text-danger"> * </b>Project Type</label>
                                         <label class="form-label ps-0" ng-if="select_history_tracking_record">
-                                            <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
-                                               data-bs-placement="top" title=" Project Type : OPEX" data-bs-html="true"></a>
+                                            <a class="form-label far fa-comment-alt text-warning cursor-pointer" 
+                                                data-bs-toggle="tooltip"
+                                                data-bs-placement="top" 
+                                                title=" Project Type : OPEX" 
+                                                data-bs-html="true">
+                                            </a>
                                         </label>
-
                                         <select class="form-select rounded-1"
-                                                ng-class="{'disabled-link':(!tab_general_active || !(tab_general_active && data_header[0].pha_status<=12 ))}"
-                                                id="expense_type" placeholder="Project Type"
-                                                name="expense_type" ng-model="item.expense_type" ng-if="data_header[0].pha_status == 11"
+                                                ng-class="{'disabled-link': isDisableStatus}"
+                                                id="expense_type" 
+                                                placeholder="Project Type"
+                                                name="expense_type" 
+                                                ng-model="item.expense_type" 
+                                                ng-if="data_header[0].pha_status == 11"
                                                 ng-change="actionChange(item,item.seq,'expense_type')">
                                             <option id="MOC">MOC</option>
                                             <option id="5YEAR">5YEAR</option>
                                         </select>
-                                        <select class="form-select rounded-1 disabled-link" ng-if="data_header[0].pha_status>=12"
-                                                ng-model="item.expense_type">
+                                        <select class="form-select rounded-1 disabled-link" 
+                                            ng-if="data_header[0].pha_status>=12"
+                                            ng-model="item.expense_type">
                                             <option id="MOC">MOC</option>
                                             <option id="5YEAR">5YEAR</option>
                                         </select>
                                     </div>
-
                                     @* Reference Number  *@
                                     <div class="col-md-3 ">
                                         <div class="row g-0 align-items-center">
-
                                             <div class="col-12 p-1">
                                                 <label class="form-label ps-0" for="unit">{{(item.expense_type=='MOC'? 'e-MOC Reference Number' : 'MOC Reference Number')}} </label>
                                                 <label class="form-label ps-0" ng-if="select_history_tracking_record">
-                                                    <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
-                                                       data-bs-placement="top" title=" Reference MOC : PN-13081" data-bs-html="true"></a>
+                                                    <a class="form-label far fa-comment-alt text-warning cursor-pointer" 
+                                                        data-bs-toggle="tooltip"
+                                                        data-bs-placement="top" 
+                                                        title=" Reference MOC : PN-13081" 
+                                                        data-bs-html="true">
+                                                    </a>
                                                 </label>
-                                                <input type="text" name="reference_moc" class="form-control rounded-1"
-                                                       ng-class="{'disabled-link':(!tab_general_active)}"
-                                                       ng-keyup="actionChange(item,item.seq,'')" ng-model="item.reference_moc"
-                                                       placeholder="Input Data"
-                                                       autocomplete="off"
-                                                       value="PN-13089">
+                                                <input type="text" 
+                                                    name="reference_moc" 
+                                                    class="form-control rounded-1"
+                                                    ng-class="{'disabled-link': isDisableStatus}"
+                                                    ng-keyup="actionChange(item,item.seq,'')" 
+                                                    ng-model="item.reference_moc"
+                                                    placeholder="Input Data"
+                                                    autocomplete="off"
+                                                    value="PN-13089">
                                             </div>
-
                                         </div>
                                     </div>
                                 </div>
-
+                                @* rows 3 *@
                                 <div class="mx-1 row  g-3 align-items-center" ng-repeat="item in data_general"
                                      ng-class="{'disabled-link':(!tab_general_active)}">
                                     <!-- Project Name -->
                                     <div class="col-md-5 p-1">
-
                                         <label class="form-label ps-0">{{(item.expense_type=='MOC'? 'MOC Title' : 'Project Name')}}</label>
                                         <label class="form-label ps-0" ng-if="select_history_tracking_record">
-                                            <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
-                                               data-bs-placement="top"
-                                               data-bs-html="true"></a>
+                                            <a class="form-label far fa-comment-alt text-warning cursor-pointer" 
+                                                data-bs-toggle="tooltip"
+                                                data-bs-placement="top"
+                                                data-bs-html="true">
+                                            </a>
                                         </label>
-
-                                        <input class="form-control rounded-1" ng-class="{'disabled-link':(!tab_general_active)}"
-                                               type="text" placeholder="Project Name"
-                                               name="project_name"
-                                               ng-model="item.pha_request_name"
-                                               @* ng-keyup="filterResultGeneral(item.pha_request_name, 'pha_request_name')" *@
-                                               >
+                                        <input class="form-control rounded-1" 
+                                            ng-class="{'disabled-link': isDisableStatus}"
+                                            type="text" 
+                                            placeholder="Project Name"
+                                            name="project_name"
+                                            ng-model="item.pha_request_name"
+                                            @* ng-keyup="filterResultGeneral(item.pha_request_name, 'pha_request_name')" *@
+                                            >
                                         <ul class="list-group mt-2 w-25" style="position: absolute;" ng-show="showResults">
                                             <li class="list-group-item "
                                                 ng-repeat="result in filteredResults | filter:{field:'pha_request_name'}"
@@ -421,65 +447,74 @@
                                                 {{ result.name }}
                                             </li>
                                         </ul>
-
                                     </div>
-
                                     <!-- Target Date -->
                                     <div class="col-md-7 p-1">
-
                                         <div class="row g-0 align-items-center">
                                             <div class="col-md-3 p-1">
                                                 <label class="form-label ps-0" for="tgs_date">Target Start Date</label>
                                                 <label class="form-label ps-0" ng-if="select_history_tracking_record">
-                                                    <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
-                                                       data-bs-placement="top" title=" Target Start Date :  " data-bs-html="true"></a>
+                                                    <a class="form-label far fa-comment-alt text-warning cursor-pointer" 
+                                                        data-bs-toggle="tooltip"
+                                                        data-bs-placement="top" 
+                                                        title=" Target Start Date :  " 
+                                                        data-bs-html="true">
+                                                    </a>
                                                 </label>
-                                                <input type="date" ng-model="item.target_start_date"
-                                                       ng-keyup="actionChange(item,item.seq,'')"
-                                                       class="form-control rounded-1 datetimepicker"
-                                                       ng-class="{'disabled-link':(!tab_general_active)}"
-                                                       placeholder="dd/mm/yyyy">
+                                                <input type="date" 
+                                                    ng-model="item.target_start_date"
+                                                    ng-keyup="actionChange(item,item.seq,'')"
+                                                    class="form-control rounded-1 datetimepicker"
+                                                    ng-class="{'disabled-link': isDisableStatus}"
+                                                    placeholder="dd/mm/yyyy">
                                             </div>
 
                                             <div class="col-md-auto p-1">
                                                 <label class="form-label ps-0" for="tge_date">COMPLETION DATE (CLOSE OUT REPORT)</label>
                                                 <label class="form-label ps-0" ng-if="select_history_tracking_record">
-                                                    <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
-                                                       data-bs-placement="top" title=" Complete Date :  " data-bs-html="true"></a>
+                                                    <a class="form-label far fa-comment-alt text-warning cursor-pointer" 
+                                                        data-bs-toggle="tooltip"
+                                                        data-bs-placement="top" 
+                                                        title=" Complete Date :  " 
+                                                        data-bs-html="true">
+                                                    </a>
                                                 </label>
-                                                <input type="date" name="te_date" ng-model="item.target_end_date"
-                                                       ng-keyup="actionChange(item,item.seq,'')"
-                                                       min="{{ item.target_start_date | date:'yyyy-MM-dd' }}"
-                                                       class="form-control rounded-1 datetimepicker" ng-class="{'disabled-link':(!tab_general_active)}"
-                                                       id="tgs_date"
-                                                       placeholder="dd/mm/yyyy">
+                                                <input type="date" 
+                                                    name="te_date" 
+                                                    ng-model="item.target_end_date"
+                                                    ng-keyup="actionChange(item,item.seq,'')"
+                                                    min="{{ item.target_start_date | date:'yyyy-MM-dd' }}"
+                                                    class="form-control rounded-1 datetimepicker" 
+                                                    ng-class="{'disabled-link': isDisableStatus}"
+                                                    id="tgs_date"
+                                                    placeholder="dd/mm/yyyy">
                                             </div>
-
                                         </div>
                                     </div>
-
                                 </div>
-
-                                <div class="mx-2 row  gx-0 align-items-center" ng-repeat="item in data_general"
-                                     ng-class="{'disabled-link':(!tab_general_active)}">
-
+                                @* rows 4 *@
+                                <div class="mx-2 row  gx-0 align-items-center" 
+                                    ng-repeat="item in data_general"
+                                    ng-class="{'disabled-link':(!tab_general_active)}">
                                     <div class="col-5 p-1">
-
                                         <label class="form-label ps-0" for="description_general">Description/Remark :</label>
                                         <label class="form-label ps-0" ng-if="select_history_tracking_record">
                                             <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
-                                               data-bs-placement="top" title=" Description/Remark :  " data-bs-html="true"></a>
+                                               data-bs-placement="top" 
+                                               title=" Description/Remark :  " 
+                                               data-bs-html="true">
+                                            </a>
                                         </label>
-
-                                        <textarea class="form-control rounded-1" ng-class="{'disabled-link':(!tab_general_active)}"
-                                                  id="description_general" name="description_general"
-                                                  placeholder="Description/Remark" style="height: 100px"
-                                                  ng-model="item.descriptions">
+                                        <textarea class="form-control rounded-1" 
+                                            ng-class="{'disabled-link': isDisableStatus}"
+                                            id="description_general" 
+                                            name="description_general"
+                                            placeholder="Description/Remark" 
+                                            style="height: 100px"
+                                            ng-model="item.descriptions">
                                         </textarea>
-
                                     </div>
                                 </div>
-
                             </div>
                         </div>
                         @* General End*@
@@ -489,33 +524,40 @@
                             <div class="card px-2">
                                 <div class="row g-3 justify-content-between align-items-center pt-2 pb-3">
                                     <div class="col-12 col-md">
-                                        <h5 class="text-900 mb-0"> <span class=" me-2 text-primary"><B>|</B></span>Session</h5>
+                                        <h5 class="text-900 mb-0"> 
+                                            <span class=" me-2 text-primary">
+                                                <B>|</B>
+                                            </span>
+                                            Session
+                                        </h5>
                                     </div>
                                 </div>
                                 <div class="row g-3 justify-content-between align-items-center pt-2 pb-3 d-none">
                                     <div class="col-12 col-md">
-                                        <h5 class="text-900 mb-0"> <span class=" me-2 text-primary"><B>|</B></span>{{ sub_software }} Member</h5>
+                                        <h5 class="text-900 mb-0"> 
+                                            <span class=" me-2 text-primary">
+                                                <B>|</B>
+                                            </span>
+                                            {{ sub_software }} Member
+                                        </h5>
                                     </div>
-
                                     <div class="float-end align-top ms-1" ng-class="{'tab-pane fade show active':!(data_header[0].pha_status==11)}">
                                         <div class="float-end pe-3">
                                             <div class="form-check form-switch">
-                                                <input class="form-check-input" id="switchEmailToMemberChecked"
-                                                       type="checkbox"
-                                                       ng-click="stamp_flow_mail_to_member_show()" />
-                                                <label class="form-check-label" for="switchEmailToMemberChecked">Email Notification to Member Team</label>
+                                                <input class="form-check-input" 
+                                                    id="switchEmailToMemberChecked"
+                                                    type="checkbox"
+                                                    ng-click="stamp_flow_mail_to_member_show()" />
+                                                <label class="form-check-label" for="switchEmailToMemberChecked">
+                                                    Email Notification to Member Team
+                                                </label>
                                             </div>
                                         </div>
                                     </div>
-
                                 </div>
-
                                 <div class="col-12 col-md mx-1">
-
                                     <div class="table-responsive scrollbar">
-
                                         <table class="table mb-0 table-borderless">
-
                                             <thead class="  text-uppercase text-start border-bottom">
                                                 <tr>
                                                     <th class="align-middle text-center" style="font-size: 10px;" rowspan="2">No</th>
@@ -525,9 +567,7 @@
                                                     <th class="align-middle text-center" style="font-size: 10px;" rowspan="2"></th>
                                                 </tr>
                                             </thead>
-
                                             <tbody class="" id="customer-rating-table-body">
-
                                                 <tr ng-repeat="item in data_session | orderBy:no" class="">
 
                                                     <td class="align-top text-top" style="width: 30px;">
@@ -541,9 +581,10 @@
                                                             <div class="col-6">
                                                                 <div class="row">
                                                                     <button class="btn btn-outline-secondary p-0 cursor-pointer col-auto" 
-                                                                            ng-show="tab_general_active || (data_header[0].pha_status === 22 && flow_role_type === 'admin')"
-                                                                            style="color: #2445fc; background-color: #f1f2f4; border-color: #f1f2f4;"
-                                                                            ng-click="openDataEmployeeAdd(item, 'member')">
+                                                                        ng-show="tab_general_active || (data_header[0].pha_status === 22 && flow_role_type === 'admin')"
+                                                                        style="color: #2445fc; background-color: #f1f2f4; border-color: #f1f2f4;"
+                                                                        ng-click="openDataEmployeeAdd(item, 'member')"
+                                                                        ng-class="{'disabled-link': isDisableStatus}">
                                                                         <span class="far fa-address-book fa-lg pe-1"></span>
                                                                         Add Member Team/Attendees
                                                                     </button>
@@ -551,18 +592,17 @@
                                                                         Member Team/Attendees
                                                                     </h6>
                                                                 </div>
-                                                                <div class="row" ng-repeat="item2 in data_memberteam" 
-                                                                     ng-if="(item2.user_name !== null && item2.user_displayname !== null) && item2.id_session === item.seq">
+                                                                <div class="row" 
+                                                                    ng-repeat="item2 in data_memberteam" 
+                                                                    ng-if="(item2.user_name !== null && item2.user_displayname !== null) && item2.id_session === item.seq">
                                                                     <div class="col-8 align-items-center  p-1">
-                                                                        <label class="mb-0 text-1100 fw-bold"
-                                                                                style="width:100%;border-color: #f1f2f4;">
-                                                                                {{ item2.user_displayname}}
+                                                                        <label class="mb-0 text-1100 fw-bold" style="width:100%;border-color: #f1f2f4;">
+                                                                            {{ item2.user_displayname}}
                                                                         </label>
                                                                     </div>
                                                                     <div class="col-4 align-items-center  p-1">
-                                                                        <label class="mb-0 text-1100 fw-bold"
-                                                                                style="width:80%;border-color: #f1f2f4;">
-                                                                                {{ item2.user_title}}
+                                                                        <label class="mb-0 text-1100 fw-bold" style="width:80%;border-color: #f1f2f4;">
+                                                                            {{ item2.user_title}}
                                                                         </label>
                                                                     </div>
                                                                 </div>
@@ -588,7 +628,8 @@
                                                                 <div class="row" ng-show="tab_general_active || (data_header[0].pha_status === 22 && flow_role_type === 'admin')">
                                                                     <button class="btn btn-outline-secondary p-0 cursor-pointer col-auto" 
                                                                         style="color: #2445fc; background-color: #f1f2f4; border-color: #f1f2f4;"
-                                                                        ng-click="openDataEmployeeAdd(item,'approver')">
+                                                                        ng-click="openDataEmployeeAdd(item,'approver')"
+                                                                        ng-class="{'disabled-link': isDisableStatus}">
                                                                         <span class="far fa-address-book fa-lg"></span>
                                                                         Add Assessment Team Leader
                                                                     </button>
@@ -603,148 +644,167 @@
                                                                             ng-if=" (item2.approver_type=='approver' && item2.user_displayname)">
                                                                                {{ '(QMTS)' + item2.user_displayname}}
                                                                         </label> *@
-                                                                    <div class="col-8 align-items-center  p-1">
-                                                                        <label class="mb-0 text-1100 fw-bold" tyle="width:100%;border-color: #f1f2f4;">
-                                                                            {{ item2.approver_type == 'section_head' && item2.user_displayname ? '(Verified)' : ''}}  
-                                                                            {{ item2.user_displayname}}                                                                        </label>
-                                                                    </div>
-                                                                    <div class="col-4 align-items-center  p-1">
-                                                                        <label class="mb-0 text-1100 fw-bold"
-                                                                                style="width:80%;border-color: #f1f2f4;">
+                                                                        <div class="col-8 align-items-center  p-1">
+                                                                            <label class="mb-0 text-1100 fw-bold" tyle="width:100%;border-color: #f1f2f4;">
+                                                                                {{ item2.approver_type == 'section_head' && item2.user_displayname ? '(Verified)' : ''}}  
+                                                                                {{ item2.user_displayname}}       
+                                                                            </label>
+                                                                        </div>
+                                                                        <div class="col-4 align-items-center  p-1">
+                                                                            <label class="mb-0 text-1100 fw-bold" style="width:80%;border-color: #f1f2f4;">
                                                                                 {{ item2.user_title}}
-                                                                        </label>
-                                                                    </div>                                                                        
+                                                                            </label>
+                                                                        </div>                                                                        
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
-
-
                                                     </td>
 
                                                     @* Session Date *@
                                                     <td class="align-top">
-
                                                         <div class="row g-2" 
                                                             ng-class="{'disabled-link': !tab_general_active && !(data_header[0].pha_status === 22 && flow_role_type === 'admin')}">
                                                             <span class="row ms-1 p-0">
-
                                                                 <span class="col-md-4  p-1 ">
                                                                     <label class="form-label d-none" for="meeting_date">Meeting Date</label>
-
-                                                                    <input type="date" class="form-control rounded-1 datetimepicker" id="meeting_date" name="meeting_date"
-                                                                           ng-change="actionChange(item,item.seq,'meeting_date')"
-                                                                           ng-model="item.meeting_date" placeholder="dd/mm/yyyy">
-
+                                                                    <input type="date" 
+                                                                        class="form-control rounded-1 datetimepicker" 
+                                                                        ng-class="{'disabled-link': isDisableStatus}"
+                                                                        id="meeting_date" 
+                                                                        name="meeting_date"
+                                                                        ng-change="actionChange(item,item.seq,'meeting_date')"
+                                                                        ng-model="item.meeting_date" 
+                                                                        placeholder="dd/mm/yyyy">
                                                                 </span>
 
                                                                 <span class="col-md-1 p-1 d-flex">
                                                                     <label class="form-label p-0 pt-2">Time</label>
                                                                 </span>
+
                                                                 <span class="col-md-3  p-1 d-flex">
                                                                     <label class="form-label d-none" for="timepicker1">Start Time</label>
-                                                                    <label class="form-label d-none" style="font-size: 10px;">{{formatTo24Hour(item.meeting_start_time)}}</label>
-
-                                                                    <input class="form-control  d-none" id="st_meet" name="st_meet"
-                                                                           style="width:20px; height: 20px"
-                                                                           ng-change="actionChange(item,item.seq,'')"
-                                                                           ng-model="item.meeting_start_time" value="{{formatTo24Hour(item.meeting_start_time)}}"
-                                                                           type="time" placeholder="hour : minute" />
-
-                                                                    <select class="form-select rounded-1  me-1 p-1" ng-model="item.meeting_start_time_hh"
-                                                                            style="width:60px" ng-change="actionChange(item,item.seq,'')">
+                                                                    <label class="form-label d-none" style="font-size: 10px;">
+                                                                        {{formatTo24Hour(item.meeting_start_time)}}
+                                                                    </label>
+                                                                    <input class="form-control  d-none" 
+                                                                         ng-class="{'disabled-link': isDisableStatus}"
+                                                                        id="st_meet" 
+                                                                        name="st_meet"
+                                                                        style="width:20px; height: 20px"
+                                                                        ng-change="actionChange(item,item.seq,'')"
+                                                                        ng-model="item.meeting_start_time" 
+                                                                        value="{{formatTo24Hour(item.meeting_start_time)}}"
+                                                                        type="time" 
+                                                                        placeholder="hour : minute" />
+                                                                    <select class="form-select rounded-1  me-1 p-1" 
+                                                                        ng-class="{'disabled-link': isDisableStatus}"
+                                                                        ng-model="item.meeting_start_time_hh"
+                                                                        style="width:60px" 
+                                                                        ng-change="actionChange(item,item.seq,'')">
                                                                         <option ng-repeat="item2 in master_hours" ng-value="item2.id">
                                                                             {{item2.name}}
                                                                         </option>
                                                                     </select>
-                                                                    <select class="form-select rounded-1  me-1 p-1" ng-model="item.meeting_start_time_mm"
-                                                                            style="width:60px" ng-change="actionChange(item,item.seq,'')">
+                                                                    <select class="form-select rounded-1  me-1 p-1" 
+                                                                        ng-class="{'disabled-link': isDisableStatus}"
+                                                                        ng-model="item.meeting_start_time_mm"
+                                                                        style="width:60px" 
+                                                                        ng-change="actionChange(item,item.seq,'')">
                                                                         <option ng-repeat="item2 in master_minutes" ng-value="item2.id">
                                                                             {{item2.name}}
                                                                         </option>
                                                                     </select>
-
                                                                 </span>
+
                                                                 <span class="col-md-1 p-1 d-flex">
                                                                     <label class="form-label p-0 pt-2">To</label>
                                                                 </span>
+
                                                                 <span class="col-md-3 p-1 d-flex">
                                                                     <label class="form-label d-none" for="timepicker2">End Time</label>
                                                                     <label class="form-label d-none" style="font-size: 10px;">{{formatTo24Hour(item.meeting_end_time)}}</label>
-                                                                    <input class="form-control  d-none" id="et_meet" name="et_meet"
-                                                                           ng-change="actionChange(item,item.seq,'')"
-                                                                           ng-model="item.meeting_end_time"
-                                                                           type="time" placeholder="hour : minute" />
-
-                                                                    <select class="form-select rounded-1  me-1 p-1" ng-model="item.meeting_end_time_hh"
-                                                                            style="width:60px" ng-change="actionChange(item,item.seq,'')">
+                                                                    <input class="form-control  d-none" 
+                                                                        id="et_meet" 
+                                                                        name="et_meet"
+                                                                        ng-class="{'disabled-link': isDisableStatus}"
+                                                                        ng-change="actionChange(item,item.seq,'')"
+                                                                        ng-model="item.meeting_end_time"
+                                                                        type="time" 
+                                                                        placeholder="hour : minute" />
+                                                                    <select class="form-select rounded-1  me-1 p-1" 
+                                                                        ng-class="{'disabled-link': isDisableStatus}"
+                                                                        ng-model="item.meeting_end_time_hh"
+                                                                        style="width:60px" 
+                                                                        ng-change="actionChange(item,item.seq,'')">
                                                                         <option ng-repeat="item2 in master_hours" ng-value="item2.id">
                                                                             {{item2.name}}
                                                                         </option>
                                                                     </select>
-                                                                    <select class="form-select rounded-1  me-1 p-1" ng-model="item.meeting_end_time_mm"
-                                                                            style="width:60px" ng-change="actionChange(item,item.seq,'')">
+                                                                    <select class="form-select rounded-1  me-1 p-1" 
+                                                                        ng-class="{'disabled-link': isDisableStatus}"
+                                                                        ng-model="item.meeting_end_time_mm"
+                                                                        style="width:60px" 
+                                                                        ng-change="actionChange(item,item.seq,'')">
                                                                         <option ng-repeat="item2 in master_minutes" ng-value="item2.id">
                                                                             {{item2.name}}
                                                                         </option>
                                                                     </select>
                                                                 </span>
-
                                                             </span>
-
                                                         </div>
                                                     </td>
 
                                                     @* Buton Action *@
-                                                    <td class="align-top " style="width: 158px;" 
-                                                         ng-disable="tab_general_active || (data_header[0].pha_status === 22 && flow_role_type === 'admin')">
-
+                                                    <td class="align-top " 
+                                                        style="width: 158px;" 
+                                                        ng-disable="tab_general_active || (data_header[0].pha_status === 22 && flow_role_type === 'admin')">
                                                         <div class="col-12" style="width: 158px;">
                                                             <div class="float-end">
                                                                 <span class="mx-1">
-                                                                    <button class="btn btn-outline-secondary p-2" style="color: #ff2828; background-color: #f1f2f4; border-color: #ff2828;"
-                                                                            ng-click="triggerRemove(item,item.seq,$index,'session')">
+                                                                    <button class="btn btn-outline-secondary p-2" 
+                                                                        ng-class="{'disabled-link': isDisableStatus}"
+                                                                        style="color: #ff2828; background-color: #f1f2f4; border-color: #ff2828;"
+                                                                        ng-click="triggerRemove(item,item.seq,$index,'session')">
                                                                         <span class="fa-regular fa-trash-can fa-lg"></span>
                                                                     </button>
                                                                 </span>
 
                                                                 <span class="mx-1">
-                                                                    <button class="btn btn-outline-secondary p-2" style="color: #2445fc; background-color: #f1f2f4; border-color: #2445fc;"
-                                                                            ng-click=copyDataSession(item.seq,$index)>
+                                                                    <button class="btn btn-outline-secondary p-2" 
+                                                                        ng-class="{'disabled-link': isDisableStatus}"
+                                                                        style="color: #2445fc; background-color: #f1f2f4; border-color: #2445fc;"
+                                                                        ng-click=copyDataSession(item.seq,$index)>
                                                                         <span class="fas fa-copy fa-lg"></span>
                                                                     </button>
                                                                 </span>
 
                                                                 <span class="mx-1 d-none">
-                                                                    <button class="btn btn-outline-secondary p-2" style="color: #1336fc; background-color: #f1f2f4; border-color: #a8a8a8;"
-                                                                            ng-click=copyDataSession(item.seq,$index)>
+                                                                    <button class="btn btn-outline-secondary p-2" 
+                                                                        ng-class="{'disabled-link': isDisableStatus}"
+                                                                        style="color: #1336fc; background-color: #f1f2f4; border-color: #a8a8a8;"
+                                                                        ng-click=copyDataSession(item.seq,$index)>
                                                                         <span class="fas fa-copy fa-lg"></span>
                                                                     </button>
                                                                 </span>
 
                                                                 <span class="mx-1">
-                                                                    <button class="btn btn-outline-secondary p-2" style="color: #0abe0a; background-color: #f1f2f4; border-color: #0abe0a;"
-                                                                            ng-click=addDataSession(item.seq,$index)>
+                                                                    <button class="btn btn-outline-secondary p-2" 
+                                                                        ng-class="{'disabled-link': isDisableStatus}"
+                                                                        style="color: #0abe0a; background-color: #f1f2f4; border-color: #0abe0a;"
+                                                                        ng-click=addDataSession(item.seq,$index)>
                                                                         <span class="fas fa-square-plus fa-lg"></span>
                                                                     </button>
                                                                 </span>
-
                                                             </div>
                                                         </div>
                                                     </td>
-
                                                 </tr>
-
-
                                             </tbody>
-
                                         </table>
-
                                     </div>
-
                                 </div>
                             </div>
-
                         </div>
                         @* Session End*@
 
@@ -753,13 +813,16 @@
                             <div class="card px-2">
                                 <div class="row g-3 justify-content-between align-items-center pt-2 pb-3">
                                     <div class="col-12 col-md">
-                                        <h5 class="text-900 mb-0"> <span class=" me-2 text-primary"><B>|</B></span>Document & Reference</h5>
+                                        <h5 class="text-900 mb-0"> 
+                                            <span class=" me-2 text-primary">
+                                                <B>|</B>
+                                            </span>
+                                            Document & Reference
+                                        </h5>
                                     </div>
                                 </div>
                                 <div class="col-12 col-md mx-1">
-
                                     <div class="table-responsive scrollbar">
-
                                         <table class="table fs--1 mb-0 table-borderless">
                                             <thead class=" text-uppercase border-bottom">
                                                 <tr>
@@ -769,33 +832,36 @@
                                                     <th class="align-middle" style="font-size: 10px;"><b class="text-danger"> * </b>Document File</th>
                                                     <th class="align-middle" style="font-size: 10px;">Comment </th>
                                                     <th class="align-middle" style="font-size: 10px;"> </th>
-
                                                 </tr>
                                             </thead>
-
                                             <tbody class="list" id="customer-rating-table-body ">
                                                 <tr class="hover-actions-trigger btn-reveal-trigger position-static "
                                                     ng-repeat="item in data_drawing">
+
                                                     <td class="align-middle text-center">
                                                         <div class="p-1 ">
                                                             <h6 class="fw-semi-bold">{{item.no}}</h6>
                                                         </div>
                                                     </td>
+
                                                     <td class="align-middle white-space-nowrap ">
-                                                        <textarea ng-keyup="actionChange(item,item.seq,'')" ng-model="item.document_name"
-                                                                  class="form-control form-control-sm  rounded-1 shadow-sm  bg-body-tertiary"
-                                                                  ng-class="{'disabled-link':(!tab_general_active)}"
-                                                                  placeholder="Document Name"
-                                                                  style="font-size: 10px;"></textarea>
+                                                        <textarea ng-keyup="actionChange(item,item.seq,'')" 
+                                                            ng-model="item.document_name"
+                                                            class="form-control form-control-sm  rounded-1 shadow-sm  bg-body-tertiary"
+                                                            ng-class="{'disabled-link': isDisableStatus}"
+                                                            placeholder="Document Name"
+                                                            style="font-size: 10px;">
+                                                        </textarea>
                                                     </td>
+
                                                     <td class="align-middle white-space-nowrap ">
-
-                                                        <textarea ng-keyup="actionChange(item,item.seq,'')" ng-model="item.document_no"
-                                                                  class="form-control form-control-sm  rounded-1 shadow-sm  bg-body-tertiary"
-                                                                  ng-class="{'disabled-link':(!tab_general_active)}"
-                                                                  placeholder="Drawing No"
-                                                                  style="font-size: 10px;"></textarea>
-
+                                                        <textarea ng-keyup="actionChange(item,item.seq,'')" 
+                                                            ng-model="item.document_no"
+                                                            class="form-control form-control-sm  rounded-1 shadow-sm  bg-body-tertiary"
+                                                            ng-class="{'disabled-link': isDisableStatus}"
+                                                            placeholder="Drawing No"
+                                                            style="font-size: 10px;">
+                                                        </textarea>
                                                     </td>
 
                                                     <td class="align-middle white-space col-3">
@@ -806,12 +872,15 @@
                                                                 </div>
                                                                 <button class="Upload-button btn ps-3"  ng-if="!item.document_file_size">
                                                                     <label class="dz-message-text  fw-bold cursor-pointer"
-                                                                        for="attfile-{{item.seq}}" ng-class="{'d-none':(!tab_general_active)}">
+                                                                        for="attfile-{{item.seq}}" 
+                                                                        ng-class="{'d-none':(!tab_general_active)}">
                                                                         Upload File(Word, Excel, PDF, Image)
                                                                     </label>
-                                                                    <input type="file" id="attfile-{{item.seq}}"
+                                                                    <input type="file" 
+                                                                        id="attfile-{{item.seq}}"
                                                                         name="file{{item.seq}}"
                                                                         onchange="angular.element(this).scope().fileSelect(this,'drawing')"
+                                                                        ng-class="{'disabled-link': isDisableStatus}"
                                                                         style="display:none" />
                                                                 </button>
                                                                 <button class="Upload-button btn ps-3" ng-if="item.document_file_size > 0">
@@ -825,52 +894,52 @@
                                                                                 {{truncateFilename(item.document_file_name, 20)}} ({{item.document_file_size}} KB)
                                                                             </b>
                                                                         </span>
-                                                                        <a id="deluploadfile-{{item.seq}}" class="btn btn-link text-danger p-0 ms-2"
-                                                                                ng-class="{'d-none':(!tab_general_active)}"
-                                                                                ng-click="clearFileName(item.seq)">
+                                                                        <a id="deluploadfile-{{item.seq}}" 
+                                                                            class="btn btn-link text-danger p-0 ms-2"
+                                                                            ng-class="{'d-none': isDisableStatus}"
+                                                                            ng-click="clearFileName(item.seq)">
                                                                             <span class="fa-regular fa-trash-can fa-lg"></span>
                                                                         </a>
-
                                                                     </div>
                                                                 </button> 
                                                             </div>                                                                                                                                                                            
                                                         </div>
-
                                                         <div id="drawing-document-file-{{item.seq}}"
                                                              class="invalid-feedback text-danger">
                                                             Please provide a valid Drawing.(Max size 10mb)
                                                         </div>
-
                                                     </td>
 
                                                     <td class="align-middle ">
                                                         <div class="col-12">
                                                             <textarea class="form-control form-control-sm  rounded-1 shadow-sm  bg-body-tertiary"
-                                                                      ng-class="{'disabled-link':(!tab_general_active)}"
-                                                                      ng-keyup="actionChange(item,item.seq,'')"
-                                                                      ng-model="item.descriptions"
-                                                                      placeholder="Comment"
-                                                                      style="font-size: 10px;"></textarea>
+                                                                ng-class="{'disabled-link': isDisableStatus}"
+                                                                ng-keyup="actionChange(item,item.seq,'')"
+                                                                ng-model="item.descriptions"
+                                                                placeholder="Comment"
+                                                                style="font-size: 10px;">
+                                                            </textarea>
                                                         </div>
-
                                                     </td>
+
                                                     <td class="align-middle " style="width: 158px;" ng-class="{'d-none': (!tab_general_active)}">
                                                         <div class="col-12" style="width: 158px;">
                                                             <div class="float-end ">
-
                                                                 <span class="mx-1">
                                                                     <button class="btn btn-outline-secondary p-2" 
-                                                                            style="color: #ff2828; background-color: #f1f2f4; border-color: #ff2828;"
-                                                                            ng-click=triggerRemove(item,item.seq,$index-1,'DrawingDoc')
-                                                                            data-toggle="tooltip" 
-                                                                            data-placement="top" 
-                                                                            title="Remove">
+                                                                        ng-class="{'disabled-link': isDisableStatus}"
+                                                                        style="color: #ff2828; background-color: #f1f2f4; border-color: #ff2828;"
+                                                                        ng-click="triggerRemove(item,item.seq,$index-1,'DrawingDoc')"
+                                                                        data-toggle="tooltip" 
+                                                                        data-placement="top" 
+                                                                        title="Remove">
                                                                         <span class="fa-regular fa-trash-can fa-lg"></span>
                                                                     </button>
                                                                 </span>
 
                                                                 <span class="mx-1 d-none">
                                                                     <button class="btn btn-outline-secondary p-2" 
+                                                                            ng-class="{'disabled-link': isDisableStatus}"
                                                                             style="color: #1336fc; background-color: #f1f2f4; border-color: #a8a8a8;"
                                                                             ng-click=copyDrawingDoc(item.seq,$index)
                                                                             data-toggle="tooltip" 
@@ -882,6 +951,7 @@
 
                                                                 <span class="mx-1">
                                                                     <button class="btn btn-outline-secondary p-2" 
+                                                                            ng-class="{'disabled-link': isDisableStatus}"
                                                                             style="color: #0abe0a; background-color: #f1f2f4; border-color: #0abe0a;"
                                                                             ng-click=addDrawingDoc(item.seq,$index)
                                                                             data-toggle="tooltip" 
@@ -890,23 +960,17 @@
                                                                         <span class="fas fa-square-plus fa-lg"></span>
                                                                     </button>
                                                                 </span>
-
-
                                                             </div>
                                                         </div>
                                                     </td>
-
-
                                                 </tr>
                                             </tbody>
                                         </table>
                                     </div>
-
                                 </div>
                             </div>
                         </div>
                         @* Drawing End*@
-
                     </div>
                     @* general information end*@
 
@@ -971,9 +1035,9 @@
                                                             </div>
                                                         </div>
 
-                                                        <div class="font-sans-serif btn-reveal-trigger position-static" 
+                                                        <div class="d-flex justify-content-center font-sans-serif btn-reveal-trigger position-static" 
                                                             ng-class="{
-                                                            'disabled-link':(!tab_general_active || !(tab_general_active && data_header[0].pha_status<=12 )),
+                                                            'disabled-link': isDisableStatus,
                                                             'd-none': !(tab_general_active)}">
                                                             <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 p-1"
                                                                 type="button" 
@@ -984,7 +1048,7 @@
                                                                 data-bs-reference="parent">
                                                                 <span class="fas fa-cog text-info"></span>
                                                             </button>
-                                                            <div class="dropdown-menu dropdown-menu-end py-2">
+                                                            <div class="dropdown-menu dropdown-menu-end py-2" >
                                                                 <a class="dropdown-item text-success" ng-click="addDataSubAreasList(item,$index)">
                                                                     <span class="fas fa-copy"></span>
                                                                     Add
@@ -1004,7 +1068,7 @@
                                                 <td class="align-top px-1 text-center">
                                                     <div class="py-2">
                                                         <select class="form-control"
-                                                            ng-class="{'disabled-link':(!tab_general_active || !(tab_general_active && data_header[0].pha_status<=12 ))}"
+                                                            ng-class="{'disabled-link': isDisableStatus }"
                                                             ng-change="actionChangeTabArea('sub_area', item)"
                                                             ng-model="item.sub_area"
                                                             ng-if="tab_general_active">
@@ -1018,7 +1082,7 @@
                                                     <textarea class="form-control rounded-1" 
                                                         ng-if="item.sub_area"
                                                         ng-class="{
-                                                        'disabled-link':(!tab_general_active || !(tab_general_active && data_header[0].pha_status<=12 ))}"
+                                                        'disabled-link': isDisableStatus }"
                                                         id="description_general" 
                                                         name="description_general"
                                                         placeholder="Sub Area" 
@@ -1046,9 +1110,9 @@
                                                                     <span class="px-1">{{item_list.no_subareas}}.{{ item_list.no_type_hazard }}</span>
                                                                 </div>
                                                             </div>
-                                                            <div class="font-sans-serif btn-reveal-trigger position-static" 
+                                                            <div class="d-flex justify-content-center font-sans-serif btn-reveal-trigger position-static" 
                                                                 ng-class="{
-                                                                'disabled-link':(!tab_general_active || !(tab_general_active && data_header[0].pha_status<=12 )),
+                                                                'disabled-link': isDisableStatus,
                                                                 'd-none': !(tab_general_active),
                                                                 'd-none': (item_list.no_type_hazard == item.hazard[$index - 1].no_type_hazard)}">
                                                                 <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 p-1"
@@ -1083,7 +1147,7 @@
                                                             class="form-control mx-2"
                                                             style="width: 28%;"
                                                             ng-class="{
-                                                                'disabled-link':(!tab_general_active || !(tab_general_active && data_header[0].pha_status<=12 )),
+                                                                'disabled-link': isDisableStatus,
                                                                 'd-none': (item_list.no_type_hazard == item.hazard[$index - 1].no_type_hazard)}"
                                                             ng-change="actionChangeTabArea('type_hazard', item, item_list)"
                                                             ng-click="actionChangeTabArea('disabled_type_hazard', item, item_list)"
@@ -1108,9 +1172,9 @@
                                                                     <span class="px-1">{{item_list.no_subareas}}.{{ item_list.no_type_hazard }}.{{ getCustomIndex($index, item_list.no_type_hazard, item.hazard) }}</span>
                                                                 </div>
                                                             </div>
-                                                            <div class="font-sans-serif btn-reveal-trigger position-static" ng-class="{'d-none': !(tab_general_active)}">
+                                                            <div class="d-flex justify-content-center font-sans-serif btn-reveal-trigger position-static" ng-class="{'d-none': !(tab_general_active)}">
                                                                 <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 p-1"
-                                                                        ng-class="{'disabled-link':(!tab_general_active || !(tab_general_active && data_header[0].pha_status<=12 ))}"
+                                                                        ng-class="{'disabled-link': isDisableStatus }"
                                                                         type="button" 
                                                                         data-bs-toggle="dropdown" 
                                                                         data-boundary="window" 
@@ -1139,7 +1203,7 @@
                                                         @* master_hazard_riskfactors *@
                                                         <div class="mx-2"  style="width: 28%;">
                                                             <button ng-if="!item_list.health_hazard" 
-                                                                ng-class="{'disabled-link':(!tab_general_active || !(tab_general_active && data_header[0].pha_status<=12 ))}"
+                                                                ng-class="{'disabled-link': isDisableStatus }"
                                                                 ng-disabled="!item_list.id_type_hazard"
                                                                 class="btn btn-outline-secondary btn-sm w-100 h-100" 
                                                                 style="border: 1px solid #cbd0dd " 
@@ -1147,7 +1211,7 @@
                                                                 Please select
                                                             </button>
                                                             <button ng-if="item_list.health_hazard" 
-                                                                ng-class="{'disabled-link':(!tab_general_active || !(tab_general_active && data_header[0].pha_status<=12 ))}"
+                                                                ng-class="{'disabled-link': isDisableStatus }"
                                                                 ng-disabled="!item_list.id_type_hazard"
                                                                 class="btn btn-outline-secondary btn-sm w-100 h-100" 
                                                                 style="border: 1px solid #cbd0dd " 
@@ -1158,7 +1222,7 @@
 
                                                         @* health_effect_rating *@
                                                         <div class="d-flex align-items-center justify-content-center gap-2"  
-                                                            ng-class="{'disabled-link':(!tab_general_active || !(tab_general_active && data_header[0].pha_status<=12 ))}"
+                                                            ng-class="{'disabled-link': isDisableStatus }"
                                                             style="width: 13%;">
                                                             @* rating *@
                                                             <div class="effect-rating" 
@@ -1211,7 +1275,7 @@
                                                                 data-toggle="tooltip" 
                                                                 data-placement="top" 
                                                                 title="Copy Description of Work or Tasks"
-                                                                ng-disabled="(!tab_general_active || !(tab_general_active && data_header[0].pha_status<=12 ))"
+                                                                ng-disabled="isDisableStatus"
                                                                 @* disabled *@
                                                                 ng-click="copyHazard(item, item_list)"
                                                                 >
@@ -1308,7 +1372,7 @@
                                                                  ng-class="{'d-none': !(tab_general_active)}"
                                                                  ng-if="item.tasks_type_other == 0">
                                                                 <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 p-1"
-                                                                        @* ng-class="{'disabled-link':(!tab_general_active || !(tab_general_active && data_header[0].pha_status<=12 ))}" *@
+                                                                        ng-class="{'disabled-link': isDisableStatus }"
                                                                         type="button" 
                                                                         data-bs-toggle="dropdown" 
                                                                         data-boundary="window" 
@@ -1334,7 +1398,7 @@
                                                             </div>
                                                         </div>
                                                         <select class="form-control"
-                                                                ng-class="{'disabled-link':(!tab_general_active || !(tab_general_active && data_header[0].pha_status<=12 ))}"
+                                                                ng-class="{'disabled-link': isDisableStatus}"
                                                                 ng-change="actionChangeWorkGroup(item)"
                                                                 @* ng-change="actionChange(item,item.seq,'worker_group')" *@
                                                                 ng-model="item.id_worker_group"
@@ -1343,29 +1407,8 @@
                                                                 {{item_m.name}}
                                                             </option>
                                                         </select>
-                                                        <input type="text" class="form-control" 
-                                                            placeholder="Name"
-                                                            ng-class="{'disabled-link':(!tab_general_active || !(tab_general_active && data_header[0].pha_status<=12 ))}"
-                                                            ng-model="item.worker_group"
-                                                            ng-if="item.tasks_type_other == 1"
-                                                            >
                                                     </div>
                                                 </td>
-
-                                                <!----span work/task lenght rowspan=""----->
-                                                @* <td class="align-top rating px-1 d-flex flex-column align-items-center justify-content-start" >
-                                                    <div class="d-flex justify-content-start w-100 ps-2" ng-show="item.id_worker_group">
-                                                        <button class="btn btn-outline-secondary p-0 cursor-pointer col-auto" style="color: #2445fc; background-color: #f1f2f4; border-color: #f1f2f4;"
-                                                                ng-click="openDataEmployeeAdd(item,'worker')">
-                                                            <span class="far fa-address-book fa-lg pe-1"></span>Add Workers
-                                                        </button>
-
-                                                    </div>  
-                                                    <div class="d-flex justify-content-start w-100 ps-2"
-                                                         ng-repeat="workers in data_workers">
-                                                        <p class="text-1100 text-start fw-bold">{{workers.user_displayname}}</p>
-                                                    </div>
-                                                </td> *@
 
                                                 <!----span work/task lenght rowspan=""----->
                                                 <td class="align-top status text-center px-1" ><!----span same id work group? same no. ----->
@@ -1390,7 +1433,7 @@
                                                                             ng-class="{'d-none': !(tab_general_active && item.tasks_type_other == 0)}"
                                                                             >
                                                                             <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 p-1" 
-                                                                                    @* ng-class="{'disabled-link':(!tab_general_active || !(tab_general_active && data_header[0].pha_status<=12 ))}" *@
+                                                                                    ng-class="{'disabled-link': isDisableStatus}"
                                                                                     type="button" 
                                                                                     data-bs-toggle="dropdown" 
                                                                                     data-boundary="window" 
@@ -1421,7 +1464,7 @@
                                                             </div>
                                                         </div>
                                                         <input class="form-control rounded-1" 
-                                                            @* ng-class="{'disabled-link':(!tab_general_active || !(tab_general_active && data_header[0].pha_status<=12 ))}"  *@
+                                                            ng-class="{'disabled-link': isDisableStatus}" 
                                                             type="text" 
                                                             placeholder="Work or Task" 
                                                             ng-model="item_d.descriptions"
@@ -1437,7 +1480,7 @@
                                                             data-toggle="tooltip" 
                                                             data-placement="top" 
                                                             title="Copy Description of Work or Tasks"
-                                                            ng-disabled="(!tab_general_active || !(tab_general_active && data_header[0].pha_status<=12 ))"
+                                                            ng-disabled="isDisableStatus"
                                                             ng-click=copyDescription(item)>
                                                             <span class="fas fa-copy fa-lg"></span>
                                                             Copy
@@ -1631,7 +1674,7 @@
                                                             ng-class="{'unbox': (item.worksheet[item.worksheet.length - 1].seq == hazard.seq)}">
                                                             <select class="form-select form-select-sm rounded-1" 
                                                                     ng-if="tab_worksheet_active"
-                                                                    ng-class="{'disabled-link':(!tab_worksheet_active)}"
+                                                                    ng-class="{'disabled-link': isDisableStatus}"
                                                                     ng-change="actionChangeFrequencyLevel(hazard)"
                                                                     ng-model="hazard.id_frequency_level" 
                                                                     style="min-width: 100px; font-size: 10.24px;">
@@ -1645,15 +1688,16 @@
                                                     <td class="td-custom " >
                                                        <div class=" box"  
                                                             ng-repeat="hazard in item.worksheet"
-                                                            ng-class="{'unbox': (item.worksheet[item.worksheet.length - 1].seq == hazard.seq)}">
+                                                            ng-class="{
+                                                                'disabled-link': isDisableStatus,
+                                                                'unbox': (item.worksheet[item.worksheet.length - 1].seq == hazard.seq)}">
                                                             <div class="d-flex align-items-center gap-2">
                                                                 <input class="form-control form-control-sm placeholder-right" 
                                                                     style="min-width: 100px; font-size: 10.24px;"
                                                                     type="text" 
                                                                     placeholder=""
                                                                     ng-keyup="processExposure(hazard)"
-                                                                    ng-model="hazard.exposure_band"
-                                                                >
+                                                                    ng-model="hazard.exposure_band">
                                                                 ppm
                                                             </div>
                                                        </div>
@@ -1709,13 +1753,15 @@
                                                     <td class="td-custom " >
                                                         <div class="box" 
                                                             ng-repeat="hazard in item.worksheet"
-                                                            ng-class="{'unbox': (item.worksheet[item.worksheet.length - 1].seq == hazard.seq)}">
+                                                            ng-class="{
+                                                                'disabled-link': isDisableStatus,
+                                                                'unbox': (item.worksheet[item.worksheet.length - 1].seq == hazard.seq)}">
                                                              <textarea class="form-control form-control-sm" 
                                                                 rows="2" 
                                                                 type="text" 
                                                                 style="width: 200px; height: 100%; font-size: 10.24px;"
                                                                 placeholder="Hierarchy of Control (ALARP)" 
-                                                                ng-disabled="hazard.initial_risk_rating === 'Low' || hazard.initial_risk_rating === 'Acceptable Risk'"
+                                                                ng-disabled="(hazard.initial_risk_rating === 'Low' || hazard.initial_risk_rating === 'Acceptable Risk')"
                                                                 ng-style="{ 'background-color': hazard.initial_risk_rating === 'Low' || hazard.initial_risk_rating === 'Acceptable Risk' ? '#f2f2f2' : 'inherit'}"
                                                                 ng-change="actionChangeControl(hazard)"
                                                                 ng-model="hazard.hierarchy_of_control">
@@ -1727,7 +1773,9 @@
                                                         <div class="box" 
                                                             ng-repeat="(idx,hazard) in item.worksheet"
                                                             ng-class="{'unbox': (item.worksheet[item.worksheet.length - 1].seq == hazard.seq)}">
-                                                            <div class="d-flex gap-2 mb-2" style="min-width: max-content;">
+                                                            <div class="d-flex gap-2 mb-2" 
+                                                                style="min-width: max-content;"
+                                                                ng-class="{'disabled-link': isDisableStatus}">
                                                                 <input type="radio" 
                                                                     name="ef-{{index}}-{{idx}}" 
                                                                     id="effective-{{index}}-{{idx}}"
@@ -1740,7 +1788,9 @@
                                                                     ng-model="hazard.effective">
                                                                 <label for="effective-{{index}}-{{idx}}">Effective</label>
                                                             </div>
-                                                            <div class="d-flex gap-2" style="min-width: max-content;">
+                                                            <div class="d-flex gap-2" 
+                                                                style="min-width: max-content;"
+                                                                ng-class="{'disabled-link': isDisableStatus}">
                                                                 <input type="radio" 
                                                                     name="ef-{{index}}-{{idx}}" 
                                                                     id="ineffective-{{index}}-{{idx}}"
@@ -1762,7 +1812,7 @@
                                                             ng-class="{'unbox': (item.worksheet[item.worksheet.length - 1].seq == hazard.seq)}">
                                                             <select class="form-select form-select-sm rounded-1" 
                                                                 ng-if="tab_worksheet_active"
-                                                                ng-class="{'disabled-link':(!tab_worksheet_active)}"
+                                                                ng-class="{'disabled-link': isDisableStatus}"
                                                                 @* ng-change="actionChangeWorksheet(item,item.seq,'frequency_level')" *@
                                                                 ng-change="actionChangeFrequencyLevel(hazard)"
                                                                 ng-model="hazard.residual_risk_rating" 
@@ -1781,7 +1831,9 @@
                                                     <td class="td-custom" >
                                                         <div class="box" 
                                                         ng-repeat="hazard in item.worksheet"
-                                                         ng-class="{'unbox': (item.worksheet[item.worksheet.length - 1].seq == hazard.seq)}">
+                                                         ng-class="{
+                                                            'disabled-link': isDisableStatus,
+                                                            'unbox': (item.worksheet[item.worksheet.length - 1].seq == hazard.seq)}">
                                                             <textarea class="form-control form-control-sm " 
                                                                 rows="2" 
                                                                 type="text"
@@ -1804,6 +1856,7 @@
                     @* <!-- manage recment start--> *@
                     <div class="" ng-class="{
                         'tab-pane fade show active':(action_part==6),
+                        'tab-pane fade show active':(tabs[4].isActive),
                         'tab-pane fade':(action_part!==6)}"
                          id="tab-manage" role="tabpanel" aria-labelledby="manage-tab">
                         <div class=" border-bottom border-200 my-0" id="NodeTable">
@@ -1819,7 +1872,7 @@
                                             <th class=" align-middle text-center" colspan="2" rowspan="1">
                                                 <b class="text-danger"> * </b>RISK RATING
                                             </th>
-                                            @* <th class=" align-middle" colspan="1" rowspan="2" ng-if="data_header[0].pha_status >12">Document File</th> *@
+                                            @* <th class=" align-middle" colspan="1" rowspan="2" ng-if="isDisableStatus">Document File</th> *@
                                             <th class=" align-middle text-center" colspan="1" rowspan="2">Recommendation</th>
                                             <th class=" align-middle text-center" colspan="1" rowspan="2">Action Owner</th>
                                             <th class=" align-middle text-center" colspan="1" rowspan="2">Action<br />Status<br />(Items)</th>
@@ -1929,7 +1982,7 @@
                                                 <div class="box-recom" ng-repeat="ws in item.worksheet | filter: filterInitialRiskRating">
                                                     <select class="form-select form-select-sm rounded-1" 
                                                         ng-if="tab_worksheet_active && ws.action_status == 'Open'"
-                                                        ng-class="{'disabled-link':(!tab_worksheet_active)}"
+                                                        ng-class="{'disabled-link': isDisableStatus}"
                                                         ng-change="actionChangeFrequencyLevel(ws)"
                                                         ng-model="ws.residual_risk_rating" 
                                                         style="min-width: 100px; font-size: 10.24px;">
@@ -1959,31 +2012,34 @@
                                             <td class="" >
                                                 <div class="box-recom " ng-repeat="ws in item.worksheet | filter: filterInitialRiskRating">
                                                     <textarea class="form-control form-control-sm " 
-                                                            rows="2" 
-                                                            type="text"
-                                                                style="width: 200px; height: 100%; font-size: 10.24px;"
-                                                            placeholder="Comments"
-                                                            ng-model="ws.recommendations">
+                                                        ng-class="{'disabled-link': isDisableStatus}"
+                                                        rows="2" 
+                                                        type="text"
+                                                        style="width: 200px; height: 100%; font-size: 10.24px;"
+                                                        placeholder="Comments"
+                                                        ng-model="ws.recommendations">
                                                     </textarea>
                                                 </div>
                                             </td>                                            
 
                                             <td class="">
-                                                <div class="box-recom " ng-repeat="ws in item.worksheet | filter: filterInitialRiskRating"
-                                                        style="width: 200px; overflow: hidden;">
-                                                    <div class="d-flex justify-content-start w-100" ng-show="item.id_worker_group">
+                                                <div class="box-recom " 
+                                                    ng-repeat="ws in item.worksheet | filter: filterInitialRiskRating"
+                                                    style="width: 200px; overflow: hidden;">
+                                                    <div class="d-flex justify-content-center w-100" ng-show="item.id_worker_group">
                                                         <button class="btn btn-outline-secondary p-1 cursor-pointer col-auto" 
+                                                            ng-class="{'disabled-link': isDisableStatus}"
                                                             style="color: #2445fc; background-color: #f1f2f4; border-color: #f1f2f4;"
                                                             ng-click="openDataEmployeeAdd(ws,'manage')">
                                                             <span class="far fa-address-book fa-lg pe-1"></span>
                                                             Add action owner
                                                         </button>
                                                     </div>  
-                                                    <p class="text-start fw-bold p-2">{{ws.responder_user_displayname}}</p>
+                                                    <p class="text-center fw-bold p-2">{{ws.responder_user_displayname}}</p>
                                                 </div>
                                             </td>
 
-                                            <td class="align-top rating white-space-nowrap" ng-if="data_header[0].pha_status >12">
+                                            @* <td class="align-top rating white-space-nowrap" ng-if="data_header[0].pha_status >12">
                                                 <div class="ms-3 text-start d-none">
                                                     <a class="nametext ms-3 filename-text me-2 cursor-pointer" 
                                                         ng-click="downloadFileOwner(item)"
@@ -2012,7 +2068,7 @@
                                                         <i class="far fa-file-pdf text-danger"></i>The Reviewer has attached the file.
                                                     </a>
                                                 </div>
-                                            </td>
+                                            </td> *@
 
                                             <td class="align-top rating white-space-nowrap">
                                                 <div class="box-recom " ng-repeat="ws in item.worksheet | filter: filterInitialRiskRating">
@@ -2024,7 +2080,9 @@
 
                                             <td class="align-top rating white-space-nowrap">
                                                 <div class="box-recom" ng-repeat="ws in item.worksheet | filter: filterInitialRiskRating">
-                                                    <input type="date" class="form-control datetimepicker rounded-1" 
+                                                    <input type="date" 
+                                                        class="form-control datetimepicker rounded-1" 
+                                                        ng-class="{'disabled-link': isDisableStatus}"
                                                         placeholder="Start Date dd/mm/yyyy"
                                                         ng-model="ws.estimated_start_date"
                                                         max="{{ws.estimated_end_date | date:'yyyy-MM-dd' }}"
@@ -2038,7 +2096,9 @@
 
                                             <td class="align-top rating white-space-nowrap">
                                                 <div class="box-recom" ng-repeat="ws in item.worksheet | filter: filterInitialRiskRating">
-                                                    <input type="date" class="form-control datetimepicker rounded-1" 
+                                                    <input type="date" 
+                                                        class="form-control datetimepicker rounded-1" 
+                                                        ng-class="{'disabled-link': isDisableStatus}"
                                                         placeholder="End Date dd/mm/yyyy"
                                                         ng-model="ws.estimated_end_date"
                                                         ng-min="ws.estimated_start_date | date:'yyyy-MM-dd'"
@@ -2129,7 +2189,7 @@
                                                             </div>
                                                         </div>
                                                         <select class="form-control"
-                                                                ng-class="{'disabled-link':(!tab_general_active || !(tab_general_active && data_header[0].pha_status<=12 ))}"
+                                                                ng-class="{'disabled-link': isDisableStatus}"
                                                                 ng-change="actionChangeWorkGroup(item)"
                                                                 disabled
                                                                 ng-model="item.id_worker_group"
@@ -2158,6 +2218,7 @@
                                                     <div class="d-flex justify-content-start flex-column px-4 w-100">
                                                         <div class="py-1 mb-3">
                                                             <button class="btn btn-outline-secondary p-1 cursor-pointer col-auto" 
+                                                                ng-class="{'disabled-link': isDisableStatus}"
                                                                 style="color: #2445fc; background-color: #f1f2f4; border-color: #f1f2f4;"
                                                                 ng-click="openDataEmployeeAdd(item,'worker')">
                                                                 <span class="far fa-address-book fa-lg pe-1"></span>
