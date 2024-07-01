@@ -707,6 +707,23 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     function validSessions(){
         let isValid = true;
+        for (let i = 0; i < $scope.data_session.length; i++) {
+            // MEMBER
+            if($scope.data_memberteam.length < 1 || !$scope.data_memberteam[0].user_displayname) {
+                $scope.goback_tab = 'general'
+                $scope.validMessage = 'Please select a valid Member Team/Adttendees'
+                return ;
+            }
+            // ASSESMENT  
+            if ($scope.data_general[0].expense_type == '5YEAR') {
+                if ($scope.data_approver.length < 1 || !$scope.data_approver[0].user_displayname) {
+                    $scope.goback_tab = 'general'
+                    $scope.validMessage = 'Please select a valid Assesment Team Leader'
+                    return ;
+                }
+            }
+        }
+        // SESSION DATE TIME
         $scope.data_session.forEach(function(session) {
           session.validated = true;
     
@@ -738,6 +755,22 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
           return true;
         }
         /*for (let i = 0; i < $scope.data_session.length; i++) {
+        // MEMBER
+        if($scope.data_memberteam.length < 1 || !$scope.data_memberteam[0].user_displayname) {
+            $scope.goback_tab = 'general'
+            $scope.validMessage = 'Please select a valid Member Team/Adttendees'
+            return ;
+        }
+        // ASSESMENT  
+        if ($scope.data_general[0].expense_type == '5YEAR') {
+            if ($scope.data_approver.length < 1 || !$scope.data_approver[0].user_displayname) {
+                $scope.goback_tab = 'general'
+                $scope.validMessage = 'Please select a valid Assesment Team Leader'
+                return ;
+            }
+        }
+        // SESSION DATE TIME
+        for (let i = 0; i < $scope.data_session.length; i++) {
             if (!$scope.data_session[i].meeting_date ||
                 !$scope.data_session[i].meeting_start_time_hh ||
                 !$scope.data_session[i].meeting_start_time_mm ||
@@ -843,6 +876,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         
         return true
     }
+
 
     function arr_def() {
         $scope.object_items_name = null;

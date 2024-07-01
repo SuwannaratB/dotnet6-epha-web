@@ -683,7 +683,7 @@
 
 
                                                                 <span class="col-md-1 p-1 d-flex">
-                                                                    <label class="form-label p-0 pt-2">Time</label>
+                                                                    <label class="form-label p-0 pt-2"><b class="text-danger"> * </b>Time</label>
                                                                 </span>
 
                                                                 <span class="col-md-3  p-1 d-flex" ng-class="{'input-invalid': !item.meeting_date && item.validated}">
@@ -724,7 +724,7 @@
                                                                 </span>
 
                                                                 <span class="col-md-1 p-1 d-flex">
-                                                                    <label class="form-label p-0 pt-2">To</label>
+                                                                    <label class="form-label p-0 pt-2"><b class="text-danger"> * </b>To</label>
                                                                 </span>
 
                                                                 <span class="col-md-3 p-1 d-flex" ng-class="{'input-invalid': !item.meeting_date && item.validated}">
@@ -2802,9 +2802,10 @@
                                             <td class="">
                                                 <a class=" text-decoration-none d-flex align-items-center">
                                                     <div class="avatar avatar-m" style="height: 20px; width: 20px;">
-                                                        <img ng-if="item.employee_img " class="rounded-circle" 
-                                                            
-                                                                ng-src="../../{{ item.employee_img }}" alt=""><!--- ng-class="{ 'skeleton': loadingData }"---->
+                                                        <img ng-if="item.employee_img " 
+                                                            class="rounded-circle" 
+                                                            ng-src="../../{{ item.employee_img }}" 
+                                                            alt="">
                                                     </div>
                                                     <p class="mb-0 ms-3 text-1100 fw-bold"><!---ng-class="{ 'skeleton skeleton-text skeleton-text__body': loadingData }"---->
                                                         {{item.employee_displayname}} 
@@ -3123,10 +3124,7 @@
         </div>
     </div>
     <!--Modal Employee Check End-->
-    @*
 
-
-    *@
     @* Save *@
     <!--Modal File Start-->
     <div class="modal fade" id="modalMsgFile" tabindex="-1" aria-labelledby="modalMsgFileLabel"
