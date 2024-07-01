@@ -2557,7 +2557,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         return arr_clone;
     }    
     function running_index_level1_lv1(arr_items, iNo, iRow, newInput) {
-        console.log("newInput",newInput)
         arr_items.sort((a, b) => a.index_rows - b.index_rows);
         var first_row = true;
         var iNoNew = iNo;
@@ -2585,9 +2584,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
 
         arr_items.sort((a, b) => a.index_rows - b.index_rows);
-        
-        console.log("arr_items",arr_items)
-
 
     }
     function running_no_level1_lv1(arr_items, iNo, iRow, newInput) {
@@ -3293,6 +3289,23 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         var seq_consequences = item.seq_consequences;
         var seq_category = item.seq_category;
 
+       /* var arrCheck = $filter('filter')($scope.data_listworksheet, function (_item) {
+            return (_item.seq_list_system == seq_list_system && _item.index_rows === index);
+        });
+
+        console.log("index",index)
+
+        $scope.data_listworksheet[index].action_change = 1;
+        $scope.data_listworksheet[index].action_type = 'Delete';
+
+        if ($scope.data_listworksheet[index].action_type === 'Delete') {
+            $scope.data_listworksheet_delete.push($scope.data_listworksheet[index]);
+        }
+
+        $scope.data_listworksheet.splice([index], 1);
+
+        console.log("$scope.data_listworksheet",$scope.data_listworksheet)*/
+
         //กรณีที่เป็นรายการเดียวไม่ต้องลบ ให้ cleare field 
         var arrCheck = [];
         if (true) {
@@ -3518,9 +3531,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             running_no_consequences(seq_list_system, seq_list_sub_system, seq_causes);
         }
     }
-    $scope.adddata_listworksheet_lv1 = function (row_type, item, index) {
 
-        console.log(item)
+
+    $scope.adddata_listworksheet_lv1 = function (row_type, item, index) {
         if (true) {
             //if (row_type.indexOf('list_system') > -1) { row_type = 'list'; }
             //else if (row_type.indexOf('list_sub_system') > -1) { row_type = 'listsub'; }
@@ -3549,13 +3562,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 item.seq_category = $scope.MaxSeqdata_listworksheetcategory;
             }
         }
-
-        //this row thaa click to add new data
-        console.log("list_system_no",item.list_system_no)
-        console.log("list_sub_system_no",item.list_sub_system_no)
-        console.log("causes_no",item.causes_no)
-        console.log("consequences_no",item.consequences_no)
-        console.log("category_no",item.category_no)
 
         var seq_list = item.id_list;
         //seq_workstep, seq_taskdesc, seq_potentailhazard, seq_category, seq_category
@@ -3633,6 +3639,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
         }
 
+
         $scope.MaxSeqdata_listworksheet = Number($scope.MaxSeqdata_listworksheet) + 1;
         var xseq = $scope.MaxSeqdata_listworksheet;
 
@@ -3682,15 +3689,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             category_no += 1;
         }
 
-
-        console.log("=======================After set new no===================")
-        console.log("row_type",row_type)
-        console.log("list_system_no",list_system_no)
-        console.log("list_sub_system_no",list_sub_system_no)
-        console.log("causes_no",causes_no)
-        console.log("consequences_no",consequences_no)
-        console.log("category_no",category_no)
-
         var arr_list = $filter('filter')($scope.data_tasklist, function (_item) {
             return (_item.seq == seq_list);
         });
@@ -3705,7 +3703,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         newInput.seq_list = seq_list;// $scope.selectedItemListView;
         newInput.list_no = list_no;
 
-
         newInput.seq_list_system = seq_list_system;
         newInput.seq_list_sub_system = seq_list_sub_system;
         newInput.seq_causes = seq_causes;
@@ -3715,11 +3712,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         newInput.index_rows = (index_rows + 0.5);
         newInput.no = (no + 0.5);
         newInput.list_system_no = list_system_no;
-        console.log("now will set list_system_no",list_system_no)
-        console.log("now will set newInput.list_system_no",newInput.list_system_no)
-        newInput.list_sub_system_no = list_sub_system_no;
-        console.log("now will set list_system_no",list_sub_system_no)
-        console.log("now will set newInput.list_system_no",newInput.list_sub_system_no)        
+        newInput.list_sub_system_no = list_sub_system_no;     
         newInput.causes_no = causes_no;
         newInput.consequences_no = consequences_no;
         newInput.category_no = category_no;
@@ -3728,67 +3721,231 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         newInput.action_change = 1;
         newInput.action_status = 'Open';
 
+        
         //copy detail row befor
         if (row_type == "list_system") {
         }
         if (row_type == "list_sub_system") {
-            newInput.list_system = item.list_system;
+            var data = $scope.data_listworksheet.filter(function(item) {
+                return item.list_system_no == list_system_no;
+            });
+            
+
+            newInput.list_system = data[0].list_system;
         }
         else if (row_type == "causes") {
-            newInput.list_system = item.list_system;
-            newInput.list_sub_system = item.list_sub_system;
+            var data = $scope.data_listworksheet.filter(function(item) {
+                return item.list_system_no == list_system_no && item.list_sub_system_no == list_sub_system_no ;
+            });
+
+            newInput.list_system = data[0].list_system;
+            newInput.list_sub_system = data[0].list_sub_system;
         }
         else if (row_type == "consequences") {
-            newInput.list_system = item.list_system;
-            newInput.list_sub_system = item.list_sub_system;
-            newInput.causes = item.causes;
+            var data = $scope.data_listworksheet.filter(function(item) {
+                return item.list_system_no == list_system_no && item.list_sub_system_no == list_sub_system_no 
+                        && item.causes_no == causes_no;
+            });
+            newInput.list_system = data[0].list_system;
+            newInput.list_sub_system = data[0].list_sub_system;
+            newInput.causes = data[0].causes;
         }
         else if (row_type == 'category') {
-            newInput.list_system = item.list_system;
-            newInput.list_sub_system = item.list_sub_system;
-            newInput.causes = item.causes;
-            newInput.consequences = item.consequences;
+            var data = $scope.data_listworksheet.filter(function(item) {
+                return item.list_system_no == list_system_no && item.list_sub_system_no == list_sub_system_no 
+                        && item.causes_no == causes_no && item.consequences_no == consequences_no;
+            });
+
+            newInput.list_system = data[0].list_system;
+            newInput.list_sub_system = data[0].list_sub_system;
+            newInput.causes = data[0].causes;
+            newInput.consequences = data[0].consequences;
         }
         $scope.selectdata_listworksheet = xseq;
 
-        running_index_worksheet(seq);
-        index = index_rows;
+        //running_index_worksheet(seq);
+        //index = index_rows;
+        //index_data = index;
+        //let index_to_add = $scope.findInsertionIndex($scope.data_listworksheet, newInput, $scope.compareItems);
+        //$scope.data_listworksheet.splice(index_to_add, 0, newInput);
+        console.log($scope.data_listworksheet);
+        let index_toinsert = $scope.findInsertionIndex($scope.data_listworksheet, newInput, $scope.compareItems);
+        $scope.data_listworksheet.splice(index_toinsert, 0, newInput);
+        console.log('Updated array:', $scope.data_listworksheet);
+        //running_index_level1_lv1($scope.data_listworksheet, iNo, index, newInput);
 
-        
-        running_index_level1_lv1($scope.data_listworksheet, iNo, index, newInput);
-        console.log(iNo, index, newInput)
-
-        if (row_type == "list_system") {
+        if (row_type === "list_system") {
             running_no_list(seq_list);
-        } else if (row_type == "list_sub_system") {
-            running_no_listsub(seq_list_system);
-        } else if (row_type == "causes") {
-            running_no_causes(seq_list_system, seq_list_sub_system);
-        } else if (row_type == "consequences") {
-            running_no_consequences(seq_list_system, seq_list_sub_system, seq_causes);
+        } else if (row_type === "list_sub_system") {
+            const list_system_no = item.list_system_no;
+            
+            var arr_items = $scope.data_listworksheet.filter(function(item) {
+                return item.list_system_no == list_system_no && 
+                       (item.row_type === "list_sub_system" || item.row_type === "list_system");
+            })
+
+            arr_items.sort((a, b) => a.index_rows - b.index_rows);
+            
+            arr_items.forEach(function(filteredItem, index) {
+                    filteredItem.list_sub_system_no = index + 1;
+            });
+            
+            arr_items.sort((a, b) => a.list_sub_system_no - b.list_sub_system_no);
+
+        } else if (row_type === "causes") {
+            const list_system_no = item.list_system_no;
+            const list_sub_system_no = item.list_sub_system_no;
+        
+            var arr_items = $scope.data_listworksheet.filter(function(item) {
+                return item.list_system_no == list_system_no && 
+                       item.list_sub_system_no == list_sub_system_no &&
+                       (item.row_type === "list_system" || item.row_type === "list_sub_system" || item.row_type === "causes");
+            });
+
+
+            arr_items.sort((a, b) => a.index_rows - b.index_rows);
+
+            console.log("arr_items",arr_items)
+
+
+            arr_items.forEach(function(filteredItem, index) {
+                filteredItem.causes_no = index + 1;
+            });
+
+            arr_items.sort((a, b) => a.causes_no - b.causes_no);
+
+        } else if (row_type === "consequences") {
+            const list_system_no = item.list_system_no;
+            const list_sub_system_no = item.list_sub_system_no;
+            const causes_no = item.causes_no;
+        
+            var arr_items = $scope.data_listworksheet.filter(function(item) {
+                return item.list_system_no == list_system_no && 
+                       item.list_sub_system_no == list_sub_system_no && 
+                       item.causes_no == causes_no &&
+                       (item.row_type === "list_system" || item.row_type === "list_sub_system" || item.row_type === "causes" || item.row_type === "consequences");
+            });
+            arr_items.sort((a, b) => a.index_rows - b.index_rows);
+        
+            arr_items.forEach(function(filteredItem, index) {
+                filteredItem.consequences_no = index + 1;
+            });
+
+            arr_items.sort((a, b) => a.consequences_no - b.consequences_no);
+
+
+        } else if (row_type === "category") {
+            const list_system_no = item.list_system_no;
+            const list_sub_system_no = item.list_sub_system_no;
+            const causes_no = item.causes_no;
+            const consequences_no = item.consequences_no;
+        
+            var arr_items = $scope.data_listworksheet.filter(function(item) {
+                return item.list_system_no == list_system_no && 
+                       item.list_sub_system_no == list_sub_system_no && 
+                       item.causes_no == causes_no && 
+                       item.consequences_no == consequences_no &&
+                       (item.row_type === "list_system" || item.row_type === "list_sub_system" || item.row_type === "causes" || item.row_type === "consequences" || item.row_type === "category");
+            });
+        
+            arr_items.sort((a, b) => a.index_rows - b.index_rows);
+
+            arr_items.forEach(function(filteredItem, index) {
+                filteredItem.category_no = index + 1;
+            });
+            arr_items.sort((a, b) => a.category_no - b.category_no);
+
         }
-    
 
-        console.log("After set this data to use",$scope.data_listworksheet)
-
-        //re-sort all again
         $scope.data_listworksheet.sort((a, b) => {
+            console.log('Comparing:', a, b);
+      
             if (a.list_system_no !== b.list_system_no) {
+              console.log(`Comparing list_system_no: ${a.list_system_no} - ${b.list_system_no}`);
               return a.list_system_no - b.list_system_no;
-            } else if (a.list_sub_system_no !== b.list_sub_system_no) {
-              return a.list_sub_system_no - b.list_sub_system_no;
-            } else if (a.causes_no !== b.causes_no) {
-                return a.causes_no - b.causes_no;
-            } else if (a.consequences_no !== b.consequences_no) {
-                return a.consequences_no - b.consequences_no;
-            }  else {
-              return a.category_no - b.category_no;
             }
+            if(a.list_system_no === b.list_system_no){
+                if (a.list_sub_system_no !== b.list_sub_system_no) {
+                    console.log(`Comparing list_sub_system_no: ${a.list_sub_system_no} - ${b.list_sub_system_no}`);
+                    return a.list_sub_system_no - b.list_sub_system_no;
+                }
+            }
+
+            if(a.list_system_no === b.list_system_no && a.list_sub_system_no === b.list_sub_system_no){
+                if (a.causes_no !== b.causes_no) {
+                    console.log(`Comparing causes_no: ${a.causes_no} - ${b.causes_no}`);
+                    return a.causes_no - b.causes_no;
+                  }
+            }
+
+            if(a.list_system_no === b.list_system_no && a.list_sub_system_no === b.list_sub_system_no && a.causes_no === b.causes_no){
+                if (a.consequences_no !== b.consequences_no) {
+                    console.log(`Comparing consequences_no: ${a.consequences_no} - ${b.consequences_no}`);
+                    return a.consequences_no - b.consequences_no;
+                  }
+            }
+
+            if(a.list_system_no === b.list_system_no && a.list_sub_system_no === b.list_sub_system_no && a.causes_no === b.causes_no && a.consequences_no === b.consequences_no){
+                if (a.category_no !== b.category_no) {
+                    console.log(`Comparing consequences_no: ${a.consequences_no} - ${b.consequences_no}`);
+                    return a.category_no - b.category_no;
+                  }
+            }            
+
         });
+
+        $scope.data_listworksheet.forEach(function(item, index) {item.index_rows = index;});
+
 
         apply();
 
     }
+
+
+        $scope.compareItems = function(a, b) {
+        if (a.list_system_no !== b.list_system_no) {
+          return a.list_system_no - b.list_system_no;
+        }
+        if (a.list_sub_system_no !== b.list_sub_system_no) {
+          return a.list_sub_system_no - b.list_sub_system_no;
+        }
+        if (a.causes_no !== b.causes_no) {
+          return a.causes_no - b.causes_no;
+        }
+        if (a.consequences_no !== b.consequences_no) {
+          return a.consequences_no - b.consequences_no;
+        }
+        return a.category_no - b.category_no;
+      };
+  
+      // Function to find the correct insertion index
+      $scope.findInsertionIndex = function(arr, item, compareFunction) {
+        let low = 0;
+        let high = arr.length;
+  
+        while (low < high) {
+          let mid = Math.floor((low + high) / 2);
+          console.log(`low: ${low}, mid: ${mid}, high: ${high}`);
+          console.log(`Comparing arr[${mid}]:`, arr[mid], 'with item:', item);
+          let comparison = compareFunction(arr[mid], item);
+          console.log('Comparison result:', comparison);
+          if (comparison < 0) {
+            low = mid + 1;
+          } else {
+            high = mid;
+          }
+        }
+        
+        // Final check
+        if (high < arr.length && compareFunction(arr[high], item) < 0) {
+          console.log('Final check indicates high index should be adjusted');
+          low = high + 1;
+        }
+  
+        console.log(`Final insertion index: ${low}`);
+        return low;
+      };
+
     $scope.copyList = function (level, seq) {
         if (level && seq) {
             $scope.data_copy = $scope.data_listworksheet.filter(function(item) {
@@ -3901,6 +4058,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             category_no = 1;
         }
 
+        console.log("row_type",row_type)
         var arr_list = $filter('filter')($scope.data_tasklist, function (_item) {
             return (_item.seq == seq_list);
         });
@@ -3941,7 +4099,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         console.clear();
         console.log($scope.data_listworksheet);
 
-        running_index_level1_lv1($scope.data_listworksheet, iNo, index, newInput);
+        //running_index_level1_lv1($scope.data_listworksheet, iNo, index, newInput);
 
         if (!(row_type == "cat")) {
             running_no_list(seq_list);
@@ -3970,58 +4128,53 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         return _index;
     }
 
+    function running_All_index_worksheet(def_seq) {
+        $scope.data_listworksheet.sort((a, b) => a.index_rows - b.index_rows);
+
+        var _index = 0;
+        for (var i = 0; i < $scope.data_listworksheet.length; i++) {
+            $scope.data_listworksheet[i].index_rows = i;
+
+            if (def_seq != '') {
+                if ($scope.data_listworksheet[i].seq == def_seq) {
+                    _index = i;//กรณีที่เป็น node > 1
+                }
+            }
+        }
+
+        return _index;
+    }
+
     function updateIndices(data, key) {
     for (let i = 0; i < data.length; i++) {
         data[i][key] = i + 1;
     }
 }
 
-function running_no_list(seq_list) {
-    // Filter items that match seq_list and row_type 'list_system'
-    var arr_items = $filter('filter')($scope.data_listworksheet, function (item) {
-        return ((item.seq_list == seq_list && item.row_type == 'list_system'));
-    });
+    function running_no_list(seq_list) {
+        console.log("seq_list", seq_list);
+        
+        // Filter items that match seq_list and row_type 'list_system'
+        var arr_items = $filter('filter')($scope.data_listworksheet, function (item) {
+            return ((item.seq_list == seq_list && item.row_type == 'list_system'));
+        });
 
-    // Sort items based on the 'no' property
-    arr_items.sort((a, b) => a.no - b.no);
+        // Sort items based on the 'no' property
+        arr_items.sort((a, b) => a.no - b.no);
 
-    console.log("Filtered and sorted arr_items by no:", arr_items);
+        var iNoNew = 1;
 
-    var iNoNew = 1;
-
-    // Update list_system_no and ensure the first row has the correct row_type
-    for (let i = 0; i < arr_items.length; i++) {
-        arr_items[i].list_system_no = iNoNew;
-        iNoNew++;
-        if (i == 0) { 
-            arr_items[i].row_type = 'list_system'; 
-        } else { 
-            arr_items[i].row_type = ''; 
+        // Update list_system_no and ensure the first row has the correct row_type
+        for (let i = 0; i < arr_items.length; i++) {
+            arr_items[i].list_system_no = iNoNew;
+            iNoNew++;
         }
+        arr_items.sort((a, b) => a.list_system_no - b.list_system_no);
+
+
     }
-
-    console.log("Updated arr_items with list_system_no:", arr_items);
-
-    // Filter items again to get all items matching seq_list
-    arr_items = $filter('filter')($scope.data_listworksheet, function (item) {
-        return (item.seq_list == seq_list);
-    });
-
-    console.log("Re-filtered arr_items:", arr_items);
-
-    iNoNew = 1;
-
-    // Update the 'no' property for all filtered items
-    for (let i = 0; i < arr_items.length; i++) {
-        arr_items[i].no = iNoNew;
-        iNoNew++;
-    }
-
-    console.log("Final arr_items with updated no:", arr_items);
-}
 
     function running_no_listsub(seq_list, seq_list_system) {
-        //row_type;//list,listsub,causes,consequences        
         var arr_items = $filter('filter')($scope.data_listworksheet, function (item) {
             return (item.seq_list == seq_list
                 && item.seq_list_system == seq_list_system
@@ -4729,6 +4882,55 @@ function running_no_list(seq_list) {
                         }
                     }
 
+                    if (true) {
+                        var arr_chk = $scope.data_listworksheet;
+                    
+                        var bCheckValid_Worksheet = false;
+                    
+                        //check หา 
+                        for (var i = 0; i < arr_chk.length; i++) {
+                            let item = arr_chk[i];                        
+                            var valid = false;
+                            if ((item['list_system'] !== undefined && item['list_system'] !== null && item['list_system'] !== '') ||
+                                (item['list_sub_system'] !== undefined && item['list_sub_system'] !== null && item['list_sub_system'] !== '') ||
+                                (item['causes'] !== undefined && item['causes'] !== null && item['causes'] !== '')) {
+
+                                // Validate based on the first present field among 'causes', 'consequences', 'category_type'
+                                if (item['list_system'] !== undefined && item['list_system'] !== null && item['list_system'] !== '') {
+                                    valid = validateFields(item, 'list_system', ['list_sub_system','causes','consequences', 'category_type', 'major_accident_event', 'existing_safeguards']);
+                                } else if (item['list_sub_system'] !== undefined && item['list_sub_system'] !== null && item['list_sub_system'] !== '') {
+                                    valid = validateFields(item, 'list_sub_system', ['list_system','causes', 'category_type', 'major_accident_event', 'existing_safeguards']);
+                                } else if (item['causes'] !== undefined && item['causes'] !== null && item['causes'] !== '') {
+                                    valid = validateFields(item, 'causes', ['list_system','list_sub_system','causes', 'consequences', 'major_accident_event', 'existing_safeguards']);
+                                }
+
+                                if(!valid){
+                                    bCheckValid_Worksheet = true; 
+                                }
+
+
+
+                            } /*else {
+                                bCheckValid_Worksheet = false; 
+                                continue; 
+                            }*/
+                        }
+                    
+        
+                        if (bCheckValid_Worksheet) {
+                            $scope.goback_tab = 'worksheet'
+                        
+                            $scope.tabs = $scope.tabs.map(tab => {
+                                tab.isActive = (tab.name === 'worksheet');
+                                return tab;
+                            })
+
+                            set_alert('Warning', 'Please provide valid data in the worksheet');
+                            return; 
+                        }
+                    }
+
+
                     var tag_name = '';
                     if (bCheckValid_Node) { bCheckValid = true; tag_name = 'task'; }
                     else if (bCheckValid_Worksheet) { bCheckValid = true; tag_name = 'worksheet'; }
@@ -4880,6 +5082,64 @@ function running_no_list(seq_list) {
     $scope.cancelEdit = function () {
         return $('#modalEditConfirm').modal('hide');
     } 
+
+    function validateFields(item, mainField, requiredFields) {
+        let valid = true;
+    
+        if (item[mainField] !== null && item[mainField] !== '') {
+            let allFieldsPresent = true;
+    
+            // Check each required field
+            requiredFields.forEach(field => {
+                if (!item[field]) {
+                    allFieldsPresent = true;
+                    valid = false;
+                    console.log(`Missing required field '${field}' in item:`, item);
+                }else{
+                    if(valid){
+                        allFieldsPresent = false;
+                    }
+
+                }
+
+            });
+
+    
+            if (allFieldsPresent) {
+                requiredFields.forEach(field => {
+                    set_valid_items(item[field], 'worksheet-' + field + '-' + item.seq);
+                });
+            }
+        } else {
+
+            valid = false;
+        }
+    
+        return valid;
+    }    
+    
+
+    function validateSelect(field, errorId) {
+        var elementSelector = '.form-label .' + field + ' .choices';
+        var selectElement = document.querySelector(elementSelector);
+        var errorDiv = document.getElementById(errorId);
+    
+        console.log(elementSelector);
+        console.log(selectElement);
+    
+        if (selectElement) {
+            selectElement.classList.add('is-invalid', 'mb-0');
+            var fieldName = (field === 'id_apu') ? 'Area Process Unit' : field;
+    
+            if (errorDiv) {
+                errorDiv.innerText = 'Please select a valid ' + fieldName + '.';
+                errorDiv.style.display = 'block';
+            }
+        } else if (errorDiv) {
+            errorDiv.style.display = 'none';
+        }
+    }
+    
 
     $scope.confirmDialogApprover = function (_item, action) {
 

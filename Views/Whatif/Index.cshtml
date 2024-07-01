@@ -2176,7 +2176,7 @@
                                         <tbody class="">
                                             <tr class="rowwork border border-dashed"
                                                 ng-if="( data_tasklist.length == 1 ? (data_tasklist[0].list == null ? false : true) : true) "
-                                                ng-repeat="item in data_listworksheet | toArray | filter:{id_list : selectedItemListView} | orderBy:'no'">
+                                                ng-repeat="item in data_listworksheet | toArray | filter:{id_list : selectedItemListView} | orderBy:'index_row'">
                                                 @* List system*@
                                                 <td class="align-top border border-light border-end-0  border-start-0  border-top-0 " style="padding: 0 !important;">
                                                     <div class="d-flex align-items-top w-100" ng-if="item.row_type =='list_system'">
