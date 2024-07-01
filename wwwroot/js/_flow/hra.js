@@ -572,33 +572,39 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             return "";
         }
-
         $scope.fileSelectApprover = function (input, file_part) {
-            //drawing, responder, approver
             var file_doc = $scope.data_header[0].pha_no;
-
+        
             const fileInput = input;
             const fileSeq = fileInput.id.split('-')[1];
             const fileInfoSpan = document.getElementById('filename-approver-' + fileSeq);
-
+        
             if (fileInput.files.length > 0) {
                 const file = fileInput.files[0];
                 const fileName = file.name;
                 const fileSize = Math.round(file.size / 1024);
+        
+                console.log("fileSize",fileSize)
+                if (fileSize > 10240) {
+                    fileInfoSpan.textContent = "";
+                    set_alert('Warning', 'File size exceeds 10 MB. Please select a smaller file.');
+                    return;
+                }
+        
                 fileInfoSpan.textContent = `${fileName} (${fileSize} KB)`;
-
+        
                 if (fileName.toLowerCase().indexOf('.pdf') == -1) {
                     fileInfoSpan.textContent = "";
                     set_alert('Warning', 'Please select a PDF file.');
                     return;
                 }
-
+        
                 var file_path = uploadFileApprover(file, fileSeq, fileName, fileSize, file_part, file_doc);
-
             } else {
                 fileInfoSpan.textContent = "";
             }
         }
+        
 
         function uploadFileApprover(file_obj, seq, file_name, file_size, file_part, file_doc) {
 
@@ -700,7 +706,38 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
 
     function validSessions(){
-        for (let i = 0; i < $scope.data_session.length; i++) {
+        let isValid = true;
+        $scope.data_session.forEach(function(session) {
+          session.validated = true;
+    
+          if (!session.meeting_date) {
+            $scope.validMessage = 'Please select a valid Meeting Date';
+            isValid = false;
+          } else if (!session.meeting_start_time_hh) {
+            $scope.validMessage = 'Please select a valid Meeting Start Time HH';
+            isValid = false;
+          } else if (!session.meeting_start_time_mm) {
+            $scope.validMessage = 'Please select a valid Meeting Start Time MM';
+            isValid = false;
+          } else if (!session.meeting_end_time_hh) {
+            $scope.validMessage = 'Please select a valid Meeting End Time HH';
+            isValid = false;
+          } else if (!session.meeting_end_time_mm) {
+            $scope.validMessage = 'Please select a valid Meeting End Time MM';
+            isValid = false;
+          }
+    
+          if (!isValid) {
+            $scope.goback_tab = 'general';
+            return false;
+          }
+        });
+    
+        if (isValid) {
+          $scope.validMessage = '';
+          return true;
+        }
+        /*for (let i = 0; i < $scope.data_session.length; i++) {
             if (!$scope.data_session[i].meeting_date ||
                 !$scope.data_session[i].meeting_start_time_hh ||
                 !$scope.data_session[i].meeting_start_time_mm ||
@@ -719,7 +756,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
         }
         $scope.validMessage = ''
-        return true
+        return true*/
     }
 
     function validDrawing(){
@@ -923,6 +960,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
 
     $scope.changeTab = function (selectedTab) {
+        if (!selectedTab) {
+            $scope.tabs.forEach(item => {
+                if (item.isActive && isShow) {
+                    selectedTab = item.name;
+                }
+            });
+        }
+        
         try {
             if ($scope.data_header[0].pha_status == 11) {
                 // set tab
@@ -2054,8 +2099,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             });
             addDisabledOption(arrText, item);
         });
-        console.log('setup master_hazard_type', $scope.master_hazard_type)
-        console.log('setup hazard', hazard)
         return hazard;
     }
 
@@ -4726,9 +4769,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
             save_data_create(action);
 
-
-            console.log(" $scope.unsavedChanges$scope.unsavedChanges$scope.unsavedChanges$scope.unsavedChanges$scope.unsavedChanges$scope.unsavedChanges", $scope.unsavedChanges)
-
         }
 
         
@@ -4903,10 +4943,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     }
                 }
             } catch {} */
-    
-    
-            console.log("copy_data_general",copy_data_general)
-            
+                
             return angular.toJson(copy_data_general);
         }
         function check_data_session() {
@@ -5573,14 +5610,18 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         function set_alert(header, detail) {
             $scope.Action_Msg_Header = header;
             $scope.Action_Msg_Detail = detail;
-            $('#modalMsg').modal('show');
+            $timeout(function() {
+                $('#modalMsg').modal('show');
+            });
         }
 
         function set_alert_confirm(header, detail) {
             $scope.Action_Msg_Confirm = true;
             $scope.Action_Msg_Header = header;
             $scope.Action_Msg_Detail = detail;
-            $('#modalMsg').modal('show');
+            $timeout(function() {
+                $('#modalMsg').modal('show');
+            });            
         }
     }
 
@@ -6258,9 +6299,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                     tasks.numbers_of_workers = tasks.worker_list.length;
                 }
-                console.log('Add Worker ', newInput)
-                console.log('Add tasks ', tasks)
-                console.log('Add tasks All ',  $scope.data_tasks)
+
+
+
             }
             else if (xformtype == "manage") {
                 var data =  $scope.selectedData;
@@ -6302,11 +6343,19 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 // }
 
                 // console.log("$scope.data_workers",$scope.data_workers)
+            $('#modalEmployeeAdd').modal('hide');
+
             }
             apply();
 
-            $('#modalEmployeeAdd').modal('show');
-    };
+
+            if (xformtype == "manage" || xformtype == "approver_ta3" || xformtype == "edit_approver") {
+                $('#modalEmployeeAdd').modal('hide');
+    
+                $scope.clearFormData();
+            } else {
+                $('#modalEmployeeAdd').modal('show');
+            }    };
 
     $scope.removeDataEmployee = function (seq, seq_session) {
             const actions = $scope.selectDatFormType;
@@ -7122,6 +7171,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $('#modalMatrix_Exposure_Rating').modal('show');
     };
 
+    $scope.openCalendar = function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+    
+        // Trigger click on the input to open the calendar dropdown
+        angular.element(event.currentTarget).find('input').trigger('click');
+    };
+
     
     $scope.Access_check = function(task) {
         // console.log("Checking access for task:", task);
@@ -7139,5 +7196,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         // Default to no access
         return false;
     };
+
+
     
 });

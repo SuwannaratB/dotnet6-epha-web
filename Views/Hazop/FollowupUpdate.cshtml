@@ -921,8 +921,9 @@
                                                     <td class="align-top text-center">
                                                         <div class="box mt-0 p-0" 
                                                             style="width: 60px;"
-                                                            ng-show="canAccess && (item_d.action_status === 'Responed' || item_d.action_status === 'Open')"
+                                                            ng-show="canAccess && item_d.reviewer_action_type !== '2'"
                                                             ng-class="{'unbox': (item.worksheet[item.worksheet.length - 1].seq == hazard.seq)}">
+                                                            {{reviewer_action_type}}
                                                             <select class="form-select form-select-sm rounded-1 px-1" 
                                                                 ng-model="item_d.residual_risk" 
                                                                 ng-change="actionChangedRisk(item_d)"
@@ -933,11 +934,12 @@
                                                                 <option value="High" >High</option>
                                                             </select>
                                                         </div>      
+                                                        
                                                         <!---ng-if="item_d.action_status !== 'Closed' || (item_d.action_status === 'Responed' && !canAccess)"---->
                                                         <div class="p-1 rounded-3 m-auto" 
                                                             style="width: 80px;"
-                                                            ng-show="(item_d.action_status === 'Closed') || item_d.action_status === 'Close with condition' 
-                                                                    || (item_d.action_status === 'Responed' && !canAccess)"
+                                                            ng-show="item_d.reviewer_action_type === '2'  || !canAccess"
+                                                            ng-if="item_d.reviewer_action_type === '2'"
                                                             ng-class="{
                                                                 'bg-danger': (item_d.residual_risk == 'High' || item_d.residual_risk == 'High\r\n'), 
                                                                 'bg-warning': (item_d.residual_risk == 'Meduim' || item_d.residual_risk == 'Meduim\r\n'),

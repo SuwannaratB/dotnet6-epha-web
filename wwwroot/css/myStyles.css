@@ -579,4 +579,28 @@ background-color: #3e8e41;
   display: block; /* Show error message when validation fails */
 }
 
+.input-container.input-invalid {
+  position: relative;
+}
+
+.input-container.input-invalid input {
+  border: 1px solid red;
+  padding-right: 24px; /* Adjust padding to make space for the icon */
+}
+
+.input-container.input-invalid .input-invalid-icon {
+  position: absolute;
+  content: "⚠️"; 
+  color: red;
+  right: 8px; /* Adjust position of the icon */
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.input-container.input-invalid input::-webkit-calendar-picker-indicator {
+  color: red; /* Hide the default calendar icon */
+}
+
+
 

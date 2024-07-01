@@ -666,50 +666,56 @@
                                                         <div class="row g-2" 
                                                             ng-class="{'disabled-link': !tab_general_active && !(data_header[0].pha_status === 22 && flow_role_type === 'admin')}">
                                                             <span class="row ms-1 p-0">
-                                                                <span class="col-md-4  p-1 ">
+                                                                <span class="col-md-4 p-1 input-container" 
+                                                                    ng-class="{'input-invalid': !item.meeting_date && item.validated}">
                                                                     <label class="form-label d-none" for="meeting_date">Meeting Date</label>
                                                                     <input type="date" 
                                                                         class="form-control rounded-1 datetimepicker" 
-                                                                        ng-class="{'disabled-link': isDisableStatus}"
+                                                                        ng-class="{'disabled-link': isDisableStatus, 'input-invalid': !item.meeting_date && item.validated}"
                                                                         id="meeting_date" 
                                                                         name="meeting_date"
-                                                                        ng-change="actionChange(item,item.seq,'meeting_date')"
+                                                                        ng-change="actionChange(item, item.seq, 'meeting_date')"
                                                                         ng-model="item.meeting_date" 
                                                                         placeholder="dd/mm/yyyy">
+                                                                    <span class="input-icon datetimepicker " ng-if="!item.meeting_date && item.validated">⚠️ Please select meeting date</span>
                                                                 </span>
+
+
 
                                                                 <span class="col-md-1 p-1 d-flex">
                                                                     <label class="form-label p-0 pt-2">Time</label>
                                                                 </span>
 
-                                                                <span class="col-md-3  p-1 d-flex">
+                                                                <span class="col-md-3  p-1 d-flex" ng-class="{'input-invalid': !item.meeting_date && item.validated}">
                                                                     <label class="form-label d-none" for="timepicker1">Start Time</label>
                                                                     <label class="form-label d-none" style="font-size: 10px;">
                                                                         {{formatTo24Hour(item.meeting_start_time)}}
                                                                     </label>
-                                                                    <input class="form-control  d-none" 
-                                                                         ng-class="{'disabled-link': isDisableStatus}"
+                                                                    <input class="form-control  d-none " 
+                                                                         ng-class="{'ng-invalid': !item.meeting_start_time_hh && item.validated,
+                                                                                    'disabled-link': isDisableStatus}"
                                                                         id="st_meet" 
                                                                         name="st_meet"
-                                                                        style="width:20px; height: 20px"
+                                                                        style="width:20px; height: 20px; max-height:30px"
                                                                         ng-change="actionChange(item,item.seq,'')"
                                                                         ng-model="item.meeting_start_time" 
                                                                         value="{{formatTo24Hour(item.meeting_start_time)}}"
                                                                         type="time" 
-                                                                        placeholder="hour : minute" />
-                                                                    <select class="form-select rounded-1  me-1 p-1" 
-                                                                        ng-class="{'disabled-link': isDisableStatus}"
+                                                                        placeholder="hour : minute" 
+                                                                        required/>
+                                                                    <select class="form-select rounded-1  me-1 p-1 input-container" 
+                                                                        ng-class="{'ng-invalid': !item.meeting_start_time_hh && item.validated,'disabled-link': isDisableStatus}"
                                                                         ng-model="item.meeting_start_time_hh"
-                                                                        style="width:60px" 
+                                                                        style="width:60px;  height: 40px;" 
                                                                         ng-change="actionChange(item,item.seq,'')">
                                                                         <option ng-repeat="item2 in master_hours" ng-value="item2.id">
                                                                             {{item2.name}}
                                                                         </option>
                                                                     </select>
-                                                                    <select class="form-select rounded-1  me-1 p-1" 
-                                                                        ng-class="{'disabled-link': isDisableStatus}"
+                                                                    <select class="form-select rounded-1  me-1 p-1 input-container" 
+                                                                        ng-class="{'ng-invalid': !item.meeting_start_time_hh && item.validated,'disabled-link': isDisableStatus}"
                                                                         ng-model="item.meeting_start_time_mm"
-                                                                        style="width:60px" 
+                                                                        style="width:60px;height: 40px;" 
                                                                         ng-change="actionChange(item,item.seq,'')">
                                                                         <option ng-repeat="item2 in master_minutes" ng-value="item2.id">
                                                                             {{item2.name}}
@@ -721,30 +727,31 @@
                                                                     <label class="form-label p-0 pt-2">To</label>
                                                                 </span>
 
-                                                                <span class="col-md-3 p-1 d-flex">
+                                                                <span class="col-md-3 p-1 d-flex" ng-class="{'input-invalid': !item.meeting_date && item.validated}">
                                                                     <label class="form-label d-none" for="timepicker2">End Time</label>
                                                                     <label class="form-label d-none" style="font-size: 10px;">{{formatTo24Hour(item.meeting_end_time)}}</label>
-                                                                    <input class="form-control  d-none" 
+                                                                    <input class="form-control  d-none input-container" 
                                                                         id="et_meet" 
                                                                         name="et_meet"
                                                                         ng-class="{'disabled-link': isDisableStatus}"
                                                                         ng-change="actionChange(item,item.seq,'')"
                                                                         ng-model="item.meeting_end_time"
                                                                         type="time" 
-                                                                        placeholder="hour : minute" />
-                                                                    <select class="form-select rounded-1  me-1 p-1" 
-                                                                        ng-class="{'disabled-link': isDisableStatus}"
+                                                                        placeholder="hour : minute"
+                                                                        required />
+                                                                    <select class="form-select rounded-1  me-1 p-1 input-container" 
+                                                                        ng-class="{'ng-invalid': !item.meeting_end_time_hh && item.validated,'disabled-link': isDisableStatus}"
                                                                         ng-model="item.meeting_end_time_hh"
-                                                                        style="width:60px" 
+                                                                        style="width:60px; height: 40px;" 
                                                                         ng-change="actionChange(item,item.seq,'')">
                                                                         <option ng-repeat="item2 in master_hours" ng-value="item2.id">
                                                                             {{item2.name}}
                                                                         </option>
                                                                     </select>
-                                                                    <select class="form-select rounded-1  me-1 p-1" 
-                                                                        ng-class="{'disabled-link': isDisableStatus}"
+                                                                    <select class="form-select rounded-1  me-1 p-1 input-container" 
+                                                                        ng-class="{'ng-invalid': !item.meeting_end_time_hh && item.validated,'disabled-link': isDisableStatus}"
                                                                         ng-model="item.meeting_end_time_mm"
-                                                                        style="width:60px" 
+                                                                        style="width:60px; height: 40px;" 
                                                                         ng-change="actionChange(item,item.seq,'')">
                                                                         <option ng-repeat="item2 in master_minutes" ng-value="item2.id">
                                                                             {{item2.name}}
@@ -2786,8 +2793,8 @@
                                                             data-placement="top" 
                                                             title="choose Employee"
                                                             ng-click="choosDataEmployee(item)">
-                                                        <span class="fa-solid fa-user-plus" ng-if="selectDatFormType !== 'owner'">Add</span>
-                                                        <span class="fa-solid fa-user-check" ng-if="selectDatFormType === 'owner'">selecte</span>
+                                                        <span class="fa-solid fa-user-plus" ng-if="selectDatFormType !== 'manage'">Add</span>
+                                                        <span class="fa-solid fa-user-check" ng-if="selectDatFormType === 'manage'">selecte</span>
                                                     </button>
                                                 </span>
                                             </td>
@@ -3217,8 +3224,8 @@
                     </div>
                 </div>
 
-                <div class="modal-body" ng-if="Action_Msg_Header == 'Warning'">
-                    <div class="d-flex justify-content-center align-items-center mb-3">
+                <div class="modal-body" ng-if="Action_Msg_Header === 'Warning'">
+                    <div class="d-flex justify-content-center align-items-center mb-3 ">
                         <h5 class="mb-0 text-center ms-5" style="font-size: 40px; font-weight: bold;" data-anchor="data-anchor" id="modalMsgLabel">
                             {{Action_Msg_Header}}
                         </h5>
