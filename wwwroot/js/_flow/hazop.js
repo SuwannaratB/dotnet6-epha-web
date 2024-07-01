@@ -5430,6 +5430,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                             invalidFieldFound = true; 
                         }
                     });
+
+                    if(invalidFieldFound) return;
                     
                 }
                 else if (pha_status == "12") {
@@ -5621,7 +5623,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     }
                 }
 
-                if (bCheckValid) { return; }
+                if (bCheckValid) return;
 
             }
 

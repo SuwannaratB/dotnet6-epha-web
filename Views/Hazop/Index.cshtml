@@ -127,16 +127,22 @@
                     </button>
                 </span>
                 <span class="mx-2" ng-if="submit_type">
-                    <button class="btn btn-success btn-sm" style="width: 150px;"
-                            ng-if=" data_header[0].pha_status == 11 && data_general[0].sub_expense_type == 'Normal'" ng-click="confirmSave('submit_register')">
+                    <button class="btn btn-success btn-sm" 
+                        style="width: 150px;"
+                        ng-if=" data_header[0].pha_status == 11 && data_general[0].sub_expense_type == 'Normal'" 
+                        ng-click="confirmSave('submit_register')">
                         Task Register
                     </button>
-                    <button class="btn btn-success btn-sm" style="width: 150px;"
-                            ng-if=" data_header[0].pha_status == 11 && !(data_general[0].sub_expense_type == 'Normal')" ng-click="confirmSave('submit')">
+                    <button class="btn btn-success btn-sm" 
+                        style="width: 150px;"
+                        ng-if=" data_header[0].pha_status == 11 && !(data_general[0].sub_expense_type == 'Normal')" 
+                        ng-click="confirmSave('submit')">
                         Submit and Closed
                     </button>
-                    <button class="btn btn-success btn-sm" style="width: 150px;"
-                            ng-if=" data_header[0].pha_status == 12 || data_header[0].pha_status == 22" ng-click="confirmSave('submit_conduct')">
+                    <button class="btn btn-success btn-sm" 
+                        style="width: 150px;"
+                        ng-if=" data_header[0].pha_status == 12 || data_header[0].pha_status == 22" 
+                        ng-click="confirmSave('submit_conduct')">
                         Submit
                     </button>
                     @*<button class="btn btn-success btn-sm" style="width: 150px;"
