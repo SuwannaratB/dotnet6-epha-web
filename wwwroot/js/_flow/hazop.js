@@ -1852,9 +1852,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 $('#divLoading').hide();
             },
             success: function (data) {
-                console.log('=> ',data);
-                console.log('show data general',data.general)
-
                 var action_part_befor = $scope.action_part;//(page_load == false ? $scope.action_part : 0);
                 var tabs_befor = (page_load == false ? $scope.tabs : null);
                 console.log("$scope.pha_type_doc",$scope.pha_type_doc)
@@ -2750,8 +2747,15 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.data_general[0].functional_location_audition = _functoArr;
             console.log($scope.data_general[0].functional_location_audition);
         }
+        // set unit no
+        var name_unitno = $filter('filter')($scope.master_unit_no, function (item) { 
+            return (item.id == $scope.data_general[0].id_unit_no); 
+        })[0];
+        if(name_unitno) $scope.data_general[0].unit_no_name = name_unitno.name
+
         return;
     }
+
     function set_data_nodeguidwords() {
 
         if ($scope.data_nodeworksheet.length > 0) {
@@ -3324,29 +3328,38 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
     $scope.removeDataSession = function (seq, index) {
         var arrdelete = $filter('filter')($scope.data_session, function (item) {
-            return (item.seq == seq && item.action_type == 'update');
+            return (item.seq == seq);
         });
+
         if (arrdelete.length > 0) { $scope.data_session_delete.push(arrdelete[0]); }
 
         $scope.data_session = $filter('filter')($scope.data_session, function (item) {
-            return !(item.seq == seq);
+            return (item.seq != arrdelete[0].seq);
         });
         if ($scope.data_session.length == 0) {
             $scope.addDataSession();
         }
-
         //if delete row 1 clear to null
-        if ($scope.data_session.length == 1 || $scope.data_session.no == 1) {
-            var keysToClear = ['meeting_date', 'meeting_end_time', 'meeting_start_time'];
-            //meeting_start_time_hh,meeting_start_time_mm,meeting_end_time_hh,meeting_end_time_mm
-            var keysToClear = ['meeting_date', 'meeting_end_time', 'meeting_start_time', 'meeting_start_time_hh', 'meeting_start_time_mm', 'meeting_end_time_hh', 'meeting_end_time_mm'];
-
-            keysToClear.forEach(function (key) {
-                $scope.data_session[0][key] = null;
-            });
-
-            $scope.data_session[0].no = 1;
+        if (!$scope.data_session[0].meeting_date &&
+            !$scope.data_session[0].meeting_end_time &&
+            !$scope.data_session[0].meeting_start_time_hh &&
+            !$scope.data_session[0].meeting_start_time_mm &&
+            !$scope.data_session[0].meeting_end_time_hh &&
+            !$scope.data_session[0].meeting_end_time_mm 
+        ) {
+            if ($scope.data_session.length == 1 || $scope.data_session.no == 1) {
+                var keysToClear = ['meeting_date', 'meeting_end_time', 'meeting_start_time'];
+                //meeting_start_time_hh,meeting_start_time_mm,meeting_end_time_hh,meeting_end_time_mm
+                var keysToClear = ['meeting_date', 'meeting_end_time', 'meeting_end_time', 'meeting_start_time_hh', 'meeting_start_time_mm', 'meeting_end_time_hh', 'meeting_end_time_mm'];
+    
+                keysToClear.forEach(function (key) {
+                    $scope.data_session[0][key] = null;
+                });
+    
+                $scope.data_session[0].no = 1;
+            }
         }
+        
         running_no_level1_lv1($scope.data_session, null, index, null);
 
         //delete employee lower session

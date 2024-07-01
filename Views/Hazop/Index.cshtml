@@ -203,34 +203,42 @@
                 <div class="card-body tab-content">
                     @* {{action_part}} *@
                     <!-- general information start -->
-                    <div class="" ng-class="{'tab-pane fade show active':(action_part==1),'tab-pane fade':(action_part!==1)}"
-                         id="tab-general" role="tabpanel" aria-labelledby="general-tab">
-
+                    <div class="" 
+                        ng-class="{'tab-pane fade show active':(action_part==1),'tab-pane fade':(action_part!==1)}"
+                        id="tab-general" role="tabpanel" 
+                        aria-labelledby="general-tab">
                         <div class="mx-3 row g-3 align-items-center" ng-repeat="item in data_general">
 
                             <div class="col-md-2">
                                 <label class="form-label ps-0" for="expense_type"><b class="text-danger"> * </b>Project Type</label>
                                 <label class="form-label ps-0" ng-if="select_history_tracking_record">
-                                    <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
-                                       data-bs-placement="top" title=" Project Type : OPEX" data-bs-html="true"></a>
+                                    <a class="form-label far fa-comment-alt text-warning cursor-pointer" 
+                                        data-bs-toggle="tooltip"
+                                        data-bs-placement="top" 
+                                        title=" Project Type : OPEX" 
+                                        data-bs-html="true">
+                                    </a>
                                 </label>
-
                                 <select class="form-select rounded-1"
-                                        ng-class="{'disabled-link':(!tab_general_active || !(tab_general_active && data_header[0].pha_status<=12 ))}"
-                                        id="expense_type" placeholder="Project Type"
-                                        name="expense_type" ng-model="item.expense_type" ng-if="data_header[0].pha_status == 11"
-                                        ng-change="actionChange(item,item.seq,'expense_type')">
+                                    ng-class="{'disabled-link':(!tab_general_active || !(tab_general_active && data_header[0].pha_status<=12 ))}"
+                                    id="expense_type" 
+                                    placeholder="Project Type"
+                                    name="expense_type" 
+                                    ng-model="item.expense_type" 
+                                    ng-if="data_header[0].pha_status == 11"
+                                    ng-change="actionChange(item,item.seq,'expense_type')">
                                     <option id="OPEX">OPEX</option>
                                     <option id="CAPEX">CAPEX</option>
                                 </select>
-                                <select class="form-select rounded-1 disabled-link" ng-if="data_header[0].pha_status>=12"
-                                        ng-model="item.expense_type">
+                                <select class="form-select rounded-1 disabled-link" 
+                                    ng-if="data_header[0].pha_status>=12"
+                                    ng-model="item.expense_type">
                                     <option id="OPEX">OPEX</option>
                                     <option id="CAPEX">CAPEX</option>
                                 </select>
                             </div>
-                            <div class="col-md-2 ">
 
+                            <div class="col-md-2 ">
                                 <label class="form-label ps-0" for="expense_type">
                                     <b class="text-danger"> * </b>Sub Project Type
                                 </label>
@@ -253,24 +261,28 @@
 
                             <div class="col-md-3 ">
                                 <div class="row g-0 align-items-center">
-
                                     <div class="col-12 p-1">
                                         <label class="form-label ps-0" for="unit">{{(item.expense_type=='OPEX'? 'e-MOC Reference Number' : 'MOC Reference Number')}} </label>
                                         <label class="form-label ps-0" ng-if="select_history_tracking_record">
-                                            <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
-                                               data-bs-placement="top" title=" Reference MOC : PN-13081" data-bs-html="true"></a>
+                                            <a class="form-label far fa-comment-alt text-warning cursor-pointer" 
+                                                data-bs-toggle="tooltip"
+                                                data-bs-placement="top" 
+                                                title=" Reference MOC : PN-13081" 
+                                                data-bs-html="true">
+                                            </a>
                                         </label>
-                                        <input type="text" name="reference_moc" class="form-control rounded-1 cursor-pointer"
-                                               ng-class="{'disabled-link':(!tab_general_active)}"
-                                               ng-keyup="actionChange(item,item.seq,'')" ng-model="item.reference_moc"
-                                               placeholder="Input Data"
-                                               autocomplete="off"
-                                               value="PN-13089">
+                                        <input type="text" 
+                                            name="reference_moc" 
+                                            class="form-control rounded-1 cursor-pointer"
+                                            ng-class="{'disabled-link':(!tab_general_active)}"
+                                            ng-keyup="actionChange(item,item.seq,'')" 
+                                            ng-model="item.reference_moc"
+                                            placeholder="Input Data"
+                                            autocomplete="off"
+                                            value="PN-13089">
                                     </div>
-
                                 </div>
                             </div>
-
                         </div>
 
                         <div class="mx-3 row  g-3 align-items-top" ng-repeat="item in data_general">
@@ -278,11 +290,14 @@
                             <div class="col-md-11 p-1 ">
                                 <div class="row g-0 align-items-top">
                                     <div class="col-md-2 p-1 me-2 id_apu" >
-
                                         <label class="form-label ps-0 pb-1" for="area"><b class="text-danger"> * </b>Area Process Unit </label>
                                         <label class="form-label ps-0" ng-if="select_history_tracking_record">
-                                            <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
-                                               data-bs-placement="top" title=" Area Process Unit : A" data-bs-html="true"></a>
+                                            <a class="form-label far fa-comment-alt text-warning cursor-pointer" 
+                                                data-bs-toggle="tooltip"
+                                                data-bs-placement="top" 
+                                                title=" Area Process Unit : A" 
+                                                data-bs-html="true">
+                                            </a>
                                         </label>
                                         <label class="form-label ps-0" for="area"></label>
                                         <select class="form-control js-choice-apu mb-0" id="id_apu"
@@ -298,7 +313,6 @@
                                                 {{item2.name}}
                                             </option>
                                         </select>
-
                                         @*<select class="form-select rounded-1 disabled-link" ng-if="!tab_general_active"
                                                 ng-model="item.id_apu">
                                             <option ng-selected="item.id_apu == item2.id"
@@ -307,18 +321,18 @@
                                             </option>
                                             <i class="fa-solid fa-triangle-exclamation"></i>
                                         </select>*@
-
                                         <div class="invalid-feedback" id="id_apu_error">
                                             <div ng-message="required">Please select an Area Process Unit.</div>
                                         </div>
-
                                     </div>
-
                                     <div class="col-auto p-1 d-none">
-                                        <i class="fas fa-clipboard-list cursor-pointer" ng-class="{'disabled-link':(!tab_general_active)}"
-                                           style="font-size: 18px;color: blue;"
-                                           data-bs-toggle="modal" data-bs-target="#modalNotification"
-                                           ng-click="openModalDataNotification(item)"></i>
+                                        <i class="fas fa-clipboard-list cursor-pointer" 
+                                            ng-class="{'disabled-link':(!tab_general_active)}"
+                                            style="font-size: 18px;color: blue;"
+                                            data-bs-toggle="modal" 
+                                            data-bs-target="#modalNotification"
+                                            ng-click="openModalDataNotification(item)">
+                                        </i>
                                     </div>
                                     <!-- Unit No -->
                                     <div class="col-md-2 p-1 me-2 align-items-top" 
@@ -341,7 +355,7 @@
                                                         placeholder="Search.." 
                                                         ng-model="search_keywords.unit_no"
                                                         ng-change="filterFunction('unit_no')">
-                                                    <a  ng-repeat="item2 in master_unit_no_list" 
+                                                    <a ng-repeat="item2 in master_unit_no_list" 
                                                         ng-class="{'disabled-link':(!tab_general_active)}"
                                                         ng-if="item2.id_apu == item.id_apu"
                                                         ng-click="changeUnitNo(item2)"
@@ -352,36 +366,37 @@
                                             </div>
                                     </div>
 
-                                     <!-- functional location -->
+                                    <!-- functional location -->
                                     <div class="col-md-2 p-1 me-2 align-items-top" 
                                         ng-if="item.id_company != '9999' "
                                         ng-class="{'disabled-link':(!tab_general_active)}"
                                         style="display: flex; flex-direction: column; padding-top: 2px;">
-                                            <label class="form-label ps-0" style="margin-top: 4px;" for="unit">
-                                                <b class="text-danger d-none"> * </b>
-                                                Functional Location
-                                            </label>
-                                            <div class="dropdown">
-                                                <button id="dropdown_functional" class="dropbtn" ng-class="{'disabled-link':(!tab_general_active)}">
-                                                    {{item.functional_location}}
-                                                </button>
-                                                <div id="functional" class="dropdown-content">
-                                                    <input id="dropdown_input" 
-                                                        class="dropdown_input" 
-                                                        ng-class="{'disabled-link':(!tab_general_active)}"
-                                                        type="text" 
-                                                        placeholder="Search.." 
-                                                        ng-model="search_keywords.functional"
-                                                        ng-change="filterFunction('functional')">
-                                                    <a  ng-repeat="item2 in master_functional_list" 
-                                                        ng-class="{'disabled-link':(!tab_general_active)}"
-                                                        ng-click="changeTFunctional(item2)"
-                                                        value="item2.id" >
-                                                        {{item2.name}}
-                                                    </a>
-                                                </div>
+                                        <label class="form-label ps-0" style="margin-top: 4px;" for="unit">
+                                            <b class="text-danger d-none"> * </b>
+                                            Functional Location
+                                        </label>
+                                        <div class="dropdown">
+                                            <button id="dropdown_functional" class="dropbtn" ng-class="{'disabled-link':(!tab_general_active)}">
+                                                {{item.functional_location}}
+                                            </button>
+                                            <div id="functional" class="dropdown-content">
+                                                <input id="dropdown_input" 
+                                                    class="dropdown_input" 
+                                                    ng-class="{'disabled-link':(!tab_general_active)}"
+                                                    type="text" 
+                                                    placeholder="Search.." 
+                                                    ng-model="search_keywords.functional"
+                                                    ng-change="filterFunction('functional')">
+                                                <a ng-repeat="item2 in master_functional_list" 
+                                                    ng-class="{'disabled-link':(!tab_general_active)}"
+                                                    ng-click="changeTFunctional(item2)"
+                                                    value="item2.id" >
+                                                    {{item2.name}}
+                                                </a>
                                             </div>
-                                    </div>                                    
+                                        </div>
+                                    </div>    
+
                                     <div class="col-4 p-1 d-none">
                                         <label class="form-label ps-0" for="organizerSingle">
                                             Functional Location
@@ -432,14 +447,12 @@
 
                                     <div class="col-md-4 p-1">
                                         <label class="form-label ps-0 pb-1" for="organizerMultiple">Functional Location Additional</label>
-
                                         <label class="form-label ps-0" ng-if="select_history_tracking_record">
                                             <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
                                                data-bs-placement="top"
                                                title=" Functional Location Desc: TPX-76-LICSA-002-TX, TPX-76-LICSA-003-TX, TPX-76-LICSA-004-TX"
                                                data-bs-html="true"></a>
                                         </label>
-
                                         <select class="form-select align-bottom rounded-1 js-choice-functional_audition"
                                                 style="height: 36px;" id="organizerMultiple"
                                                 ng-class="{'disabled-link':(!tab_general_active)}"
@@ -455,7 +468,6 @@
                                                 {{ item2.name }}
                                             </option>
                                         </select>
-
                                         @*<select class="form-select align-bottom rounded-1 disabled-link" style="height: 36px;"
                                                 ng-model="item.functional_location_audition"
                                                 ng-if="!tab_general_active">
@@ -465,10 +477,7 @@
                                                 {{ item2.name }}
                                             </option>
                                         </๑select>*@
-
-
                                     </div>
-
                                 </div>
                             </div>
 
@@ -668,23 +677,21 @@
                     </div>
                     <!-- general information end-->
                     <!-- session start-->
-                    <div class="" ng-class="{'tab-pane fade show active':(action_part==2),'tab-pane fade':(action_part!==2)}"
-                         id="tab-session" role="tabpanel" aria-labelledby="session-tab">
+                    <div class="" 
+                        ng-class="{'tab-pane fade show active':(action_part==2),'tab-pane fade':(action_part!==2)}"
+                        id="tab-session" 
+                        role="tabpanel" 
+                        aria-labelledby="session-tab">
                         <div class="m-3 row  gx-0 align-items-center">
-
                             <div class="card px-2 ">
                                 <div class="row g-3 justify-content-between align-items-center pt-2 pb-3 d-none">
                                     <div class="col-12 col-md">
                                         <h5 class="text-900 mb-0"> <span class=" me-2 text-primary"><B>|</B></span>{{ sub_software }} Member</h5>
                                     </div>
                                 </div>
-
                                 <div class="col-12 col-md mx-1">
-
                                     <div class="table-responsive scrollbar">
-
                                         <table class="table mb-0 table-borderless">
-
                                             <thead class="  text-uppercase text-start border-bottom">
                                                 <tr>
                                                     <th class="align-middle text-center" style="font-size: 10px;" rowspan="2">No</th>
@@ -704,9 +711,7 @@
                                                     <th class="align-middle text-center" style="font-size: 10px;" rowspan="2"></th>
                                                 </tr>
                                             </thead>
-
                                             <tbody class="" id="customer-rating-table-body">
-
                                                 <tr ng-repeat="item in data_session | orderBy:no" class="">
 
                                                     <td class="text-center" style="width: 30px;">
@@ -714,54 +719,49 @@
                                                             <h6 class="fw-semi-bold">{{$index + 1}}</h6>
                                                         </div>
                                                     </td>
+
                                                     <td class="align-top col-auto" style="min-width: 400px;">
                                                         <div class="row d-flex">
                                                             <div class="col-6">
                                                                 <div class="row" ng-class="{'d-none':(!tab_general_active)}">
-
-                                                                    <button class="btn btn-outline-secondary p-0 cursor-pointer col-auto" style="color: #2445fc; background-color: #f1f2f4; border-color: #f1f2f4;"
-                                                                            ng-click="openDataEmployeeAdd(item,'member')">
-                                                                        <span class="far fa-address-book fa-lg pe-1"></span>Add Member Team
+                                                                    <button class="btn btn-outline-secondary p-0 cursor-pointer col-auto" 
+                                                                        style="color: #2445fc; background-color: #f1f2f4; border-color: #f1f2f4;"
+                                                                        ng-click="openDataEmployeeAdd(item,'member')">
+                                                                        <span class="far fa-address-book fa-lg pe-1"></span>
+                                                                        Add Member Team
                                                                     </button>
-
                                                                 </div>
-
                                                                 <div class="row" ng-repeat="item2 in data_memberteam | toArray | filter:{id_session:item.seq }">
-
                                                                     <div class="col-8 align-items-center  p-1">
-                                                                        <label class="mb-0 text-1100 fw-bold"
-                                                                                style="width:100%;border-color: #f1f2f4;">
-                                                                                {{ item2.user_displayname}}
+                                                                        <label class="mb-0 text-1100 fw-bold" style="width:100%;border-color: #f1f2f4;">
+                                                                            {{ item2.user_displayname}}
                                                                         </label>
                                                                     </div>
                                                                     <div class="col-4 align-items-center  p-1">
-                                                                        <label class="mb-0 text-1100 fw-bold"
-                                                                                style="width:80%;border-color: #f1f2f4;">
-                                                                                {{ item2.user_title}}
+                                                                        <label class="mb-0 text-1100 fw-bold" style="width:80%;border-color: #f1f2f4;">
+                                                                            {{ item2.user_title}}
                                                                         </label>
                                                                     </div>
                                                                 </div>
                                                             </div>
-
                                                             <div class="col-6" ng-if="data_general[0].expense_type=='CAPEX' && data_general[0].sub_expense_type=='Normal' ">
                                                                 <div class="row" ng-class="{'d-none':(!tab_general_active)}">
-                                                                    <button class="btn btn-outline-secondary p-0 cursor-pointer col-auto" style="color: #2445fc; background-color: #f1f2f4; border-color: #f1f2f4;"
-                                                                            ng-click="openDataEmployeeAdd(item,'approver')">
-                                                                        <span class="far fa-address-book fa-lg pe-1"></span>Add Approver
+                                                                    <button class="btn btn-outline-secondary p-0 cursor-pointer col-auto" 
+                                                                        style="color: #2445fc; background-color: #f1f2f4; border-color: #f1f2f4;"
+                                                                        ng-click="openDataEmployeeAdd(item,'approver')">
+                                                                        <span class="far fa-address-book fa-lg pe-1"></span>
+                                                                        Add Approver
                                                                     </button>
                                                                 </div>
                                                                 <div class="row" ng-repeat="item2 in data_approver | toArray | filter:{id_session:item.seq }">
-
                                                                     <div class="col-8 align-items-center  p-1">
-                                                                        <label class="mb-0 text-1100 fw-bold"
-                                                                                style="width:100%;border-color: #f1f2f4;">
-                                                                                {{ item2.user_displayname}}
+                                                                        <label class="mb-0 text-1100 fw-bold" style="width:100%;border-color: #f1f2f4;">
+                                                                            {{ item2.user_displayname}}
                                                                         </label>
                                                                     </div>
                                                                     <div class="col-4 align-items-center  p-1">
-                                                                        <label class="mb-0 text-1100 fw-bold"
-                                                                                style="width:80%;border-color: #f1f2f4;">
-                                                                                {{ item2.user_title}}
+                                                                        <label class="mb-0 text-1100 fw-bold" style="width:80%;border-color: #f1f2f4;">
+                                                                            {{ item2.user_title}}
                                                                         </label>
                                                                     </div>
                                                                 </div>
@@ -770,43 +770,45 @@
                                                     </td>
 
                                                     <td class="align-top">
-
                                                         <div class="row g-2" ng-class="{'disabled-link':(!tab_general_active)}">
-
                                                             <span class="row p-0">
-
                                                                 <span class="col-md-4  p-1 ">
                                                                     <label class="form-label d-none" for="meeting_date">Meeting Date</label>
-
-                                                                    <input type="date" class="form-control rounded-1 datetimepicker cursor-pointer" id="meeting_date" name="meeting_date"
-                                                                           ng-change="actionChange(item,item.seq,'')"
-                                                                           ng-model="item.meeting_date" placeholder="dd/mm/yyyy">
-
+                                                                    <input type="date" 
+                                                                        class="form-control rounded-1 datetimepicker cursor-pointer" 
+                                                                        id="meeting_date" 
+                                                                        name="meeting_date"
+                                                                        ng-change="actionChange(item,item.seq,'')"
+                                                                        ng-model="item.meeting_date" 
+                                                                        placeholder="dd/mm/yyyy">
                                                                 </span>
-
                                                                 <span class="col-md-3  p-1 d-flex">
                                                                     <label class="form-label d-none" for="timepicker1">Start Time</label>
                                                                     <label class="form-label d-none" style="font-size: 10px;">{{formatTo24Hour(item.meeting_start_time)}}</label>
-
-                                                                    <input class="form-control  d-none" id="st_meet" name="st_meet"
-                                                                           style="width:20px; height: 20px"
-                                                                           ng-change="actionChange(item,item.seq,'')"
-                                                                           ng-model="item.meeting_start_time" value="{{formatTo24Hour(item.meeting_start_time)}}"
-                                                                           type="time" placeholder="hour : minute" />
-
-                                                                    <select class="form-select rounded-1  me-1 p-1" ng-model="item.meeting_start_time_hh"
-                                                                            style="width:60px" ng-change="actionChange(item,item.seq,'')">
+                                                                    <input class="form-control  d-none" 
+                                                                        id="st_meet" 
+                                                                        name="st_meet"
+                                                                        style="width:20px; height: 20px"
+                                                                        ng-change="actionChange(item,item.seq,'')"
+                                                                        ng-model="item.meeting_start_time" 
+                                                                        value="{{formatTo24Hour(item.meeting_start_time)}}"
+                                                                        type="time" placeholder="hour : minute" />
+                                                                    <select class="form-select rounded-1  me-1 p-1" 
+                                                                        ng-model="item.meeting_start_time_hh"
+                                                                        style="width:60px" 
+                                                                        ng-change="actionChange(item,item.seq,'')">
                                                                         <option ng-repeat="item2 in master_hours" ng-value="item2.id">
                                                                             {{item2.name}}
                                                                         </option>
                                                                     </select>
-                                                                    <select class="form-select rounded-1  me-1 p-1" ng-model="item.meeting_start_time_mm"
-                                                                            style="width:60px" ng-change="actionChange(item,item.seq,'')">
+                                                                    <select class="form-select rounded-1  me-1 p-1" 
+                                                                        ng-model="item.meeting_start_time_mm"
+                                                                        style="width:60px" 
+                                                                        ng-change="actionChange(item,item.seq,'')">
                                                                         <option ng-repeat="item2 in master_minutes" ng-value="item2.id">
                                                                             {{item2.name}}
                                                                         </option>
                                                                     </select>
-
                                                                 </span>
                                                                 <span class="col-md-1 p-1 d-flex">
                                                                     <label class="form-label p-0 pt-2">To</label>
@@ -814,107 +816,98 @@
                                                                 <span class="col-md-3 p-1 d-flex">
                                                                     <label class="form-label d-none" for="timepicker2">End Time</label>
                                                                     <label class="form-label d-none" style="font-size: 10px;">{{formatTo24Hour(item.meeting_end_time)}}</label>
-                                                                    <input class="form-control  d-none" id="et_meet" name="et_meet"
-                                                                           ng-change="actionChange(item,item.seq,'')"
-                                                                           ng-model="item.meeting_end_time"
-                                                                           type="time" placeholder="hour : minute" />
-
-                                                                    <select class="form-select rounded-1  me-1 p-1" ng-model="item.meeting_end_time_hh"
-                                                                            style="width:60px" ng-change="actionChange(item,item.seq,'')">
+                                                                    <input class="form-control  d-none" 
+                                                                        id="et_meet" 
+                                                                        name="et_meet"
+                                                                        ng-change="actionChange(item,item.seq,'')"
+                                                                        ng-model="item.meeting_end_time"
+                                                                        type="time" 
+                                                                        placeholder="hour : minute" />
+                                                                    <select class="form-select rounded-1  me-1 p-1" 
+                                                                        ng-model="item.meeting_end_time_hh"
+                                                                        style="width:60px" 
+                                                                        ng-change="actionChange(item,item.seq,'')">
                                                                         <option ng-repeat="item2 in master_hours" ng-value="item2.id">
                                                                             {{item2.name}}
                                                                         </option>
                                                                     </select>
-                                                                    <select class="form-select rounded-1  me-1 p-1" ng-model="item.meeting_end_time_mm"
-                                                                            style="width:60px" ng-change="actionChange(item,item.seq,'')">
+                                                                    <select class="form-select rounded-1  me-1 p-1" 
+                                                                        ng-model="item.meeting_end_time_mm"
+                                                                        style="width:60px" 
+                                                                        ng-change="actionChange(item,item.seq,'')">
                                                                         <option ng-repeat="item2 in master_minutes" ng-value="item2.id">
                                                                             {{item2.name}}
                                                                         </option>
                                                                     </select>
                                                                 </span>
-
-
                                                             </span>
-
                                                             <div class="col-md-12 p-1" ng-if="selectMemberTeamCalendar ">
-                                                                <img src="~/assets/images/1687508177333.jpg" class="img-fluid" alt="...">
+                                                                <img src="~/assets/images/1687508177333.jpg" 
+                                                                    class="img-fluid" 
+                                                                    alt="...">
                                                             </div>
-
                                                         </div>
                                                     </td>
+
                                                     <td class="align-top " style="width: 158px;" ng-class="{'d-none': (!tab_general_active)}">
-                                                        
                                                         <div class="col-12" style="width: 158px;">
                                                             <div class="float-end">
                                                                 <span class="mx-1">
                                                                     <button class="btn btn-outline-secondary p-2" 
-                                                                            data-toggle="tooltip" 
-                                                                            data-placement="top" 
-                                                                            title="Remove"
-                                                                            style="color: #ff2828; background-color: #f1f2f4; border-color: #ff2828;"
-                                                                            ng-disabled="$first && 
-                                                                                        ((data_approver.length === 0 || data_approver[0].user_name === null) && 
-                                                                                        (data_memberteam.length === 0 || data_memberteam[0].user_name === null))"
-                                                                            ng-click="triggerRemove(item,item.seq,$index,'session')">
+                                                                        data-toggle="tooltip" 
+                                                                        data-placement="top" 
+                                                                        title="Remove"
+                                                                        style="color: #ff2828; background-color: #f1f2f4; border-color: #ff2828;"
+                                                                        ng-disabled="$first && 
+                                                                        ((data_approver.length === 0 || data_approver[0].user_name === null) && 
+                                                                        (data_memberteam.length === 0 || data_memberteam[0].user_name === null))"
+                                                                        ng-click="triggerRemove(item,item.seq,$index,'session')">
                                                                         <span class="fa-regular fa-trash-can fa-lg"></span>
                                                                     </button>
                                                                 </span>
-
                                                                 <span class="mx-1">
                                                                     <button class="btn btn-outline-secondary p-2" 
-                                                                            style="color: #2445fc; background-color: #f1f2f4; border-color: #2445fc;"
-                                                                            data-toggle="tooltip" 
-                                                                            data-placement="top" 
-                                                                            title="Copy"
-                                                                            ng-disabled="!((data_approver.length && data_approver[0].user_name !== null) || 
-                                                                                            (data_memberteam.length && data_memberteam[0].user_name !== null))"                                                                            
-                                                                            ng-click=copyDataSession(item.seq,$index)>
+                                                                        style="color: #2445fc; background-color: #f1f2f4; border-color: #2445fc;"
+                                                                        data-toggle="tooltip" 
+                                                                        data-placement="top" 
+                                                                        title="Copy"
+                                                                        ng-disabled="!((data_approver.length && data_approver[0].user_name !== null) || 
+                                                                        (data_memberteam.length && data_memberteam[0].user_name !== null))"                                                                            
+                                                                        ng-click=copyDataSession(item.seq,$index)>
                                                                         <span class="fas fa-copy fa-lg"></span>
                                                                     </button>
                                                                 </span>
-
                                                                 <span class="mx-1 d-none">
                                                                     <button class="btn btn-outline-secondary p-2" 
-                                                                            style="color: #1336fc; background-color: #f1f2f4; border-color: #a8a8a8;"
-                                                                            data-toggle="tooltip" 
-                                                                            data-placement="top" 
-                                                                            title="Copy"
-                                                                            ng-click=copyDataSession(item.seq,$index)>
+                                                                        style="color: #1336fc; background-color: #f1f2f4; border-color: #a8a8a8;"
+                                                                        data-toggle="tooltip" 
+                                                                        data-placement="top" 
+                                                                        title="Copy"
+                                                                        ng-click=copyDataSession(item.seq,$index)>
                                                                         <span class="fas fa-copy fa-lg"></span>
                                                                     </button>
                                                                 </span>
-
                                                                 <span class="mx-1">
                                                                     <button class="btn btn-outline-secondary p-2" 
-                                                                            style="color: #0abe0a; background-color: #f1f2f4; border-color: #0abe0a;"
-                                                                            data-toggle="tooltip" 
-                                                                            data-placement="top" 
-                                                                            title="Add"
-                                                                            ng-click=addDataSession(item.seq,$index)>
+                                                                        style="color: #0abe0a; background-color: #f1f2f4; border-color: #0abe0a;"
+                                                                        data-toggle="tooltip" 
+                                                                        data-placement="top" 
+                                                                        title="Add"
+                                                                        ng-click=addDataSession(item.seq,$index)>
                                                                         <span class="fas fa-square-plus fa-lg"></span>
                                                                     </button>
                                                                 </span>
-
                                                             </div>
                                                         </div>
                                                     </td>
 
                                                 </tr>
-
-                                            
-
-
                                             </tbody>
-
                                         </table>
-
                                     </div>
-
                                 </div>
-
                             </div>
                         </div>
-
                     </div>
                     <!-- session end-->
                     <!-- Node list -->
@@ -948,30 +941,34 @@
                                             <tbody class="list" id="customer-rating-table-body ">
                                                 <tr class="hover-actions-trigger btn-reveal-trigger position-static "
                                                     ng-repeat="item in data_drawing">
+
                                                     <td class="align-middle text-center">
                                                         <div class="p-1 ">
                                                             <h6 class="fw-semi-bold">{{item.no}}</h6>
                                                         </div>
                                                     </td>
+
                                                     <td class="align-middle white-space-nowrap ">
-                                                        <textarea ng-keyup="actionChange(item,item.seq,'')" ng-model="item.document_name"
-                                                                  class="form-control form-control-sm  rounded-1 shadow-sm  bg-body-tertiary"
-                                                                  ng-class="{'disabled-link':(!tab_general_active)}"
-                                                                  placeholder="Document Name"
-                                                                  style="font-size: 10px;"></textarea>
+                                                        <textarea ng-keyup="actionChange(item,item.seq,'')" 
+                                                            ng-model="item.document_name"
+                                                            class="form-control form-control-sm  rounded-1 shadow-sm  bg-body-tertiary"
+                                                            ng-class="{'disabled-link':(!tab_general_active)}"
+                                                            placeholder="Document Name"
+                                                            style="font-size: 10px;">
+                                                        </textarea>
                                                     </td>
+
                                                     <td class="align-middle white-space-nowrap ">
-
-                                                        <textarea ng-keyup="actionChange(item,item.seq,'')" ng-model="item.document_no"
-                                                                  class="form-control form-control-sm  rounded-1 shadow-sm  bg-body-tertiary"
-                                                                  ng-class="{'disabled-link':(!tab_general_active)}"
-                                                                  placeholder="Drawing No"
-                                                                  style="font-size: 10px;"></textarea>
-
+                                                        <textarea ng-keyup="actionChange(item,item.seq,'')" 
+                                                            ng-model="item.document_no"
+                                                            class="form-control form-control-sm  rounded-1 shadow-sm  bg-body-tertiary"
+                                                            ng-class="{'disabled-link':(!tab_general_active)}"
+                                                            placeholder="Drawing No"
+                                                            style="font-size: 10px;">
+                                                        </textarea>
                                                     </td>
 
                                                     <td class="align-middle white-space col-3">
-
                                                         <div class="row uploadbox align-items-center" ng-if="tab_general_active">
                                                             <div class="btn-group">
                                                                 <div class="icon-button border p-3" style="border-color: #0d6efd; background-color: #0d6efd;">
@@ -1003,7 +1000,6 @@
                                                                                 ng-click="clearFileName(item.seq)">
                                                                             <span class="fa-regular fa-trash-can fa-lg"></span>
                                                                         </a>
-
                                                                     </div>
                                                                 </button> 
                                                             </div>                                                                                                                                                                                
@@ -1033,51 +1029,47 @@
                                                                 </a>
                                                             </div>*@
                                                         </div>
-
                                                         <div id="drawing-document-file-{{item.seq}}"
                                                              class="invalid-feedback text-danger">
                                                             Please provide a valid Drawing.(Max size 10mb)
                                                         </div>
-
                                                     </td>
 
                                                     <td class="align-middle ">
                                                         <div class="col-12">
                                                             <textarea class="form-control form-control-sm  rounded-1 shadow-sm  bg-body-tertiary"
-                                                                      ng-class="{'disabled-link':(!tab_general_active)}"
-                                                                      ng-keyup="actionChange(item,item.seq,'')"
-                                                                      ng-model="item.descriptions"
-                                                                      placeholder="Comment"
-                                                                      style="font-size: 10px;"></textarea>
+                                                                ng-class="{'disabled-link':(!tab_general_active)}"
+                                                                ng-keyup="actionChange(item,item.seq,'')"
+                                                                ng-model="item.descriptions"
+                                                                placeholder="Comment"
+                                                                style="font-size: 10px;">
+                                                            </textarea>
                                                         </div>
-
                                                     </td>
+
                                                     <td class="align-middle " style="width: 158px;" ng-class="{'d-none': (!tab_general_active)}">
                                                         <div class="col-12" style="width: 158px;">
                                                             <div class="float-end ">
-
                                                                 <span class="mx-1">
                                                                     <button class="btn btn-outline-secondary p-2" 
-                                                                            style="color: #ff2828; background-color: #f1f2f4; border-color: #ff2828;"
-                                                                            ng-click="triggerRemove(item,item.seq,$index-1,'DrawingDoc')"
-                                                                            data-toggle="tooltip" 
-                                                                            data-placement="top" 
-                                                                            title="Remove">
+                                                                        style="color: #ff2828; background-color: #f1f2f4; border-color: #ff2828;"
+                                                                        ng-click="triggerRemove(item,item.seq,$index-1,'DrawingDoc')"
+                                                                        data-toggle="tooltip" 
+                                                                        data-placement="top" 
+                                                                        title="Remove">
                                                                         <span class="fa-regular fa-trash-can fa-lg"></span>
                                                                     </button>
                                                                 </span>
-
                                                                 <span class="mx-1 d-none">
                                                                     <button class="btn btn-outline-secondary p-2" 
-                                                                            style="color: #1336fc; background-color: #f1f2f4; border-color: #a8a8a8;"
-                                                                            ng-click=copyDrawingDoc(item.seq,$index)
-                                                                            data-toggle="tooltip" 
-                                                                            data-placement="top" 
-                                                                            title="Copy">
+                                                                        style="color: #1336fc; background-color: #f1f2f4; border-color: #a8a8a8;"
+                                                                        ng-click=copyDrawingDoc(item.seq,$index)
+                                                                        data-toggle="tooltip" 
+                                                                        data-placement="top" 
+                                                                        title="Copy">
                                                                         <span class="fas fa-copy fa-lg"></span>
                                                                     </button>
                                                                 </span>
-
                                                                 <span class="mx-1">
                                                                     <button class="btn btn-outline-secondary p-2" 
                                                                             style="color: #0abe0a; background-color: #f1f2f4; border-color: #0abe0a;"
@@ -1088,12 +1080,9 @@
                                                                         <span class="fas fa-square-plus fa-lg"></span>
                                                                     </button>
                                                                 </span>
-
-
                                                             </div>
                                                         </div>
                                                     </td>
-
 
                                                 </tr>
                                             </tbody>
@@ -1198,18 +1187,22 @@
                                                         <div class="d-flex align-items-center ">
                                                             <div class="autocomplete-container">
                                                                 <textarea class="form-control form-control-sm rounded-1 p-0 m-0 w-100 border border-end-0 border-top-0"
-                                                                          style=" width: 200px; font-size: 10px;"
-                                                                          id="node_{{item.seq}}" name="node_{{item.seq}}"
-                                                                          placeholder="Node" rows="3"
-                                                                          ng-class="{'disabled-link':(!tab_node_active)}"
-                                                                          ng-model="item.node"
-                                                                          ng-keyup="filterResultHistory(item.node, 'node', 'node_'+ item.seq);actionChange(item,item.seq,'node')">
+                                                                    style=" width: 200px; font-size: 10px;"
+                                                                    id="node_{{item.seq}}" 
+                                                                    name="node_{{item.seq}}"
+                                                                    placeholder="Node" 
+                                                                    rows="3"
+                                                                    ng-class="{'disabled-link':(!tab_node_active)}"
+                                                                    ng-model="item.node"
+                                                                    ng-keyup="filterResultHistory(item.node, 'node', 'node_'+ item.seq);actionChange(item,item.seq,'node')">
                                                                 </textarea>
-                                                                <div class="autocomplete-dropdown" style="position: absolute;" ng-show="isShow == 'node_'+ item.seq"
-                                                                     ng-class="{'ng-show' : (filteredArr[0].fieldID == ('node_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('node_'+item.seq)) }">
+                                                                <div class="autocomplete-dropdown" 
+                                                                    style="position: absolute;" 
+                                                                    ng-show="isShow == 'node_'+ item.seq"
+                                                                    ng-class="{'ng-show' : (filteredArr[0].fieldID == ('node_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('node_'+item.seq)) }">
                                                                     <div class="autocomplete-option"
-                                                                         ng-repeat="result in filteredResults | toArray | filter:{field:'node'}"
-                                                                         ng-click="selectResult(result,item,'node')">
+                                                                        ng-repeat="result in filteredResults | toArray | filter:{field:'node'}"
+                                                                        ng-click="selectResult(result,item,'node')">
                                                                         {{ result.name }}
                                                                     </div>
                                                                 </div>
@@ -1225,14 +1218,18 @@
                                                         <div class="d-flex align-items-center ">
                                                             <div class="autocomplete-container">
                                                                 <textarea class="form-control form-control-sm rounded-1 p-0 m-0 w-100 border border-end-0 border-top-0"
-                                                                          style="font-size: 10px;"
-                                                                          id="design_intent_{{item.seq}}" name="design_intent_{{item.seq}}"
-                                                                          placeholder="Design Intent" rows="3"
-                                                                          ng-class="{'disabled-link':(!tab_node_active)}"
-                                                                          ng-model="item.design_intent"
-                                                                          ng-keyup="filterResultHistory(item.design_intent, 'design_intent', 'design_intent_'+ item.seq);actionChange(item,item.seq,'')"></textarea>
-                                                                <div class="autocomplete-dropdown" style="position: absolute;" ng-show="showResults"
-                                                                     ng-class="{'ng-show' : (filteredArr[0].fieldID == ('design_intent_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('design_intent_'+item.seq)) }">
+                                                                    style="font-size: 10px;"
+                                                                    id="design_intent_{{item.seq}}" 
+                                                                    name="design_intent_{{item.seq}}"
+                                                                    placeholder="Design Intent" 
+                                                                    rows="3"
+                                                                    ng-class="{'disabled-link':(!tab_node_active)}"
+                                                                    ng-model="item.design_intent"
+                                                                    ng-keyup="filterResultHistory(item.design_intent, 'design_intent', 'design_intent_'+ item.seq);actionChange(item,item.seq,'')"></textarea>
+                                                                <div class="autocomplete-dropdown" 
+                                                                    style="position: absolute;" 
+                                                                    ng-show="showResults"
+                                                                    ng-class="{'ng-show' : (filteredArr[0].fieldID == ('design_intent_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('design_intent_'+item.seq)) }">
                                                                     <div class="autocomplete-option"
                                                                          ng-repeat="result in filteredResults | toArray | filter:{field:'design_intent'}"
                                                                          ng-click="selectResult(result,item,'design_intent')">

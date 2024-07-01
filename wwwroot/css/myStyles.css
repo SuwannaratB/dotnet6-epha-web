@@ -113,7 +113,7 @@ a, i {
 /* dropdown */
 .dropbtn {
     width: 100%;
-    min-height: 39px;
+    height: 39px;
     background: transparent;
     /* color: white; */
     text-align: start;
@@ -123,6 +123,7 @@ a, i {
     border-radius: 6px;
     margin-top: 2px;
     cursor: pointer;
+    overflow: auto;
 }
 
 /* .dropbtn:hover, .dropbtn:focus {
@@ -408,7 +409,7 @@ background-color: #3e8e41;
   }
 
   /* Firefox */
-  .box-recom, textarea {
+  .box-recom, .dropbtn, textarea {
     scrollbar-width: thin;
     scrollbar-color: #f1f2f4 #fff;
   }
