@@ -174,13 +174,21 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                     var arr_clone_def = { id: $scope.data_conditions[0].master_unit_no, name: 'Please select' };
                     $scope.master_unit_no.splice(0, 0, arr_clone_def);
                 }*/
+                    console.log(sub_software,"sub_software")
 
                 if (sub_software == "HAZOP") {
-                    $scope.data_conditions[0].expense_type = $scope.data_conditions[0].expense_type || "ALL";
-                    $scope.data_conditions[0].sub_expense_type = $scope.data_conditions[0].sub_expense_type || "ALL";
+                    $scope.data_conditions[0].expense_type = $scope.data_conditions[0].expense_type === null ? "ALL" :  $scope.data_conditions[0].expense_type;
+                    $scope.data_conditions[0].sub_expense_type = $scope.data_conditions[0].sub_expense_type === null ? "ALL" : $scope.data_conditions[0].sub_expense_type;
 
-                    console.log("$scope.data_conditions",$scope.data_conditions)
-
+                }else if (sub_software == "WHAT\'S IF" || sub_software == "WHATIF") {
+                    console.log(sub_software,"sub_software")
+                    console.log($scope.data_conditions[0].expense_type,"$scope.data_conditions[0].expense_type")
+                    console.log($scope.data_conditions[0].sub_expense_type,"$scope.data_conditions[0].sub_expense_type")
+                    $scope.data_conditions[0].expense_type = $scope.data_conditions[0].expense_type === null ? "ALL" :  $scope.data_conditions[0].expense_type;
+                    $scope.data_conditions[0].sub_expense_type = $scope.data_conditions[0].sub_expense_type === null ? "ALL" : $scope.data_conditions[0].sub_expense_type;
+                    console.log(sub_software,"sub_software")
+                    console.log($scope.data_conditions[0].expense_type,"$scope.data_conditions[0].expense_type")
+                    console.log($scope.data_conditions[0].sub_expense_type,"$scope.data_conditions[0].sub_expense_type")
                 } else if (sub_software == "JSEA") {
                     $scope.data_conditions[0].id_company = $scope.data_conditions[0].id_company || "ALL";
                     $scope.data_conditions[0].id_apu = $scope.data_conditions[0].id_apu || "ALL";
@@ -191,6 +199,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                     
 
                 } else if (sub_software == "HRA") {
+                    $scope.data_conditions[0].expense_type = $scope.data_conditions[0].expense_type === null ? "ALL" :  $scope.data_conditions[0].expense_type;
 
                 } else {
 
@@ -293,13 +302,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             var arr_search = $filter('filter')($scope.data_results_def, function (_item) {
                 return (
                     (item.expense_type
-                        ? ( item.expense_type == 'ALL'
+                        ? ( item.expense_type == 'ALL' ||  item.expense_type == ''
                             ? item.expense_type != null
                             : item.expense_type == _item.expense_type) 
                         : true
                     )
                     &&  (item.sub_expense_type
-                        ? ( item.sub_expense_type == 'ALL'
+                        ? ( item.sub_expense_type == 'ALL' || item.sub_expense_type == ''
                             ? item.sub_expense_type != null
                             : (item.sub_expense_type.toLowerCase() == _item.sub_expense_type.toLowerCase())) 
                         : true
