@@ -1633,7 +1633,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             },
             success: function (data) {
                 var arr = data;
-                console.log("=>",arr);
 
                 if (arr[0].status == 'true') {
                     $scope.pha_type_doc = 'update';
@@ -2044,6 +2043,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     $scope.action_owner_active = true;
                 }  
 
+                console.log("==============",$scope.params)
+                console.log("==============",$scope.params)
+
                 if($scope.params !== null){
                     console.log("$scope.params",$scope.params)
 
@@ -2090,6 +2092,15 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         }
                     } else {
                         $scope.isMainApprover = false; 
+                    }
+
+                    if($scope.data_approver){
+                        $scope.data_approver_ta3.filter(item => {
+                            if(item.user_name === $scope.user_name){
+                                $scope.tab_approver_active = true;
+
+                            }
+                        })
                     }
                 }
                 // $scope.action_owner_active = true;
@@ -6455,7 +6466,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.Action_Msg_Header = header;
         $scope.Action_Msg_Detail = detail;
 
-        $('#modalMsg').modal('show');
+        $timeout(function() {
+            $('#modalMsg').modal('show');
+        });   
     }
 
 
@@ -6464,10 +6477,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.Action_Msg_Header = header;
             $scope.Action_Msg_Detail = detail;
         });
-        $('#modalMsg').modal({
-            backdrop: 'static',
-            keyboard: false 
-        }).modal('show');
+
+        $timeout(function() {
+            $('#modalMsg').modal({
+                backdrop: 'static',
+                keyboard: false 
+            }).modal('show');
+        });
+
     }
 
     function set_alert_confirm(header, detail) {
@@ -6951,7 +6968,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $('#modalConfirm').modal('show');
         
         $scope.confirm = function() {
+            
             $('#modalConfirm').modal('hide');
+            // Save and send
+            setTimeout(function() {
+                save_data_approver_ta3("submit");
+            }, 200);
             deferred.resolve(true);
         };
         
@@ -7169,10 +7191,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
    
                        $scope.MaxSeqdata_approver_ta3 = Number($scope.MaxSeqdata_approver_ta3) + 1
                        
-                        // Save and send
-                        setTimeout(function() {
-                            save_data_approver_ta3("submit");
-                        }, 200);
                     }
 
 
@@ -7466,9 +7484,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         
                 return itemName.includes(searchText);
             });
-
-            console.log("master_unit_no_list",$scope.master_unit_no_list)
-            console.log("master_unit_no",$scope.master_unit_no)
         }
 
         if (type == 'functional') {
@@ -7486,19 +7501,39 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     //access each role
     $scope.Access_check = function(task) {
+        let accessInfo = {
+            canAccess: false,
+            isTA2: false,
+            isTA3: false
+        };
+    
         // If user is an admin, allow access
         if ($scope.flow_role_type === 'admin') {
-            return true;
+            accessInfo.canAccess = true;
+            return accessInfo;
         }
         
         // If user is an employee and the task belongs to them, allow access
         if ($scope.flow_role_type === 'employee' && $scope.user_name === task.user_name) {
-            return true;
+            accessInfo.isTA2 = true;
+            accessInfo.canAccess = true;
+            return accessInfo;
+        } else if ($scope.flow_role_type === 'employee') {
+            // Check if the user is a TA3 for this task
+            for (let item of $scope.data_approver_ta3) {
+                if (item.id_approver === task.id) {
+                    accessInfo.isTA3 = true;
+                    accessInfo.canAccess = true;
+
+                    return accessInfo;
+                }
+            }
         }
-        
-        //originator cant edit?
-        return false;
+    
+    
+        return accessInfo;
     };
+    
     
 
 

@@ -310,11 +310,11 @@
                                                                 {{item.action_required}}
                                                             </h6>
                                                             <h6 class="fw-semi-bold cursor-pointer text-primary" title="Waiting Approve Review."
-                                                                ng-if="item.action_required=='Approver'" ng-click="editActionApprove(item)">
+                                                                ng-if="item.action_required=='Approver' || item.action_required=='Assigned'" ng-click="editActionApprove(item)">
                                                                 {{item.action_required}}
                                                             </h6>
                                                             <h6 class="fw-semi-bold"
-                                                                ng-if="!(item.action_required=='Recommendation Closing' || item.action_required=='Approve' || item.action_required=='Approver') ">
+                                                                ng-if="!(item.action_required=='Recommendation Closing' || item.action_required=='Approve' || item.action_required=='Approver' || item.action_required=='Assigned') ">
                                                                 {{item.action_required}}
                                                             </h6>
                                                         </div>

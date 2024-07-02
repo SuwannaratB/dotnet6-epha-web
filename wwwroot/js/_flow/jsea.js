@@ -277,12 +277,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     
         for (let key of allKeys) {
             if (!keys1.includes(key)) {
-                console.log(`Key ${key} not found in first object at ${path || 'root'}`);
                 differencesFound = true;
                 continue;
             }
             if (!keys2.includes(key)) {
-                console.log(`Key ${key} not found in second object at ${path || 'root'}`);
                 differencesFound = true;
                 continue;
             }
@@ -295,10 +293,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
     
             if (!_.isEqual(val1, val2)) {
-                console.log(`Difference found at ${path ? path + '.' + key : key}:`);
-                console.log(`   ${key}:`);
-                console.log(`      obj1: ${val1}`);
-                console.log(`      obj2: ${val2}`);
                 differencesFound = true;
             }
     
@@ -315,31 +309,32 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     function setupWatch(data) {
         $scope.$watch(data, function(newValues, oldValues) {
             if (!$scope.dataLoaded) {
-                console.log("Data not yet loaded, skipping watch callback.");
                 return;
             }
-    
-            console.log("Watcher triggered change for : ", data);
-    
+        
             if ($scope.data_header[0].pha_status === 11 || $scope.data_header[0].pha_status === 12) {
                 $scope.stopTimer();
                 $scope.startTimer();
     
                 if (Array.isArray(newValues) && Array.isArray(oldValues)) {
                     if (!isEqual(newValues, oldValues, data)) {
-                        console.log("newValues", newValues);
-                        console.log("oldValues", oldValues);
-                        console.log("new !== old");
     
                         $scope.unsavedChanges = true;
                     }
                 } else if (!_.isEqual(newValues, oldValues)) {
-                    console.log("newValues", newValues);
-                    console.log("oldValues", oldValues);
-                    console.log("new !== old");
     
                     $scope.unsavedChanges = true;
                 }
+            }else{
+                if (Array.isArray(newValues) && Array.isArray(oldValues)) {
+                    if (!isEqual(newValues, oldValues, data)) {
+    
+                        $scope.unsavedChanges = true;
+                    }
+                } else if (!_.isEqual(newValues, oldValues)) {
+    
+                    $scope.unsavedChanges = true;
+                }                
             }
     
         }, true);
@@ -1583,7 +1578,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             },
             success: function (data) {
                 var arr = data;
-                console.log(arr);
 
                 if (arr[0].status == 'true') {
                     $scope.pha_type_doc = 'update';
@@ -1592,6 +1586,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                         set_alert('Success', 'Data has been successfully saved.');
                         apply();
+
+                        return get_data_after_save(false, false, $scope.pha_seq);
+
                     }
                     else {
 
@@ -6154,19 +6151,39 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     //access each role
     $scope.Access_check = function(task) {
+        let accessInfo = {
+            canAccess: false,
+            isTA2: false,
+            isTA3: false
+        };
+    
         // If user is an admin, allow access
         if ($scope.flow_role_type === 'admin') {
-            return true;
+            accessInfo.canAccess = true;
+            return accessInfo;
         }
         
         // If user is an employee and the task belongs to them, allow access
         if ($scope.flow_role_type === 'employee' && $scope.user_name === task.user_name) {
-            return true;
+            accessInfo.isTA2 = true;
+            accessInfo.canAccess = true;
+            return accessInfo;
+        } else if ($scope.flow_role_type === 'employee') {
+            // Check if the user is a TA3 for this task
+            for (let item of $scope.data_approver_ta3) {
+                if (item.id_approver === task.id) {
+                    accessInfo.isTA3 = true;
+                    accessInfo.canAccess = true;
+
+                    return accessInfo;
+                }
+            }
         }
-        
-        //originator cant edit?
-        return false;
+    
+    
+        return accessInfo;
     };
+    
     
     
 

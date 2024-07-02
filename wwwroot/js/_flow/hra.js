@@ -5654,8 +5654,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.Action_Msg_Header = header;
             $scope.Action_Msg_Detail = detail;
             $timeout(function() {
-                $('#modalMsg').modal('show');
-            });            
+                $('#modalMsg').modal({
+                    backdrop: 'static',
+                    keyboard: false 
+                }).modal('show');
+            });        
         }
     }
 

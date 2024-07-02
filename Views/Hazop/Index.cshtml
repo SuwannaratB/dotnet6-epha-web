@@ -3383,13 +3383,12 @@
 
                                         <tbody class="list" id="customer-rating-table-body">
                                             <tr ng-repeat="item in data_approver | orderBy:['no']" 
-                                                ng-init="canAccess = Access_check(item)"
-                                                ng-style="{ 'background-color': canAccess ? '' : '#f9fbff' }"
-                                                ng-class="{ 'task-highlight':  canAccess}"                                                
+                                                ng-init="accessInfo = Access_check(item)"
+                                                ng-style="{ 'background-color': accessInfo.canAccess ? '' : '#f9fbff' }"
+                                                ng-class="{ 'task-highlight':  accessInfo.canAccess}"                                                
                                                 class="hover-actions-trigger btn-reveal-trigger position-static text-center ">@*will more grey if can't access*@
                                                 <!---------ng-class="{ 'task-highlight':  }"
                                                 ng-if="(item.user_name == user_name ) || (flow_role_type == 'admin')"---------->
-                                                
                                                 <td class="align-top white-space-nowrap">
                                                     <div class="col-md-12 p-1 ps-3">
                                                         <label class="text-1100 fw-bold ">
@@ -3425,7 +3424,7 @@
                                                         </div>
                                                     </div>
 
-                                                    <div class="text-start ps-4" ng-if="item.user_name === user_name">
+                                                    <div class="text-start ps-4" ng-if="accessInfo.isTA2">
                                                             <a ng-click="openDataEmployeeAdd(item,'approver_ta3')"
                                                                 class="btn btn-link px-0"
                                                                 data-toggle="tooltip" 
@@ -3435,10 +3434,9 @@
                                                         </a>
                                                     </div> 
 
-                                                        <div class="col-md-12 text-start p-1 ps-4" 
-                                                            ng-show="item.user_name === user_name"
-                                                            ng-repeat="item_ta3 in data_approver_ta3 | toArray | filter:{id_approver: item.id}">
-
+                                                    <div class="col-md-12 text-start p-1 ps-4" 
+                                                            ng-show="(accessInfo.isTA2 || item_ta3.id_approver ===  item.id) && item_ta3.action_type !== 'delete'"
+                                                            ng-repeat="item_ta3 in data_approver_ta3 | toArray | filter:{id_approver: item.id}">                                                            
                                                             <label class="text-secondary">Task assigned : <br></label>
                                                             <div>
                                                                 <a class="fa-solid fa-user-pen pe-2 cursor-pointer" ></a>
@@ -3456,22 +3454,16 @@
                                                                 HAZOP Report
                                                             </b>
                                                         </div><br />
-                                                        <div class="form-check form-check-inline" ng-hide="!canAccess"
-                                                             ng-class="{ 'no-drop': !canAccess, 'cursor-pointer': canAccess }">
+                                                        <div class="form-check form-check-inline" ng-hide="!(accessInfo.canAccess && accessInfo.isTA2)" >
                                                             <input class="form-check-input" id="inlineRadio-{{item.seq}}" type="radio"
                                                                    name="inlineRadioOptions-{{item.seq}}" 
-                                                                   ng-class="{ 'cant-Access': !canAccess }"
-                                                                   
                                                                    value="approve" checked ng-model="item.action_status" />
                                                             <label class="form-check-label" for="inlineRadioApprove-{{item.seq}}"> Approve</label>
                                                         </div>
-                                                        <div class="form-check form-check-inline" ng-hide="!canAccess"
-                                                             ng-class="{ 'no-drop': !canAccess, 'cursor-pointer': canAccess }">
+                                                        <div class="form-check form-check-inline" ng-hide="!(accessInfo.canAccess && accessInfo.isTA2)">
                                                             <input class="form-check-input" id="inlineRadioOptions-{{item.seq}}" type="radio"
                                                                    name="inlineRadioOptions-{{item.seq}}" 
-                                                                   ng-class="{ 'cant-Access': !canAccess }"
-                                                                   ng-disabled="!canAccess"
-                                                                   value="reject" ng-model="item.action_status" />
+                                                                   value="reject" checked ng-model="item.action_status" />
                                                             <label class="form-check-label" for="inlineRadioReject-{{item.seq}}"> Send back with Comment</label>
                                                         </div>
                                                         <div id="valid-approver-status-{{item.seq}}" class="invalid-feedback text-danger">
@@ -3492,15 +3484,11 @@
                                                 </td>
                                                 <td class="align-top white-space-nowrap text-start" ng-class="{'disabled-link':(!tab_approver_active)}">
 
-                                                    <div class="col-md-12 p-1 ps-3" ng-if="!(item.approver_action_type == 2 || data_header[0].pha_status != 21)" 
-                                                         ng-class="{ 'no-drop': !canAccess }">
+                                                    <div class="col-md-12 p-1 ps-3" ng-if="!(item.approver_action_type == 2 || data_header[0].pha_status != 21)" >
                                                             <textarea class="form-control rounded-1" 
                                                                     id="floatingTextarea2" 
                                                                     placeholder="{{ canAccess ? 'Enter your comment' : '' }}"
-                                                                    ng-class="{ 'cant-Access': !canAccess }"
-                                                                    ng-hide="!canAccess"
-                                                                    ng-disabled="!canAccess"
-                                                                    ng-style="{ 'background-color': canAccess ? '' : '#f9fbff' }"
+                                                                    ng-if="accessInfo.canAccess && (accessInfo.isTA2 || accessInfo.isTA3)"
                                                                     ng-model="item.comment"></textarea>
                                                         <div id="valid-approver-comment-{{item.seq}}" class="invalid-feedback text-danger">
                                                             Please select a valid comment.
@@ -3508,7 +3496,8 @@
                                                     </div>
                                                     <div class="col-md-12 p-1 ps-3" ng-if="(item.approver_action_type == 2 || data_header[0].pha_status != 21 )">
 
-                                                        <p class="fw-bold" ng-class="{'disabled-link': !tab_approver_active || !canAccess}" >Comment : 
+                                                        <p class="fw-bold" ng-if="item.comment"
+                                                           ng-class="{'disabled-link': !tab_approver_active || !canAccess}" >Comment : 
                                                             <span>{{item.comment}}</span>
                                                         </p>
                                                     </div>
@@ -3517,12 +3506,10 @@
                                                     @* {{item.seq}} *@
                                                     <div class=" p-0 cursor-pointer " 
                                                          ng-repeat="item_x in data_drawing_approver  | toArray | filter:{id_approver : item.seq}  ">
-                                                        <div class="d-flex flex-nowrap" ng-if="!(item.approver_action_type == 2 || data_header[0].pha_status != 21)" 
-                                                             ng-class="{ 'no-drop': !canAccess ,'ps-2': !canAccess }">
-                                                            <div class="font-sans-serif btn-reveal-trigger position-static me-1">
+                                                        <div class="d-flex flex-nowrap" ng-if="!(item.approver_action_type == 2 || data_header[0].pha_status != 21)" >
+                                                            <div class="font-sans-serif btn-reveal-trigger position-static me-1" ng-show="accessInfo.canAccess">
                                                                 <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 p-1"
-                                                                        ng-class="{ 'cant-Access': !canAccess }"
-                                                                        ng-hide="!canAccess"
+                                                                        ng-if="!(accessInfo.canAccess && accessInfo.isTA2)"
                                                                         type="button" data-bs-toggle="dropdown" data-boundary="window"
                                                                         aria-haspopup="true" aria-expanded="false" data-bs-reference="parent">
                                                                     <span class="fas fa-cog text-info"></span>
@@ -3560,29 +3547,22 @@
                                                                            style="display:none" />
                                                                 </div>
                                                             </div>*@
-                                                            <div class="btn-group my-2" ng-style="{ 'opacity': !canAccess ? 0.5 : 1}"
-                                                                ng-hide="!canAccess"
-                                                                ng-class="{ 'no-drop': !canAccess, 'ps-2': !canAccess, 'cursor-pointer': canAccess }">
+                                                            <div class="btn-group my-2" 
+                                                                ng-show="accessInfo.canAccess">
                                                                 <div class="icon-button border p-3" style="border-color: #0d6efd; background-color: #0d6efd;"
-                                                                    ng-style="{ 'opacity': !canAccess ? 0.5 : 1}" ng-hide="!canAccess && !item_x.document_file_size">
+                                                                    ng-hide="!(accessInfo.canAccess && (accessInfo.isTA2 || accessInfo.isTA3)) && !item_x.document_file_size">
                                                                     <span class="fa-solid fa-arrow-up-from-bracket fa-lg" style="color: #ffffff;"></span>
                                                                 </div>
                                                                 <button class="Upload-button btn ps-3" 
-                                                                        ng-style="{ 'background-color': canAccess ? '' : '#f5f7fa' }"
-                                                                        ng-class="{ 'no-drop': !canAccess, 'cursor-pointer': canAccess }" 
                                                                         ng-if="!item_x.document_file_size">
                                                                     <span class="nametext ms-3 filename-text me-2 d-none" id="filename-approver-{{item_x.seq}}">
                                                                         {{(item_x.document_file_size>0? item_x.document_file_name + '('+  item_x.document_file_size + 'KB)' : '')}}
                                                                     </span>
-                                                                    <label class="dz-message-text fw-bold p-1 " for="attfile-{{item_x.seq}}"
-                                                                        ng-class="{ 'no-drop': !canAccess, 'cursor-pointer': canAccess }"
-                                                                        ng-style="{ 'background-color': canAccess ? '' : '#f5f7fa' }">
+                                                                    <label class="dz-message-text fw-bold p-1 " for="attfile-{{item_x.seq}}">
                                                                         Upload File (Max size 10mb)
                                                                     </label>
                                                                     <input type="file" id="attfile-{{item_x.seq}}"
                                                                         name="file{{item_x.seq}}"
-                                                                        ng-class="{ 'disabled-link': !canAccess, 'cursor-pointer' : canAccess }"
-                                                                        ng-disabled="!canAccess"
                                                                         onchange="angular.element(this).scope().fileSelectApprover(this, 'approver')"
                                                                         style="display:none" />
 
@@ -3622,19 +3602,18 @@
                                                         <button class="btn btn-outline text-primary  p-1 m-2 me-0" 
                                                                 style=" background-color: #f1f2f4; width:50px;"
                                                                 ng-click="confirmDialogApprover(item,'save')"
-                                                                ng-class="{ 'cant-Access': !canAccess}"
-                                                                ng-hide="!canAccess"
+                                                                ng-show="accessInfo.canAccess && (accessInfo.isTA2 || accessInfo.isTA3)"
                                                                 ng-if="!(item.approver_action_type == 2 || data_header[0].pha_status != 21)">
                                                             <span class="fa fa-save text-primary fa-lg"></span><br />
                                                             <span style="font-size:8px">Save</span>
                                                         </button>
                                                         @* confirmSave('submit_approver') *@
-                                                        <button class="btn btn-outline text-success  p-1 m-2 ms-1"
+                                                        <button class="btn btn-outline text-success p-1 m-2 ms-1"
                                                                 style="background-color: #f1f2f4; width:80px; "
-                                                                ng-click="confirmDialogApprover(item,'submit')"
-                                                                ng-class="{ 'cant-Access': !canAccess}"
-                                                                ng-hide="!canAccess"
-                                                                ng-if="!(item.approver_action_type == 2 || data_header[0].pha_status != 21)">
+                                                                ng-click="confirmDialogApprover(item, 'submit')"
+                                                                ng-show="accessInfo.canAccess"
+                                                                ng-disabled="!accessInfo.canAccess || accessInfo.isTA3"
+                                                                ng-class="{'disabled-button': !accessInfo.canAccess || accessInfo.isTA3}">
                                                             <span class="fa fa-save text-success fa-lg"></span><br />
                                                             <span style="font-size:8px">Submit</span>
                                                         </button>

@@ -2594,7 +2594,6 @@
                                                                 <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 p-1"
                                                                         type="button" data-bs-toggle="dropdown" data-boundary="window"
                                                                         ng-class="{ 'cant-Access': !canAccess }"
-                                                                        ng-disabled="!canAccess"
                                                                         ng-hide="!canAccess"
                                                                         aria-haspopup="true" aria-expanded="false" data-bs-reference="parent">
                                                                     <span class="fas fa-cog text-info"></span>
@@ -2676,9 +2675,15 @@
                                                         <span class="col-md-4  p-1 ">
                                                             <label class="form-label d-none" for="meeting_date">Action Date</label>
 
-                                                            <input type="date" class="form-control rounded-1 datetimepicker cursor-pointer" id="action_date" name="action_date"
-                                                                   ng-change="actionChange(item,item.seq,'action_date')"
-                                                                   ng-model="item.date_review" placeholder="dd/mm/yyyy">
+                                                            <input type="date" class="form-control rounded-1 datetimepicker cursor-pointer" 
+                                                                    id="action_date" name="action_date"
+                                                                    ng-if="!(item.approver_action_type == 2 || data_header[0].pha_status != 21)"
+                                                                    ng-hide="!canAccess"
+                                                                    ng-change="actionChange(item,item.seq,'action_date')"
+                                                                    ng-model="item.date_review" placeholder="dd/mm/yyyy">
+                                                            <label class="text-1100 fw-bold " ng-if="item.approver_action_type == 2">
+                                                                {{item.date_review}}
+                                                            </label>
                                                         </span>
                                                         @*<label class="text-1100 fw-bold ">
                                                             {{item.date_review_show}}
