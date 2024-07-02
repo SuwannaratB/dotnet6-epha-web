@@ -283,6 +283,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     
     setupWatch('data_general');
     setupWatch('data_session');
+    setupWatch('data_drawing');
     setupWatch('data_approver');
     setupWatch('data_memberteam');
     setupWatch('data_relatedpeople');

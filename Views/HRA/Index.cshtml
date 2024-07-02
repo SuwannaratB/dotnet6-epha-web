@@ -2334,7 +2334,12 @@
                                                                 HRA Report
                                                             </b>
                                                         </div><br />
-                                                        <p>{{item.action_status =='approve' ? 'Approve' : 'Send back with Comment' }}</p>
+                                                        <p>{{item.action_status =='reject' 
+                                                            ? 'Send back with Comment' 
+                                                            : item.action_status =='approve' 
+                                                                ? 'Approve'
+                                                                : '' }}</p>
+                                                        @* <p>{{item.action_status =='approve' ? 'Approve' : 'Send back with Comment' }}</p> *@
                                                     </div>
 
                                                 </td>
