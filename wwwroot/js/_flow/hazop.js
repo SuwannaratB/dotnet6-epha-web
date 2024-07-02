@@ -1116,6 +1116,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     var url_ws = conFig.service_api_url();
 
     function arr_def() {
+        $scope.currentYear = new Date().getFullYear();
+
         $scope.object_items_name = null;
 
         $scope.selectViewTypeFollowup = true;

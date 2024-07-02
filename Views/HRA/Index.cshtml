@@ -45,7 +45,7 @@
                     <div class="row">
                         <div class="col-auto">
                             <b>PHA No.:</b> <br>
-                            <span class="text-uppercase">{{ ( data_header[0].action_type =='update' ? data_header[0].pha_no : data_header[0].pha_sub_software + '-2023-00000XX')}}</span>
+                            <span class="text-uppercase">{{ ( data_header[0].action_type =='update' ? data_header[0].pha_no : data_header[0].pha_sub_software + '-'+ currentYear +'-00000XX')}}</span>
 
                         </div>
                         <div class="col-auto">
@@ -637,7 +637,7 @@
                                                                         Assessment Team Leader
                                                                     </h6>
                                                                 </div>
-                                                                <div class="row" ng-repeat="item2 in data_approver | filter:{id_session:item.seq }">
+                                                                <div class="" ng-repeat="item2 in data_approver | filter:{id_session:item.seq }">
                                                                     <div class="row align-items-center  p-1">
                                                                         @* <label class="mb-0 text-1100 fw-bold" 
                                                                             style="width:80%;border-color: #f1f2f4;"
@@ -872,10 +872,11 @@
                                                     </td>
 
                                                     <td class="align-middle white-space col-3">
-                                                        <div class="row uploadbox align-items-center" ng-if="tab_general_active">
+                                                        <div class="row uploadbox align-items-center">
                                                             <div class="btn-group">
                                                                 <div class="icon-button border p-3" style="border-color: #0d6efd; background-color: #0d6efd;">
-                                                                    <span class="fa-solid fa-arrow-up-from-bracket fa-lg" style="color: #ffffff;"></span>
+                                                                     <span ng-if="!item.document_file_size" class="fa-solid fa-arrow-up-from-bracket fa-lg" style="color: #ffffff;"></span>
+                                                                    <span ng-if="item.document_file_size" class="fa-solid fa-file-pdf fa-lg" style="color: #ffffff;"></span>
                                                                 </div>
                                                                 <button class="Upload-button btn ps-3"  ng-if="!item.document_file_size">
                                                                     <label class="dz-message-text  fw-bold cursor-pointer"
@@ -894,7 +895,6 @@
                                                                     <div class="d-flex align-items-center">
                                                                         <span class="mr-3 nametext"
                                                                             id="filename{{item.seq}}" 
-                                                                            ng-class="{'d-none':(!tab_general_active)}"
                                                                             ng-click="downloadFile(item)"
                                                                             ng-if="item.document_file_size>0">
                                                                             <b style="font-size:x-small;">
@@ -1158,8 +1158,7 @@
                                                                 'd-none': (item_list.no_type_hazard == item.hazard[$index - 1].no_type_hazard)}"
                                                             ng-change="actionChangeTabArea('type_hazard', item, item_list)"
                                                             ng-click="actionChangeTabArea('disabled_type_hazard', item, item_list)"
-                                                            ng-model="item_list.id_type_hazard"
-                                                            ng-if="tab_general_active">
+                                                            ng-model="item_list.id_type_hazard">
                                                             <option value="" disabled>Please select</option>
                                                             <option ng-repeat="item_m in master_hazard_type" 
                                                                     ng-value="item_m.id"
@@ -2336,7 +2335,12 @@
                                                                 HRA Report
                                                             </b>
                                                         </div><br />
-                                                        <p>{{item.action_status =='approve' ? 'Approve' : 'Send back with Comment' }}</p>
+                                                        <p>{{item.action_status =='reject' 
+                                                            ? 'Send back with Comment' 
+                                                            : item.action_status =='approve' 
+                                                                ? 'Approve'
+                                                                : '' }}</p>
+                                                        @* <p>{{item.action_status =='approve' ? 'Approve' : 'Send back with Comment' }}</p> *@
                                                     </div>
 
                                                 </td>
@@ -2366,7 +2370,7 @@
                                                 <td class="align-top px-1 text-start" style="min-width:200px;">
                                                     <div class=" p-0 cursor-pointer "
                                                          ng-repeat="item_x in data_drawing_approver  | filter:{id_approver : item.seq}  ">
-                                                        <div class="d-flex flex-nowrap" ng-if="!(item.approver_action_type == 2 || data_header[0].pha_status != 21)" 
+                                                        <div class="d-flex align-items-center flex-nowrap" ng-if="!(item.approver_action_type == 2 || data_header[0].pha_status != 21)" 
                                                              ng-class="{ 'no-drop': !canAccess ,'ps-2': !canAccess }">
                                                             <div class="font-sans-serif btn-reveal-trigger position-static me-1">
                                                                 <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 p-1"
@@ -2393,9 +2397,12 @@
                                                             <div class="btn-group my-2" ng-style="{ 'opacity': !canAccess ? 0.5 : 1}"
                                                                 ng-hide="!canAccess"
                                                                 ng-class="{ 'no-drop': !canAccess, 'ps-2': !canAccess, 'cursor-pointer': canAccess }">
-                                                                <div class="icon-button border p-3" style="border-color: #0d6efd; background-color: #0d6efd;"
-                                                                    ng-style="{ 'opacity': !canAccess ? 0.5 : 1}" ng-hide="!canAccess && !item_x.document_file_size">
-                                                                    <span class="fa-solid fa-arrow-up-from-bracket fa-lg" style="color: #ffffff;"></span>
+                                                                <div class="icon-button border p-3" 
+                                                                    style="border-color: #0d6efd; background-color: #0d6efd;"
+                                                                    ng-style="{ 'opacity': !canAccess ? 0.5 : 1}" 
+                                                                    ng-hide="!canAccess && !item_x.document_file_size">
+                                                                     <span ng-if="!item_x.document_file_size" class="fa-solid fa-arrow-up-from-bracket fa-lg" style="color: #ffffff;"></span>
+                                                                    <span ng-if="item_x.document_file_size" class="fa-solid fa-file-pdf fa-lg" style="color: #ffffff;"></span>
                                                                 </div>
                                                                 <button class="Upload-button btn ps-3" 
                                                                         ng-style="{ 'background-color': canAccess ? '' : '#f5f7fa' }"
@@ -2417,7 +2424,10 @@
                                                                         style="display:none" />
 
                                                                 </button>
-                                                                <button class="Upload-button btn cursor-pointer" style="width:250px;" ng-if="item_x.document_file_size > 0">
+                                                                <button class="Upload-button btn cursor-pointer" 
+                                                                    style="width:250px;" 
+                                                                    ng-if="item_x.document_file_size > 0"
+                                                                    ng-click="downloadFile(item_x)">
                                                                     <div class="d-flex align-items-center">
                                                                         <span class="nametext filename-text me-2 cursor-pointer">
                                                                             {{ item_x.document_file_name }} ({{ item_x.document_file_size }} KB)
@@ -2426,11 +2436,11 @@
                                                                 </button>
                                                             </div>     
                                                         </div>
-                                                        <div class="text-start p-0 cursor-pointer d-flex flex-nowrap" ng-if="item_x.document_file_size>0 ">
+                                                        @* <div class="text-start p-0 cursor-pointer d-flex flex-nowrap" ng-if="item_x.document_file_size>0 ">
                                                             <a class="nametext ms-3 filename-text me-2" ng-click="downloadFile(item_x)">
                                                                 <i class="far fa-file-pdf text-danger"></i> {{(item_x.document_file_size>0? item_x.document_file_name + '('+  item_x.document_file_size + 'KB)' : '')}}
                                                             </a>
-                                                        </div>
+                                                        </div> *@
 
                                                     </div>
                                                     <div ng-class="{'invalid-feedback text-danger': !(form_valid.valid_document_file==true && item.seq == id_approver_select), 'feedback text-danger': form_valid.valid_document_file}">
