@@ -45,7 +45,7 @@
                     <div class="row">
                         <div class="col-auto">
                             <b>PHA No.:</b> <br>
-                            <span class="text-uppercase">{{ ( data_header[0].action_type =='update' ? data_header[0].pha_no : data_header[0].pha_sub_software + '-2023-00000XX')}}</span>
+                            <span class="text-uppercase">{{ ( data_header[0].action_type =='update' ? data_header[0].pha_no : data_header[0].pha_sub_software + '-'+ currentYear +'-00000XX')}}</span>
 
                         </div>
                         <div class="col-auto">
