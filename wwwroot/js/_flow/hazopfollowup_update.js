@@ -675,7 +675,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
         window.open(page, "_top");
     }
     $scope.confirmFollowBack = function () {
-        window.open('Hazop/Followup', "_top")
+        window.open('home/hometasks', "_top")
         // var page = conFig.controller_action_befor();
         // window.open(page, "_top")
     }
