@@ -3769,8 +3769,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         //let index_to_add = $scope.findInsertionIndex($scope.data_listworksheet, newInput, $scope.compareItems);
         //$scope.data_listworksheet.splice(index_to_add, 0, newInput);
         console.log($scope.data_listworksheet);
-        let index_toinsert = $scope.findInsertionIndex($scope.data_listworksheet, newInput, $scope.compareItems);
-        $scope.data_listworksheet.splice(index_toinsert, 0, newInput);
+        //let index_toinsert = $scope.findInsertionIndex($scope.data_listworksheet, newInput, $scope.compareItems);
+        $scope.data_listworksheet.splice(index+1, 0, newInput);
         console.log('Updated array:', $scope.data_listworksheet);
         //running_index_level1_lv1($scope.data_listworksheet, iNo, index, newInput);
 
@@ -3784,11 +3784,35 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                        (item.row_type === "list_sub_system" || item.row_type === "list_system");
             })
 
-            arr_items.sort((a, b) => a.index_rows - b.index_rows);
+            //arr_items.sort((a, b) => a.index_rows - b.index_rows);
             
             arr_items.forEach(function(filteredItem, index) {
-                    filteredItem.list_sub_system_no = index + 1;
+                // Update the list_sub_system_no for filteredItem
+                var newSubSystemNo = index + 1;
+                console.log("Updating filteredItem:", filteredItem);
+                console.log("New list_sub_system_no:", newSubSystemNo);
+            
+                // Store the old list_sub_system_no for comparison
+                var oldSubSystemNo = filteredItem.list_sub_system_no;
+                console.log("oldSubSystemNo",oldSubSystemNo)
+            
+                filteredItem.list_sub_system_no = newSubSystemNo;
+            
+                // Find and update the items in data_listworksheet with the same list_system_no and old list_sub_system_no
+                var relatedItems = $scope.data_listworksheet.filter(function(item) {
+                    return item.list_system_no == filteredItem.list_system_no &&
+                           item.list_sub_system_no == oldSubSystemNo &&
+                           item.row_type === "cause";
+                });
+            
+                relatedItems.forEach(function(relatedItem) {
+                    relatedItem.list_sub_system_no = newSubSystemNo;
+                });
+            
+                console.log("relatedItems updated:", relatedItems);
             });
+            
+            
             
             arr_items.sort((a, b) => a.list_sub_system_no - b.list_sub_system_no);
 
