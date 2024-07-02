@@ -872,7 +872,7 @@
                                                     </td>
 
                                                     <td class="align-middle white-space col-3">
-                                                        <div class="row uploadbox align-items-center" ng-if="tab_general_active">
+                                                        <div class="row uploadbox align-items-center">
                                                             <div class="btn-group">
                                                                 <div class="icon-button border p-3" style="border-color: #0d6efd; background-color: #0d6efd;">
                                                                     <span class="fa-solid fa-arrow-up-from-bracket fa-lg" style="color: #ffffff;"></span>
@@ -894,7 +894,6 @@
                                                                     <div class="d-flex align-items-center">
                                                                         <span class="mr-3 nametext"
                                                                             id="filename{{item.seq}}" 
-                                                                            ng-class="{'d-none':(!tab_general_active)}"
                                                                             ng-click="downloadFile(item)"
                                                                             ng-if="item.document_file_size>0">
                                                                             <b style="font-size:x-small;">
@@ -1158,8 +1157,7 @@
                                                                 'd-none': (item_list.no_type_hazard == item.hazard[$index - 1].no_type_hazard)}"
                                                             ng-change="actionChangeTabArea('type_hazard', item, item_list)"
                                                             ng-click="actionChangeTabArea('disabled_type_hazard', item, item_list)"
-                                                            ng-model="item_list.id_type_hazard"
-                                                            ng-if="tab_general_active">
+                                                            ng-model="item_list.id_type_hazard">
                                                             <option value="" disabled>Please select</option>
                                                             <option ng-repeat="item_m in master_hazard_type" 
                                                                     ng-value="item_m.id"
