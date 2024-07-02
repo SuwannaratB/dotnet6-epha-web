@@ -880,6 +880,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
 
     function arr_def() {
+        $scope.currentYear = new Date().getFullYear();
+        
         $scope.object_items_name = null;
 
         $scope.selectViewTypeFollowup = true;
