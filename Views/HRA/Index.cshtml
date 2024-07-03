@@ -1843,7 +1843,10 @@
                                                                 ng-change="actionChangeFrequencyLevel(hazard)"
                                                                 ng-model="hazard.residual_risk_rating" 
                                                                 style="min-width: 100px; font-size: 10.24px;"
-                                                                ng-disabled="!hazard.exposure_status || hazard.initial_risk_rating == 'Low' || hazard.initial_risk_rating == 'Low\r\n'">
+                                                                ng-disabled="
+                                                                    !hazard.exposure_status || 
+                                                                    hazard.initial_risk_rating == 'Low' || hazard.initial_risk_rating == 'Low\r\n'||
+                                                                    hazard.initial_risk_rating == 'Acceptable Risk' || hazard.initial_risk_rating == 'Acceptable Risk\r\n'">
                                                                 <option ng-repeat="item_m in data_residual_risk" ng-value="item_m.id">
                                                                     {{item_m.name}}
                                                                 </option>
@@ -1890,8 +1893,8 @@
                          id="tab-manage" role="tabpanel" aria-labelledby="manage-tab">
                         <div class=" border-bottom border-200 my-0" id="NodeTable">
                             <div class="table-responsive scrollbar">
-                                <table class="table fs--2 mb-0">
-                                    <thead class=" text-uppercase text-center">
+                                <table class="table fs--2 mb-0 table-bordered">
+                                    <thead class=" text-uppercase text-center bg-soft">
                                         <tr>
                                             <th class=" align-middle" colspan="1" rowspan="2">JOB TYPE/CHANGE TYPE</th>
                                             <th class=" align-middle" colspan="1" rowspan="2">TASK OR ACTIVITY</th>
@@ -1942,10 +1945,11 @@
                                             </td>
                                             
                                             <td>
-                                                <div class="d-flex flex-column box-recom " ng-repeat="ws in item.worksheet | filter: filterInitialRiskRating" 
+                                                <div class="d-flex flex-column box-recom " 
+                                                    ng-repeat="(idx, ws) in item.worksheet | filter: filterInitialRiskRating" 
                                                     style="min-width: max-content;">
                                                     {{ ws.sub_area
-                                                        ? item.worksheet[$index - 1].sub_area == ws.sub_area 
+                                                        ? item.worksheet[idx - 1].sub_area == ws.sub_area 
                                                             ? '' 
                                                             : ws.sub_area 
                                                         : 'Not found'

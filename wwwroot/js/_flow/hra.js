@@ -1952,7 +1952,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         return false;
     };
     
-    $scope.filterInitialRiskRating = function(item) {
+    $scope.filterInitialRiskRating = function(item) { 
         return item.initial_risk_rating === 'Meduim' || 
             item.initial_risk_rating === 'Meduim\r\n' || 
             item.initial_risk_rating === 'High' ||
@@ -5951,6 +5951,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
 
         $scope.actionChangeFrequencyLevel = function (item) {
+            item.action_change = 1
             processExposureRating(item)
         }
 
