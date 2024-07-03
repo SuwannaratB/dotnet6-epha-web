@@ -1425,7 +1425,12 @@
 
                                                 <!----- work or task ==> can be add------->
                                                 <td class="align-top pt-1">
-                                                    <div class="d-flex align-items-center mx-1 p-1" ng-repeat="item_d in item.descriptions">
+                                                    <div class="d-flex align-items-center mx-1 p-1" 
+                                                        ng-repeat="(idx, item_d) in item.descriptions"
+                                                        ng-class="{
+                                                            'card-copy': dec_copy.id == item_d.id_tasks,
+                                                            'card-copy-rmt': item.descriptions[idx-1].id_tasks == item_d.id_tasks,
+                                                            'card-copy-rmb': item.descriptions[idx+1].id_tasks == item_d.id_tasks}">
                                                         <div>
                                                             <div class="font-sans-serif btn-reveal-trigger position-static">
                                                                 <span class="px-1">

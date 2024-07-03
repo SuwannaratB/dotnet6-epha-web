@@ -7147,6 +7147,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
 
     $scope.copyDescription = function (item) {
+        if ($scope.dec_copy) {
+            $scope.dec_copy = null;
+            $scope.dec_copy_status = false;
+            return
+        }
+
         if (item) {
             $scope.dec_copy = item;
             $scope.dec_copy_status = true;
