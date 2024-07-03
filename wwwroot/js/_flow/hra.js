@@ -863,21 +863,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         return true
     }
 
-    function validWorksheet(){
-        var isRecom = false;
-        for (let i = 0; i < $scope.data_worksheet_list.length; i++) {
-            isRecom = $scope.filterInitialRiskRatingMain($scope.data_worksheet_list[i])
-
-            if(isRecom) break;
-        }
-        if (!isRecom) {
-            $scope.goback_tab = 'worksheet';
-            return false
-        } 
-        
-        return true
-    }
-
 
     function arr_def() {
         $scope.currentYear = new Date().getFullYear();

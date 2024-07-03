@@ -2388,9 +2388,11 @@
                                                 <td class="align-top px-1 text-start" style="min-width:200px;">
                                                     <div class=" p-0 cursor-pointer "
                                                          ng-repeat="item_x in data_drawing_approver  | filter:{id_approver : item.seq}  ">
-                                                        <div class="d-flex align-items-center flex-nowrap" ng-if="!(item.approver_action_type == 2 || data_header[0].pha_status != 21)" 
-                                                             ng-class="{ 'no-drop': !canAccess ,'ps-2': !canAccess }">
-                                                            <div class="font-sans-serif btn-reveal-trigger position-static me-1">
+                                                        <div class="d-flex align-items-center flex-nowrap" 
+                                                            @* ng-if="!(item.approver_action_type == 2 || data_header[0].pha_status != 21)"  *@
+                                                            ng-class="{ 'no-drop': !canAccess ,'ps-2': !canAccess }">
+
+                                                            <div ng-if="item.approver_action_type != 2" class="font-sans-serif btn-reveal-trigger position-static me-1">
                                                                 <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 p-1"
                                                                         ng-class="{ 'cant-Access': !canAccess }"
                                                                         ng-hide="!canAccess"
@@ -2412,7 +2414,9 @@
                                                                     </a>
                                                                 </div>
                                                             </div>
-                                                            <div class="btn-group my-2" ng-style="{ 'opacity': !canAccess ? 0.5 : 1}"
+
+                                                            <div class="btn-group my-2" 
+                                                                ng-style="{ 'opacity': !canAccess ? 0.5 : 1}"
                                                                 ng-hide="!canAccess"
                                                                 ng-class="{ 'no-drop': !canAccess, 'ps-2': !canAccess, 'cursor-pointer': canAccess }">
                                                                 <div class="icon-button border p-3" 
@@ -2423,9 +2427,9 @@
                                                                     <span ng-if="item_x.document_file_size" class="fa-solid fa-file-pdf fa-lg" style="color: #ffffff;"></span>
                                                                 </div>
                                                                 <button class="Upload-button btn ps-3" 
-                                                                        ng-style="{ 'background-color': canAccess ? '' : '#f5f7fa' }"
-                                                                        ng-class="{ 'no-drop': !canAccess, 'cursor-pointer': canAccess }" 
-                                                                        ng-if="!item_x.document_file_size">
+                                                                    ng-style="{ 'background-color': canAccess ? '' : '#f5f7fa' }"
+                                                                    ng-class="{ 'no-drop': !canAccess, 'cursor-pointer': canAccess }" 
+                                                                    ng-if="!item_x.document_file_size">
                                                                     <span class="nametext ms-3 filename-text me-2 d-none" id="filename-approver-{{item_x.seq}}">
                                                                         {{(item_x.document_file_size>0? item_x.document_file_name + '('+  item_x.document_file_size + 'KB)' : '')}}
                                                                     </span>
