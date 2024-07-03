@@ -1558,6 +1558,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                 // set isDisableStatus PHA STATUS > 12 (waitting follow up)
                 $scope.isDisableStatus = setup_isDisabledPHAStatus(arr.header[0])
+                // set isApproveReject
+                $scope.isApproveReject = setup_isApproveReject(arr.header[0])
 
                 if (true) {
                     $scope.data_all = arr;
@@ -2165,6 +2167,15 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             return true
         }
         console.log(`PHA status: ${header.pha_status} isDisableStatus: false`)
+        return false
+    }
+
+    function setup_isApproveReject(header){
+        if (header.approve_status == 'reject') {
+            // console.log(`PHA status: ${header.pha_status} isDisableStatus: true`)
+            return true
+        }
+        // console.log(`PHA status: ${header.pha_status} isDisableStatus: false`)
         return false
     }
 
