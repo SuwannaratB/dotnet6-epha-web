@@ -2391,7 +2391,6 @@
                                                         <div class="d-flex align-items-center flex-nowrap" 
                                                             @* ng-if="!(item.approver_action_type == 2 || data_header[0].pha_status != 21)"  *@
                                                             ng-class="{ 'no-drop': !canAccess ,'ps-2': !canAccess }">
-
                                                             <div ng-if="item.approver_action_type != 2" class="font-sans-serif btn-reveal-trigger position-static me-1">
                                                                 <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 p-1"
                                                                         ng-class="{ 'cant-Access': !canAccess }"
@@ -2417,7 +2416,7 @@
 
                                                             <div class="btn-group my-2" 
                                                                 ng-style="{ 'opacity': !canAccess ? 0.5 : 1}"
-                                                                ng-hide="!canAccess"
+                                                                @* ng-hide="!canAccess" *@
                                                                 ng-class="{ 'no-drop': !canAccess, 'ps-2': !canAccess, 'cursor-pointer': canAccess }">
                                                                 <div class="icon-button border p-3" 
                                                                     style="border-color: #0d6efd; background-color: #0d6efd;"
