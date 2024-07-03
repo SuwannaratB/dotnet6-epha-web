@@ -7113,23 +7113,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $('#modalEmployeeAdd').modal('hide');
 
         }
-        else if (xformtype == 'edit_approver') {
-            // ขั้นแรก เรียงข้อมูลตามฟิลด์ 'no'
-            var sortedData = $filter('orderBy')($scope.data_approver, 'no');
-            // จากนั้น กรองข้อมูลตามเงื่อนไขที่ต้องการ
-            var result = $filter('filter')(sortedData, function (item, idx) {
-                return idx == $scope.approve_index;
-            })[0];
-
-            if (result) {
-                result.action_change = 1;
-                result.action_type = 'update';
-                result.user_displayname = item.employee_displayname;
-                result.user_img = item.employee_img;
-                result.user_name = item.employee_name;
-            }
-            $('#modalEmployeeAdd').modal('hide');
-        }
         else if (xformtype == "approver_ta3"){
 
             $scope.selected_TA3 = item;

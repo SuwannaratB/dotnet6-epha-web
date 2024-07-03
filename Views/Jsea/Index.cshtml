@@ -2485,7 +2485,6 @@
                                                     <div class="col-md-12 p-1 ps-3">
                                                         <label class="text-1100 fw-bold ">
                                                             {{$index + 1 }}
-                                                            <!----{{item.no}}----->
                                                         </label>
                                                     </div>
                                                 </td>
@@ -2497,9 +2496,10 @@
                                                                     openDataEmployeeAdd(item,'edit_approver',$index); 
                                                                     recommentAction_valid(item);" 
                                                                     class="btn btn-link px-0 mx-1"
+                                                                    ng-disabled="item.approver_action_type === 2"
                                                                     data-toggle="tooltip" 
                                                                     title="Add Employee">
-                                                                <span class="far fa-address-book"></span>
+                                                                    <span class="far fa-address-book"></span>
                                                                 </button>
                                                                 <button class="btn btn-sm transition-none btn-reveal fs--2 p-1 " 
                                                                         type="button"
@@ -2926,7 +2926,7 @@
                                                                 ng-click="choosDataEmployee(item)">
                                                             <span class="fa-solid fa-user-plus" ng-if="selectDatFormType !== 'owner' && params !== 'edit_approver'">Add</span>
                                                             <span class="fa-solid fa-user-check" ng-if="selectDatFormType === 'owner' || params === 'edit_approver'">selecte</span>
-                                                            <span class="fa-solid fa-paper-plane" ng-if="selectDatFormType ==== 'approver_ta3' && params !== 'edit_approver'">selecte</span>
+                                                            <span class="fa-solid fa-paper-plane" ng-if="selectDatFormType === 'approver_ta3' && params !== 'edit_approver'">selecte</span>
                                                         </button>
                                                     </span>
                                                 </td>
