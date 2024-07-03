@@ -148,12 +148,12 @@ AppMenuPage.filter('sortNodeworksheet', function() {
     return function(input) {
         var sortedArray = input.slice(0); 
         sortedArray.sort(function(a, b) {
-            if (a.guidewords_no === 0 && b.guidewords_no !== 0) {
+            if (a.id_guide_word === 0 && b.id_guide_word !== 0) {
                 return 1; // If 'guidewords_no' of 'a' === 0 and 'guidewords_no' of 'b' !== 0, 'b' comes before 'a'
-            } else if (a.guidewords_no !== 0 && b.guidewords_no === 0) {
+            } else if (a.id_guide_word !== 0 && b.id_guide_word === 0) {
                 return -1; // If 'guidewords_no' of 'a' is not 0 and 'guidewords_no' of 'b' is 0, 'a' comes before 'b'
             } else {
-                return a.guidewords_no - b.guidewords_no; // Otherwise, sort based on 'guidewords_no'
+                return a.id_guide_word - b.id_guide_word; // Otherwise, sort based on 'guidewords_no'
             }
         });
         return sortedArray;
@@ -574,6 +574,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 }
             }
 
+            //if selcte hazop
+            if (selectedTab.action_part == 5) {
+                $scope.selectedItemNodeView = $scope.data_node[0].id;
+                $scope.viewDataNodeList($scope.selectedItemNodeView);
+
+            }   
+                     
             // default start date recommendations
 
             if (selectedTab.action_part == 6) {
@@ -605,15 +612,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             return ((item.name == tag_name));
         });
 
-        console.log("tag_name",tag_name)
-        console.log("arr_tab",arr_tab)
         $scope.changeTab_Focus(arr_tab, tag_name);
     }
 
     $scope.changeTab_Focus = function (selectedTab, nameTab) {
 
-        console.log("selectedTab",selectedTab)
-        console.log("nameTab",nameTab)
         angular.forEach($scope.tabs, function (tab) {
             tab.isActive = false;
         });
@@ -635,7 +638,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         check_tab(selectedTab[0].name);
 
-        console.log($scope.tabs)
 
         apply();
     };
@@ -1858,6 +1860,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 console.log("$scope.pha_type_doc",$scope.pha_type_doc)
                 var arr = data;
                 if (true) {
+                    
                     $scope.data_all = arr;
                     $scope.master_apu = arr.apu;
                     $scope.master_business_unit_def = arr.business_unit;
@@ -1903,7 +1906,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     }
 
                     $scope.data_general = angular.copy(arr.general);
-                    console.log("$scope.data_general",$scope.data_general)
 
                     //set id to 5 
                     $scope.data_general.forEach(function (item) { item.id_ram = (item.id_ram == null ? 5 : item.id_ram); });
@@ -2039,73 +2041,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 }
 
                 $scope.data_header = JSON.parse(replace_hashKey_arr(arr.header));
-                set_form_action(action_part_befor, !action_submit, page_load);
 
-                if($scope.params != 'edit_approver'){
-                    $scope.action_owner_active = true;
-                }  
-
-                console.log("==============",$scope.params)
-                console.log("==============",$scope.params)
-
-                if($scope.params !== null){
-                    console.log("$scope.params",$scope.params)
-
-                    if($scope.params != 'edit_approver'){
-                        $scope.action_owner_active = true;
-                    }  
-                    
-    
-                    if($scope.params !== 'edit') {
-                        $scope.tab_general_active = false;
-                        $scope.tab_node_active = false;
-                        $scope.tab_worksheet_active = false;
-                        $scope.tab_managerecom_active = false;
-                        $scope.tab_approver_active = false;
-    
-                        if($scope.params === 'edit_action_owner'){
-                            $scope.action_owner_active = true;
-                        } 
-    
-                        if($scope.params === 'edit_approver'){
-                            $scope.action_owner_active = false;
-    
-                        }  
-    
-                    }
-    
-                    if($scope.params === 'edit' && $scope.flow_role_type === 'admin') {
-                        $scope.tab_general_active = true;
-                        $scope.tab_node_active = true;
-                        $scope.tab_worksheet_active = true;
-                        $scope.tab_managerecom_active = true;
-                        $scope.tab_approver_active = true;
-    
-                        $scope.save_type = true;
-                    }
-                }else if ($scope.params === null && arr.header[0].pha_status === 21) {
-                    if (Array.isArray($scope.data_approver)) {
-                        let mainApprover = $scope.data_approver.find(item => item.approver_type === 'approver' && item.user_name === $scope.user_name);
-                
-                        if (mainApprover) {
-                            $scope.isMainApprover = true;
-                        } else {
-                            $scope.isMainApprover = false;
-                        }
-                    } else {
-                        $scope.isMainApprover = false; 
-                    }
-
-                    if($scope.data_approver){
-                        $scope.data_approver_ta3.filter(item => {
-                            if(item.user_name === $scope.user_name){
-                                $scope.tab_approver_active = true;
-
-                            }
-                        })
-                    }
-                }
-                // $scope.action_owner_active = true;
 
                 //ตรวจสอบเพิ่มเติม
                 if (arr.user_in_pha_no[0].pha_no == '' && $scope.flow_role_type != 'admin') {
@@ -2160,8 +2096,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         }
                     }catch{}
 
-
-                    console.log("$scope.data_general$scope.data_general$scope.data_general",$scope.data_general)
                     /*try {
                         $scope.master_apu = JSON.parse(replace_hashKey_arr(arr.apu));
                         $scope.master_functional = JSON.parse(replace_hashKey_arr(arr.functional));
@@ -2199,32 +2133,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         $scope.save_type = false;
                     } 
 
-                    $timeout(function() {
-                        try {
-                            if (typeof page_load !== 'undefined' && page_load === true) {
-                                initializeChoices();
-                            }
-                        } catch (e) {
-                            console.error('Error initializing Choices.js:', e);
-                        }
-            
-                        function initializeChoices() {
-                            console.log("now choice load to show");
-                            const choices1 = new Choices('.js-choice-apu');
-                            const choices2 = new Choices('.js-choice-functional');
-                            const choices5 = new Choices('.js-choice-functional_audition');
-                
-                            // Uncomment and initialize other Choices instances if needed
-                            // const choices2 = new Choices('.js-choice-apu');
-                            // const choices3 = new Choices('.js-choice-functional');
-                        }
-                    }, 0);
-
+                    var pha_status = $scope.data_header[0].pha_status
+                    set_form_action(action_part_befor, !action_submit, page_load);
+                    set_form_access(pha_status,$scope.params,$scope.flow_role_type)
+                    set_tab_focus(pha_status,action_part_befor)
 
                     $timeout(function() {
                         try {
                             if (typeof page_load !== 'undefined' && page_load === true) {
-                                console.log("master_functional_auditionmaster_functional_auditionmaster_functional_audition",$scope.master_functional_audition)
                                 var element = document.querySelector('.js-choice-functional_audition');
                                     if (element.tagName.toLowerCase() === 'select') {
                                         console.log('Element is a <select> element');
@@ -2237,10 +2153,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                                     
 
                                 initializeChoices();
+                            }else{
+                                initializeChoices();
                             }
-                        } catch (e) {
-                            //console.error('Error initializing Choices.js:', e);
-                        }
+                        } catch (e) {}
             
                         function initializeChoices() {
             
@@ -2271,10 +2187,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 $scope.dataLoaded = true;
                 $scope.leavePage = false;
                 
-                console.log("$scope.data_header[0].pha_status",$scope.data_header[0].pha_status)
                 if($scope.data_header[0].pha_status === 11 || $scope.data_header[0].pha_status === 12){
                     $scope.startTimer();  
                 }
+
+        console.log("qwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwq",$scope.action_part)
 
                 $scope.unsavedChanges= false;
 
@@ -2599,6 +2516,95 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 }
             }
         }
+    }
+    function set_form_access(pha_status,params,flow_role_type){
+        if(pha_status === 11 || pha_status === 12){
+            $scope.can_edit = true;
+
+        }
+        if(params != 'edit_approver'){
+            $scope.action_owner_active = true;
+        }  
+
+        if(params !== null){
+
+            if(params != 'edit_approver'){
+                $scope.action_owner_active = true;
+            }  
+            
+
+            if(params !== 'edit') {
+                $scope.tab_general_active = false;
+                $scope.tab_node_active = false;
+                $scope.tab_worksheet_active = false;
+                $scope.tab_managerecom_active = false;
+                $scope.tab_approver_active = false;
+
+                if(params === 'edit_action_owner'){
+                    $scope.action_owner_active = true;
+
+                } 
+
+                if(params === 'edit_approver'){
+                    $scope.action_owner_active = false;
+
+                }  
+
+                $scope.can_edit = false;
+
+
+            }
+
+            if(params === 'edit' && flow_role_type === 'admin') {
+                $scope.tab_general_active = true;
+                $scope.tab_node_active = true;
+                $scope.tab_worksheet_active = true;
+                $scope.tab_managerecom_active = true;
+                $scope.tab_approver_active = true;
+
+                $scope.save_type = true;
+                $scope.can_edit = true;
+
+            }
+        }else if (params === null && pha_status === 21) {
+            if (Array.isArray($scope.data_approver)) {
+                let mainApprover = $scope.data_approver.find(item => item.approver_type === 'approver' && item.user_name === $scope.user_name);
+        
+                if (mainApprover) {
+                    $scope.can_edit = true;
+                } else {
+                    $scope.can_edit = false;
+                }
+            } else {
+                $scope.can_edit = false; 
+            }
+
+            if($scope.data_approver){
+                $scope.data_approver_ta3.filter(item => {
+                    if(item.user_name === $scope.user_name){
+                        $scope.tab_approver_active = true;
+
+                    }
+                })
+            }
+        }
+    }
+    function set_tab_focus(pha_status,action_part_befor){
+        if(pha_status == 11){
+            var arr_tab = $filter('filter')($scope.tabs, function (item) { return ((item.action_part == action_part_befor)); });
+
+        $scope.changeTab_Focus(arr_tab, arr_tab.name);
+
+        } else if(pha_status == 12 || $scope.params === 'edit_action_owner' ||  $scope.params === 'edit'){
+            var arr_tab = $filter('filter')($scope.tabs, function (item) { return ((item.action_part == 5)); });
+            $scope.action_part = 5;
+            console.log("arr_tab",arr_tab)
+
+        $scope.changeTab_Focus(arr_tab, arr_tab.name);
+        }
+
+        console.log($scope.params)
+
     }
     function check_case_member_review() {
 
@@ -3594,7 +3600,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         newInput.action_type = 'insert';
         newInput.action_change = 1;
         console.clear();
-        console.log(newInput);
 
         running_no_level1_lv1($scope.data_node, iNo, index, newInput);
 
@@ -3603,8 +3608,18 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         //add NodeDrawing  
         $scope.addDataNodeDrawing("", $scope.selectdata_node);
 
+        
+
         //add NodeDrawing  
         $scope.AddDataGuideWords(false);
+
+        console.log("Will show all node ids:");
+
+        $scope.data_nodeworksheet.forEach(node => {
+            console.log(node.nid_node);
+        });
+        
+        return;
 
         add_data_nodeworksheet_new_node(xValues);
 
@@ -5590,51 +5605,57 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     }*/
 
                         if (true) {
-                            var arr_chk = $scope.data_nodeworksheet;
+                            var node = $scope.data_node;
+
+                            for (var i = 0; i < node.length; i++){
+                                var arr_chk = $scope.data_nodeworksheet.filter(item => item.id_node === node[i].id);
                         
-                            var bCheckValid_Worksheet = false;
-                        
-                            //check หา 
-                            for (var i = 0; i < arr_chk.length; i++) {
-                                let item = arr_chk[i];                        
-                                var valid = false;
-                                if ((item['causes'] !== undefined && item['causes'] !== null && item['causes'] !== '') ||
-                                    (item['consequences'] !== undefined && item['consequences'] !== null && item['consequences'] !== '') ||
-                                    (item['category_type'] !== undefined && item['category_type'] !== null && item['category_type'] !== '')) {
-
-                                    // Validate based on the first present field among 'causes', 'consequences', 'category_type'
-                                    if (item['causes'] !== undefined && item['causes'] !== null && item['causes'] !== '') {
-                                        valid = validateFields(item, 'causes', ['consequences', 'category_type', 'major_accident_event', 'existing_safeguards']);
-                                    } else if (item['consequences'] !== undefined && item['consequences'] !== null && item['consequences'] !== '') {
-                                        valid = validateFields(item, 'consequences', ['causes', 'category_type', 'major_accident_event', 'existing_safeguards']);
-                                    } else if (item['category_type'] !== undefined && item['category_type'] !== null && item['category_type'] !== '') {
-                                        valid = validateFields(item, 'category_type', ['causes', 'consequences', 'major_accident_event', 'existing_safeguards']);
-                                    }
-
-                                    if(!valid){
-                                        bCheckValid_Worksheet = true; 
-                                    }
-
-
-
-                                } /*else {
-                                    bCheckValid_Worksheet = false; 
-                                    continue; 
-                                }*/
-                            }
-                        
-            
-                            if (bCheckValid_Worksheet) {
-                                $scope.goback_tab = 'worksheet'
+                                var bCheckValid_Worksheet = false;
                             
-                                $scope.tabs = $scope.tabs.map(tab => {
-                                    tab.isActive = (tab.name === 'worksheet');
-                                    return tab;
-                                })
+                                //check หา 
+                                for (var j = 0; j < arr_chk.length; j++) {
+                                    let item = arr_chk[j];                        
+                                    var valid = false;
+                                    if ((item['causes'] !== undefined && item['causes'] !== null && item['causes'] !== '') ||
+                                        (item['consequences'] !== undefined && item['consequences'] !== null && item['consequences'] !== '') ||
+                                        (item['category_type'] !== undefined && item['category_type'] !== null && item['category_type'] !== '')) {
+    
+                                        // Validate based on the first present field among 'causes', 'consequences', 'category_type'
+                                        if (item['causes'] !== undefined && item['causes'] !== null && item['causes'] !== '') {
+                                            valid = validateFields(item, 'causes', ['consequences', 'category_type', 'major_accident_event', 'existing_safeguards']);
+                                        } else if (item['consequences'] !== undefined && item['consequences'] !== null && item['consequences'] !== '') {
+                                            valid = validateFields(item, 'consequences', ['causes', 'category_type', 'major_accident_event', 'existing_safeguards']);
+                                        } else if (item['category_type'] !== undefined && item['category_type'] !== null && item['category_type'] !== '') {
+                                            valid = validateFields(item, 'category_type', ['causes', 'consequences', 'major_accident_event', 'existing_safeguards']);
+                                        }
+    
+                                        if(!valid){
+                                            bCheckValid_Worksheet = true; 
+                                        }
+    
+    
+    
+                                    } /*else {
+                                        bCheckValid_Worksheet = false; 
+                                        continue; 
+                                    }*/
+                                }    
+                                if (bCheckValid_Worksheet) {
+                                    $scope.goback_tab = 'worksheet'
+                                
+                                    $scope.tabs = $scope.tabs.map(tab => {
+                                        tab.isActive = (tab.name === 'worksheet');
+                                        return tab;
+                                    })
+    
+                                    set_alert('Warning', 'Please provide valid data in the worksheet');
+                                    return; 
+                                }
 
-                                set_alert('Warning', 'Please provide valid data in the worksheet');
-                                return; 
                             }
+
+                        
+        
                         }
 
 
@@ -5777,7 +5798,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 }
             }
         }
-
+        
+        
         // Check follow up edit
         if ($scope.params) {
             return $('#modalEditConfirm').modal('show');
@@ -5826,9 +5848,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     
     function validateFields(item, mainField, requiredFields) {
         let valid = true;
-    
+        let allFieldsPresent = true; 
+        let isViewDataNodeListSet = false; //
+
         if (item[mainField] !== null && item[mainField] !== '') {
-            let allFieldsPresent = true;
     
             // Check each required field
             requiredFields.forEach(field => {
@@ -5845,12 +5868,22 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             });
 
-    
             if (allFieldsPresent) {
                 requiredFields.forEach(field => {
-                    set_valid_items(item[field], 'nodeworksheet-' + field + '-' + item.seq);
+                    if (!isViewDataNodeListSet) {
+                        $timeout(function() {
+                            $scope.selectedItemNodeView = item.id_node;
+
+                            $scope.viewDataNodeList($scope.selectedItemNodeView);
+                        }, 0); 
+                        isViewDataNodeListSet = true;
+                    }
+                    $timeout(function() {
+                        set_valid_items(item[field], 'nodeworksheet-' + field + '-' + item.seq);
+                    }, 0); 
                 });
             }
+            
         } else {
 
             valid = false;

@@ -102,7 +102,7 @@
                         SAVE
                     </button>
                 </span>
-                <span class="mx-2" ng-if="data_header[0].pha_status == 21 && isMainApprover">
+                <span class="mx-2" ng-if="data_header[0].pha_status == 21 && can_edit">
                     <button class="btn btn-primary btn-sm" 
                         ng-click="confirmSave('save')">
                         Edit Worksheet
@@ -972,8 +972,8 @@
                                                         <div class="row uploadbox align-items-center" ng-if="tab_general_active">
                                                             <div class="btn-group">
                                                                 <div class="icon-button border p-3" style="border-color: #0d6efd; background-color: #0d6efd;">
-                                                                    <span class="fa-solid fa-arrow-up-from-bracket fa-lg" style="color: #ffffff;"></span>
-                                                                </div>
+                                                                    <span ng-if="!item.document_file_size" class="fa-solid fa-arrow-up-from-bracket fa-lg" style="color: #ffffff;"></span>
+                                                                    <span ng-if="item.document_file_size" class="fa-solid fa-file-pdf fa-lg" style="color: #ffffff;"></span>                                                                </div>
                                                                 <button class="Upload-button btn ps-3"  ng-if="!item.document_file_size">
                                                                     <label class="dz-message-text  fw-bold cursor-pointer"
                                                                         for="attfile-{{item.seq}}" ng-class="{'d-none':(!tab_general_active)}">
@@ -2336,7 +2336,7 @@
                                                                 </button>
                                                             </div>
                                                         </div>
-                                                        <div class="autocomplete-container" style=" width: 100%; " ng-class="{'disabled-link':(!tab_worksheet_active)}">
+                                                        <div class="autocomplete-container" style=" width: 100%; ">
                                                             <textarea class="form-control form-control-sm worksheetscroll rounded-1 p-0 m-0 w-100 border border-0" 
                                                                       style=" width: 100vh; font-size: 10px; resize: none;"
                                                                       id="causes_worksheet_{{item.seq}}" 
@@ -2344,14 +2344,14 @@
                                                                       placeholder="Causes" 
                                                                       rows="3"
                                                                       ng-style="{'min-height': (30 * (data_nodeworksheet | filter:{deviations: item.deviations,causes_no: item.causes_no}).length) + 'px'}"
-                                                                      ng-readonly="(data_header[0].pha_status === 21 && params !== 'edit' ? !isMainApprover : false)"
+                                                                      ng-readonly="!can_edit"
                                                                       ng-model="item.causes"
                                                                       ng-keyup="filterResultHistory(item.causes, 'causes', 'causes_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')">
                                                             </textarea>
                                                             <div class="autocomplete-dropdown" style="position: absolute;" ng-show="isShow == 'causes_worksheet_'+ item.seq"
                                                                  ng-class="{'ng-show' : (filteredArr[0].fieldID == ('causes_worksheet_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('causes_worksheet_'+item.seq)) }">
                                                                 <div class="autocomplete-option"
-                                                                     ng-hide="data_header[0].pha_status === 21 && params !== 'edit' ? !isMainApprover : false"
+                                                                     ng-hide="data_header[0].pha_status === 21 && params !== 'edit' ? !can_edit : false"
                                                                      ng-repeat="result in filteredResults | toArray | filter:{field:'causes'}"
                                                                      ng-click="selectResult(result,item,'causes')">
                                                                     {{ result.name }}
@@ -2417,7 +2417,7 @@
                                                                 </button>
                                                             </div>
                                                         </div>
-                                                        <div class="autocomplete-container" style=" width: 100%; " ng-class="{'disabled-link':(!tab_worksheet_active)}">
+                                                        <div class="autocomplete-container" style=" width: 100%; ">
                                                             <textarea class="form-control form-control-sm rounded-1 p-0 m-0 w-100 border-0"
                                                                       style=" width: 200px; font-size: 10px; resize: none;"
                                                                       id="consequences_worksheet_{{item.seq}}" 
@@ -2425,14 +2425,14 @@
                                                                       placeholder="Consequences" 
                                                                       rows="3"
                                                                       ng-style="{'min-height': (30 * (data_nodeworksheet | filter:{deviations: item.deviations,causes_no: item.causes_no,consequences_no: item.consequences_no}).length) + 'px'}"
-                                                                      ng-readonly="(data_header[0].pha_status === 21 && params !== 'edit' ? !isMainApprover : false)"                                                                      
+                                                                      ng-readonly="!can_edit"                                                                      
                                                                       ng-model="item.consequences"
                                                                       ng-keyup="filterResultHistory(item.consequences, 'consequences', 'consequences_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')">
                                                             </textarea>
                                                             <div class="autocomplete-dropdown" style="position: absolute;" ng-show="isShow == 'consequences_worksheet_'+ item.seq"
                                                                  ng-class="{'ng-show' : (filteredArr[0].fieldID == ('consequences_worksheet_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('consequences_worksheet_'+item.seq)) }">
                                                                 <div class="autocomplete-option"
-                                                                     ng-hide="data_header[0].pha_status === 21 && params !== 'edit' ? !isMainApprover : false"
+                                                                     ng-hide="data_header[0].pha_status === 21 && params !== 'edit' ? !can_edit : false"
                                                                      ng-repeat="result in filteredResults | toArray | filter:{field:'consequences'}"
                                                                      ng-click="selectResult(result,item,'consequences')">
                                                                     {{ result.name }}
@@ -2587,7 +2587,7 @@
                                                                     placeholder=" Protection/Mitigation Barriers" 
                                                                     rows="3"
                                                                       ng-style="{'min-height': (30 * (data_nodeworksheet | filter:{deviations: item.deviations,causes_no: item.causes_no,consequences_no: item.consequences_no}).length) + 'px'}"
-                                                                      ng-readonly="(data_header[0].pha_status === 21 && params !== 'edit' ? !isMainApprover : false)"     
+                                                                     ng-readonly="!can_edit"     
                                                                     ng-model="item.existing_safeguards"
                                                                     ng-keyup="filterResultHistory(item.existing_safeguards, 'existing_safeguards', 'existing_safeguards_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')">
                                                             </textarea>
@@ -2596,7 +2596,7 @@
                                                                 ng-show="isShow == 'existing_safeguards_worksheet_'+ item.seq"
                                                                 ng-class="{'ng-show' : (filteredArr[0].fieldID == ('existing_safeguards_worksheet_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('existing_safeguards_worksheet_'+item.seq)) }">
                                                                 <div class="autocomplete-option"
-                                                                     ng-hide="data_header[0].pha_status === 21 && params !== 'edit' ? !isMainApprover : false"
+                                                                     ng-hide="data_header[0].pha_status === 21 && params !== 'edit' ? !can_edit : false"
                                                                      ng-repeat="result in filteredResults | toArray | filter:{field:'existing_safeguards'}"
                                                                      ng-click="selectResult(result,item,'existing_safeguards')">
                                                                     {{ result.name }}
@@ -2659,7 +2659,6 @@
                                                     <div class="d-flex align-items-top w-100">
                                                         <div class="autocomplete-container" 
                                                             style=" width: 100%; " 
-                                                            ng-class="{'disabled-link':(!tab_worksheet_active)}"
                                                             ng-if="item.recommendations!=''">
                                                             <textarea class="form-control form-control-sm rounded-1 p-0 m-0 w-100 border-0 text-center"
                                                                       style=" width: 50px; font-size: 10px;resize: none;"
@@ -2688,6 +2687,7 @@
                                                                       name="recommendations_worksheet_{{item.seq}}"
                                                                       placeholder="Recommendations" 
                                                                       rows="3"
+                                                                      ng-readonly="!can_edit"
                                                                       ng-model="item.recommendations"
                                                                       ng-change="recommentAction($index)"
                                                                       ng-keyup="
@@ -3506,8 +3506,9 @@
                                                     @* {{item.seq}} *@
                                                     <div class=" p-0 cursor-pointer " 
                                                          ng-repeat="item_x in data_drawing_approver  | toArray | filter:{id_approver : item.seq}  ">
-                                                        <div class="d-flex flex-nowrap" ng-if="!(item.approver_action_type == 2 || data_header[0].pha_status != 21)" >
-                                                            <div class="font-sans-serif btn-reveal-trigger position-static me-1" ng-show="accessInfo.canAccess">
+                                                        <div class="d-flex flex-nowrap">
+                                                            <div class="font-sans-serif btn-reveal-trigger position-static me-1" 
+                                                                ng-if="accessInfo.canAccess && !item.approver_action_type == 2">
                                                                 <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 p-1"
                                                                         ng-if="!(accessInfo.canAccess && accessInfo.isTA2)"
                                                                         type="button" data-bs-toggle="dropdown" data-boundary="window"
@@ -3524,35 +3525,16 @@
                                                                     <a class="dropdown-item text-danger"
                                                                         ng-click=removeDataApproverDrawing(item_x,item_d.seq)>
                                                                         <span class="fas fa-times-circle"></span> 
-                                                                        Remove
+                                                                         Remove
                                                                     </a>
                                                                 </div>
                                                             </div>
-                                                            @*<div class="align-items-center" 
-                                                                ng-class="{ 'cant-Access': !canAccess }">
-                                                                <div class="uploadbox ">
-                                                                    <span class="nametext ms-3 filename-text me-2" id="filename-approver-{{item_x.seq}}" >
-                                                                        <p >
-                                                                            {{(item_x.document_file_size>0? item_x.document_file_name + '('+  item_x.document_file_size + 'KB)' : '')}}
-                                                                        </p>
-                                                                    </span>
-                                                                    <label class="uploadfile dz-message-text text-info fw-bold p-2" for="attfile-{{item_x.seq}}"
-                                                                           style="cursor: pointer;">
-                                                                        <i class="fa-solid fa-arrow-up-from-bracket fa-xl me-1"></i>
-                                                                        <span class="upload-text d-none d-lg-inline">Upload File (Max size 10mb)</span>
-                                                                    </label>
-                                                                    <input type="file" id="attfile-{{item_x.seq}}"
-                                                                           name="file{{item_x.seq}}"
-                                                                           onchange="angular.element(this).scope().fileSelectApprover(this,'approver')"
-                                                                           style="display:none" />
-                                                                </div>
-                                                            </div>*@
                                                             <div class="btn-group my-2" 
                                                                 ng-show="accessInfo.canAccess">
                                                                 <div class="icon-button border p-3" style="border-color: #0d6efd; background-color: #0d6efd;"
                                                                     ng-hide="!(accessInfo.canAccess && (accessInfo.isTA2 || accessInfo.isTA3)) && !item_x.document_file_size">
-                                                                    <span class="fa-solid fa-arrow-up-from-bracket fa-lg" style="color: #ffffff;"></span>
-                                                                </div>
+                                                                        <span ng-if="!item_x.document_file_size" class="fa-solid fa-arrow-up-from-bracket fa-lg" style="color: #ffffff;"></span>
+                                                                        <span ng-if="item_x.document_file_size" class="fa-solid fa-file-pdf fa-lg" style="color: #ffffff;"></span>                                                                  </div>
                                                                 <button class="Upload-button btn ps-3" 
                                                                         ng-if="!item_x.document_file_size">
                                                                     <span class="nametext ms-3 filename-text me-2 d-none" id="filename-approver-{{item_x.seq}}">
@@ -4706,7 +4688,7 @@
                                     <input type="radio"
                                            id="likelihood"
                                            name="likelihood"
-                                           ng-hide="data_header[0].pha_status === 21 ? !isMainApprover : false"
+                                           ng-hide="data_header[0].pha_status === 21 ? !can_edit : false"
                                            ng-checked="cal_ram_action_likelihood == item_ram.likelihood_level"
                                            ng-click="selectDataRAM('l',item_ram.likelihood_level)"
                                            style="cursor: pointer; width:25px; height:25px;">
@@ -4721,7 +4703,7 @@
                                 <input type="radio"
                                        id="security_level"
                                        name="security_level"
-                                       ng-hide="data_header[0].pha_status === 21 ? !isMainApprover : false "
+                                       ng-hide="data_header[0].pha_status === 21 ? !can_edit : false "
                                        ng-checked="cal_ram_action_security == item_ram.security_level"
                                        ng-click="selectDataRAM('s',item_ram.security_level)"
                                        style="cursor: pointer; width:25px; height:25px;">
@@ -4744,7 +4726,7 @@
                                     <input type="radio"
                                            id="likelihood" 
                                            name="likelihood"
-                                           ng-hide="data_header[0].pha_status === 21 ? !isMainApprover : false"
+                                           ng-hide="data_header[0].pha_status === 21 ? !can_edit : false"
                                            ng-checked="cal_ram_action_likelihood == item_ram.likelihood_level"
                                            ng-click="selectDataRAM('l',item_ram.likelihood_level)"
                                            style="cursor: pointer;width:30px; height:30px;">
@@ -4758,7 +4740,7 @@
                                 <input type="radio"
                                        id="security_level" 
                                        ng-checked="cal_ram_action_security == item_ram.security_level"
-                                       ng-hide="data_header[0].pha_status === 21 ? !isMainApprover : false "
+                                       ng-hide="data_header[0].pha_status === 21 ? !can_edit : false "
                                        name="security_level"
                                        ng-click="selectDataRAM('s',item_ram.security_level)"
                                        style="cursor: pointer;width:30px; height:30px;">
