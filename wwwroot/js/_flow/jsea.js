@@ -3082,7 +3082,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
 
         //if delete row 1 clear to null
-        if ($scope.data_drawing.length == 1 || $scope.data_drawing.no == 1) {
+        if (index == 0) {
             var keysToClear = ['document_name', 'document_no', 'descriptions'];
 
 
