@@ -3450,7 +3450,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             // ถ้า rows น้อยกว่าให้เพิ่ม rows
             console.log(`row default: ${rows_hazard} row copy: ${copy_hazard.length}`)
             if (rows_hazard < copy_hazard.length) {
-                $scope.addDataHazardList(current_subArea, current_hazard, 'health')
+                const difference = copy_hazard.length - rows_hazard
+                console.log('difference ',difference)
+                console.log('current_hazard ',current_hazard)
+                for (let i = 0; i < difference; i++) {
+                     $scope.addDataHazardList(current_subArea, current_hazard, 'health')
+                    
+                }
+               
             }
             // get
             var subArea_list = $filter('filter')($scope.data_subareas_list, function (_item) { 
