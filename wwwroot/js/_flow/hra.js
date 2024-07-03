@@ -1560,6 +1560,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 $scope.isDisableStatus = setup_isDisabledPHAStatus(arr.header[0])
                 // set isApproveReject
                 $scope.isApproveReject = setup_isApproveReject(arr.header[0])
+                // set isApproveReject
+                $scope.isEditWorksheet = setup_isEditWorksheet($scope.params)
 
                 if (true) {
                     $scope.data_all = arr;
@@ -2172,10 +2174,15 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     function setup_isApproveReject(header){
         if (header.approve_status == 'reject') {
-            // console.log(`PHA status: ${header.pha_status} isDisableStatus: true`)
             return true
         }
-        // console.log(`PHA status: ${header.pha_status} isDisableStatus: false`)
+        return false
+    }
+
+    function setup_isEditWorksheet(params){
+        if (params == 'edit') {
+            return true
+        }
         return false
     }
 
