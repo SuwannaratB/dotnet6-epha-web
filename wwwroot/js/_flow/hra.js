@@ -863,21 +863,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         return true
     }
 
-    function validWorksheet(){
-        var isRecom = false;
-        for (let i = 0; i < $scope.data_worksheet_list.length; i++) {
-            isRecom = $scope.filterInitialRiskRatingMain($scope.data_worksheet_list[i])
-
-            if(isRecom) break;
-        }
-        if (!isRecom) {
-            $scope.goback_tab = 'worksheet';
-            return false
-        } 
-        
-        return true
-    }
-
 
     function arr_def() {
         $scope.currentYear = new Date().getFullYear();
@@ -1560,6 +1545,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 $scope.isDisableStatus = setup_isDisabledPHAStatus(arr.header[0])
                 // set isApproveReject
                 $scope.isApproveReject = setup_isApproveReject(arr.header[0])
+                // set isApproveReject
+                $scope.isEditWorksheet = setup_isEditWorksheet($scope.params)
 
                 if (true) {
                     $scope.data_all = arr;
@@ -2172,10 +2159,15 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     function setup_isApproveReject(header){
         if (header.approve_status == 'reject') {
-            // console.log(`PHA status: ${header.pha_status} isDisableStatus: true`)
             return true
         }
-        // console.log(`PHA status: ${header.pha_status} isDisableStatus: false`)
+        return false
+    }
+
+    function setup_isEditWorksheet(params){
+        if (params == 'edit') {
+            return true
+        }
         return false
     }
 
@@ -2995,10 +2987,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
 
             //if delete row 1 clear to null
-            if ($scope.data_drawing.length == 1 || $scope.data_drawing.no == 1) {
+            if (index == 0) {
                 var keysToClear = ['document_name', 'document_no', 'descriptions'];
-
-
                 keysToClear.forEach(function (key) {
                     $scope.data_drawing[0][key] = null;
                 });

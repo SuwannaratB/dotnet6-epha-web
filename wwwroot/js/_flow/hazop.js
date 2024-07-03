@@ -513,7 +513,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     || selectedTab.name == 'report'
                 ) {
 
-
                     if ($scope.data_general[0].sub_expense_type == 'Normal') {
                         
                         if (!$scope.data_general[0].expense_type ||
@@ -529,38 +528,39 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                             });
                             selectedTab.isActive = true;
 
-                            return set_alert('Warning', 'Please select a valid General Information');
+                            // return set_alert('Warning', 'Please select a valid General Information');
                         }
 
-                    if (!$scope.data_drawing[0].document_no ) {
-                        //|| !$scope.status_upload
-                        $scope.tab_worksheet_show = true;
-                        $scope.tab_managerecom_show = true;
-                        $scope.goback_tab = 'node';
+                    // if (!$scope.data_drawing[0].document_no ) {
+                    //     $scope.tab_worksheet_show = true;
+                    //     $scope.tab_managerecom_show = true;
+                    //     $scope.goback_tab = 'node';
 
-                        angular.forEach($scope.tabs, function (tab) {
-                            tab.isActive = false;
-                        });
-                        selectedTab.isActive = true;
+                    //     angular.forEach($scope.tabs, function (tab) {
+                    //         tab.isActive = false;
+                    //     });
+                    //     selectedTab.isActive = true;
 
-                        return set_alert('Warning', 'Please select a valid Drawing');
-                    }
+                    //     return set_alert('Warning', 'Please select a valid Drawing');
+                    // }
 
-                        if (!$scope.data_node[0].node ||
-                            !$scope.data_nodedrawing[0].id_drawing
-                        ) {
-                            $scope.tab_worksheet_show = true;
-                            $scope.tab_managerecom_show = true;
-                            $scope.goback_tab = 'node';
+                    //     if (!$scope.data_node[0].node ||
+                    //         !$scope.data_nodedrawing[0].id_drawing
+                    //     ) {
+                    //         $scope.tab_worksheet_show = true;
+                    //         $scope.tab_managerecom_show = true;
+                    //         $scope.goback_tab = 'node';
 
-                            angular.forEach($scope.tabs, function (tab) {
-                                tab.isActive = false;
-                            });
-                            selectedTab.isActive = true;
+                    //         angular.forEach($scope.tabs, function (tab) {
+                    //             tab.isActive = false;
+                    //         });
+                    //         selectedTab.isActive = true;
 
-                            return set_alert('Warning', 'Please select a valid Node');
-                        }
-                        
+                    //         return set_alert('Warning', 'Please select a valid Node');
+                    //     }
+                        if(!validBeforRegister()) 
+                            return set_alert('Warning',$scope.validMessage)
+
                         apply();
                         $('#modalPleaseRegister').modal('show');
                         return;
@@ -605,7 +605,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         apply();
     };
     $scope.goBackToTab = function (){
-
         var tag_name = $scope.goback_tab;
 
         var arr_tab = $filter('filter')($scope.tabs, function (item) {
@@ -5445,6 +5444,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             if (action == 'submit_register' || action == 'submit_conduct' || action == 'submit_genarate') {
 
+                if(!validBeforRegister()) 
+                    return set_alert('Warning',$scope.validMessage)
+
                 var bCheckValid = false;
                 var arr_chk = $scope.data_general;
                 if (pha_status == "11") {
@@ -7551,8 +7553,126 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     
         return accessInfo;
     };
+
+    function validBeforRegister() {
+        if (validGeneral() &&
+            validSessions() &&
+            validDrawing() &&
+            validNode()
+        ) {
+            return true
+        }
+
+        return false
+    }
+
+    function validGeneral(){
+        if (!$scope.data_general[0].sub_expense_type ||
+            !$scope.data_general[0].expense_type ||
+            !$scope.data_general[0].id_apu
+        ) {
+            if(!$scope.data_general[0].sub_expense_type) $scope.validMessage = 'Please select a valid  Sub Project Type'
+            if(!$scope.data_general[0].expense_type) $scope.validMessage = 'Please select a valid Project Type'
+            if(!$scope.data_general[0].id_apu) $scope.validMessage = 'Please select a valid  Area Process Unit'
+
+            $scope.goback_tab = 'general';
+
+            return false
+        }
+        $scope.validMessage = ''
+        return true
+    }
+
+    function validSessions(){
+        let isValid = true;
+        for (let i = 0; i < $scope.data_session.length; i++) {
+            // MEMBER
+            if($scope.data_memberteam.length < 1 || !$scope.data_memberteam[0].user_displayname) {
+                $scope.goback_tab = 'session'
+                $scope.validMessage = 'Please select a valid Member Team/Adttendees'
+                return ;
+            }
+            // ASSESMENT  
+            if ($scope.data_general[0].expense_type == '5YEAR') {
+                if ($scope.data_approver.length < 1 || !$scope.data_approver[0].user_displayname) {
+                    $scope.goback_tab = 'session'
+                    $scope.validMessage = 'Please select a valid Assesment Team Leader'
+                    return ;
+                }
+            }
+        }
+        // SESSION DATE TIME
+        $scope.data_session.forEach(function(session) {
+          session.validated = true;
     
+          if (!session.meeting_date) {
+            $scope.validMessage = 'Please select a valid Meeting Date';
+            isValid = false;
+          } else if (!session.meeting_start_time_hh) {
+            $scope.validMessage = 'Please select a valid Meeting Start Time HH';
+            isValid = false;
+          } else if (!session.meeting_start_time_mm) {
+            $scope.validMessage = 'Please select a valid Meeting Start Time MM';
+            isValid = false;
+          } else if (!session.meeting_end_time_hh) {
+            $scope.validMessage = 'Please select a valid Meeting End Time HH';
+            isValid = false;
+          } else if (!session.meeting_end_time_mm) {
+            $scope.validMessage = 'Please select a valid Meeting End Time MM';
+            isValid = false;
+          }
     
+          if (!isValid) {
+            $scope.goback_tab = 'session';
+            return false;
+          }
+        });
+    
+        if (isValid) {
+          $scope.validMessage = '';
+          return true;
+        }
+    }
+    
+    function validDrawing(){
+        for (let i = 0; i < $scope.data_drawing.length; i++) {
+            if (!$scope.data_drawing[i].document_no ||
+                !$scope.data_drawing[i].document_file_name
+            ) {
+                if(!$scope.data_drawing[i].document_file_name) $scope.validMessage = 'Please select a valid Document File'
+                if(!$scope.data_drawing[i].document_no) $scope.validMessage = 'Please select a valid Drawing No'
+    
+                $scope.goback_tab = 'node';
+
+                return false
+            }
+        }
+        $scope.validMessage = ''
+        return true
+    }
+
+    function validNode(){
+        for (let i = 0; i < $scope.data_node.length; i++) {
+            if (!$scope.data_node[i].node) {
+                if(!$scope.data_node[i].document_file_name) $scope.validMessage = 'Please select a valid Node'
+                
+                $scope.goback_tab = 'node';
+                return false
+            }
+        }
+        
+        for (let i = 0; i < $scope.data_nodedrawing.length; i++) {
+            if (!$scope.data_nodedrawing[i].id_drawing) {
+                if(!$scope.data_nodedrawing[i].id_drawing) $scope.validMessage = 'Please select a valid Drawing'
+    
+                $scope.goback_tab = 'node';
+                return false
+            }
+        }
+
+        $scope.validMessage = ''
+        return true
+    }
 
 
 });

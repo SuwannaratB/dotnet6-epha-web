@@ -936,7 +936,7 @@
                                                                     <button class="btn btn-outline-secondary p-2" 
                                                                         ng-class="{'disabled-link': isDisableStatus}"
                                                                         style="color: #ff2828; background-color: #f1f2f4; border-color: #ff2828;"
-                                                                        ng-click="triggerRemove(item,item.seq,$index-1,'DrawingDoc')"
+                                                                        ng-click="triggerRemove(item,item.seq,$index,'DrawingDoc')"
                                                                         data-toggle="tooltip" 
                                                                         data-placement="top" 
                                                                         title="Remove">
@@ -1680,7 +1680,10 @@
                                                             ng-class="{'unbox': (item.worksheet[item.worksheet.length - 1].seq == hazard.seq)}">
                                                             <select class="form-select form-select-sm rounded-1" 
                                                                     ng-if="tab_worksheet_active"
-                                                                    ng-class="{'disabled-link': isDisableStatus && !isApproveReject}"
+                                                                    ng-class="{'disabled-link': 
+                                                                        isDisableStatus && 
+                                                                        !isApproveReject &&
+                                                                        !isEditWorksheet}"
                                                                     ng-change="actionChangeFrequencyLevel(hazard)"
                                                                     ng-model="hazard.id_frequency_level" 
                                                                     style="min-width: 100px; font-size: 10.24px;">
@@ -1695,7 +1698,10 @@
                                                        <div class=" box"  
                                                             ng-repeat="hazard in item.worksheet"
                                                             ng-class="{
-                                                                'disabled-link': isDisableStatus && !isApproveReject,
+                                                                'disabled-link': 
+                                                                    isDisableStatus && 
+                                                                    !isApproveReject &&
+                                                                    !isEditWorksheet,
                                                                 'unbox': (item.worksheet[item.worksheet.length - 1].seq == hazard.seq)}">
                                                             <div class="d-flex align-items-center gap-2">
                                                                 <input class="form-control form-control-sm placeholder-right" 
@@ -1760,7 +1766,10 @@
                                                         <div class="box" 
                                                             ng-repeat="hazard in item.worksheet"
                                                             ng-class="{
-                                                                'disabled-link': isDisableStatus && !isApproveReject,
+                                                                'disabled-link': 
+                                                                    isDisableStatus && 
+                                                                    !isApproveReject && 
+                                                                    !isEditWorksheet,
                                                                 'unbox': (item.worksheet[item.worksheet.length - 1].seq == hazard.seq)}">
                                                              <textarea class="form-control form-control-sm" 
                                                                 rows="2" 
@@ -1781,7 +1790,7 @@
                                                             ng-class="{'unbox': (item.worksheet[item.worksheet.length - 1].seq == hazard.seq)}">
                                                             <div class="d-flex gap-2 mb-2" 
                                                                 style="min-width: max-content;"
-                                                                ng-class="{'disabled-link': isDisableStatus && !isApproveReject}">
+                                                                ng-class="{'disabled-link': isDisableStatus && !isApproveReject && !isEditWorksheet}">
                                                                 <input type="radio" 
                                                                     name="ef-{{index}}-{{idx}}" 
                                                                     id="effective-{{index}}-{{idx}}"
@@ -1796,7 +1805,10 @@
                                                             </div>
                                                             <div class="d-flex gap-2" 
                                                                 style="min-width: max-content;"
-                                                                ng-class="{'disabled-link': isDisableStatus && !isApproveReject}">
+                                                                ng-class="{'disabled-link': 
+                                                                    isDisableStatus && 
+                                                                    !isApproveReject && 
+                                                                    !isEditWorksheet}">
                                                                 <input type="radio" 
                                                                     name="ef-{{index}}-{{idx}}" 
                                                                     id="ineffective-{{index}}-{{idx}}"
@@ -1818,7 +1830,10 @@
                                                             ng-class="{'unbox': (item.worksheet[item.worksheet.length - 1].seq == hazard.seq)}">
                                                             <select class="form-select form-select-sm rounded-1" 
                                                                 ng-if="tab_worksheet_active"
-                                                                ng-class="{'disabled-link': isDisableStatus && !isApproveReject}"
+                                                                ng-class="{'disabled-link': 
+                                                                    isDisableStatus && 
+                                                                    !isApproveReject && 
+                                                                    !isEditWorksheet}"
                                                                 @* ng-change="actionChangeWorksheet(item,item.seq,'frequency_level')" *@
                                                                 ng-change="actionChangeFrequencyLevel(hazard)"
                                                                 ng-model="hazard.residual_risk_rating" 
@@ -1838,7 +1853,10 @@
                                                         <div class="box" 
                                                         ng-repeat="hazard in item.worksheet"
                                                          ng-class="{
-                                                            'disabled-link': isDisableStatus && !isApproveReject,
+                                                            'disabled-link': 
+                                                                isDisableStatus && 
+                                                                !isApproveReject &&
+                                                                !isEditWorksheet,
                                                             'unbox': (item.worksheet[item.worksheet.length - 1].seq == hazard.seq)}">
                                                             <textarea class="form-control form-control-sm " 
                                                                 rows="2" 
@@ -2370,9 +2388,11 @@
                                                 <td class="align-top px-1 text-start" style="min-width:200px;">
                                                     <div class=" p-0 cursor-pointer "
                                                          ng-repeat="item_x in data_drawing_approver  | filter:{id_approver : item.seq}  ">
-                                                        <div class="d-flex align-items-center flex-nowrap" ng-if="!(item.approver_action_type == 2 || data_header[0].pha_status != 21)" 
-                                                             ng-class="{ 'no-drop': !canAccess ,'ps-2': !canAccess }">
-                                                            <div class="font-sans-serif btn-reveal-trigger position-static me-1">
+                                                        <div class="d-flex align-items-center flex-nowrap" 
+                                                            @* ng-if="!(item.approver_action_type == 2 || data_header[0].pha_status != 21)"  *@
+                                                            ng-class="{ 'no-drop': !canAccess ,'ps-2': !canAccess }">
+
+                                                            <div ng-if="item.approver_action_type != 2" class="font-sans-serif btn-reveal-trigger position-static me-1">
                                                                 <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 p-1"
                                                                         ng-class="{ 'cant-Access': !canAccess }"
                                                                         ng-hide="!canAccess"
@@ -2394,7 +2414,9 @@
                                                                     </a>
                                                                 </div>
                                                             </div>
-                                                            <div class="btn-group my-2" ng-style="{ 'opacity': !canAccess ? 0.5 : 1}"
+
+                                                            <div class="btn-group my-2" 
+                                                                ng-style="{ 'opacity': !canAccess ? 0.5 : 1}"
                                                                 ng-hide="!canAccess"
                                                                 ng-class="{ 'no-drop': !canAccess, 'ps-2': !canAccess, 'cursor-pointer': canAccess }">
                                                                 <div class="icon-button border p-3" 
@@ -2405,9 +2427,9 @@
                                                                     <span ng-if="item_x.document_file_size" class="fa-solid fa-file-pdf fa-lg" style="color: #ffffff;"></span>
                                                                 </div>
                                                                 <button class="Upload-button btn ps-3" 
-                                                                        ng-style="{ 'background-color': canAccess ? '' : '#f5f7fa' }"
-                                                                        ng-class="{ 'no-drop': !canAccess, 'cursor-pointer': canAccess }" 
-                                                                        ng-if="!item_x.document_file_size">
+                                                                    ng-style="{ 'background-color': canAccess ? '' : '#f5f7fa' }"
+                                                                    ng-class="{ 'no-drop': !canAccess, 'cursor-pointer': canAccess }" 
+                                                                    ng-if="!item_x.document_file_size">
                                                                     <span class="nametext ms-3 filename-text me-2 d-none" id="filename-approver-{{item_x.seq}}">
                                                                         {{(item_x.document_file_size>0? item_x.document_file_name + '('+  item_x.document_file_size + 'KB)' : '')}}
                                                                     </span>

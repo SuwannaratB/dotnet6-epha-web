@@ -4,128 +4,138 @@
     Layout = "~/Views/Shared/_LayoutWeb.cshtml";
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.3/angular.min.js"></script>
 
-
+    <link rel="stylesheet" href="~/css/myStyles.css">
 }
 
 <div class="flex-center position-relative sg-0" style="max-height:100vh; max-width: 100%;" id="divPage" ng-controller="ctrlAppPage">
-
     <div class="content" style="max-height:100vh; max-width: 100%;">
-        <div class="card shadow-none border border-300 " data-component-card="data-component-card">
-
+        <div class="card shadow-none border border-300 mt-4" data-component-card="data-component-card">
             <div class="card-body" style="max-width: 100%;">
                 <div class="col-12 " style="zoom:0.8;">
-
                     <div class="card rounded shadow-lg border-0">
-
                         <div class="card-body border-0">
                             @* justify-content-center *@
                             <div class="row gx-4 gy-2 d-flex justify-content-center" style="margin-left: auto !important;">
-
-                                <a id="menu_hometasks" href="home/hometasks" ng-if="menu_hometasks"
-                                   class="col-xxl-3 col-xl-3 col-lg-4 col-md-6 col-sm-9 col-12 text-decoration-none">
-
+                                <a id="menu_hometasks" 
+                                    href="home/hometasks" 
+                                    ng-if="menu_hometasks"
+                                    class="card-menu col-xxl-3 col-xl-3 col-lg-4 col-md-6 col-sm-9 col-12 text-decoration-none">
                                     <div class="card border-0 rounded shadow p-3 mb-3 aspect-ratio aspect-ratio-4x3"
                                          style="background-color: #ffffff; width: 100%; height: 325px;">
                                         <img src="../assets/img/iconforportal/home-task@3x.png"
-                                             class="w-100 h-100" alt="...">
+                                            class="w-100 h-100" 
+                                            alt="..."
+                                            style="object-fit: cover;">
                                     </div>
                                     <h3 class="mt-2 text-center">MY TASKS</h3>
-
                                 </a>
-                                <a id="menu_hazop" ng-click="selected_menu('hazop')" ng-if="menu_hazop"
-                                   class="col-xxl-3 col-xl-3 col-lg-4 col-md-6 col-sm-9 col-12 text-decoration-none">
 
+                                <a id="menu_hazop" 
+                                    ng-click="selected_menu('hazop')" 
+                                    ng-if="menu_hazop"
+                                    class="card-menu col-xxl-3 col-xl-3 col-lg-4 col-md-6 col-sm-9 col-12 text-decoration-none">
                                     <div class="card border-0 rounded shadow p-3 mb-3 aspect-ratio aspect-ratio-4x3"
                                          style="background-color: #ffffff; width: 100%; height: 325px;">
                                         <img src="../assets/img/iconforportal/hazop@3x.png"
-                                             class="w-100 h-100" alt="...">
+                                            class="w-100 h-100" 
+                                            alt="..."
+                                            style="object-fit: cover;">
                                     </div>
                                     <h3 class="mt-2 text-center">HAZOP</h3>
-
                                 </a>
-                                <a id="menu_jsea" ng-click="selected_menu('jsea')" ng-if="menu_jsea"
-                                   class="col-xxl-3 col-xl-3 col-lg-4 col-md-6 col-sm-9 col-12 text-decoration-none">
 
+                                <a id="menu_jsea" 
+                                    ng-click="selected_menu('jsea')" 
+                                    ng-if="menu_jsea"
+                                    class="card-menu col-xxl-3 col-xl-3 col-lg-4 col-md-6 col-sm-9 col-12 text-decoration-none">
                                     <div class="card border-0 rounded shadow p-3 mb-3 aspect-ratio aspect-ratio-4x3"
                                          style="background-color: #ffffff; width: 100%; height: 325px;">
-                                        <img src="../assets/img/iconforportal/jsea@3x.png" class="w-100 h-100"
-                                             alt="...">
+                                        <img src="../assets/img/iconforportal/jsea@3x.png" 
+                                            class="w-100 h-100"
+                                            alt="..."
+                                            style="object-fit: cover;">
                                     </div>
                                     <h3 class="mt-2 text-center">JSEA</h3>
-
                                 </a>
 
-                                <a id="menu_whatif" ng-click="selected_menu('whatif')" ng-if="menu_whatif"
-                                   class="col-xxl-3 col-xl-3 col-lg-4 col-md-6 col-sm-9 col-12 text-decoration-none">
-
+                                <a id="menu_whatif" 
+                                    ng-click="selected_menu('whatif')"
+                                    ng-if="menu_whatif"
+                                    class="card-menu col-xxl-3 col-xl-3 col-lg-4 col-md-6 col-sm-9 col-12 text-decoration-none">
                                     <div class="card border-0 rounded shadow p-3 mb-3 aspect-ratio aspect-ratio-4x3"
                                          style="background-color: #ffffff;  height: 325px; min-height: 150px;">
                                         <img src="../assets/img/iconforportal/what-if@3x.png"
-                                             class="w-100 h-100" alt="...">
+                                            class="w-100 h-100" 
+                                            alt="..."
+                                            style="object-fit: cover;">
                                     </div>
                                     <h3 class="mt-2 text-center">WHAT'S IF</h3>
-
                                 </a>
-                                <a id="menu_hra" ng-click="selected_menu('hra')" ng-if="menu_hra"
-                                   class="col-xxl-3 col-xl-3 col-lg-4 col-md-6 col-sm-9 col-12 text-decoration-none">
 
+                                <a id="menu_hra" 
+                                    ng-click="selected_menu('hra')" 
+                                    ng-if="menu_hra"
+                                    class="card-menu col-xxl-3 col-xl-3 col-lg-4 col-md-6 col-sm-9 col-12 text-decoration-none">
                                     <div class="card border-0 rounded shadow p-3 mb-3 aspect-ratio aspect-ratio-4x3"
                                          style="background-color: #ffffff; width: 100%; height: 325px; min-height: 150px;">
                                         <img src="../assets/img/iconforportal/hra@3x.png"
-                                             class="w-100 h-100" alt="...">
+                                            class="w-100 h-100" 
+                                            alt="..."
+                                            style="object-fit: cover;">
                                     </div>
                                     <h3 class="mt-2 text-center">HRA</h3>
-
                                 </a>
-                                <a id="menu_bowtie" href="https://bowtiemaster.com/" target="_blank" ng-if="menu_bowtie"
-                                   class="col-xxl-3 col-xl-3 col-lg-4 col-md-6 col-sm-9 col-12 text-decoration-none">
 
+                                <a id="menu_bowtie" 
+                                    href="https://bowtiemaster.com/" 
+                                    target="_blank" 
+                                    ng-if="menu_bowtie"
+                                    class="card-menu col-xxl-3 col-xl-3 col-lg-4 col-md-6 col-sm-9 col-12 text-decoration-none">
                                     <div class="card border-0 rounded shadow p-3 mb-3 aspect-ratio aspect-ratio-4x3"
                                          style="background-color: #ffffff; width: 100%; height: 325px; min-height: 150px;">
                                         <img src="../assets/img/iconforportal/bow-tie@3x.png"
-                                             class="w-100 h-100" alt="...">
+                                            class="w-100 h-100" 
+                                            alt="..."
+                                            style="object-fit: cover;">
                                     </div>
                                     <h3 class="mt-2 text-center">BOW-TIE</h3>
-
                                 </a>
-                                <a id="menu_search" href="hazop/search" ng-if="menu_search"
-                                   class="col-xxl-3 col-xl-3 col-lg-4 col-md-6 col-sm-9 col-12 text-decoration-none">
 
+                                <a id="menu_search" 
+                                    href="hazop/search" 
+                                    ng-if="menu_search"
+                                    class="card-menu col-xxl-3 col-xl-3 col-lg-4 col-md-6 col-sm-9 col-12 text-decoration-none">
                                     <div class="card border-0 rounded shadow p-3 mb-3 aspect-ratio aspect-ratio-4x3"
                                          style="background-color: #ffffff; width: 100%; height: 325px; min-height: 150px;">
                                         <img src="../assets/img/iconforportal/search@3x.png"
-                                             class="w-100 h-100" alt="...">
+                                            class="w-100 h-100" 
+                                            alt="..."
+                                            style="object-fit: cover;">
                                     </div>
                                     <h3 class="mt-2 text-center">SEARCH</h3>
-
                                 </a>
 
-                                <a id="menu_report" href="report/index" ng-if="menu_report"
-                                   class="col-xxl-3 col-xl-3 col-lg-4 col-md-6 col-sm-9 col-12 text-decoration-none disabled-link">
-
+                                <a id="menu_report" 
+                                    href="report/index" 
+                                    ng-if="menu_report"
+                                    class="card-menu col-xxl-3 col-xl-3 col-lg-4 col-md-6 col-sm-9 col-12 text-decoration-none disabled-link">
                                     <div class="card border-0 rounded shadow p-3 mb-3 aspect-ratio aspect-ratio-4x3"
                                          style="background-color: #ffffff; width: 100%; height: 325px; min-height: 150px;">
                                         <img src="../assets/img/iconforportal/dashboard@3x.png"
-                                             class="w-100 h-100" alt="...">
+                                            class="w-100 h-100" 
+                                            alt="..."
+                                            style="object-fit: cover;">
                                     </div>
                                     <h3 class="mt-2 text-center">DASHBOARD/REPORT</h3>
-
                                 </a>
 
-
                             </div>
-
                         </div>
-
                     </div>
-
                 </div>
             </div>
-
         </div>
-
     </div>
-
 </div>
 
 @section scripts {
