@@ -1210,11 +1210,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         var pha_seq = $scope.data_header[0].seq;
         token_doc = pha_seq;
 
-        var json_header = angular.toJson($scope.data_header);
-        //var json_general = angular.toJson([$scope.data_general[0]]);
         var json_general =  check_data_general();
-
-        // var json_general = angular.toJson($scope.data_general);
+        var json_header = check_data_header();
 
         var flow_action = (action == 'submit_complete' ? 'submit' : action);
 
@@ -1952,7 +1949,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         return false;
     };
     
-    $scope.filterInitialRiskRating = function(item) {
+    $scope.filterInitialRiskRating = function(item) { 
         return item.initial_risk_rating === 'Meduim' || 
             item.initial_risk_rating === 'Meduim\r\n' || 
             item.initial_risk_rating === 'High' ||
@@ -4943,6 +4940,15 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     //check_data
     if (true) {
         //alert(1111);
+        function check_data_header() {
+            if ($scope.data_general[0].expense_type == '5YEAR') {
+                $scope.data_header[0].action_change = 1;
+                $scope.data_header[0].request_approver = 1;
+            }
+
+           return angular.toJson($scope.data_header);
+        }
+
         function check_data_general() {
             //แปลง date to yyyyMMdd
             //แปลง time to hh:mm
@@ -4991,6 +4997,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 
             return angular.toJson(copy_data_general);
         }
+
         function check_data_session() {
 
             var pha_seq = $scope.data_header[0].seq;
@@ -5951,6 +5958,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
 
         $scope.actionChangeFrequencyLevel = function (item) {
+            item.action_change = 1
             processExposureRating(item)
         }
 
