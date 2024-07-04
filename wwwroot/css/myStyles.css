@@ -409,7 +409,7 @@ background-color: #3e8e41;
   }
 
   /* Firefox */
-  .box-recom, .dropbtn, textarea {
+  .box, .box-recom, .dropbtn, textarea {
     scrollbar-width: thin;
     scrollbar-color: #f1f2f4 #fff;
   }

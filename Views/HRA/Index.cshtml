@@ -2292,8 +2292,8 @@
                                                 <th class=" align-middle">No</th>
                                                 <th class=" align-middle">Approver</th>
                                                 <th class=" align-middle">Status</th>
-                                                <th class=" align-middle text-start"><b class="text-danger" ng-if="item.action_status == 'reject'"> * </b>Comment</th>
-                                                <th class=" align-middle text-start">Document File</th>
+                                                <th class=" align-middle"><b class="text-danger" ng-if="item.action_status == 'reject'"> * </b>Comment</th>
+                                                <th class=" align-middle">Document File</th>
                                                 <th class=" align-middle">Action Date</th>
                                                 <th class=" align-middle"></th>
                                             </tr>
@@ -2434,8 +2434,10 @@
                                                                      <span ng-if="!item_x.document_file_size" class="fa-solid fa-arrow-up-from-bracket fa-lg" style="color: #ffffff;"></span>
                                                                     <span ng-if="item_x.document_file_size" class="fa-solid fa-file-pdf fa-lg" style="color: #ffffff;"></span>
                                                                 </div>
-                                                                <button class="Upload-button btn ps-3" 
-                                                                    ng-style="{ 'background-color': canAccess ? '' : '#f5f7fa' }"
+                                                                <button class="Upload-button btn ps-3"
+                                                                    ng-style="{ 
+                                                                        'background-color': canAccess ? '' : '#f5f7fa',
+                                                                        'margin-left':  canAccess ? '' : '8px'}"
                                                                     ng-class="{ 'no-drop': !canAccess, 'cursor-pointer': canAccess }" 
                                                                     ng-if="!item_x.document_file_size">
                                                                     <span class="nametext ms-3 filename-text me-2 d-none" id="filename-approver-{{item_x.seq}}">
