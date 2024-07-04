@@ -1015,7 +1015,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                             $('#modalMsg').modal('hide');
 
                             setTimeout(function() {
-                                location.reload();
+                                // location.reload();
+                                window.open("Home/Portal", "_top");
                             }, 2000); 
                         }
                         

@@ -588,7 +588,9 @@
                                                     <td class="align-middle">
                                                         <div class="p-2" 
                                                             style="width: 200px;"
-                                                            ng-class="{ 'no-drop': !canAccess, 'cursor-pointer': canAccess}">
+                                                            ng-class="{ 
+                                                                'no-drop': !canAccess, 'cursor-pointer': canAccess,
+                                                                'd-none': item_d.responder_user_name != user_name && item_d.responder_action_type != 2}">
                                                             <textarea class="form-control form-control-sm rounded-1 p-0 mt-1 w-100 border border-end-0 border-top-0"
                                                                 style=" width: 100vh; font-size: 10px;"
                                                                 ng-class="{ 'cant-Access': !canAccess}"
@@ -607,8 +609,8 @@
                                                     @* Hazop recommendations responded sheet 13 *@
                                                     <td class="align-top px-1" style="min-width:200px;" ng-if="flow_status != 14">
                                                         <div class=" p-0 cursor-pointer "
-                                                            @* ng-class="{'d-none': item_d.responder_user_name != user_name}" *@
-                                                             ng-repeat="item_x in data_drawingworksheet | filter:{id_worksheet:item_d.seq, action_type : '!delete'}">
+                                                            ng-class="{'d-none': item_d.responder_user_name != user_name && item_d.responder_action_type != 2}"
+                                                            ng-repeat="item_x in data_drawingworksheet | filter:{id_worksheet:item_d.seq, action_type : '!delete'}">
                                                             <div class="d-flex align-items-center flex-nowrap"
                                                                  ng-class="{ 'no-drop': !canAccess, 'cursor-pointer': canAccess }"
                                                                  @* ng-if="!((flow_status == 14 
