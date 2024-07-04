@@ -1464,7 +1464,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
         return false;
     };
     
-
+    $scope.hasResponderUserDisplayName = function(item) {
+        return item.responder_user_displayname && item.responder_user_displayname.trim() !== '';
+    };
 
     
 });

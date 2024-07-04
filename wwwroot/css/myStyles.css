@@ -28,7 +28,7 @@ a, i {
 }
 
 .d-none {
-    display: none;
+    display: none !important;
 }
 
 .my-text {
