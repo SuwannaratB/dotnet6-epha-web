@@ -3,30 +3,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
     $('#divLoading').hide();
 
 
-    var unsavedChanges = false;
-
-    // Track location changes
-    $rootScope.$on('$locationChangeStart', function(event, next, current) {
-        if (unsavedChanges) {
-            var confirmLeave = $window.confirm("You have unsaved changes. Are you sure you want to leave?");
-            if (!confirmLeave) {
-                event.preventDefault();
-            }
-        }
-    });
-
-    // close tab / browser window
-    $window.addEventListener('beforeunload', function(event) {
-        if (unsavedChanges) {
-            var confirmationMessage = 'You have unsaved changes. Are you sure you want to leave?';
-    
-            event.preventDefault();
-            event.returnValue = confirmationMessage;
-            return confirmationMessage;
-        }
-    });
-
-
     //  add file 
     $scope.clearFileName = function (detail_seq,inputId) {
 
@@ -234,7 +210,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
 
         } catch (ex) { alert(ex); }
 
-        unsavedChanges = true;
     }
 
     $scope.truncateFilename = function(filename, length) {
@@ -722,7 +697,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
             $scope.confirmSaveReviewFollowup('save', item);
         }
 
-        unsavedChanges = false;
     };
 
     $scope.actionImplement = function (item) {
@@ -753,7 +727,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
              
             }
         });
-        unsavedChanges = true;
     }
 
     $scope.actionInput = function (item) {
@@ -765,7 +738,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
             }
         });
 
-        unsavedChanges = true;
     }
 
     $scope.setSeqUpload = function (seq) {
@@ -800,7 +772,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
         clear_form_valid();
 
         if (action == 'submit') {
-            unsavedChanges = false;
             //เนื่องจากย้ายมาในระดับ row
             $scope.id_worksheet_select = item.seq;
             //if (item.document_file_size == 0 || item.document_file_size == null) {
@@ -1026,16 +997,28 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                     apply();
 
                     if (true) {
+                        console.log("it true")
                         var arr = $filter('filter')($scope.data_details, function (item) {
                             return (item.responder_action_type == 2);
                         });
 
                         console.log("=>",arr)
                         if (arr.length == $scope.data_details.length) {
+                            console.log("will Portal")
+
                             window.open("Home/Portal", "_top");
                         } else { 
-                            $('#modalMsg').modal('show');
+                            console.log("will reload")
+                            setTimeout(function() {
+                                $('#modalMsg').modal('show');
+                            }, 1000); 
+                            $('#modalMsg').modal('hide');
+
+                            setTimeout(function() {
+                                location.reload();
+                            }, 2000); 
                         }
+                        
                     }
 
                 }
@@ -1364,7 +1347,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
             } catch (e) { }
         }
 
-        unsavedChanges = true;
         apply();
 
         $('#modalRAM').modal('show');

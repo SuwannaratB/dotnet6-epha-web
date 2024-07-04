@@ -1027,12 +1027,12 @@
                                                                     <i class="far fa-file-pdf text-danger"></i> 
                                                                     {{(item.document_file_size>0? item.document_file_name + '('+  item.document_file_size + 'KB)' : '')}}
                                                                 </a>
-                                                            </div>*@
+                                                            </div>
                                                         </div>
                                                         <div id="drawing-document-file-{{item.seq}}"
                                                              class="invalid-feedback text-danger">
                                                             Please provide a valid Drawing.(Max size 10mb)
-                                                        </div>
+                                                        </div>*@
                                                     </td>
 
                                                     <td class="align-middle ">
@@ -3483,12 +3483,11 @@
 
                                                 </td>
                                                 <td class="align-top white-space-nowrap text-start" ng-class="{'disabled-link':(!tab_approver_active)}">
-
                                                     <div class="col-md-12 p-1 ps-3" ng-if="!(item.approver_action_type == 2 || data_header[0].pha_status != 21)" >
                                                             <textarea class="form-control rounded-1" 
                                                                     id="floatingTextarea2" 
-                                                                    placeholder="{{ canAccess ? 'Enter your comment' : '' }}"
-                                                                    ng-if="accessInfo.canAccess && (accessInfo.isTA2 || accessInfo.isTA3)"
+                                                                    placeholder="{{ accessInfo.canAccess ? 'Enter your comment' : '' }}"
+                                                                    ng-if="accessInfo.canAccess || accessInfo.isTA2 || accessInfo.isTA3"
                                                                     ng-model="item.comment"></textarea>
                                                         <div id="valid-approver-comment-{{item.seq}}" class="invalid-feedback text-danger">
                                                             Please select a valid comment.
@@ -3508,9 +3507,9 @@
                                                          ng-repeat="item_x in data_drawing_approver  | toArray | filter:{id_approver : item.seq}  ">
                                                         <div class="d-flex flex-nowrap">
                                                             <div class="font-sans-serif btn-reveal-trigger position-static me-1" 
-                                                                ng-if="accessInfo.canAccess && !item.approver_action_type == 2">
+                                                                ng-if="(accessInfo.canAccess || accessInfo.isTA2 ||accessInfo.isTA3) && (item.approver_action_type == 0 || item.approver_action_type == 1)">
                                                                 <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 p-1"
-                                                                        ng-if="!(accessInfo.canAccess && accessInfo.isTA2)"
+                                                                        ng-if="(accessInfo.canAccess || accessInfo.isTA2 || accessInfo.isTA3)"
                                                                         type="button" data-bs-toggle="dropdown" data-boundary="window"
                                                                         aria-haspopup="true" aria-expanded="false" data-bs-reference="parent">
                                                                     <span class="fas fa-cog text-info"></span>
@@ -3532,7 +3531,7 @@
                                                             <div class="btn-group my-2" 
                                                                 ng-show="accessInfo.canAccess">
                                                                 <div class="icon-button border p-3" style="border-color: #0d6efd; background-color: #0d6efd;"
-                                                                    ng-hide="!(accessInfo.canAccess && (accessInfo.isTA2 || accessInfo.isTA3)) && !item_x.document_file_size">
+                                                                    ng-hide="!(accessInfo.canAccess || accessInfo.isTA2 || accessInfo.isTA3) && !item_x.document_file_size">
                                                                         <span ng-if="!item_x.document_file_size" class="fa-solid fa-arrow-up-from-bracket fa-lg" style="color: #ffffff;"></span>
                                                                         <span ng-if="item_x.document_file_size" class="fa-solid fa-file-pdf fa-lg" style="color: #ffffff;"></span>                                                                  </div>
                                                                 <button class="Upload-button btn ps-3" 
@@ -3584,7 +3583,7 @@
                                                         <button class="btn btn-outline text-primary  p-1 m-2 me-0" 
                                                                 style=" background-color: #f1f2f4; width:50px;"
                                                                 ng-click="confirmDialogApprover(item,'save')"
-                                                                ng-show="accessInfo.canAccess && (accessInfo.isTA2 || accessInfo.isTA3)"
+                                                                ng-show="accessInfo.canAccess || accessInfo.isTA2 || accessInfo.isTA3"
                                                                 ng-if="!(item.approver_action_type == 2 || data_header[0].pha_status != 21)">
                                                             <span class="fa fa-save text-primary fa-lg"></span><br />
                                                             <span style="font-size:8px">Save</span>

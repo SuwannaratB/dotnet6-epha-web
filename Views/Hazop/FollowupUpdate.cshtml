@@ -806,10 +806,10 @@
 
                                                     @* Recommendations *@
                                                     <th class="sort align-middle " colspan="1" rowspan="3">
-                                                        Commnets
+                                                        Action Owner responded
                                                     </th>
                                                     @* Action Owner 13 *@
-                                                    <th class="sort align-middle " colspan="1" rowspan="3" scope="col">
+                                                    <th class="sort align-middle " colspan="1" rowspan="3" scope="col" ng-if="flow_status == 13">
                                                         Action Owner
                                                     </th>
 
@@ -935,7 +935,7 @@
                                                     <td class="align-middle text-center">
                                                         <div class="" 
                                                             style="width: 90px;"
-                                                            ng-show="canAccess && item_d.reviewer_action_type !== '2'">
+                                                            ng-if="!((flow_status == 14 ? item_d.reviewer_action_type : item_d.responder_action_type) == 2) && canAccess">
                                                             {{reviewer_action_type}}
                                                             <select class="form-select form-select-sm rounded-1 p-2" 
                                                                 ng-model="item_d.residual_risk" 
@@ -950,8 +950,7 @@
                                                         <!---ng-if="item_d.action_status !== 'Closed' || (item_d.action_status === 'Responed' && !canAccess)"---->
                                                         <div class="p-1 rounded-3 m-auto" 
                                                             style="width: 80px;"
-                                                            ng-show="item_d.reviewer_action_type === '2'  || !canAccess"
-                                                            ng-if="item_d.reviewer_action_type === '2'"
+                                                            ng-if="((flow_status == 14 ? item_d.reviewer_action_type : item_d.responder_action_type) == 2)"
                                                             ng-class="{
                                                                 'bg-danger': (item_d.residual_risk == 'High' || item_d.residual_risk == 'High\r\n'), 
                                                                 'bg-warning': (item_d.residual_risk == 'Meduim' || item_d.residual_risk == 'Meduim\r\n'),
@@ -1183,7 +1182,7 @@
 
                                                             <div class="row" ng-if="((flow_status == 14 ? item_d.reviewer_action_type : item_d.responder_action_type) == 2)">
                                                                 <h6><b>{{item_d.action_status}}</b></h6>
-                                                                <p>Comment: {{item_d.reviewer_comment}}</p>
+                                                                <p ng-if="item_d.reviewer_comment">Comment: <span>{{item_d.reviewer_comment}}</span></p>
                                                             </div>
                                                             <div id="valid-comment-{{item_d.seq}}" class="invalid-feedback text-danger text-start">
                                                                 Please provide a valid Comment file.
