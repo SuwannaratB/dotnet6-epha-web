@@ -305,7 +305,8 @@
                                                         <div class=" p-0 cursor-pointer "
                                                              ng-repeat="item_x in data_drawingworksheet | filter:{id_worksheet:item_d.seq, action_type : '!delete'}">
                                                             <div class="d-flex align-items-center flex-nowrap"
-                                                                 ng-if="!((flow_status == 14 ? item_d.reviewer_action_type : item_d.responder_action_type) == 2)">
+                                                                 @* ng-if="!((flow_status == 14 ? item_d.reviewer_action_type : item_d.responder_action_type) == 2)" *@
+                                                                 >
                                                                 <div class="font-sans-serif btn-reveal-trigger position-static me-1">
                                                                     <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 p-1"
                                                                             type="button" data-bs-toggle="dropdown" data-boundary="window"
@@ -324,28 +325,8 @@
                                                                         </a>
                                                                     </div>
                                                                 </div>
+                                                                
                                                                 <div class="align-items-center">
-                                                                    @*<div class="uploadbox ">
-                                                                    <span class="nametext ms-3 filename-text me-2"
-                                                                    id="filename{{item_x.seq}}">
-                                                                    {{(item_x.document_file_size>0? item_x.document_file_name + '('+  item_x.document_file_size + 'KB)' : '')}}
-                                                                    </span>
-                                                                    <label class="uploadfile dz-message-text text-info fw-bold p-2"
-                                                                    for="attfile-{{item_x.seq}}"
-                                                                    style="cursor: pointer;">
-                                                                    <i class="fa-solid fa-arrow-up-from-bracket fa-xl me-1"></i>
-                                                                    <span class="upload-text d-none d-lg-inline">Upload File</span>
-                                                                    </label>
-                                                                    <input type="file" id="attfile-{{item_x.seq}}"
-                                                                    name="file{{item_x.seq}}"
-                                                                    onchange="
-                                                                    angular.element(this).scope().fileSelect(this);"
-                                                                    ng-click="
-                                                                    alert(item_x.seq);
-                                                                    setSeqUpload(item_d.seq)"
-                                                                    style="display:none"
-                                                                    />
-                                                                    </div>*@
                                                                     <div class="btn-group mb-2" style="height:60px;">
                                                                         <div class="icon-button border p-3" style="border-color: #0d6efd; background-color: #0d6efd;">
                                                                             <span class="fa-solid fa-arrow-up-from-bracket fa-lg" style="color: #ffffff;"></span>
@@ -375,9 +356,10 @@
                                                                                         {{truncateFilename(item_x.document_file_name, 20)}} ({{item_x.document_file_size}} KB)
                                                                                     </b>
                                                                                 </span>
-                                                                                <a id="deluploadfile-{{item_x.seq}}" class="btn btn-link text-danger p-0 ms-2"
-                                                                                   
-                                                                                   ng-click="clearFileName(item_d.seq,item_x.seq)">
+                                                                                <a id="deluploadfile-{{item_x.seq}}" 
+                                                                                    ng-if="item_d.reviewer_action_type != 2"
+                                                                                    class="btn btn-link text-danger p-0 ms-2"
+                                                                                    ng-click="clearFileName(item_d.seq,item_x.seq)">
                                                                                     <span class="fa-regular fa-trash-can fa-lg"></span>
                                                                                 </a>
 
