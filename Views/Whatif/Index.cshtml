@@ -238,43 +238,197 @@
 
                         <div class="mx-3 row  g-3 align-items-top" ng-repeat="item in data_general">
                             <!-- area -->
-                            <div class="col-md-2 p-1 ">
-                                <div class="row g-0 align-items-center">
-                                    <div class="col-10 p-1  ">
-
-                                        <label class="form-label ps-0" for="area"><b class="text-danger"> * </b>Area Process Unit </label>
+                            <div class="col-md-11 p-1 ">
+                                <div class="row g-0 align-items-top">
+                                    <div class="col-md-2 p-1 me-2 id_apu" >
+                                        <label class="form-label ps-0 pb-1" for="area"><b class="text-danger"> * </b>Area Process Unit </label>
                                         <label class="form-label ps-0" ng-if="select_history_tracking_record">
-                                            <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
-                                               data-bs-placement="top" title=" Area Process Unit : A" data-bs-html="true"></a>
+                                            <a class="form-label far fa-comment-alt text-warning cursor-pointer" 
+                                                data-bs-toggle="tooltip"
+                                                data-bs-placement="top" 
+                                                title=" Area Process Unit : A" 
+                                                data-bs-html="true">
+                                            </a>
                                         </label>
                                         <label class="form-label ps-0" for="area"></label>
-                                        <select class="form-control js-choice-apu"
+                                        <select class="form-control js-choice-apu mb-0" id="id_apu"
+                                                ng-class="{'disabled-link':(!tab_general_active || !(tab_general_active && data_header[0].pha_status<=12 ))}"
                                                 data-choices="data-choices"
                                                 data-options='{"removeItemButton":true,"placeholder":true}'
-                                                ng-change="actionChange(item,item.seq,'area')" ng-model="item.id_apu"
-                                                ng-if="tab_general_active">
-                                            <option ng-repeat="item2 in master_apu" ng-value="item2.id">
+                                                ng-change="actionChange(item,item.seq,'area')"
+                                                ng-model="item.id_apu"
+                                                ng-disabled="!tab_general_active || !(tab_general_active && data_header[0].pha_status <= 12)"
+                                                hide-placeholder-option>
+                                            @*<option value="" selected ng-if="!placeholderHidden">Please select</option>*@
+                                            <option ng-repeat="item2 in master_apu" ng-value="item2.id" >
                                                 {{item2.name}}
                                             </option>
                                         </select>
-
-                                        <select class="form-select rounded-1 disabled-link" ng-if="!tab_general_active"
+                                        @*<select class="form-select rounded-1 disabled-link" ng-if="!tab_general_active"
                                                 ng-model="item.id_apu">
                                             <option ng-selected="item.id_apu == item2.id"
                                                     ng-repeat="item2 in master_apu" ng-value="item2.id">
                                                 {{item2.name}}
                                             </option>
-                                        </select>
-
+                                            <i class="fa-solid fa-triangle-exclamation"></i>
+                                        </select>*@
+                                        <div class="invalid-feedback" id="id_apu_error">
+                                            <div ng-message="required">Please select an Area Process Unit.</div>
+                                        </div>
                                     </div>
-
                                     <div class="col-auto p-1 d-none">
-                                        <i class="fas fa-clipboard-list cursor-pointer" ng-class="{'disabled-link':(!tab_general_active)}"
-                                           style="font-size: 18px;color: blue;"
-                                           data-bs-toggle="modal" data-bs-target="#modalNotification"
-                                           ng-click="openModalDataNotification(item)"></i>
+                                        <i class="fas fa-clipboard-list cursor-pointer" 
+                                            ng-class="{'disabled-link':(!tab_general_active)}"
+                                            style="font-size: 18px;color: blue;"
+                                            data-bs-toggle="modal" 
+                                            data-bs-target="#modalNotification"
+                                            ng-click="openModalDataNotification(item)">
+                                        </i>
+                                    </div>
+                                    <!-- Unit No -->
+                                    <div class="col-md-2 p-1 me-2 align-items-top" 
+                                        ng-if="item.id_company != '9999' "
+                                        ng-class="{'disabled-link':(!tab_general_active)}"
+                                        style="display: flex; flex-direction: column; padding-top: 2px;">
+                                            <label class="form-label ps-0" style="margin-top: 4px;" for="unit">
+                                                <b class="text-danger d-none"> * </b>
+                                                Unit No 
+                                            </label>
+                                            <div class="dropdown">
+                                                <button id="dropdown_unit_no" class="dropbtn" ng-class="{'disabled-link':(!tab_general_active)}">
+                                                    {{item.unit_no_name}}
+                                                </button>
+                                                <div id="unit_no" class="dropdown-content">
+                                                    <input id="dropdown_input" 
+                                                        ng-class="{'disabled-link':(!tab_general_active)}"
+                                                        class="dropdown_input" 
+                                                        type="text" 
+                                                        placeholder="Search.." 
+                                                        ng-model="search_keywords.unit_no"
+                                                        ng-change="filterFunction('unit_no')">
+                                                    <a ng-repeat="item2 in master_unit_no_list" 
+                                                        ng-class="{'disabled-link':(!tab_general_active)}"
+                                                        ng-if="item2.id_apu == item.id_apu"
+                                                        ng-click="changeUnitNo(item2)"
+                                                        value="item2.id" >
+                                                        {{item2.name}}
+                                                    </a>
+                                                </div>
+                                            </div>
                                     </div>
 
+                                    <!-- functional location -->
+                                    <div class="col-md-2 p-1 me-2 align-items-top" 
+                                        ng-if="item.id_company != '9999' "
+                                        ng-class="{'disabled-link':(!tab_general_active)}"
+                                        style="display: flex; flex-direction: column; padding-top: 2px;">
+                                        <label class="form-label ps-0" style="margin-top: 4px;" for="unit">
+                                            <b class="text-danger d-none"> * </b>
+                                            Functional Location
+                                        </label>
+                                        <div class="dropdown">
+                                            <button id="dropdown_functional" class="dropbtn" ng-class="{'disabled-link':(!tab_general_active)}">
+                                                {{item.functional_location}}
+                                            </button>
+                                            <div id="functional" class="dropdown-content">
+                                                <input id="dropdown_input" 
+                                                    class="dropdown_input" 
+                                                    ng-class="{'disabled-link':(!tab_general_active)}"
+                                                    type="text" 
+                                                    placeholder="Search.." 
+                                                    ng-model="search_keywords.functional"
+                                                    ng-change="filterFunction('functional')">
+                                                <a ng-repeat="item2 in master_functional_list" 
+                                                    ng-class="{'disabled-link':(!tab_general_active)}"
+                                                    ng-click="changeTFunctional(item2)"
+                                                    value="item2.id" >
+                                                    {{item2.name}}
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>    
+
+                                    <div class="col-4 p-1 d-none">
+                                        <label class="form-label ps-0" for="organizerSingle">
+                                            Functional Location
+                                        </label>
+                                        <label class="form-label ps-0" ng-if="select_history_tracking_record">
+                                            <a class="form-label far fa-comment-alt text-warning cursor-pointer" 
+                                                data-bs-toggle="tooltip" 
+                                                data-bs-placement="top" 
+                                                title=" Functional Location : TPX-76-LICSA-002-TX" 
+                                                data-bs-html="true">
+                                            </a>
+                                        </label>
+                                        <div ng-if="!(item.expense_type=='CAPEX' && (item.sub_expense_type=='Study' || item.sub_expense_type=='Internal Study'))">
+                                            <select class="form-control js-choice-functional"
+                                                    ng-class="{'disabled-link':(!tab_general_active || !(tab_general_active && data_header[0].pha_status<=12 ))}"
+                                                    data-choices="data-choices"
+                                                    data-options='{"removeItemButton":true,"placeholder":true}'
+                                                    ng-change="actionChange(item,item.seq,'')" 
+                                                    ng-model='item.functional_location'
+                                                    ng-if="tab_general_active && !(item.expense_type=='CAPEX' && (item.sub_expense_type=='Study' || item.sub_expense_type=='Internal Study'))"
+                                                    hide-placeholder-option>
+                                                <option value="" selected ng-if="!placeholderHidden">Please select</option>
+                                                <option ng-repeat="item2 in master_functional" 
+                                                        ng-class="{'disabled-link':(!tab_general_active)}"
+                                                        ng-value="item2.id">{{item2.name}}
+                                                </option>
+                                            </select>
+                                            <select class="form-control disabled-link"
+                                                    ng-model='item.functional_location'
+                                                    ng-class="{'disabled-link':(!tab_general_active)}"
+                                                    ng-if="!tab_general_active && !(item.expense_type=='CAPEX' && (item.sub_expense_type=='Study' || item.sub_expense_type=='Internal Study'))">
+                                                <option ng-repeat="item2 in master_functional" ng-value="item2.id">{{item2.name}}</option>
+                                            </select>
+
+                                        </div>
+
+                                        <div ng-if="(item.expense_type=='CAPEX' && (item.sub_expense_type=='Study' || item.sub_expense_type=='Internal Study'))">
+                                            <input class="form-control rounded-1" 
+                                                    ng-class="{'disabled-link':(!tab_general_active)}"
+                                                   type="text" 
+                                                   placeholder="Functional Location"
+                                                   name="other_functional_location" 
+                                                   ng-model="item.other_functional_location" />
+                                        </div>
+
+
+                                    </div>
+
+                                    <div class="col-md-4 p-1">
+                                        <label class="form-label ps-0 pb-1" for="organizerMultiple">Functional Location Additional</label>
+                                        <label class="form-label ps-0" ng-if="select_history_tracking_record">
+                                            <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
+                                               data-bs-placement="top"
+                                               title=" Functional Location Desc: TPX-76-LICSA-002-TX, TPX-76-LICSA-003-TX, TPX-76-LICSA-004-TX"
+                                               data-bs-html="true"></a>
+                                        </label>
+                                        <select class="form-select align-bottom rounded-1 js-choice-functional_audition"
+                                                style="height: 36px;" id="organizerMultiple"
+                                                ng-class="{'disabled-link':(!tab_general_active)}"
+                                                data-choices="data-choices"
+                                                multiple="multiple" data-options='{"removeItemButton":true,"placeholder":true}'
+                                                name="functional_location_audition"
+                                                ng-model="item.functional_location_audition"
+                                                ng-change="actionChange(item,item.seq,'')"
+                                                ng-disable="!tab_general_active" data-allow-clear="true">
+                                            <option ng-repeat="item2 in master_functional_audition"
+                                                    ng-selected="item.functional_location_audition == item2.name"
+                                                    value="{{item2.name}}">
+                                                {{ item2.name }}
+                                            </option>
+                                        </select>
+                                        @*<select class="form-select align-bottom rounded-1 disabled-link" style="height: 36px;"
+                                                ng-model="item.functional_location_audition"
+                                                ng-if="!tab_general_active">
+                                            <option ng-repeat="item2 in master_functional_audition"
+                                                    ng-selected="item.functional_location_audition == item2.name"
+                                                    value="{{item2.name}}">
+                                                {{ item2.name }}
+                                            </option>
+                                        </๑select>*@
+                                    </div>
                                 </div>
                             </div>
 
@@ -288,7 +442,7 @@
                                            data-bs-placement="top" title=" Business Unit : ADIP Unit" data-bs-html="true"></a>
                                     </label>
 
-                                    <div ng-if="!(item.expense_type=='CAPEX' && !(item.sub_expense_type=='Normal'))">
+                                    <div ng-if="!(item.expense_type=='CAPEX' && (item.sub_expense_type=='Study' || item.sub_expense_type=='Internal Study'))">
 
                                         <select class="form-control"
                                                 ng-class="{'disabled-link':(!tab_general_active)}"
@@ -312,135 +466,12 @@
                                             </option>
                                         </select>
                                     </div>
-                                    <div ng-if="(item.expense_type=='CAPEX' && !(item.sub_expense_type=='Normal'))">
+                                    <div ng-if="(item.expense_type=='CAPEX' && (item.sub_expense_type=='Study' || item.sub_expense_type=='Internal Study'))">
                                         <input class="form-control rounded-1" ng-class="{'disabled-link':(!tab_general_active)}"
                                                type="text" placeholder="Business Unit"
                                                name="other_business_unit" ng-model="item.other_business_unit" />
                                     </div>
 
-
-                                </div>
-                            </div>
-
-                            <!-- Unit No -->
-                            <div class="col-md-3 p-1 align-items-top">
-                                <div class="row g-0 align-items-top p-2">
-
-                                    <label class="form-label ps-0" for="unit">Unit No </label>
-                                    <label class="form-label ps-0" ng-if="select_history_tracking_record">
-                                        <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
-                                           data-bs-placement="top" title=" Unit No : ADIP Unit" data-bs-html="true"></a>
-                                    </label>
-
-                                    <div ng-if="!(item.expense_type=='CAPEX' && !(item.sub_expense_type=='Normal'))">
-                                        <select class="form-control"
-                                                ng-class="{'disabled-link':(!tab_general_active)}"
-                                                data-choices="data-choices"
-                                                data-options='{"removeItemButton":true,"placeholder":true}'
-                                                ng-change="actionChange(item,item.seq,'')" ng-model="item.id_unit_no"
-                                                ng-if="tab_general_active && !(item.expense_type=='CAPEX' && !(item.sub_expense_type=='Normal'))">
-                                            <option ng-selected="item.id_unit_no == item2.id"
-                                                    ng-repeat="item2 in master_unit_no"
-                                                    ng-value="item2.id" ng-if="item2.id_apu == item.id_apu">
-                                                {{item2.name}}
-                                            </option>
-                                        </select>
-
-                                        <select class="form-control disabled-link" ng-model="item.id_unit_no"
-                                                ng-if="!tab_general_active && !(item.expense_type=='CAPEX' && !(item.sub_expense_type=='Normal'))">
-                                            <option ng-selected="item.id_unit_no == item2.id"
-                                                    ng-repeat="item2 in master_unit_no" ng-value="item2.id"
-                                                    ng-if="item2.id_apu == item.id_apu">
-                                                {{item2.name}}
-                                            </option>
-                                        </select>
-                                    </div>
-
-                                    <div ng-if="(item.expense_type=='CAPEX' && !(item.sub_expense_type=='Normal'))">
-                                        <input class="form-control rounded-1" ng-class="{'disabled-link':(!tab_general_active)}"
-                                               type="text" placeholder="Unit No"
-                                               name="other_unit_no" ng-model="item.other_unit_no" />
-                                    </div>
-
-                                </div>
-                            </div>
-
-                            <!-- functional location -->
-                            <div class="col-md-auto p-1 align-items-top">
-                                <div class="row g-0 align-items-top">
-
-                                    <div class="col-5 p-1">
-                                        <label class="form-label ps-0" for="organizerSingle">
-                                            Functional Location
-                                        </label>
-
-                                        <label class="form-label ps-0" ng-if="select_history_tracking_record"><a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip" data-bs-placement="top" title=" Functional Location : TPX-76-LICSA-002-TX" data-bs-html="true"></a></label>
-
-                                        <div ng-if="!(item.expense_type=='CAPEX' && !(item.sub_expense_type=='Normal'))">
-                                            <select class="form-control js-choice-functional"
-                                                    data-choices="data-choices"
-                                                    data-options='{"removeItemButton":true,"placeholder":true}'
-                                                    ng-change="actionChange(item,item.seq,'')" ng-model='item.functional_location'
-                                                    ng-if="tab_general_active && !(item.expense_type=='CAPEX' && !(item.sub_expense_type=='Normal'))">
-                                                <option value="" selected ng-if="!placeholderHidden">Please select</option>
-                                            </select>
-
-                                            <select class="form-control disabled-link"
-                                                    ng-model='item.functional_location'
-                                                    ng-if="!tab_general_active && !(item.expense_type=='CAPEX' && !(item.sub_expense_type=='Normal'))">
-                                                <option ng-repeat="item2 in master_functional" ng-value="item2.id">{{item2.name}}</option>
-                                            </select>
-
-                                        </div>
-
-                                        <div ng-if="(item.expense_type=='CAPEX' && !(item.sub_expense_type=='Normal'))">
-                                            <input class="form-control rounded-1" ng-class="{'disabled-link':(!tab_general_active)}"
-                                                   type="text" placeholder="Functional Location"
-                                                   name="other_functional_location" ng-model="item.other_functional_location" />
-                                        </div>
-
-
-                                    </div>
-
-                                    <div class="col-7 p-1">
-                                        <label class="form-label ps-0" for="organizerMultiple">Functional Location Audition</label>
-
-                                        <label class="form-label ps-0" ng-if="select_history_tracking_record">
-                                            <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
-                                               data-bs-placement="top"
-                                               title=" Functional Location Desc: TPX-76-LICSA-002-TX, TPX-76-LICSA-003-TX, TPX-76-LICSA-004-TX"
-                                               data-bs-html="true"></a>
-                                        </label>
-
-                                        <select class="form-select align-bottom rounded-1 js-choice-functional_audition"
-                                                style="height: 36px;" id="organizerMultiple"
-                                                ng-class="{'disabled-link':(!tab_general_active)}"
-                                                data-choices="data-choices"
-                                                multiple="multiple" data-options='{"removeItemButton":true,"placeholder":true}'
-                                                name="functional_location_audition"
-                                                ng-model="item.functional_location_audition"
-                                                ng-change="actionChange(item,item.seq,'')"
-                                                ng-if="tab_general_active">
-                                            @* <option value=""></option> *@
-                                            <option ng-repeat="item2 in master_functional_audition"
-                                                    ng-selected="item.functional_location_audition == item2.name"
-                                                    value="{{item2.name}}">
-                                                {{ item2.name }}
-                                            </option>
-                                        </select>
-
-                                        <select class="form-select align-bottom rounded-1 disabled-link" style="height: 36px;"
-                                                ng-model="item.functional_location_audition"
-                                                ng-if="!tab_general_active">
-                                            <option ng-repeat="item2 in master_functional_audition"
-                                                    ng-selected="item.functional_location_audition == item2.name"
-                                                    value="{{item2.name}}">
-                                                {{ item2.name }}
-                                            </option>
-                                        </select>
-
-
-                                    </div>
 
                                 </div>
                             </div>
@@ -486,11 +517,14 @@
                                             <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
                                                data-bs-placement="top" title=" Target Start Date :  " data-bs-html="true"></a>
                                         </label>
-                                        <input type="date" ng-model="item.target_start_date"
-                                               ng-keyup="actionChange(item,item.seq,'')"
-                                               class="form-control rounded-1 datetimepicker"
-                                               ng-class="{'disabled-link':(!tab_general_active)}"
-                                               placeholder="dd/mm/yyyy">
+                                        <input type="date"
+                                            ng-model="item.target_start_date"
+                                            ng-keyup="actionChange(item, item.seq, '')"
+                                            ng-max="item.target_end_date"
+                                            max="{{ item.target_end_date | date:'yyyy-MM-dd' }}"
+                                            class="form-control rounded-1 datetimepicker cursor-pointer"
+                                            ng-class="{'disabled-link': (!tab_general_active)}"
+                                            placeholder="dd/mm/yyyy">
                                     </div>
 
                                     <div class="col-md-auto p-1">
@@ -499,11 +533,13 @@
                                             <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
                                                data-bs-placement="top" title=" Complete Date :  " data-bs-html="true"></a>
                                         </label>
-                                        <input type="date" name="te_date" ng-model="item.target_end_date"
-                                               ng-keyup="actionChange(item,item.seq,'')"
-                                               class="form-control rounded-1 datetimepicker" ng-class="{'disabled-link':(!tab_general_active)}"
-                                               id="tgs_date"
-                                               placeholder="dd/mm/yyyy">
+                                        <input type="date" ng-model="item.target_end_date"
+                                            ng-keyup="actionChange(item,item.seq,'')"
+                                            ng-min="item.target_start_date"
+                                            min="{{ item.target_start_date | date:'yyyy-MM-dd' }}"
+                                            class="form-control rounded-1 datetimepicker cursor-pointer"
+                                            ng-class="{'disabled-link':(!tab_general_active)}"
+                                            placeholder="dd/mm/yyyy">
                                     </div>
 
                                 </div>
@@ -2172,7 +2208,6 @@
                                                 <th class=" align-middle  mx-0" scope="col" style="padding: 0 !important;">R</th>
                                             </tr>
                                         </thead>
-
                                         <tbody class="">
                                             <tr class="rowwork border border-dashed"
                                                 ng-if="( data_tasklist.length == 1 ? (data_tasklist[0].list == null ? false : true) : true) "
@@ -2616,26 +2651,28 @@
 
                                                 @* Responder *@
                                                 <td class="align-top border border-light border-end-0  border-start-0  border-top-0 " style="padding: 0 !important; width: 120px;">
-                                                    <div class="d-flex align-items-center ">
-                                                        <div ng-class="{'disabled-link': (!action_owner_active) || (item.action_status === 'Responed')}">
-                                                            <button ng-click="openDataEmployeeAdd(item,'owner')" 
+                                                    <div class="d-flex align-items-center">
+                                                        <div ng-class="{'disabled-link': !action_owner_active || item.action_status === 'Responed'}">
+                                                            <button ng-click="openDataEmployeeAdd(item, 'owner')" 
                                                                     class="btn btn-link px-0 mx-1"
                                                                     data-toggle="tooltip" 
                                                                     data-placement="top" 
+                                                                    ng-if="action_owner_active && item.action_status !== 'Responed'"
                                                                     title="Add Employee">
                                                                 <span class="far fa-address-book"></span>
                                                             </button>
-                                                            <button class="btn btn-sm transition-none btn-reveal fs--2 p-1 " 
+                                                            <button class="btn btn-sm transition-none btn-reveal fs--2 p-1" 
                                                                     type="button"
-                                                                    ng-click="removeDataEmpWorkSheet('worksheet',item.seq)"
-                                                                    ng-if="item.responder_id>0">
+                                                                    ng-click="removeDataEmpWorkSheet('worksheet', item.seq)"
+                                                                    ng-if="item.responder_id > 0">
                                                                 <span class="fas fa-times text-danger"></span>
                                                             </button>
                                                         </div>
-                                                        <p class="m-0  text-1100 fw-bold" style="width: 115px;">
+                                                        <p class="m-0 text-1100 fw-bold" style="width: 115px;">
                                                             {{ item.action_project_team === false ? item.responder_user_displayname : item.project_team_text }}
                                                         </p>
                                                     </div>
+
                                                     <div id="valid-worksheet-responder-{{item.seq}}"
                                                          class="invalid-feedback text-danger">
                                                         Please provide a valid Responder.
@@ -2658,7 +2695,7 @@
                                                             ng-class="{'disabled-link':(!tab_worksheet_active)}"
                                                             ng-if="item.action_project_team" ng-model="item.action_status">
                                                         <option value="N/A">N/A</option>
-                                                        <option value="Wait_for_design" title="Waiting for detail design">Waiting for detail design</option>
+                                                        <option value="Waiting for detail design" title="Waiting for detail design">Waiting for detail design</option>
                                                     </select>
                                                 </td>
 
@@ -3193,20 +3230,20 @@
                                         </thead>
 
                                         <tbody class="list" id="customer-rating-table-body">
-                                            <tr ng-repeat-start="item in data_approver | orderBy:['no']" 
-                                                ng-init="canAccess = Access_check(item)"
-                                                ng-style="{ 'background-color': canAccess ? '' : '#f9fbff' }" 
-                                                class="hover-actions-trigger btn-reveal-trigger position-static text-center">
+                                            <tr ng-repeat="item in data_approver" 
+                                                ng-init="accessInfo = Access_check(item)"
+                                                ng-style="{ 'background-color': accessInfo.canAccess ? '' : '#f9fbff' }"
+                                                ng-class="{ 'task-highlight':  accessInfo.canAccess}"                                                   class="hover-actions-trigger btn-reveal-trigger position-static text-center">
                                                 <!--------ng-if="(item.user_name == user_name ) || (flow_role_type == 'admin')"---------------------->
                                                 <td class="align-top white-space-nowrap">
                                                     <div class="col-md-12 p-1 ps-3">
                                                         <label class="text-1100 fw-bold ">
-                                                            {{item.no}}
+                                                            {{$index + 1}}
                                                         </label>
                                                     </div>
                                                 </td>
                                                 <td class="align-top white-space-nowrap">
-                                                    <div class="d-flex align-items-center">
+                                                    <div class="d-flex align-items-center d-none">
                                                         <div class="col-md-12 p-1 ps-3 d-flex justify-content-between align-items-center">
                                                             <div ng-if="params == 'edit_approver'">
                                                                 <button 
@@ -3246,33 +3283,70 @@
                                                             </label>
                                                         </div>
                                                     </div>
-                                                     <div class="col-md-12 p-1 ps-3">
-                                                        <div ng-repeat="item_ta3 in data_approver_ta3" ng-if="item.id === item_ta3.id_approver">
-                                                            <label class="text-1100 fw-bold ">
-                                                                {{item_ta3.user_displayname}}
+                                                    <div class="d-flex align-items-center">
+                                                        <div class="col-md-12 p-1 ps-3 d-flex justify-content-between align-items-center">
+                                                            <div ng-if="params == 'edit_approver'">
+                                                                <button 
+                                                                    ng-click="
+                                                                        openDataEmployeeAdd(item, 'edit_approver', $index); 
+                                                                        recommentAction_valid(item);" 
+                                                                    class="btn btn-link px-0 mx-1"
+                                                                    ng-class="{'no-drop': item.approver_action_type == 2 || data_header[0].pha_status != 21}"
+                                                                    ng-disabled="item.approver_action_type == 2 || data_header[0].pha_status != 21"
+                                                                    data-toggle="tooltip" 
+                                                                    title="Add Employee">
+                                                                    <span class="far fa-address-book"></span>
+                                                                </button>
+                                                                <button class="btn btn-sm transition-none btn-reveal fs--2 p-1 " 
+                                                                        type="button"
+                                                                        ng-click="removeDataEmpWorkSheet('worksheet',item.seq)"
+                                                                        ng-if="item.responder_id>0">
+                                                                    <span class="fas fa-times text-danger"></span>
+                                                                </button>
+                                                            </div>                                                                                                                                                                               
+                                                            <label class="text-1100 fw-bold m-0">
+                                                                {{item.user_displayname}}
                                                             </label>
                                                         </div>
                                                     </div>
+                                                    <div class="text-start ps-4" ng-if="accessInfo.isTA2">
+                                                            <a ng-click="openDataEmployeeAdd(item,'approver_ta3')"
+                                                                class="btn btn-link px-0"
+                                                                data-toggle="tooltip" 
+                                                                title="select TA3"
+                                                                style="font-size: smaller;">
+                                                                <span>Click to select TA3</span>
+                                                        </a>
+                                                    </div> 
+
+                                                    <div class="col-md-12 text-start p-1 ps-4" 
+                                                            ng-show="(accessInfo.isTA2 || item_ta3.id_approver ===  item.id) && item_ta3.action_type !== 'delete'"
+                                                            ng-repeat="item_ta3 in data_approver_ta3 | toArray | filter:{id_approver: item.id}">                                                            
+                                                            <label class="text-secondary">Task assigned : <br></label>
+                                                            <div>
+                                                                <a class="fa-solid fa-user-pen pe-2 cursor-pointer" ></a>
+                                                                <label class="text-1100 fw-bold">{{item_ta3.user_displayname}}</label>
+
+                                                            </div>
+                                                    </div>
                                                 </td>
                                                 <td class="align-top white-space-nowrap" ng-class="{'disabled-link':(!tab_approver_active)}">
-                                                    <div class="col-md-12 p-1 ps-3 text-start" >
-                                                    <div class="col-md-12 p-1 ps-3 text-start" ng-if="!(item.approver_action_type == 2 || data_header[0].pha_status != 21)" >
+                                                    <div class="col-md-12 p-1 ps-3 text-start"  ng-if="(accessInfo.canAccess || accessInfo.isTA2) && item.approver_action_type != 2">
                                                         <div class="form-check form-check-inline cursor-pointer">
-                                                            <span class="fa-solid far fa-file-pdf text-danger" style="font-size:15px;" ng-click="confirmExport('hazop_report','pdf')"></span>
+                                                            <span class="fa-solid far fa-file-pdf text-danger" style="font-size:15px;" ng-click="confirmExport('whatif_report','pdf')"></span>
                                                             <b>
                                                                 What's if Report
                                                             </b>
                                                         </div><br />
-                                                        <div class="form-check form-check-inline" ng-class="{ 'no-drop': !canAccess, 'cursor-pointer': canAccess }">
+                                                        <div class="form-check form-check-inline" ng-hide="!(accessInfo.canAccess && accessInfo.isTA2)" >
                                                             <input class="form-check-input" id="inlineRadio-{{item.seq}}" type="radio"
                                                                    name="inlineRadioOptions-{{item.seq}}" 
-                                                                   ng-class="{ 'cant-Access': !canAccess }"
                                                                    value="approve" checked ng-model="item.action_status" />
                                                             <label class="form-check-label" for="inlineRadioApprove-{{item.seq}}"> Approve</label>
                                                         </div>
-                                                        <div class="form-check form-check-inline"  ng-class="{ 'no-drop': !canAccess, 'cursor-pointer': canAccess }">
+                                                        <div class="form-check form-check-inline"  ng-hide="!(accessInfo.canAccess && accessInfo.isTA2)">
                                                             <input class="form-check-input" id="inlineRadioOptions-{{item.seq}}" type="radio"
-                                                                   name="inlineRadioOptions-{{item.seq}}" ng-class="{ 'cant-Access': !canAccess }"
+                                                                   name="inlineRadioOptions-{{item.seq}}"
                                                                    value="reject" ng-model="item.action_status" />
                                                             <label class="form-check-label" for="inlineRadioReject-{{item.seq}}"> Send back with Comment</label>
                                                         </div>
@@ -3281,46 +3355,46 @@
                                                         </div>
                                                     </div>
 
-                                                    <div class="col-md-12 p-1 ps-3" ng-if="(item.approver_action_type == 2 || data_header[0].pha_status != 21)"
-                                                        ng-class="{ 'no-drop': !canAccess, 'cursor-pointer': canAccess }">
+
+                                                    <div class="col-md-12 p-1 ps-3 text-start" ng-if="item.approver_action_type == 2">
+                                                        <div class="form-check form-check-inline cursor-pointer p-0">
+                                                            <span class="fa-solid far fa-file-pdf text-danger" style="font-size:15px;" ng-click="confirmExport('hazop_report','pdf')"></span>
+                                                            <b>
+                                                                What's if Report
+                                                            </b>
+                                                        </div><br />
                                                         <p>{{item.action_status =='approve' ? 'Approve' : 'Send back with Comment' }}</p>
                                                     </div>
-
                                                 </td>                                                
 
                                                 <td class="align-top white-space-nowrap text-start" ng-class="{'disabled-link':(!tab_approver_active)}">
-                                                    <div class="col-md-12 p-1 ps-3 text-start" >
-
-                                                    <div class="col-md-12 p-1 ps-3" 
-                                                         ng-class="{ 'no-drop': !canAccess }"
-                                                         ng-if="!(item.approver_action_type == 2 || data_header[0].pha_status != 21)">
-                                                        <textarea class="form-control rounded-1" id="floatingTextarea2" placeholder="Enter your comment"
-                                                                  ng-class="{ 'cant-Access': !canAccess }"
-                                                                  ng-disabled="!canAccess" 
-                                                                  ng-model="item.comment">  </textarea>
-
+                                                    <div class="col-md-12 p-1 ps-3" ng-if="!(item.approver_action_type == 2 || data_header[0].pha_status != 21)" >
+                                                            <textarea class="form-control rounded-1" 
+                                                                    id="floatingTextarea2" 
+                                                                    placeholder="{{ accessInfo.canAccess ? 'Enter your comment' : '' }}"
+                                                                    ng-if="accessInfo.canAccess || accessInfo.isTA2 || accessInfo.isTA3"
+                                                                    ng-model="item.comment"></textarea>
                                                         <div id="valid-approver-comment-{{item.seq}}" class="invalid-feedback text-danger">
                                                             Please select a valid comment.
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-12 p-1 ps-3" ng-if="(item.approver_action_type == 2 || data_header[0].pha_status != 21)">
+                                                    <div class="col-md-12 p-1 ps-3" ng-if="(item.approver_action_type == 2 || data_header[0].pha_status != 21 )">
 
-                                                        <p>Comment: {{item.comment}}</p>
+                                                        <p class="fw-bold" ng-if="item.comment"
+                                                           ng-class="{'disabled-link': !tab_approver_active || !canAccess}" >
+                                                            <span>{{item.comment}}</span>
+                                                        </p>
                                                     </div>
                                                 </td>
-                                                <td class="align-top px-1" style="min-width:200px;" ng-class="{'disabled-link':(!tab_approver_active)}">
-                                                    <div class="col-md-12 p-1 ps-3 text-start" >
+                                                <td class="align-top px-1" style="min-width:200px;">
                                                     @* {{item.seq}} *@
-                                                    <div class=" p-0 cursor-pointer "
+                                                    <div class=" p-0 cursor-pointer " 
                                                          ng-repeat="item_x in data_drawing_approver  | toArray | filter:{id_approver : item.seq}  ">
-
-                                                        <div class="d-flex flex-nowrap" 
-                                                             ng-class="{ 'no-drop': !canAccess }"
-                                                             ng-if="!(item.approver_action_type == 2 || data_header[0].pha_status != 21)">
-                                                            <div class="font-sans-serif btn-reveal-trigger position-static me-1">
+                                                        <div class="d-flex flex-nowrap">
+                                                            <div class="font-sans-serif btn-reveal-trigger position-static me-1" 
+                                                                ng-if="(accessInfo.canAccess || accessInfo.isTA2 ||accessInfo.isTA3) && (item.approver_action_type == 0 || item.approver_action_type == 1)">
                                                                 <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 p-1"
-                                                                        ng-class="{ 'cant-Access': !canAccess }"
-                                                                        ng-disabled="!canAccess"
+                                                                        ng-if="(accessInfo.canAccess || accessInfo.isTA2 || accessInfo.isTA3)"
                                                                         type="button" data-bs-toggle="dropdown" data-boundary="window"
                                                                         aria-haspopup="true" aria-expanded="false" data-bs-reference="parent">
                                                                     <span class="fas fa-cog text-info"></span>
@@ -3331,67 +3405,42 @@
                                                                         <span class="fas fa-copy"></span>
                                                                         Add
                                                                     </a>
-                                                                    <div class="dropdown-divider"></div><a class="dropdown-item text-danger"
-                                                                                                           ng-click=removeDataApproverDrawing(item_x,item_d.seq)>
-                                                                        <span class="fas fa-times-circle"></span> Remove
+                                                                    <div class="dropdown-divider"></div>
+                                                                    <a class="dropdown-item text-danger"
+                                                                        ng-click=removeDataApproverDrawing(item_x,item_d.seq)>
+                                                                        <span class="fas fa-times-circle"></span> 
+                                                                         Remove
                                                                     </a>
                                                                 </div>
-                                                                @*<div class="align-items-center" ng-class="{ 'cant-Access': !canAccess }">
-
-                                                                    <div class="uploadbox">
-                                                                        <span class="nametext ms-3 filename-text me-2" id="filename-approver-{{item_x.seq}}">
-                                                                            {{(item_x.document_file_size > 0 ? item_x.document_file_name + '(' +  item_x.document_file_size + 'KB)' : '')}}
-                                                                        </span>
-                                                                        <label class="uploadfile dz-message-text text-info fw-bold p-2" for="attfile-{{item_x.seq}}"
-                                                                            style="cursor: pointer;">
-                                                                            <i class="fa-solid fa-arrow-up-from-bracket fa-xl me-1"></i>
-                                                                            <span class="upload-text d-none d-lg-inline">Upload File (Max size 10mb)</span>
-                                                                        </label>
-                                                                        <input type="file" id="attfile-{{item_x.seq}}"
-                                                                            name="file{{item_x.seq}}"
-                                                                            onchange="angular.element(this).scope().fileSelectApprover(this,'approver')"
-                                                                            style="display:none" />
-                                                                    </div>
-                                                                </div>*@
-                                                             <div class="btn-group my-2" ng-class="{ 'no-drop': !canAccess, 'cursor-pointer': canAccess }">
-                                                                <div class="icon-button border p-3" style="border-color: #0d6efd; background-color: #0d6efd;">
-                                                                    <span class="fa-solid fa-arrow-up-from-bracket fa-lg" style="color: #ffffff;"></span>
-                                                                </div>
-                                                                <button class="Upload-button btn ps-3 cursor-pointer" 
-                                                                        ng-class="{ 'no-drop': !canAccess, 'cursor-pointer': canAccess }" 
-                                                                        ng-disabled="!canAccess"
-                                                                        ng-if="!item_x.document_file_size">
+                                                            </div>
+                                                            <div class="btn-group my-2" >
+                                                                <div class="icon-button border p-3" style="border-color: #0d6efd; background-color: #0d6efd;"
+                                                                    ng-hide="!(accessInfo.canAccess || accessInfo.isTA2 || accessInfo.isTA3) && !item_x.document_file_size">
+                                                                        <span ng-if="!item_x.document_file_size" class="fa-solid fa-arrow-up-from-bracket fa-lg" style="color: #ffffff;"></span>
+                                                                        <span ng-if="item_x.document_file_size" class="fa-solid fa-file-pdf fa-lg" style="color: #ffffff;"></span>                                                                  </div>
+                                                                <button class="Upload-button btn ps-3" 
+                                                                        ng-show="(accessInfo.canAccess || accessInfo.isTA2 || accessInfo.isTA3) && !item_x.document_file_size">
                                                                     <span class="nametext ms-3 filename-text me-2 d-none" id="filename-approver-{{item_x.seq}}">
                                                                         {{(item_x.document_file_size>0? item_x.document_file_name + '('+  item_x.document_file_size + 'KB)' : '')}}
                                                                     </span>
-                                                                    <label class="dz-message-text fw-bold p-1 cursor-pointer" for="attfile-{{item_x.seq}}">
+                                                                    <label class="dz-message-text fw-bold p-1 " for="attfile-{{item_x.seq}}">
                                                                         Upload File (Max size 10mb)
                                                                     </label>
                                                                     <input type="file" id="attfile-{{item_x.seq}}"
-                                                                           class="cursor-pointer"
-                                                                           name="file{{item_x.seq}}"
-                                                                           ng-class="{ 'cant-Access': !canAccess }"
-                                                                           ng-disabled="!canAccess"
-                                                                           onchange="angular.element(this).scope().fileSelectApprover(this,'approver')"
-                                                                           style="display:none" />
+                                                                        name="file{{item_x.seq}}"
+                                                                        onchange="angular.element(this).scope().fileSelectApprover(this, 'approver')"
+                                                                        style="display:none" />
+
                                                                 </button>
                                                                 <button class="Upload-button btn cursor-pointer" style="width:250px;" ng-if="item_x.document_file_size > 0">
                                                                     <div class="d-flex align-items-center">
-                                                                        <span class="nametext filename-text me-2 cursor-pointer">
+                                                                        <span class="nametext filename-text me-2 cursor-pointer" ng-click="downloadFile(item_x)">
                                                                             {{ item_x.document_file_name }} ({{ item_x.document_file_size }} KB)
                                                                         </span>
                                                                     </div>
                                                                 </button>
-                                                            </div>                                                 
-                                                            </div>    
+                                                            </div>                                                              
                                                         </div>
-                                                        @* {{item_x.document_file_size}} *@
-                                                        <div class="text-start p-0 cursor-pointer d-flex flex-nowrap" ng-if="item_x.document_file_size>0 ">
-                                                            <a class="nametext ms-3 filename-text me-2" ng-click="downloadFile(item_x)">
-                                                                <i class="far fa-file-pdf text-danger"></i> {{(item_x.document_file_size>0? item_x.document_file_name + '('+  item_x.document_file_size + 'KB)' : '')}}
-                                                            </a>
-                                                        </div>
-
                                                     </div>
                                                     <div ng-class="{'invalid-feedback text-danger': !(form_valid.valid_document_file==true && item.seq == id_approver_select), 'feedback text-danger': form_valid.valid_document_file}">
                                                         Please provide a valid document file.
@@ -3404,33 +3453,28 @@
                                                         </label>
                                                     </div>
                                                 </td>
-                                                <td class="align-top px-0 pt-0 " ng-class="{'disabled-link':(!tab_approver_active)}">
-                                                    <div class="col-md-12 p-1 ps-3 text-start" >
-                                                    <div class="d-flex"
-                                                         ng-class="{ 'no-drop': !canAccess, 'cursor-pointer': canAccess }">
-
-                                                        <button class="btn btn-outline text-primary  p-1 m-2 me-0" style=" background-color: #f1f2f4; width:50px;"
-                                                                ng-click="confirmDialogApprover(item,'save')"
-                                                                ng-class="{ 'cant-Access': !canAccess}"
-                                                                ng-disabled="!canAccess"
-                                                                ng-if="!(item.approver_action_type == 2 || data_header[0].pha_status != 21)">
-                                                            <span class="fa fa-save text-primary fa-lg"></span><br /><span style="font-size:8px">Save</span>
+                                                <td class="align-top px-1 py-3" ng-class="{'disabled-link': (!tab_approver_active)}">
+                                                    <div class="d-flex" ng-class="{ 'no-drop': !canAccess, 'cursor-pointer': canAccess }">
+                                                        <button class="btn btn-outline text-primary p-1 m-2 me-0"
+                                                                style="background-color: #f1f2f4; width:50px;"
+                                                                ng-click="confirmDialogApprover(item, 'save')"
+                                                                ng-show="(accessInfo.canAccess || accessInfo.isTA2 || accessInfo.isTA3) && item.approver_action_type != 2">
+                                                            <span class="fa fa-save text-primary fa-lg"></span><br />
+                                                            <span style="font-size:8px">Save</span>
                                                         </button>
-                                                        @* confirmSave('submit_approver') *@
-                                                        <button class="btn btn-outline text-success  p-1 m-2 ms-1"
-                                                                style="background-color: #f1f2f4; width:80px; "
-                                                                ng-click="confirmDialogApprover(item,'submit')"
-                                                                ng-class="{ 'cant-Access': !canAccess}"
-                                                                ng-disabled="!canAccess"
-                                                                ng-if="!(item.approver_action_type == 2 || data_header[0].pha_status != 21)">
-                                                            <span class="fa fa-save text-success fa-lg"></span><br /><span style="font-size:8px">Submit</span>
+                                                        <button class="btn btn-outline text-success p-1 m-2 ms-1"
+                                                                style="background-color: #f1f2f4; width:80px;"
+                                                                ng-click="confirmDialogApprover(item, 'submit')"
+                                                                ng-show="(accessInfo.canAccess || accessInfo.isTA2 || accessInfo.isTA3) && item.approver_action_type != 2"
+                                                                ng-disabled="!accessInfo.canAccess || accessInfo.isTA3">
+                                                            <span class="fa fa-save text-success fa-lg"></span><br />
+                                                            <span style="font-size:8px">Submit</span>
                                                         </button>
-
                                                     </div>
                                                 </td>
 
+
                                             </tr>
-                                            <tr ng-repeat-end></tr>
 
                                         </tbody>
 
@@ -3566,44 +3610,36 @@
                     </button>
 
                 </div>
-                <div class="modal-header"  ng-if="selectDatFormType === 'owner' && params != 'edit_approver'">
-                    <!-- For form_type === 'member' or 'approver' -->
-                    <div ng-if="selectDatFormType !== 'owner'">
-                        <h5 class="text-900 mb-0" data-anchor="data-anchor" id="modalEmployeeCheckLabel">
-                            <span class="me-2 text-primary"><B>|</B></span> Search Employee/Contract
-                        </h5>
-                    </div>
+                <div class="modal-header ps-0 pb-0" ng-if="selectDatFormType === 'owner' && params != 'edit_approver'">
                     <!-- For form_type === 'owner' -->
-                    <div ng-if="selectDatFormType === 'owner' && params != 'edit_approver'">
-                        <nav class="navbar navbar-expand-lg navbar-light ps-0">
-                            <div class="container-fluid">
-                                <ul class="nav nav-underline border-3 border-primary border-bottom" id="myTab"
-                                    role="tablist" style="position: relative;">
-                                    <li class="mx-2" ng-if="tab.isShow || true">
-                                        <a ng-click="selectTab('employee')"
-                                           class="btn btn-outline-primary border border-0 "
-                                           ng-class="{'btn btn-outline-primary border border-0 active': (owner_status === 'employee'),'btn btn-outline-primary border border-0 ': (owner_status === 'teams') }"
-                                           style="border-radius: 10px 10px 0px 0px !important;"
-                                           aria-selected="tab.isActive">Search Employee/Contract</a>
-                                    </li>
-                                    <li class="mx-2" ng-if="tab.isShow || true">
-                                        <a ng-click="selectTab('teams')"
-                                           class="btn btn-outline-primary border border-0 "
-                                           ng-class="{'btn btn-outline-primary border border-0 active': (owner_status === 'teams'),'btn btn-outline-primary border border-0 ': (owner_status === 'employee') }"
-                                           style="border-radius: 10px 10px 0px 0px !important;"
-                                           aria-selected="tab.isActive">Add Teams</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </nav>
-                    </div>
+                    <nav class="navbar navbar-expand-lg navbar-light ps-0 pb-0">
+                        <div class="container-fluid ps-0">
+                            <ul class="nav nav-underline border-3  " id="myTab"
+                                role="tablist" style="position: relative;">
+                                <li class="mx-2" ng-if="tab.isShow || true"><!-----btn-outline-primary------->
+                                    <a ng-click="selectTab('employee')"
+                                       class="btn border border-0 "
+                                       ng-class="{'btn border border-bottom border-primary border-0 text-primary active': (owner_status === 'employee'),'btn border border-0 ': (owner_status === 'teams') }"
+                                        style="border-radius: 10px 10px 0px 0px !important;"
+                                       aria-selected="tab.isActive">Search Employee/Contract</a>
+                                </li>
+                                <li class="mx-2" ng-if="tab.isShow || true">
+                                    <a ng-click="selectTab('teams')"
+                                       class="btn border border-0 "
+                                       ng-class="{'btn border border-0 border-bottom border-primary text-primary active': (owner_status === 'teams'),'btn border border-0 ': (owner_status === 'employee') }"
+                                       style="border-radius: 10px 10px 0px 0px !important;"
+                                       aria-selected="tab.isActive">Add Teams</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </nav>
 
                     <button class="btn p-1" type="button" data-bs-dismiss="modal" aria-label="Close" ng-click="clearFormData()">
                         <svg class="svg-inline--fa fa-xmark fs--1" aria-hidden="true" focusable="false" data-prefix="fas"
                                 data-icon="xmark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"
                                 data-fa-i2svg="">
                             <path fill="currentColor"
-                                  d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z">
+                                    d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z">
                             </path>
                         </svg>
                     </button>
@@ -4799,9 +4835,9 @@
 
                 </div>
                 <div class="modal-body">
-                    <p>Are you sure</p>
+                    <p>Are you sure you want to invite <span class="fw-bold">{{selected_TA3.employee_displayname}}</span> to join and assist with tasks? Please confirm.</p>
                     <div class="col-auto" style="float:right">
-                        <button style="width:100px;" class="btn btn-success me-1 mb-1" type="button" ng-click="confirm()">Yes</button>
+                        <button style="width:100px;" class="btn btn-primary me-1 mb-1" type="button" ng-click="confirm()">Yes</button>
                         <button style="width:100px;" class="btn btn-outline-secondary me-1 mb-1" type="button" data-bs-dismiss="modal" aria-label="Close">
                             Cancel
                         </button>
@@ -4809,8 +4845,7 @@
                 </div>
             </div>
         </div>
-    </div>  
-
+    </div>
 
     <div class="modal autosaveModal" id="autosaved" tabindex="-1" role="dialog" aria-labelledby="autosavedModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">

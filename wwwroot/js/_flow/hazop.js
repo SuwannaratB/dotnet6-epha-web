@@ -408,6 +408,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }, true);
     }
 
+    setupWatch('tabs');
+
     setupWatch('data_general');
     setupWatch('data_approver');
     setupWatch('data_memberteam');
@@ -2189,8 +2191,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 if($scope.data_header[0].pha_status === 11 || $scope.data_header[0].pha_status === 12){
                     $scope.startTimer();  
                 }
-
-        console.log("qwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwq",$scope.action_part)
 
                 $scope.unsavedChanges= false;
 

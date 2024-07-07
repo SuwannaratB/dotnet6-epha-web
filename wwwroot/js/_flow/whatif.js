@@ -117,7 +117,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 });
 
 
-AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, $document, $interval, $rootScope, $window,$q) {
+AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, $document, $interval, $rootScope, $window,$q,$timeout) {
 
     $scope.data_tooltip = [
         { id:1, title_th: '', title_en: 'List System' },
@@ -202,9 +202,17 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             interval = undefined; 
         }
     };
-    
+    $scope.compareValues = function(newValues, oldValues, data) {
+        if (Array.isArray(newValues) && Array.isArray(oldValues)) {
+             if (!isEqual(newValues, oldValues, data)) {
+                $scope.unsavedChanges = true;
+             }
+            } else if (!_.isEqual(newValues, oldValues)) {
 
-    
+                $scope.unsavedChanges = true;
+            }
+    };
+        
     function isEqual(arr1, arr2, path = '') {
         if (arr1 === arr2) return true;
 
@@ -290,28 +298,24 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     function setupWatch(data) {
         $scope.$watch(data, function(newValues, oldValues) {
             if (!$scope.dataLoaded) {
-                console.log("Data not yet loaded, skipping watch callback.");
                 return;
             }
     
-            console.log("Watcher triggered change for : ", data);
     
             if ($scope.data_header[0].pha_status === 11 || $scope.data_header[0].pha_status === 12) {
                 $scope.stopTimer();
                 $scope.startTimer();
+            }
     
+            if (data !== 'tabs') { 
                 if (Array.isArray(newValues) && Array.isArray(oldValues)) {
                     if (!isEqual(newValues, oldValues, data)) {
-                        console.log("newValues", newValues);
-                        console.log("oldValues", oldValues);
-                        console.log("new !== old");
+                        $scope.compareValues(newValues, oldValues, data);
     
                         $scope.unsavedChanges = true;
                     }
                 } else if (!_.isEqual(newValues, oldValues)) {
-                    console.log("newValues", newValues);
-                    console.log("oldValues", oldValues);
-                    console.log("new !== old");
+                    $scope.compareValues(newValues, oldValues, data);
     
                     $scope.unsavedChanges = true;
                 }
@@ -319,7 +323,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     
         }, true);
     }
-    
+    setupWatch('tabs');
+
     setupWatch('data_general');
     setupWatch('data_session');
     setupWatch('data_memberteam');
@@ -435,8 +440,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     }
                 }
             }
-            // default start date recommendations
+            //if selcte hazop
+            if (selectedTab.action_part == 5) {
+                $scope.selectedItemNodeView = $scope.data_taskliste[0].id_list;
+                $scope.viewDataNodeList($scope.selectedItemNodeView);
 
+            }   
             if (selectedTab.action_part == 6) {
                 $scope.data_listworksheet.forEach(_item => {
                     if (_item.recommendations && _item.responder_user_displayname && !_item.estimated_start_date) {
@@ -1776,7 +1785,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                                 }
                             }
                         }
-                        $scope.selectedItemListView = $scope.data_listworksheet[0].seq;
+                        $scope.selectedItemListView = $scope.data_listworksheet[0].id_list;
                     }
 
                 }
@@ -1833,45 +1842,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 if($scope.params != 'edit_approver'){
                     $scope.action_owner_active = true;
                 }  
-
-                console.log("$scope.params",$scope.params)
-
-                if($scope.params !== null){
-                    console.log("$scope.params",$scope.params)
-
-                    if($scope.params != 'edit_approver'){
-                        $scope.action_owner_active = true;
-                    }  
-                    
-    
-                    if($scope.params !== 'edit') {
-                        $scope.tab_general_active = false;
-                        $scope.tab_node_active = false;
-                        $scope.tab_worksheet_active = false;
-                        $scope.tab_managerecom_active = false;
-                        $scope.tab_approver_active = false;
-    
-                        if($scope.params === 'edit_action_owner'){
-                            $scope.action_owner_active = true;
-                        } 
-    
-                        if($scope.params === 'edit_approver'){
-                            $scope.action_owner_active = false;
-    
-                        }  
-    
-                    }
-    
-                    if($scope.params === 'edit' && $scope.flow_role_type === 'admin') {
-                        $scope.tab_general_active = true;
-                        $scope.tab_node_active = true;
-                        $scope.tab_worksheet_active = true;
-                        $scope.tab_managerecom_active = true;
-                        $scope.tab_approver_active = true;
-    
-                        $scope.save_type = true;
-                    }
-                }
 
                 //ตรวจสอบเพิ่มเติม
                 if (arr.user_in_pha_no[0].pha_no == '' && $scope.flow_role_type != 'admin') {
@@ -1954,6 +1924,52 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         }
                     } catch (ex) { alert(ex); console.clear(); }
 
+                    var pha_status = $scope.data_header[0].pha_status
+                    set_form_action(action_part_befor, !action_submit, page_load);
+                    set_form_access(pha_status,$scope.params,$scope.flow_role_type)
+                    set_tab_focus(pha_status,action_part_befor)
+
+                    $timeout(function() {
+                        try {
+                            if (typeof page_load !== 'undefined' && page_load === true) {
+                                var element = document.querySelector('.js-choice-functional_audition');
+                                    if (element.tagName.toLowerCase() === 'select') {
+                                        console.log('Element is a <select> element');
+                                    }
+
+                                    var element = document.querySelector('.js-choice-functional_audition');
+                                    if (element.tagName.toLowerCase() === 'select' && element.multiple) {
+                                        console.log('Element is a <select> element with multiple selection');
+                                    }
+                                    
+
+                                initializeChoices();
+                            }else{
+                                initializeChoices();
+                            }
+                        } catch (e) {}
+            
+                        function initializeChoices() {
+            
+                            initializeChoiceElement('.js-choice-functional_audition');
+                            initializeChoiceElement('.js-choice-apu');
+                            initializeChoiceElement('.js-choice-functional');
+                        }
+            
+                        function initializeChoiceElement(selector) {
+                            var element = document.querySelector(selector);
+                            if (element && (element.tagName.toLowerCase() === 'select' || element.type === 'text')) {
+                                if (!element.classList.contains('choices__input')) {
+                                    new Choices(element);
+                                } else {
+                                    console.warn(`Choices.js already initialized on ${selector}`);
+                                }
+                            } else {
+                                //console.error(`Element ${selector} not found or not a valid type`);
+                            }
+                        }
+
+                    }, 0);
 
                     $scope.$apply(); 
 
@@ -1964,20 +1980,16 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         $scope.startTimer();  
                     }
     
-                    $scope.unsavedChanges= false;
+                    $scope.$apply();
 
-                    try {
-                        if (page_load == true || true) {
-                            const choices1 = new Choices('.js-choice-apu');
-                            const choices2 = new Choices('.js-choice-functional');
-                            const choices5 = new Choices('.js-choice-functional_audition');
-
-                            //const choices3 = new Choices('.js-choice-business_unit');
-                            //const choices4 = new Choices('.js-choice-unit_no');
-                        }
-                    } catch { }
                 }
 
+                $scope.dataLoaded = true;
+                $scope.leavePage = false;
+                
+                if($scope.data_header[0].pha_status === 11 || $scope.data_header[0].pha_status === 12){
+                    $scope.startTimer();  
+                }
                 $scope.unsavedChanges= false;
 
 
@@ -2302,6 +2314,96 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
         }
     }
+    function set_form_access(pha_status,params,flow_role_type){
+        if(pha_status === 11 || pha_status === 12){
+            $scope.can_edit = true;
+
+        }
+        if(params != 'edit_approver'){
+            $scope.action_owner_active = true;
+        }  
+
+        if(params !== null){
+
+            if(params != 'edit_approver'){
+                $scope.action_owner_active = true;
+            }  
+            
+
+            if(params !== 'edit') {
+                $scope.tab_general_active = false;
+                $scope.tab_node_active = false;
+                $scope.tab_worksheet_active = false;
+                $scope.tab_managerecom_active = false;
+                $scope.tab_approver_active = false;
+
+                if(params === 'edit_action_owner'){
+                    $scope.action_owner_active = true;
+
+                } 
+
+                if(params === 'edit_approver'){
+                    $scope.action_owner_active = false;
+
+                }  
+
+                $scope.can_edit = false;
+
+
+            }
+
+            if(params === 'edit' && flow_role_type === 'admin') {
+                $scope.tab_general_active = true;
+                $scope.tab_node_active = true;
+                $scope.tab_worksheet_active = true;
+                $scope.tab_managerecom_active = true;
+                $scope.tab_approver_active = true;
+
+                $scope.save_type = true;
+                $scope.can_edit = true;
+
+            }
+        }else if (params === null && pha_status === 21) {
+            if (Array.isArray($scope.data_approver)) {
+                let mainApprover = $scope.data_approver.find(item => item.approver_type === 'approver' && item.user_name === $scope.user_name);
+        
+                if (mainApprover) {
+                    $scope.can_edit = true;
+                } else {
+                    $scope.can_edit = false;
+                }
+            } else {
+                $scope.can_edit = false; 
+            }
+
+            if($scope.data_approver){
+                $scope.data_approver_ta3.filter(item => {
+                    if(item.user_name === $scope.user_name){
+                        $scope.tab_approver_active = true;
+
+                    }
+                })
+            }
+        }
+    }
+    function set_tab_focus(pha_status,action_part_befor){
+        if(pha_status == 11){
+            var arr_tab = $filter('filter')($scope.tabs, function (item) { return ((item.action_part == action_part_befor)); });
+
+        $scope.changeTab_Focus(arr_tab, arr_tab.name);
+
+        } else if(pha_status == 12 || $scope.params === 'edit_action_owner' ||  $scope.params === 'edit'){
+            var arr_tab = $filter('filter')($scope.tabs, function (item) { return ((item.action_part == 5)); });
+            $scope.action_part = 5;
+            console.log("arr_tab",arr_tab)
+
+        $scope.changeTab_Focus(arr_tab, arr_tab.name);
+        }
+
+        console.log($scope.params)
+
+    }
+
     function check_case_member_review() {
 
         if ($scope.data_header[0].pha_status == 12
@@ -2986,9 +3088,28 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.selectdata_tasklist = xValues;
 
         console.clear();
-        console.log(newInput);
 
         set_data_listworksheet(seq);
+
+        //copy list worksheet 
+        $scope.MaxSeqdata_listworksheet = Number($scope.MaxSeqdata_listworksheet) + 1;
+        var MaxSeqdata_listworksheet = $scope.MaxSeqdata_listworksheet;
+
+        var new_worksheet = angular.copy($scope.data_listworksheet_def[0]);
+        new_worksheet.seq = MaxSeqdata_listworksheet;
+        new_worksheet.id = MaxSeqdata_listworksheet;
+        new_worksheet.id_list = newInput.id;
+        new_worksheet.no = (iNo);
+        new_worksheet.list_no = (iNo);
+        new_worksheet.list_sub_system_no = 1
+        new_worksheet.list_system_no = 1 
+        new_worksheet.causes_no = 1
+        new_worksheet.consequences_no= 1
+        new_worksheet.row_type = 'list_system';
+        new_worksheet.action_type = 'insert';
+        new_worksheet.action_change = 1;
+
+        $scope.data_listworksheet.push(new_worksheet);
 
         console.log($scope.data_listworksheet);
 
@@ -4082,7 +4203,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             category_no = 1;
         }
 
-        console.log("row_type",row_type)
         var arr_list = $filter('filter')($scope.data_tasklist, function (_item) {
             return (_item.seq == seq_list);
         });
@@ -4700,21 +4820,57 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     $scope.formData = [];
 
     $scope.confirmBack = function () {
+        if (conFig.pha_type_doc == 'preview') {
 
-        console.log("scope.unsavedChanges",$scope.unsavedChanges)
+            var pha_type_doc = 'back';
+            var pha_status = "";
 
-        if(!$scope.unsavedChanges){
-            window.open("home/portal", "_top");
-        }else{
-            $('#unsavedChangesModal').modal({
-                backdrop: 'static',
-                keyboard: false 
-            }).modal('show');
+            var page = conFig.controller_action_befor();
+            var controller_text = "hazop";
+            //conFig.pha_seq = null;
+            conFig.pha_type_doc = pha_type_doc;
+
+            $.ajax({
+                url: controller_text + "/next_page",
+                data: '{"controller_action_befor":"' + page + '","pha_type_doc":"' + pha_type_doc + '"}',
+                type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+                beforeSend: function () {
+                    $("#divLoading").show();
+                },
+                complete: function () {
+                    $("#divLoading").hide();
+                },
+                success: function (data) {
+                    var arr = data;
+                    window.open(data.page, "_top");
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    if (jqXHR.status == 500) {
+                        alert('Internal error: ' + jqXHR.responseText);
+                    } else {
+                        alert('Unexpected ' + textStatus);
+                    }
+                }
+
+            });
+            return;
+        } else {
+
+            console.log($scope.unsavedChanges,"$scope.unsavedChanges")
+            if(!$scope.unsavedChanges){
+                window.open("home/portal", "_top");
+            }else{
+                $('#unsavedChangesModal').modal({
+                    backdrop: 'static',
+                    keyboard: false 
+                }).modal('show');
+            }
+            
         }
-        
-        return;
-    };
-    
+
+
+    }
+
     $scope.action_leavePage = function(action) {
         switch (action) {
             case 'leave':
@@ -4833,7 +4989,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         }
                     });
 
-                    console.log($scope.data_memberteam)
 
                     arr_chk = $scope.data_memberteam;
                     
@@ -4898,7 +5053,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                             //if (set_valid_items(arr_chk[i].responder_user_name, 'worksheet-causes-' + arr_chk[i].seq)) { bCheckValid_Worksheet = true; }
                             //if (set_valid_items(arr_chk[i].responder_user_name, 'worksheet-consequences-' + arr_chk[i].seq)) { bCheckValid_Worksheet = true; }
 
-                            if (set_valid_items(arr_chk[i].responder_user_name, 'worksheet-responder-' + arr_chk[i].seq)) { bCheckValid_Worksheet = true; }
+                            //if (set_valid_items(arr_chk[i].responder_user_name, 'worksheet-responder-' + arr_chk[i].seq)) { bCheckValid_Worksheet = true; }
 
                             if (set_valid_items(arr_chk[i].estimated_start_date, 'worksheet-estimated-start-' + arr_chk[i].seq)) { bCheckValid_Manage = true; }
                             if (set_valid_items(arr_chk[i].estimated_end_date, 'worksheet-estimated-end-' + arr_chk[i].seq)) { bCheckValid_Manage = true; }
@@ -4906,53 +5061,64 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         }
                     }
 
-                    if (true) {
-                        var arr_chk = $scope.data_listworksheet;
+
+
+                   /* if (true) {
+                        var task = $scope.data_tasklist;
+
+                        for (var i = 0; i < task.length; i++){
+                            var arr_chk = $scope.data_listworksheet.filter(item => item.id_node === task[i].id);
                     
-                        var bCheckValid_Worksheet = false;
-                    
-                        //check หา 
-                        for (var i = 0; i < arr_chk.length; i++) {
-                            let item = arr_chk[i];                        
-                            var valid = false;
-                            if ((item['list_system'] !== undefined && item['list_system'] !== null && item['list_system'] !== '') ||
-                                (item['list_sub_system'] !== undefined && item['list_sub_system'] !== null && item['list_sub_system'] !== '') ||
-                                (item['causes'] !== undefined && item['causes'] !== null && item['causes'] !== '')) {
-
-                                // Validate based on the first present field among 'causes', 'consequences', 'category_type'
-                                if (item['list_system'] !== undefined && item['list_system'] !== null && item['list_system'] !== '') {
-                                    valid = validateFields(item, 'list_system', ['list_sub_system','causes','consequences', 'category_type', 'major_accident_event', 'existing_safeguards']);
-                                } else if (item['list_sub_system'] !== undefined && item['list_sub_system'] !== null && item['list_sub_system'] !== '') {
-                                    valid = validateFields(item, 'list_sub_system', ['list_system','causes', 'category_type', 'major_accident_event', 'existing_safeguards']);
-                                } else if (item['causes'] !== undefined && item['causes'] !== null && item['causes'] !== '') {
-                                    valid = validateFields(item, 'causes', ['list_system','list_sub_system','causes', 'consequences', 'major_accident_event', 'existing_safeguards']);
-                                }
-
-                                if(!valid){
-                                    bCheckValid_Worksheet = true; 
-                                }
-
-
-
-                            } /*else {
-                                bCheckValid_Worksheet = false; 
-                                continue; 
-                            }*/
-                        }
-                    
-        
-                        if (bCheckValid_Worksheet) {
-                            $scope.goback_tab = 'worksheet'
+                            var bCheckValid_Worksheet = false;
                         
-                            $scope.tabs = $scope.tabs.map(tab => {
-                                tab.isActive = (tab.name === 'worksheet');
-                                return tab;
-                            })
+                            //check หา 
+                            for (var j = 0; j < arr_chk.length; j++) {
+                                let item = arr_chk[j];                        
+                                var valid = false;
+                                if ((item['list_system'] !== undefined && item['list_system'] !== null && item['list_system'] !== '') ||
+                                    (item['causes'] !== undefined && item['causes'] !== null && item['causes'] !== '') ||
+                                    (item['consequences'] !== undefined && item['consequences'] !== null && item['consequences'] !== '') ||
+                                    (item['list_sub_system'] !== undefined && item['list_sub_system'] !== null && item['list_sub_system'] !== '')) {
 
-                            set_alert('Warning', 'Please provide valid data in the worksheet');
-                            return; 
+                                    // Validate based on the first present field among 'causes', 'consequences', 'category_type'
+                                    if (item['list_system'] !== undefined && item['list_system'] !== null && item['list_system'] !== '') {
+                                        valid = validateFields(item, 'list_system', ['consequences', 'causes', 'major_accident_event', 'existing_safeguards']);
+                                    } else if (item['list_sub_system'] !== undefined && item['consequences'] !== null && item['consequences'] !== '') {
+                                        valid = validateFields(item, 'list_sub_system', ['list_system','causes', 'consequences', 'major_accident_event', 'existing_safeguards']);
+                                    } else if (item['consequences'] !== undefined && item['consequences'] !== null && item['consequences'] !== '') {
+                                        valid = validateFields(item, 'consequences', ['causes', 'consequences', 'major_accident_event', 'existing_safeguards']);
+                                    }else if (item['causes'] !== undefined && item['causes'] !== null && item['causes'] !== '') {
+                                        valid = validateFields(item, 'causes', ['list_system', 'list_sub_system', 'major_accident_event', 'existing_safeguards']);
+                                    }
+
+                                    if(!valid){
+                                        bCheckValid_Worksheet = true; 
+                                    }
+
+
+
+                                } else {
+                                    bCheckValid_Worksheet = false; 
+                                    continue; 
+                                }
+                            }   
+                            if (bCheckValid_Worksheet) {
+                                $scope.goback_tab = 'worksheet'
+                            
+                                $scope.tabs = $scope.tabs.map(tab => {
+                                    tab.isActive = (tab.name === 'worksheet');
+                                    return tab;
+                                })
+
+                                set_alert('Warning', 'Please provide valid data in the worksheet');
+                                return; 
+                            }
+
                         }
-                    }
+
+                    
+    
+                    }*/
 
 
                     var tag_name = '';
@@ -4971,8 +5137,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
 
         }
-
-
 
         //call function confirm ให้เลือก Ok หรือ Cancle
         if (true) {
@@ -5109,9 +5273,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     function validateFields(item, mainField, requiredFields) {
         let valid = true;
-    
+        let allFieldsPresent = true; 
+        let isViewDataNodeListSet = false; //
+
         if (item[mainField] !== null && item[mainField] !== '') {
-            let allFieldsPresent = true;
     
             // Check each required field
             requiredFields.forEach(field => {
@@ -5128,12 +5293,22 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             });
 
-    
             if (allFieldsPresent) {
                 requiredFields.forEach(field => {
-                    set_valid_items(item[field], 'worksheet-' + field + '-' + item.seq);
+                    if (!isViewDataNodeListSet) {
+                        $timeout(function() {
+                            $scope.selectedItemNodeView = item.id_node;
+
+                            $scope.viewDataNodeList($scope.selectedItemNodeView);
+                        }, 0); 
+                        isViewDataNodeListSet = true;
+                    }
+                    $timeout(function() {
+                        set_valid_items(item[field], 'nodeworksheet-' + field + '-' + item.seq);
+                    }, 0); 
                 });
             }
+            
         } else {
 
             valid = false;
@@ -5163,6 +5338,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             errorDiv.style.display = 'none';
         }
     }
+    
     
 
     $scope.confirmDialogApprover = function (_item, action) {
@@ -5738,6 +5914,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             set_master_ram_likelihood(_arr.id_ram);
         }
 
+        if(type_text === 'area'){
+            $scope.data_general[0].id_unit_no = null;
+            $scope.data_general[0].unit_no_name = null;
+            $scope.data_general[0].id_area = null;
+            $scope.data_general[0].id_company = null;
+            $scope.data_general[0].action_change = 1;
+        }
+
         if (type_text == "task") {
             $scope.selectedItemListView = _seq;
         }
@@ -5745,6 +5929,82 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.unsavedChanges = true;
         apply();
     }
+    $document.on('click', function(event) {
+        const targetElement = event.target;
+        const id = targetElement.getAttribute('id');
+        var id_dropdown = '';
+        var id_list = '';
+
+        if (id) {
+            id_dropdown = id.substring(0, id.indexOf('_'));
+        }
+        // click button
+        if (id_dropdown == 'dropdown') {
+            id_list = id.substring(id.indexOf("_") + 1); 
+        }
+        // click input text
+        if (id == 'dropdown_input') {
+            return
+        }
+        // hidden dropdown
+        document.getElementById('unit_no').classList.remove("show");
+        document.getElementById('functional').classList.remove("show");
+        // set default list
+        $scope.search_keywords = clone_arr_newrow(  $scope.search_keywords);
+        $scope.master_unit_no_list =  $scope.master_unit_no;
+        $scope.master_functional_list =  $scope.master_functional;
+        //$scope.data_request_type_list =  $scope.data_request_type;
+        // show
+        try {
+            document.getElementById(id_list).classList.toggle("show");
+        } catch (error) {}
+    });
+
+    $scope.filterFunction = function (type) {
+        console.log("type",type)
+        if (type == 'unit_no') {
+            $scope.master_unit_no_list = $filter('filter')($scope.master_unit_no, function(item) {
+                var itemName = item.name.toLowerCase();
+                var searchText = $scope.search_keywords.unit_no.toLowerCase();
+        
+                return itemName.includes(searchText);
+            });
+        }
+
+        if (type == 'functional') {
+            $scope.master_functional_list = $filter('filter')($scope.master_functional, function(item) {
+                var itemName = item.name.toLowerCase();
+                var searchText = $scope.search_keywords.functional.toLowerCase();
+        
+                return itemName.includes(searchText);
+            });
+        }
+
+
+    }
+
+    $scope.changeUnitNo = function(unit_no) {
+        console.log(unit_no)
+        $scope.data_general[0].id_unit_no = unit_no.id;
+        $scope.data_general[0].unit_no_name = unit_no.name;
+        $scope.data_general[0].id_area = unit_no.id_area;
+        $scope.data_general[0].id_company = unit_no.id_company;
+        $scope.data_general[0].action_change = 1;
+
+        console.log("show after set unbit no", $scope.data_general)
+    };
+
+    $scope.changeTFunctional = function(item) {
+        $scope.data_general[0].functional_location = item.functional_location;
+        $scope.data_general[0].action_change = 1;
+        // $scope.data_general[0].unit_no_name = unit_no.name;
+    };
+
+    $scope.changeRequestType = function(request_type) {
+        $scope.data_general[0].id_request_type = request_type.id;
+        $scope.data_general[0].action_change = 1;
+
+    };
 
     $scope.actionChangeTaskDrawing = function (_arr, _seq) {
         $scope.unsavedChanges = true;
@@ -6207,7 +6467,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $('#modalConfirm').modal('show');
         
         $scope.confirm = function() {
+            
             $('#modalConfirm').modal('hide');
+            // Save and send
+            setTimeout(function() {
+                save_data_approver_ta3("submit");
+            }, 200);
             deferred.resolve(true);
         };
         
@@ -6223,7 +6488,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         
         return deferred.promise;
     };
-    
 
     $scope.choosDataEmployee = function (item) {
 
@@ -6450,7 +6714,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                        newInput.user_name = employee_name;
                        newInput.user_displayname = employee_displayname;
                        newInput.user_img = employee_img;
-                       newInput.user_title = employee_position;
    
                        console.log(newInput)
                        $scope.data_approver_ta3.push(newInput);
@@ -6459,11 +6722,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
    
                        $scope.MaxSeqdata_approver_ta3 = Number($scope.MaxSeqdata_approver_ta3) + 1
                        
-                        // Save and send
-                        setTimeout(function() {
-                            console.log("Calling save_data_approver_ta3");
-                            save_data_approver_ta3("submit");
-                        }, 200);
                     }
 
 
@@ -6488,10 +6746,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         apply();
 
     };
-
-    $scope.confirm = function(){
-        $scope.confirmation = true;
-    }
 
     $scope.clearFormData = function() {
         $scope.formData = [];
@@ -6842,17 +7096,38 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     //access each role
     $scope.Access_check = function(task) {
-        if ($scope.flow_role_type === 'admin') {
-            return true;
-        }
-        
-        if ($scope.flow_role_type === 'employee' && $scope.user_name === task.user_name) {
-            return true;
-        }
-        
-        return false;
-    };
+        let accessInfo = {
+            canAccess: false,
+            isTA2: false,
+            isTA3: false
+        };
     
+        // If user is an admin, allow access
+        if ($scope.flow_role_type === 'admin') {
+            accessInfo.canAccess = true;
+            return accessInfo;
+        }
+        
+        // If user is an employee and the task belongs to them, allow access
+        if ($scope.flow_role_type === 'employee' && $scope.user_name === task.user_name) {
+            accessInfo.isTA2 = true;
+            accessInfo.canAccess = true;
+            return accessInfo;
+        } else if ($scope.flow_role_type === 'employee') {
+            // Check if the user is a TA3 for this task
+            for (let item of $scope.data_approver_ta3) {
+                if (item.id_approver === task.id) {
+                    accessInfo.isTA3 = true;
+                    accessInfo.canAccess = true;
+
+                    return accessInfo;
+                }
+            }
+        }
+    
+    
+        return accessInfo;
+    };
     
 
 });
