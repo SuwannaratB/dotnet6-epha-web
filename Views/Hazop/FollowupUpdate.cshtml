@@ -578,6 +578,7 @@
                                                                 ng-class="{ 'cant-Access': !canAccess}"
                                                                 placeholder="Remark"
                                                                 rows="3"
+                                                                readonly="!canAccess"
                                                                 ng-change="actionInput(item_d)"
                                                                 ng-model="item_d.responder_comment">
                                                             </textarea>
@@ -602,7 +603,7 @@
                                                                 >
                                                                 <div class="font-sans-serif btn-reveal-trigger position-static me-1">
                                                                     <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 p-1"
-                                                                            ng-class="{ 'cant-Access': !canAccess }"
+                                                                            ng-if="canAccess"
                                                                             type="button" data-bs-toggle="dropdown" data-boundary="window"
                                                                             aria-haspopup="true" aria-expanded="false" data-bs-reference="parent">
                                                                         <span class="fas fa-cog text-info"></span>
