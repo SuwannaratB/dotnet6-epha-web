@@ -3338,16 +3338,16 @@
                                                                 What's if Report
                                                             </b>
                                                         </div><br />
-                                                        <div class="form-check form-check-inline" ng-hide="!(accessInfo.canAccess && accessInfo.isTA2)" >
+                                                        <div class="form-check form-check-inline" ng-if="accessInfo.canAccess || accessInfo.isTA2" >
                                                             <input class="form-check-input" id="inlineRadio-{{item.seq}}" type="radio"
                                                                    name="inlineRadioOptions-{{item.seq}}" 
                                                                    value="approve" checked ng-model="item.action_status" />
                                                             <label class="form-check-label" for="inlineRadioApprove-{{item.seq}}"> Approve</label>
                                                         </div>
-                                                        <div class="form-check form-check-inline"  ng-hide="!(accessInfo.canAccess && accessInfo.isTA2)">
+                                                        <div class="form-check form-check-inline" ng-if="accessInfo.canAccess || accessInfo.isTA2">
                                                             <input class="form-check-input" id="inlineRadioOptions-{{item.seq}}" type="radio"
-                                                                   name="inlineRadioOptions-{{item.seq}}"
-                                                                   value="reject" ng-model="item.action_status" />
+                                                                   name="inlineRadioOptions-{{item.seq}}" 
+                                                                   value="reject" checked ng-model="item.action_status" />
                                                             <label class="form-check-label" for="inlineRadioReject-{{item.seq}}"> Send back with Comment</label>
                                                         </div>
                                                         <div id="valid-approver-status-{{item.seq}}" class="invalid-feedback text-danger">
@@ -3392,7 +3392,7 @@
                                                          ng-repeat="item_x in data_drawing_approver  | toArray | filter:{id_approver : item.seq}  ">
                                                         <div class="d-flex flex-nowrap">
                                                             <div class="font-sans-serif btn-reveal-trigger position-static me-1" 
-                                                                ng-if="(accessInfo.canAccess || accessInfo.isTA2 ||accessInfo.isTA3) && (item.approver_action_type == 0 || item.approver_action_type == 1)">
+                                                                ng-if="(accessInfo.canAccess || accessInfo.isTA2 ||accessInfo.isTA3) && (item.approver_action_type != 2)">
                                                                 <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 p-1"
                                                                         ng-if="(accessInfo.canAccess || accessInfo.isTA2 || accessInfo.isTA3)"
                                                                         type="button" data-bs-toggle="dropdown" data-boundary="window"

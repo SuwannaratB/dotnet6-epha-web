@@ -3389,6 +3389,8 @@
                                                 class="hover-actions-trigger btn-reveal-trigger position-static text-center ">@*will more grey if can't access*@
                                                 <!---------ng-class="{ 'task-highlight':  }"
                                                 ng-if="(item.user_name == user_name ) || (flow_role_type == 'admin')"---------->
+
+
                                                 <td class="align-top white-space-nowrap">
                                                     <div class="col-md-12 p-1 ps-3">
                                                         <label class="text-1100 fw-bold ">
@@ -3428,9 +3430,9 @@
                                                             <a ng-click="openDataEmployeeAdd(item,'approver_ta3')"
                                                                 class="btn btn-link px-0"
                                                                 data-toggle="tooltip" 
-                                                                title="select TA3"
+                                                                title="select other Riewver"
                                                                 style="font-size: smaller;">
-                                                                <span>Click to select TA3</span>
+                                                                <span>clicking to select another Reviewer</span>
                                                         </a>
                                                     </div> 
 
@@ -3448,19 +3450,19 @@
                                                 </td>
                                                 <td class="align-top white-space-nowrap" ng-class="{'disabled-link':(!tab_approver_active)}">
                                                     <div class="col-md-12 p-1 ps-3 text-start"  ng-if="(accessInfo.canAccess || accessInfo.isTA2) && item.approver_action_type != 2">
-                                                        <div class="form-check form-check-inline cursor-pointer">
+                                                        <div class="form-check form-check-inline cursor-pointer ps-0">
                                                             <span class="fa-solid far fa-file-pdf text-danger" style="font-size:15px;" ng-click="confirmExport('hazop_report','pdf')"></span>
                                                             <b>
                                                                 HAZOP Report
                                                             </b>
                                                         </div><br />
-                                                        <div class="form-check form-check-inline" ng-hide="!(accessInfo.canAccess && accessInfo.isTA2)" >
+                                                        <div class="form-check form-check-inline" ng-if="(accessInfo.canAccess || accessInfo.isTA2) && !accessInfo.isTA3" >
                                                             <input class="form-check-input" id="inlineRadio-{{item.seq}}" type="radio"
                                                                    name="inlineRadioOptions-{{item.seq}}" 
                                                                    value="approve" checked ng-model="item.action_status" />
                                                             <label class="form-check-label" for="inlineRadioApprove-{{item.seq}}"> Approve</label>
                                                         </div>
-                                                        <div class="form-check form-check-inline" ng-hide="!(accessInfo.canAccess && accessInfo.isTA2)">
+                                                        <div class="form-check form-check-inline" ng-if="(accessInfo.canAccess || accessInfo.isTA2) && !accessInfo.isTA3">
                                                             <input class="form-check-input" id="inlineRadioOptions-{{item.seq}}" type="radio"
                                                                    name="inlineRadioOptions-{{item.seq}}" 
                                                                    value="reject" checked ng-model="item.action_status" />
@@ -3507,7 +3509,7 @@
                                                          ng-repeat="item_x in data_drawing_approver  | toArray | filter:{id_approver : item.seq}  ">
                                                         <div class="d-flex flex-nowrap">
                                                             <div class="font-sans-serif btn-reveal-trigger position-static me-1" 
-                                                                ng-if="(accessInfo.canAccess || accessInfo.isTA2 ||accessInfo.isTA3) && (item.approver_action_type == 0 || item.approver_action_type == 1)">
+                                                                ng-if="(accessInfo.canAccess || accessInfo.isTA2 ||accessInfo.isTA3) && (item.approver_action_type != 2)">
                                                                 <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 p-1"
                                                                         ng-if="(accessInfo.canAccess || accessInfo.isTA2 || accessInfo.isTA3)"
                                                                         type="button" data-bs-toggle="dropdown" data-boundary="window"
@@ -3891,14 +3893,14 @@
                 </div>
 
                 <!------------show name after add   --------------->
-                <div class="modal-header bg-soft" ng-if="(selectDatFormType !== 'owner' &&  params !== 'edit_approver' && (data_memberteam || data_approver).length > 1 )">
+                <div class="modal-header bg-soft" ng-if="(selectDatFormType !== 'owner' && selectDatFormType !== 'approver_ta3' &&  params !== 'edit_approver' && (data_memberteam || data_approver).length > 1 )">
                     <h5 class="text-900 mb-0">
                         <span class="me-2 text-primary"><B>|</B></span> {{ selectDatFormType === 'member' ? 'Member Team' : 'Approver' }}
                     </h5>
                 </div>
 
                 <div class="modal-body h-50"  
-                    ng-if="(selectDatFormType !== 'owner' &&  params !== 'edit_approver' && (data_memberteam || data_approver).length > 1 )">
+                    ng-if="(selectDatFormType !== 'owner' && selectDatFormType !== 'approver_ta3' && params !== 'edit_approver' && (data_memberteam || data_approver).length > 1 )">
                     <div class="col-auto py-2" ng-repeat="item2 in (selectDatFormType === 'member' ? data_memberteam : data_approver) | toArray | filter:{id_session: selectdata_session }"
                         ng-if="!(item2.user_displayname == '' || item2.user_displayname == null)">
                         <div class="d-flex align-items-center p-1" style="height: 20px;">
@@ -3907,7 +3909,7 @@
                                     data-toggle="tooltip" 
                                     data-placement="top" 
                                     title="Remove"
-                                    ng-click="removeDataEmployee(item2.seq, selectdata_session)">
+                                    ng-click="removeDataEmployee(item2.seq, selectdata_session,selectDatFormType)">
                                 <span class="fa-regular fa-trash-can fa-lg"></span>
                             </button>                            
                             <label class="mb-0 ms-3 text-1100 fw-bold" style="width: 25%; border-color: #f1f2f4;">{{ item2.user_displayname }}</label>
@@ -3951,7 +3953,7 @@
                 </div>
                 <div class="modal-footer" ng-if="Action_Msg_Header == 'Success'">
                     <div class="d-flex flex-column align-items-center bg-primary" >
-                        <button class="btn p-2 px-8 text-white" type="button" data-bs-dismiss="modal" aria-label="Close"><!----ng-if="!Action_Msg_Confirm"----->
+                        <button class="btn p-2 px-8 text-white" type="button" data-bs-dismiss="modal" aria-label="Close" ng-click="reloadPage()">
                             OK
                         </button>
                     </div>

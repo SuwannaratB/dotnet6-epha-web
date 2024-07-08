@@ -7107,27 +7107,30 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             accessInfo.canAccess = true;
             return accessInfo;
         }
-        
-        // If user is an employee and the task belongs to them, allow access
-        if ($scope.flow_role_type === 'employee' && $scope.user_name === task.user_name) {
-            accessInfo.isTA2 = true;
-            accessInfo.canAccess = true;
-            return accessInfo;
-        } else if ($scope.flow_role_type === 'employee') {
-            // Check if the user is a TA3 for this task
-            for (let item of $scope.data_approver_ta3) {
-                if (item.id_approver === task.id) {
-                    accessInfo.isTA3 = true;
-                    accessInfo.canAccess = true;
-
-                    return accessInfo;
+    
+        // If user is an employee
+        if ($scope.flow_role_type === 'employee') {
+            // Check if the task belongs to the user (TA2)
+            if ($scope.user_name === task.user_name) {
+                accessInfo.isTA2 = true;
+                accessInfo.canAccess = true; // TA2 should have access to their own tasks
+                console.log("User is TA2, granting access:", accessInfo);
+            } else {
+                // Check if the user is a TA3 for this task
+                for (let item of $scope.data_approver_ta3) {
+                    if (item.id_approver === task.id && $scope.user_name == item.user_name) {
+                        accessInfo.isTA3 = true;
+                        accessInfo.canAccess = false; // TA3 should not have access
+                        console.log("User is TA3, not granting access:", accessInfo);
+                        break;
+                    }
                 }
             }
         }
     
-    
         return accessInfo;
     };
+    
     
 
 });

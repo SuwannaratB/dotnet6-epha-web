@@ -1648,7 +1648,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         apply();
 
 
-                        return get_data_after_save(false, false, $scope.pha_seq);
+                        get_data_after_save(false, false, $scope.pha_seq);
                     }
                     else {
                         set_alert('Success', 'Data has been successfully submitted.');
@@ -1678,7 +1678,30 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 }
                 else {
                     set_alert('Error', arr[0].status);
+                    if (arr[0].pha_status == '13') {
+                        //กรณีที่ TA2 approve all
+                        if($scope.flow_role_type == 'admin') {
+                            return page_load();
+                        }
+
+                    } else if (arr[0].pha_status == '22') {
+                        //กรณีที่ TA2 approve reject
+                        window.open('hazop/search', "_top");
+                    } else {
+                        //กรณี TA2 approve some items
+                        //ให้ update action_change = 0; 
+                        var arr_update = $filter('filter')($scope.data_approver, function (item) {
+                            return ((item.id_session == id_session && item.seq == seq));
+                        });
+                        if (arr_update.length > 0) {
+                            arr_update[0].action_change = 0;
+                        }
+                        apply();
+                    }
+
                     apply();
+
+                    return;                    
                 }
 
             },
@@ -1921,10 +1944,34 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     $scope.data_memberteam_def = clone_arr_newrow(arr.memberteam);
                     $scope.data_memberteam_old = (arr.memberteam);
 
-                    $scope.data_approver = arr.approver;
-                    $scope.data_approver_def = clone_arr_newrow(arr.approver);
-                    $scope.data_approver_old = (arr.approver);
-
+                    $scope.set_data_approver = function(approvers) {
+                        let uniqueApprovers = [];
+                        let idSeqMap = {};
+                    
+                        for (let approver of approvers) {
+                            let id = approver.id;
+                            let seq = approver.seq;
+                    
+                            if (!idSeqMap[id]) {
+                                idSeqMap[id] = new Set();
+                            }
+                    
+                            while (idSeqMap[id].has(seq)) {
+                                seq += 1; // Increment seq if it's a duplicate
+                            }
+                    
+                            idSeqMap[id].add(seq);
+                            uniqueApprovers.push({ ...approver, seq: seq });
+                        }
+                    
+                        return uniqueApprovers;
+                    };
+                    
+                    // Now set $scope.data_approver to the unique approvers
+                    $scope.data_approver = $scope.set_data_approver(arr.approver);
+                    $scope.data_approver_def = clone_arr_newrow($scope.set_data_approver(arr.approver));
+                    $scope.data_approver_old = $scope.set_data_approver(arr.approver);
+                    
                     //check id_pha ก่อน
                     arr.approver_ta3 = arr.approver_ta3.filter((item) => {
                         return item.id_pha === $scope.data_approver[0].id_pha && item.id_pha === $scope.data_header[0].id;
@@ -6508,7 +6555,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         });   
     }
 
-
+    $scope.reloadPage = function(){
+        window.location.reload();
+    }
     function set_alert_warning(header, detail) {
         $scope.$apply(function () {
             $scope.Action_Msg_Header = header;
@@ -7248,38 +7297,74 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         //$scope.formData_outsider = [];
     };
 
-    $scope.removeDataEmployee = function (seq, seq_session) {
+    $scope.removeDataEmployee = function (seq, seq_session,type) {
 
-        var arrdelete = $filter('filter')($scope.data_memberteam, function (item) {
-            return (item.seq == seq && item.action_type == 'update');
-        });
-        if (arrdelete.length > 0) { $scope.data_memberteam_delete.push(arrdelete[0]); }
-
-        $scope.data_memberteam = $filter('filter')($scope.data_memberteam, function (item) {
-            if (item.seq == seq && item.id_session == seq_session) {
-                if (item.user_name !== undefined && item.user_name !== null) {
-                    $scope.clickedStates[item.user_name] = false;
-                } 
-            }
-        
-            return !(item.seq == seq && item.id_session == seq_session);
-        });
-        console.log("call to del",$scope.data_memberteam)
-        
-        //if delete row 1 clear to null
-        if ($scope.data_memberteam.length == 1 || $scope.data_memberteam.no == 1) {
-            var keysToClear = ['user_name', 'user_displayname'];
-
-
-            keysToClear.forEach(function (key) {
-                $scope.data_memberteam[0][key] = null;
+        if(type === 'member'){
+            var arrdelete = $filter('filter')($scope.data_memberteam, function (item) {
+                return (item.seq == seq && item.action_type == 'update');
             });
-
-            $scope.data_memberteam[0].no = 1;
+            if (arrdelete.length > 0) { $scope.data_memberteam_delete.push(arrdelete[0]); }
+    
+            $scope.data_memberteam = $filter('filter')($scope.data_memberteam, function (item) {
+                if (item.seq == seq && item.id_session == seq_session) {
+                    if (item.user_name !== undefined && item.user_name !== null) {
+                        $scope.clickedStates[item.user_name] = false;
+                    } 
+                }
+            
+                return !(item.seq == seq && item.id_session == seq_session);
+            });
+            console.log("call to del",$scope.data_memberteam)
+            
+            //if delete row 1 clear to null
+            if ($scope.data_memberteam.length == 1 || $scope.data_memberteam.no == 1) {
+                var keysToClear = ['user_name', 'user_displayname'];
+    
+    
+                keysToClear.forEach(function (key) {
+                    $scope.data_memberteam[0][key] = null;
+                });
+    
+                $scope.data_memberteam[0].no = 1;
+            }
+    
+    
+            running_no_level1($scope.data_memberteam, null, null);
+        }else{
+            var arrdelete = $filter('filter')($scope.data_approver, function (item) {
+                return (item.seq == seq && item.action_type == 'update');
+            });
+            if (arrdelete.length > 0) { $scope.data_approver_delete.push(arrdelete[0]); }
+    
+            $scope.data_approver = $filter('filter')($scope.data_approver, function (item) {
+                if (item.seq == seq && item.id_session == seq_session) {
+                    if (item.user_name !== undefined && item.user_name !== null) {
+                        $scope.clickedStates[item.user_name] = false;
+                    } 
+                }
+            
+                return !(item.seq == seq && item.id_session == seq_session);
+            });
+            console.log("call to del",$scope.data_approver)
+            
+            //if delete row 1 clear to null
+            if ($scope.data_approver.length == 1 || $scope.data_approver.no == 1) {
+                var keysToClear = ['user_name', 'user_displayname'];
+    
+    
+                keysToClear.forEach(function (key) {
+                    $scope.data_approver[0][key] = null;
+                });
+    
+                $scope.data_approver[0].no = 1;
+            }
+    
+    
+            running_no_level1($scope.data_approver, null, null);
         }
 
+        
 
-        running_no_level1($scope.data_memberteam, null, null);
         apply();
     };
 
@@ -7532,27 +7617,31 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             accessInfo.canAccess = true;
             return accessInfo;
         }
-        
-        // If user is an employee and the task belongs to them, allow access
-        if ($scope.flow_role_type === 'employee' && $scope.user_name === task.user_name) {
-            accessInfo.isTA2 = true;
-            accessInfo.canAccess = true;
-            return accessInfo;
-        } else if ($scope.flow_role_type === 'employee') {
-            // Check if the user is a TA3 for this task
-            for (let item of $scope.data_approver_ta3) {
-                if (item.id_approver === task.id) {
-                    accessInfo.isTA3 = true;
-                    accessInfo.canAccess = true;
-
-                    return accessInfo;
+    
+        // If user is an employee
+        if ($scope.flow_role_type === 'employee') {
+            // Check if the task belongs to the user (TA2)
+            if ($scope.user_name === task.user_name) {
+                accessInfo.isTA2 = true;
+                accessInfo.canAccess = true; // TA2 should have access to their own tasks
+                console.log("User is TA2, granting access:", accessInfo);
+            } else {
+                // Check if the user is a TA3 for this task
+                for (let item of $scope.data_approver_ta3) {
+                    if (item.id_approver === task.id && $scope.user_name == item.user_name) {
+                        accessInfo.isTA3 = true;
+                        accessInfo.canAccess = true; // TA3 should not have access
+                        console.log("User is TA3, not granting access:", accessInfo);
+                        break;
+                    }
                 }
             }
         }
     
-    
         return accessInfo;
     };
+    
+    
 
     function validBeforRegister() {
         if (validGeneral() &&
