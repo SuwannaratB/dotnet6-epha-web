@@ -259,12 +259,12 @@
                                             </a>
                                         </label>
                                         <select class="form-control js-choice-company " 
-                                                disabled
-                                                ng-class="{'disabled-link': isDisableStatus}"
-                                                data-choices="data-choices"
-                                                data-options='{"removeItemButton":true,"placeholder":true}'
-                                                ng-change="actionChange(item,item.seq,'')" 
-                                                ng-model="item.id_company">
+                                            disabled
+                                            ng-class="{'disabled-link': isDisableStatus}"
+                                            data-choices="data-choices"
+                                            data-options='{"removeItemButton":true,"placeholder":true}'
+                                            ng-change="actionChange(item,item.seq,'')" 
+                                            ng-model="item.id_company">
                                             <option ng-repeat="item2 in master_company | orderBy:'id'" ng-value="item2.id">
                                                 {{item2.name}}
                                             </option>
@@ -289,7 +289,8 @@
                                                         ng-class="{'disabled-link': isDisableStatus}"
                                                         data-choices="data-choices"
                                                         data-options='{"removeItemButton":true,"placeholder":true}'
-                                                        ng-change="actionChange(item,item.seq,'apu')" ng-model="item.id_apu">
+                                                        ng-change="actionChange(item,item.seq,'apu')" 
+                                                        ng-model="item.id_apu">
                                                     <option ng-repeat="item2 in master_apu" 
                                                             ng-value="item2.id">
                                                         {{item2.name}}
@@ -1405,9 +1406,10 @@
                                                         </div>
                                                         <select class="form-control"
                                                                 ng-class="{'disabled-link': isDisableStatus}"
-                                                                ng-change="actionChangeWorkGroup(item)"
+                                                                @* ng-change="actionChangeWorkGroup(item)" *@
                                                                 @* ng-change="actionChange(item,item.seq,'worker_group')" *@
                                                                 ng-model="item.id_worker_group"
+                                                                ng-change="changeWorkerGroup(item)"
                                                                 ng-if="item.tasks_type_other == 0">
                                                             <option ng-repeat="item_m in master_worker_group" ng-value="item_m.id">
                                                                 {{item_m.name}}
@@ -1491,8 +1493,8 @@
                                                             data-toggle="tooltip" 
                                                             data-placement="top" 
                                                             title="Copy Description of Work or Tasks"
-                                                            @* ng-disabled="isDisableStatus" *@
-                                                            disabled
+                                                            ng-disabled="isDisableStatus"
+                                                            @* disabled *@
                                                             ng-click=copyDescription(item)>
                                                             <span class="fas fa-copy fa-lg"></span>
                                                             Copy
@@ -2738,7 +2740,7 @@
                                         <th class="text-center" style="width: 10%;">Select</th>
                                         <th class="text-start" style="width: 70%;">RISK FACTOR ({{ (master_hazard_riskfactors_list | filter:{id_hazard_type: select_hazard_type}).length }})</th>
                                         <th class="text-center" style="width: 10%;">Rating</th>
-                                        <th class="text-center" style="width: 10%;">TLV STD</th>
+                                        <th class="text-center" style="width: 10%;">standard</th>
                                     </tr>
                                 </thead>
                                 <tbody class=" list">
@@ -2756,7 +2758,9 @@
                                                 @* ng-click="changeRisk(select_hazard, $index)" *@ >
                                        </td>
 
-                                        <td class="text-start" style="width: 70%;">{{item.name}}</td>
+                                        <td class="text-start" style="width: 70%;">
+                                            {{item.name}}
+                                        </td>
 
                                         <td class="text-center" style="width: 10%;">
                                             <div class="d-flex align-items-center justify-content-center" style="width: 100%;">
@@ -2773,7 +2777,10 @@
                                                 </div>
                                             </div>
                                         </td>
-                                        <td class="text-center" style="width: 10%;">{{item.standard_value}} {{item.standard_unit}}</td>
+
+                                        <td class="text-center" style="width: 10%;">
+                                            {{item.standard_value}} {{item.standard_unit}}
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>

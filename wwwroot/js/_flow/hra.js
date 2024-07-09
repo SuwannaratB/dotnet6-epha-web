@@ -948,6 +948,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             { id: 'High\r\n', name: 'High' },
         ];
 
+        $scope.mocTitle = {
+            default: 'Health Hazard for',
+            apu: '',
+            unit: ''
+        }
+
         $scope.riskfactors_duplicate = [];
 
         // สร้างชั่วโมง (0-23)
@@ -999,10 +1005,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 selectedTab.isActive = true;
 
                 if (selectedTab.name == 'worksheet') {
-                    // if(!validBeforRegister()) {
-                    //     $scope.action_part = 5
-                    //     return set_alert('Warning',$scope.validMessage)
-                    // }
+                    if(!validBeforRegister()) {
+                        $scope.action_part = 5
+                        return set_alert('Warning',$scope.validMessage)
+                    }
                     $scope.confirmSave('confirm_submit_register_without')
                     return; 
                 }
@@ -1590,6 +1596,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     //general
                     if (true) {
                         $scope.data_general = arr.general;
+                        if(!$scope.data_general[0].pha_request_name) 
+                            $scope.data_general[0].pha_request_name = $scope.mocTitle['default']
 
                         $scope.data_session = arr.session;
                         $scope.data_session_def = clone_arr_newrow(arr.session);
@@ -2731,16 +2739,40 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             return arr_tasks;
         }
 
-        $scope.changeDescription = function (dec) {
-            if (dec) {
-                dec.action_change = 1;
-                // worksheet
-                var ws = $filter('filter')($scope.data_worksheet_list, function (item) { 
-                    return (item.id_activity == dec.seq); 
-                })[0];
+        $scope.changeWorkerGroup = function (task) {
+            if(!task) return console.log('Tasks not found!')
+
+            var list = $filter('filter')($scope.master_worker_group, function (item) { 
+                return (item.id == task.id_worker_group); 
+            })[0];
+            task.worker_group = list.name
+            task.action_change = 1;
+            // worksheet
+            var ws = $filter('filter')($scope.data_worksheet_list, function (item) { 
+                return (item.seq == task.seq); 
+            });
+
+            for (let i = 0; i < ws.length; i++) {
+                ws[i].id_worker_group = task.id_worker_group
+                ws[i].worker_group = task.worker_group
+                ws[i].action_change = 1;
                 
-                ws.description = dec.descriptions
             }
+            console.log('tsks ', task)
+            console.log('ws ', ws)
+            console.log('data_worksheet_list ', $scope.data_worksheet_list)
+        }
+
+        $scope.changeDescription = function (dec) {
+            if(!dec) return console.log('Tasks not found!')
+
+            dec.action_change = 1;
+            // worksheet
+            var ws = $filter('filter')($scope.data_worksheet_list, function (item) { 
+                return (item.id_activity == dec.seq); 
+            })[0];
+            
+            ws.description = dec.descriptions
         }
 
         $scope.triggerRemove = function(data,seq, index, type) {
@@ -3890,7 +3922,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             newInput.descriptions = [];
             newInput.worker_list = [];
             newInput.worksheet = [];
-
+            console.log(angular.copy(newInput))
             $scope.MaxSeqdataDescriptions = Number($scope.MaxSeqdataDescriptions) + 1;
             var xValues2 = $scope.MaxSeqdataDescriptions;
             var newInput2 = clone_arr_newrow($scope.data_descriptions_def)[0];
@@ -3915,7 +3947,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 isSort = true;
             }
              // add
-            $scope.data_tasks.splice(index_push, 0, newInput);
+            $scope.data_tasks.splice(index_push, 0, angular.copy(newInput));
             // sort number
             if (isSort) {
                 for (let i = 0; i <  $scope.data_tasks.length; i++) {
@@ -3932,7 +3964,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
             console.log('All data_tasks',$scope.data_tasks)
             // add worksheet follow task
-            // var new_ws = angular.copy($scope.data_worksheet_list)
+            addWorksheetForTask(item, newInput, newInput2, index)
+
+            console.log('all ==> ', $scope.data_tasks)
+            console.log('all worksheet ==> ', $scope.data_worksheet_list)
+        }
+
+        function addWorksheetForTask(item, newInput, newInput2, index){
             var new_ws = newInput;
             new_ws.description = null
             new_ws.id_activity = newInput2.seq
@@ -3962,9 +4000,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 $scope.data_worksheet_list[i].index_rows = i
                 $scope.data_worksheet_list[i].no = i+1
             }
-
-            console.log('all ==> ', $scope.data_tasks)
-            console.log('all worksheet ==> ', $scope.data_worksheet_list)
         }
 
         $scope.removeDataTasks = function (item, index) {
@@ -4031,7 +4066,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         };
 
         //work or tasks
-        $scope.addDescriptions = function (item_t, item_d){
+        $scope.addDescriptions = function (item_t, item_d, type){
             $scope.MaxSeqdataDescriptions = Number($scope.MaxSeqdataDescriptions) + 1;
             var xValues = $scope.MaxSeqdataDescriptions;
 
@@ -4067,7 +4102,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
             console.log('all ==> ',$scope.data_tasks)
             
-            // worksheet
+            // worksheet 
+            addWorksheetForDec(item_t, item_d, newInput, type)
+
+            console.log('all ==> ', $scope.data_tasks)
+            console.log('all worksheet ==> ', $scope.data_worksheet_list)
+        }
+
+        function addWorksheetForDec(item_t, item_d, newInput, type){
             var result_worksheet = $filter('filter')($scope.data_worksheet_list, function (item) {
                 return (item_t.id_activity == item.id_activity);
             })[0];
@@ -4078,6 +4120,16 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             new_ws.id_activity = newInput.seq
             new_ws.index_rows = new_ws.index_rows + 1
             new_ws.no = new_ws.no + 1
+
+            // if (type == 'paste') {
+               
+            //     var result = $filter('filter')($scope.dec_copyWorksheet, function (item) {
+            //         return !item.select;
+            //     })
+            //     new_ws.description = result[0].description
+            //     result[0].select = true;
+            //     console.log('paste ',$scope.dec_copyWorksheet)
+            // }
 
             for (let i = 0; i < new_ws.worksheet.length; i++) {
                 $scope.MaxSeqdataWorksheet = Number($scope.MaxSeqdataWorksheet) + 1;
@@ -4114,9 +4166,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             // }
              // add
             // $scope.data_worksheet_list.splice(index_push, 0, new_ws);
- 
-            console.log('all ==> ', $scope.data_tasks)
-            console.log('all worksheet ==> ', $scope.data_worksheet_list)
         }
 
         $scope.removeDescriptions = function (item_t, index) {
@@ -4845,8 +4894,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                     $('#modalSendMailRegister').modal('hide');
                 } else if (action == 'confirm_submit_register_without') {
-                    // if(!validBeforRegister()) 
-                    //     return set_alert('Warning',$scope.validMessage)
+                    if(!validBeforRegister()) 
+                        return set_alert('Warning',$scope.validMessage)
 
                     $scope.Action_Msg_Confirm = true;
                     action = 'submit_without';
@@ -5822,6 +5871,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 if (arrText.length > 0) {
                     $scope.selectedBusiness_Unit = arrText[0].name;
                 }
+                setMocTile('unit_no');
             }
             if(type_text == "apu"){
                //update id_apu ด้วย 
@@ -5834,7 +5884,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     $scope.master_toc_list.some(toc => toc.id === item.id_plant_area)
                 );
 
-
+                setMocTile('apu');
 
                 console.log("update ap",$scope.data_general)
                 console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",)
@@ -5857,7 +5907,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         _arr.hazard[i].work_of_task = _arr.work_of_task;
                     }
                 }
-                
             }
             if (type_text == "type_hazard") {
                 var arrText = $filter('filter')($scope.master_hazard_type, function (item) {
@@ -6772,6 +6821,37 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     // dev
 
+    function setMocTile(type){
+        if(!type) return console.log('type not found!')
+        
+        var general = $scope.data_general[0]
+        if (type == 'apu') {
+            var result_apu = $filter('filter')($scope.master_apu, function (item) {
+                return (item.id == general.id_apu);
+            })[0];
+
+            $scope.mocTitle['apu'] = result_apu.name
+        }
+
+        if(type == 'unit_no'){
+            var result_unitno = $filter('filter')($scope.master_unit_no_list, function (item) {
+                return (item.id == general.id_unit_no);
+            })[0];
+
+            if(!result_unitno) {
+                $scope.mocTitle['unit'] = ''
+                general.pha_request_name = $scope.mocTitle['default'] + '-' + $scope.mocTitle['apu'] + '-' + $scope.mocTitle['unit']
+                return
+            }
+
+            $scope.mocTitle['unit'] = result_unitno.name
+        }
+
+        general.pha_request_name = $scope.mocTitle['default'] + '-' + $scope.mocTitle['apu'] + '-' + $scope.mocTitle['unit']
+        general.action_change = 1;
+        console.log('general ',general)
+    }
+
     $scope.actionChangeTabArea = function (type, subArea, hazard) {
         if (!type) {
             return console.log('type not found !')
@@ -7270,18 +7350,29 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
 
         if (item) {
+            // copy description
             $scope.dec_copy = item;
+            // copy worksheet
+            var result = $filter('filter')($scope.data_worksheet_list, function (_item) { 
+                return _item.seq == item.seq
+            });
+            $scope.dec_copyWorksheet = result;
+            // set ststus
             $scope.dec_copy_status = true;
         }
+
+        console.log('copy',$scope.dec_copy)
+        console.log('all',$scope.data_worksheet_list)
     }
 
     $scope.pasteDescription = function (item) {
+        // paste description
         const data_copy = $scope.dec_copy;
         if (data_copy) {
-            if (item.descriptions.length != data_copy.descriptions.length) {
+            if (item.descriptions.length < data_copy.descriptions.length) {
                 const num_rows = data_copy.descriptions.length - item.descriptions.length;
                 for (let i = 0; i < num_rows; i++) {
-                    $scope.addDescriptions(item, item.descriptions[item.descriptions.length - 1])
+                    $scope.addDescriptions(item, item.descriptions[item.descriptions.length - 1], 'paste')
                 }
             }
 
@@ -7290,6 +7381,31 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 item.descriptions[i].descriptions = data_copy.descriptions[i].descriptions;
             }
         }
+        // worksheet
+        console.log('item',item)
+        const data_copy_worksheet = $scope.dec_copyWorksheet;
+        var result = $filter('filter')($scope.data_worksheet_list, function (_item) {
+            return _item.seq == item.seq
+        })
+
+        for (let i = 0; i < result.length; i++) {
+            if ( data_copy_worksheet[i]) {
+                if(result[i].description) result[i].action_change = 1
+                result[i].description = data_copy_worksheet[i].description
+            } 
+        }
+        // if (type == 'paste') {
+               
+        //     var result = $filter('filter')($scope.dec_copyWorksheet, function (item) {
+        //         return !item.select;
+        //     })
+        //     new_ws.description = result[0].description
+        //     result[0].select = true;
+        //     console.log('paste ',$scope.dec_copyWorksheet)
+        // }
+
+        console.log('all data_worksheet_list',$scope.data_worksheet_list)
+
     }
 
     $scope.getCustomIndex = function(currentIndex, currentTypeHazard, hazardList) {
