@@ -1328,7 +1328,7 @@
                                     <p><b>DEPARTMENT: &nbsp;</b>{{data_general[0].id_departments}}</p>
                                     <p><b>SECTIONS: &nbsp;</b>{{data_general[0].id_sections}}</p>
                                 </div>
-                                <div class="table-responsive scrollbar" id="table-container">
+                                <div class="table-responsive scrollbar" style="max-height: 62vh;" id="table-container">
                                     <table class="table fs--2 mb-0 table-bordered">
                                         <thead class=" text-uppercase  text-center bg-soft">
                                             <tr>
@@ -1491,7 +1491,8 @@
                                                             data-toggle="tooltip" 
                                                             data-placement="top" 
                                                             title="Copy Description of Work or Tasks"
-                                                            ng-disabled="isDisableStatus"
+                                                            @* ng-disabled="isDisableStatus" *@
+                                                            disabled
                                                             ng-click=copyDescription(item)>
                                                             <span class="fas fa-copy fa-lg"></span>
                                                             Copy
@@ -1603,32 +1604,42 @@
                                             </thead>
                                             <tbody class="list" id="customer-rating-table-body">
                                                 <tr ng-repeat="(index, item) in data_worksheet_list">
-                                                    
-                                                    <td class="td-custom">
+                                                    @* 3.0 *@
+                                                    <td class="td-custom" 
+                                                        rowspan="{{ rowspanWorksheet(item) }}"
+                                                        ng-if="item.seq != data_worksheet_list[index - 1].seq">
                                                         <div class="text-center" style="border: none; padding: 8px">
-                                                            {{ $index+1 }}
+                                                            {{ getNoWorksheet(item) }} 
                                                         </div>
                                                     </td>
-
-                                                    <td class="td-custom">
-                                                        <div class="box text-center" style="border: none;">
-                                                            {{ item.worker_group ? item.worker_group : 'Not found' }}
+                                                    @* 3.1 *@
+                                                    <td class="td-custom"
+                                                        rowspan="{{ rowspanWorksheet(item) }}"
+                                                        ng-if="item.seq != data_worksheet_list[index - 1].seq">
+                                                        <div class="box text-center" 
+                                                            ng-class="{'unbox': (item.worksheet[item.worksheet.length - 1].seq == ws.seq)}"
+                                                            style="border: none;">
+                                                            {{ item.worker_group 
+                                                                ? data_worksheet_list[index - 1].id == item.id
+                                                                    ? ''
+                                                                    : item.worker_group 
+                                                                : 'Not found' }}
                                                         </div>
                                                     </td>
-
+                                                    @* 3.2 *@
                                                     <td class="td-custom ">
-                                                        <div class="" style="padding: 8px;" ng-repeat="item_dec in item.descriptions">
-                                                              {{ item_dec.descriptions ? item_dec.descriptions : 'Not found' }}
+                                                        <div class="" style="padding: 8px;">
+                                                              {{ item.description ? item.description : 'Not found' }}
                                                         </div>
                                                     </td>
-
+                                                    @* 3.3 *@
                                                     <td class="td-custom ">
                                                         <div class="d-flex flex-column box" 
-                                                        ng-repeat="ws in item.worksheet" 
-                                                        ng-class="{
-                                                            'unbox': (item.worksheet[item.worksheet.length - 1].seq == ws.seq),
-                                                            'disbox': (item.worksheet[$index + 1].sub_area == ws.sub_area) }"
-                                                        style="min-width: max-content;">
+                                                            ng-repeat="ws in item.worksheet" 
+                                                            ng-class="{
+                                                                'unbox': (item.worksheet[item.worksheet.length - 1].seq == ws.seq),
+                                                                'disbox': (item.worksheet[$index + 1].sub_area == ws.sub_area) }"
+                                                            style="min-width: max-content;">
                                                             {{ ws.sub_area
                                                                 ? item.worksheet[$index - 1].sub_area == ws.sub_area 
                                                                     ? '' 
@@ -1925,10 +1936,12 @@
                                     </thead>
 
                                     <tbody class="list" id="customer-rating-table-body">
-                                        <tr ng-repeat="item in data_worksheet_list | filter: filterInitialRiskRatingMain | orderBy:['index_rows']" 
+                                        <tr ng-repeat="(index, item) in data_worksheet_list | filter: filterInitialRiskRatingMain | orderBy:['index_rows']" 
                                             class="hover-actions-trigger btn-reveal-trigger position-static text-center">
 
-                                            <td class="align-top rating white-space-nowrap text-start">
+                                            <td class="align-top rating white-space-nowrap text-start"
+                                                rowspan="{{ rowspanWorksheet(item) }}"
+                                                ng-if="item.seq != data_worksheet_list[index - 1].seq">
                                                 <div class="ms-3">
                                                     <label class="pt-2">
                                                         {{item.worker_group}} 
@@ -1936,12 +1949,17 @@
                                                 </div>
                                             </td>
                                             
-                                            <td class="align-top rating white-space-nowrap">
+                                            @* <td class="align-top rating white-space-nowrap">
                                                  <div class="pt-2" style="min-width: 100px; height: max-content; overflow: auto;">
                                                     <div class="d-flex flex-column gap-1 text-start" ng-repeat="item_dec in item.descriptions">
                                                         {{ item_dec.descriptions ? item_dec.descriptions : 'Not found' }}
                                                     </div>
                                                  </div>
+                                            </td> *@
+                                            <td class="td-custom ">
+                                                <div class="" style="padding: 8px;">
+                                                    {{ item.description ? item.description : 'Not found' }}
+                                                </div>
                                             </td>
                                             
                                             <td>
