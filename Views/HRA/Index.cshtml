@@ -154,16 +154,16 @@
 
                     <ul class="nav nav-underline border-3 border-primary border-bottom " id="myTab" role="tablist" style="position: relative;">
 
-                        <li ng-repeat="tab in tabs" class="mx-2 " ng-if="tab.isShow || true">
-                            <a ng-click="changeTab(tab)"
-                               class="btn-outline-primary border border-0 px"
-                               ng-class="{'btn  active': (tab.isActive === true)}"
-                               style="border-radius: 10px 10px 0px 0px; padding: 0.625rem 1.5rem; font-size: 0.8rem; font-weight: 700; line-height: 1.2; text-align: center; display: inline-block; vertical-align: middle;"
-                               id="{{tab.name}}-tab" name="{{tab.name}}-tab"
-                               data-bs-toggle="tab" 
-                               href="#tab-{{tab.name}}" role="tab"
-                               aria-controls="tab-{{tab.name}}"
-                               aria-selected="{{tab.isActive}}">{{ tab.title }}</a>
+                        <li ng-repeat="tab in tabs" ng-if="tab.isShow || true">
+                                <a ng-click="changeTab(tab)"
+                                    class="btn-nav-menu btn-outline-primary border border-0"
+                                    ng-class="{'btn active': (tab.isActive === true)}"
+                                    id="{{tab.name}}-tab" name="{{tab.name}}-tab"
+                                    data-bs-toggle="tab" href="#tab-{{tab.name}}" role="tab"
+                                    aria-controls="tab-{{tab.name}}"
+                                    aria-selected="{{tab.isActive}}">
+                                    {{ tab.title }}
+                                </a>
                         </li>
                     </ul>
 

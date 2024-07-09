@@ -417,18 +417,38 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $('#modalPleaseRegister').modal('hide');
     }
 
+    // <!======================== Set tans ==============================!?>
     $scope.changeTab = function (selectedTab) {
 
         try {
             if ($scope.data_header[0].pha_status == 11) {
+                console.log("selectedTab",selectedTab)
+                console.log("$scope.data_header[0].pha_status",$scope.data_header[0].pha_status)
                 if (selectedTab.name == 'worksheet'
                     || selectedTab.name == 'manage'
                     || selectedTab.name == 'report'
                 ) {
                     if ($scope.data_general[0].sub_expense_type == 'Normal') {
-                        selectedTab = $scope.oldTab;
-                        apply();
+                        if (!$scope.data_general[0].expense_type ||
+                            !$scope.data_general[0].sub_expense_type ||
+                            !$scope.data_general[0].id_apu
+                        ) {
+                            $scope.tab_worksheet_show = true;
+                            $scope.tab_managerecom_show = true;
+                            $scope.goback_tab = 'general';
+                            
+                            angular.forEach($scope.tabs, function (tab) {
+                                tab.isActive = false;
+                            });
+                            selectedTab.isActive = true;
 
+                            // return set_alert('Warning', 'Please select a valid General Information');
+                        }
+
+                        if(!validBeforRegister()) 
+                            return set_alert('Warning',$scope.validMessage)
+
+                        apply();
                         $('#modalPleaseRegister').modal('show');
                         return;
 
@@ -439,20 +459,20 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         $scope.tab_managerecom_show = true;
                     }
                 }
-            }
-            //if selcte hazop
-            if (selectedTab.action_part == 5) {
-                $scope.selectedItemNodeView = $scope.data_taskliste[0].id_list;
-                $scope.viewDataNodeList($scope.selectedItemNodeView);
+            }else if ($scope.data_header[0].pha_status !== 11 ) {
+                if(selectedTab.action_part == 5){
+                    $scope.selectedItemNodeView = $scope.data_taskliste[0].id_list;
+                    $scope.viewDataNodeList($scope.selectedItemNodeView);
+                }else if (selectedTab.action_part == 6) {
+                    $scope.data_listworksheet.forEach(_item => {
+                        if (_item.recommendations && _item.responder_user_displayname && !_item.estimated_start_date) {
+                            _item.estimated_start_date = new Date();
+                            $scope.actionChangeWorksheet(_item, _item.seq, '');
+                        }
+                    });
+                }
 
-            }   
-            if (selectedTab.action_part == 6) {
-                $scope.data_listworksheet.forEach(_item => {
-                    if (_item.recommendations && _item.responder_user_displayname && !_item.estimated_start_date) {
-                        _item.estimated_start_date = new Date();
-                        $scope.actionChangeWorksheet(_item, _item.seq, '');
-                    }
-                });
+
             }
 
 
@@ -470,6 +490,15 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.oldTab = selectedTab;
         apply();
     };
+    $scope.goBackToTab = function (){
+        var tag_name = $scope.goback_tab;
+
+        var arr_tab = $filter('filter')($scope.tabs, function (item) {
+            return ((item.name == tag_name));
+        });
+
+        $scope.changeTab_Focus(arr_tab, tag_name);
+    }
 
     $scope.changeTab_Focus = function (selectedTab, nameTab) {
         angular.forEach($scope.tabs, function (tab) {
@@ -2637,6 +2666,105 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     }
 
+    // <==== set ====>    
+    function validBeforRegister() {
+        if (validGeneral() &&
+            validSessions() &&
+            validDrawing() /*&&
+            validNode()*/
+        ) {
+            return true
+        }
+
+        return false
+    }
+
+    function validGeneral(){
+        if (!$scope.data_general[0].sub_expense_type ||
+            !$scope.data_general[0].expense_type ||
+            !$scope.data_general[0].id_apu
+        ) {
+            if(!$scope.data_general[0].sub_expense_type) $scope.validMessage = 'Please select a valid  Sub Project Type'
+            if(!$scope.data_general[0].expense_type) $scope.validMessage = 'Please select a valid Project Type'
+            if(!$scope.data_general[0].id_apu) $scope.validMessage = 'Please select a valid  Area Process Unit'
+
+            $scope.goback_tab = 'general';
+
+            return false
+        }
+        $scope.validMessage = ''
+        return true
+    }
+
+    function validSessions(){
+        let isValid = true;
+        for (let i = 0; i < $scope.data_session.length; i++) {
+            // MEMBER
+            if($scope.data_memberteam.length < 1 || !$scope.data_memberteam[0].user_displayname) {
+                $scope.goback_tab = 'session'
+                $scope.validMessage = 'Please select a valid Member Team/Adttendees'
+                return ;
+            }
+            // ASSESMENT  
+            if ($scope.data_general[0].expense_type == '5YEAR') {
+                if ($scope.data_approver.length < 1 || !$scope.data_approver[0].user_displayname) {
+                    $scope.goback_tab = 'session'
+                    $scope.validMessage = 'Please select a valid Assesment Team Leader'
+                    return ;
+                }
+            }
+        }
+        // SESSION DATE TIME
+        $scope.data_session.forEach(function(session) {
+          session.validated = true;
+    
+          if (!session.meeting_date) {
+            $scope.validMessage = 'Please select a valid Meeting Date';
+            isValid = false;
+          } else if (!session.meeting_start_time_hh) {
+            $scope.validMessage = 'Please select a valid Meeting Start Time HH';
+            isValid = false;
+          } else if (!session.meeting_start_time_mm) {
+            $scope.validMessage = 'Please select a valid Meeting Start Time MM';
+            isValid = false;
+          } else if (!session.meeting_end_time_hh) {
+            $scope.validMessage = 'Please select a valid Meeting End Time HH';
+            isValid = false;
+          } else if (!session.meeting_end_time_mm) {
+            $scope.validMessage = 'Please select a valid Meeting End Time MM';
+            isValid = false;
+          }
+    
+          if (!isValid) {
+            $scope.goback_tab = 'session';
+            return false;
+          }
+        });
+    
+        if (isValid) {
+          $scope.validMessage = '';
+          return true;
+        }
+    }
+    
+    function validDrawing(){
+        for (let i = 0; i < $scope.data_drawing.length; i++) {
+            if (!$scope.data_drawing[i].document_no ||
+                !$scope.data_drawing[i].document_file_name
+            ) {
+                if(!$scope.data_drawing[i].document_file_name) $scope.validMessage = 'Please select a valid Document File'
+                if(!$scope.data_drawing[i].document_no) $scope.validMessage = 'Please select a valid Drawing No'
+    
+                $scope.goback_tab = 'node';
+
+                return false
+            }
+        }
+        $scope.validMessage = ''
+        return true
+    }
+
+
     // <==== (Kul)Session zone function  ====>    
     function clone_arr_newrow(arr_items) {
         var arr_clone = []; var arr_clone_def = [];
@@ -3063,6 +3191,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         apply();
     };
 
+
     // <==== Task List zone function  ====>   
     $scope.addDataTaskList = function (seq, index) {
 
@@ -3396,7 +3525,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     };
 
-
     $scope.viewDataTaskList = function (seq) {
         $scope.selectedItemListView = seq;
         console.log($scope);
@@ -3652,7 +3780,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             running_no_consequences(seq_list_system, seq_list_sub_system, seq_causes);
         }
     }
-
 
     $scope.adddata_listworksheet_lv1 = function (row_type, item, index) {
         if (true) {
@@ -4046,8 +4173,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     }
 
-
-        $scope.compareItems = function(a, b) {
+    $scope.compareItems = function(a, b) {
         if (a.list_system_no !== b.list_system_no) {
           return a.list_system_no - b.list_system_no;
         }
@@ -4061,10 +4187,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
           return a.consequences_no - b.consequences_no;
         }
         return a.category_no - b.category_no;
-      };
+    };
   
       // Function to find the correct insertion index
-      $scope.findInsertionIndex = function(arr, item, compareFunction) {
+    $scope.findInsertionIndex = function(arr, item, compareFunction) {
         let low = 0;
         let high = arr.length;
   
@@ -4089,7 +4215,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
   
         console.log(`Final insertion index: ${low}`);
         return low;
-      };
+    };
 
     $scope.copyList = function (level, seq) {
         if (level && seq) {
@@ -6937,15 +7063,15 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     $scope.removeDataRelatedpeopleOutsider = function (seq) {
 
-        var uset_type = $scope.selectDatFormType;
-        var seq_session = $scope.seq_session;
+        var user_type = $scope.selectDatFormType;
+        var seq_session = $scope.selectdata_session;
         var arrdelete = $filter('filter')($scope.data_relatedpeople_outsider, function (item) {
-            return (item.uset_type == uset_type && item.seq == seq && item.action_type == 'update');
+            return (item.user_type == user_type && item.seq == seq && item.action_type == 'update');
         });
         if (arrdelete.length > 0) { $scope.data_relatedpeople_outsider_delete.push(arrdelete[0]); }
 
         $scope.data_relatedpeople_outsider = $filter('filter')($scope.data_relatedpeople_outsider, function (item) {
-            return !(item.uset_type == uset_type && item.seq == seq && item.id_session == seq_session);
+            return !(item.user_type == user_type && item.seq == seq && item.id_session == seq_session);
         });
 
         //if delete row 1 clear to null

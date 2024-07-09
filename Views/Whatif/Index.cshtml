@@ -130,31 +130,18 @@
 
                 <div class="card-header mb-0 pb-0 border border-bottom-0 ">
 
-                   @*  <ul class="nav nav-underline border-3 border-primary border-bottom " id="myTab" role="tablist">
-
-                        <li ng-repeat="tab in tabs" class="mx-2 " ng-if="tab.isShow || true">
-                            <a ng-click="changeTab(tab)"
-                               class="btn btn-outline-primary border border-0 "
-                               ng-class="{'btn btn-outline-primary border border-0 active': (tab.isActive==true),'btn btn-outline-primary border border-0 ': (tab.isActive==false) }"
-                               style="border-radius: 10px 10px 0px 0px !important;"
-                               id="{{tab.name}}-tab" name="{{tab.name}}-tab"
-                               data-bs-toggle="tab" href="#tab-{{tab.name}}" role="tab"
-                               aria-controls="tab-{{tab.name}}"
-                               aria-selected="tab.isActive">{{ tab.title }}</a>
-                        </li>
-                    </ul> *@
-
                     <ul class="nav nav-underline border-3 border-primary border-bottom " id="myTab" role="tablist" style="position: relative;">
 
-                        <li ng-repeat="tab in tabs" class="mx-2 " ng-if="tab.isShow || true">
-                            <a ng-click="changeTab(tab)"
-                               class="btn btn-outline-primary border border-0 "
-                               ng-class="{'btn btn-outline-primary border border-0 active': (tab.isActive==true),'btn btn-outline-primary border border-0 ': (tab.isActive==false) }"
-                               style="border-radius: 10px 10px 0px 0px !important;"
-                               id="{{tab.name}}-tab" name="{{tab.name}}-tab"
-                               data-bs-toggle="tab" href="#tab-{{tab.name}}" role="tab"
-                               aria-controls="tab-{{tab.name}}"
-                               aria-selected="tab.isActive">{{ tab.title }}</a>
+                        <li ng-repeat="tab in tabs" ng-if="tab.isShow || true">
+                                <a ng-click="changeTab(tab)"
+                                    class="btn-nav-menu btn-outline-primary border border-0"
+                                    ng-class="{'btn active': (tab.isActive === true)}"
+                                    id="{{tab.name}}-tab" name="{{tab.name}}-tab"
+                                    data-bs-toggle="tab" href="#tab-{{tab.name}}" role="tab"
+                                    aria-controls="tab-{{tab.name}}"
+                                    aria-selected="{{tab.isActive}}">
+                                    {{ tab.title }}
+                                </a>
                         </li>
                     </ul>
                 </div>
@@ -3875,7 +3862,7 @@
                                                         data-toggle="tooltip" 
                                                         data-placement="top" 
                                                         title="Remove"
-                                                        ng-click=removeDataRelatedpeopleOutsider(itemRel.seq)>
+                                                        ng-click=removeDataRelatedpeopleOutsider(itemRel.seq,itemRel.id_session)>
                                                     <span class="fa-regular fa-trash-can fa-lg"></span>
                                                 </button>
                                             </span>
@@ -3969,6 +3956,7 @@
                     </div>
                     <div class="d-flex flex-column align-items-center" ng-if="!Action_Msg_Confirm">
                         <button class="btn p-2 px-8 text-white" type="button" data-bs-dismiss="modal" aria-label="Close"
+                                ng-click="goBackToTab()"
                                 ng-class="{ 'bg-warning' : (Action_Msg_Header == 'Warning'? true :false),'bg-primary' : (Action_Msg_Header == 'Warning'? false :true) }">
                             {{ Action_Msg_Header == 'Warning' ? 'Go back' : 'OK' }}
                         </button>

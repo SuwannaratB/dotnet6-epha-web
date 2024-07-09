@@ -154,20 +154,20 @@
                                aria-selected="tab.isActive">{{ tab.title }}</a>
                         </li>
                     </ul> *@
-
                     <ul class="nav nav-underline border-3 border-primary border-bottom " id="myTab" role="tablist" style="position: relative;">
 
-                        <li ng-repeat="tab in tabs" class="mx-2 " ng-if="tab.isShow || true">
-                            <a ng-click="changeTab(tab)"
-                               class="btn btn-outline-primary border border-0 "
-                               ng-class="{'btn btn-outline-primary border border-0 active': (tab.isActive==true),'btn btn-outline-primary border border-0 ': (tab.isActive==false) }"
-                               style="border-radius: 10px 10px 0px 0px !important;"
-                               id="{{tab.name}}-tab" name="{{tab.name}}-tab"
-                               data-bs-toggle="tab" href="#tab-{{tab.name}}" role="tab"
-                               aria-controls="tab-{{tab.name}}"
-                               aria-selected="tab.isActive">{{ tab.title }}</a>
+                        <li ng-repeat="tab in tabs" ng-if="tab.isShow || true">
+                                <a ng-click="changeTab(tab)"
+                                    class="btn-nav-menu btn-outline-primary border border-0"
+                                    ng-class="{'btn active': (tab.isActive === true)}"
+                                    id="{{tab.name}}-tab" name="{{tab.name}}-tab"
+                                    data-bs-toggle="tab" href="#tab-{{tab.name}}" role="tab"
+                                    aria-controls="tab-{{tab.name}}"
+                                    aria-selected="{{tab.isActive}}">
+                                    {{ tab.title }}
+                                </a>
                         </li>
-                    </ul>
+                    </ul><!----ng-class="{'active': (tab.isActive === true),'': (tab.isActive === false) }"   ng-class="{'active': (tab.isActive === true)}"--->
 
                 </div>
 
