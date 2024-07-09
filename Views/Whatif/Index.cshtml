@@ -58,7 +58,7 @@
                                 <span> {{data_header[0].pha_status_displayname}}</span>
                             </div>
                         </div>
-                        <div class="col-auto" ><!----ng-class="{ 'd-none': (minutes > 9) }"------>
+                        <div class="col-auto" ng-if="data_header[0].pha_status === 11 || data_header[0].pha_status === 12"><!----ng-class="{ 'd-none': (minutes > 9) }"------>
                             <div class="col-auto">
                                 <b>Auto-Save Interval :</b> <br>
                                 <span ng-class="{ 'blinking-text': (minutes <= 10) }">{{counterText}} </span>
@@ -3273,7 +3273,8 @@
                                             <tr ng-repeat="item in data_approver" 
                                                 ng-init="accessInfo = Access_check(item)"
                                                 ng-style="{ 'background-color': accessInfo.canAccess ? '' : '#f9fbff' }"
-                                                ng-class="{ 'task-highlight':  accessInfo.canAccess}"                                                   class="hover-actions-trigger btn-reveal-trigger position-static text-center">
+                                                ng-class="{ 'task-highlight':  accessInfo.canAccess}"                                                   
+                                                class="hover-actions-trigger btn-reveal-trigger position-static text-center">
                                                 <!--------ng-if="(item.user_name == user_name ) || (flow_role_type == 'admin')"---------------------->
                                                 <td class="align-top white-space-nowrap">
                                                     <div class="col-md-12 p-1 ps-3">
@@ -3378,13 +3379,13 @@
                                                                 What's if Report
                                                             </b>
                                                         </div><br />
-                                                        <div class="form-check form-check-inline" ng-if="accessInfo.canAccess || accessInfo.isTA2" >
+                                                        <div class="form-check form-check-inline" ng-if="!accessInfo.isTA3" >
                                                             <input class="form-check-input" id="inlineRadio-{{item.seq}}" type="radio"
                                                                    name="inlineRadioOptions-{{item.seq}}" 
                                                                    value="approve" checked ng-model="item.action_status" />
                                                             <label class="form-check-label" for="inlineRadioApprove-{{item.seq}}"> Approve</label>
                                                         </div>
-                                                        <div class="form-check form-check-inline" ng-if="accessInfo.canAccess || accessInfo.isTA2">
+                                                        <div class="form-check form-check-inline" ng-if="!accessInfo.isTA3">
                                                             <input class="form-check-input" id="inlineRadioOptions-{{item.seq}}" type="radio"
                                                                    name="inlineRadioOptions-{{item.seq}}" 
                                                                    value="reject" checked ng-model="item.action_status" />
