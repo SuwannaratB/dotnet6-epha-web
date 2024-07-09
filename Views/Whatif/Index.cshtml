@@ -3098,54 +3098,78 @@
                                             </td>
 
                                             <td class="align-top rating white-space-nowrap ">
-                                                <div class="d-flex align-items-center text-end ">
-                                                    <div class="align-items-center ">
-                                                        <p class="transition-none fs--2p-1 ps-0 text-center rounded-1 cursor-pointer"
-                                                           ng-click="openModalDataRAM_Recommendations(item,'s',item.seq,'befor',item.id_ram)" style="width: 20px; height:20px">
-                                                            {{item.ram_befor_security}}
+                                                <div class="d-flex align-items-top text-end ">
+                                                    <div class="d-flex align-items-top justify-content-center" style="min-height: 52px;">
+                                                        <p class="transition-none fs--2p-1 ps-0 p-1 text-center rounded-1 cursor-pointer"
+                                                        style="width: 20px; height:20px; margin: 0;">
+                                                            {{item.ram_after_security}}
                                                         </p>
                                                     </div>
 
-                                                    <div class="align-items-center ">
-                                                        <p class="transition-none fs--2p-1 ps-0 text-center rounded-1 cursor-pointer"
-                                                           ng-click="openModalDataRAM_Recommendations(item,'l',item.seq,'befor',item.id_ram)" style="width: 20px; height:20px">
-                                                            {{item.ram_befor_likelihood}}
+                                                    <div class="d-flex align-items-top justify-content-center" style="min-height: 52px;">
+                                                        <p class="transition-none fs--2p-1 ps-0 p-1 text-center rounded-1 cursor-pointer"
+                                                        style="width: 20px; height:20px; margin: 0;">
+                                                            {{item.ram_after_likelihood}}
                                                         </p>
                                                     </div>
 
-                                                    <div class="align-items-center ">
-                                                        <p ng-style=" { 'background-color' : ((item.ram_befor_risk == 'H') ? 'red' : ((item.ram_befor_risk == 'M') ? 'yellow' : ((item.ram_befor_risk == 'L') ? 'green' : '#D3D3D3')) ) }"
-                                                           class="transition-none fs--2p-1 ps-0 text-center rounded-1 cursor-pointer"
-                                                           ng-click="openModalDataRAM_Recommendations(item,'r',item.seq,'befor',item.id_ram)" style="width: 20px; height:20px">
-                                                            {{item.ram_befor_risk}}
-                                                        </p>
+                                                    <div class="d-flex align-items-top justify-content-center text-end" 
+                                                         ng-class="{ 'no-drop': !canAccess(item_d), 'cursor-pointer': canAccess(item_d) }"
+                                                         style=" width: 30px;height:30px">
+                                                        <button
+                                                            ng-style=" { 'background-color' : ((item.ram_after_risk == 'H') ? 'red' : ((item.ram_after_risk == 'M') ? 'yellow' : ((item.ram_after_risk == 'L') ? 'green' : '#D3D3D3')) ) }"
+                                                            class="btn btn-sm dropdown-toggle h-100 dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end"
+                                                            ng-class="{ 'cant-Access': !canAccess(item_d) }"
+                                                            type="button"
+                                                            style="width: 30px;">
+                                                            <div class="d-flex text-center"
+                                                                style=" width: 25px;">
+                                                                <h6 class="me-1 text-center"
+                                                                    style=" width: 30px;">
+                                                                    {{item.ram_after_risk}}</h6>
+                                                            </div>
+                                                        </button>
                                                     </div>
                                                 </div>
                                             </td>
 
-                                            <td class="align-top rating white-space-nowrap ">
-                                                <div class="d-flex align-items-center text-end ">
-                                                    <div class="align-items-center ">
-                                                        <p class="transition-none fs--2p-1 ps-0 text-center rounded-1 cursor-pointer"
-                                                           ng-click="openModalDataRAM_Recommendations(item,'s',item.seq,'action',item.id_ram)" style="width: 20px; height:20px">
+                                            <td class="align-top rating white-space-nowrap " ng-class="{'disabled-link':(!tab_managerecom_active)}">
+                                                <div class="d-flex align-items-top text-end ">
+                                                    <div class="d-flex align-items-top justify-content-center" style="min-height: 52px;">
+                                                        <p class="transition-none fs--2p-1 ps-0 p-1 text-center rounded-1 cursor-pointer"
+                                                            style="width: 20px; height:20px; margin: 0;"
+                                                            ng-click="openModalDataRAM_Worksheet(item,'s',item.seq,'after',item.id_ram)">
                                                             {{item.ram_action_security}}
                                                         </p>
                                                     </div>
 
-                                                    <div class="align-items-center ">
-                                                        <p class="transition-none fs--2p-1 ps-0 text-center rounded-1 cursor-pointer"
-                                                           ng-click="openModalDataRAM_Recommendations(item,'l',item.seq,'action',item.id_ram)" style="width: 20px; height:20px">
+                                                    <div class="d-flex align-items-top justify-content-center" style="min-height: 52px;">
+                                                        <p class="transition-none fs--2p-1 ps-0 p-1 text-center rounded-1 cursor-pointer"
+                                                            style="width: 20px; height:20px; margin: 0;"
+                                                            ng-click="openModalDataRAM_Worksheet(item,'r',item.seq,'action',item.id_ram)">
                                                             {{item.ram_action_likelihood}}
                                                         </p>
                                                     </div>
-
-                                                    <div class="align-items-center ">
-                                                        <p ng-style=" {'color': item.ram_action_risk === 'L' ? 'white' : 'black','background-color' : ((item.ram_action_risk == 'H') ? 'red' : ((item.ram_action_risk == 'M') ? 'yellow' : ((item.ram_action_risk == 'L') ? 'green' : '#D3D3D3')) )}"
-                                                           class="transition-none fs--2p-1 ps-0 text-center rounded-1 cursor-pointer"
-                                                           ng-click="openModalDataRAM_Recommendations(item,'r',item.seq,'action',item.id_ram)" style="width: 20px; height:20px;">
-                                                            {{item.ram_action_risk}}
-                                                        </p>
-                                                    </div>
+                                                    
+                                                    <div class="align-items-top text-end cursor-pointer" 
+                                                         ng-class="{ 'no-drop': !canAccess(item_d), 'cursor-pointer': canAccess(item_d) }"
+                                                         style=" width: 30px;height:30px">
+                                                        <button
+                                                            ng-style=" { 'background-color' : ((item.ram_action_risk == 'H') ? 'red' : ((item.ram_action_risk == 'M') ? 'yellow' : ((item.ram_action_risk == 'L') ? 'green' : '#D3D3D3')) ) }"
+                                                            class="btn btn-sm dropdown-toggle h-100 cursor-pointer dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end"
+                                                            type="button"
+                                                            ng-click="openModalDataRAM_Worksheet(item,'r',item.seq,'action',item.id_ram)"
+                                                            style="width: 30px;">
+                                                            <div class="d-flex text-center"
+                                                                style=" width: 25px;">
+                                                                <h6 class="me-1 text-center"
+                                                                    style=" width: 30px;">
+                                                                    {{item.ram_action_risk}}</h6>
+                                                                <span class="fas fa-pencil-alt fa-sm "
+                                                                    style=" width: 8px;"></span>
+                                                            </div>
+                                                        </button>
+                                                    </div>                                                    
                                                 </div>
 
                                             </td>
@@ -3172,6 +3196,7 @@
                                             <td class="align-top rating white-space-nowrap">
                                                 <input type="date" class="form-control  datetimepicker rounded-1" ng-class="{'disabled-link':(!tab_managerecom_active)}"
                                                        placeholder="End Date dd/mm/yyyy"
+                                                       min="{{ item.estimated_start_date | date:'yyyy-MM-dd' }}"
                                                        ng-model="item.estimated_end_date"
                                                        ng-change="actionChangeWorksheet(item,item.seq,'')">
                                                 <div id="valid-worksheet-estimated-end-{{item.seq}}"
