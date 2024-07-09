@@ -203,8 +203,10 @@
                 <div class="card-body tab-content">
                     @* {{action_part}} *@
                     <!-- general information start -->
-                    <div class="" 
-                        ng-class="{'tab-pane fade show active':(action_part==1),'tab-pane fade':(action_part!==1)}"
+                    <div class="" ng-class="{
+                        'tab-pane fade show active':(action_part == 1),
+                        'tab-pane fade show active':(tabs[0].isActive),
+                        'tab-pane fade':(action_part != 1)}"
                         id="tab-general" role="tabpanel" 
                         aria-labelledby="general-tab">
                         <div class="mx-3 row g-3 align-items-center" ng-repeat="item in data_general">
@@ -672,13 +674,13 @@
                             </div>
 
                         </div>
-
-
                     </div>
                     <!-- general information end-->
                     <!-- session start-->
-                    <div class="" 
-                        ng-class="{'tab-pane fade show active':(action_part==2),'tab-pane fade':(action_part!==2)}"
+                    <div class="" ng-class="{
+                        'tab-pane fade show active':(action_part==2),
+                        'tab-pane fade show active':(tabs[1].isActive),
+                        'tab-pane fade':(action_part!==2)}"
                         id="tab-session" 
                         role="tabpanel" 
                         aria-labelledby="session-tab">
@@ -911,8 +913,12 @@
                     </div>
                     <!-- session end-->
                     <!-- Node list -->
-                    <div class="" ng-class="{'tab-pane fade show active':(action_part==3),'tab-pane fade':(action_part!==3)}"
-                         id="tab-node" role="tabpanel" aria-labelledby="node-tab">
+                    <div class="" 
+                        ng-class="{
+                            'tab-pane fade show active':(action_part==3),
+                            'tab-pane fade show active':(tabs[2].isActive),
+                            'tab-pane fade':(action_part!==3)}"
+                        id="tab-node" role="tabpanel" aria-labelledby="node-tab">
 
                         <div class="m-3 row  gx-0 align-items-center">
                             <div class="card px-2">
@@ -1401,8 +1407,12 @@
                     </div>
                     <!-- Node list -->
                     <!-- RAM start-->
-                    <div class="" ng-class="{'tab-pane fade show active':(action_part==4),'tab-pane fade':(action_part!==4)}"
-                         id="tab-ram" role="tabpanel" aria-labelledby="ram-tab">
+                    <div class="" 
+                        ng-class="{
+                            'tab-pane fade show active':(action_part==4),
+                            'tab-pane fade show active':(tabs[3].isActive),
+                            'tab-pane fade':(action_part!==4)}"
+                        id="tab-ram" role="tabpanel" aria-labelledby="ram-tab">
 
                         <!------&& tab_worksheet_active---->
                         <div class="m-3 row  gx-0 align-items-center" ng-if="flow_role_type == 'admin' && tab_worksheet_active">
@@ -2006,7 +2016,11 @@
 
                     <!-- RAM end-->
                     <!-- HAZOP Worksheet -->
-                    <div class="" ng-class="{'tab-pane fade show active':(action_part==5),'tab-pane fade':(action_part!==5)}"
+                    <div class="" 
+                        ng-class="{
+                            'tab-pane fade show active':(action_part==5),
+                            'tab-pane fade show active':(tabs[4].isActive),
+                            'tab-pane fade':(action_part!==5)}"
                          id="tab-worksheet" role="tabpanel" aria-labelledby="worksheet-tab">
                         <div style="background-color: #ffffff;"
                              ng-if=" ( data_header[0].pha_status == 11 && tab_worksheet_active==true) || (data_header[0].pha_status >  11) || (data_general[0].expense_type == 'OPEX' && (data_general[0].sub_expense_type == 'Study' || data_general[0].sub_expense_type == 'Internal Study'))">
@@ -3057,7 +3071,11 @@
                     </div>
                     <!-- HAZOP Worksheet -->
                     <!-- manage recment -->
-                    <div class="" ng-class="{'tab-pane fade show active':(action_part==6),'tab-pane fade':(action_part!==6)}"
+                    <div class="" 
+                        ng-class="{
+                            'tab-pane fade show active':(action_part==6),
+                            'tab-pane fade show active':(tabs[5].isActive),
+                            'tab-pane fade':(action_part!==6)}"
                          id="tab-manage" role="tabpanel" aria-labelledby="manage-tab">
 
                         <div class=" border-bottom border-200 my-0" id="NodeTable">
@@ -3360,7 +3378,11 @@
                     </div>
                     <!-- manage recment -->
                     <!-- ta2 approver -->
-                    <div class="" ng-class="{'tab-pane fade show active':(action_part==7),'tab-pane fade':(action_part!==7)}"
+                    <div class="" 
+                        ng-class="{
+                            'tab-pane fade show active':(action_part==7),
+                            'tab-pane fade show active':(tabs[6].isActive),
+                            'tab-pane fade':(action_part!==7)}"
                          id="tab-approver" role="tabpanel" aria-labelledby="approver-tab">
 
                         <div class="m-3 row  gx-0 align-items-center">
@@ -3603,7 +3625,11 @@
                     </div>
                     <!-- ta2 approver -->
                     <!-- report start-->
-                    <div class="" ng-class="{'tab-pane fade show active':(action_part==8),'tab-pane fade':(action_part!==8)}"
+                    <div class="" 
+                        ng-class="{
+                            'tab-pane fade show active':(action_part==8),
+                            'tab-pane fade show active':(tabs[7].isActive),
+                            'tab-pane fade':(action_part!==8)}"
                          id="tab-report" role="tabpanel" aria-labelledby="report-tab" ng-if="export_type==true">
 
                         <div class="m-3 row  gx-0 align-items-center">

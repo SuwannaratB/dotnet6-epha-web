@@ -1289,7 +1289,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         var json_session = check_data_session();
         var json_memberteam = check_data_memberteam();
         var json_approver = check_data_approver();
-        var json_relatedpeople = "";//check_data_relatedpeople();
+        var json_relatedpeople = check_data_relatedpeople();
         var json_relatedpeople_outsider = check_data_relatedpeople_outsider();
         var json_drawing = check_data_drawing();
 
@@ -1798,6 +1798,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     set_data_general();
                     set_data_listworksheet('');
                     set_master_ram_likelihood('');
+                    $scope.checkAndGenerateWorksheet();
 
                     try {
                         var id_session_last = arr.session[arr.session.length - 1].seq;
@@ -3126,6 +3127,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         running_no_level1($scope.data_memberteam, null, null);
         apply();
     };
+    $scope.openModalMatrix = function(){
+
+        $('#modalMatrix').modal({
+            backdrop: 'static',
+            keyboard: false 
+        }).modal('show');
+    }
 
 
     // <==== (Kul)Drawing & Reference zone function  ====>     
@@ -6135,9 +6143,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         if (id == 'dropdown_input') {
             return
         }
+        try{
         // hidden dropdown
         document.getElementById('unit_no').classList.remove("show");
         document.getElementById('functional').classList.remove("show");
+        }catch{}
+
         // set default list
         $scope.search_keywords = clone_arr_newrow(  $scope.search_keywords);
         $scope.master_unit_no_list =  $scope.master_unit_no;
