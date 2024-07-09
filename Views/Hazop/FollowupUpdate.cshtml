@@ -570,18 +570,15 @@
                                                     <td class="align-middle">
                                                         <div class="p-2" 
                                                             style="width: 200px;"
-                                                            ng-class="{ 
-                                                                'no-drop': !canAccess, 'cursor-pointer': canAccess,
-                                                                'd-none': item_d.responder_user_name != user_name && item_d.responder_action_type != 2}">
-                                                            <textarea class="form-control form-control-sm rounded-1 p-0 mt-1 w-100 border border-end-0 border-top-0"
-                                                                style=" width: 100vh; font-size: 10px;"
-                                                                ng-class="{ 'cant-Access': !canAccess}"
-                                                                placeholder="Remark"
-                                                                rows="3"
-                                                                readonly="!canAccess"
-                                                                ng-change="actionInput(item_d)"
-                                                                ng-model="item_d.responder_comment">
-                                                            </textarea>
+                                                            ng-class="{ 'd-none': item_d.responder_user_name != user_name && item_d.responder_action_type != 2}">
+                                                                <textarea class="form-control form-control-sm rounded-1 p-0 mt-1 w-100 border border-end-0 border-top-0"
+                                                                    style="width: 100vh; font-size: 10px;"
+                                                                    ng-attr-placeholder="{{ item_d.responder_action_type === 2 ? '' : 'Remark' }}"
+                                                                    rows="3"
+                                                                    ng-readonly="item_d.responder_action_type === 2"
+                                                                    ng-change="actionInput(item_d)"
+                                                                    ng-model="item_d.responder_comment">
+                                                                </textarea>
                                                             <div id="valid-remark-{{item_d.seq}}"
                                                                  class="invalid-feedback text-danger">
                                                                 Please provide a valid Remark.

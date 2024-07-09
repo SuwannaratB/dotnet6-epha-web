@@ -621,8 +621,6 @@ ul.nav li a.btn-nav-menu.btn-outline-primary:hover {
   transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition effect */
 }
 
-
-
 .card-menu{
   padding: 14px 2px;
   border-radius: 8px;
