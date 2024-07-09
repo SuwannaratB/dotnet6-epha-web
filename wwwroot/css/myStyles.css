@@ -603,6 +603,26 @@ background-color: #3e8e41;
   color: red; /* Hide the default calendar icon */
 }
 
+ul.nav li a.btn-nav-menu.btn-outline-primary {
+  border-radius: 10px 10px 0px 0px; 
+  padding: 0.625rem 1.5rem; 
+  font-size: 0.8rem; 
+  font-weight: 700; 
+  line-height: 1.2; 
+  text-align: center; 
+  display: inline-block; 
+  vertical-align: middle;
+  text-decoration: none;
+}
+
+ul.nav li a.btn-nav-menu.btn-outline-primary:hover {
+  background-color: #f0f0f0;
+  color: #0056b3;
+  transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition effect */
+}
+
+
+
 .card-menu{
   padding: 14px 2px;
   border-radius: 8px;

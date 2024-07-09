@@ -161,7 +161,8 @@
 
 
 /*nav manu*/
-a .nav-menu .btn-outline-primary {
+/* Adding ul to make it more specific */
+ul.nav li a.nav-menu.btn-outline-primary {
     border-radius: 10px 10px 0px 0px; 
     padding: 0.625rem 1.5rem; 
     font-size: 0.8rem; 
@@ -171,14 +172,13 @@ a .nav-menu .btn-outline-primary {
     display: inline-block; 
     vertical-align: middle;
     text-decoration: none;
-}
-
-/* Define styles for .nav-menu .btn-outline-primary:hover */
-a .nav-menu .btn-outline-primary:hover {
+  }
+  
+  ul.nav li a.nav-menu.btn-outline-primary:hover {
     background-color: #f0f0f0;
     color: #0056b3;
     transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition effect */
-}
-
+  }
+  
 
 
