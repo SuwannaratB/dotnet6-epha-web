@@ -4109,18 +4109,18 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     item_t.descriptions[i].no = i + 1;
                 }
             }
-            console.log('all ==> ',$scope.data_tasks)
+            console.log('item_d ==> ',item_d)
             
             // worksheet 
-            addWorksheetForDec(item_t, item_d, newInput, type)
+            addWorksheetForDec( item_d, newInput)
 
             console.log('all ==> ', $scope.data_tasks)
             console.log('all worksheet ==> ', $scope.data_worksheet_list)
         }
 
-        function addWorksheetForDec(item_t, item_d, newInput, type){
+        function addWorksheetForDec(item_d, newInput){
             var result_worksheet = $filter('filter')($scope.data_worksheet_list, function (item) {
-                return (item_t.id_activity == item.id_activity);
+                return (item_d.seq == item.id_activity);
             })[0];
 
             var new_ws = angular.copy(result_worksheet)
@@ -4130,15 +4130,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             new_ws.index_rows = new_ws.index_rows + 1
             new_ws.no = new_ws.no + 1
 
-            // if (type == 'paste') {
-               
-            //     var result = $filter('filter')($scope.dec_copyWorksheet, function (item) {
-            //         return !item.select;
-            //     })
-            //     new_ws.description = result[0].description
-            //     result[0].select = true;
-            //     console.log('paste ',$scope.dec_copyWorksheet)
-            // }
 
             for (let i = 0; i < new_ws.worksheet.length; i++) {
                 $scope.MaxSeqdataWorksheet = Number($scope.MaxSeqdataWorksheet) + 1;
