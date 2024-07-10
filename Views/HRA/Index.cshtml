@@ -377,13 +377,14 @@
                                             </a>
                                         </label>
                                         <select class="form-select rounded-1"
-                                                ng-class="{'disabled-link': isDisableStatus}"
-                                                id="expense_type" 
-                                                placeholder="Project Type"
-                                                name="expense_type" 
-                                                ng-model="item.expense_type" 
-                                                ng-if="data_header[0].pha_status == 11"
-                                                ng-change="actionChange(item,item.seq,'expense_type')">
+                                            ng-class="{'disabled-link': isDisableStatus}"
+                                            id="expense_type" 
+                                            placeholder="Project Type"
+                                            name="expense_type" 
+                                            ng-model="item.expense_type" 
+                                            ng-if="data_header[0].pha_status == 11"
+                                            ng-change="actionChange(item,item.seq,'expense_type')"
+                                            disabled>
                                             <option id="MOC">MOC</option>
                                             <option id="5YEAR">5YEAR</option>
                                         </select>
@@ -1768,8 +1769,10 @@
                                                             style="min-width: max-content; padding-top: 10px; text-align: center;"
                                                             ng-repeat="ws in item.worksheet"
                                                             ng-class="{'unbox': (item.worksheet[item.worksheet.length - 1].seq == ws.seq)}">
+                                                            @*have standard_value *@
                                                             <div class="card-initial" 
-                                                                ng-if="ws.initial_risk_rating"
+                                                                ng-if="ws.initial_risk_rating && ws.standard_value"
+                                                                style="min-width: 100px;"
                                                                 ng-class="{
                                                                     'bg-danger': (ws.initial_risk_rating == 'High' || ws.initial_risk_rating == 'High\r\n' 
                                                                     || ws.initial_risk_rating == 'Very High' || ws.initial_risk_rating == 'Very High\r\n'),
@@ -1777,6 +1780,28 @@
                                                                     }" >
                                                                 {{ ws.initial_risk_rating }}
                                                             </div>
+                                                            @* none standard_value*@
+                                                            <select class="drop-initial form-select form-select-sm rounded-2" 
+                                                                ng-if="!ws.standard_value"
+                                                                ng-class="{'disabled-link': 
+                                                                        isDisableStatus && 
+                                                                        !isApproveReject && 
+                                                                        !isEditWorksheet}"
+                                                                ng-style="{'background': 
+                                                                    ws.initial_risk_rating == 'Low' || ws.initial_risk_rating == 'Acceptable Risk'
+                                                                        ? '#25b003' 
+                                                                        : ws.initial_risk_rating == 'Meduim' 
+                                                                            ? '#e5780b' 
+                                                                            : ws.initial_risk_rating == 'High' || ws.initial_risk_rating == 'Very High'
+                                                                                ? '#ed2000' 
+                                                                                : ''}"
+                                                                ng-change="actionChangeInitialRiskRating(ws)"
+                                                                ng-model="ws.initial_risk_rating" 
+                                                                style="min-width: 100px; font-size: 10.24px; text-align: center;">
+                                                                <option ng-repeat="item_m in data_initial_risk" ng-value="item_m.name">
+                                                                    {{item_m.name}}
+                                                                </option>
+                                                            </select>
                                                         </div>
                                                     </td>
 
@@ -1794,8 +1819,8 @@
                                                                 type="text" 
                                                                 style="width: 200px; height: 100%; font-size: 10.24px;"
                                                                 placeholder="Hierarchy of Control (ALARP)" 
-                                                                ng-disabled="(hazard.initial_risk_rating === 'Low' || hazard.initial_risk_rating === 'Acceptable Risk')"
-                                                                ng-style="{ 'background-color': hazard.initial_risk_rating === 'Low' || hazard.initial_risk_rating === 'Acceptable Risk' ? '#f2f2f2' : 'inherit'}"
+                                                                ng-disabled="( hazard.initial_risk_rating === 'Acceptable Risk')"
+                                                                ng-style="{ 'background-color': hazard.initial_risk_rating === 'Acceptable Risk' ? '#f2f2f2' : 'inherit'}"
                                                                 ng-change="actionChangeControl(hazard)"
                                                                 ng-model="hazard.hierarchy_of_control">
                                                             </textarea>
@@ -1814,7 +1839,6 @@
                                                                     id="effective-{{index}}-{{idx}}"
                                                                     style="width: 20px;"
                                                                     ng-disabled="
-                                                                        hazard.initial_risk_rating == 'Low' || hazard.initial_risk_rating == 'Low\r\n' ||
                                                                         hazard.initial_risk_rating == 'Acceptable Risk' || hazard.initial_risk_rating == 'Acceptable Risk\r\n'"
                                                                     value="0"
                                                                     ng-change="actionChangEffective(hazard)"
@@ -1832,7 +1856,6 @@
                                                                     id="ineffective-{{index}}-{{idx}}"
                                                                     style="width: 20px;"
                                                                     ng-disabled="
-                                                                        hazard.initial_risk_rating == 'Low' || hazard.initial_risk_rating == 'Low\r\n' ||
                                                                         hazard.initial_risk_rating == 'Acceptable Risk' || hazard.initial_risk_rating == 'Acceptable Risk\r\n'"
                                                                     value="1"
                                                                     ng-change="actionChangEffective(hazard)"
@@ -1858,7 +1881,6 @@
                                                                 style="min-width: 100px; font-size: 10.24px;"
                                                                 ng-disabled="
                                                                     !hazard.exposure_status || 
-                                                                    hazard.initial_risk_rating == 'Low' || hazard.initial_risk_rating == 'Low\r\n'||
                                                                     hazard.initial_risk_rating == 'Acceptable Risk' || hazard.initial_risk_rating == 'Acceptable Risk\r\n'">
                                                                 <option ng-repeat="item_m in data_residual_risk" ng-value="item_m.id">
                                                                     {{item_m.name}}
@@ -1984,6 +2006,7 @@
                                                         @* {{ ws.type_hazard }} *@
                                                         {{ ws.type_hazard
                                                             ? item.worksheet[$index - 1].type_hazard == ws.type_hazard 
+                                                                && item.worksheet[$index - 1].sub_area == ws.sub_area 
                                                                 ? '' 
                                                                 : ws.type_hazard 
                                                             : 'Not found'
@@ -2655,14 +2678,12 @@
                             </path>
                         </svg>
                     </button>
-
                 </div>
                 <div class="modal-body">
-
-                    <img src="~/assets/img/risk_rating.png" style="height:300px;" />
-
+                   <div class="d-flex align-items-center justify-content-center p-4">
+                     <img src="~/assets/img/risk_rating.png" style="height:300px;" />
+                   </div>
                 </div>
-
             </div>
         </div>
     </div>
@@ -2685,14 +2706,12 @@
                             </path>
                         </svg>
                     </button>
-
                 </div>
                 <div class="modal-body">
-
-                    <img src="~/assets/img/exposure_rating.png" style="width: 400px; " />
-
+                    <div class="d-flex align-items-center justify-content-center p-4">
+                         <img src="~/assets/img/exposure_rating.png" style="width: 680px; " />
+                    </div>
                 </div>
-
             </div>
         </div>
     </div>
@@ -2723,12 +2742,30 @@
                     <div class="mb-4">
                         <div class="row g-3">
                             <div class="col-auto">
+                                        <label class="form-label ps-0" for="expense_type">
+                                    <b class="text-danger d-none"> * </b>
+                                    search
+                                </label>
                                 <div class="search-box position-relative">
                                     <input class="form-control search-input search"
                                            ng-model="keywords.text" placeholder="Search"
                                            ng-change="fillterRisk()" />
                                     <span class="fas fa-search search-box-icon"></span>
                                 </div>
+                            </div>
+                           <div class="col-md-2 ">
+                                <label class="form-label ps-0" for="expense_type">
+                                    <b class="text-danger d-none"> * </b>
+                                    standard
+                                </label>
+                                <select class="form-control" 
+                                    ng-model="selectedStandard" 
+                                    ng-change="changeStandard(selectedStandard)">
+                                    <option value="">All</option>
+                                    <option ng-repeat="item in master_standard_type" ng-value="item.id">
+                                        {{item.name}}
+                                    </option>
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -2744,10 +2781,11 @@
                                     </tr>
                                 </thead>
                                 <tbody class=" list">
-                                    <tr class="hover-actions-trigger btn-reveal-trigger position-static text-center"
+                                    <tr class="rows-modal-risk cursor-pointer hover-actions-trigger btn-reveal-trigger position-static text-center"
                                         ng-repeat="item in master_hazard_riskfactors_list | filter: filterRiskfactorDuplicates"
+                                        ng-class="{'rows-modal-risk-active': select_hazard.id_health_hazard == item.id}"
                                         id="row-{{$index}}">
-                                        <td class="text-center" style="width: 10%;">
+                                        <td class="text-center td-border" style="width: 10%;">
                                             <input type="radio" 
                                                 id="risk"
                                                 name="risk"  
@@ -2758,28 +2796,37 @@
                                                 @* ng-click="changeRisk(select_hazard, $index)" *@ >
                                        </td>
 
-                                        <td class="text-start" style="width: 70%;">
+                                        <td class="text-start" 
+                                            style="width: 70%;"  
+                                            @* ng-click="changeRisk(select_hazard, $index, 'click')" *@
+                                            >
                                             {{item.name}}
                                         </td>
 
-                                        <td class="text-center" style="width: 10%;">
+                                        <td class="text-center" 
+                                            style="width: 10%;"
+                                            @* ng-click="changeRisk(select_hazard, $index, 'click')" *@
+                                            >
                                             <div class="d-flex align-items-center justify-content-center" style="width: 100%;">
                                                 <div ng-if="item.hazards_rating">
                                                     <div class="effect-rating"
                                                         ng-class="{
                                                             'bg-success': (item.hazards_rating == '1' || item.hazards_rating == '2'),
                                                             'bg-warning': (item.hazards_rating == '3') 
-                                                        }" 
-                                                        ng-click="chooseRating(select_hazard.health_hazard, $index)"
-                                                        >
+                                                        }" >
                                                         {{item.hazards_rating}}
                                                     </div>
                                                 </div>
                                             </div>
                                         </td>
 
-                                        <td class="text-center" style="width: 10%;">
-                                            {{item.standard_value}} {{item.standard_unit}}
+                                        <td class="text-center" 
+                                            style="width: 10%;"
+                                            @* ng-click="changeRisk(select_hazard, $index, 'click')" *@
+                                            >
+                                            <p class="standard">
+                                                {{item.standard_value}} {{item.standard_unit}}
+                                            </p>
                                         </td>
                                     </tr>
                                 </tbody>
