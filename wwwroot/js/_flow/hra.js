@@ -943,9 +943,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
 
         $scope.data_initial_risk = [
+            { id: 'Acceptable Risk', name: 'Acceptable Risk' },
             { id: 'Low', name: 'Low' },
             { id: 'Meduim\r\n', name: 'Meduim' },
             { id: 'High\r\n', name: 'High' },
+            { id: 'Very High', name: 'Very High' },
         ];
 
         $scope.mocTitle = {
@@ -982,6 +984,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             { name: 'manage', action_part: 6, title: 'Manage Recommendations', isActive: false, isShow: false },
             { name: 'list_name', action_part: 7, title: 'Name List', isActive: false, isShow: false },
             //{ name: 'approver', action_part: 8, title: 'Assessment Team Leader (QMTS)', isActive: false, isShow: false },
+            // { name: 'monitoring', action_part: 10, title: 'Transfer Monitoring', isActive: false, isShow: false },
             { name: 'report', action_part: 9, title: 'Report', isActive: false, isShow: false }
         ];
 
@@ -1762,6 +1765,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                             { name: 'manage', action_part: 6, title: 'Manage Recommendations', isActive: false, isShow: false },
                             { name: 'approver', action_part: 8, title: 'Assessment Team Leader (QMTS)', isActive: false, isShow: false },
                             { name: 'list_name', action_part: 7, title: 'List of Name', isActive: false, isShow: false },
+                            // { name: 'monitoring', action_part: 10, title: 'Transfer Monitoring', isActive: false, isShow: false },
                             { name: 'report', action_part: 9, title: 'Report', isActive: false, isShow: false }
                         ];
 
@@ -6092,6 +6096,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.actionChangeFrequencyLevel = function (item) {
             item.action_change = 1
             processExposureRating(item)
+        }
+
+        $scope.actionChangeInitialRiskRating = function (item) {
+            item.action_change = 1
+            console.log(item)
+            console.log('------')
         }
 
     }

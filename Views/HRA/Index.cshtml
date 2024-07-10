@@ -1769,8 +1769,10 @@
                                                             style="min-width: max-content; padding-top: 10px; text-align: center;"
                                                             ng-repeat="ws in item.worksheet"
                                                             ng-class="{'unbox': (item.worksheet[item.worksheet.length - 1].seq == ws.seq)}">
+                                                            @*have standard_value *@
                                                             <div class="card-initial" 
-                                                                ng-if="ws.initial_risk_rating"
+                                                                ng-if="ws.initial_risk_rating && ws.standard_value"
+                                                                style="min-width: 100px;"
                                                                 ng-class="{
                                                                     'bg-danger': (ws.initial_risk_rating == 'High' || ws.initial_risk_rating == 'High\r\n' 
                                                                     || ws.initial_risk_rating == 'Very High' || ws.initial_risk_rating == 'Very High\r\n'),
@@ -1778,6 +1780,28 @@
                                                                     }" >
                                                                 {{ ws.initial_risk_rating }}
                                                             </div>
+                                                            @* none standard_value*@
+                                                            <select class="drop-initial form-select form-select-sm rounded-2" 
+                                                                ng-if="!ws.standard_value"
+                                                                ng-class="{'disabled-link': 
+                                                                        isDisableStatus && 
+                                                                        !isApproveReject && 
+                                                                        !isEditWorksheet}"
+                                                                ng-style="{'background': 
+                                                                    ws.initial_risk_rating == 'Low' || ws.initial_risk_rating == 'Acceptable Risk'
+                                                                        ? '#25b003' 
+                                                                        : ws.initial_risk_rating == 'Meduim' 
+                                                                            ? '#e5780b' 
+                                                                            : ws.initial_risk_rating == 'High' || ws.initial_risk_rating == 'Very High'
+                                                                                ? '#ed2000' 
+                                                                                : ''}"
+                                                                ng-change="actionChangeInitialRiskRating(ws)"
+                                                                ng-model="ws.initial_risk_rating" 
+                                                                style="min-width: 100px; font-size: 10.24px; text-align: center;">
+                                                                <option ng-repeat="item_m in data_initial_risk" ng-value="item_m.name">
+                                                                    {{item_m.name}}
+                                                                </option>
+                                                            </select>
                                                         </div>
                                                     </td>
 
@@ -2654,14 +2678,12 @@
                             </path>
                         </svg>
                     </button>
-
                 </div>
                 <div class="modal-body">
-
-                    <img src="~/assets/img/risk_rating.png" style="height:300px;" />
-
+                   <div class="d-flex align-items-center justify-content-center p-4">
+                     <img src="~/assets/img/risk_rating.png" style="height:300px;" />
+                   </div>
                 </div>
-
             </div>
         </div>
     </div>
@@ -2684,14 +2706,12 @@
                             </path>
                         </svg>
                     </button>
-
                 </div>
                 <div class="modal-body">
-
-                    <img src="~/assets/img/exposure_rating.png" style="width: 400px; " />
-
+                    <div class="d-flex align-items-center justify-content-center p-4">
+                         <img src="~/assets/img/exposure_rating.png" style="width: 680px; " />
+                    </div>
                 </div>
-
             </div>
         </div>
     </div>

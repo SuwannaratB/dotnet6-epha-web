@@ -439,12 +439,23 @@ background-color: #3e8e41;
   }
 
   .card-initial {
+    display: flex;
     background: #25b003;
     color: white;
     padding: 4px 14px;
-    border-radius: 6px
+    border-radius: 6px;
+    min-height: 26px;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
   }
 
+  .drop-initial {
+    /* background: #25b003; */
+    color: white;
+    font-weight: 800;
+    padding-right: 15px;
+  }
   
   .card-copy {
     border: 1px dashed #3874ff;
