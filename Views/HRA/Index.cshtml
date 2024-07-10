@@ -2763,7 +2763,7 @@
                                 <tbody class=" list">
                                     <tr class="rows-modal-risk cursor-pointer hover-actions-trigger btn-reveal-trigger position-static text-center"
                                         ng-repeat="item in master_hazard_riskfactors_list | filter: filterRiskfactorDuplicates"
-                                        ng-class="{'rows-modal-risk-active': select_risk_index == $index}"
+                                        ng-class="{'rows-modal-risk-active': select_hazard.id_health_hazard == item.id}"
                                         id="row-{{$index}}">
                                         <td class="text-center td-border" style="width: 10%;">
                                             <input type="radio" 
@@ -2778,13 +2778,15 @@
 
                                         <td class="text-start" 
                                             style="width: 70%;"  
-                                            ng-click="changeRisk(select_hazard, $index, 'click')">
+                                            @* ng-click="changeRisk(select_hazard, $index, 'click')" *@
+                                            >
                                             {{item.name}}
                                         </td>
 
                                         <td class="text-center" 
                                             style="width: 10%;"
-                                            ng-click="changeRisk(select_hazard, $index, 'click')">
+                                            @* ng-click="changeRisk(select_hazard, $index, 'click')" *@
+                                            >
                                             <div class="d-flex align-items-center justify-content-center" style="width: 100%;">
                                                 <div ng-if="item.hazards_rating">
                                                     <div class="effect-rating"
@@ -2800,7 +2802,8 @@
 
                                         <td class="text-center" 
                                             style="width: 10%;"
-                                            ng-click="changeRisk(select_hazard, $index, 'click')">
+                                            @* ng-click="changeRisk(select_hazard, $index, 'click')" *@
+                                            >
                                             <p class="standard">
                                                 {{item.standard_value}} {{item.standard_unit}}
                                             </p>
