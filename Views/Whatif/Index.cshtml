@@ -84,29 +84,53 @@
                     <button class="btn text-light btn-sm" style="background-color: #e90f8b;" ng-click="clickExportReport()">EXPORT/IMPORT</button>
                 </span>
                 <span class="mx-2" ng-if="save_type">
-                    <button class="btn btn-primary btn-sm" style="width: 100px;" ng-click="confirmSave('save')">SAVE</button>
+                    <button class="btn btn-primary btn-sm" 
+                        style="width: 100px;" 
+                        ng-click="confirmSave('save')">
+                        SAVE
+                    </button>
                 </span>
-                <span class="mx-2" ng-if="action_to_review">
+                <span class="mx-2" ng-if="data_header[0].pha_status == 21 && can_edit">
+                    <button class="btn btn-primary btn-sm" 
+                        ng-click="confirmSave('save')">
+                        Edit Worksheet
+                    </button>
+                </span>
+                <span class="mx-2" ng-if="params == 'edit_action_owner' && data_header[0].pha_status == 13 && action_part == 5">
+                    <button class="btn btn-primary btn-sm" 
+                        ng-click="confirmSave('save')">
+                        Change Action Owner
+                    </button>
+                </span>
+                <span class="mx-2" ng-if="params == 'edit_approver' && action_part == 7">
+                    <button class="btn btn-primary btn-sm" 
+                        ng-click="confirmSave('save')">
+                        Change Approver
+                    </button>
+                </span>
+                <span class="mx-2" ng-if="action_to_review_type">
                     <button class="btn btn-warning btn-sm" style="width: 200px;"
                             ng-click="confirmMailtoMemberReview('submit')">
                         <span style="font-size:9px">EMAIL TO MEMBER TEAM REVIEW</span>
                     </button>
                 </span>
                 <span class="mx-2" ng-if="submit_type">
-                    <button class="btn btn-success btn-sm" style="width: 150px;"
-                            ng-if=" data_header[0].pha_status == 11 && data_general[0].sub_expense_type == 'Normal'" ng-click="confirmSave('submit_register')">
+                    <button class="btn btn-success btn-sm" 
+                        style="width: 150px;"
+                        ng-if=" data_header[0].pha_status == 11 && data_general[0].sub_expense_type == 'Normal'" 
+                        ng-click="confirmSave('submit_register')">
                         Task Register
                     </button>
-                    <button class="btn btn-success btn-sm" style="width: 150px;"
-                            ng-if=" data_header[0].pha_status == 11 && !(data_general[0].sub_expense_type == 'Normal')" ng-click="confirmSave('submit')">
+                    <button class="btn btn-success btn-sm" 
+                        style="width: 150px;"
+                        ng-if=" data_header[0].pha_status == 11 && !(data_general[0].sub_expense_type == 'Normal')" 
+                        ng-click="confirmSave('submit')">
                         Submit and Closed
                     </button>
-                    <button class="btn btn-success btn-sm" style="width: 150px;"
-                            ng-if=" data_header[0].pha_status == 12" ng-click="confirmSave('submit_conduct')">
-                        Submit
-                    </button>
-                    <button class="btn btn-success btn-sm" style="width: 150px;"
-                            ng-if=" data_header[0].pha_status == 21" ng-click="confirmSave('submit_approver')">
+                    <button class="btn btn-success btn-sm" 
+                        style="width: 150px;"
+                        ng-if=" data_header[0].pha_status == 12 || data_header[0].pha_status == 22" 
+                        ng-click="confirmSave('submit_conduct')">
                         Submit
                     </button>
                 </span>
@@ -619,11 +643,13 @@
 
                                             <tbody class="" id="customer-rating-table-body">
 
-                                                <tr ng-repeat="item in data_session | orderBy:no" class="">
+                                                <tr ng-repeat="item in data_session | orderBy:no" class=""
+                                                    ng-init="getAccessInfo(item, $index,'session')">
 
                                                     <td class="align-top text-top" style="width: 30px;">
                                                         <h6 class="fw-semi-bold text-center">{{item.no}}</h6>
                                                     </td>
+                                                    
 
                                                     @* Member Team *@
                                                     <td class="align-top col-auto" style="min-width: 450px;">
@@ -832,10 +858,11 @@
                                                                 <span class="mx-1">
                                                                     <button class="btn btn-outline-secondary p-2" 
                                                                             style="color: #ff2828; background-color: #f1f2f4; border-color: #ff2828;"
-                                                                            ng-click=removeDataSession(item.seq,$index)
                                                                             data-toggle="tooltip" 
                                                                             data-placement="top" 
-                                                                            title="Remove">
+                                                                            title="Remove"
+                                                                            ng-disabled="!accessInfoMap[item.id].canRemove"
+                                                                            ng-click="triggerRemove(item,item.seq,$index,'session')">
                                                                         <span class="fa-regular fa-trash-can fa-lg"></span>
                                                                     </button>
                                                                 </span>
@@ -843,6 +870,7 @@
                                                                     <button class="btn btn-outline-secondary p-2" 
                                                                             style="color: #2445fc; background-color: #f1f2f4; border-color: #2445fc;"
                                                                             ng-click=copyDataSession(item.seq,$index)
+                                                                            ng-disabled="!accessInfoMap[item.id].canCopy"                                                                             
                                                                             data-toggle="tooltip" 
                                                                             data-placement="top" 
                                                                             title="Copy">
@@ -924,7 +952,8 @@
 
                                             <tbody class="list" id="customer-rating-table-body ">
                                                 <tr class="hover-actions-trigger btn-reveal-trigger position-static "
-                                                    ng-repeat="item in data_drawing">
+                                                    ng-repeat="item in data_drawing"
+                                                    ng-init="getAccessInfo(item, $index,'drawing')">
                                                     <td class="align-middle text-center">
                                                         <div class="p-1 ">
                                                             <h6 class="fw-semi-bold">{{item.no}}</h6>
@@ -1053,7 +1082,8 @@
                                                                 <span class="mx-1">
                                                                     <button class="btn btn-outline-secondary p-2" 
                                                                             style="color: #ff2828; background-color: #f1f2f4; border-color: #ff2828;"
-                                                                            ng-click=removeDrawingDoc(item.seq,$index-1)
+                                                                            ng-click="triggerRemove(item,item.seq,$index-1,'DrawingDoc')"
+                                                                            ng-disabled="!accessInfoMap[item.id].canRemove"
                                                                             data-toggle="tooltip" 
                                                                             data-placement="top" 
                                                                             title="Remove">
@@ -1162,7 +1192,7 @@
                                                                         </a>
                                                                         <div class="dropdown-divider"></div>
                                                                         <a class="dropdown-item text-danger"
-                                                                           ng-click=removeDataTaskList(item.seq,$index)>
+                                                                           ng-click= "triggerRemove(item,item.seq,$index,'tasklist')">
                                                                             <span class="fas fa-times-circle"></span>
                                                                             Remove
                                                                         </a>
@@ -1329,7 +1359,8 @@
                                                                             Add
                                                                         </a>
                                                                         <div class="dropdown-divider"></div>
-                                                                        <a class="dropdown-item text-danger" ng-click=removeDataTaskDrawing(item2.seq,item.seq)>
+                                                                        <a class="dropdown-item text-danger" 
+                                                                           ng-click="triggerRemove(item2,item2.seq,item.seq,'TaskDrawing')">
                                                                             <span class="fas fa-times-circle"></span> 
                                                                             Remove
                                                                         </a>
@@ -3270,7 +3301,7 @@
                                         </thead>
 
                                         <tbody class="list" id="customer-rating-table-body">
-                                            <tr ng-repeat="item in data_approver" 
+                                            <tr ng-repeat="item in data_approver | filter: { id_session: data_drawing_approver[0].id_session }"
                                                 ng-init="accessInfo = Access_check(item)"
                                                 ng-style="{ 'background-color': accessInfo.canAccess ? '' : '#f9fbff' }"
                                                 ng-class="{ 'task-highlight':  accessInfo.canAccess}"                                                   
@@ -3371,7 +3402,7 @@
                                                             </div>
                                                     </div>
                                                 </td>
-                                                <td class="align-top white-space-nowrap" ng-class="{'disabled-link':(!tab_approver_active)}">
+                                                <td class="align-top white-space-nowrap" ng-class="{'disabled-link border-bottom':(!tab_approver_active)}">
                                                     <div class="col-md-12 p-1 ps-3 text-start"  ng-if="(accessInfo.canAccess || accessInfo.isTA2) && item.approver_action_type != 2">
                                                         <div class="form-check form-check-inline cursor-pointer">
                                                             <span class="fa-solid far fa-file-pdf text-danger" style="font-size:15px;" ng-click="confirmExport('whatif_report','pdf')"></span>
@@ -3408,7 +3439,7 @@
                                                     </div>
                                                 </td>                                                
 
-                                                <td class="align-top white-space-nowrap text-start" ng-class="{'disabled-link':(!tab_approver_active)}">
+                                                <td class="align-top white-space-nowrap text-start" ng-class="{'disabled-link border-bottom':(!tab_approver_active)}">
                                                     <div class="col-md-12 p-1 ps-3" ng-if="!(item.approver_action_type == 2 || data_header[0].pha_status != 21)" >
                                                             <textarea class="form-control rounded-1" 
                                                                     id="floatingTextarea2" 
@@ -3494,7 +3525,7 @@
                                                         </label>
                                                     </div>
                                                 </td>
-                                                <td class="align-top px-1 py-3" ng-class="{'disabled-link': (!tab_approver_active)}">
+                                                <td class="align-top px-1 py-3" ng-class="{'disabled-link border-bottom': (!tab_approver_active)}">
                                                     <div class="d-flex" ng-class="{ 'no-drop': !canAccess, 'cursor-pointer': canAccess }">
                                                         <button class="btn btn-outline text-primary p-1 m-2 me-0"
                                                                 style="background-color: #f1f2f4; width:50px;"
@@ -3825,11 +3856,12 @@
 
                     <div ng-show="selectDatFormType === 'owner' && owner_status === 'teams'">
                         <!-- For form_type === 'owner'  action_project_team if teams ==== 1-->
-                        <div>                    
-                            <div class="mb-3">
-                                <input type="text" class="form-control" id="employee_position" ng-model="owner_teams">
+                        <div class="d-flex">                    
+                            <div class="col-5 me-4">
+                                <input type="text" class="form-control " id="employee_position" ng-model="owner_teams">
                             </div>
-                            <button type="button" class="btn btn-primary" ng-click="choosDataEmployee()">Apply</button>                        
+
+                            <button type="button" class="btn btn-primary" ng-click="choosDataEmployee()" ng-disabled="!owner_teams">Apply</button>                        
                         </div>
                     </div>
                 </div>
@@ -4889,7 +4921,35 @@
             </div>
         </div>
     </div>
-
+<!-------- Modal Before Remove ------------->
+<div class="modal fade" id="removeModal" tabindex="-1" role="dialog" aria-labelledby="removeModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="removeModalLabel">Confirm Removal</h5>
+                    <button class="btn p-1" type="button" data-bs-dismiss="modal" aria-label="Close">
+                        <svg class="svg-inline--fa fa-xmark fs--1" aria-hidden="true" focusable="false"
+                             data-prefix="fas" data-icon="xmark" role="img" xmlns="http://www.w3.org/2000/svg"
+                             viewBox="0 0 320 512" data-fa-i2svg="">
+                            <path fill="currentColor"
+                                  d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 
+                                  301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 
+                                  0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 
+                                  210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z">
+                            </path>
+                        </svg>
+                    </button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to remove this item?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" ng-click="action_remove('yes')">Yes</button>
+                <button type="button" class="btn btn-primary" ng-click="action_remove('no')">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
     <div class="modal autosaveModal" id="autosaved" tabindex="-1" role="dialog" aria-labelledby="autosavedModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content" style="background-color: #dff0d8;">

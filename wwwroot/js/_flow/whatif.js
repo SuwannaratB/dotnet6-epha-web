@@ -419,82 +419,74 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     // <!======================== Set tans ==============================!?>
     $scope.changeTab = function (selectedTab) {
-
-        try {
-            if ($scope.data_header[0].pha_status == 11) {
-                if (selectedTab.name == 'worksheet'
-                    || selectedTab.name == 'manage'
-                    || selectedTab.name == 'report'
-                ) {
-                    if ($scope.data_general[0].sub_expense_type == 'Normal') {
-                        if (!$scope.data_general[0].expense_type ||
-                            !$scope.data_general[0].sub_expense_type ||
-                            !$scope.data_general[0].id_apu
-                        ) {
-                            $scope.tab_worksheet_show = true;
-                            $scope.tab_managerecom_show = true;
-                            $scope.goback_tab = 'general';
-                            
-                            angular.forEach($scope.tabs, function (tab) {
-                                tab.isActive = false;
-                            });
-                            selectedTab.isActive = true;
-
-                        }
-
-
-
-                        if(!validBeforRegister()) 
-                            return set_alert('Warning',$scope.validMessage)
-
-                        apply();
-                        $('#modalPleaseRegister').modal('show');
-                        return;
-
-                    } else {
-                        $scope.tab_worksheet_active = true;
-                        $scope.tab_managerecom_active = true;
+        if ($scope.data_header[0].pha_status === 11) {
+            if (selectedTab.name === 'worksheet' || selectedTab.name === 'manage' || selectedTab.name === 'report') {
+                if ($scope.data_general[0].sub_expense_type === 'Normal') {
+                    if (!$scope.data_general[0].expense_type ||
+                        !$scope.data_general[0].sub_expense_type ||
+                        !$scope.data_general[0].id_apu) {
                         $scope.tab_worksheet_show = true;
                         $scope.tab_managerecom_show = true;
+                        $scope.goback_tab = 'general';
+    
+                        angular.forEach($scope.tabs, function (tab) {
+                            tab.isActive = false;
+                        });
+                        selectedTab.isActive = true;
+    
+                        apply();
+                        return;  // Early return to avoid further execution
                     }
-                    if($scope.data_tasklist){
-                        $scope.checkAndGenerateWorksheet();
+    
+                    if (!validBeforRegister()) {
+                        return set_alert('Warning', $scope.validMessage);
+                    } else {
+                        console.log("will save");
+                        $scope.confirmSave('submit_register');
                     }
-
-                }
-            }else if ($scope.data_header[0].pha_status !== 11 ) {
-                if(selectedTab.action_part == 5){
-                    $scope.selectedItemNodeView = $scope.data_taskliste[0].id_list;
-                    $scope.viewDataNodeList($scope.selectedItemNodeView);
-                }else if (selectedTab.action_part == 6) {
-                    $scope.data_listworksheet.forEach(_item => {
-                        if (_item.recommendations && _item.responder_user_displayname && !_item.estimated_start_date) {
-                            _item.estimated_start_date = new Date();
-                            $scope.actionChangeWorksheet(_item, _item.seq, '');
-                        }
-                    });
+    
+                    apply();
+                } else {
+                    $scope.tab_worksheet_active = true;
+                    $scope.tab_managerecom_active = true;
+                    $scope.tab_worksheet_show = true;
+                    $scope.tab_managerecom_show = true;
                 }
 
-                if($scope.data_tasklist){
+                if ($scope.data_tasklist) {
                     $scope.checkAndGenerateWorksheet();
                 }
             }
-
-
-        } catch (error) { }
-
+        } else {
+            if (selectedTab.action_part === 5) {
+                $scope.selectedItemNodeView = $scope.data_tasklist[0].id_list;
+                $scope.viewDataTaskList($scope.selectedItemNodeView);
+            } else if (selectedTab.action_part === 6) {
+                $scope.data_listworksheet.forEach(_item => {
+                    if (_item.recommendations && _item.responder_user_displayname && !_item.estimated_start_date) {
+                        _item.estimated_start_date = new Date();
+                        $scope.actionChangeWorksheet(_item, _item.seq, '');
+                    }
+                });
+            }
+    
+            if ($scope.data_tasklist) {
+                $scope.checkAndGenerateWorksheet();
+            }
+        }
+    
         angular.forEach($scope.tabs, function (tab) {
             tab.isActive = false;
         });
-
+    
         selectedTab.isActive = true;
-
+    
         check_tab(selectedTab.name);
-
-
+    
         $scope.oldTab = selectedTab;
         apply();
     };
+    
     $scope.goBackToTab = function (){
         var tag_name = $scope.goback_tab;
 
@@ -655,6 +647,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
     }
     $scope.fileSelectApprover = function (input, file_part) {
+        
+        console.log("$scope.data_approver",$scope.data_drawing_approver)
+
         //drawing, responder, approver
         var file_doc = $scope.data_header[0].pha_no;
 
@@ -729,7 +724,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                             arr[0].document_file_size = file_size;
                             //'https://localhost:7098/api/' + '/AttachedFileTemp/hazop/HAZOP-2023-0000016-DRAWING-202312231716.PDF'
                             arr[0].document_file_path = (url_ws.replace('/api/', '')) + file_path;// (url_ws.replace('/api/', '/')) + 'AttachedFileTemp/Hazop/' + file_name;
-                            arr[0].document_module = 'jsea';
+                            arr[0].document_module = 'whatif';
                             arr[0].action_change = 1;
                             apply();
 
@@ -820,6 +815,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                             apply();
 
                         }
+
+                        console.log("show approver",$scope.data_drawing_approver)
                     } else {
                         // กรณีเกิดข้อผิดพลาดในการร้องขอไปยัง server
                         console.error('มีข้อผิดพลาด: ' + request.status);
@@ -855,14 +852,17 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.Action_Msg_Detail = detail;
         $timeout(function() {
             $('#modalMsg').modal('show');
-        });      }
+        });      
+    }
 
     function set_alert_warning(header, detail) {
         $scope.$apply(function () {
             $scope.Action_Msg_Header = header;
             $scope.Action_Msg_Detail = detail;
         });
-        $('#modalMsg').modal('show');
+        $timeout(function() {
+            $('#modalMsg').modal('show');
+        });        
     }
 
     function set_alert_confirm(header, detail) {
@@ -872,7 +872,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.Action_Msg_Header = header;
         $scope.Action_Msg_Detail = detail;
 
-        $('#modalMsg').modal('show');
+        $timeout(function() {
+            $('#modalMsg').modal('show');
+        });        
     }
 
 
@@ -1469,7 +1471,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     }
                 }
                 else {
-                    set_alert('Error', arr[0].status);
+                    set_alert_warning('Error', arr[0].status);
+                    window.open('hazop/search', "_top");
+
                     apply();
                 }
             },
@@ -1514,8 +1518,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             comment = arr_json[0].comment;
             user_approver = arr_json[0].user_name;
 
+            //กรณีที่เป็น safety review submit ให้บังคับ action_status  เป็น approve
+            if (arr_json[0].approver_type == 'safety' && flow_action == 'submit') { action_status = 'approve' }
+
         } else { set_alert('Error', 'No Data.'); return; }
         var json_drawing_approver = check_data_drawing_approver(id_session);
+        var json_approver = check_data_approver();
 
         $.ajax({
             url: url_ws + "flow/set_approve",
@@ -2920,6 +2928,94 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         arr_items.sort((a, b) => a.no - b.no);
 
     }
+    $scope.triggerRemove = function(data,seq, index, type) {
+        console.log("data",data)
+        console.log("index, type",index, type)
+        if (seq !== null && index !== null) {
+            $scope.seqToRemove = seq;
+            $scope.indexToRemove = index;
+            $scope.typeToRemove = type;
+            switch($scope.typeToRemove) {
+                case 'session':
+                    var shouldShowModal = false;
+
+                    console.log("$scope.data_memberteam",$scope.data_memberteam)
+                    console.log("$scope.data_approver",$scope.data_approver)
+
+                    for (var i = 0; i < $scope.data_memberteam.length; i++) {
+                        var member = $scope.data_memberteam[i];
+                        if ((member.id_session === seq && member.user_displayname !== null)) {
+                            shouldShowModal = true;
+                            break; 
+                        }
+                    }
+
+                    for (var i = 0; i < $scope.data_approver.length; i++){
+                        var approver = $scope.data_approver[i];
+
+                        if ((approver.id_session === seq && approver.user_displayname !== null)) {
+                            shouldShowModal = true;
+                            break; 
+                        }                        
+                    }
+
+                    if (shouldShowModal || data.meeting_date !== null ) {
+                        $('#removeModal').modal('show');
+                    } else {
+                        $scope.removeDataSession($scope.seqToRemove, $scope.indexToRemove);
+                    }
+                    break;
+                case 'DrawingDoc':
+                    if(data.document_file_name !== null || data.document_file_path !== null || data.descriptions !== null || data.document_name !== null){
+                        $('#removeModal').modal('show');
+                    }else{
+                        $scope.removeDrawingDoc($scope.seqToRemove, $scope.indexToRemove);
+                    }
+                    break;
+                case 'tasklist' :
+                    if(data.design_conditions !== null || data.design_intent !== null || data.node !== null || data.node_boundary !== null || data.operating_conditions !== null){
+                        $('#removeModal').modal('show');
+                    }else{
+                        $scope.removeDataTaskList($scope.seqToRemove, $scope.indexToRemove);
+                    }
+                    break;
+                case 'TaskDrawing' :
+                    if(data.descriptions !== null || data.id_drawing !== null ){
+                        $('#removeModal').modal('show');
+                    }else{
+                        $scope.removeDataTaskDrawing($scope.seqToRemove, $scope.indexToRemove);
+                    }                                        
+                    break;
+                default:
+                    $('#removeModal').modal('show');
+            }
+        } else {
+            console.error('is null');
+        }
+    };
+    $scope.action_remove = function(action) {
+        if (action === 'yes') {
+            switch($scope.typeToRemove) {
+                case 'session':
+                    $scope.removeDataSession($scope.seqToRemove, $scope.indexToRemove);
+                    break;
+                case 'DrawingDoc':
+                    $scope.removeDrawingDoc($scope.seqToRemove, $scope.indexToRemove);
+                    break;
+                case 'tasklist' :
+                    $scope.removeDataTaskList($scope.seqToRemove, $scope.indexToRemove);
+                    break;
+                case 'TaskDrawing' :
+                    $scope.removeDataTaskDrawing($scope.seqToRemove, $scope.indexToRemove);
+                    break;
+                default:
+                    console.error('Unknown type:', $scope.typeToRemove);
+            }
+            $('#removeModal').modal('hide');
+        } else {
+            $('#removeModal').modal('hide');
+        }
+    };        
     $scope.addDataSession = function (seq, index) {
 
         $scope.MaxSeqDataSession = Number($scope.MaxSeqDataSession) + 1;
@@ -2972,39 +3068,30 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         $scope.selectdata_session = xValues;
 
-        if (true) {
-            var arr_copy = [];
-            angular.copy($scope.data_memberteam, arr_copy);
-            var arrmember = $filter('filter')(arr_copy, function (item) { return (item.id_session == seq); });
+        function processData(sourceArray, seq, id_session) {
+            let arr_copy = [];
+            angular.copy(sourceArray, arr_copy);
+            let arrmember = $filter('filter')(arr_copy, function(item) {
+                return (item.id_session == seq);
+            });
+        
             for (let i = 0; i < arrmember.length; i++) {
                 arrmember[i].id_session = Number(id_session);
                 arrmember[i].action_type = 'insert';
                 arrmember[i].action_change = 1;
-
+        
                 arrmember[i].seq = $scope.selectdata_memberteam;
                 arrmember[i].id = $scope.selectdata_memberteam;
-
-                $scope.data_memberteam.push(arrmember[i]);
+        
+                sourceArray.push(arrmember[i]);
                 $scope.selectdata_memberteam += 1;
             }
         }
-        if (true) {
-            var arr_copy = [];
-            angular.copy($scope.data_approve, arr_copy);
-            var arrmember = $filter('filter')(arr_copy, function (item) { return (item.id_session == seq); });
-            for (let i = 0; i < arrmember.length; i++) {
-                arrmember[i].id_session = Number(id_session);
-                arrmember[i].action_type = 'insert';
-                arrmember[i].action_change = 1;
-
-                arrmember[i].seq = $scope.selectdata_memberteam;
-                arrmember[i].id = $scope.selectdata_memberteam;
-
-                $scope.data_memberteam.push(arrmember[i]);
-                $scope.selectdata_memberteam += 1;
-            }
-        }
-
+        
+        processData($scope.data_memberteam, seq, id_session);
+        processData($scope.data_approver, seq, id_session);
+        processData($scope.data_relatedpeople, seq, id_session);
+        processData($scope.data_relatedpeople_outsider, seq, id_session);
 
     }
     $scope.removeDataSession = function (seq, index) {
@@ -3169,6 +3256,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         running_no_level1_lv1($scope.data_drawing, iNo, index, newInput);
 
         $scope.selectDrawingDoc = xValues;
+
+        console.log("$scope.data_drawing",$scope.data_drawing)
         apply();
     }
     $scope.copyDrawingDoc = function (seq, index) {
@@ -4080,10 +4169,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         //index_data = index;
         //let index_to_add = $scope.findInsertionIndex($scope.data_listworksheet, newInput, $scope.compareItems);
         //$scope.data_listworksheet.splice(index_to_add, 0, newInput);
-        console.log($scope.data_listworksheet);
         //let index_toinsert = $scope.findInsertionIndex($scope.data_listworksheet, newInput, $scope.compareItems);
         $scope.data_listworksheet.splice(index+1, 0, newInput);
-        console.log('Updated array:', $scope.data_listworksheet);
         //running_index_level1_lv1($scope.data_listworksheet, iNo, index, newInput);
 
         if (row_type === "list_system") {
@@ -4099,14 +4186,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             //arr_items.sort((a, b) => a.index_rows - b.index_rows);
             
             arr_items.forEach(function(filteredItem, index) {
-                // Update the list_sub_system_no for filteredItem
+                // Updatelist_sub_system_no for filteredItem
                 var newSubSystemNo = index + 1;
-                console.log("Updating filteredItem:", filteredItem);
-                console.log("New list_sub_system_no:", newSubSystemNo);
             
                 // Store the old list_sub_system_no for comparison
                 var oldSubSystemNo = filteredItem.list_sub_system_no;
-                console.log("oldSubSystemNo",oldSubSystemNo)
             
                 filteredItem.list_sub_system_no = newSubSystemNo;
             
@@ -4121,7 +4205,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     relatedItem.list_sub_system_no = newSubSystemNo;
                 });
             
-                console.log("relatedItems updated:", relatedItems);
             });
             
             
@@ -4140,8 +4223,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
 
             arr_items.sort((a, b) => a.index_rows - b.index_rows);
-
-            console.log("arr_items",arr_items)
 
 
             arr_items.forEach(function(filteredItem, index) {
@@ -4490,7 +4571,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         
         // Filter items that match seq_list and row_type 'list_system'
         var arr_items = $filter('filter')($scope.data_listworksheet, function (item) {
-            return ((item.seq_list == seq_list && item.row_type == 'list_system'));
+            return ((item.id_list == seq_list && item.row_type == 'list_system'));
         });
 
         // Sort items based on the 'no' property
@@ -5367,7 +5448,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             } else if (action == 'confirm_submit_register_without') {
                 $scope.Action_Msg_Confirm = true;
                 action = 'submit_without';
-                $('#modalSendMail').modal('hide');
+                $('#modalSendMailRegister').modal('hide');
 
             } else if (action == 'confirm_submit_complete') {
                 $scope.Action_Msg_Confirm = true;
@@ -5464,7 +5545,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     function validateFields(item, mainField, requiredFields) {
         let valid = true;
         let allFieldsPresent = true; 
-        let isViewDataNodeListSet = false; //
+        let isviewDataTaskListSet = false; //
 
         if (item[mainField] !== null && item[mainField] !== '') {
     
@@ -5485,13 +5566,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             if (allFieldsPresent) {
                 requiredFields.forEach(field => {
-                    if (!isViewDataNodeListSet) {
+                    if (!isviewDataTaskListSet) {
                         $timeout(function() {
                             $scope.selectedItemNodeView = item.id_node;
 
-                            $scope.viewDataNodeList($scope.selectedItemNodeView);
+                            $scope.viewDataTaskList($scope.selectedItemNodeView);
                         }, 0); 
-                        isViewDataNodeListSet = true;
+                        isviewDataTaskListSet = true;
                     }
                     $timeout(function() {
                         set_valid_items(item[field], 'nodeworksheet-' + field + '-' + item.seq);
@@ -5533,6 +5614,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     $scope.confirmDialogApprover = function (_item, action) {
 
+        console.log("_item",_item)
+
+        console.log("arrrrrrrrrrrrrrrrrrrrr",$scope.data_approver)
         var arr_chk = _item;
         $scope.item_approver_active = [];
         $scope.item_approver_active.push(_item);
@@ -5655,32 +5739,32 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     function check_data_session() {
 
         var pha_seq = $scope.data_header[0].seq;
-        for (var i = 0; i < $scope.data_session.length; i++) {
-            $scope.data_session[i].id = $scope.data_session[i].seq;
-            $scope.data_session[i].id_pha = pha_seq;
+        var copy_data_session = angular.copy($scope.data_session);
+
+        for (var i = 0; i < copy_data_session.length; i++) {
+            copy_data_session[i].id = copy_data_session[i].seq;
+            copy_data_session[i].id_pha = pha_seq;
             try {
-                var meeting_date = new Date($scope.data_session[0].meeting_date);
-                var meeting_date_utc = new Date(Date.UTC(meeting_date.getFullYear(), meeting_date.getMonth(), meeting_date.getDate()));
-                $scope.data_session[0].meeting_date = meeting_date_utc.toISOString().split('T')[0];
+                copy_data_session[0].meeting_date = copy_data_session[0].meeting_date.toISOString().split('T')[0];
             } catch { }
             try {
                 //12/31/1969 7:55:00 PM 
-                var hh = $scope.data_session[i].meeting_start_time_hh; var mm = $scope.data_session[i].meeting_start_time_mm;
+                var hh = copy_data_session[i].meeting_start_time_hh; var mm = copy_data_session[i].meeting_start_time_mm;
                 var valtime = "1970-01-01T" + (hh).substring(hh.length - 2) + ":" + (mm).substring(mm.length - 2) + ":00.000Z";
 
-                $scope.data_session[i].meeting_start_time = new Date(valtime);
+                copy_data_session[i].meeting_start_time = new Date(valtime);
             } catch { }
-
             try {
                 //12/31/1969 7:55:00 PM
-                var hh = $scope.data_session[i].meeting_end_time_hh; var mm = $scope.data_session[i].meeting_end_time_mm;
+                var hh = copy_data_session[i].meeting_end_time_hh; var mm = copy_data_session[i].meeting_end_time_mm;
                 var valtime = "1970-01-01T" + (hh).substring(hh.length - 2) + ":" + (mm).substring(mm.length - 2) + ":00.000Z";
-                $scope.data_session[i].meeting_end_time = new Date(valtime);
+                copy_data_session[i].meeting_end_time = new Date(valtime);
             } catch { }
         }
 
         var arr_active = [];
-        angular.copy($scope.data_session, arr_active);
+        angular.copy(copy_data_session, arr_active);
+
         var arr_json = $filter('filter')(arr_active, function (item) {
             return ((item.action_type == 'update' && item.action_change == 1) || item.action_type == 'insert');
         });
@@ -6077,12 +6161,16 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     function check_data_drawing_approver(id_session) {
 
+        console.log(id_session)
+        console.log("$scope.data_drawing_approver",$scope.data_drawing_approver)
+
         var pha_seq = $scope.data_header[0].seq;
 
         for (var i = 0; i < $scope.data_drawing_approver.length; i++) {
             $scope.data_drawing_approver[i].id = Number($scope.data_drawing_approver[i].seq);
             $scope.data_drawing_approver[i].id_pha = pha_seq;
         }
+        
 
         var arr_active = [];
         angular.copy($scope.data_drawing_approver, arr_active);
@@ -6093,6 +6181,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 && item.id_session == id_session
             );
         });
+
+        console.log("arr_json",arr_json)
+
 
         //ข้อมูลที่ delete อยู่ใน data_drawing_approver ไม่ได้เก็บไว้ใน data_drawing_approver_delete
         //ต้องไปปรับ $scope.removeDataWorksheetDrawing 
@@ -6109,6 +6200,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     //start Update Action Type null to Update 
     $scope.actionChange = function (_arr, _seq, type_text) {
         action_type_changed(_arr, _seq);
+        updateDataSessionAccessInfo()
 
         var arr_submit = $filter('filter')($scope.data_tasklist, function (item) {
             return ((item.action_type !== '' || item.action_type !== null));
@@ -6750,6 +6842,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             console.log("$scope.data_memberteam",$scope.data_memberteam)
 
+
         }
         else if (xformtype == "approver") {
 
@@ -6784,19 +6877,16 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         }
         else if (xformtype == 'edit_approver') {
-            // ขั้นแรก เรียงข้อมูลตามฟิลด์ 'no'
-            var sortedData = $filter('orderBy')($scope.data_approver, 'no');
             // จากนั้น กรองข้อมูลตามเงื่อนไขที่ต้องการ
-            var result = $filter('filter')(sortedData, function (item, idx) {
-                return idx == $scope.approve_index;
-            })[0];
+            var result = $scope.data_approver[$scope.approve_index];
+
 
             if (result) {
                 result.action_change = 1;
                 result.user_displayname = item.employee_displayname;
                 result.user_img = item.employee_img;
                 result.user_name = item.employee_name;
-                newInput.user_title = employee_position;
+                result.user_title = employee_position;
 
             }
             $('#modalEmployeeAdd').modal('hide');
@@ -6940,6 +7030,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 });
             }
             
+        }
+
+        if(xformtype == 'member' || xformtype == 'approver' || xformtype == 'specialist'){
+            updateDataSessionAccessInfo('session');
         }
 
         //clear_valid_items($scope.recomment_clear_valid);
@@ -7320,6 +7414,84 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.form_valid = { valid_document_file: false };
     }
 
+    function updateDataSessionAccessInfo(type) {
+
+        console.log("will update data")
+        if(type == 'session'){
+            $scope.data_session.forEach((item, index) => {
+                $scope.getAccessInfo(item, index,type);
+            });
+        }else{
+            console.log("will update data for data_drawing")
+            
+            $scope.data_drawing.forEach((item, index) => {
+                $scope.getAccessInfo(item, index,'drawing');
+            });
+        }
+
+    }
+
+    $scope.accessInfoMap = {};
+
+    $scope.getAccessInfo = function(item, index, type) {
+        let accessInfo = {
+            canRemove: false,
+            canCopy: false,
+        };
+    
+        if(type == 'session'){
+            let approverData = $scope.data_approver.filter(data => data.id_session === item.id);
+            let memberTeamData = $scope.data_memberteam.filter(data => data.id_session === item.id);
+            let relatedPeopleData = $scope.data_relatedpeople.filter(data => data.id_session === item.id);
+    
+            if ($scope.data_general[0].expense_type === 'CAPEX') {
+                if (index === 0 && approverData.length === 0 && memberTeamData.length === 0 && relatedPeopleData.length === 0) {
+                    accessInfo.canRemove = false;
+                } else {
+                    accessInfo.canRemove = true;
+                }
+    
+                if (approverData.length > 0 || memberTeamData.length > 0 || relatedPeopleData.length > 0) {
+                    accessInfo.canCopy = true;
+                } else {
+                    accessInfo.canCopy = false;
+                }
+            } else {
+                if (index === 0 && memberTeamData.length === 0) {
+                    accessInfo.canRemove = false;
+                } else {
+                    accessInfo.canRemove = true;
+                }
+    
+                if (memberTeamData.length > 0) {
+                    accessInfo.canCopy = true;
+                } else {
+                    accessInfo.canCopy = false;
+                }
+            }
+        } else if(type === 'drawing'){
+            console.log('drawing item:', item);
+    
+            if(index === 0) {
+                if (item.document_name !== null || item.document_no !== null || item.descriptions !== null ||
+                    item.document_file_name !== null || item.document_file_path !== null) {
+                    accessInfo.canRemove = true;
+                } else {
+                    accessInfo.canRemove = false;
+                }
+            } else {
+                accessInfo.canRemove = true;
+            }
+        }
+    
+        console.log('accessInfo before updating map:', accessInfo);
+    
+        $scope.accessInfoMap[item.id] = accessInfo;
+    
+        console.log('accessInfoMap after update:', $scope.accessInfoMap);
+    };
+    
+    
     //access each role
     $scope.Access_check = function(task) {
         let accessInfo = {
@@ -7447,7 +7619,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 if(!$scope.data_drawing[i].document_file_name) $scope.validMessage = 'Please select a valid Document File'
                 if(!$scope.data_drawing[i].document_no) $scope.validMessage = 'Please select a valid Drawing No'
     
-                $scope.goback_tab = 'node';
+                $scope.goback_tab = 'task';
 
                 return false
             }
@@ -7457,23 +7629,23 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
 
     function validNode(){
-        for (let i = 0; i < $scope.data_node.length; i++) {
-            if (!$scope.data_node[i].node) {
-                if(!$scope.data_node[i].document_file_name) $scope.validMessage = 'Please select a valid Node'
+        for (let i = 0; i < $scope.data_tasklist.length; i++) {
+            if (!$scope.data_tasklist[i].list) {
+                if(!$scope.data_tasklist[i].document_file_name) $scope.validMessage = 'Please select a valid Task'
                 
-                $scope.goback_tab = 'node';
+                $scope.goback_tab = 'task';
                 return false
             }
         }
         
-        for (let i = 0; i < $scope.data_nodedrawing.length; i++) {
-            if (!$scope.data_nodedrawing[i].id_drawing) {
-                if(!$scope.data_nodedrawing[i].id_drawing) $scope.validMessage = 'Please select a valid Drawing'
+        /*for (let i = 0; i < $scope.data_tasklistdrawing.length; i++) {
+            if (!$scope.data_tasklistdrawing[i].id_drawing) {
+                if(!$scope.data_tasklistdrawing[i].id_drawing) $scope.validMessage = 'Please select a valid Drawing'
     
                 $scope.goback_tab = 'node';
                 return false
             }
-        }
+        }*/
 
         $scope.validMessage = ''
         return true

@@ -940,6 +940,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                             apply();
 
                         }
+                        
                     } else {
                         // กรณีเกิดข้อผิดพลาดในการร้องขอไปยัง server
                         console.error('มีข้อผิดพลาด: ' + request.status);
