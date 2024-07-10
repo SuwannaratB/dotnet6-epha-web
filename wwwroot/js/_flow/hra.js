@@ -681,7 +681,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     function validBeforRegister() {
         if (validGeneral() &&
             validSessions() &&
-            validDrawing() &&
+            // validDrawing() &&
             validSubArea() &&
             validTasks()
         ) {
@@ -1570,6 +1570,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         $scope.master_subarea_location = JSON.parse(replace_hashKey_arr(arr.subarea_location));
                         $scope.master_hazard_type = JSON.parse(replace_hashKey_arr(arr.hazard_type));
                         $scope.master_hazard_type = setup_master_hazard_type($scope.master_hazard_type);
+                        $scope.master_standard_type = JSON.parse(replace_hashKey_arr(arr.standard_type));
                         $scope.master_hazard_riskfactors = JSON.parse(replace_hashKey_arr(arr.hazard_riskfactors));
                         $scope.master_hazard_riskfactors_list = JSON.parse(replace_hashKey_arr(arr.hazard_standard));
                         // moc master_hazard_riskfactors
@@ -1596,11 +1597,20 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     //general
                     if (true) {
                         $scope.data_general = arr.general;
+
                         if(!$scope.data_general[0].pha_request_name) 
                             $scope.data_general[0].pha_request_name = $scope.mocTitle['default']
+                    
+                        $scope.data_general[0].expense_type = '5YEAR'
 
                         $scope.data_session = arr.session;
                         $scope.data_session_def = clone_arr_newrow(arr.session);
+
+                        // if(!$scope.data_session[0].meeting_date) {
+                        //     var today = new Date();
+                        //     $scope.data_session[0].meeting_date = new Date(Date.UTC( new Date().getFullYear(),  new Date().getMonth(), today.getDate()));
+                        //     console.log($scope.data_session[0].meeting_date)
+                        // }
 
                         $scope.data_memberteam = arr.memberteam;
                         $scope.data_memberteam_def = clone_arr_newrow(arr.memberteam);
@@ -1631,7 +1641,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     if (true) {
                         // add key count_riskfactors
                         $scope.hazard_standard = arr.hazard_standard;
-                        
+
                         arr.hazard = setup_hazard(arr.hazard);
 
                         $scope.data_subareas = arr.subareas;
@@ -1668,7 +1678,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         $scope.data_descriptions_def = clone_arr_newrow(arr.descriptions);
                         $scope.data_descriptions_def = clone_arr_newrow(arr.descriptions);
                         $scope.data_tasks = groupTaksList($scope.data_tasks);
-                        console.log('data Tasks', $scope.data_tasks )
                     }
 
                     //HRA Worksheet
@@ -5856,9 +5865,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     arr_check[0].action_new_row = 1;
                     $scope.data_general[0].target_start_date = _arr.meeting_date;
                 }
+                console.log($scope.data_general[0])
             }
-
-            if (type_text == "meeting_date") { }
             if (type_text == "unit_no") {
 
                 //update id_apu ด้วย 
@@ -7098,14 +7106,24 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         // hazard.count_riskfactors = $scope.sub_hazard_riskfactors.length
     }
 
-    $scope.changeRisk = function (hazard, index) {
+    $scope.changeRisk = function (hazard, index, type) {
         $scope.select_risk_index = index;
         $scope.chooseIndexRating = 0;
         var hazard_index = $scope.select_hazard_index;
+
+        // click
+        if (type) {
+            var list_item = $filter('filter')($scope.hazard_standard, function (item, idx) { 
+                return (idx == index); 
+            })[0];
+            hazard.id_health_hazard = list_item.id
+        }
+
         // filter hazard_standard
         var list = $filter('filter')($scope.hazard_standard, function (item) { 
             return (item.id == hazard.id_health_hazard); 
         })[0];
+        console.log('hazard',hazard)
 
         if (list) {
             hazard.health_hazard = list.name;
@@ -7163,7 +7181,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.select_hazard = item_hazard;
         $scope.select_hazard_index = index;
         $scope.select_hazard_type = item_hazard.id_type_hazard
-        console.log("select_hazard_type",$scope.select_hazard_type)
         $('#modalRisk').modal('show');
     };
 
@@ -7469,6 +7486,15 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             return _item.seq == item.seq
         });
         return result.length
+    };
+
+    $scope.changeStandard = function(selectedStandard) {
+
+        if(!selectedStandard) return $scope.master_hazard_riskfactors_list = $scope.hazard_standard
+
+        $scope.master_hazard_riskfactors_list = $filter('filter')($scope.hazard_standard, function (_item) { 
+            return _item.id_hazard_type == selectedStandard; 
+        });
     };
     
     

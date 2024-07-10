@@ -65,6 +65,11 @@ a, i {
     cursor: pointer;
 }
 
+.standard {
+  font-size: 14px;
+  font-weight: 600;
+}
+
 .mr-27 {
     margin-right: 27px;
 }
@@ -630,6 +635,18 @@ ul.nav li a.btn-nav-menu.btn-outline-primary:hover {
 .card-menu:hover {
   box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
   /* transform: scale(1.02);  */
+}
+
+.rows-modal-risk-active {
+  background: #e3e6ed;
+}
+.rows-modal-risk:hover {
+  background: #e3e6ed;
+}
+
+.td-border {
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
 }
 
 
