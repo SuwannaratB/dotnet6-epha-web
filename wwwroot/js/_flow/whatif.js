@@ -429,19 +429,15 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         $scope.tab_managerecom_show = true;
                         $scope.goback_tab = 'general';
     
-                        angular.forEach($scope.tabs, function (tab) {
-                            tab.isActive = false;
-                        });
-                        selectedTab.isActive = true;
-    
                         apply();
                         return;  // Early return to avoid further execution
                     }
     
                     if (!validBeforRegister()) {
-                        return set_alert('Warning', $scope.validMessage);
+                        set_alert('Warning', $scope.validMessage);
+
+                        return;
                     } else {
-                        console.log("will save");
                         $scope.confirmSave('submit_register');
                     }
     
@@ -475,14 +471,17 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
         }
     
-        angular.forEach($scope.tabs, function (tab) {
+        /*angular.forEach($scope.tabs, function (tab) {
             tab.isActive = false;
         });
     
         selectedTab.isActive = true;
     
-        check_tab(selectedTab.name);
+        check_tab(selectedTab.name);*/
     
+        console.log(selectedTab)
+        $scope.changeTab_Focus([selectedTab], $scope.goback_tab);
+
         $scope.oldTab = selectedTab;
         apply();
     };
@@ -490,10 +489,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     $scope.goBackToTab = function (){
         var tag_name = $scope.goback_tab;
 
+        console.log("tag_name",tag_name)
         var arr_tab = $filter('filter')($scope.tabs, function (item) {
             return ((item.name == tag_name));
         });
 
+        console.log("arr_tab",arr_tab)
         $scope.changeTab_Focus(arr_tab, tag_name);
     }
 
@@ -501,19 +502,38 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         angular.forEach($scope.tabs, function (tab) {
             tab.isActive = false;
         });
-        selectedTab[0].isActive = true;
 
-        // Set focus to the clicked tab element
-        try {
-            document.getElementById(selectedTab[0].name + "-tab").addEventListener("click", function (event) {
-                ev = event.target
-            });
+        // Set all tabs to inactive
+        angular.forEach($scope.tabs, function (tab) {
+            tab.isActive = false;
+            var tabPane = document.getElementById("tab-" + tab.name);
+            if (tabPane) {
+                tabPane.classList.remove('show', 'active');
+            }
+        });
 
-            var tabElement = angular.element(ev);
-            tabElement[0].focus();
-        } catch (error) { }
+        if(Array.isArray){
+            selectedTab[0].isActive = true;
+            var activeTabPane = document.getElementById("tab-" + selectedTab[0].name);
+            if (activeTabPane) {
+                activeTabPane.classList.add('show', 'active');
+            }
 
-        check_tab(selectedTab[0].name);
+            console.log("show tabs",$scope.tabs)
+            check_tab(selectedTab[0].name);
+
+        }else{
+            selectedTab.isActive = true;
+            var activeTabPane = document.getElementById("tab-" + selectedTab.name);
+            if (activeTabPane) {
+                activeTabPane.classList.add('show', 'active');
+            }
+
+            check_tab(selectedTab.name);
+        }
+
+
+
 
         apply();
     };
@@ -1558,8 +1578,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         set_alert('Success', 'Data has been successfully submitted.');
 
                         if (arr[0].pha_status == '13') {
-                            //กรณีที่ TA2 approve all
-                            window.open('hazop/search', "_top");
+                            if($scope.flow_role_type == 'admin') {
+                                return get_data_after_save(false, false, $scope.pha_seq);
+                            }else{
+                                //กรณีที่ TA2 approve all
+                                window.open('hazop/search', "_top");
+                            }
+
+
                         } else if (arr[0].pha_status == '22') {
                             //กรณีที่ TA2 approve reject
                             window.open('hazop/search', "_top");
@@ -1935,7 +1961,16 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         $scope.selected_ram_img = (url_ws.replace('/api/', '/')) + arr_items[0].document_file_path;
                     }
 
-                    try {
+                    try{
+                        if ($scope.data_general[0].master_apu == null || $scope.data_general[0].master_apu == '') {
+                            $scope.data_general[0].master_apu = null;
+                            //var arr_clone_def = { id: $scope.data_general[0].master_apu, name: 'Please select' };
+                            var arr_clone_def = { id: null, name: 'Please select' };
+                            $scope.master_apu.splice(0, 0, arr_clone_def);
+                        }
+                    }catch{}
+
+                    /*try {
                         $scope.master_apu = JSON.parse(replace_hashKey_arr(arr.apu));
                         $scope.master_functional = JSON.parse(replace_hashKey_arr(arr.functional));
                         $scope.master_business_unit = JSON.parse(replace_hashKey_arr(arr.business_unit));
@@ -1951,7 +1986,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                             var arr_clone_def = { id: null, name: 'Please select' };
                             $scope.master_apu.splice(0, 0, arr_clone_def);
                         }
-                        if ($scope.data_general[0].master_functional == null || $scope.data_general[0].master_functional == '') {
+                        if ($scope.data_general[0].master_functional == null) {
                             $scope.data_general[0].master_functional = null;
                             //var arr_clone_def = { id: $scope.data_general[0].master_functional, name: 'Please select' };
                             var arr_clone_def = { id: null, name: 'Please select' };
@@ -1969,7 +2004,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                             var arr_clone_def = { id: null, name: 'Please select' };
                             $scope.master_unit_no.splice(0, 0, arr_clone_def);
                         }
-                    } catch (ex) { alert(ex); console.clear(); }
+                    } catch (ex) { alert(ex); console.clear(); }*/
 
                     var pha_status = $scope.data_header[0].pha_status
                     set_form_action(action_part_befor, !action_submit, page_load);
@@ -7528,7 +7563,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     
         return accessInfo;
     };
-    
     
 
     function validBeforRegister() {

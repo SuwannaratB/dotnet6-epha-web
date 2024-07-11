@@ -605,7 +605,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                 success: function (data) {
 
                     var arr = data;
-                    console.log(arr);
                     if (arr[0].status == 'true') {
 
                         var controller_text = sub_software; //"hazop" //เนื่องจากไม่ได้แยกตาม module ให้ชี้ไป hazop ที่เดียว
@@ -613,8 +612,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                         conFig.pha_sub_software = sub_software;
                         conFig.pha_seq = arr[0].seq_new;
                         conFig.pha_status = arr[0].pha_status;
-
-                        console.log("controller_text",controller_text)
 
                         next_page(controller_text, conFig.pha_status);
 

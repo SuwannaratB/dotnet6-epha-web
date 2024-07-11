@@ -440,12 +440,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
         apply();
     }
     $scope.removeDataWorksheetDrawing = function (item_draw, seq_nodeworksheet) {
+        console.log("item_draw",item_draw)
+        console.log("$scope.data_drawingworksheet",$scope.data_drawingworksheet)
         var seq = item_draw.seq;
-        var fileUpload = document.getElementById('attfile-' + seq);
+        /*var fileUpload = document.getElementById('attfile-' + seq);
         var fileNameDisplay = document.getElementById('filename' + seq);
 
         fileUpload.value = ''; // ล้างค่าใน input file
-        fileNameDisplay.textContent = ''; // ล้างข้อความที่แสดงชื่อไฟล์
+        fileNameDisplay.textContent = ''; // ล้างข้อความที่แสดงชื่อไฟล์*/
 
         //หา same  id_worksheet if > 1 splice item_draw , if === 1 set null
         var item_draw_worksheet = $scope.data_drawingworksheet.filter(function(item) {
@@ -666,11 +668,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
 
             if (item.implement) {
                 // const validRemark = set_valid_items(item.responder_comment, 'remark-'+ item.seq);
-                const validUploadFile = set_valid_items($scope.fileInfoSpan, 'upload_file-'+ item.seq);
+                /*const validUploadFile = set_valid_items($scope.fileInfoSpan, 'upload_file-'+ item.seq);
 
                 if (!validUploadFile) {
                     $scope.confirmSaveFollowup('save', item);
-                }
+                }*/
             }else {
                 var docfiles = $filter('filter')($scope.data_drawingworksheet, function (_item) {
                     return (_item.id_worksheet == item.seq && 
@@ -679,12 +681,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                 })[0];
 
                 const validRemark = set_valid_items(item.responder_comment, 'remark-'+ item.seq);
-                const validUploadFile = set_valid_items(docfiles.document_file_name, 'upload_file-'+ item.seq);
+                //const validUploadFile = set_valid_items(docfiles.document_file_name, 'upload_file-'+ item.seq);
                 const validComment= set_valid_items(item.reviewer_comment, 'comment-'+ item.seq);
-                if (!validRemark && !validUploadFile && !validComment) {
+                if (!validRemark  && !validComment) {
                     $scope.confirmSaveFollowup('save', item);
                 }
-            }
+            }//&& !validUploadFile
 
         } else if ($scope.flow_status == 14) {
             item.action_change = 1;
@@ -719,7 +721,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
 
                 if (!_item.implement) {
                     // set_valid_items(_item.responder_comment, 'remark-'+_item.seq);
-                    set_valid_items($scope.fileInfoSpan, 'upload_file-'+_item.seq);
+                    //set_valid_items($scope.fileInfoSpan, 'upload_file-'+_item.seq);
                 }else {
                     clear_valid_items('remark-'+_item.seq);
                     clear_valid_items('upload_file-'+_item.seq);
