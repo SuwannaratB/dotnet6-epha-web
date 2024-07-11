@@ -791,9 +791,9 @@
                                                         Recommendations Close Plan
                                                     </th>
 
-                                                    <th class="sort align-middle " colspan="1" rowspan="3">
+                                                    @* <th class="sort align-middle " colspan="1" rowspan="3">
                                                         Over Due (Day)
-                                                    </th>
+                                                    </th> *@
 
                                                     <th class="sort align-middle " colspan="1" rowspan="3"></th>
                                                 </tr>
@@ -1164,13 +1164,13 @@
                                                         <b>{{item_d.estimated_end_date_text}}</b>
                                                     </td>
 
-                                                    <td class="align-middle  px-0" style=" width: 70px;" ng-if="!(flow_status == 13)">
+                                                    @* <td class="align-middle  px-0" style=" width: 70px;" ng-if="!(flow_status == 13)">
                                                         <b>{{item_d.reviewer_date}}</b>
-                                                    </td>
+                                                    </td> *@
 
-                                                    <td class="align-middle  px-0">
+                                                    @* <td class="align-middle  px-0">
                                                         <div class="text-danger"><b>{{item_d.over_due}}</b></div>
-                                                    </td>
+                                                    </td> *@
 
                                                     <td class="align-middle px-0 pt-0 ">
                                                         <div class="d-flex" ng-class="{ 'no-drop': !canAccess, 'cursor-pointer': canAccess}">

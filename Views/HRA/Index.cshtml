@@ -2566,6 +2566,128 @@
                         </div>
                     </div> 
 
+                    @* <!-- Monitoring start--> *@
+                    <div class="" ng-class="{
+                        'tab-pane fade show active':(action_part==10),
+                        'tab-pane fade':(action_part!==10)}"
+                         id="tab-manage" role="tabpanel" aria-labelledby="manage-tab">
+                        <div class=" border-bottom border-200 my-0" id="NodeTable">
+                            <div class="table-responsive scrollbar">
+                                <table class="table fs--2 mb-0 table-bordered">
+                                    <thead class=" text-uppercase text-center bg-soft">
+                                        <tr>
+                                            <th class=" align-middle" scope="col" >TYPE OF HAZARD</th>
+                                            <th class=" align-middle" scope="col" >INITIAL RISK RATING</th>
+                                            <th class=" align-middle" scope="col" >RECOMMENDATION</th>
+                                            <th class=" align-middle" scope="col" >TRACKING FREQUENCY</th>
+                                            <th class=" align-middle" scope="col" >TIMES FREQUENCY</th>
+                                            <th class=" align-middle" scope="col" >STATUS</th>
+                                            <th class=" align-middle" scope="col" >START DATE</th>
+                                            <th class=" align-middle" scope="col" >END DATE</th>
+                                            <th class=" align-middle" scope="col" >NEXT CHECKED</th>
+                                            <th class=" align-middle" scope="col" >LAST CHECKED</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody class="list" id="customer-rating-table-body">
+                                        <tr class="hover-actions-trigger btn-reveal-trigger position-static text-center"
+                                            ng-repeat="item in mocMonitoring">
+
+                                            <td class="align-middle" 
+                                                rowspan="{{ rowspanMonitoring(item) }}"
+                                                ng-if="mocMonitoring[$index - 1].type_hazard != item.type_hazard">
+                                                <div class="">
+                                                    {{item.type_hazard}}
+                                                </div>
+                                            </td>
+
+                                            <td class="align-middle" >
+                                                <div class="">
+                                                    {{item.initial_risk_rating}}
+                                                </div>
+                                            </td>
+
+                                            <td class="align-middle">
+                                                <div class="">
+                                                    {{item.recommendations}}
+                                                </div>
+                                            </td>
+
+                                            <td class="">
+                                                <div class="">
+                                                     <select class="form-select form-select-sm rounded-2" 
+                                                        ng-model="item.id_rangtype" 
+                                                        style="min-width: 100px; font-size: 10.24px;">
+                                                        <option ng-repeat="item_m in master_rangtype" ng-value="item_m.id">
+                                                            {{item_m.name}}
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                            </td>
+  
+                                            <td class="">
+                                                <div class="">
+                                                    
+                                                </div>
+                                            </td>
+
+                                            <td class="">
+                                                <div class="">
+                                                    <select class="form-select form-select-sm rounded-2" 
+                                                        ng-model="item.status" 
+                                                        style="min-width: 100px; font-size: 10.24px;">
+                                                        <option ng-repeat="item_m in status_monitoring" ng-value="item_m.name">
+                                                            {{item_m.name}}
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                            </td>                                           
+
+                                            <td class="">
+                                                <div class="">
+                                                    <input type="date" 
+                                                        class="form-control datetimepicker rounded-1" 
+                                                        placeholder="Start Date dd/mm/yyyy"
+                                                        ng-model="item.create_date">
+                                                    @* <div id="valid-nodeworksheet-estimated-start-{{ws.seq}}"
+                                                        class="invalid-feedback text-danger">
+                                                        Please provide a valid Estimated Start Date.
+                                                    </div> *@
+                                                </div>
+                                            </td>
+
+                                            <td class="">
+                                                <div class="" >
+                                                    <input type="date" 
+                                                        class="form-control datetimepicker rounded-1" 
+                                                        placeholder="End Date dd/mm/yyyy"
+                                                        ng-model="item.create_date">
+                                                    @* <div id="valid-nodeworksheet-estimated-end-{{ws.seq}}"
+                                                        class="invalid-feedback text-danger">
+                                                        Please provide a valid Estimated End Date.
+                                                    </div> *@
+                                                </div>
+                                            </td>
+
+                                            <td class="">
+                                                <div class="">
+                                                    
+                                                </div>
+                                            </td>
+
+                                            <td class="">
+                                                <div class="">
+                                                    
+                                                </div>
+                                            </td>
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
                     @* Report start *@
                     <div class="" ng-class="{
                         'tab-pane fade show active':(action_part==9),

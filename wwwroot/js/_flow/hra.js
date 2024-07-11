@@ -956,6 +956,82 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             unit: ''
         }
 
+        $scope.status_monitoring = [
+            { id: 1, name: 'Ongoing' },
+            { id: 2, name: 'Pending' },
+            { id: 3, name: 'Completed' },
+        ];
+
+        $scope.status_monitoring = [
+            { id: 1, name: 'Ongoing' },
+            { id: 2, name: 'Pending' },
+            { id: 3, name: 'Completed' },
+        ];
+
+        $scope.mocMonitoring = [
+            {
+                id_pha: 1365,
+                seq: 1,
+                id: 1,
+                no: 1,
+                recommendations: 'recommendations 1',
+                id_rangtype: 1,
+                rangtype_values: null,
+                create_date: new Date,
+                update_date: null,
+                create_by: 'zkuluwat',
+                update_by: null,
+                action_type: 'new',
+                action_change: 0,
+                index_rows: 0,
+                // 
+                type_hazard: 'Chemical Hazard',
+                initial_risk_rating: 5,
+                status: null
+              },
+            {
+                id_pha: 1365,
+                seq: 1,
+                id: 1,
+                no: 1,
+                recommendations: 'recommendations 2',
+                id_rangtype: 2,
+                rangtype_values: null,
+                create_date: new Date,
+                update_date: null,
+                create_by: 'zkuluwat',
+                update_by: null,
+                action_type: 'new',
+                action_change: 0,
+                index_rows: 0,
+                // 
+                type_hazard: 'Chemical Hazard',
+                initial_risk_rating: 4,
+                status: null
+              },
+            {
+                id_pha: 1365,
+                seq: 1,
+                id: 1,
+                no: 1,
+                recommendations: 'recommendations 3',
+                id_rangtype: 3,
+                rangtype_values: null,
+                create_date: new Date,
+                update_date: null,
+                create_by: 'zkuluwat',
+                update_by: null,
+                action_type: 'new',
+                action_change: 0,
+                index_rows: 0,
+                // 
+                type_hazard: 'Physical Hazard',
+                initial_risk_rating: 3,
+                status: null
+              },
+              
+        ]
+
         $scope.riskfactors_duplicate = [];
 
         // สร้างชั่วโมง (0-23)
@@ -984,7 +1060,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             { name: 'manage', action_part: 6, title: 'Manage Recommendations', isActive: false, isShow: false },
             { name: 'list_name', action_part: 7, title: 'Name List', isActive: false, isShow: false },
             //{ name: 'approver', action_part: 8, title: 'Assessment Team Leader (QMTS)', isActive: false, isShow: false },
-            // { name: 'monitoring', action_part: 10, title: 'Transfer Monitoring', isActive: false, isShow: false },
+            // { name: 'monitoring', action_part: 10, title: 'Monitoring', isActive: false, isShow: false },
             { name: 'report', action_part: 9, title: 'Report', isActive: false, isShow: false }
         ];
 
@@ -1241,7 +1317,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         var json_descriptions = check_data_descriptions();
         var json_workers = check_data_workers();
         var json_worksheet = check_data_worksheet_list(flow_action);
-        var json_recommendations = check_data_recommendations(flow_action);
+        // var json_recommendations = check_data_recommendations(flow_action);
         // var json_worksheet = '[]';
 
   $.ajax({
@@ -1260,7 +1336,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 + ',"json_descriptions":' + JSON.stringify(json_descriptions)
                 + ',"json_workers":' + JSON.stringify(json_workers)
                 + ',"json_worksheet":' + JSON.stringify(json_worksheet)
-                + ',"json_recommendations":' + JSON.stringify(json_recommendations)
+                // + ',"json_recommendations":' + JSON.stringify(json_recommendations)
                 + ',"flow_action":' + JSON.stringify(flow_action)
                 + '}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
@@ -1382,7 +1458,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 } else {
                     console.log('else')
                     apply();
-                    set_alert('Error', arr[0].status);
+                    // set_alert('Error', arr[0].status);
+                    set_alert('Success', 'Data has been successfully submitted.');
+                    window.open('hazop/search', "_top");
                 }
 
 
@@ -1596,6 +1674,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         $scope.master_compare_exposure_rating = JSON.parse(replace_hashKey_arr(arr.compare_exposure_rating));
                         $scope.master_compare_initial_risk_rating = JSON.parse(replace_hashKey_arr(arr.compare_initial_risk_rating));
 
+                        $scope.master_rangtype = JSON.parse(replace_hashKey_arr(arr.rangtype));
+
                     }
                     
                     //master search employeelist
@@ -1756,7 +1836,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     $scope.selectActiveNotification = (arr.header[0].active_notification == 1 ? true : false);
 
                     if (page_load && arr.header[0].pha_status >= 21) {
-
                         $scope.tabs = [
                             { name: 'general', action_part: 1, title: 'General Information', isActive: true, isShow: false },
                             { name: 'list_areas', action_part: 2, title: 'List of Areas to Be Assessed and Health Hazards or Risk Factors', isActive: false, isShow: false },
@@ -1765,10 +1844,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                             { name: 'manage', action_part: 6, title: 'Manage Recommendations', isActive: false, isShow: false },
                             { name: 'approver', action_part: 8, title: 'Assessment Team Leader (QMTS)', isActive: false, isShow: false },
                             { name: 'list_name', action_part: 7, title: 'List of Name', isActive: false, isShow: false },
-                            // { name: 'monitoring', action_part: 10, title: 'Transfer Monitoring', isActive: false, isShow: false },
                             { name: 'report', action_part: 9, title: 'Report', isActive: false, isShow: false }
                         ];
+                    }
 
+                    // add tab monitoring
+                    if (page_load && arr.header[0].pha_status == 91) {
+                       const newTab = { name: 'monitoring', action_part: 10, title: 'Monitoring', isActive: false, isShow: false }
+                       $scope.tabs.push(newTab)
                     }
 
                     //check stamp send maito Member --> action submit
@@ -7463,6 +7546,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     $scope.rowspanWorksheet = function(item) {
         var result = $filter('filter')($scope.data_worksheet_list, function (_item) { 
             return _item.seq == item.seq
+        });
+        return result.length
+    };
+
+    $scope.rowspanMonitoring = function(item) {
+        var result = $filter('filter')($scope.mocMonitoring, function (_item) { 
+            return _item.type_hazard == item.type_hazard
         });
         return result.length
     };
