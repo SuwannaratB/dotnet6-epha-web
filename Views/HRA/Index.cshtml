@@ -1651,7 +1651,7 @@
                                                             }}
                                                         </div>
                                                     </td>
-
+                                                    @* 3.4 *@
                                                     <td class="td-custom ">
                                                         <div class="d-flex flex-col box" 
                                                             ng-repeat="ws in item.worksheet" 
@@ -1667,7 +1667,7 @@
                                                         }}
                                                         </div>
                                                     </td>
-
+                                                    @* 3.4 *@
                                                     <td class="td-custom " >
                                                         <div class="d-flex flex-col box" 
                                                             ng-repeat="hazard in item.worksheet"
@@ -1675,7 +1675,7 @@
                                                            {{ hazard.health_hazard ? hazard.health_hazard  : 'Not found'}}
                                                         </div>
                                                     </td>
-
+                                                    @* 3.5 *@
                                                     <td class="td-custom " >
                                                         <div class="d-flex justify-content-center box" 
                                                             ng-repeat="hazard in item.worksheet"
@@ -1692,7 +1692,7 @@
                                                             </div>
                                                         </div>
                                                     </td>
-
+                                                    @* 3.6 *@
                                                     <td class="td-custom " >
                                                         <div class=" box" 
                                                             ng-repeat="hazard in item.worksheet"
@@ -1712,7 +1712,7 @@
                                                             </select>
                                                         </div>
                                                     </td>
-
+                                                    @* 3.7 *@
                                                     <td class="td-custom " >
                                                        <div class=" box"  
                                                             ng-repeat="hazard in item.worksheet"
@@ -1733,7 +1733,7 @@
                                                             </div>
                                                        </div>
                                                     </td>
-
+                                                    @* 3.8 *@
                                                     <td class="td-custom " >
                                                         <div class="d-flex flex-col box" 
                                                             style="min-width: max-content; padding-top: 15px;"
@@ -1742,7 +1742,7 @@
                                                            {{ hazard.standard_value }} {{  hazard.standard_value ? 'ppm' : '' }}
                                                         </div>
                                                     </td>
-
+                                                    @* 3.9 *@
                                                     <td class="td-custom " >
                                                        <div class="box text-center" 
                                                             style="min-width: max-content; padding-top: 15px; text-align: center;"
@@ -1754,7 +1754,7 @@
                                                             </p>
                                                         </div>
                                                     </td>
-
+                                                    @* 3.10 *@
                                                     <td class="td-custom ">
                                                         <div class="box text-center" 
                                                             style="min-width: max-content; padding-top: 15px; text-align: center;"
@@ -1763,7 +1763,7 @@
                                                             {{ ws.exposure_rating }}
                                                         </div>
                                                     </td>
-
+                                                    @* 3.11 *@
                                                     <td class="td-custom " >
                                                         <div class="box" 
                                                             style="min-width: max-content; padding-top: 10px; text-align: center;"
@@ -1804,7 +1804,7 @@
                                                             </select>
                                                         </div>
                                                     </td>
-
+                                                    @* 3.12 *@
                                                     <td class="td-custom " >
                                                         <div class="box" 
                                                             ng-repeat="hazard in item.worksheet"
@@ -1826,7 +1826,7 @@
                                                             </textarea>
                                                         </div>
                                                     </td>
-
+                                                    @* 3.13 *@
                                                     <td class="td-custom">
                                                         <div class="box" 
                                                             ng-repeat="(idx,hazard) in item.worksheet"
@@ -1864,7 +1864,7 @@
                                                             </div>
                                                         </div>
                                                     </td>
-
+                                                    @* 3.14 *@
                                                     <td class="td-custom" >
                                                         <div class="box" 
                                                             ng-repeat="hazard in item.worksheet"
@@ -1891,24 +1891,64 @@
                                                             </select>
                                                         </div>
                                                     </td>
-
+                                                    @* 3.15 *@
                                                     <td class="td-custom" >
-                                                        <div class="box" 
-                                                        ng-repeat="hazard in item.worksheet"
-                                                         ng-class="{
+                                                        <div class="box d-flex flex-column gap-2" 
+                                                            ng-repeat="ws in item.worksheet"
+                                                            ng-class="{
                                                             'disabled-link': 
                                                                 isDisableStatus && 
                                                                 !isApproveReject &&
                                                                 !isEditWorksheet,
-                                                            'unbox': (item.worksheet[item.worksheet.length - 1].seq == hazard.seq)}">
-                                                            <textarea class="form-control form-control-sm " 
+                                                            'unbox': (item.worksheet[item.worksheet.length - 1].seq == ws.seq)}">
+                                                            @* <textarea class="form-control form-control-sm " 
                                                                 rows="2" 
                                                                 type="text"
                                                                 style="width: 200px; height: 100%; font-size: 10.24px;"
                                                                 placeholder="Comments"
                                                                 ng-change="actionChangeComment(hazard)"
                                                                 ng-model="hazard.recommendations">
-                                                            </textarea>
+                                                            </textarea> *@
+                                                            <div class="d-flex gap-2" ng-repeat="recom in ws.recommendations">
+                                                                <div class="d-flex align-items-center font-sans-serif btn-reveal-trigger position-static"
+                                                                    style="max-height: 34px;">
+                                                                    <div class="font-sans-serif btn-reveal-trigger position-static" 
+                                                                        ng-class="">
+                                                                        <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 p-1" 
+                                                                            ng-class="{'disabled-link': isDisableStatus}"
+                                                                            type="button" 
+                                                                            data-bs-toggle="dropdown" 
+                                                                            data-boundary="window" 
+                                                                            aria-haspopup="true" 
+                                                                            aria-expanded="false" 
+                                                                            data-bs-reference="parent">
+                                                                            <span class="fas fa-cog text-info"></span>
+                                                                        </button>
+                                                                        <div class="dropdown-menu dropdown-menu-end py-2">
+                                                                            <a class="dropdown-item text-success" 
+                                                                                style="cursor: pointer;"
+                                                                                ng-click="addComments(ws, $index)">
+                                                                                <span class="fas fa-copy"></span>
+                                                                                Add {{$index}}
+                                                                            </a>
+                                                                            <div class="dropdown-divider"></div>
+                                                                            <a class="dropdown-item text-danger" 
+                                                                                style="cursor: pointer;"
+                                                                                ng-click="removeComments(ws, recom)">
+                                                                                <span class="fas fa-times-circle"></span> 
+                                                                                Remove 
+                                                                            </a>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <input class="form-control rounded-1" 
+                                                                    ng-class="{'disabled-link': isDisableStatus}" 
+                                                                    style="width: 200px; max-height: 28px; font-size: 10.24px;"
+                                                                    type="text" 
+                                                                    placeholder="Comments"
+                                                                    ng-model="recom.recommendations"
+                                                                    ng-change="actionChangeComment(recom)" >
+                                                            </div>
                                                         </div>
                                                     </td>
                                                 </tr>
