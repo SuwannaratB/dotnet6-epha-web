@@ -2231,7 +2231,7 @@
                                         <tbody class="">
                                             <tr class="rowwork border border-dashed"
                                                 ng-if="( data_tasklist.length == 1 ? (data_tasklist[0].list == null ? false : true) : true) "
-                                                ng-repeat="item in data_listworksheet | toArray | filter:{id_list : selectedItemListView} | orderBy:'index_row'">
+                                                ng-repeat="item in data_listworksheet | toArray | filter:{id_list : selectedItemListView}">
                                                 @* List system*@
                                                 <td class="align-top border border-light border-end-0  border-start-0  border-top-0 " style="padding: 0 !important;">
                                                     <div class="d-flex align-items-top w-100" ng-if="item.row_type =='list_system'">
@@ -2252,7 +2252,7 @@
                                                                 </button>
                                                                 <div class="dropdown-menu dropdown-menu-end py-2 align-top">
                                                                     <a class="dropdown-item text-success"
-                                                                       ng-click="adddata_listworksheet_lv1('list_system',item,$index)">
+                                                                       ng-click="adddata_listworksheet('list_system',item,$index)">
                                                                         <span class="fas fa-copy"></span>
                                                                         Add
                                                                     </a>
@@ -2320,7 +2320,7 @@
                                                                 </button>
                                                                 <div class="dropdown-menu dropdown-menu-end py-2 align-top">
                                                                     <a class="dropdown-item text-success"
-                                                                       ng-click="adddata_listworksheet_lv1('list_sub_system',item,$index)">
+                                                                       ng-click="adddata_listworksheet('list_sub_system',item,$index)">
                                                                         <span class="fas fa-copy"></span>
                                                                         Add
                                                                     </a>
@@ -2379,7 +2379,7 @@
                                                                 </button>
                                                                 <div class="dropdown-menu dropdown-menu-end py-2 align-top">
                                                                     <a class="dropdown-item text-success"
-                                                                       ng-click="adddata_listworksheet_lv1('causes',item,$index)">
+                                                                       ng-click="adddata_listworksheet('causes',item,$index)">
                                                                         <span class="fas fa-copy"></span>
                                                                         Add
                                                                     </a>
@@ -2437,7 +2437,7 @@
                                                                 </button>
                                                                 <div class="dropdown-menu dropdown-menu-end py-2 align-top">
                                                                     <a class="dropdown-item text-success"
-                                                                       ng-click="adddata_listworksheet_lv1('consequences',item,$index)">
+                                                                       ng-click="adddata_listworksheet('consequences',item,$index)">
                                                                         <span class="fas fa-copy"></span>
                                                                         Add
                                                                     </a>
@@ -2499,7 +2499,7 @@
                                                                 </button>
                                                                 <div class="dropdown-menu dropdown-menu-end py-2 align-top">
                                                                     <a class="dropdown-item text-success"
-                                                                       ng-click="adddata_listworksheet_lv1('category',item)">
+                                                                       ng-click="adddata_listworksheet('category',item)">
                                                                         <span class="fas fa-copy"></span>
                                                                         Add
                                                                     </a>
