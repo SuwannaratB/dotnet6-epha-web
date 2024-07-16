@@ -2948,6 +2948,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         var shouldShowModal = false;
                         for (var i = 0; i < $scope.data_memberteam.length; i++) {
                             var member = $scope.data_memberteam[i];
+
                             if ((member.id_session === seq && member.user_displayname !== null)) {
                                 shouldShowModal = true;
                                 break; 
@@ -2963,7 +2964,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                             }                        
                         }
     
-                        if (shouldShowModal || data.meeting_date !== null ) {
+                        if (shouldShowModal ) {
                             $('#removeModal').modal('show');
                         } else {
                             $scope.removeDataSession($scope.seqToRemove, $scope.indexToRemove);
@@ -6117,12 +6118,16 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     $scope.master_toc_list.some(toc => toc.id === item.id_plant_area)
                 );
 
-                setMocTile('apu');
+                
 
                 console.log("update ap",$scope.data_general)
                 console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",)
                 $scope.master_unit_no_list = angular.copy(master);
 
+            }
+
+            if(type_text == "section"){
+                setMocTile('section');
             }
             if (type_text == "sub_area") {
                 var arrText = $filter('filter')($scope.master_subarea_location, function (item) {
@@ -6211,6 +6216,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
 
             action_type_changed(_arr, _seq);
+            updateDataSessionAccessInfo()
+
 
             apply();
         }
@@ -6800,6 +6807,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
             apply();
 
+            if(xformtype == 'member' || xformtype == 'approver' || xformtype == 'specialist'){
+                updateDataSessionAccessInfo('session');
+            }
+
 
             if (xformtype == "manage" || xformtype == "approver_ta3" || xformtype == "edit_approver") {
                 $('#modalEmployeeAdd').modal('hide');
@@ -7064,12 +7075,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         if(!type) return console.log('type not found!')
         
         var general = $scope.data_general[0]
-        if (type == 'apu') {
-            var result_apu = $filter('filter')($scope.master_apu, function (item) {
-                return (item.id == general.id_apu);
+
+        console.log("general",general)
+        if (type == 'section') {
+            var result_section = $filter('filter')($scope.data_sections, function (item) {
+                return (item.id == general.id_sections);
             })[0];
 
-            $scope.mocTitle['apu'] = result_apu.name
+            $scope.mocTitle['section'] = result_section.name
         }
 
         if(type == 'unit_no'){
@@ -7079,14 +7092,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             if(!result_unitno) {
                 $scope.mocTitle['unit'] = ''
-                general.pha_request_name = $scope.mocTitle['default'] + '-' + $scope.mocTitle['apu'] + '-' + $scope.mocTitle['unit']
+                general.pha_request_name = $scope.mocTitle['default'] + ' ' + $scope.mocTitle['section'] + ' at' + $scope.mocTitle['unit']
                 return
             }
 
             $scope.mocTitle['unit'] = result_unitno.name
         }
 
-        general.pha_request_name = $scope.mocTitle['default'] + '-' + $scope.mocTitle['apu'] + '-' + $scope.mocTitle['unit']
+        general.pha_request_name = $scope.mocTitle['default'] + ' ' + $scope.mocTitle['section'] + ' at' + $scope.mocTitle['unit']
         general.action_change = 1;
         console.log('general ',general)
     }
@@ -7762,6 +7775,68 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         angular.element(event.currentTarget).find('input').trigger('click');
     };
 
+    function updateDataSessionAccessInfo(type) {
+
+        console.log("will update data")
+        if(type == 'session'){
+        console.log("will update data session",type)
+
+            $scope.data_session.forEach((item, index) => {
+                $scope.getAccessInfo(item, index,type);
+            });
+        }else{
+            console.log("will update data for data_drawing")
+            
+            $scope.data_drawing.forEach((item, index) => {
+                $scope.getAccessInfo(item, index,'drawing');
+            });
+        }
+
+    }
+
+    $scope.accessInfoMap = {};
+
+    $scope.getAccessInfo = function(item, index, type) {
+        let accessInfo = {
+            canRemove: false,
+            canCopy: false,
+        };
+    
+        if(type == 'session'){
+            let approverData = $scope.data_approver.filter(data => data.id_session === item.id);
+            let memberTeamData = $scope.data_memberteam.filter(data => data.id_session === item.id);
+            
+            if (index === 0 && 
+                (approverData.length === 0 || approverData[0].user_name == null) &&
+                (memberTeamData.length === 0 || memberTeamData[0].user_name == null)) {
+                accessInfo.canRemove = false;
+            } else {
+                accessInfo.canRemove = true;
+            }
+    
+            if ((approverData.length > 0 && approverData[0].user_name != null) ||
+                (memberTeamData.length > 0 && memberTeamData[0].user_name != null)) {
+                accessInfo.canCopy = true;
+            } else {
+                accessInfo.canCopy = false;
+            }
+        } else if(type === 'drawing'){
+            console.log('drawing item:', item);
+    
+            if(index === 0) {
+                if (item.document_name !== null || item.document_no !== null || item.descriptions !== null ||
+                    item.document_file_name !== null || item.document_file_path !== null) {
+                    accessInfo.canRemove = true;
+                } else {
+                    accessInfo.canRemove = false;
+                }
+            } else {
+                accessInfo.canRemove = true;
+            }
+        }
+        
+        $scope.accessInfoMap[item.id] = accessInfo;
+    };
     
     $scope.Access_check = function(task) {
         // console.log("Checking access for task:", task);

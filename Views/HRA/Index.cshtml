@@ -230,7 +230,7 @@
                                             ng-class="{'disabled-link': isDisableStatus}"
                                             data-choices="data-choices"
                                             data-options='{"removeItemButton":true,"placeholder":true}'
-                                            @* ng-change="actionChange(item,item.seq,'')"  *@
+                                            ng-change="actionChange(item,item.seq,'section')"
                                             ng-model="item.id_sections">
                                             <option value="">Please select</option>
                                             <option ng-repeat="item2 in data_sections" 
@@ -366,7 +366,7 @@
                                     </div>
                                     <!-- Unit No -->
                                     @* Project Type  *@
-                                    <div class="col-md-2">
+                                    <div class="col-md-2 d-none">
                                         <label class="form-label ps-0" for="expense_type"><b class="text-danger"> * </b>Project Type</label>
                                         <label class="form-label ps-0" ng-if="select_history_tracking_record">
                                             <a class="form-label far fa-comment-alt text-warning cursor-pointer" 
@@ -570,7 +570,8 @@
                                                 </tr>
                                             </thead>
                                             <tbody class="" id="customer-rating-table-body">
-                                                <tr ng-repeat="item in data_session | orderBy:no" class="">
+                                                <tr ng-repeat="item in data_session | orderBy:no" class=""
+                                                    ng-init="getAccessInfo(item, $index,'session')">
 
                                                     <td class="align-top text-top" style="width: 30px;">
                                                         <h6 class="fw-semi-bold text-center pt-1">{{item.no}}</h6>
@@ -774,6 +775,7 @@
                                                                     <button class="btn btn-outline-secondary p-2" 
                                                                         ng-class="{'disabled-link': isDisableStatus}"
                                                                         style="color: #ff2828; background-color: #f1f2f4; border-color: #ff2828;"
+                                                                        ng-disabled="!accessInfoMap[item.id].canRemove"
                                                                         ng-click="triggerRemove(item,item.seq,$index,'session')">
                                                                         <span class="fa-regular fa-trash-can fa-lg"></span>
                                                                     </button>
@@ -782,6 +784,7 @@
                                                                 <span class="mx-1">
                                                                     <button class="btn btn-outline-secondary p-2" 
                                                                         ng-class="{'disabled-link': isDisableStatus}"
+                                                                        ng-disabled="!accessInfoMap[item.id].canCopy"  
                                                                         style="color: #2445fc; background-color: #f1f2f4; border-color: #2445fc;"
                                                                         ng-click=copyDataSession(item.seq,$index)>
                                                                         <span class="fas fa-copy fa-lg"></span>
@@ -845,7 +848,8 @@
                                             </thead>
                                             <tbody class="list" id="customer-rating-table-body ">
                                                 <tr class="hover-actions-trigger btn-reveal-trigger position-static "
-                                                    ng-repeat="item in data_drawing">
+                                                    ng-repeat="item in data_drawing"
+                                                    ng-init="getAccessInfo(item, $index,'drawing')">
 
                                                     <td class="align-middle text-center">
                                                         <div class="p-1 ">
@@ -939,6 +943,7 @@
                                                                         ng-class="{'disabled-link': isDisableStatus}"
                                                                         style="color: #ff2828; background-color: #f1f2f4; border-color: #ff2828;"
                                                                         ng-click="triggerRemove(item,item.seq,$index,'DrawingDoc')"
+                                                                        ng-disabled="!accessInfoMap[item.id].canRemove"   
                                                                         data-toggle="tooltip" 
                                                                         data-placement="top" 
                                                                         title="Remove">
@@ -4445,12 +4450,14 @@
                         </svg>
                     </button>
             </div>
-            <div class="modal-body">
-                Are you sure you want to remove this item?
+            <div class="modal-body text-center">
+                <p class="mt-3" style="color: grey; font-weight: bold;">
+                    'Are you sure you want to remove this item?'
+                </p>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal" ng-click="action_remove('yes')">Yes</button>
-                <button type="button" class="btn btn-primary" ng-click="action_remove('no')">Cancel</button>
+            <div class="modal-footer justify-content-end">
+                <button type="button" class="btn btn-danger" data-dismiss="modal" ng-click="action_remove('yes')">Yes, Delete</button>
+                <button type="button" class="btn btn-light" ng-click="action_remove('no')">No, Keep It</button>
             </div>
         </div>
     </div>

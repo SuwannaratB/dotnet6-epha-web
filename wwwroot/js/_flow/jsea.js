@@ -673,7 +673,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 $("#divLoading").hide(); 
              }
 
-             updateDataSessionAccessInfo('session');
+             updateDataSessionAccessInfo();
         } else {
             fileInfoSpan.textContent = "";
         }
@@ -5269,6 +5269,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
 
         action_type_changed(_arr, _seq);
+        updateDataSessionAccessInfo();
 
 
         if (type_text == "ChangeRAM") {
@@ -6460,17 +6461,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             let memberTeamData = $scope.data_memberteam.filter(data => data.id_session === item.id);
             let relatedPeopleData = $scope.data_relatedpeople.filter(data => data.id_session === item.id);
     
-
-            console.log("=========================================================")
-            console.log("index", index)
-            console.log("approverData.length", approverData.length)
-            console.log("approverData[0].user_name", approverData.length > 0 ? approverData[0].user_name : "N/A")
-            console.log("memberTeamData.length", memberTeamData.length)
-            console.log("memberTeamData[0].user_name", memberTeamData.length > 0 ? memberTeamData[0].user_name : "N/A")
-            console.log("relatedPeopleData.length", relatedPeopleData.length)
-            console.log("relatedPeopleData[0].user_name", relatedPeopleData.length > 0 ? relatedPeopleData[0].user_name : "N/A")
-            console.log("=========================================================")
-
             if (index === 0 && 
                 (approverData.length === 0 || approverData[0].user_name == null) &&
                 (memberTeamData.length === 0 || memberTeamData[0].user_name == null) &&

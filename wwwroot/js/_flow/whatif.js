@@ -6539,7 +6539,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     //start Update Action Type null to Update 
     $scope.actionChange = function (_arr, _seq, type_text) {
         action_type_changed(_arr, _seq);
-        updateDataSessionAccessInfo()
 
         var arr_submit = $filter('filter')($scope.data_tasklist, function (item) {
             return ((item.action_type !== '' || item.action_type !== null));
@@ -6566,6 +6565,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.selectedItemListView = _seq;
         }
 
+        updateDataSessionAccessInfo('session')
+
+        
         $scope.unsavedChanges = true;
         apply();
     }
@@ -7389,7 +7391,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
 
         if(xformtype == 'member' || xformtype == 'approver' || xformtype == 'specialist'){
-            updateDataSessionAccessInfo('session');
+            updateDataSessionAccessInfo();
         }
 
         //clear_valid_items($scope.recomment_clear_valid);
