@@ -1895,12 +1895,7 @@
                                                     <td class="td-custom" >
                                                         <div class="box d-flex flex-column gap-2" 
                                                             ng-repeat="ws in item.worksheet"
-                                                            ng-class="{
-                                                            'disabled-link': 
-                                                                isDisableStatus && 
-                                                                !isApproveReject &&
-                                                                !isEditWorksheet,
-                                                            'unbox': (item.worksheet[item.worksheet.length - 1].seq == ws.seq)}">
+                                                            ng-class="{'unbox': (item.worksheet[item.worksheet.length - 1].seq == ws.seq)}">
                                                             @* <textarea class="form-control form-control-sm " 
                                                                 rows="2" 
                                                                 type="text"
@@ -1909,7 +1904,9 @@
                                                                 ng-change="actionChangeComment(hazard)"
                                                                 ng-model="hazard.recommendations">
                                                             </textarea> *@
-                                                            <div class="d-flex gap-2" ng-repeat="recom in ws.recommendations">
+                                                            <div class="d-flex gap-2" 
+                                                                ng-class="{ 'disabled-link': isDisableStatus && !isApproveReject && !isEditWorksheet}"
+                                                                ng-repeat="recom in ws.recommendations">
                                                                 <div class="d-flex align-items-center font-sans-serif btn-reveal-trigger position-static"
                                                                     style="max-height: 34px;">
                                                                     <div class="font-sans-serif btn-reveal-trigger position-static" 
@@ -1960,7 +1957,7 @@
                         </div>
                     </div>
 
-                    @* <!-- manage recment start--> *@
+                    @* <!-- manage recomendations start--> *@
                     <div class="" ng-class="{
                         'tab-pane fade show active':(action_part==6),
                         'tab-pane fade show active':(tabs[4].isActive),
@@ -2126,15 +2123,25 @@
                                             </td>
 
                                             <td class="" >
-                                                <div class="box-recom " ng-repeat="ws in item.worksheet | filter: filterInitialRiskRating">
-                                                    <textarea class="form-control form-control-sm " 
+                                                <div class="box-recom d-flex flex-column gap-2" ng-repeat="ws in item.worksheet | filter: filterInitialRiskRating">
+                                                     <div class=""  ng-repeat="recom in ws.recommendations">
+                                                         <input class="form-control rounded-1" 
+                                                            ng-class="{'disabled-link': isDisableStatus}"
+                                                            disabled 
+                                                            style="width: 200px; max-height: 28px; font-size: 10.24px;"
+                                                            type="text" 
+                                                            placeholder="Comments"
+                                                            ng-model="recom.recommendations"
+                                                            ng-change="actionChangeComment(recom)" >
+                                                     </div>
+                                                    @* <textarea class="form-control form-control-sm " 
                                                         ng-class="{'disabled-link': isDisableStatus}"
                                                         rows="2" 
                                                         type="text"
                                                         style="width: 200px; height: 100%; font-size: 10.24px;"
                                                         placeholder="Comments"
                                                         ng-model="ws.recommendations">
-                                                    </textarea>
+                                                    </textarea> *@
                                                 </div>
                                             </td>                                            
 
@@ -2382,7 +2389,7 @@
                                             </tr>
                                         </thead>
                                         <tbody class="list" id="customer-rating-table-body">
-                                            <tr ng-repeat="item in data_approver | orderBy:['no']" 
+                                            <tr ng-repeat="item in data_approver | filter: filterLastSession" 
                                                 ng-init="canAccess = Access_check(item)"
                                                 ng-style="{ 'background-color': canAccess ? '' : '#f9fbff' }"
                                                 ng-class="{ 'task-highlight':  canAccess}"                                                
