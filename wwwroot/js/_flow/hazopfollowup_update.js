@@ -270,6 +270,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
     }
 
     $scope.toggleChanged = function() {
+        $scope.toggleStatus = !$scope.toggleStatus
         if ($scope.toggleStatus) {
             var list =  $filter('filter')($scope.data_details_old, function (item) { 
                 return (item.responder_user_name == $scope.user_name); 
@@ -626,6 +627,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                     $scope.master_no = [{ id: 4, name: 4 }, { id: 5, name: 5 }, { id: 6, name: 6 }, { id: 7, name: 7 }, { id: 8, name: 8 }, { id: 9, name: 9 }, { id: 10, name: 10 }];
                     $scope.ram_rows_level = 5;
                     $scope.ram_columns_level = 5;
+
                     
                 }   
                 
@@ -634,6 +636,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                 $scope.DetailsShow = '' + arr.pha_doc[0].pha_no + ' (' + arr.pha_doc[0].pha_request_name + ')';
                 $scope.DetailsShow2 = '' + arr.pha_doc[0].pha_status_desc;
                 $scope.document_module = (arr.pha_doc[0].pha_status == 13 ? 'followup' : 'review_followup');
+                
+                $scope.toggleChanged();
+
                 apply();
             },
             error: function (jqXHR, textStatus, errorThrown) {
@@ -1397,18 +1402,38 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
         $('#modalExportReviewerFile').modal('show');
     }
 
-    $scope.openModalTempletes = function (data_type) {
+
+    $scope.openModalTempletes = function(data_type, actions,seq_worksheet) {
         var user_name = $scope.data_details[0].responder_user_name;
         var seq = $scope.data_details[0].id_pha;
         var sub_software = $scope.data_details[0].pha_sub_software;
+    
+        var url = '';
+        var data = '';
 
-        $.ajax({
-            url: url_ws + "Flow/export_recommendation_by_action_owner",
-            data: '{"sub_software":"' + sub_software + 
+        console.log("seq_worksheet",seq_worksheet)
+    
+        // Determine the URL and data string based on the action type
+        if (actions === 'owner') {
+            url = url_ws + "Flow/export_recommendation_by_action_owner";
+            data = '{"sub_software":"' + sub_software + 
                     '","user_name":"' + user_name + 
                     '","seq":"' + seq + 
                     '","export_type":"' + data_type + 
-                    '"}',
+                    '"}'
+        } else if (actions === 'item') {
+            url = url_ws + "Flow/export_recommendation_by_item";
+            data = '{"sub_software":"' + sub_software + 
+                    '","user_name":"' + user_name + 
+                    '","seq":"' + seq + 
+                    '","export_type":"' + data_type +
+                    '","seq_worksheet":"' + seq_worksheet + 
+                    '"}'
+        }
+
+        $.ajax({
+            url: url,
+            data: data,
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
             beforeSend: function () {
                 $('#modalExportFile').modal('hide');
@@ -1443,13 +1468,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
 
         });
     }
-
-    //toggle to show own or all 
-    $scope.showOwnTasks = false;
-
-    $scope.toggleTasksView = function() {
-        $scope.showOwnTasks = !$scope.showOwnTasks;
-    };
 
     //access each role
     $scope.Access_check = function(task) {
