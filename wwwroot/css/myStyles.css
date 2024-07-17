@@ -660,5 +660,43 @@ ul.nav li a.btn-nav-menu.btn-outline-primary:hover {
   border-bottom-left-radius: 10px;
 }
 
+/* dropdown filter risk */
+.filter-risk {
+  position: relative;
+}
+
+.filter-risk-container {
+  position: absolute;
+  right: -37px;
+  top: 20px;
+  background: #dedede;
+  padding: 6px;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  font-size: 10.24px;
+  color: black;
+  font-weight: 600;
+  box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 2px, 
+              rgba(0, 0, 0, 0.07) 0px 2px 4px, 
+              rgba(0, 0, 0, 0.07) 0px 4px 8px, 
+              rgba(0, 0, 0, 0.07) 0px 8px 16px, 
+              rgba(0, 0, 0, 0.07) 0px 16px 32px, 
+              rgba(0, 0, 0, 0.07) 0px 32px 64px;
+}
+
+.filter-risk-list {
+  min-width: 100%;
+  width: max-content;
+  padding: 6px 12px;
+  border-radius: 4px;
+}
+
+.filter-risk-list:hover {
+  background: #0e8dff;
+  color: #fff;
+}
 
 
