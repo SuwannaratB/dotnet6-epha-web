@@ -1026,26 +1026,17 @@
                                 <div class="table-responsive scrollbar mb-3" id="table-container" style="max-height: 62vh;">
                                     <table class="table fs--2 mb-0 table-bordered">
                                         <thead class=" text-capitalize  text-center bg-soft">
-                                            <tr>
-                                                <th class="sort align-middle text-center px-0" style="width: 5%;">
+                                            <thead class="text-center bg-soft">
+                                                <tr>
+                                                    <th class="sort align-middle text-center px-0" style="width: 5%;"></th>
+                                                    <th class="sort align-middle text-start px-1" style="width: 20%;">Name of Sub Area</th>
+                                                    <th class="sort align-middle px-0" style="width: 25%;">Type of Hazard</th>
+                                                    <th class="sort align-middle px-0" style="width: 25%;">Health Hazards or Risk Factor</th>
+                                                    <th class="sort align-middle px-0" style="width: 10%;">Health Effect Rating</th>
+                                                    <th class="sort align-middle px-0" style="width: 15%;">Action</th>
+                                                </tr>
+                                            </thead>
 
-                                                </th>
-                                                <th class="sort align-middle text-start px-1" style="width: 20%;">
-                                                    NAME OF SUB AREA
-                                                </th>
-                                                <th class="sort align-middle px-0" style="width: 25%;">
-                                                    TYPE OF HAZARD
-                                                </th>
-                                                <th class="sort align-middle px-0" style="width: 25%;">
-                                                    HEALTH HAZARDS OR RISK FACTOR
-                                                </th>
-                                                <th class="sort align-middle px-0" style="width: 10%;">
-                                                    HEALTH EFFECT RATING
-                                                </th>
-                                                <th class="sort align-middle px-0" style="width: 15%;">
-                                                    ACTION
-                                                </th>
-                                            </tr>
                                         </thead>
                                         <tbody class="list">
                                             <tr class="hover-actions-trigger btn-reveal-trigger position-static p-0"
@@ -1347,27 +1338,28 @@
                                 </div>
                                 <div class="table-responsive scrollbar" style="max-height: 62vh;" id="table-container">
                                     <table class="table fs--2 mb-0 table-bordered">
-                                        <thead class=" text-uppercase  text-center bg-soft">
+                                        <thead class="text-uppercase text-center bg-soft">
                                             <tr>
                                                 <th class="sort align-middle" colspan="2" rowspan="1" style="width: 40%;">
-                                                    NAME OF WORKER GROUP
+                                                    Name of Worker Group
                                                 </th>
                                                 <th class="sort align-middle text-center" colspan="1" rowspan="2" style="width: 5%;">
-                                                    NUMBERS OF WORKERS
+                                                    Numbers of Workers
                                                 </th>
                                                 <th class="sort align-middle text-center" colspan="1" rowspan="2" style="width: 30%;">
-                                                    DESCRIPTION OF WORK OR TASK
+                                                    Description of Work or Task
                                                 </th>
                                                 <th class="sort align-middle text-center" colspan="1" rowspan="2" style="width: 15%;">
-                                                    ACTION
+                                                    Action
                                                 </th>
                                             </tr>
                                             <tr>
-                                                <th class=" align-middle text-start" style="width: 20%;">AREA</th>
-                                                <th class=" align-middle text-start" style="width: 20%;">WORKER GROUP</th>
-                                                @* <th class=" align-middle text-start">EMPLOYEES /STAFF MEMBERS</th> *@
+                                                <th class="align-middle text-start" style="width: 20%;">Area</th>
+                                                <th class="align-middle text-start" style="width: 20%;">Worker Group</th>
+                                                <!-- Uncomment if needed: <th class="align-middle text-start">Employees / Staff Members</th> -->
                                             </tr>
                                         </thead>
+
                                         <tbody class="list" id="customer-rating-table-body">
                                             <tr class="hover-actions-trigger btn-reveal-trigger position-static" 
                                                 ng-repeat="(index, item) in data_tasks" 
@@ -1602,7 +1594,7 @@
                                                     <th class=" align-top" >Health Effect Rating</th>
                                                     <th class=" align-top" >Frequency Level</th>
                                                     <th class=" align-top" >Exposure Band</th>
-                                                    <th class=" align-top" >TLV std</th>
+                                                    <th class=" align-top" >standard</th>
                                                     <th class=" align-top" >
                                                         Exposure<br/>Level = [3.7] <br/>vs [3.8]
                                                     </th>
@@ -1983,32 +1975,31 @@
                                 <table class="table fs--2 mb-0 table-bordered">
                                     <thead class="text-capitalize text-center bg-soft">
                                         <tr>
-                                            <th class=" align-middle" colspan="1" rowspan="2">JOB TYPE/CHANGE TYPE</th>
-                                            <th class=" align-middle" colspan="1" rowspan="2">TASK OR ACTIVITY</th>
-                                            <th class=" align-middle" colspan="1" rowspan="2">SUB AREA</th>
-                                            <th class=" align-middle" colspan="2" rowspan="1">Exposure Indicator</th>
-                                            <th class=" align-middle" colspan="1" rowspan="2">HEALTH EFFECT RATING</th>
-                                            <th class=" align-middle text-center" colspan="2" rowspan="1">
-                                                <b class="text-danger"> * </b>RISK RATING
+                                            <th class="align-middle" colspan="1" rowspan="2">Job Type/Change Type</th>
+                                            <th class="align-middle" colspan="1" rowspan="2">Task Or Activity</th>
+                                            <th class="align-middle" colspan="1" rowspan="2">Sub Area</th>
+                                            <th class="align-middle" colspan="2" rowspan="1">Exposure Indicator</th>
+                                            <th class="align-middle" colspan="1" rowspan="2">Health Effect Rating</th>
+                                            <th class="align-middle text-center" colspan="2" rowspan="1">
+                                                <b class="text-danger"> * </b>Risk Rating
                                             </th>
-                                            @* <th class=" align-middle" colspan="1" rowspan="2" ng-if="isDisableStatus">Document File</th> *@
-                                            <th class=" align-middle text-center" colspan="1" rowspan="2">Recommendation</th>
-                                            <th class=" align-middle text-center" colspan="1" rowspan="2">Action Owner</th>
-                                            <th class=" align-middle text-center" colspan="1" rowspan="2">Action<br />Status<br />(Items)</th>
-                                            <th class=" align-middle text-center" colspan="2" rowspan="1">
+                                            @* <th class="align-middle" colspan="1" rowspan="2" ng-if="isDisableStatus">Document File</th> *@
+                                            <th class="align-middle text-center" colspan="1" rowspan="2">Recommendation</th>
+                                            <th class="align-middle text-center" colspan="1" rowspan="2">Action Owner</th>
+                                            <th class="align-middle text-center" colspan="1" rowspan="2">Action<br />Status<br />(Items)</th>
+                                            <th class="align-middle text-center" colspan="2" rowspan="1">
                                                 <b class="text-danger"> * </b>Recommendations Close Plan
                                             </th>
-                                            <th class=" align-middle" colspan="1" rowspan="2">Action Close Date</th>
+                                            <th class="align-middle" colspan="1" rowspan="2">Action Close Date</th>
                                         </tr>
                                         <tr>
-                                            <th class=" align-middle" scope="col" >TYPE OF HAZARD</th>
-                                            <th class=" align-middle" scope="col" >HEALTH HAZARDS OR RISK FACTOR</th>
-                                            <th class=" align-middle" scope="col" >INITIAL RISK RATING</th>
-                                            <th class=" align-middle" scope="col" >RESIDUAL RISK RATING</th>
-                                            <th class=" align-middle" scope="col" >Start Date</th>
-                                            <th class=" align-middle" scope="col" >End Date</th>
+                                            <th class="align-middle" scope="col">Type Of Hazard</th>
+                                            <th class="align-middle" scope="col">Health Hazards Or Risk Factor</th>
+                                            <th class="align-middle" scope="col">Initial Risk Rating</th>
+                                            <th class="align-middle" scope="col">Residual Risk Rating</th>
+                                            <th class="align-middle" scope="col">Start Date</th>
+                                            <th class="align-middle" scope="col">End Date</th>
                                         </tr>
-
                                     </thead>
 
                                     <tbody class="list" id="customer-rating-table-body">
