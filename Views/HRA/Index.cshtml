@@ -182,6 +182,16 @@
                             <div class="card border-0">
                                 @* rows 1 *@
                                 <div class="mx-1 row g-3 align-items-center" ng-repeat="item in data_general ">
+
+                                    <h5>
+                                        Health risk assessment: 
+                                        <span class="fw-normal" ng-if="item.id_section || item.id_unit_no">
+                                            {{item.id_sections}} 
+                                            <span ng-if="item.id_sections">at</span> 
+                                            {{mocTitle['unit']}}
+                                        </span>
+                                    </h5>
+
                                     <!-- company -->
                                     <div class="col-md-2 ">
                                         <label class="form-label ps-0" for="expense_type">
@@ -398,7 +408,7 @@
                                     @* Reference Number  *@
                                     <div class="col-md-3 ">
                                         <div class="row g-0 align-items-center">
-                                            <div class="col-12 p-1">
+                                            <div class="col-12 p-1 d-none">
                                                 <label class="form-label ps-0" for="unit">{{(item.expense_type=='MOC'? 'e-MOC Reference Number' : 'MOC Reference Number')}} </label>
                                                 <label class="form-label ps-0" ng-if="select_history_tracking_record">
                                                     <a class="form-label far fa-comment-alt text-warning cursor-pointer" 
@@ -1015,7 +1025,7 @@
                                 <!------ NAME OF SUB AREA :------>
                                 <div class="table-responsive scrollbar mb-3" id="table-container" style="max-height: 62vh;">
                                     <table class="table fs--2 mb-0 table-bordered">
-                                        <thead class=" text-uppercase  text-center bg-soft">
+                                        <thead class=" text-capitalize  text-center bg-soft">
                                             <tr>
                                                 <th class="sort align-middle text-center px-0" style="width: 5%;">
 
@@ -1564,7 +1574,7 @@
                                 <div class="table-responsive scrollbar tableFixHead" style="min-height:400px;">
                                     <div class="table-responsive scrollbar" id="table-container" style="max-height: 60vh;">
                                         <table class="table fs--2 mb-0 table-bordered">
-                                            <thead class=" text-uppercase  text-center bg-soft" style="font-size: 10px;">
+                                            <thead class=" text-capitalize  text-center bg-soft" style="font-size: 10px;">
                                                 <tr>
                                                     <th class=" align-top" >[3.0]</th>
                                                     <th class=" align-top" >[3.1]</th>
@@ -1971,7 +1981,7 @@
                         <div class=" border-bottom border-200 my-0" id="NodeTable">
                             <div class="table-responsive scrollbar">
                                 <table class="table fs--2 mb-0 table-bordered">
-                                    <thead class=" text-uppercase text-center bg-soft">
+                                    <thead class="text-capitalize text-center bg-soft">
                                         <tr>
                                             <th class=" align-middle" colspan="1" rowspan="2">JOB TYPE/CHANGE TYPE</th>
                                             <th class=" align-middle" colspan="1" rowspan="2">TASK OR ACTIVITY</th>
@@ -2382,7 +2392,7 @@
                             <div class=" border-bottom border-200 my-0" id="ApproverTable">
                                 <div class="table-responsive scrollbar">
                                     <table class="table fs--2 mb-0">
-                                        <thead class=" text-uppercase text-center">
+                                        <thead class="text-capitalize text-center">
                                             <tr>
                                                 <th class=" align-middle">No</th>
                                                 <th class=" align-middle">Approver</th>
@@ -2626,7 +2636,7 @@
                         <div class=" border-bottom border-200 my-0" id="NodeTable">
                             <div class="table-responsive scrollbar">
                                 <table class="table fs--2 mb-0 table-bordered">
-                                    <thead class=" text-uppercase text-center bg-soft">
+                                    <thead class=" text-capitalize text-center bg-soft">
                                         <tr>
                                             <th class=" align-middle" scope="col" >TYPE OF HAZARD</th>
                                             <th class=" align-middle" scope="col" >INITIAL RISK RATING</th>
@@ -3179,21 +3189,6 @@
                                         ng-click="removeDataEmployee(item2.seq, selectdata_session)">
                                     <span class="fa-regular fa-trash-can fa-lg"></span>
                                 </button> 
-                                @*<div class="form-check mb-0 ms-2 text-1100 fw-bold d-flex align-contents-center gap-2" ng-if="selectDatFormType == 'approver'">
-                                    <input class="form-check-input disabled-link rounded-2 cursor-pointer"
-                                        style="width: 24px; height:24px;"
-                                        type="checkbox"
-                                        ng-if="item2.approver_type === 'section_head'"
-                                        ng-checked="item2.isSectionHead"
-                                        ng-click="actionChangeQMTS(item2, item2.seq)">
-                                    <input class="form-check-input rounded-2 cursor-pointer"
-                                        type="checkbox"
-                                        style="width: 24px; height:24px;"
-                                        ng-if="item2.approver_type !== 'section_head'"
-                                        ng-checked="!item2.isSectionHead"
-                                        ng-click="actionChangeQMTSUnCheck(item2, item2.seq)">
-                                    <label class="form-check-label m-auto fw-bold" for="approver_section_head">(Verified)</label>
-                                </div>*@
                                 <div class="form-check mb-0 ms-2 text-1100 fw-bold d-flex align-contents-center" ng-if="selectDatFormType == 'approver'">
                                     <input class="form-check-input disabled-link rounded-2 cursor-pointer" 
                                         style="width: 24px; height:24px;"
@@ -3224,32 +3219,10 @@
                                         data-toggle="tooltip" 
                                         data-placement="top" 
                                         title="Remove"
-                                        ng-click="removeDataEmployee(item2, selectdata_session)"
-                                        ng-if="item2.id_tasks">
+                                        ng-click="removeDataEmployee(item2, selectdata_session)">
                                     <span class="fa-regular fa-trash-can fa-lg"></span>
                                 </button> 
-                                <div ng-if="!item2.id_tasks" style=" width: 25px; height:25px;"></div>
-                                <div class="form-check mb-0 ms-2 text-1100 fw-bold d-flex align-contents-center gap-2" ng-if="selectDatFormType == 'approver'">
-                                    @*<input class="form-check-input rounded-2 cursor-pointer" 
-                                        type="checkbox" 
-                                        style="width: 24px; height:24px;"
-                                        ng-model="item2.verified"
-                                        ng-checked="item2.verified"
-                                        ng-click="actionVerified(item2)">
-                                    <label class="form-check-label m-auto fw-bold" for="">(Verrified)</label>*@
-                                    <input class="form-check-input disabled-link rounded-2 cursor-pointer" 
-                                        style="width: 24px; height:24px;"
-                                        type="checkbox" 
-                                        ng-if="item2.approver_type =='section_head'" 
-                                        checked 
-                                        ng-click="actionChangeQMTS(item2, item2.seq)">
-                                    <input class="form-check-input rounded-2 cursor-pointer" 
-                                        type="checkbox" 
-                                        style="width: 24px; height:24px;"
-                                        ng-if="!(item2.approver_type =='section_head')" 
-                                        ng-click="actionChangeQMTSUnCheck(item2, item2.seq)">
-                                    <label class="form-check-label m-auto fw-bold" for="approver_section_head">(Verrified)</label>                                    
-                                </div>                           
+                                <div ng-if="!item2.id_tasks" style=" width: 25px; height:25px;"></div>                    
                                 <label class="mb-0 ms-3 text-1100 fw-bold" style="width: 30%; border-color: #f1f2f4;">
                                     {{ item2.user_displayname }}
                                 </label>

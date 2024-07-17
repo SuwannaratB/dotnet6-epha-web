@@ -1066,8 +1066,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         $scope.tabs = [
             { name: 'general', action_part: 1, title: 'General Information', isActive: true, isShow: false },
-            { name: 'areas', action_part: 2, title: 'Health Hazards', isActive: false, isShow: false },
-            { name: 'worker', action_part: 3, title: 'Worker Groups', isActive: false, isShow: false },
+            { name: 'areas', action_part: 2, title: 'Identify Health Hazards', isActive: false, isShow: false },
+            { name: 'worker', action_part: 3, title: 'Worker Groups & Tasks', isActive: false, isShow: false },
             //{ name: 'ram', action_part: 4, title: 'RAM', isActive: false, isShow: false },
             { name: 'worksheet', action_part: 5, title: $scope.sub_software + ' Worksheet', isActive: false, isShow: false },
             { name: 'manage', action_part: 6, title: 'Manage Recommendations', isActive: false, isShow: false },
@@ -2027,6 +2027,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 }
 
                 setDeafaultEffective();
+                setDefaultMocTIltle();
 
                 $scope.unsavedChanges = false;
 
@@ -6623,8 +6624,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             var seq_session = $scope.selectdata_session;
             var xformtype = $scope.selectDatFormType;
 
-            console.log("item",item)
-
             if (xformtype == "member") {
 
                 var arr_items = $filter('filter')($scope.data_memberteam, function (item) {
@@ -6707,34 +6706,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             }
             else if (xformtype == "worker") {
-                // var arr_items = $filter('filter')($scope.data_workers, function (item) {
-                //     return (item.id_session == seq_session && item.user_name == employee_name);
-                // });
-
-                // if (arr_items.length == 0) {
-                //     var seq = $scope.MaxSeqdataWorkers;
-                //     var newInput = clone_arr_newrow($scope.data_workers_def)[0];
-                //     newInput.seq = seq;
-                //     newInput.id = seq;
-                //     newInput.no = (0);
-                //     newInput.id_session = Number(seq_session);
-                //     newInput.action_type = 'insert';
-                //     newInput.action_change = 1;
-
-                //     newInput.user_name = employee_name;
-                //     newInput.user_displayname = employee_displayname;
-                //     newInput.user_title = employee_position;
-                //     newInput.user_img = employee_img;
-
-                //     $scope.data_workers.push(newInput);
-                //     running_no_level1($scope.data_workers, null, null);
-
-                //     $scope.MaxSeqdataWorkers = Number($scope.MaxSeqdataWorkers + 1);
-                // }
 
                 var tasks = $filter('filter')($scope.data_tasks, function (item) {
                     return (item.seq == seq_session);
                 })[0];
+
+                console.log("tasks",tasks)
 
                 if (tasks) {
                     $scope.MaxSeqdataWorkers = Number($scope.MaxSeqdataWorkers) + 1
@@ -6849,9 +6826,19 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 $scope.removeDataApprover(seq, seq_session)
             }
 
-            if (actions == 'worker') {
-                
+            if (actions == 'worker') {                    
+                const index = $scope.data_worker_list.findIndex(item => item.id === seq.id && item.user_name === seq.user_name);
+            
+                if (index !== -1) {
+                    $scope.data_worker_list.splice(index, 1);
+                    console.log("Item removed:", seq);
+                } else {
+                    console.log("Item not found:", seq);
+                }
+            
+                console.log($scope.data_worker_list);
             }
+            
 
             if (actions == 'manage') {
                 var data =  $scope.selectedData;
@@ -6866,9 +6853,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 data.responder_user_id = null
                 data.action_change = 1;
                 console.log(data)
-            }
-
-    ;
+            };
             apply();
     };
 
@@ -7102,6 +7087,27 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         general.pha_request_name = $scope.mocTitle['default'] + ' ' + $scope.mocTitle['section'] + ' at' + $scope.mocTitle['unit']
         general.action_change = 1;
         console.log('general ',general)
+    }
+
+    function setDefaultMocTIltle(){
+        var general = $scope.data_general[0]
+
+        console.log("==========================================",general)
+
+        if (general.id_sections) {
+            var result_section = general.id_sections;
+
+            $scope.mocTitle['section'] = result_section.name
+        }
+
+        if(general.id_unit_no){
+            var result_unitno = $filter('filter')($scope.master_unit_no_list, function (item) {
+                return (item.id == general.id_unit_no);
+            })[0];
+
+            $scope.mocTitle['unit'] = result_unitno.name
+        }
+
     }
 
     $scope.actionChangeTabArea = function (type, subArea, hazard) {
