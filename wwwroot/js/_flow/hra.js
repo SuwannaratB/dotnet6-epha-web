@@ -1047,6 +1047,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
               
         ]
 
+        $scope.data_summary = []
+        $scope.sum_initial_risk = 0;
+        $scope.sum_residual_risk = 0;
+
         $scope.riskfactors_duplicate = [];
 
         // สร้างชั่วโมง (0-23)
@@ -1076,7 +1080,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             { name: 'list_name', action_part: 7, title: 'Name List', isActive: false, isShow: false },
             //{ name: 'approver', action_part: 8, title: 'Assessment Team Leader (QMTS)', isActive: false, isShow: false },
             // { name: 'monitoring', action_part: 10, title: 'Monitoring', isActive: false, isShow: false },
-            { name: 'report', action_part: 9, title: 'Report', isActive: false, isShow: false }
+            { name: 'report', action_part: 9, title: 'Report', isActive: false, isShow: false },
+            { name: 'summary', action_part: 11, title: 'Summary of Risk Management', isActive: false, isShow: false }
         ];
 
     }
@@ -1815,6 +1820,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         $scope.data_recomment_setting = setup_recommen_setting(arr.recommendations, arr.recom_setting)
                     }
 
+                    // Summary of Risk Management
+                    $scope.data_summary = setup_summary( $scope.data_worksheet_list);
+
                     set_format_date_time();  //set format date
 
                     try {
@@ -1872,7 +1880,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                             { name: 'manage', action_part: 6, title: 'Manage Recommendations', isActive: false, isShow: false },
                             { name: 'approver', action_part: 8, title: 'Assessment Team Leader (QMTS)', isActive: false, isShow: false },
                             { name: 'list_name', action_part: 7, title: 'List of Name', isActive: false, isShow: false },
-                            { name: 'report', action_part: 9, title: 'Report', isActive: false, isShow: false }
+                            { name: 'report', action_part: 9, title: 'Report', isActive: false, isShow: false },
+                            { name: 'summary', action_part: 11, title: 'Summary of Risk Management', isActive: false, isShow: false }
                         ];
                     }
 
@@ -2024,16 +2033,19 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     $scope.startTimer();  
                 }
 
-                // add tab 
-                if (arr.header[0].pha_status == 11) {
-                    $scope.tabs[0].isActive = true;
-                }
-
-                if (page_load && arr.header[0].pha_status == 91) {
-                    const newTab = { name: 'monitoring', action_part: 10, title: 'Monitoring', isActive: false, isShow: false }
-                    $scope.tabs.push(newTab)
-                    // set tab
-                    $scope.changeTab(newTab)   
+                // add Tabs 
+                if (true) {
+                    if (arr.header[0].pha_status == 11) {
+                        $scope.tabs[0].isActive = true;
+                    }
+    
+                    if (page_load && arr.header[0].pha_status == 91) {
+                        const newTab = { name: 'monitoring', action_part: 10, title: 'Monitoring', isActive: false, isShow: false }
+                        $scope.tabs.push(newTab)
+                        // set tab
+                        $scope.changeTab(newTab)   
+                    }
+                    // { name: 'summary', action_part: 11, title: 'Summary of Risk Management', isActive: false, isShow: false }
                 }
 
                 setDeafaultEffective();
@@ -2121,6 +2133,45 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         //     item.initial_risk_rating === 'Very High\r\n' ||
         //     item.hierarchy_of_control != null;
     };
+
+    function setup_summary(data_worksheet){
+        console.log('setup_summary waitting...')
+        var data = [
+            { name: "Acceptable", initial_risk_rating: 0, residual_risk_rating: 0, name_check: "Acceptable Risk", name_check2: "Acceptable Risk\r\n" },
+            { name: "Low", initial_risk_rating: 0, residual_risk_rating: 0, name_check: "Low", name_check2: "Low\r\n" },
+            { name: "Medium", initial_risk_rating: 0, residual_risk_rating: 0, name_check: "Meduim", name_check2: "Meduim\r\n" },
+            { name: "High", initial_risk_rating: 0, residual_risk_rating: 0, name_check: "High", name_check2: "High\r\n" },
+            { name: "Very High", initial_risk_rating: 0, residual_risk_rating: 0, name_check: "Very High", name_check2: "Very High\r\n" }
+        ]        
+
+        var all = []
+
+        for (let i = 0; i < data_worksheet.length; i++) {
+            for (let j = 0; j < data_worksheet[i].worksheet.length; j++) {
+                all.push(data_worksheet[i].worksheet[j]);   
+            }
+        }
+
+        if(all.length == 0) return all
+
+        $scope.sum_initial_risk = 0;
+        $scope.sum_residual_risk = 0;
+
+        all.forEach(function(item) {
+            data.forEach(function(summary) {
+                if (item.initial_risk_rating === summary.name_check || item.initial_risk_rating === summary.name_check2) {
+                    summary.initial_risk_rating++;
+                    $scope.sum_initial_risk ++;
+                }
+                if (item.residual_risk_rating === summary.name_check || item.initial_risk_rating === summary.name_check2) {
+                    summary.residual_risk_rating++;
+                    $scope.sum_residual_risk ++;
+                }
+            });
+        });console.log('data ',data)
+
+        return data
+    }
 
     function setup_recommen_setting(recommendations, recommentSetting){
         // ฟังก์ชั่นเพื่อเรียงลำดับข้อมูล recommendations ตาม no
@@ -6399,9 +6450,17 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             processExposureRating(item)
         }
 
+        $scope.actionChangeResidualRiskRating = function (item) {
+            item.action_change = 1
+            // tab summary
+            $scope.data_summary = setup_summary($scope.data_worksheet_list);
+        }
+
         $scope.actionChangeInitialRiskRating = function (item) {
             item.action_change = 1
             $scope.isChangeInitialRisk = true;
+            // tab summary
+            $scope.data_summary = setup_summary($scope.data_worksheet_list);
         }
 
     }
@@ -7619,6 +7678,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         
         hazard.initial_risk_rating = compare.results;
         hazard.action_change = 1;
+
+        // tab summary
+        $scope.data_summary = setup_summary($scope.data_worksheet_list);
+
         console.log('data_worksheet_list',$scope.data_worksheet_list)
     }
 

@@ -1904,7 +1904,7 @@
                                                                     !isApproveReject && 
                                                                     !isEditWorksheet}"
                                                                 @* ng-change="actionChangeWorksheet(item,item.seq,'frequency_level')" *@
-                                                                ng-change="actionChangeFrequencyLevel(hazard)"
+                                                                ng-change="actionChangeResidualRiskRating(hazard)"
                                                                 ng-model="hazard.residual_risk_rating" 
                                                                 style="min-width: 100px; font-size: 10.24px;"
                                                                 ng-disabled="
@@ -2107,7 +2107,7 @@
 
                                             <td class="align-top rating white-space-nowrap text-start">
                                                 <div class="box-recom " 
-                                                    style="min-width: max-content; padding-top: 7px; text-align: center;"
+                                                    style="min-width: 100px; padding-top: 7px; text-align: center;"
                                                     ng-repeat="ws in item.worksheet | filter: filterInitialRiskRating">
                                                     <div class="card-initial"
                                                         ng-if="ws.initial_risk_rating"
@@ -2125,7 +2125,7 @@
                                                     <select class="form-select form-select-sm rounded-1" 
                                                         ng-if="tab_worksheet_active && ws.action_status == 'Open'"
                                                         ng-class="{'disabled-link': isDisableStatus}"
-                                                        ng-change="actionChangeFrequencyLevel(ws)"
+                                                        ng-change="actionChangeResidualRiskRating(ws)"
                                                         ng-model="ws.residual_risk_rating" 
                                                         style="min-width: 100px; font-size: 10.24px;">
                                                         <option ng-repeat="item_m in data_residual_risk" ng-value="item_m.id">
@@ -2642,7 +2642,7 @@
                         </div>
                     </div> 
 
-                    @* <!-- Monitoring start--> *@
+                    @* Monitoring *@
                     <div class="" ng-class="{
                         'tab-pane fade show active':(action_part==10),
                         'tab-pane fade':(action_part!==10)}"
@@ -2847,6 +2847,66 @@
 
                         </div>
 
+                    </div>
+
+                    @* Summary of Risk Management *@
+                    <div class="" ng-class="{
+                        'tab-pane fade show active':(action_part==11),
+                        'tab-pane fade':(action_part!==11)}"
+                         id="tab-manage" role="tabpanel" aria-labelledby="manage-tab">
+                        <div class=" border-bottom border-200 my-0" id="NodeTable">
+                            <div class="table-responsive scrollbar">
+                                <table class="table fs--2 mb-0 table-bordered">
+                                    <thead class="text-center bg-soft">
+                                        <tr>
+                                            <th class=" align-middle" colspan="2" style="width: 50%;" scope="col" >
+                                                Initial risk ({{sum_initial_risk}}) items
+                                            </th>
+                                            <th class=" align-middle" colspan="2" style="width: 50%;" scope="col" >
+                                                Residual risk ({{sum_residual_risk}}) items
+                                            </th>
+                                        </tr>
+                                        <tr>
+                                            <th class=" align-middle" style="width: 25%;" scope="col" >Name</th>
+                                            <th class=" align-middle" style="width: 25%;" scope="col" >Quantity</th>
+                                            <th class=" align-middle" style="width: 25%;" scope="col" >Name</th>
+                                            <th class=" align-middle" style="width: 25%;" scope="col" >Quantity</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody class="list" id="customer-rating-table-body">
+                                        <tr class="hover-actions-trigger btn-reveal-trigger position-static text-center"
+                                            ng-repeat="item in data_summary">
+
+                                            <td class="align-middle">
+                                                <div class="">
+                                                    {{item.name}}
+                                                </div>
+                                            </td>
+
+                                            <td class="align-middle">
+                                                <div class="">
+                                                    {{item.initial_risk_rating}}
+                                                </div>
+                                            </td>
+
+                                            <td class="align-middle" >
+                                                <div class="">
+                                                    {{item.name}}
+                                                </div>
+                                            </td>
+
+                                            <td class="align-middle">
+                                                <div class="">
+                                                    {{item.residual_risk_rating}}
+                                                </div>
+                                            </td>
+  
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
 
                 </div>
