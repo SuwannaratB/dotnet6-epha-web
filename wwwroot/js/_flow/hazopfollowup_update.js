@@ -1001,6 +1001,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                         $scope.Action_Msg_Header = 'Success';
                         $scope.Action_Msg_Detail = 'Data has been successfully submitted.';
                     }
+
                     apply();
 
                     if (true) {
@@ -1144,7 +1145,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                             $('#modalMsg').modal('show');
                         }
                     }
-
+                    page_load()
                 }
 
 

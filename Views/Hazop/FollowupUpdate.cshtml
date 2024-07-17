@@ -980,6 +980,7 @@
                                                                         </div>
                                                                         <button class="Upload-button btn ps-3" 
                                                                                 ng-hide="!canAccess"
+                                                                                style="width:240px;"
                                                                                 ng-style="{ 'background-color': canAccess ? '' : '#f5f7fa' }"
                                                                                 ng-class="{ 'no-drop': !canAccess, 'cursor-pointer': canAccess }" 
                                                                                 ng-if="!item_x.document_file_size">
@@ -999,7 +1000,7 @@
                                                                                 ng-click="setSeqUpload(item_d.seq)"
                                                                                 style="display:none" />
                                                                         </button>
-                                                                        <button class="Upload-button btn cursor-pointer" style="width:250px;" 
+                                                                        <button class="Upload-button btn cursor-pointer" style="width:240px;" 
                                                                             ng-hide="!canAccess"
                                                                             ng-if="item_x.document_file_size > 0">
                                                                             <div class="d-flex align-items-center" >
@@ -1046,7 +1047,7 @@
                                                              ng-repeat="item_x in data_drawingworksheet | filter:{id_worksheet:item_d.seq, action_type : '!delete'}">
                                                             <div class="d-flex flex-nowrap"
                                                                  ng-if="!((flow_status == 14 ? item_d.reviewer_action_type : item_d.responder_action_type) == 2)">
-                                                                <div class="font-sans-serif btn-reveal-trigger position-static me-1">
+                                                                <div class="d-flex align-items-center font-sans-serif btn-reveal-trigger position-static me-1">
                                                                     <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 p-1"
                                                                             type="button" data-bs-toggle="dropdown" data-boundary="window"
                                                                             aria-haspopup="true" aria-expanded="false" data-bs-reference="parent">
@@ -1073,9 +1074,10 @@
                                                                             <span class="fa-solid fa-arrow-up-from-bracket fa-lg" style="color: #ffffff;"></span>
                                                                         </div>
                                                                         <button class="Upload-button btn ps-3" 
-                                                                                ng-style="{ 'background-color': canAccess ? '' : '#f5f7fa' }"
-                                                                                ng-class="{ 'no-drop': !canAccess, 'cursor-pointer': canAccess }" 
-                                                                                ng-if="!item_x.document_file_size">
+                                                                            style="width:240px;"
+                                                                            ng-style="{ 'background-color': canAccess ? '' : '#f5f7fa' }"
+                                                                            ng-class="{ 'no-drop': !canAccess, 'cursor-pointer': canAccess }" 
+                                                                            ng-if="!item_x.document_file_size">
                                                                             <span class="nametext ms-3 filename-text me-2 d-none" id="filename-approver-{{item_x.seq}}">
                                                                                 {{(item_x.document_file_size>0? item_x.document_file_name + '('+  item_x.document_file_size + 'KB)' : '')}}
                                                                             </span>
@@ -1093,7 +1095,7 @@
                                                                                 style="display:none" />
 
                                                                         </button>
-                                                                        <button class="Upload-button btn cursor-pointer" style="width:250px;" ng-if="item_x.document_file_size > 0">
+                                                                        <button class="Upload-button btn cursor-pointer" style="width:240px;" ng-if="item_x.document_file_size > 0">
                                                                             <div class="d-flex align-items-center">
                                                                                 <span class="nametext filename-text me-2 cursor-pointer">
                                                                                     {{ item_x.document_file_name }} ({{ item_x.document_file_size }} KB)
@@ -1106,7 +1108,8 @@
 
                                                             <div class="text-start p-0 cursor-pointer d-flex flex-nowrap">
                                                                 <div ng-repeat="reviewer in data_drawingworksheet_reviewer">
-                                                                    <a class="nametext ms-3 filename-text me-2" ng-if="flow_status == 14 && item_x.document_file_size > 0 
+                                                                    <a class="nametext ms-3 filename-text me-2" 
+                                                                        ng-if="flow_status == 14 && item_x.document_file_size > 0 
                                                                         && item_d.id === reviewer.id_worksheet  && reviewer.seq === item_x.id" ng-click="downloadFile(item_x)">
                                                                         <i class="far fa-file-pdf text-danger"></i> 
                                                                         {{ item_x.document_file_name }} ({{ item_x.document_file_size }}KB)

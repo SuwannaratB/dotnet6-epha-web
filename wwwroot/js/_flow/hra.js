@@ -943,6 +943,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             text: ''
         }
 
+        $scope.isInitialRisk = false;
+
         $scope.data_initial_risk = [
             { id: 'Acceptable Risk', name: 'Acceptable Risk' },
             { id: 'Low', name: 'Low' },
@@ -1267,6 +1269,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         var arr = $filter('filter')($scope.data_all.max, function (item) { return (item.name == 'recommendations'); });
         var iMaxSeq = 1; if (arr.length > 0) { iMaxSeq = arr[0].values; }
         $scope.MaxSeqdataRecommendations = iMaxSeq;
+
+        var arr = $filter('filter')($scope.data_all.max, function (item) { return (item.name == 'recom_setting'); });
+        var iMaxSeq = 1; if (arr.length > 0) { iMaxSeq = arr[0].values; }
+        $scope.MaxSeqdataRecommenSetting = iMaxSeq;
 
         $scope.MaxSeqdata_relatedpeople_outsider = 0;
         var arr_check = $filter('filter')($scope.data_all.max, function (item) { return (item.name == 'relatedpeople_outsider'); });
@@ -1645,7 +1651,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 var action_part_befor = $scope.action_part;
                 var tabs_befor = (page_load == false ? $scope.tabs : null);
                 var arr = data;
-
+                console.log('arr ', arr)
                 $scope.backup = angular.copy(data);
 
                 // set isDisableStatus PHA STATUS > 12 (waitting follow up)
@@ -1702,6 +1708,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                     //general
                     if (true) {
+                        $scope.data_header = arr.header;
+
                         $scope.data_general = arr.general;
 
                         if(!$scope.data_general[0].pha_request_name) 
@@ -1791,6 +1799,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         $scope.data_worksheet_old = (arr.worksheet);
                         $scope.data_worksheet_list = setup_worksheet($scope.data_subareas_list, $scope.data_tasks, arr.worksheet);
                         $scope.data_worksheet_list = setup_recommendations($scope.data_worksheet_list, $scope.data_recommendations);
+
+                        $scope.data_worksheet_list_def = $scope.data_worksheet_list
                     }
 
                     //Approver
@@ -1798,6 +1808,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         $scope.data_drawing_approver = arr.drawing_approver;
                         $scope.data_drawing_approver_def = clone_arr_newrow(arr.drawing_approver);
                         $scope.data_drawing_approver_old = (arr.drawing_approver);
+                    }
+
+                    // Monitoring
+                    if ($scope.data_header[0].approve_action_type == 2) {
+                        $scope.data_recomment_setting = setup_recommen_setting(arr.recommendations, arr.recom_setting)
                     }
 
                     set_format_date_time();  //set format date
@@ -1873,12 +1888,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         }
                         arr.header[0].flow_mail_to_member = (arr.header[0].flow_mail_to_member == null ? 0 : arr.header[0].flow_mail_to_member);
                     }
-
-                    //set data_header
-                    $scope.data_header = JSON.parse(replace_hashKey_arr(arr.header));
-
                 }
-
 
                 //ตรวจสอบเพิ่มเติม workflow
                 if (true) {
@@ -2065,16 +2075,23 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     $scope.filterInitialRiskRatingMain = function(item) {
         for (let i = 0; i < item.worksheet.length; i++) {
-            let element = item.worksheet[i];
-            if (element.initial_risk_rating === 'Meduim' || 
-                element.initial_risk_rating === 'Meduim\r\n' || 
-                element.initial_risk_rating === 'High' ||
-                element.initial_risk_rating === 'High\r\n' ||
-                element.initial_risk_rating === 'Very High' ||
-                element.initial_risk_rating === 'Very High\r\n'
-            ) {
-                return true;
+            // let element = item.worksheet[i];
+            for (let j = 0; j < item.worksheet[i].recommendations.length; j++) {
+                let element = item.worksheet[i].recommendations[j];
+                if (element.recommendations) {
+                    return true;
+                } 
             }
+            // if (element.initial_risk_rating === 'Meduim' || 
+            //     element.initial_risk_rating === 'Meduim\r\n' || 
+            //     element.initial_risk_rating === 'High' ||
+            //     element.initial_risk_rating === 'High\r\n' ||
+            //     element.initial_risk_rating === 'Very High' ||
+            //     element.initial_risk_rating === 'Very High\r\n' ||
+            //     element.hierarchy_of_control != null
+            // ) {
+            //     return true;
+            // }
         }
         return false;
     };
@@ -2088,13 +2105,45 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
     
     $scope.filterInitialRiskRating = function(item) { 
-        return item.initial_risk_rating === 'Meduim' || 
-            item.initial_risk_rating === 'Meduim\r\n' || 
-            item.initial_risk_rating === 'High' ||
-            item.initial_risk_rating === 'High\r\n'||
-            item.initial_risk_rating === 'Very High' ||
-            item.initial_risk_rating === 'Very High\r\n';
+        for (let j = 0; j < item.recommendations.length; j++) {
+            let element = item.recommendations[j];
+            if (element.recommendations) {
+                return true;
+            } 
+        }
+
+        return false
+        // return item.initial_risk_rating === 'Meduim' || 
+        //     item.initial_risk_rating === 'Meduim\r\n' || 
+        //     item.initial_risk_rating === 'High' ||
+        //     item.initial_risk_rating === 'High\r\n'||
+        //     item.initial_risk_rating === 'Very High' ||
+        //     item.initial_risk_rating === 'Very High\r\n' ||
+        //     item.hierarchy_of_control != null;
     };
+
+    function setup_recommen_setting(recommendations, recommentSetting){
+        // ฟังก์ชั่นเพื่อเรียงลำดับข้อมูล recommendations ตาม no
+        recommendations.sort(function(a, b) {
+            return a.no - b.no;
+        });
+
+        for (let i = 0; i < recommentSetting.length; i++) {
+
+            $scope.MaxSeqdataRecommenSetting = Number($scope.MaxSeqdataRecommenSetting) + 1;
+            var xValues = $scope.MaxSeqdataRecommenSetting;
+
+            recommentSetting[i].id = xValues
+            recommentSetting[i].seq = xValues
+            recommentSetting[i].action_change = 1
+            recommentSetting[i].no = i + 1
+            recommentSetting[i].index_rows = i
+            recommentSetting[i].id_pha = recommendations[i].id_pha
+            recommentSetting[i].recommendations = recommendations[i].recommendations
+        }
+        console.log('recommentSetting => ',recommentSetting)
+        return recommentSetting
+    }
     
     function setup_worksheet(subArea_list, worker_list, resWorksheet) {
         if (worker_list.length > 0) {
@@ -2185,12 +2234,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             for (let i = 0; i < worksheet.length; i++) {
                 for (let j = 0; j < worksheet[i].worksheet.length; j++) {
                     $scope.addComments(worksheet[i].worksheet[j])
-                    // for (let k = 0; k < worksheet[i].worksheet[j].recommendations.length; k++) {
-                    //     worksheet[i].worksheet[j].recommendations[k].no = index + 1
-                    //     worksheet[i].worksheet[j].recommendations[k].index_rows = index
-                    //     worksheet[i].worksheet[j].recommendations[k].action_change = 1
-                    //     index++
-                    // }
                 }
             }
         } else {
@@ -3055,12 +3098,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             $scope.MaxSeqDataSession = Number($scope.MaxSeqDataSession) + 1;
             var xValues = $scope.MaxSeqDataSession;
-
             var id_session = xValues;
             var arr = $filter('filter')($scope.data_session, function (item) { return (item.seq == seq); });
             var iNo = 1; if (arr.length > 0) { iNo = arr[0].no; }
-            for (let i = 0; i < arr.length; i++) {
 
+            for (let i = 0; i < arr.length; i++) {
                 var newInput = clone_arr_newrow($scope.data_session_def)[0];
                 newInput.seq = Number(xValues);
                 newInput.id = Number(xValues);
@@ -3070,14 +3112,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 newInput.meeting_date = arr[i].meeting_date;
                 newInput.meeting_start_time = arr[i].meeting_start_time;
                 newInput.meeting_end_time = arr[i].meeting_end_time;
-
                 //meeting_start_time_hh,meeting_start_time_mm,meeting_end_time_hh,meeting_end_time_mm
                 newInput.meeting_start_time_hh = arr[i].meeting_start_time_hh;
                 newInput.meeting_start_time_mm = arr[i].meeting_start_time_mm;
                 newInput.meeting_end_time_hh = arr[i].meeting_end_time_hh;
                 newInput.meeting_end_time_mm = arr[i].meeting_end_time_mm;
-
-
                 newInput.action_new_row = 0;
 
             };
@@ -3114,6 +3153,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             console.log("$scope.data_approver",$scope.data_approver)
 
         }
+
         $scope.removeDataSession = function (seq, index) {
             var arrdelete = $filter('filter')($scope.data_session, function (item) {
                 return (item.seq == seq && item.action_type == 'update');
@@ -3130,7 +3170,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             //if delete row 1 clear to null
             if ($scope.data_session.length == 1 || $scope.data_session.no == 1) {
                 var keysToClear = ['user_name', 'user_displayname'];
-
 
                 keysToClear.forEach(function (key) {
                     $scope.data_session[0][key] = null;
@@ -6362,8 +6401,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         $scope.actionChangeInitialRiskRating = function (item) {
             item.action_change = 1
-            console.log(item)
-            console.log('------')
+            $scope.isChangeInitialRisk = true;
         }
 
     }
@@ -7734,7 +7772,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         return index + 1
     }
 
-    $scope.rowspanWorksheet = function(item) {
+    $scope.rowspanWorksheet = function(item, data_worksheet_list) {
         var result = $filter('filter')($scope.data_worksheet_list, function (_item) { 
             return _item.seq == item.seq
         });
@@ -7761,7 +7799,89 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         var maxSession = Math.max.apply(Math, $scope.data_approver.map(function(o) { return o.id_session; }));
         return item.id_session === maxSession;
     };
+
+    // deopdown filter initial risk
+    $scope.openFilterInitialRisk = function(event){
+        $scope.isInitialRisk = !$scope.isInitialRisk
+    }
+    $scope.selectFilterInitialRisk = function(item){
+        if(item == 'all') 
+            return $scope.isFilterInitialRisk = null;
+
+        return $scope.isFilterInitialRisk = item;
+        // filter
+        $scope.data_worksheet_list = $scope.data_worksheet_list_def;
+        console.log('All',$scope.data_worksheet_list)
+        console.log('All  def',$scope.data_worksheet_list_def)
+        if(item == 'all') return 
+
+        var worksheet_main = []
+        for (let i = 0; i < $scope.data_worksheet_list_def.length; i++) {
+
+            // var worksheet_list = []
+            $scope.data_worksheet_list_def[i].worksheet = $filter('filter')($scope.data_worksheet_list_def[i].worksheet, function (_item) { 
+                return _item.initial_risk_rating == item; 
+            });
+            // for (let j = 0; j < $scope.data_worksheet_list[i].worksheet.length; j++) {
+
+            //     if ($scope.data_worksheet_list[i].worksheet[j].initial_risk_rating == item) {
+            //         worksheet_list.push($scope.data_worksheet_list[i].worksheet[j])
+            //     } 
+            // }
+
+            // if (worksheet_list.length > 0) {
+            //     $scope.data_worksheet_list[i].worksheet = worksheet_list
+            //     worksheet_main.push($scope.data_worksheet_list[i])
+            // }
+            
+        }
+
+        $scope.data_worksheet_list = worksheet_main;
+        console.log('All worksheet_list',$scope.data_worksheet_list)
+        console.log('All worksheet_list def',$scope.data_worksheet_list_def)
+    }
+
+    $document.on('click', function() {
+        $scope.$apply(function() {
+            $scope.isInitialRisk = false;
+        });
+    });
+
+    angular.element(document.querySelector('.filter-risk')).on('click', function(event) {
+        event.stopPropagation();
+    });
+
+    $scope.filterInitialRiskRatingWorksheetMain = function(item){
+        if(!$scope.isFilterInitialRisk) return true
+
+        for (let i = 0; i < item.worksheet.length; i++) {
+            let element = item.worksheet[i];
+            if (element.initial_risk_rating === $scope.isFilterInitialRisk || 
+                element.initial_risk_rating === $scope.isFilterInitialRisk + '\r\n'
+            ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    $scope.filterInitialRiskRatingWorksheet = function(item){
+        if(!$scope.isFilterInitialRisk) return true
+
+        return item.initial_risk_rating === $scope.isFilterInitialRisk || 
+            item.initial_risk_rating === $scope.isFilterInitialRisk + '\r\n'
+    }
     
+    // $scope.filterInitialRiskRating = function(item) { 
+    //     return item.initial_risk_rating === 'Meduim' || 
+    //         item.initial_risk_rating === 'Meduim\r\n' || 
+    //         item.initial_risk_rating === 'High' ||
+    //         item.initial_risk_rating === 'High\r\n'||
+    //         item.initial_risk_rating === 'Very High' ||
+    //         item.initial_risk_rating === 'Very High\r\n' ||
+    //         item.hierarchy_of_control != null;
+    // };
     
     $scope.Matrix_Frequency_Rating = function () {
          
