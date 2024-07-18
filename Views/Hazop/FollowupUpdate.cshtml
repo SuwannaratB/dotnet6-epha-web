@@ -879,17 +879,16 @@
                                                     </td>
 
                                                     @*Initial risk*@
-                                                    <td class="align-middle text-center">
-                                                        <div class="d-flex align-items-center justify-content-center p-1 rounded-3" 
+                                                    <td class="align-middle">
+                                                        <div class="card-initial " 
                                                              style="width: 80px;"
                                                              ng-class="{
-                                                                'bg-danger': (item_d.initial_risk_rating == 'High' 
-                                                                    || item_d.initial_risk_rating == 'High\r\n' 
-                                                                    || item_d.initial_risk_rating == 'Very High' 
-                                                                    || item_d.initial_risk_rating == 'Very High\r\n'),
-                                                                'bg-warning': (item_d.initial_risk_rating == 'Meduim' 
-                                                                    || item_d.initial_risk_rating == 'Meduim\r\n')}">
-                                                            <div class="fw-semi-bold text-white">
+                                                                'risk-acceptable': (item_d.initial_risk_rating == 'Acceptable Risk' || item_d.initial_risk_rating == 'Acceptable Risk\r\n'),
+                                                                'risk-low': (item_d.initial_risk_rating == 'Low' || item_d.initial_risk_rating == 'Low\r\n'),
+                                                                'risk-medium': (item_d.initial_risk_rating == 'Meduim' || item_d.initial_risk_rating == 'Meduim\r\n'),
+                                                                'risk-high': (item_d.initial_risk_rating == 'High' || item_d.initial_risk_rating == 'High\r\n'),
+                                                                'risk-very-high': (item_d.initial_risk_rating == 'Very High' || item_d.initial_risk_rating == 'Very High\r\n')}">
+                                                            <div class="">
                                                                 {{item_d.initail_risk}}
                                                             </div>
                                                         </div>

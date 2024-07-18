@@ -1242,9 +1242,11 @@
                                                             <div class="effect-rating" 
                                                                 @* ng-class="{'mr-27': (item_list.count_riskfactors <= 1)}" *@
                                                                 ng-class="{
-                                                                    'bg-success': (item_list.health_effect_rating == '1' || item_list.health_effect_rating == '2'),
-                                                                    'bg-warning': (item_list.health_effect_rating == '3') 
-                                                                }"  
+                                                                    'risk-acceptable': (item_list.health_effect_rating == '1'),
+                                                                    'risk-low': (item_list.health_effect_rating == '2'),
+                                                                    'risk-medium': (item_list.health_effect_rating == '3'),
+                                                                    'risk-high': (item_list.health_effect_rating == '4'),
+                                                                    'risk-very-high': (item_list.health_effect_rating == '5')}"  
                                                                 ng-if="item_list.health_effect_rating"
                                                                 ng-click="openModalRisk(item_list, index)">
                                                                 {{item_list.health_effect_rating}}
@@ -1585,7 +1587,7 @@
                                                     <th class=" align-top cursor-pointer d-flex justify-content-center gap-2">
                                                         [3.11] 
                                                         <div class="filter-risk"  
-                                                        @* ng-click="openFilterInitialRisk($event)" *@
+                                                        ng-click="openFilterInitialRisk($event)"
                                                         >
                                                             <i class="fa-solid fa-filter text-primary" ></i>
                                                             <div class="filter-risk-container" ng-if="isInitialRisk">
@@ -1712,9 +1714,11 @@
                                                                 <div class="effect-rating "
                                                                     @* ng-click="openModalRisk(hazard, $index)" *@
                                                                     ng-class="{
-                                                                    'bg-success': (hazard.health_effect_rating == '1' || hazard.health_effect_rating == '2'),
-                                                                    'bg-warning': (hazard.health_effect_rating == '3') 
-                                                                    }" >
+                                                                    'risk-acceptable': (hazard.health_effect_rating == '1'),
+                                                                    'risk-low': (hazard.health_effect_rating == '2'),
+                                                                    'risk-medium': (hazard.health_effect_rating == '3'),
+                                                                    'risk-high': (hazard.health_effect_rating == '4'),
+                                                                    'risk-very-high': (hazard.health_effect_rating == '5')}" >
                                                                 {{ hazard.health_effect_rating }}
                                                             </div>
                                                             </div>
@@ -1802,27 +1806,23 @@
                                                                 ng-if="ws.initial_risk_rating && ws.standard_value "
                                                                 style="min-width: 100px;"
                                                                 ng-class="{
-                                                                    'bg-danger': (ws.initial_risk_rating == 'High' || ws.initial_risk_rating == 'High\r\n' 
-                                                                    || ws.initial_risk_rating == 'Very High' || ws.initial_risk_rating == 'Very High\r\n'),
-                                                                    'bg-warning': (ws.initial_risk_rating == 'Meduim' || ws.initial_risk_rating == 'Meduim\r\n') 
-                                                                    }" >
+                                                                   'risk-acceptable': (ws.initial_risk_rating == 'Acceptable Risk' || ws.initial_risk_rating == 'Acceptable Risk\r\n'),
+                                                                    'risk-low': (ws.initial_risk_rating == 'Low' || ws.initial_risk_rating == 'Low\r\n'),
+                                                                    'risk-medium': (ws.initial_risk_rating == 'Meduim' || ws.initial_risk_rating == 'Meduim\r\n'),
+                                                                    'risk-high': (ws.initial_risk_rating == 'High' || ws.initial_risk_rating == 'High\r\n'),
+                                                                    'risk-very-high': (ws.initial_risk_rating == 'Very High' || ws.initial_risk_rating == 'Very High\r\n')}" >
                                                                 {{ ws.initial_risk_rating }}
                                                             </div>
                                                             @* none standard_value*@
                                                             <select class="drop-initial form-select form-select-sm rounded-2" 
                                                                 ng-if="!ws.standard_value"
-                                                                ng-class="{'disabled-link': 
-                                                                        isDisableStatus && 
-                                                                        !isApproveReject && 
-                                                                        !isEditWorksheet}"
-                                                                ng-style="{'background': 
-                                                                    ws.initial_risk_rating == 'Low' || ws.initial_risk_rating == 'Acceptable Risk'
-                                                                        ? '#25b003' 
-                                                                        : ws.initial_risk_rating == 'Meduim' 
-                                                                            ? '#e5780b' 
-                                                                            : ws.initial_risk_rating == 'High' || ws.initial_risk_rating == 'Very High'
-                                                                                ? '#ed2000' 
-                                                                                : ''}"
+                                                                ng-class="{
+                                                                    'disabled-link': (isDisableStatus && !isApproveReject && !isEditWorksheet),
+                                                                    'risk-acceptable': (ws.initial_risk_rating == 'Acceptable Risk' || ws.initial_risk_rating == 'Acceptable Risk\r\n'),
+                                                                    'risk-low': (ws.initial_risk_rating == 'Low' || ws.initial_risk_rating == 'Low\r\n'),
+                                                                    'risk-medium': (ws.initial_risk_rating == 'Meduim' || ws.initial_risk_rating == 'Meduim\r\n'),
+                                                                    'risk-high': (ws.initial_risk_rating == 'High' || ws.initial_risk_rating == 'High\r\n'),
+                                                                    'risk-very-high': (ws.initial_risk_rating == 'Very High' || ws.initial_risk_rating == 'Very High\r\n')}"
                                                                 ng-change="actionChangeInitialRiskRating(ws)"
                                                                 ng-model="ws.initial_risk_rating" 
                                                                 style="min-width: 100px; font-size: 10.24px; text-align: center;">
@@ -2098,9 +2098,11 @@
                                                         <div class="effect-rating "
                                                             @* ng-click="openModalRisk(hazard, $index)" *@
                                                             ng-class="{
-                                                                    'bg-success': (ws.health_effect_rating == '1' || ws.health_effect_rating == '2'),
-                                                                    'bg-warning': (ws.health_effect_rating == '3') 
-                                                            }" >
+                                                                'risk-acceptable': (ws.health_effect_rating == '1' ),
+                                                                'risk-low': (ws.health_effect_rating == '2' ),
+                                                                'risk-medium': (ws.health_effect_rating == '3'),
+                                                                'risk-high': (ws.health_effect_rating == '4'),
+                                                                'risk-very-high': (ws.health_effect_rating == '5')}" >
                                                             {{ ws.health_effect_rating }}
                                                         </div>
                                                     </div>
@@ -2114,9 +2116,11 @@
                                                     <div class="card-initial"
                                                         ng-if="ws.initial_risk_rating"
                                                         ng-class="{
-                                                            'bg-danger': (ws.initial_risk_rating == 'High' || ws.initial_risk_rating == 'High\r\n' 
-                                                            || ws.initial_risk_rating == 'Very High' || ws.initial_risk_rating == 'Very High\r\n'),
-                                                            'bg-warning': (ws.initial_risk_rating == 'Meduim' || ws.initial_risk_rating == 'Meduim\r\n') }" >
+                                                            'risk-acceptable': (ws.initial_risk_rating == 'Acceptable Risk' || ws.initial_risk_rating == 'Acceptable Risk\r\n'),
+                                                            'risk-low': (ws.initial_risk_rating == 'Low' || ws.initial_risk_rating == 'Low\r\n'),
+                                                            'risk-medium': (ws.initial_risk_rating == 'Meduim' || ws.initial_risk_rating == 'Meduim\r\n'),
+                                                            'risk-high': (ws.initial_risk_rating == 'High' || ws.initial_risk_rating == 'High\r\n'),
+                                                            'risk-very-high': (ws.initial_risk_rating == 'Very High' || ws.initial_risk_rating == 'Very High\r\n')}" >
                                                         {{ ws.initial_risk_rating }}
                                                     </div>
                                                 </div>                                            
@@ -3010,14 +3014,15 @@
                     <div class="mb-4">
                         <div class="row g-3">
                             <div class="col-auto">
-                                        <label class="form-label ps-0" for="expense_type">
+                                <label class="form-label ps-0" for="expense_type">
                                     <b class="text-danger d-none"> * </b>
                                     search
                                 </label>
                                 <div class="search-box position-relative">
                                     <input class="form-control search-input search"
-                                           ng-model="keywords.text" placeholder="Search"
-                                           ng-change="fillterRisk()" />
+                                        ng-model="keywords.text" 
+                                        placeholder="Search"
+                                        ng-change="fillterRisk()" />
                                     <span class="fas fa-search search-box-icon"></span>
                                 </div>
                             </div>
@@ -3079,9 +3084,11 @@
                                                 <div ng-if="item.hazards_rating">
                                                     <div class="effect-rating"
                                                         ng-class="{
-                                                            'bg-success': (item.hazards_rating == '1' || item.hazards_rating == '2'),
-                                                            'bg-warning': (item.hazards_rating == '3') 
-                                                        }" >
+                                                            'risk-acceptable': (item.hazards_rating == '1'),
+                                                            'risk-low': (item.hazards_rating == '2'),
+                                                            'risk-medium': (item.hazards_rating == '3'),
+                                                            'risk-high': (item.hazards_rating == '4'),
+                                                            'risk-very-high': (item.hazards_rating == '5')}" >
                                                         {{item.hazards_rating}}
                                                     </div>
                                                 </div>

@@ -41,29 +41,43 @@ a, i {
 
 .effect-rating {
     padding: 2px 8px;
-    background: red;
-    color: white;
+    /* background: red; */
+    /* color: white; */
     font-weight: bold;
-    font-size: 16px;
+    font-size: 14px;
     border-radius: 6px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
 }
-.effect-rating.active{
-    padding: 2px 8px;
-    background: red;
-    color: white;
-    border: 2px solid blue;
-    font-weight: bold;
-    font-size: 16px;
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-}
+
+  /* Risk Rating */
+  .risk-acceptable {
+    background: #a0ff80;
+    color: #258a03;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+  }
+  .risk-low {
+    background: #73e600;
+    color: #457c0e;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+  }
+  .risk-medium {
+    background: #e6e600;
+    color: #727200 !important;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+  }
+  .risk-high {
+    background: #fe0000;
+    color: #ffd9d9;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+  }
+  .risk-very-high {
+    background: #b20000;
+    color: #ffdcdc;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+  }
 
 .standard {
   font-size: 14px;
@@ -440,8 +454,8 @@ background-color: #3e8e41;
 
   .card-initial {
     display: flex;
-    background: #25b003;
-    color: white;
+    /* background: #25b003; */
+    /* color: white; */
     padding: 4px 14px;
     border-radius: 6px;
     min-height: 26px;
@@ -452,7 +466,7 @@ background-color: #3e8e41;
 
   .drop-initial {
     /* background: #25b003; */
-    color: white;
+    /* color: white; */
     font-weight: 800;
     padding-right: 15px;
   }
@@ -507,9 +521,6 @@ background-color: #3e8e41;
     color: white;
     cursor: pointer;
   }
-
-
-
 
 /*Modal*/
 
