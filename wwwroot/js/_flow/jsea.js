@@ -2008,7 +2008,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 
                 //ตรวจสอบเพิ่มเติม
                 if (arr.user_in_pha_no[0].pha_no == '' && $scope.flow_role_type != 'admin') {
-                    if (arr.data_header[0].action_type != 'insert') {
+                    if (arr.header[0].action_type != 'insert') {
                         $scope.tab_general_active = false;
                         $scope.tab_node_active = false;
                         $scope.tab_worksheet_active = false;
@@ -2052,12 +2052,20 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     }
 
                     try{
+                        $scope.master_tagid = JSON.parse(replace_hashKey_arr(arr.tagid));
 
                         if ($scope.data_general[0].id_apu == null || $scope.data_general[0].id_apu == '') {
                             $scope.data_general[0].id_apu = null;
                             var arr_clone_def = { id: null, name: 'Please select' };
                             $scope.master_apu.splice(0, 0, arr_clone_def);
                         }
+
+                        if ($scope.data_general[0].id_tagid == null || $scope.data_general[0].id_tagid == '') {
+                            $scope.data_general[0].id_tagid = null;
+                            var arr_clone_def = { id: null, name: 'Please select' };
+                            $scope.master_tagid.splice(0, 0, arr_clone_def);
+                        }
+
                     }catch{}
                     
                     /*try {
@@ -2165,10 +2173,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     } catch { }
 
                 }
+                $scope.dataLoaded = true;
+                $scope.leavePage = false;
+                if($scope.data_header[0].pha_status === 11 || $scope.data_header[0].pha_status === 12){
+                    $scope.startTimer();  
+                }
+
 
                 addDefaultMember();
-                $scope.unsavedChanges= false;
-
 
             },
             error: function (jqXHR, textStatus, errorThrown) {

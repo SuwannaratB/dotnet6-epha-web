@@ -455,8 +455,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
         } else {
             if (selectedTab.action_part === 5) {
-                $scope.selectedItemNodeView = $scope.data_tasklist[0].id_list;
-                $scope.viewDataTaskList($scope.selectedItemNodeView);
+                $scope.selectedItemListView = $scope.data_tasklist[0].id_list;
+                $scope.viewDataTaskList($scope.selectedItemListView);
             } else if (selectedTab.action_part === 6) {
                 $scope.data_listworksheet.forEach(_item => {
                     if (_item.recommendations && _item.responder_user_displayname && !_item.estimated_start_date) {
@@ -1216,6 +1216,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         var arr = $filter('filter')($scope.data_all.max, function (item) { return (item.name == 'category'); });
         var iMaxSeq = 1; if (arr.length > 0) { iMaxSeq = arr[0].values; }
         $scope.MaxSeqdata_listworksheetcategory = iMaxSeq;
+
+        var arr = $filter('filter')($scope.data_all.max, function (item) { return (item.name == 'recommendations'); });
+        var iMaxSeq = 1; if (arr.length > 0) { iMaxSeq = arr[0].values; }
+        $scope.MaxSeqdata_listworksheetrecommendations = iMaxSeq;
 
         $scope.MaxSeqdata_approver = 0;
         var arr_check = $filter('filter')($scope.data_all.max, function (item) { return (item.name == 'approver'); });
@@ -3459,9 +3463,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
     $scope.removeDataTaskList = function (seq, index) {
 
-        console.log("seq",seq)
-        console.log("index",index)
-
         var arrdelete = $filter('filter')($scope.data_tasklist, function (item) {
             return (item.seq == seq && item.action_type == 'update');
         });
@@ -3547,6 +3548,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         new_worksheet.list_system_no = 1;
         new_worksheet.causes_no = 1;
         new_worksheet.consequences_no = 1;
+        new_worksheet.category_no = 1;
+        new_worksheet.recommendations_no = 1;
     
         new_worksheet.row_type = 'list_system';
         new_worksheet.action_type = 'insert';
@@ -4401,6 +4404,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         var seq_causes = item.seq_causes;
         var seq_consequences = item.seq_consequences;
         var seq_category = item.seq_category;
+        var seq_recommendations = item.seq_recommendations;
 
         var index_rows = Number(item.index_rows);
         var no = Number(item.no);
@@ -4409,6 +4413,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         var causes_no = Number(item.causes_no);
         var consequences_no = Number(item.consequences_no);
         var category_no = Number(item.category_no);
+        var recommendations_no = Number(item.recommendations_no);
 
         var arr_def = [];
         angular.copy($scope.data_listworksheet, arr_def);
@@ -4467,6 +4472,19 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 iNo = arr[arr.length - 1].no;
                 index_rows = arr[arr.length - 1].index_rows;
             }
+        } else if (row_type == 'recommendations') {
+            var arr = $filter('filter')(arr_def, function (_item) {
+                return (_item.no >= no && _item.id_list == seq_list
+                    && _item.seq_list_system == seq_list_system && _item.seq_list_sub_system == seq_list_sub_system
+                    && _item.seq_causes == seq_causes
+                    && _item.seq_consequences == seq_consequences
+                    && _item.seq_category == seq_category
+                    && _item.seq_recommendations == seq_recommendations);
+            });
+            if (arr.length > 0) {
+                iNo = arr[arr.length - 1].no;
+                index_rows = arr[arr.length - 1].index_rows;
+            }
         }
 
 
@@ -4518,6 +4536,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             //กรณีที่เป็น cat ให้ +1
             category_no += 1;
         }
+        if (row_type == 'recommendations') {
+            $scope.MaxSeqdata_listworksheetrecommendations = Number($scope.MaxSeqdata_listworksheetrecommendations) + 1;
+            seq_recommendations = $scope.MaxSeqdata_listworksheetrecommendations;
+
+            recommendations_no += 1;
+        }
 
         var arr_list = $filter('filter')($scope.data_tasklist, function (_item) {
             return (_item.seq == seq_list);
@@ -4538,6 +4562,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         newInput.seq_causes = seq_causes;
         newInput.seq_consequences = seq_consequences;
         newInput.seq_category = seq_category;
+        newInput.seq_recommendations = seq_recommendations;
 
         newInput.index_rows = index_rows;
         newInput.no = no;
@@ -4546,6 +4571,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         newInput.causes_no = causes_no;
         newInput.consequences_no = consequences_no;
         newInput.category_no = category_no;
+        newInput.recommendations_no = index_rows;
 
         newInput.action_type = 'insert';
         newInput.action_change = 1;
@@ -4591,10 +4617,24 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             newInput.causes = data[0].causes;
             newInput.consequences = data[0].consequences;
         }
+        else if (row_type == 'recommendations') {
+            var data = $scope.data_listworksheet.filter(function(item) {
+                return item.list_system_no == list_system_no && item.list_sub_system_no == list_sub_system_no 
+                        && item.causes_no == causes_no && item.consequences_no == consequences_no 
+                        && item.category_no == category_no;
+            });
+
+            newInput.list_system = data[0].list_system;
+            newInput.list_sub_system = data[0].list_sub_system;
+            newInput.causes = data[0].causes;
+            newInput.consequences = data[0].consequences;
+            newInput.category_no = data[0].category_no;
+            newInput.recommendations_no = data[0].recommendations_no;
+        }
         $scope.selectdata_listworksheet = xseq;
 
-        insertNewData(newInput);
-        console.log("newInputnewInputnewInputnewInput",newInput)
+        insertNewData(newInput,index);
+        $scope.data_listworksheet.forEach(function(item, index) {item.index_rows = index;});
 
         return;
 
@@ -4606,56 +4646,195 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     
         let previous = {};
         dataList.forEach((item, index) => {
-            if (previous.list_system_no === item.list_system_no) {
+            console.log("item.list_system_no",item.list_system_no)
+            console.log("previous.list_system_no",previous.list_system_no)
+            if (previous.list_system_no === item.list_system_no ) {
+                if (previous.list_system_no >= item.list_system_no && item.row_type === 'list_system'){
+                    item.list_system_no = previous.list_system_no + 1;
+                }
+
                 if (previous.list_sub_system_no >= item.list_sub_system_no && item.row_type === 'list_sub_system') {
                     item.list_sub_system_no = previous.list_sub_system_no + 1;
                 }
-                if (previous.list_sub_system_no === item.list_sub_system_no && previous.causes_no >= item.causes_no && item.row_type === 'causes') {
-                    item.causes_no = previous.causes_no + 1;
+                if (previous.list_sub_system_no === item.list_sub_system_no && previous.causes_no >= item.causes_no && (item.row_type === 'causes'||item.row_type === 'list_sub_system')) {
+                    if(previous.seq_causes === item.seq_causes){
+                        item.causes_no = previous.causes_no
+                    }else{
+                        item.causes_no = previous.causes_no + 1;
+                    }
+                    
                 }
-                if (previous.list_sub_system_no === item.list_sub_system_no && previous.causes_no === item.causes_no && previous.consequences_no >= item.consequences_no && item.row_type === 'consequences') {
+                if (previous.list_sub_system_no === item.list_sub_system_no && previous.causes_no === item.causes_no && previous.consequences_no >= item.consequences_no 
+                    && (item.row_type === 'causes'||item.row_type === 'list_sub_system' || item.row_type === 'consequences')) {
                     item.consequences_no = previous.consequences_no + 1;
+                }
+                if (previous.list_sub_system_no === item.list_sub_system_no && previous.causes_no === item.causes_no && previous.consequences_no === item.consequences_no && previous.category_no >= item.category_no 
+                    && (item.row_type === 'causes'||item.row_type === 'list_sub_system' || item.row_type === 'consequences' || item.row_type === 'category')) {
+                    item.category_no = previous.category_no + 1;
+                }
+                if (previous.list_sub_system_no === item.list_sub_system_no && previous.causes_no === item.causes_no && previous.consequences_no >= item.consequences_no && previous.category_no === item.category_no && previous.recommendations_no >= item.recommendations_no 
+                    && (item.row_type === 'causes'||item.row_type === 'list_sub_system' || item.row_type === 'consequences' || item.row_type === 'category' || item.row_type === 'recommendations')) {
+                    item.recommendations_no = previous.recommendations_no + 1;
                 }
             }
             previous = { ...item };
         });
     
-        console.log("After ensuring uniqueness:");
-        console.table(dataList);
+        //console.log("After ensuring uniqueness:");
+        //console.table(dataList);
     }
     
-    function insertNewData(newData) {
-        console.log("Inserting new data:", newData);
-    
+    function insertNewData(newData,data_index) {    
+
         let index = -1;
+
         for (let i = 0; i < $scope.data_listworksheet.length; i++) {
             const item = $scope.data_listworksheet[i];
-    
-            if (
-                (item.list_system_no > newData.list_system_no) ||
-                (item.list_system_no === newData.list_system_no && item.list_sub_system_no > newData.list_sub_system_no) ||
-                (item.list_system_no === newData.list_system_no && item.list_sub_system_no === newData.list_sub_system_no && item.causes_no > newData.causes_no) ||
-                (item.list_system_no === newData.list_system_no && item.list_sub_system_no === newData.list_sub_system_no && item.causes_no === newData.causes_no && item.consequences_no > newData.consequences_no) ||
-                (item.list_system_no === newData.list_system_no && item.list_sub_system_no === newData.list_sub_system_no && item.causes_no === newData.causes_no && item.consequences_no === newData.consequences_no && item.category_no > newData.category_no) ||
-                (item.list_system_no === newData.list_system_no && item.list_sub_system_no === newData.list_sub_system_no && item.causes_no === newData.causes_no && item.consequences_no === newData.consequences_no && item.category_no === newData.category_no && item.row_type > newData.row_type)
-            ) {
+            
+                console.log("data_index", i);
+                console.log("newData", newData);
+                console.log("item", item);
+                console.log("newData.row_type", newData.row_type);
+                console.log("item.list_system_no ", item.list_system_no, "newData.list_system_no", newData.list_system_no);
+                console.log("item.list_sub_system_no ", item.list_sub_system_no, "newData.list_sub_system_no", newData.list_sub_system_no);
+                console.log("item.causes_no ", item.causes_no, "newData.causes_no", newData.causes_no);
+                console.log("item.consequences_no ", item.consequences_no, "newData.consequences_no", newData.consequences_no);
+                console.log("item.category_no ", item.category_no, "newData.category_no", newData.category_no);
+                console.log("item.recommendations_no ", item.recommendations_no, "newData.recommendations_no", newData.recommendations_no);
+            
+            if (item.id_list !== newData.id_list) {
+                continue;
+            }
+            
+            // General condition to update the index for different row types
+            if ( newData.row_type !== 'recommendations' &&
+                ((item.list_system_no > newData.list_system_no) ||
+                (newData.row_type === 'list_sub_system' && item.list_system_no === newData.list_system_no && item.list_sub_system_no >= newData.list_sub_system_no) ||
+                (item.list_system_no === newData.list_system_no && item.list_sub_system_no === newData.list_sub_system_no && item.causes_no === newData.causes_no 
+                && item.consequences_no === newData.consequences_no && item.category_no === newData.category_no))) {
                 index = i;
                 break;
             }
+            
+            // Specific conditions for 'causes' row type
+            if (newData.row_type === 'causes' && item.list_system_no === newData.list_system_no 
+                && item.list_sub_system_no === newData.list_sub_system_no) {
+                //index = item.causes_no >= newData.causes_no ? i : i + 1;
+                //break;
+                //break;
+                console.log("item.list_system_no ", item.list_system_no, "newData.list_system_no", newData.list_system_no);
+                console.log("item.list_sub_system_no ", item.list_sub_system_no, "newData.list_sub_system_no", newData.list_sub_system_no);
+                console.log("item.causes_no ", item.causes_no, "newData.causes_no", newData.causes_no);
+                console.log("item.consequences_no ", item.consequences_no, "newData.consequences_no", newData.consequences_no);
+                console.log("item.category_no ", item.category_no, "newData.category_no", newData.category_no);
+                console.log("item.recommendations_no ", item.recommendations_no, "newData.recommendations_no", newData.recommendations_no);
+
+                const set_causes = $scope.data_listworksheet.filter(data => 
+                    data.list_system_no === item.list_system_no && 
+                    data.list_sub_system_no === item.list_sub_system_no && 
+                    data.causes_no === item.causes_no 
+                );
+
+                console.log("settttttttttttttttttttttttttttttt",set_causes)
+                for (let j = 0; j < set_causes.length; j++) {
+                    if (set_causes[j].recommendation_no) {
+                        index = i + j + 1;
+                        break;
+                    }
+                }
+                
+                if (index === -1) {
+                    index = i + set_causes.length;
+                }
+                
+                console.log(index)
+                break;                       
+            }
+            
+            // Specific conditions for 'consequences' row type
+            if (newData.row_type === 'consequences' && item.list_system_no === newData.list_system_no 
+                && item.list_sub_system_no === newData.list_sub_system_no 
+                && item.causes_no === newData.causes_no ) {
+                //index = item.consequences_no >= newData.consequences_no ? i : i + 1;
+                //break;
+                console.log("item.list_system_no ", item.list_system_no, "newData.list_system_no", newData.list_system_no);
+                console.log("item.list_sub_system_no ", item.list_sub_system_no, "newData.list_sub_system_no", newData.list_sub_system_no);
+                console.log("item.causes_no ", item.causes_no, "newData.causes_no", newData.causes_no);
+                console.log("item.consequences_no ", item.consequences_no, "newData.consequences_no", newData.consequences_no);
+                console.log("item.category_no ", item.category_no, "newData.category_no", newData.category_no);
+                console.log("item.recommendations_no ", item.recommendations_no, "newData.recommendations_no", newData.recommendations_no);
+
+                const set_consequences = $scope.data_listworksheet.filter(data => 
+                    data.list_system_no === item.list_system_no && 
+                    data.list_sub_system_no === item.list_sub_system_no && 
+                    data.causes_no === item.causes_no && 
+                    data.consequences_no === item.consequences_no
+                );
+
+                console.log("settttttttttttttttttttttttttttttt",set_consequences)
+                for (let j = 0; j < set_consequences.length; j++) {
+                    if (set_consequences[j].recommendation_no) {
+                        index = i + j + 1;
+                        break;
+                    }
+                }
+                
+                if (index === -1) {
+                    index = i + set_consequences.length;
+                }
+                
+                console.log(index)
+                break;                
+            }
+            
+            // Specific conditions for 'category' row type
+            if ((newData.row_type === 'category') && item.list_system_no === newData.list_system_no 
+                && item.list_sub_system_no === newData.list_sub_system_no 
+                && item.causes_no === newData.causes_no 
+                && item.consequences_no === newData.consequences_no) {
+
+                const set_category = $scope.data_listworksheet.filter(data => 
+                    data.list_system_no === item.list_system_no && 
+                    data.list_sub_system_no === item.list_sub_system_no && 
+                    data.causes_no === item.causes_no && 
+                    data.consequences_no === item.consequences_no && 
+                    data.category_no === item.category_no
+                );
+                for (let j = 0; j < set_category.length; j++) {
+                    if (set_category[j].recommendation_no) {
+                        index = i + j + 1;
+                        break;
+                    }
+                }
+                
+                if (index === -1) {
+                    index = i + set_category.length;
+                }
+                
+                console.log(index)
+                break;
+            }
+            
+            // Specific condition for 'recommendations' row type
+            if (newData.row_type === 'recommendations' && item.list_system_no === newData.list_system_no 
+                && item.list_sub_system_no === newData.list_sub_system_no && item.causes_no === newData.causes_no 
+                && item.consequences_no === newData.consequences_no && item.category_no === newData.category_no) {
+                    
+                index = data_index + 1;
+
+                break;
+            }
+
         }
-    
+            
         if (index === -1) {
             index = $scope.data_listworksheet.length;
         }
-    
-        console.log("Inserting at index:", index);
-    
+            
         $scope.data_listworksheet.splice(index, 0, newData);
-    
+            
         ensureUnique($scope.data_listworksheet);
-    
-        console.log("After insertion and ensuring uniqueness:");
-        console.table($scope.data_listworksheet);
+            
     }
     $scope.compareItems = function(a, b) {
         if (a.list_system_no !== b.list_system_no) {
@@ -5907,9 +6086,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 requiredFields.forEach(field => {
                     if (!isviewDataTaskListSet) {
                         $timeout(function() {
-                            $scope.selectedItemNodeView = item.id_node;
+                            $scope.selectedItemListView = item.id_node;
 
-                            $scope.viewDataTaskList($scope.selectedItemNodeView);
+                            $scope.viewDataTaskList($scope.selectedItemListView);
                         }, 0); 
                         isviewDataTaskListSet = true;
                     }
