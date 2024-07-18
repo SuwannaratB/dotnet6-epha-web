@@ -1619,18 +1619,18 @@
                                                     <th class=" align-top" >
                                                         Exposure<br/>Level = [3.7] <br/>vs [3.8]
                                                     </th>
-                                                    <th class="text-uppercase align-top cursor-pointer" ng-click="Matrix_Exposure_Rating()">
+                                                    <th class="align-top cursor-pointer" ng-click="Matrix_Exposure_Rating()">
                                                         Exposure<br/>Rating = [3.6] <br/>vs [3.9]
                                                         <a class="fa-solid fa-subtitles" style="color: #1985a1"></a>
                                                     </th>
-                                                    <th class="text-uppercase align-top cursor-pointer" ng-click="Matrix_Frequency_Rating()">
+                                                    <th class="align-top cursor-pointer" ng-click="Matrix_Frequency_Rating()">
                                                         Initial Risk<br/>Rating = [3.5]<br/>vs [3.10]
                                                         <a class="fa-solid fa-subtitles" style="color: #fa6607"></a>
                                                     </th>
-                                                    <th class="text-uppercase align-top" >Hierarchy of Control (ALARP)</th>
-                                                    <th class="text-uppercase align-top" >Effective?</th>
-                                                    <th class="text-uppercase align-top" >Residual Risk Rating</th>
-                                                    <th class="text-uppercase align-top" >Comments</th>
+                                                    <th class="align-top" >Hierarchy of Control (ALARP)</th>
+                                                    <th class="align-top" >Effective?</th>
+                                                    <th class="align-top" >Residual Risk Rating</th>
+                                                    <th class="align-top" >Comments</th>
                                                 </tr>
                                             </thead>
                                             <tbody class="list" id="customer-rating-table-body">
@@ -1705,7 +1705,7 @@
                                                     </td>
                                                     @* 3.5 *@
                                                     <td class="td-custom " >
-                                                        <div class="d-flex justify-content-center box" 
+                                                        <div class="d-flex justify-content-center box" style="min-width: 58px;"
                                                             ng-repeat="hazard in item.worksheet | filter: filterInitialRiskRatingWorksheet"
                                                             ng-class="{'unbox': (item.worksheet[item.worksheet.length - 1].seq == hazard.seq)}">
                                                             <div ng-if="hazard.health_effect_rating">
@@ -1925,14 +1925,6 @@
                                                         <div class="box d-flex flex-column gap-2" 
                                                             ng-repeat="ws in item.worksheet | filter: filterInitialRiskRatingWorksheet"
                                                             ng-class="{'unbox': (item.worksheet[item.worksheet.length - 1].seq == ws.seq)}">
-                                                            @* <textarea class="form-control form-control-sm " 
-                                                                rows="2" 
-                                                                type="text"
-                                                                style="width: 200px; height: 100%; font-size: 10.24px;"
-                                                                placeholder="Comments"
-                                                                ng-change="actionChangeComment(hazard)"
-                                                                ng-model="hazard.recommendations">
-                                                            </textarea> *@
                                                             <div class="d-flex gap-2" 
                                                                 ng-class="{ 'disabled-link': isDisableStatus && !isApproveReject && !isEditWorksheet}"
                                                                 ng-repeat="recom in ws.recommendations">
@@ -1967,13 +1959,22 @@
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <input class="form-control rounded-1" 
+                                                                <textarea class="form-control form-control-sm " 
+                                                                    ng-class="{'disabled-link': isDisableStatus}"
+                                                                    rows="2" 
+                                                                    type="text"
+                                                                    style="width: 200px; height: 100%; font-size: 10.24px;"
+                                                                    placeholder="Comments"
+                                                                    ng-model="recom.recommendations"
+                                                                    ng-change="actionChangeComment(recom)">
+                                                                </textarea>
+                                                                @* <input class="form-control rounded-1" 
                                                                     ng-class="{'disabled-link': isDisableStatus}" 
                                                                     style="width: 200px; max-height: 28px; font-size: 10.24px;"
                                                                     type="text" 
                                                                     placeholder="Comments"
                                                                     ng-model="recom.recommendations"
-                                                                    ng-change="actionChangeComment(recom)" >
+                                                                    ng-change="actionChangeComment(recom)" > *@
                                                             </div>
                                                         </div>
                                                     </td>
@@ -2091,6 +2092,7 @@
 
                                             <td>
                                                 <div class="d-flex justify-content-center box-recom " 
+                                                    style="min-width: 58px;"
                                                     ng-repeat="ws in item.worksheet | filter: filterInitialRiskRating">
                                                     <div ng-if="ws.health_effect_rating">
                                                         <div class="effect-rating "
@@ -2154,14 +2156,23 @@
                                             <td class="" >
                                                 <div class="box-recom d-flex flex-column gap-2" ng-repeat="ws in item.worksheet | filter: filterInitialRiskRating">
                                                      <div class=""  ng-repeat="recom in ws.recommendations">
-                                                         <input class="form-control rounded-1" 
+                                                        <textarea class="form-control form-control-sm " 
+                                                            ng-class="{'disabled-link': isDisableStatus}"
+                                                            rows="2" 
+                                                            type="text"
+                                                            style="width: 200px; height: 100%; font-size: 10.24px;"
+                                                            placeholder="Comments"
+                                                            ng-model="recom.recommendations"
+                                                            ng-change="actionChangeComment(recom)">
+                                                        </textarea>
+                                                         @* <input class="form-control rounded-1" 
                                                             ng-class="{'disabled-link': isDisableStatus}"
                                                             disabled 
                                                             style="width: 200px; max-height: 28px; font-size: 10.24px;"
                                                             type="text" 
                                                             placeholder="Comments"
                                                             ng-model="recom.recommendations"
-                                                            ng-change="actionChangeComment(recom)" >
+                                                            ng-change="actionChangeComment(recom)" > *@
                                                      </div>
                                                     @* <textarea class="form-control form-control-sm " 
                                                         ng-class="{'disabled-link': isDisableStatus}"
