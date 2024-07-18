@@ -1242,9 +1242,11 @@
                                                             <div class="effect-rating" 
                                                                 @* ng-class="{'mr-27': (item_list.count_riskfactors <= 1)}" *@
                                                                 ng-class="{
-                                                                    'bg-success': (item_list.health_effect_rating == '1' || item_list.health_effect_rating == '2'),
-                                                                    'bg-warning': (item_list.health_effect_rating == '3') 
-                                                                }"  
+                                                                    'risk-acceptable': (item_list.health_effect_rating == '1'),
+                                                                    'risk-low': (item_list.health_effect_rating == '2'),
+                                                                    'risk-medium': (item_list.health_effect_rating == '3'),
+                                                                    'risk-high': (item_list.health_effect_rating == '4'),
+                                                                    'risk-very-high': (item_list.health_effect_rating == '5')}"  
                                                                 ng-if="item_list.health_effect_rating"
                                                                 ng-click="openModalRisk(item_list, index)">
                                                                 {{item_list.health_effect_rating}}
@@ -1578,8 +1580,29 @@
                                                     <th class=" align-top" >[3.7]</th>
                                                     <th class=" align-top" >[3.8]</th>
                                                     <th class=" align-top" >[3.9]</th>
-                                                    <th class=" align-top cursor-pointer" ng-click="Matrix_Exposure_Rating()">[3.10]</th>
-                                                    <th class=" align-top cursor-pointer" ng-click="Matrix_Frequency_Rating()">[3.11]</th>
+                                                    <th class=" align-top cursor-pointer" 
+                                                        ng-click="Matrix_Exposure_Rating()">
+                                                        [3.10]
+                                                    </th>
+                                                    <th class=" align-top cursor-pointer d-flex justify-content-center gap-2">
+                                                        [3.11] 
+                                                        <div class="filter-risk"  
+                                                        ng-click="openFilterInitialRisk($event)"
+                                                        >
+                                                            <i class="fa-solid fa-filter text-primary" ></i>
+                                                            <div class="filter-risk-container" ng-if="isInitialRisk">
+                                                                <div class="filter-risk-list " 
+                                                                    ng-click="selectFilterInitialRisk('all')">
+                                                                    All
+                                                                </div>
+                                                                <div class="filter-risk-list " 
+                                                                    ng-repeat="item in data_initial_risk"
+                                                                    ng-click="selectFilterInitialRisk(item.name)">
+                                                                    {{item.name}}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </th>
                                                     <th class=" align-top" >[3.12]</th>
                                                     <th class=" align-top" >[3.13]</th>
                                                     <th class=" align-top" >[3.14]</th>
@@ -1598,22 +1621,22 @@
                                                     <th class=" align-top" >
                                                         Exposure<br/>Level = [3.7] <br/>vs [3.8]
                                                     </th>
-                                                    <th class=" align-top cursor-pointer" ng-click="Matrix_Exposure_Rating()">
+                                                    <th class="align-top cursor-pointer" ng-click="Matrix_Exposure_Rating()">
                                                         Exposure<br/>Rating = [3.6] <br/>vs [3.9]
                                                         <a class="fa-solid fa-subtitles" style="color: #1985a1"></a>
                                                     </th>
-                                                    <th class=" align-top cursor-pointer" ng-click="Matrix_Frequency_Rating()">
+                                                    <th class="align-top cursor-pointer" ng-click="Matrix_Frequency_Rating()">
                                                         Initial Risk<br/>Rating = [3.5]<br/>vs [3.10]
                                                         <a class="fa-solid fa-subtitles" style="color: #fa6607"></a>
                                                     </th>
-                                                    <th class=" align-top" >Hierarchy of Control (ALARP)</th>
-                                                    <th class=" align-top" >Effective?</th>
-                                                    <th class=" align-top" >Residual Risk Rating</th>
-                                                    <th class=" align-top" >Comments</th>
+                                                    <th class="align-top" >Hierarchy of Control (ALARP)</th>
+                                                    <th class="align-top" >Effective?</th>
+                                                    <th class="align-top" >Residual Risk Rating</th>
+                                                    <th class="align-top" >Comments</th>
                                                 </tr>
                                             </thead>
                                             <tbody class="list" id="customer-rating-table-body">
-                                                <tr ng-repeat="(index, item) in data_worksheet_list">
+                                                <tr ng-repeat="(index, item) in data_worksheet_list | filter: filterInitialRiskRatingWorksheetMain">
                                                     @* 3.0 *@
                                                     <td class="td-custom" 
                                                         rowspan="{{ rowspanWorksheet(item) }}"
@@ -1624,7 +1647,7 @@
                                                     </td>
                                                     @* 3.1 *@
                                                     <td class="td-custom"
-                                                        rowspan="{{ rowspanWorksheet(item) }}"
+                                                        rowspan="{{ rowspanWorksheet(item, data_worksheet_list) }}"
                                                         ng-if="item.seq != data_worksheet_list[index - 1].seq">
                                                         <div class="box text-center" 
                                                             ng-class="{'unbox': (item.worksheet[item.worksheet.length - 1].seq == ws.seq)}"
@@ -1645,7 +1668,7 @@
                                                     @* 3.3 *@
                                                     <td class="td-custom ">
                                                         <div class="d-flex flex-column box" 
-                                                            ng-repeat="ws in item.worksheet" 
+                                                            ng-repeat="ws in item.worksheet | filter: filterInitialRiskRatingWorksheet" 
                                                             ng-class="{
                                                                 'unbox': (item.worksheet[item.worksheet.length - 1].seq == ws.seq),
                                                                 'disbox': (item.worksheet[$index + 1].sub_area == ws.sub_area) }"
@@ -1661,7 +1684,7 @@
                                                     @* 3.4 *@
                                                     <td class="td-custom ">
                                                         <div class="d-flex flex-col box" 
-                                                            ng-repeat="ws in item.worksheet" 
+                                                            ng-repeat="ws in item.worksheet | filter: filterInitialRiskRatingWorksheet" 
                                                             ng-class="{
                                                                 'unbox': (item.worksheet[item.worksheet.length - 1].seq == ws.seq),
                                                                 'disbox': (item.worksheet[$index + 1].type_hazard == ws.type_hazard && item.worksheet[$index + 1].subarea_no == ws.subarea_no) }"
@@ -1677,23 +1700,25 @@
                                                     @* 3.4 *@
                                                     <td class="td-custom " >
                                                         <div class="d-flex flex-col box" 
-                                                            ng-repeat="hazard in item.worksheet"
+                                                            ng-repeat="hazard in item.worksheet | filter: filterInitialRiskRatingWorksheet"
                                                             ng-class="{'unbox': (item.worksheet[item.worksheet.length - 1].seq == hazard.seq)}">
                                                            {{ hazard.health_hazard ? hazard.health_hazard  : 'Not found'}}
                                                         </div>
                                                     </td>
                                                     @* 3.5 *@
                                                     <td class="td-custom " >
-                                                        <div class="d-flex justify-content-center box" 
-                                                            ng-repeat="hazard in item.worksheet"
+                                                        <div class="d-flex justify-content-center box" style="min-width: 58px;"
+                                                            ng-repeat="hazard in item.worksheet | filter: filterInitialRiskRatingWorksheet"
                                                             ng-class="{'unbox': (item.worksheet[item.worksheet.length - 1].seq == hazard.seq)}">
                                                             <div ng-if="hazard.health_effect_rating">
                                                                 <div class="effect-rating "
                                                                     @* ng-click="openModalRisk(hazard, $index)" *@
                                                                     ng-class="{
-                                                                    'bg-success': (hazard.health_effect_rating == '1' || hazard.health_effect_rating == '2'),
-                                                                    'bg-warning': (hazard.health_effect_rating == '3') 
-                                                                    }" >
+                                                                    'risk-acceptable': (hazard.health_effect_rating == '1'),
+                                                                    'risk-low': (hazard.health_effect_rating == '2'),
+                                                                    'risk-medium': (hazard.health_effect_rating == '3'),
+                                                                    'risk-high': (hazard.health_effect_rating == '4'),
+                                                                    'risk-very-high': (hazard.health_effect_rating == '5')}" >
                                                                 {{ hazard.health_effect_rating }}
                                                             </div>
                                                             </div>
@@ -1702,7 +1727,7 @@
                                                     @* 3.6 *@
                                                     <td class="td-custom " >
                                                         <div class=" box" 
-                                                            ng-repeat="hazard in item.worksheet"
+                                                            ng-repeat="hazard in item.worksheet | filter: filterInitialRiskRatingWorksheet"
                                                             ng-class="{'unbox': (item.worksheet[item.worksheet.length - 1].seq == hazard.seq)}">
                                                             <select class="form-select form-select-sm rounded-1" 
                                                                     ng-if="tab_worksheet_active"
@@ -1722,7 +1747,7 @@
                                                     @* 3.7 *@
                                                     <td class="td-custom " >
                                                        <div class=" box"  
-                                                            ng-repeat="hazard in item.worksheet"
+                                                            ng-repeat="hazard in item.worksheet | filter: filterInitialRiskRatingWorksheet"
                                                             ng-class="{
                                                                 'disabled-link': 
                                                                     isDisableStatus && 
@@ -1744,7 +1769,7 @@
                                                     <td class="td-custom " >
                                                         <div class="d-flex flex-col box" 
                                                             style="min-width: max-content; padding-top: 15px;"
-                                                            ng-repeat="hazard in item.worksheet"
+                                                            ng-repeat="hazard in item.worksheet | filter: filterInitialRiskRatingWorksheet"
                                                             ng-class="{'unbox': (item.worksheet[item.worksheet.length - 1].seq == hazard.seq)}">
                                                            {{ hazard.standard_value }} {{  hazard.standard_value ? 'ppm' : '' }}
                                                         </div>
@@ -1753,7 +1778,7 @@
                                                     <td class="td-custom " >
                                                        <div class="box text-center" 
                                                             style="min-width: max-content; padding-top: 15px; text-align: center;"
-                                                            ng-repeat="hazard in item.worksheet"
+                                                            ng-repeat="hazard in item.worksheet | filter: filterInitialRiskRatingWorksheet"
                                                             ng-class="{'unbox': (item.worksheet[item.worksheet.length - 1].seq == hazard.seq)}">
                                                             <p ng-if="hazard.id_exposure_level"
                                                                 ng-repeat="item_m in master_exposure_level | filter:{ id: hazard.id_exposure_level }">
@@ -1765,7 +1790,7 @@
                                                     <td class="td-custom ">
                                                         <div class="box text-center" 
                                                             style="min-width: max-content; padding-top: 15px; text-align: center;"
-                                                            ng-repeat="ws in item.worksheet"
+                                                            ng-repeat="ws in item.worksheet | filter: filterInitialRiskRatingWorksheet"
                                                             ng-class="{'unbox': (item.worksheet[item.worksheet.length - 1].seq == ws.seq)}">
                                                             {{ ws.exposure_rating }}
                                                         </div>
@@ -1774,34 +1799,30 @@
                                                     <td class="td-custom " >
                                                         <div class="box" 
                                                             style="min-width: max-content; padding-top: 10px; text-align: center;"
-                                                            ng-repeat="ws in item.worksheet"
+                                                            ng-repeat="ws in item.worksheet | filter: filterInitialRiskRatingWorksheet"
                                                             ng-class="{'unbox': (item.worksheet[item.worksheet.length - 1].seq == ws.seq)}">
                                                             @*have standard_value *@
                                                             <div class="card-initial" 
-                                                                ng-if="ws.initial_risk_rating && ws.standard_value"
+                                                                ng-if="ws.initial_risk_rating && ws.standard_value "
                                                                 style="min-width: 100px;"
                                                                 ng-class="{
-                                                                    'bg-danger': (ws.initial_risk_rating == 'High' || ws.initial_risk_rating == 'High\r\n' 
-                                                                    || ws.initial_risk_rating == 'Very High' || ws.initial_risk_rating == 'Very High\r\n'),
-                                                                    'bg-warning': (ws.initial_risk_rating == 'Meduim' || ws.initial_risk_rating == 'Meduim\r\n') 
-                                                                    }" >
+                                                                   'risk-acceptable': (ws.initial_risk_rating == 'Acceptable Risk' || ws.initial_risk_rating == 'Acceptable Risk\r\n'),
+                                                                    'risk-low': (ws.initial_risk_rating == 'Low' || ws.initial_risk_rating == 'Low\r\n'),
+                                                                    'risk-medium': (ws.initial_risk_rating == 'Meduim' || ws.initial_risk_rating == 'Meduim\r\n'),
+                                                                    'risk-high': (ws.initial_risk_rating == 'High' || ws.initial_risk_rating == 'High\r\n'),
+                                                                    'risk-very-high': (ws.initial_risk_rating == 'Very High' || ws.initial_risk_rating == 'Very High\r\n')}" >
                                                                 {{ ws.initial_risk_rating }}
                                                             </div>
                                                             @* none standard_value*@
                                                             <select class="drop-initial form-select form-select-sm rounded-2" 
                                                                 ng-if="!ws.standard_value"
-                                                                ng-class="{'disabled-link': 
-                                                                        isDisableStatus && 
-                                                                        !isApproveReject && 
-                                                                        !isEditWorksheet}"
-                                                                ng-style="{'background': 
-                                                                    ws.initial_risk_rating == 'Low' || ws.initial_risk_rating == 'Acceptable Risk'
-                                                                        ? '#25b003' 
-                                                                        : ws.initial_risk_rating == 'Meduim' 
-                                                                            ? '#e5780b' 
-                                                                            : ws.initial_risk_rating == 'High' || ws.initial_risk_rating == 'Very High'
-                                                                                ? '#ed2000' 
-                                                                                : ''}"
+                                                                ng-class="{
+                                                                    'disabled-link': (isDisableStatus && !isApproveReject && !isEditWorksheet),
+                                                                    'risk-acceptable': (ws.initial_risk_rating == 'Acceptable Risk' || ws.initial_risk_rating == 'Acceptable Risk\r\n'),
+                                                                    'risk-low': (ws.initial_risk_rating == 'Low' || ws.initial_risk_rating == 'Low\r\n'),
+                                                                    'risk-medium': (ws.initial_risk_rating == 'Meduim' || ws.initial_risk_rating == 'Meduim\r\n'),
+                                                                    'risk-high': (ws.initial_risk_rating == 'High' || ws.initial_risk_rating == 'High\r\n'),
+                                                                    'risk-very-high': (ws.initial_risk_rating == 'Very High' || ws.initial_risk_rating == 'Very High\r\n')}"
                                                                 ng-change="actionChangeInitialRiskRating(ws)"
                                                                 ng-model="ws.initial_risk_rating" 
                                                                 style="min-width: 100px; font-size: 10.24px; text-align: center;">
@@ -1814,7 +1835,7 @@
                                                     @* 3.12 *@
                                                     <td class="td-custom " >
                                                         <div class="box" 
-                                                            ng-repeat="hazard in item.worksheet"
+                                                            ng-repeat="hazard in item.worksheet | filter: filterInitialRiskRatingWorksheet"
                                                             ng-class="{
                                                                 'disabled-link': 
                                                                     isDisableStatus && 
@@ -1836,7 +1857,7 @@
                                                     @* 3.13 *@
                                                     <td class="td-custom">
                                                         <div class="box" 
-                                                            ng-repeat="(idx,hazard) in item.worksheet"
+                                                            ng-repeat="(idx,hazard) in item.worksheet | filter: filterInitialRiskRatingWorksheet"
                                                             ng-class="{'unbox': (item.worksheet[item.worksheet.length - 1].seq == hazard.seq)}">
                                                             <div class="d-flex gap-2 mb-2" 
                                                                 style="min-width: max-content;"
@@ -1874,7 +1895,7 @@
                                                     @* 3.14 *@
                                                     <td class="td-custom" >
                                                         <div class="box" 
-                                                            ng-repeat="hazard in item.worksheet"
+                                                            ng-repeat="hazard in item.worksheet | filter: filterInitialRiskRatingWorksheet"
                                                             ng-class="{'unbox': (item.worksheet[item.worksheet.length - 1].seq == hazard.seq)}">
                                                             <select class="form-select form-select-sm rounded-1" 
                                                                 ng-if="tab_worksheet_active"
@@ -1883,10 +1904,11 @@
                                                                     !isApproveReject && 
                                                                     !isEditWorksheet}"
                                                                 @* ng-change="actionChangeWorksheet(item,item.seq,'frequency_level')" *@
-                                                                ng-change="actionChangeFrequencyLevel(hazard)"
+                                                                ng-change="actionChangeResidualRiskRating(hazard)"
                                                                 ng-model="hazard.residual_risk_rating" 
                                                                 style="min-width: 100px; font-size: 10.24px;"
                                                                 ng-disabled="
+                                                                    hazard.initial_risk_rating != 'Low' &&
                                                                     !hazard.exposure_status || 
                                                                     hazard.initial_risk_rating == 'Acceptable Risk' || hazard.initial_risk_rating == 'Acceptable Risk\r\n'">
                                                                 <option ng-repeat="item_m in data_residual_risk" ng-value="item_m.id">
@@ -1901,16 +1923,8 @@
                                                     @* 3.15 *@
                                                     <td class="td-custom" >
                                                         <div class="box d-flex flex-column gap-2" 
-                                                            ng-repeat="ws in item.worksheet"
+                                                            ng-repeat="ws in item.worksheet | filter: filterInitialRiskRatingWorksheet"
                                                             ng-class="{'unbox': (item.worksheet[item.worksheet.length - 1].seq == ws.seq)}">
-                                                            @* <textarea class="form-control form-control-sm " 
-                                                                rows="2" 
-                                                                type="text"
-                                                                style="width: 200px; height: 100%; font-size: 10.24px;"
-                                                                placeholder="Comments"
-                                                                ng-change="actionChangeComment(hazard)"
-                                                                ng-model="hazard.recommendations">
-                                                            </textarea> *@
                                                             <div class="d-flex gap-2" 
                                                                 ng-class="{ 'disabled-link': isDisableStatus && !isApproveReject && !isEditWorksheet}"
                                                                 ng-repeat="recom in ws.recommendations">
@@ -1945,13 +1959,22 @@
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <input class="form-control rounded-1" 
+                                                                <textarea class="form-control form-control-sm " 
+                                                                    ng-class="{'disabled-link': isDisableStatus}"
+                                                                    rows="2" 
+                                                                    type="text"
+                                                                    style="width: 200px; height: 100%; font-size: 10.24px;"
+                                                                    placeholder="Comments"
+                                                                    ng-model="recom.recommendations"
+                                                                    ng-change="actionChangeComment(recom)">
+                                                                </textarea>
+                                                                @* <input class="form-control rounded-1" 
                                                                     ng-class="{'disabled-link': isDisableStatus}" 
                                                                     style="width: 200px; max-height: 28px; font-size: 10.24px;"
                                                                     type="text" 
                                                                     placeholder="Comments"
                                                                     ng-model="recom.recommendations"
-                                                                    ng-change="actionChangeComment(recom)" >
+                                                                    ng-change="actionChangeComment(recom)" > *@
                                                             </div>
                                                         </div>
                                                     </td>
@@ -2049,7 +2072,7 @@
                                                         @* {{ ws.type_hazard }} *@
                                                         {{ ws.type_hazard
                                                             ? item.worksheet[$index - 1].type_hazard == ws.type_hazard 
-                                                                && item.worksheet[$index - 1].sub_area == ws.sub_area 
+                                                                || item.worksheet[$index - 1].sub_area == ws.sub_area 
                                                                 ? '' 
                                                                 : ws.type_hazard 
                                                             : 'Not found'
@@ -2069,14 +2092,17 @@
 
                                             <td>
                                                 <div class="d-flex justify-content-center box-recom " 
+                                                    style="min-width: 58px;"
                                                     ng-repeat="ws in item.worksheet | filter: filterInitialRiskRating">
                                                     <div ng-if="ws.health_effect_rating">
                                                         <div class="effect-rating "
                                                             @* ng-click="openModalRisk(hazard, $index)" *@
                                                             ng-class="{
-                                                                    'bg-success': (ws.health_effect_rating == '1' || ws.health_effect_rating == '2'),
-                                                                    'bg-warning': (ws.health_effect_rating == '3') 
-                                                            }" >
+                                                                'risk-acceptable': (ws.health_effect_rating == '1' ),
+                                                                'risk-low': (ws.health_effect_rating == '2' ),
+                                                                'risk-medium': (ws.health_effect_rating == '3'),
+                                                                'risk-high': (ws.health_effect_rating == '4'),
+                                                                'risk-very-high': (ws.health_effect_rating == '5')}" >
                                                             {{ ws.health_effect_rating }}
                                                         </div>
                                                     </div>
@@ -2085,13 +2111,16 @@
 
                                             <td class="align-top rating white-space-nowrap text-start">
                                                 <div class="box-recom " 
-                                                    style="min-width: max-content; padding-top: 7px; text-align: center;"
+                                                    style="min-width: 100px; padding-top: 7px; text-align: center;"
                                                     ng-repeat="ws in item.worksheet | filter: filterInitialRiskRating">
                                                     <div class="card-initial"
+                                                        ng-if="ws.initial_risk_rating"
                                                         ng-class="{
-                                                            'bg-danger': (ws.initial_risk_rating == 'High' || ws.initial_risk_rating == 'High\r\n' 
-                                                            || ws.initial_risk_rating == 'Very High' || ws.initial_risk_rating == 'Very High\r\n'),
-                                                            'bg-warning': (ws.initial_risk_rating == 'Meduim' || ws.initial_risk_rating == 'Meduim\r\n') }" >
+                                                            'risk-acceptable': (ws.initial_risk_rating == 'Acceptable Risk' || ws.initial_risk_rating == 'Acceptable Risk\r\n'),
+                                                            'risk-low': (ws.initial_risk_rating == 'Low' || ws.initial_risk_rating == 'Low\r\n'),
+                                                            'risk-medium': (ws.initial_risk_rating == 'Meduim' || ws.initial_risk_rating == 'Meduim\r\n'),
+                                                            'risk-high': (ws.initial_risk_rating == 'High' || ws.initial_risk_rating == 'High\r\n'),
+                                                            'risk-very-high': (ws.initial_risk_rating == 'Very High' || ws.initial_risk_rating == 'Very High\r\n')}" >
                                                         {{ ws.initial_risk_rating }}
                                                     </div>
                                                 </div>                                            
@@ -2102,7 +2131,7 @@
                                                     <select class="form-select form-select-sm rounded-1" 
                                                         ng-if="tab_worksheet_active && ws.action_status == 'Open'"
                                                         ng-class="{'disabled-link': isDisableStatus}"
-                                                        ng-change="actionChangeFrequencyLevel(ws)"
+                                                        ng-change="actionChangeResidualRiskRating(ws)"
                                                         ng-model="ws.residual_risk_rating" 
                                                         style="min-width: 100px; font-size: 10.24px;">
                                                         <option ng-repeat="item_m in data_residual_risk" ng-value="item_m.id">
@@ -2131,14 +2160,23 @@
                                             <td class="" >
                                                 <div class="box-recom d-flex flex-column gap-2" ng-repeat="ws in item.worksheet | filter: filterInitialRiskRating">
                                                      <div class=""  ng-repeat="recom in ws.recommendations">
-                                                         <input class="form-control rounded-1" 
+                                                        <textarea class="form-control form-control-sm " 
+                                                            ng-class="{'disabled-link': isDisableStatus}"
+                                                            rows="2" 
+                                                            type="text"
+                                                            style="width: 200px; height: 100%; font-size: 10.24px;"
+                                                            placeholder="Comments"
+                                                            ng-model="recom.recommendations"
+                                                            ng-change="actionChangeComment(recom)">
+                                                        </textarea>
+                                                         @* <input class="form-control rounded-1" 
                                                             ng-class="{'disabled-link': isDisableStatus}"
                                                             disabled 
                                                             style="width: 200px; max-height: 28px; font-size: 10.24px;"
                                                             type="text" 
                                                             placeholder="Comments"
                                                             ng-model="recom.recommendations"
-                                                            ng-change="actionChangeComment(recom)" >
+                                                            ng-change="actionChangeComment(recom)" > *@
                                                      </div>
                                                     @* <textarea class="form-control form-control-sm " 
                                                         ng-class="{'disabled-link': isDisableStatus}"
@@ -2619,7 +2657,7 @@
                         </div>
                     </div> 
 
-                    @* <!-- Monitoring start--> *@
+                    @* Monitoring *@
                     <div class="" ng-class="{
                         'tab-pane fade show active':(action_part==10),
                         'tab-pane fade':(action_part!==10)}"
@@ -2826,8 +2864,67 @@
 
                     </div>
 
-                </div>
+                    @* Summary of Risk Management *@
+                    <div class="" ng-class="{
+                        'tab-pane fade show active':(action_part==11),
+                        'tab-pane fade':(action_part!==11)}"
+                         id="tab-manage" role="tabpanel" aria-labelledby="manage-tab">
+                        <div class=" border-bottom border-200 my-0" id="NodeTable">
+                            <div class="table-responsive scrollbar">
+                                <table class="table fs--2 mb-0 table-bordered">
+                                    <thead class="text-center bg-soft">
+                                        <tr>
+                                            <th class=" align-middle" colspan="2" style="width: 50%;" scope="col" >
+                                                Initial risk ({{sum_initial_risk}}) items
+                                            </th>
+                                            <th class=" align-middle" colspan="2" style="width: 50%;" scope="col" >
+                                                Residual risk ({{sum_residual_risk}}) items
+                                            </th>
+                                        </tr>
+                                        <tr>
+                                            <th class=" align-middle" style="width: 25%;" scope="col" >Name</th>
+                                            <th class=" align-middle" style="width: 25%;" scope="col" >Quantity</th>
+                                            <th class=" align-middle" style="width: 25%;" scope="col" >Name</th>
+                                            <th class=" align-middle" style="width: 25%;" scope="col" >Quantity</th>
+                                        </tr>
+                                    </thead>
 
+                                    <tbody class="list" id="customer-rating-table-body">
+                                        <tr class="hover-actions-trigger btn-reveal-trigger position-static text-center"
+                                            ng-repeat="item in data_summary">
+
+                                            <td class="align-middle">
+                                                <div class="">
+                                                    {{item.name}}
+                                                </div>
+                                            </td>
+
+                                            <td class="align-middle">
+                                                <div class="">
+                                                    {{item.initial_risk_rating}}
+                                                </div>
+                                            </td>
+
+                                            <td class="align-middle" >
+                                                <div class="">
+                                                    {{item.name}}
+                                                </div>
+                                            </td>
+
+                                            <td class="align-middle">
+                                                <div class="">
+                                                    {{item.residual_risk_rating}}
+                                                </div>
+                                            </td>
+  
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
             </div>
         </div>
     </div>
@@ -2917,14 +3014,15 @@
                     <div class="mb-4">
                         <div class="row g-3">
                             <div class="col-auto">
-                                        <label class="form-label ps-0" for="expense_type">
+                                <label class="form-label ps-0" for="expense_type">
                                     <b class="text-danger d-none"> * </b>
                                     search
                                 </label>
                                 <div class="search-box position-relative">
                                     <input class="form-control search-input search"
-                                           ng-model="keywords.text" placeholder="Search"
-                                           ng-change="fillterRisk()" />
+                                        ng-model="keywords.text" 
+                                        placeholder="Search"
+                                        ng-change="fillterRisk()" />
                                     <span class="fas fa-search search-box-icon"></span>
                                 </div>
                             </div>
@@ -2986,9 +3084,11 @@
                                                 <div ng-if="item.hazards_rating">
                                                     <div class="effect-rating"
                                                         ng-class="{
-                                                            'bg-success': (item.hazards_rating == '1' || item.hazards_rating == '2'),
-                                                            'bg-warning': (item.hazards_rating == '3') 
-                                                        }" >
+                                                            'risk-acceptable': (item.hazards_rating == '1'),
+                                                            'risk-low': (item.hazards_rating == '2'),
+                                                            'risk-medium': (item.hazards_rating == '3'),
+                                                            'risk-high': (item.hazards_rating == '4'),
+                                                            'risk-very-high': (item.hazards_rating == '5')}" >
                                                         {{item.hazards_rating}}
                                                     </div>
                                                 </div>
