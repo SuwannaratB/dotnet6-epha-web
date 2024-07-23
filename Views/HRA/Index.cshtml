@@ -3267,7 +3267,7 @@
          aria-hidden="true" style="display: none;">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content scrollbar" style="max-height: calc(100vh - 100px); overflow-y:auto;"">
-                <div class="modal-header" >
+                <div class="modal-header" ng-if="selectDatFormType !== 'manage'">
                     <div > 
                         <h5 class="text-900 mb-0" data-anchor="data-anchor" id="modalEmployeeCheckLabel">
                             <span class="me-2 text-primary"><B>|</B></span> Search Employee/Contract
@@ -3284,29 +3284,63 @@
                     </button>
 
                 </div>
+                <div class="modal-header ps-0 pb-0" ng-if="selectDatFormType === 'manage' && params != 'edit_approver'">
+                    <!-- For form_type === 'owner' -->
+                    <nav class="navbar navbar-expand-lg navbar-light ps-0 pb-0">
+                        <div class="container-fluid ps-0">
+                            <ul class="nav nav-underline border-3  " id="myTab"
+                                role="tablist" style="position: relative;">
+                                <li class="mx-2" ng-if="tab.isShow || true"><!-----btn-outline-primary------->
+                                    <a ng-click="selectTab('search_tab')"
+                                       class="btn border border-0 "
+                                       ng-class="{'btn border border-bottom border-primary border-0 text-primary active': (action_tabs === 'search_tab'),'btn border border-0 ': (action_tabs === 'manage_tabs') }"
+                                        style="border-radius: 10px 10px 0px 0px !important;"
+                                       aria-selected="tab.isActive">Search Employee/Contract</a>
+                                </li>
+                                <li class="mx-2" ng-if="tab.isShow || true">
+                                    <a ng-click="selectTab('manage_tabs')"
+                                       class="btn border border-0 "
+                                       ng-class="{'btn border border-0 border-bottom border-primary text-primary active': (action_tabs === 'manage_tabs'),'btn border border-0 ': (action_tabs === 'search_tab') }"
+                                       style="border-radius: 10px 10px 0px 0px !important;"
+                                       aria-selected="tab.isActive">Manage Recommendations</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </nav>
 
+                    <button class="btn p-1" type="button" data-bs-dismiss="modal" aria-label="Close" ng-click="clearFormData()">
+                        <svg class="svg-inline--fa fa-xmark fs--1" aria-hidden="true" focusable="false" data-prefix="fas"
+                                data-icon="xmark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"
+                                data-fa-i2svg="">
+                            <path fill="currentColor"
+                                    d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z">
+                            </path>
+                        </svg>
+                    </button>
+                </div>
                 <div class="modal-body">
-                    <div class="mb-4">
-                        <div class="row g-3">
-                            <div class="col-auto">
-                                <label for="" style="font-size: 14px; font-weight: bold; padding-left: 4px;">Indicator</label>
-                                <div class="search-box position-relative">
-                                    <input class="form-control search-input search"
-                                           ng-model="searchIndicator.text" 
-                                           placeholder="Search"
-                                           ng-change="fillterDataEmployeeAdd()" />
-                                    <span class="fas fa-search search-box-icon"></span>
+                    <div ng-show="action_tabs === 'search_tab'">
+                        <div class="mb-4">
+                            <div class="row g-3">
+                                <div class="col-auto">
+                                    <label for="" style="font-size: 14px; font-weight: bold; padding-left: 4px;">Indicator</label>
+                                    <div class="search-box position-relative">
+                                        <input class="form-control search-input search"
+                                            ng-model="searchIndicator.text" 
+                                            placeholder="Search"
+                                            ng-change="fillterDataEmployeeAdd()" />
+                                        <span class="fas fa-search search-box-icon"></span>
+                                    </div>
+                                </div>
+                                <div class="col-auto d-flex align-items-end justify-content-end" ng-show="selectDatFormType === 'member'">
+                                    <button class="btn text-light btn-sm" style="background-color: #e90f8b;" 
+                                            ng-class="{'button-fade': showContractor}"
+                                            ng-click="showContractor = !showContractor">
+                                        <span class="fa-solid fa-user-pen"></span> Contractor/Outsource
+                                    </button>
                                 </div>
                             </div>
-                            <div class="col-auto d-flex align-items-end justify-content-end" ng-show="selectDatFormType === 'member'">
-                                <button class="btn text-light btn-sm" style="background-color: #e90f8b;" 
-                                        ng-class="{'button-fade': showContractor}"
-                                        ng-click="showContractor = !showContractor">
-                                    <span class="fa-solid fa-user-pen"></span> Contractor/Outsource
-                                </button>
-                            </div>
                         </div>
-                    </div>
                         @* start แสดงข้อมูลที่ ค้นหาตาม textsearch*@
                         <div class="bg-white border-top border-bottom border-200 position-relative top-1" >
                             <div class="table-responsive scrollbar-overlay mx-n1 px-1">
@@ -3391,6 +3425,59 @@
                             </div>
                         </div>
                         @* end แสดงข้อมูลที่ ค้นหาตาม textsearch*@
+                    </div>
+                    <div ng-show="action_tabs === 'manage_tabs'" class="p-4 bg-light rounded shadow-sm">
+                        <p class="h4 mb-4"><strong>Action Owner:</strong> <span>{{selectedData.responder_user_displayname}}</span></p>
+                        <p class="h5 text-muted mb-4">Managing Recommendations</p>
+                        <div class="mb-4 p-3 bg-white rounded border">
+                            <p class="mb-2"><strong>Comment:</strong> <span class="text-primary">{{selectedComment}}</span></p>
+                            <p class="mb-2"><strong>Factor:</strong> <span class="text-primary">{{selectedFactor}}</span></p>
+                            <p class="mb-0"><strong>Initial Risk:</strong> <span class="text-primary">{{selectedInitialRisk}}</span></p>
+                        </div>
+                        <div class="bg-white border-top border-bottom border-200 position-relative top-1 rounded">
+                            <div class="table-responsive mx-n1 px-1">
+                                <table class="table table-sm fs--1 mb-0">
+                                    <thead class="text-uppercase" style="background-color: #f8f9fa; color: #343a40;">
+                                        <tr class="text-center">
+                                            <th scope="col">Group</th>
+                                            <th scope="col">Task</th>
+                                            <th scope="col">Factor</th>
+                                            <th scope="col">Initial Risk</th>
+                                            <th scope="col"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="list">
+                                        <tr class="hover-actions-trigger btn-reveal-trigger position-static text-center"
+                                            ng-class="{'row-faded': clickedStates[item.employee_name]}"
+                                            ng-repeat="item in data_worksheet_show | filter:filterData">
+                                            <td>{{item.group}}</td>
+                                            <td>{{item.task}}</td>
+                                            <td class="text-center">{{item.factor}}</td>
+                                            <td class="text-center">{{item.initial_risk}}</td>
+                                            <td>
+                                                <span class="mx-1">
+                                                    <button class="btn btn-outline-secondary p-1 cursor-pointer"
+                                                            ng-class="{'btn-clicked': clickedStates[item.employee_name]}" 
+                                                            data-toggle="tooltip" 
+                                                            data-placement="top" 
+                                                            title="Choose Employee"
+                                                            ng-click="applyActionOwner(item)">
+                                                        <span class="fa-solid fa-user-check" ng-if="selectDatFormType === 'manage'">Apply</span>
+                                                    </button>
+                                                </span>
+                                            </td>
+                                        </tr>
+
+                                        <tr ng-if="data_worksheet_show.length === 0">
+                                            <td colspan="5">
+                                                <p class="mb-0 ms-3 text-1100 fw-bold text-center">Not Found</p>
+                                            </td>
+                                        </tr>        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>                              
+                    </div>
                 </div>
 
                 <!------------show name after add   --------------->
@@ -3470,8 +3557,8 @@
                             </div>
                         </div>
                     </div>
-                    @* list manage *@
-                    <div class="body-manage"  ng-if="selectDatFormType == 'manage'">
+                    @* list manage 
+                    <div class="body-manage"  ng-if="selectDatFormType == 'manage' && action_tabs !== 'manage'">
                         <div class="col-auto py-2" ng-if="selectedData.responder_user_displayname">
                             <div class="d-flex align-items-center p-1" style="height: 20px;">
                                 <button class="btn btn-outline-secondary p-1" 
@@ -3489,7 +3576,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>*@
 
                 <!------------contractor/out source-------------->
                 <div class="modal-header bg-soft" 

@@ -6673,7 +6673,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.searchText = '';
 
             if($scope.selectDatFormType == 'worker')
+
                 $scope.data_worker_list = item.worker_list
+
+            if (form_type === 'manage') {
+                $scope.manage_ws_recom = item;
+
+                $scope.action_tabs = 'search_tab'; //1 for em || 2 for teams to sent to p'kul
+            }
 
             apply();
             console.log('selectDatFormType ',$scope.selectDatFormType)
@@ -6682,6 +6689,17 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 keyboard: false 
             }).modal('show');
         };
+
+        $scope.selectTab = function(tab) {
+            $scope.action_tabs = tab;
+
+            console.log("manage_ws_recom",$scope.manage_ws_recom)
+
+            var manage = $scope.manage_ws_recom
+            $scope.selectedComment = 'test comment';
+            $scope.selectedFactor = manage.health_hazard;
+            $scope.selectedInitialRisk = manage.initial_risk_rating;
+        }
 
         $scope.fillterDataEmployeeAdd = function (type) {
             $scope.employeelist_show = [];
@@ -6918,42 +6936,18 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                 if(!data) return;
 
-                data.responder_user_displayname = employee_displayname
                 data.responder_action_type = employee_position
                 data.responder_user_email = employee_email
                 data.responder_user_name = employee_name
                 data.responder_user_img = employee_img
                 data.responder_user_id = id
                 data.action_change = 1;
-                /*var arr_items = $filter('filter')($scope.data_workers, function (item) {
-                    return (item.id_session == seq_session && item.user_name == employee_name);
-                });*/
+ 
+                if ($scope.action_tabs === 'search_tab') {
+                    data.responder_user_displayname = employee_position + '-' + employee_displayname.split(" ")[0];   
+                } 
 
-                // if (arr_items.length == 0) {
-                //     var seq = $scope.MaxSeqdataWorkers;
-
-                //     var newInput = clone_arr_newrow($scope.data_workers_def)[0];
-                //     newInput.seq = seq;
-                //     newInput.id = seq;
-                //     newInput.no = (0);
-                //     newInput.id_session = Number(seq_session);
-                //     newInput.action_type = 'insert';
-                //     newInput.action_change = 1;
-
-                //     newInput.user_name = employee_name;
-                //     newInput.user_displayname = employee_displayname;
-                //     newInput.user_title = employee_position;
-                //     newInput.user_img = employee_img;
-
-                //     $scope.data_workers.push(newInput);
-                //     running_no_level1($scope.data_workers, null, null);
-
-                //     $scope.MaxSeqdataWorkers = Number($scope.MaxSeqdataWorkers + 1);
-
-                // }
-
-                // console.log("$scope.data_workers",$scope.data_workers)
-            $('#modalEmployeeAdd').modal('hide');
+                //$('#modalEmployeeAdd').modal('hide');
 
             }
             apply();
@@ -6963,13 +6957,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
 
 
-            if (xformtype == "manage" || xformtype == "approver_ta3" || xformtype == "edit_approver") {
+            if (xformtype == "approver_ta3" || xformtype == "edit_approver") {
                 $('#modalEmployeeAdd').modal('hide');
     
                 $scope.clearFormData();
             } else {
                 $('#modalEmployeeAdd').modal('show');
-            }    };
+            }    
+    };
 
     $scope.removeDataEmployee = function (seq, seq_session) {
             const actions = $scope.selectDatFormType;
@@ -8139,7 +8134,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         } else if (type === 'Exposure_Level') {
             $scope.ratingLabel = '[3.9] Exposure Level';
         } else {
-            $scope.ratingLabel = ''; // Default text in case type is not recognized
+            $scope.ratingLabel = ''; 
         }
     
         $('#modalMatrix_Rating_worksheet').modal('show');

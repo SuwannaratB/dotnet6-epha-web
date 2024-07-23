@@ -7186,13 +7186,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 if ($scope.owner_status === 'teams') {
                     arr_items.project_team_text =  $scope.owner_teams;
                     arr_items.action_project_team = true;
-                    arr_items.action_status = 'N/A'
+                    arr_items.action_status = 'Open'
                     
                 } else {
                     arr_items.responder_user_displayname = employee_position + '-' + employee_displayname.split(" ")[0];
                     arr_items.action_project_team = false;
                     arr_items.action_status = 'Open'
-            }
+                }
 
             arr_items.action_change = 1;
             $('#modalEmployeeAdd').modal('hide');
