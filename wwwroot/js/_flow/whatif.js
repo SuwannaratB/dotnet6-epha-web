@@ -419,6 +419,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     // <!======================== Set tans ==============================!?>
     $scope.changeTab = function (selectedTab) {
+
+
         if ($scope.data_header[0].pha_status === 11) {
             if (selectedTab.name === 'worksheet' || selectedTab.name === 'manage' || selectedTab.name === 'report') {
                 if ($scope.data_general[0].sub_expense_type === 'Normal') {
@@ -455,7 +457,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
         } else {
             if (selectedTab.action_part === 5) {
-                $scope.selectedItemListView = $scope.data_tasklist[0].id_list;
+
+                $scope.selectedItemListView = $scope.data_tasklist[0].id;
+
                 $scope.viewDataTaskList($scope.selectedItemListView);
             } else if (selectedTab.action_part === 6) {
                 $scope.data_listworksheet.forEach(_item => {
@@ -3542,7 +3546,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         new_worksheet.id_list = task.id;
         new_worksheet.seq_list = task.seq;
     
-        new_worksheet.no = task.no;
+        new_worksheet.no = '';
         new_worksheet.list_no = task.no;
         new_worksheet.list_sub_system_no = 1;
         new_worksheet.list_system_no = 1;
@@ -4407,7 +4411,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         var seq_recommendations = item.seq_recommendations;
 
         var index_rows = Number(item.index_rows);
-        var no = Number(item.no);
+        var no = '';
         var list_system_no = Number(item.list_system_no);
         var list_sub_system_no = Number(item.list_sub_system_no);
         var causes_no = Number(item.causes_no);
@@ -4640,45 +4644,58 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     }
 
-    function ensureUnique(dataList) {
-        console.log("Before ensuring uniqueness:");
-        console.table(dataList);
+    function ensureUnique(dataList,type) {
     
-        let previous = {};
-        dataList.forEach((item, index) => {
-            console.log("item.list_system_no",item.list_system_no)
-            console.log("previous.list_system_no",previous.list_system_no)
-            if (previous.list_system_no === item.list_system_no ) {
-                if (previous.list_system_no >= item.list_system_no && item.row_type === 'list_system'){
-                    item.list_system_no = previous.list_system_no + 1;
-                }
+        if(type === 'recom'){
+            let count = 1;
 
-                if (previous.list_sub_system_no >= item.list_sub_system_no && item.row_type === 'list_sub_system') {
-                    item.list_sub_system_no = previous.list_sub_system_no + 1;
+            dataList.forEach((item, index) => {
+    
+                if (item.recommendations !== null && item.recommendations !== '') {
+                    item.no = count; 
+                    count++; 
                 }
-                if (previous.list_sub_system_no === item.list_sub_system_no && previous.causes_no >= item.causes_no && (item.row_type === 'causes'||item.row_type === 'list_sub_system')) {
-                    if(previous.seq_causes === item.seq_causes){
-                        item.causes_no = previous.causes_no
-                    }else{
-                        item.causes_no = previous.causes_no + 1;
+            });
+        }else{
+            let previous = {};
+            dataList.forEach((item, index) => {
+    
+                if (previous.list_system_no === item.list_system_no && type !== 'recom') {
+                    if (previous.list_system_no >= item.list_system_no && item.row_type === 'list_system'){
+                        item.list_system_no = previous.list_system_no + 1;
                     }
-                    
+    
+                    if (previous.list_sub_system_no >= item.list_sub_system_no && item.row_type === 'list_sub_system') {
+                        item.list_sub_system_no = previous.list_sub_system_no + 1;
+                    }
+                    if (previous.list_sub_system_no === item.list_sub_system_no && previous.causes_no >= item.causes_no && (item.row_type === 'causes'||item.row_type === 'list_sub_system')) {
+                        if(previous.seq_causes === item.seq_causes){
+                            item.causes_no = previous.causes_no
+                        }else{
+                            item.causes_no = previous.causes_no + 1;
+                        }
+                        
+                    }
+                    if (previous.list_sub_system_no === item.list_sub_system_no && previous.causes_no === item.causes_no && previous.consequences_no >= item.consequences_no 
+                        && (item.row_type === 'causes'||item.row_type === 'list_sub_system' || item.row_type === 'consequences')) {
+                        item.consequences_no = previous.consequences_no + 1;
+                    }
+                    if (previous.list_sub_system_no === item.list_sub_system_no && previous.causes_no === item.causes_no && previous.consequences_no === item.consequences_no && previous.category_no >= item.category_no 
+                        && (item.row_type === 'causes'||item.row_type === 'list_sub_system' || item.row_type === 'consequences' || item.row_type === 'category')) {
+                        item.category_no = previous.category_no + 1;
+                    }
+                    if (previous.list_sub_system_no === item.list_sub_system_no && previous.causes_no === item.causes_no && previous.consequences_no >= item.consequences_no && previous.category_no === item.category_no && previous.recommendations_no >= item.recommendations_no 
+                        && (item.row_type === 'causes'||item.row_type === 'list_sub_system' || item.row_type === 'consequences' || item.row_type === 'category' || item.row_type === 'recommendations')) {
+                        item.recommendations_no = previous.recommendations_no + 1;
+                    }
                 }
-                if (previous.list_sub_system_no === item.list_sub_system_no && previous.causes_no === item.causes_no && previous.consequences_no >= item.consequences_no 
-                    && (item.row_type === 'causes'||item.row_type === 'list_sub_system' || item.row_type === 'consequences')) {
-                    item.consequences_no = previous.consequences_no + 1;
-                }
-                if (previous.list_sub_system_no === item.list_sub_system_no && previous.causes_no === item.causes_no && previous.consequences_no === item.consequences_no && previous.category_no >= item.category_no 
-                    && (item.row_type === 'causes'||item.row_type === 'list_sub_system' || item.row_type === 'consequences' || item.row_type === 'category')) {
-                    item.category_no = previous.category_no + 1;
-                }
-                if (previous.list_sub_system_no === item.list_sub_system_no && previous.causes_no === item.causes_no && previous.consequences_no >= item.consequences_no && previous.category_no === item.category_no && previous.recommendations_no >= item.recommendations_no 
-                    && (item.row_type === 'causes'||item.row_type === 'list_sub_system' || item.row_type === 'consequences' || item.row_type === 'category' || item.row_type === 'recommendations')) {
-                    item.recommendations_no = previous.recommendations_no + 1;
-                }
-            }
-            previous = { ...item };
-        });
+                previous = { ...item };
+            });
+        }
+
+
+
+
     
         //console.log("After ensuring uniqueness:");
         //console.table(dataList);
@@ -4691,16 +4708,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         for (let i = 0; i < $scope.data_listworksheet.length; i++) {
             const item = $scope.data_listworksheet[i];
             
-                console.log("data_index", i);
-                console.log("newData", newData);
-                console.log("item", item);
-                console.log("newData.row_type", newData.row_type);
-                console.log("item.list_system_no ", item.list_system_no, "newData.list_system_no", newData.list_system_no);
-                console.log("item.list_sub_system_no ", item.list_sub_system_no, "newData.list_sub_system_no", newData.list_sub_system_no);
-                console.log("item.causes_no ", item.causes_no, "newData.causes_no", newData.causes_no);
-                console.log("item.consequences_no ", item.consequences_no, "newData.consequences_no", newData.consequences_no);
-                console.log("item.category_no ", item.category_no, "newData.category_no", newData.category_no);
-                console.log("item.recommendations_no ", item.recommendations_no, "newData.recommendations_no", newData.recommendations_no);
             
             if (item.id_list !== newData.id_list) {
                 continue;
@@ -4721,14 +4728,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 && item.list_sub_system_no === newData.list_sub_system_no) {
                 //index = item.causes_no >= newData.causes_no ? i : i + 1;
                 //break;
-                //break;
-                console.log("item.list_system_no ", item.list_system_no, "newData.list_system_no", newData.list_system_no);
-                console.log("item.list_sub_system_no ", item.list_sub_system_no, "newData.list_sub_system_no", newData.list_sub_system_no);
-                console.log("item.causes_no ", item.causes_no, "newData.causes_no", newData.causes_no);
-                console.log("item.consequences_no ", item.consequences_no, "newData.consequences_no", newData.consequences_no);
-                console.log("item.category_no ", item.category_no, "newData.category_no", newData.category_no);
-                console.log("item.recommendations_no ", item.recommendations_no, "newData.recommendations_no", newData.recommendations_no);
-
                 const set_causes = $scope.data_listworksheet.filter(data => 
                     data.list_system_no === item.list_system_no && 
                     data.list_sub_system_no === item.list_sub_system_no && 
@@ -6870,6 +6869,24 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 _arr.recommendations_no = recommendations_no;
             }
         }
+
+        if(type_text == 'recom' && (_arr.recommendations !== null || _arr.recommendations !== '')){
+            if($scope.data_header[0].pha_status === 12) {
+                ensureUnique($scope.data_listworksheet,type_text);
+            }else{
+                /*let maxNo = 0;
+
+                $scope.data_listworksheet.forEach(item => {
+                    if (item.no > maxNo) {
+                        maxNo = item.no;
+                    }
+                });
+        
+                maxNo += 1;
+
+                _arr.no = maxNo;*/
+            }
+        }
         action_type_changed(_arr, _seq);
 
         var arr_submit = $filter('filter')($scope.data_listworksheet, function (item) {
@@ -7453,7 +7470,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             if ($scope.owner_status === 'teams') {
                 arr_items.project_team_text =  $scope.owner_teams;
                 arr_items.action_project_team = true;
-                arr_items.action_status = 'N/A'
+                arr_items.action_status = 'Open'
                 
             } else {
                 arr_items.responder_user_displayname = employee_position + '-' + employee_displayname.split(" ")[0];
