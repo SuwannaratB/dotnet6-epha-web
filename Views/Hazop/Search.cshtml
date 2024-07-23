@@ -410,7 +410,108 @@
 
                                             @*row 2 HRA *@
                                             <div class="row" ng-if="(item_m.pha_sub_software | lowercase)=='hra'">
-                                                <div class="col-md-2">
+                                                    <div class="col-lg-2 col-md-4 col-sm-12">
+                                                        <label class="form-label ps-0" for="company">
+                                                            Company
+                                                        </label>
+                                                        <label class="form-label ps-0" ng-if="select_history_tracking_record">
+                                                            <a class="form-label far fa-comment-alt text-warning cursor-pointer"
+                                                               data-bs-toggle="tooltip"
+                                                               data-bs-placement="top"
+                                                               name="company" title=""
+                                                               data-bs-html="true">
+                                                            </a>
+                                                        </label>
+                                                        <select class="form-control js-choice-company "
+                                                                data-choices="data-choices"
+                                                                data-options='{"removeItemButton":true,"placeholder":true}'
+                                                                ng-model="item_m.id_company"
+                                                                ng-change="actionChange(item_m)">
+                                                            <option id="ALL" value="ALL" selected>All</option>
+                                                            <option ng-repeat="item2 in master_company" ng-value="item2.id">
+                                                                {{item2.name}}
+                                                            </option>
+                                                        </select>
+                                                    </div>
+                                              
+                                                    <div class="col-lg-2 col-md-4 col-sm-12">
+                                                        <label class="form-label ps-0" for="area">Area Process Unit </label>
+                                                        <label class="form-label ps-0" ng-if="select_history_tracking_record">
+                                                            <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
+                                                               data-bs-placement="top" title=" Area Process Unit : A" data-bs-html="true"></a>
+                                                        </label>
+                                                        <select class="form-control js-choice-apu-jsea"
+                                                                data-choices="data-choices"
+                                                                data-options='{"removeItemButton":true,"placeholder":true}'
+                                                                ng-model="item_m.id_apu"
+                                                                ng-change="actionChange(item_m)">
+                                                            <option id="ALL" value="ALL" selected>All</option>
+                                                            <option ng-repeat="item2 in master_apu" ng-value="item2.id">{{item2.name}}</option>
+                                                        </select>
+
+                                                    </div>
+                                             
+                                                    <div class="col-lg-2 col-md-4 col-sm-12">
+                                                        <label class="form-label ps-0" for="toc">Thaioil Complex </label>
+                                                        <label class="form-label ps-0" ng-if="select_history_tracking_record">
+                                                            <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
+                                                               data-bs-placement="top" title="Thaioil Complex" data-bs-html="true"></a>
+                                                        </label>
+                                                        <label class="form-label ps-0" for="toc"></label>
+                                                        <select class="form-control js-choice-toc"
+                                                                data-choices="data-choices"
+                                                                data-options='{"removeItemButton":true,"placeholder":true}'
+                                                                ng-change="actionChange(item_m)"
+                                                                ng-model="item_m.id_toc">
+                                                            <option id="ALL" value="ALL" selected>All</option>
+                                                            <option ng-repeat="item2 in master_toc" ng-value="item2.id">
+                                                                {{item2.name}}
+                                                            </option>
+                                                        </select>
+                                                    </div>
+                                        
+                                                    <div class="col-lg-2 col-md-4 col-sm-12">
+                                                        <label class="form-label ps-0" for="unit">Unit No </label>
+                                                        <label class="form-label ps-0" ng-if="select_history_tracking_record">
+                                                            <a class="form-label far fa-comment-alt text-warning cursor-pointer"
+                                                               data-bs-toggle="tooltip"
+                                                               data-bs-placement="top"
+                                                               title=" Unit No : ADIP Unit"
+                                                               data-bs-html="true">
+                                                            </a>
+                                                        </label>
+                                                        <select class="form-control"
+                                                                data-choices="data-choices"
+                                                                data-options='{"removeItemButton":true,"placeholder":true}'
+                                                                ng-change="actionChange(item_m)"
+                                                                ng-model="item_m.id_unit_no">
+                                                            <option id="ALL" value="ALL" selected>All</option>
+                                                            <option ng-repeat="item2 in master_unit_no_show" ng-value="item2.id">{{item2.name}}</option>
+                                                        </select>
+                                                    </div>
+                                                   
+                                                    <div class="col-lg-2 col-md-4 col-sm-12">
+                                                        <label class="form-label ps-0" for="tagid">Tag ID/ Equipment </label>
+                                                        <label class="form-label ps-0" ng-if="select_history_tracking_record">
+                                                            <a class="form-label far fa-comment-alt text-warning cursor-pointer"
+                                                               data-bs-toggle="tooltip"
+                                                               data-bs-placement="top"
+                                                               title=""
+                                                               data-bs-html="true"></a>
+                                                        </label>
+                                                        <select class="form-control "
+                                                                data-choices="data-choices"
+                                                                data-options='{"removeItemButton":true,"placeholder":true}'
+                                                                ng-change="actionChange(item_m)"
+                                                                ng-model="item_m.id_tagid">
+                                                            <option id="ALL" value="ALL" selected>All</option>
+                                                            <option ng-repeat="item2 in master_tagid" ng-value="item2.id">
+                                                                {{item2.name}}
+                                                            </option>
+                                                        </select>
+                                                    </div>
+                                                                                                    
+                                                @*<div class="col-md-2">
                                                     <label class="form-label ps-0">Project Type</label>
                                                     <label class="form-label ps-0" ng-if="select_history_tracking_record">
                                                         <a class="form-label far fa-comment-alt text-warning cursor-pointer" 
@@ -454,7 +555,7 @@
                                                                 >
                                                         </div>
                                                     </div>
-                                                </div>                                    
+                                                </div>*@                                 
                                             </div>
 
                                             @* row 3 HAZOP,WHAT-IF*@

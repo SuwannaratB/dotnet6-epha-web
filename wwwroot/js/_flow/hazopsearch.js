@@ -126,7 +126,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                 }
                 //$scope.master_approver = JSON.parse(replace_hashKey_arr(arr.approver));
 
-                if (sub_software == "JSEA") {
+                if (sub_software == "JSEA" || sub_software == "HRA") {
                     try {
                         $scope.master_company = JSON.parse(replace_hashKey_arr(arr.company));
                         $scope.master_toc = JSON.parse(replace_hashKey_arr(arr.toc));
@@ -174,8 +174,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                     var arr_clone_def = { id: $scope.data_conditions[0].master_unit_no, name: 'Please select' };
                     $scope.master_unit_no.splice(0, 0, arr_clone_def);
                 }*/
-                    console.log(sub_software,"sub_software")
-
                 if (sub_software == "HAZOP") {
                     $scope.data_conditions[0].expense_type = $scope.data_conditions[0].expense_type === null ? "ALL" :  $scope.data_conditions[0].expense_type;
                     $scope.data_conditions[0].sub_expense_type = $scope.data_conditions[0].sub_expense_type === null ? "ALL" : $scope.data_conditions[0].sub_expense_type;
@@ -200,6 +198,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
                 } else if (sub_software == "HRA") {
                     $scope.data_conditions[0].expense_type = $scope.data_conditions[0].expense_type === null ? "ALL" :  $scope.data_conditions[0].expense_type;
+                    $scope.data_conditions[0].id_company = $scope.data_conditions[0].id_company || "ALL";
+                    $scope.data_conditions[0].id_apu = $scope.data_conditions[0].id_apu || "ALL";
+                    $scope.data_conditions[0].id_toc = $scope.data_conditions[0].id_toc || "ALL";
+                    $scope.data_conditions[0].id_unit_no = $scope.data_conditions[0].id_unit_no || "ALL";
+                    $scope.data_conditions[0].id_tagid = $scope.data_conditions[0].id_tagid || "ALL";
+                    $scope.data_conditions[0].id_request_type = $scope.data_conditions[0].id_request_type || "ALL";
 
                 } else {
 
