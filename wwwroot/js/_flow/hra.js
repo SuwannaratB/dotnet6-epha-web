@@ -8127,15 +8127,24 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     //         item.hierarchy_of_control != null;
     // };
     
-    $scope.Matrix_Frequency_Rating = function () {
-         
-        $('#modalMatrix_Frequency_Rating').modal('show');
-    };
+    $scope.Matrix_Rating = function (type) {
 
-    $scope.Matrix_Exposure_Rating = function () {
-         
-        $('#modalMatrix_Exposure_Rating').modal('show');
+        console.log("call to pop up modal")
+        $scope.select_modal = type;
+    
+        if (type === 'Exposure_Rating') {
+            $scope.ratingLabel = '[3.10] Exposure Rating';
+        } else if (type === 'Frequency_Rating') {
+            $scope.ratingLabel = '[3.11] Initial Risk Rating';
+        } else if (type === 'Exposure_Level') {
+            $scope.ratingLabel = '[3.9] Exposure Level';
+        } else {
+            $scope.ratingLabel = ''; // Default text in case type is not recognized
+        }
+    
+        $('#modalMatrix_Rating_worksheet').modal('show');
     };
+    
 
     $scope.openCalendar = function(event) {
         event.preventDefault();

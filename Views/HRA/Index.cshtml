@@ -184,9 +184,9 @@
                                 <div class="mx-1 row g-3 align-items-center" ng-repeat="item in data_general ">
 
                                     <h5>
-                                        Health risk assessment: 
+                                        HEALTH RISK ASSESSMENT :  
                                         <span class="fw-normal" ng-if="item.id_section || item.id_unit_no">
-                                            {{item.id_sections}} 
+                                            {{ item.id_sections}} 
                                             <span ng-if="item.id_sections">at</span> 
                                             {{mocTitle['unit']}}
                                         </span>
@@ -1647,7 +1647,7 @@
                                                         </div>
                                                     </th>
 
-                                                    <th class=" align-top cursor-pointer" ng-click="Matrix_Exposure_Rating()">
+                                                    <th class=" align-top cursor-pointer" ng-click="Matrix_Rating('Exposure_Rating')">
                                                         <div class="container-header-number ">
                                                             <span>[3.10]</span>
                                                         </div>
@@ -1721,14 +1721,14 @@
                                                     <th class=" align-top" >Frequency Level</th>
                                                     <th class=" align-top" >Exposure Band</th>
                                                     <th class=" align-top" >standard</th>
-                                                    <th class=" align-top" >
+                                                    <th class=" align-top" ng-click="Matrix_Rating('Exposure_Level')">
                                                         Exposure<br/>Level = [3.7] <br/>vs [3.8]
                                                     </th>
-                                                    <th class="align-top cursor-pointer" ng-click="Matrix_Exposure_Rating()">
+                                                    <th class="align-top cursor-pointer" ng-click="Matrix_Rating('Exposure_Rating')">
                                                         Exposure<br/>Rating = [3.6] <br/>vs [3.9]
                                                         <a class="fa-solid fa-subtitles" style="color: #1985a1"></a>
                                                     </th>
-                                                    <th class="align-top cursor-pointer" ng-click="Matrix_Frequency_Rating()">
+                                                    <th class="align-top cursor-pointer" ng-click="Matrix_Rating('Frequency_Rating')">
                                                         Initial Risk<br/>Rating = [3.5]<br/>vs [3.10]
                                                         <a class="fa-solid fa-subtitles" style="color: #fa6607"></a>
                                                     </th>
@@ -3102,17 +3102,16 @@
 
 
     @* ************************************************************** *@
-
-    <div class="modal fade modal-xl" id="modalMatrix_Frequency_Rating" tabindex="-1" aria-labelledby="modalMatrix_Frequency_RatingLabel"
-         aria-hidden="true" style="display: none;">
+    <div class="modal fade modal-xl" id="modalMatrix_Rating_worksheet" tabindex="-1" aria-labelledby="modalMatrix_Rating_worksheetLabel" 
+        aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" style="height:300px;">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="text-900 mb-0" data-anchor="data-anchor" id="modalMatrix_Frequency_RatingLabel">
-                        <span class=" me-2 text-primary"><B>|</B></span> Frequency Rating
-                    </h5>
+                <h5 class="text-900 mb-0" data-anchor="data-anchor" id="modalMatrix_Frequency_RatingLabel">
+                    <span class="me-2 text-primary"><b>|</b></span> {{ ratingLabel }}
+                </h5>
 
-                    <button class="btn p-1" type="button" data-bs-dismiss="modal" aria-label="Close">
+                <button class="btn p-1" type="button" data-bs-dismiss="modal" aria-label="Close">
                         <svg class="svg-inline--fa fa-xmark fs--1" aria-hidden="true" focusable="false" data-prefix="fas"
                              data-icon="xmark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"
                              data-fa-i2svg="">
@@ -3122,42 +3121,21 @@
                         </svg>
                     </button>
                 </div>
-                <div class="modal-body">
-                   <div class="d-flex align-items-center justify-content-center p-4">
-                     <img src="~/assets/img/risk_rating.png" style="height:300px;" />
-                   </div>
+                <div class="modal-body" style="overflow: hidden; padding: 1rem;">
+                    <img ng-if="select_modal === 'Exposure_Rating'" 
+                        src="~/assets/img/exposure_rating.png" 
+                        style="max-width: 100%; max-height: 100%; height: auto; width: auto; display: block; margin: auto;">
+                    <img ng-if="select_modal === 'Frequency_Rating'" 
+                        src="~/assets/img/risk_rating.png" 
+                        style="max-width: 100%; max-height: 100%; height: auto; width: auto; display: block; margin: auto;">
+                    <img ng-if="select_modal === 'Exposure_Level'" 
+                        src="~/assets/img/exposure_level.png" 
+                        style="max-width: 100%; max-height: 100%; height: auto; width: auto; display: block; margin: auto;">
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="modal fade modal-xl" id="modalMatrix_Exposure_Rating" tabindex="-1" aria-labelledby="modalMatrix_Exposure_RatingLabel"
-         aria-hidden="true" style="display: none;">
-        <div class="modal-dialog modal-dialog-centered"  >
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="text-900 mb-0" data-anchor="data-anchor" id="modalMatrix_Exposure_RatingLabel">
-                        <span class=" me-2 text-primary"><B>|</B></span> Exposure Rating
-                    </h5>
-
-                    <button class="btn p-1" type="button" data-bs-dismiss="modal" aria-label="Close">
-                        <svg class="svg-inline--fa fa-xmark fs--1" aria-hidden="true" focusable="false" data-prefix="fas"
-                             data-icon="xmark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"
-                             data-fa-i2svg="">
-                            <path fill="currentColor"
-                                  d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z">
-                            </path>
-                        </svg>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="d-flex align-items-center justify-content-center p-4">
-                         <img src="~/assets/img/exposure_rating.png" style="width: 680px; " />
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
     @* ************************************************************** *@
 
 
