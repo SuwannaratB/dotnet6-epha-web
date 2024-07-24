@@ -398,7 +398,7 @@ background-color: #3e8e41;
   .box {
     min-width: 100px;
     width: 100%;
-    height: 88px;
+    height: 62px;
     padding: 8px;
     margin-bottom: 4px;
     border-bottom: 1px solid #e3e6ed;
@@ -409,7 +409,7 @@ background-color: #3e8e41;
   .box-recom {
     min-width: 100px;
     width: 100%;
-    height: 88px;
+    height: 62px;
     padding: 8px;
     margin-bottom: 4px;
     /* border-bottom: 1px solid #e3e6ed; */
@@ -684,9 +684,11 @@ ul.nav li a.btn-nav-menu.btn-outline-primary:hover {
 /* dropdown filter risk */
 .container-worksheet-filter {
   position: absolute;
+  display: flex;
+  flex-direction: column;
   background: #fff;
-  padding: 10px;
-  top: 60px;
+  padding: 18px;
+  top: 44px;
   right: 0;
   border-radius: 4px;
   z-index: 99;
@@ -696,6 +698,26 @@ ul.nav li a.btn-nav-menu.btn-outline-primary:hover {
   rgba(0, 0, 0, 0.07) 0px 8px 16px, 
   rgba(0, 0, 0, 0.07) 0px 16px 32px, 
   rgba(0, 0, 0, 0.07) 0px 32px 64px;
+}
+
+.title-filter {
+  font-size: 16px; 
+  font-weight: 800; 
+  padding-bottom: 16px;
+}
+
+.list-container {
+  display: flex;
+  gap: 80px;
+}
+
+.checkbox-container {
+  min-width: max-content;
+}
+
+.checkbox-container .topic {
+  color: #979797;
+  padding-bottom: 6px !important;
 }
 
 .btn-filter-worksheet {
