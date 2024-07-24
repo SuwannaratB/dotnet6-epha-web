@@ -2240,6 +2240,7 @@
                                             <tr class="rowwork border border-dashed"
                                                 ng-if="( data_tasklist.length == 1 ? (data_tasklist[0].list == null ? false : true) : true) "
                                                 ng-repeat="item in data_listworksheet | toArray | filter:{id_list : selectedItemListView}">
+
                                                 @* List system*@
                                                 <td class="align-top border border-light border-active " style="padding: 0 !important;"
                                                     ng-if="item.row_type === 'list_system'" 
@@ -2621,8 +2622,9 @@
                                                     </div>
                                                 </td>
 
-                                                <td class="align-top border border-light border-0 border-top-0 "
-                                                    style="padding: 0 !important; width: 20px;">
+                                                <td class="align-top border border-light border-0 border-top-0 "style="padding: 0 !important; width: 20px;"
+                                                    ng-if="item.row_type =='list_system' || item.row_type =='list_sub_system' || item.row_type =='causes' || item.row_type =='consequences' || item.row_type =='category' "
+                                                    rowspan="{{ (data_listworksheet | filter:{id_list : selectedItemListView,list_system_no: item.list_system_no,list_sub_system_no: item.list_sub_system_no,causes_no: item.causes_no,consequences_no: item.consequences_no,category_no: item.category_no}).length }}">
                                                     <div class="align-items-center text-end pt-1" style=" width: 20px;" ng-class="{'disabled-link':(!tab_worksheet_active)}">
                                                         <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end"
                                                                 type="button" ng-click="openModalDataRAM_Worksheet(item,'l',item.seq,'after')">
@@ -2630,8 +2632,9 @@
                                                         </button>
                                                     </div>
                                                 </td>
-                                                <td class="align-top border border-light border-0 border-top-0 "
-                                                    style="padding: 0 !important; width: 30px;">
+                                                <td class="align-top border border-light border-0 border-top-0 "style="padding: 0 !important; width: 30px;"
+                                                    ng-if="item.row_type =='list_system' || item.row_type =='list_sub_system' || item.row_type =='causes' || item.row_type =='consequences' || item.row_type =='category' "
+                                                    rowspan="{{ (data_listworksheet | filter:{id_list : selectedItemListView,list_system_no: item.list_system_no,list_sub_system_no: item.list_sub_system_no,causes_no: item.causes_no,consequences_no: item.consequences_no,category_no: item.category_no}).length }}">
                                                     <div class="align-items-center text-end pt-1" style=" width: 30px;">
                                                         <button ng-style=" { 'background-color' : ((item.ram_after_risk == 'H') ? 'red' : ((item.ram_after_risk == 'M') ? 'yellow' : ((item.ram_after_risk == 'L') ? 'green' : '#D3D3D3')) ) }"
                                                                 class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end"
@@ -2672,7 +2675,7 @@
                                                         <div class="autocomplete-container" ng-class="{'disabled-link':(!tab_worksheet_active)}"
                                                              ng-if="item.recommendations!=''">
                                                              @*{{item.recommendations_no}} *@
-                                                             {{item.no}} 
+                                                             {{item.recommendations_no}} 
                                                              @* <textarea class="form-control form-control-sm rounded-1 p-0 m-0 w-100 border border-end-0 border-top-0 text-center"
                                                                       style=" width: 50px; font-size: 10px;"
                                                                       placeholder="No" rows="1"
@@ -2737,8 +2740,8 @@
                                                             </button>
                                                         </div>
                                                         <p class="m-0 text-1100 fw-bold" style="width: 115px;" 
-                                                        ng-class="{'text-primary': item.action_project_team}">
-                                                        {{ item.action_project_team === false ? item.responder_user_displayname : item.project_team_text }}
+                                                            ng-class="{'text-primary': item.action_project_team}">
+                                                            {{ item.action_project_team === false ? item.responder_user_displayname : item.project_team_text }}
                                                         </p>
 
                                                     </div>

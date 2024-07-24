@@ -3546,14 +3546,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         new_worksheet.id_list = task.id;
         new_worksheet.seq_list = task.seq;
     
-        new_worksheet.no = '';
+        new_worksheet.no = 1;
         new_worksheet.list_no = task.no;
         new_worksheet.list_sub_system_no = 1;
         new_worksheet.list_system_no = 1;
         new_worksheet.causes_no = 1;
         new_worksheet.consequences_no = 1;
         new_worksheet.category_no = 1;
-        new_worksheet.recommendations_no = 1;
+        new_worksheet.recommendations_no = '';
     
         new_worksheet.row_type = 'list_system';
         new_worksheet.action_type = 'insert';
@@ -4398,6 +4398,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 $scope.MaxSeqdata_listworksheetcategory = Number($scope.MaxSeqdata_listworksheetcategory) + 1;
                 item.seq_category = $scope.MaxSeqdata_listworksheetcategory;
             }
+            if (item.seq_recommendations == null) {
+                $scope.MaxSeqdata_listworksheetrecommendations = Number($scope.MaxSeqdata_listworksheetrecommendations) + 1;
+                item.seq_recommendations = $scope.MaxSeqdata_listworksheetrecommendations;
+            }
         }
 
         var seq_list = item.id_list;
@@ -4544,7 +4548,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.MaxSeqdata_listworksheetrecommendations = Number($scope.MaxSeqdata_listworksheetrecommendations) + 1;
             seq_recommendations = $scope.MaxSeqdata_listworksheetrecommendations;
 
-            recommendations_no += 1;
+            //recommendations_no += 1;
         }
 
         var arr_list = $filter('filter')($scope.data_tasklist, function (_item) {
@@ -4575,7 +4579,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         newInput.causes_no = causes_no;
         newInput.consequences_no = consequences_no;
         newInput.category_no = category_no;
-        newInput.recommendations_no = index_rows;
+        newInput.recommendations_no = '';
 
         newInput.action_type = 'insert';
         newInput.action_change = 1;
@@ -4652,7 +4656,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             dataList.forEach((item, index) => {
     
                 if (item.recommendations !== null && item.recommendations !== '') {
-                    item.no = count; 
+                    item.recommendations_no = count; 
                     count++; 
                 }
             });
@@ -4686,7 +4690,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     }
                     if (previous.list_sub_system_no === item.list_sub_system_no && previous.causes_no === item.causes_no && previous.consequences_no >= item.consequences_no && previous.category_no === item.category_no && previous.recommendations_no >= item.recommendations_no 
                         && (item.row_type === 'causes'||item.row_type === 'list_sub_system' || item.row_type === 'consequences' || item.row_type === 'category' || item.row_type === 'recommendations')) {
-                        item.recommendations_no = previous.recommendations_no + 1;
+                        item.recommendations_no = '';
                     }
                 }
                 previous = { ...item };
