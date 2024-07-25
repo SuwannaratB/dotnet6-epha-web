@@ -3513,8 +3513,8 @@
                                         <tr class="text-center">
                                             <th scope="col">Group</th>
                                             <th scope="col">Task</th>
-                                            <th scope="col">Factor</th>
-                                            <th scope="col">Initial Risk</th>
+                                            <th scope="col">Health Effect Rating</th>
+                                            <th scope="col">Residual Risk Rating</th>
                                             <th scope="col"></th>
                                         </tr>
                                     </thead>
@@ -3525,11 +3525,21 @@
                                             <td rowspan="{{groups.worksheet.length+1}}">{{groups.worker_group}}</td>
                                             <td rowspan="{{groups.worksheet.length+1}}">{{groups.description}}</td>
                                             <tr ng-repeat="data in groups.worksheet">
-                                                <td class="text-center">{{data.health_hazard}}</td>
-                                                <td class="text-center">{{data.initial_risk_rating}}</td>
-                                                <td>
-                                                    <span class="mx-1">
-                                                        <button class="btn btn-outline-primary"
+                                                <td class="text-center">
+                                                    <div class="effect-rating w-25 mx-auto" 
+                                                        ng-class="{
+                                                            'risk-acceptable': (data.health_effect_rating == '1'),
+                                                            'risk-low': (data.health_effect_rating == '2'),
+                                                            'risk-medium': (data.health_effect_rating == '3'),
+                                                            'risk-high': (data.health_effect_rating == '4'),
+                                                            'risk-very-high': (data.health_effect_rating == '5')}">
+                                                        {{data.health_effect_rating}}
+                                                    </div>
+                                                </td>
+                                                <td class="text-center">{{data.residual_risk_rating}}</td>
+                                                <td class="text-center">
+                                                    <span class="text-center mx-1 mx-auto" >
+                                                        <button class="btn btn-outline-primary p-2"
                                                                 ng-class="{'btn-clicked': clickedStates[data.employee_name]}" 
                                                                 data-toggle="tooltip" 
                                                                 data-placement="top" 
