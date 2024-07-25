@@ -934,6 +934,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.searchdataMemberTeam = '';
         $scope.searchdataResponder = '';
         $scope.searchdataApprover = '';
+        $scope.searchQueryWorksheet = '';
+        $scope.countFilterWorksheet = '';
 
         $scope.keywords = {
             text:''
@@ -8176,23 +8178,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         
         // get 
         var check = true
-        console.log('>> ',response)
-        console.log('worker_group >> '+item.description +' seq >>'+item.seq)
         for (let i = 0; i < response.length; i++) {
             if ( response[i].seq == item.seq) {
                 return check = false
-            }
-
-            // for (let j = 0; j < response[i].worksheet.length; j++) {
-                
-            //     if (j > 0) {
-            //         console.log(`--- ${response[i].worksheet[j-1].seq} --- ${item.seq}`)
-            //         if ( response[i].worksheet[j-1].seq == item.seq) {
-            //             return check = false
-            //         }
-            //     }
-            // }
-            
+            } 
         }
 
         return check
@@ -8221,9 +8210,30 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     };
 
     // deopdown filter initial risk
+    $scope.searchWorksheet = function(searchText){
+        // if (!searchText) {
+        //     return $scope.val_search = null
+        // }
+        $scope.val_search = filterDescription($scope.searchQueryWorksheet)
+
+        // เรียงข้อมูล display
+        if ($scope.val_search) {
+            // มีข้อมูล Filter 
+            $scope.display_worksheet_filter = $scope.val_search.displayFilter
+        } else {
+            // ไม่มีข้อมูล Filter 
+            if ($scope.val_filterInitial) {
+                // มีข้อมูล Filter ก่อนหน้า
+                $scope.display_worksheet_filter = $scope.val_filterInitial.displayFilter
+            } else {
+                // ไม่มีข้อมูล Filter ก่อนหน้า
+                $scope.display_worksheet_filter = $scope.data_worksheet_list
+            }
+        }
+    }
+
     $scope.applyFilters = function(){
         $scope.val_filterInitial = filterInitailRisk();
-        console.log('val_filterInitial',$scope.val_filterInitial)
         // เรียงข้อมูล display
         if ($scope.val_filterInitial) {
             // ถ้าเลือก Filter
@@ -8243,6 +8253,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         });
         $scope.val_filterInitial = null;
 
+        // clear search
+        $scope.val_search = null
+        $scope.searchQueryWorksheet = ''
 
         // เรียงข้อมูล display
         $scope.display_worksheet_filter = $scope.data_worksheet_list
@@ -8256,12 +8269,17 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         .map((option) => option.name_check);
         
         var displayFilter = []
-        for (let i = 0; i < $scope.data_worksheet_list.length; i++) {
-            let tmp_list = $scope.data_worksheet_list[i].worksheet.filter((item) =>
+        var list = $scope.data_worksheet_list
+
+        if($scope.val_search) 
+            list = $scope.val_search.displayFilter
+
+        for (let i = 0; i < list.length; i++) {
+            let tmp_list = list[i].worksheet.filter((item) =>
                 selectFilter.includes(item.initial_risk_rating)
             );
             if (tmp_list.length > 0) {
-                var data = angular.copy($scope.data_worksheet_list[i])
+                var data = angular.copy(list[i])
                 data.worksheet = tmp_list
                 displayFilter.push(data)
             }
@@ -8271,6 +8289,28 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             return null
 
         return {  selectFilter, displayFilter }
+    }
+
+    function filterDescription(textSearch){
+        const searchQuery = textSearch.toLowerCase();
+        let displayFilter = []
+
+        if ($scope.val_filterInitial) {
+            // ถ้ามีข้อมูล Filter ก่อนหน้า
+            displayFilter = $scope.val_filterInitial.displayFilter.filter(item =>
+                item.description.toLowerCase().includes(searchQuery)
+            );
+        } else {
+            // ไม่มีข้อมูล Filter ก่อนหน้า
+            displayFilter = $scope.data_worksheet_list.filter(item =>
+                item.description.toLowerCase().includes(searchQuery)
+            );
+        }
+
+        if (displayFilter.length == $scope.data_worksheet_list.length) 
+            return null
+
+        return { searchQuery, displayFilter }
     }
 
     // ////////////////////////////////////////////////
@@ -8316,18 +8356,24 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     // });
 
     $scope.filterInitialRiskRatingWorksheetMain = function(item){
-        // console.log('main val_filterInitial', $scope.val_filterInitial)
-        if(!$scope.val_filterInitial) return true
+        if(!$scope.val_search && !$scope.val_filterInitial) return true
+
+        // Search
+        if ($scope.val_search) {
+            return item.description.toLowerCase().includes($scope.val_search.searchQuery)      
+        }
 
         for (let i = 0; i < item.worksheet.length; i++) {
-            for (let j = 0; j < $scope.val_filterInitial.selectFilter.length; j++) {
-                if (item.worksheet[i].initial_risk_rating === $scope.val_filterInitial.selectFilter[j] || 
-                    item.worksheet[i].initial_risk_rating === $scope.val_filterInitial.selectFilter[j] + '\r\n'
-                ) {
-                    return true;
+            // Filter Initial Risk
+            if ($scope.val_filterInitial) {
+                for (let j = 0; j < $scope.val_filterInitial.selectFilter.length; j++) {
+                    if (item.worksheet[i].initial_risk_rating === $scope.val_filterInitial.selectFilter[j] || 
+                        item.worksheet[i].initial_risk_rating === $scope.val_filterInitial.selectFilter[j] + '\r\n'
+                    ) {
+                        return true;
+                    }
                 }
             }
-
         }
         return false;
         // if(!$scope.isFilterInitialRisk) return true

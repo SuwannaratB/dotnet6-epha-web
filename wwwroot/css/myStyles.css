@@ -671,6 +671,26 @@ ul.nav li a.btn-nav-menu.btn-outline-primary:hover {
   border-bottom-left-radius: 10px;
 }
 
+
+.btn-worksheet-filter {
+  position: relative;
+}
+
+.bard {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  width: 20px;
+  height: 20px;
+  background: #fff;
+  color: #333;
+  border: 1px solid #333;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 /* worksheet */
 .container-header-number {
   padding-top: 6px;

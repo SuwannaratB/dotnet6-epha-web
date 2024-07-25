@@ -1554,12 +1554,19 @@
                                     <b>NAME OF AREA: &nbsp;</b>{{selectedBusiness_Unit}}
                                 </div>
                                 <div class="d-flex align-items-center gap-2  position-relative">
-                                    <input class="form-control rounded-1" type="text" placeholder="Search">
+                                    <input class="form-control " 
+                                        type="text" 
+                                        ng-model="searchQueryWorksheet"
+                                        ng-keyup="searchWorksheet($event.target.value)" 
+                                        placeholder="Search Task Or Activity">
                                     <button class="btn-worksheet-filter btn btn-primary d-flex gap-2" ng-click="openFilterWorksheet()">
                                         <i class="fa-solid fa-filter"></i>
                                         Filter
+                                        <div class="bard" ng-if="val_filterInitial.selectFilter.length">
+                                            {{val_filterInitial.selectFilter.length}}
+                                        </div>
                                     </button>
-                                   <div class="container-worksheet-filter" ng-if="isFilterWorksheet">
+                                    <div class="container-worksheet-filter" ng-if="isFilterWorksheet">
                                         <div class="d-flex align-items-center justify-content-end">
                                             <i class="fa-solid fa-xmark cursor-pointer" ng-click="closeFilterWorksheet()"></i>
                                         </div>
