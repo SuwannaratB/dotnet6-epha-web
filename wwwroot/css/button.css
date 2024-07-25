@@ -179,6 +179,24 @@ ul.nav li a.nav-menu.btn-outline-primary {
     color: #0056b3;
     transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition effect */
   }
+
+
+  .custom-btn-addmember {
+    transition: all 0.3s ease;
+}
+
+.custom-btn-addmember:hover {
+    color: #fff !important;
+    background-color: #2445fc !important;
+    border-color: #2445fc !important;
+}
+
+.custom-btn-addmember:focus {
+    color: #2445fc !important;
+    background-color: #f1f2f4 !important;
+    border-color: #2445fc !important;
+}
   
-
-
+.bg-light-grey {
+    background-color: #f8fcff !important;
+}
