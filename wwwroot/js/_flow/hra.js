@@ -6814,17 +6814,72 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }).modal('show');
         };
 
+        /*manage recommendation */
         $scope.selectTab = function(tab) {
             $scope.action_tabs = tab;
 
             console.log("manage_ws_recom",$scope.manage_ws_recom)
 
-            var manage = $scope.manage_ws_recom
-            $scope.selectedComment = 'test comment';
-            $scope.selectedFactor = manage.health_hazard;
-            $scope.selectedInitialRisk = manage.initial_risk_rating;
-        }
+            console.log("tab",tab)
 
+
+            // Activate the filter when the "manage" tab is selected
+            if (tab === 'manage_tabs') {
+                var manage = $scope.manage_ws_recom
+                $scope.selectedComment = manage.recommendations;
+                $scope.selectedFactor = manage.health_hazard;
+                $scope.selectedInitialRisk = manage.initial_risk_rating;
+
+                $scope.isFilterActive = true;
+
+                $scope.data_worksheet_show = $scope.worksheet_Filter($scope.data_worksheet_list)
+
+                console.log("$scope.data_worksheet_show",$scope.data_worksheet_show)
+            } else {
+                $scope.isFilterActive = false;
+            }
+
+        }
+        
+        $scope.worksheet_Filter = function(items) {
+            if (!$scope.isFilterActive) return items;
+
+            console.log(items)
+        
+            const selectedComment = $scope.selectedComment.trim().toLowerCase();
+            const selectedFactor = $scope.selectedFactor;
+            const selectedInitialRisk = $scope.selectedInitialRisk.trim().toLowerCase();
+            const selectedFactor_id = $scope.manage_ws_recom.id_hazard;
+
+            console.log("Selected Comment:", selectedComment);
+            console.log("Selected Factor:", selectedFactor);
+            console.log("Selected Initial Risk:", selectedInitialRisk);
+            console.log("selectedFactor_id:", selectedFactor_id);
+
+            return items.map(item => {
+                if (!item.worksheet) return null; // Check if worksheet exists
+        
+                const filteredWorksheet = item.worksheet.filter(function(worksheetItem) {
+                    const recommendations = worksheetItem.recommendations ? worksheetItem.recommendations.trim().toLowerCase() : null;
+                    const id_hazard = worksheetItem.id_hazard ? worksheetItem.id_hazard : null;
+                    const initialRisk = worksheetItem.initial_risk_rating ? worksheetItem.initial_risk_rating.trim().toLowerCase() : null;
+        
+                    console.log("Worksheet Item - Recommendations:", recommendations);
+                    console.log("Worksheet Item - ID Hazard:", id_hazard);
+                    console.log("Worksheet Item - Initial Risk:", initialRisk);
+        
+                    return (selectedComment && recommendations && recommendations === selectedComment) &&
+                           (selectedFactor && id_hazard && id_hazard === selectedFactor_id) &&
+                           (selectedInitialRisk && initialRisk && initialRisk === selectedInitialRisk);
+                });
+        
+                if (filteredWorksheet.length > 0) {
+                    return { ...item, worksheet: filteredWorksheet };
+                }
+                return null;
+            }).filter(item => item !== null);
+        };
+        
         $scope.fillterDataEmployeeAdd = function (type) {
             $scope.employeelist_show = [];
             var searchIndicator = $scope.searchIndicator.text;

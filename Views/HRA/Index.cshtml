@@ -3514,24 +3514,27 @@
                                     <tbody class="list">
                                         <tr class="hover-actions-trigger btn-reveal-trigger position-static text-center"
                                             ng-class="{'row-faded': clickedStates[item.employee_name]}"
-                                            ng-repeat="item in data_worksheet_show | filter:filterData">
-                                            <td>{{item.group}}</td>
-                                            <td>{{item.task}}</td>
-                                            <td class="text-center">{{item.factor}}</td>
-                                            <td class="text-center">{{item.initial_risk}}</td>
-                                            <td>
-                                                <span class="mx-1">
-                                                    <button class="btn btn-outline-secondary p-1 cursor-pointer"
-                                                            ng-class="{'btn-clicked': clickedStates[item.employee_name]}" 
-                                                            data-toggle="tooltip" 
-                                                            data-placement="top" 
-                                                            title="Choose Employee"
-                                                            ng-click="applyActionOwner(item)">
-                                                        <span class="fa-solid fa-user-check" ng-if="selectDatFormType === 'manage'">Apply</span>
-                                                    </button>
-                                                </span>
-                                            </td>
+                                            ng-repeat-start="groups in data_worksheet_show">
+                                            <td rowspan="{{groups.worksheet.length+1}}">{{groups.worker_group}}</td>
+                                            <td rowspan="{{groups.worksheet.length+1}}">{{groups.description}}</td>
+                                            <tr ng-repeat="data in groups.worksheet">
+                                                <td class="text-center">{{data.health_hazard}}</td>
+                                                <td class="text-center">{{data.initial_risk_rating}}</td>
+                                                <td>
+                                                    <span class="mx-1">
+                                                        <button class="btn btn-outline-primary"
+                                                                ng-class="{'btn-clicked': clickedStates[data.employee_name]}" 
+                                                                data-toggle="tooltip" 
+                                                                data-placement="top" 
+                                                                title="Choose Employee"
+                                                                ng-click="applyActionOwner(data)">
+                                                            <span class="" ng-if="selectDatFormType === 'manage'">Apply</span>
+                                                        </button>
+                                                    </span>
+                                                </td>
+                                            </tr>
                                         </tr>
+                                        <tr ng-repeat-end></tr>
 
                                         <tr ng-if="data_worksheet_show.length === 0">
                                             <td colspan="5">
