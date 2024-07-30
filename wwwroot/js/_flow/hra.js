@@ -111,7 +111,7 @@ AppMenuPage.filter('toArray', function() {
     };
   });
 
-AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, $document, $element,$rootScope,$window,$timeout,$interval) {
+AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, $document, $element,$rootScope,$window,$timeout,$interval,$q) {
 
     $scope.unsavedChanges = false;
     $scope.dataLoaded = false;
@@ -6797,6 +6797,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.selectDatFormType = form_type;//member, approver, owner
             $scope.employeelist_show = [];
             $scope.searchText = '';
+            $scope.action_tabs = '';
 
             if($scope.selectDatFormType == 'worker')
 
@@ -6807,6 +6808,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                 $scope.action_tabs = 'search_tab'; //1 for em || 2 for teams to sent to p'kul
             }
+
+            console.log("action_tabs",$scope.action_tabs)
+
 
             apply();
             console.log('selectDatFormType ',$scope.selectDatFormType)
@@ -6984,237 +6988,280 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
         };    
 
+        $scope.showModal = function() {
+            var deferred = $q.defer();
+                
+            $('#modalEmployeeAdd').modal('show')
+            $('#modalConfirm_Recommendation').modal('show').css('z-index', 1062);
 
-    $scope.choosDataEmployee = function (item) {
-
-            var id = item.id;
-            var employee_name = item.employee_name;
-            var employee_displayname = item.employee_displayname;
-            var employee_email = item.employee_email;
-            var employee_position = item.employee_position;
-            var employee_img = item.employee_img;
-
-            var seq_session = $scope.selectdata_session;
-            var xformtype = $scope.selectDatFormType;
-
-            if (xformtype == "member") {
-
-                var arr_items = $filter('filter')($scope.data_memberteam, function (item) {
-                    return (item.id_session == seq_session && item.user_name == employee_name);
-                });
-
-                console.log("arr_items",arr_items)
-                if (arr_items.length == 0) {
-
-                    //add new employee 
-                    var seq = $scope.MaxSeqDataMemberteam;
-
-                    var newInput = clone_arr_newrow($scope.data_memberteam_def)[0];
-                    newInput.seq = seq;
-                    newInput.id = seq;
-                    newInput.no = (0);
-                    newInput.id_session = Number(seq_session);
-                    newInput.action_type = 'insert';
-                    newInput.action_change = 1;
-
-                    newInput.user_name = employee_name;
-                    newInput.user_displayname = employee_displayname;
-                    newInput.user_title = employee_position;
-                    newInput.user_img = employee_img;
-
-                    $scope.data_memberteam.push(newInput);
-                    running_no_level1($scope.data_memberteam, null, null);
-
-                    $scope.MaxSeqDataMemberteam = Number($scope.MaxSeqDataMemberteam) + 1
-
-                }
-
-            }
-            else if (xformtype == "approver") {
-
-                var arr_items_all = $filter('filter')($scope.data_approver, function (item) {
-                    return (item.id_session == seq_session && item.user_displayname != null);
-                });
-                var arr_items = $filter('filter')($scope.data_approver, function (item) {
-                    return (item.id_session == seq_session && item.user_name == employee_name);
-                });
-
-                if (arr_items.length == 0) {
-
-                    //add new employee to approve list ได้รายการเดียว 
-                    var seq = $scope.MaxSeqdataApprover;
-
-                    var newInput = clone_arr_newrow($scope.data_approver_def)[0];
-                    newInput.seq = seq;
-                    newInput.id = seq;
-                    newInput.no = (0);
-                    newInput.id_session = Number(seq_session);
-                    newInput.action_type = 'insert';
-                    newInput.action_change = 1;
-
-                    //approver or section_head
-                    newInput.approver_type = (arr_items_all.length == 0 ? 'section_head' : 'approver');
-
-                    newInput.user_name = employee_name;
-                    newInput.user_displayname = employee_displayname;
-                    newInput.user_title = employee_position;
-                    newInput.user_img = employee_img;
-
-                    $scope.data_approver.push(newInput);
-                    running_no_level1($scope.data_approver, null, null);
-
-                    newInput.no == 0 ? newInput.verified = true : newInput.verified = false;
-                    $scope.MaxSeqdataApprover = Number($scope.MaxSeqdataApprover) + 1
-
-                    $scope.data_approver.sort(function(a, b) {
-                        if (a.approver_type === "section_head") return -1;
-                        if (b.approver_type === "section_head") return 1;
-                        return 0;
-                    });
-
-                    console.log('data_approver ',$scope.data_approver)
-
+                
+            $scope.applyRecommendation = function() {
                     
-                }
+                $('#modalConfirm_Recommendation').modal('hide');
+                $('#modalEmployeeAdd').modal('hide')
 
-            }
-            else if (xformtype == "worker") {
-
-                var tasks = $filter('filter')($scope.data_tasks, function (item) {
-                    return (item.seq == seq_session);
-                })[0];
-
-                console.log("tasks",tasks)
-
-                if (tasks) {
-                    $scope.MaxSeqdataWorkers = Number($scope.MaxSeqdataWorkers) + 1
-                    var seq_worker =  $scope.MaxSeqdataWorkers;
-                    var newInput = clone_arr_newrow($scope.data_workers_def)[0];
-                    newInput.seq = seq_worker;
-                    newInput.id = seq_worker;
-                    newInput.index_rows = tasks.index_rows;
-                    newInput.no = tasks.worker_list.no ? tasks.worker_list.no + 1 : tasks.worker_list.length + 1;
-                    newInput.id_session = Number(tasks.seq);
-                    newInput.id_tasks = Number(tasks.seq);
-                    newInput.id_pha = Number(tasks.id_pha);
-                    newInput.action_type = 'insert';
-                    newInput.action_change = 1;
-                    newInput.user_name = employee_name;
-                    newInput.user_displayname = employee_displayname;
-                    newInput.user_title = employee_position;
-                    newInput.user_img = employee_img;
-
-                    tasks.worker_list.push(newInput);
-
-                    tasks.numbers_of_workers = tasks.worker_list.length;
-                }
-
-
-
-            }
-            else if (xformtype == "manage") {
-                var data =  $scope.selectedData;
-
-                if(!data) return;
-
-                data.responder_action_type = employee_position
-                data.responder_user_email = employee_email
-                data.responder_user_name = employee_name
-                data.responder_user_img = employee_img
-                data.responder_user_id = id
-                data.action_change = 1;
- 
-                if ($scope.action_tabs === 'search_tab') {
-                    data.responder_user_displayname = employee_position + '-' + employee_displayname.split(" ")[0];   
-                } 
-
-                //$('#modalEmployeeAdd').modal('hide');
-
-            }
-            apply();
-
-            if(xformtype == 'member' || xformtype == 'approver' || xformtype == 'specialist'){
-                updateDataSessionAccessInfo('session');
-            }
-
-
-            if (xformtype == "approver_ta3" || xformtype == "edit_approver") {
-                $('#modalEmployeeAdd').modal('hide');
-    
-                $scope.clearFormData();
-            } else {
-                $('#modalEmployeeAdd').modal('show');
-            }    
-    };
-
-    $scope.removeDataEmployee = function (seq, seq_session) {
-            const actions = $scope.selectDatFormType;
-
-            if (actions == 'member') {
-                var arrdelete = $filter('filter')($scope.data_memberteam, function (item) {
-                    return (item.seq == seq && item.action_type == 'update');
-                });
-
-                if (arrdelete.length > 0) { $scope.data_memberteam_delete.push(arrdelete[0]); }
-
-                $scope.data_memberteam = $filter('filter')($scope.data_memberteam, function (item) {
-                    return !(item.seq == seq && item.id_session == seq_session);
-                });
-                //if delete row 1 clear to null
-                if ($scope.data_memberteam.length == 1 || $scope.data_memberteam.no == 1) {
-                    var keysToClear = ['user_name', 'user_displayname'];
-
-                    keysToClear.forEach(function (key) {
-                        $scope.data_memberteam[0][key] = null;
-                    });
-                    $scope.data_memberteam[0].no = 1;
-                }
-                running_no_level1($scope.data_memberteam, null, null)
-            }
-
-            if (actions == 'approver') {
-                $scope.removeDataApprover(seq, seq_session)
-            }
-
-            if (actions == 'worker') {                    
-                const index = $scope.data_worker_list.findIndex(item => item.id === seq.id && item.user_name === seq.user_name);
-            
-                if (index !== -1) {
-                    $scope.data_worker_list.splice(index, 1);
-                    console.log("Item removed:", seq);
-                } else {
-                    console.log("Item not found:", seq);
-                }
-            
-                console.log($scope.data_worker_list);
-            }
-            
-
-            if (actions == 'manage') {
-                var data =  $scope.selectedData;
-
-                if(!data) return;
-
-                data.responder_user_displayname = null
-                data.responder_action_type = null
-                data.responder_user_email = null
-                data.responder_user_name = null
-                data.responder_user_img = null
-                data.responder_user_id = null
-                data.action_change = 1;
-                console.log(data)
+                deferred.resolve(true);
             };
-            apply();
-    };
+                
+            $scope.checkOtherAreas = function() {
+                $('#modalConfirm_Recommendation').modal('hide');
 
-    $scope.clearFormData = function() {
-        $scope.formData = [];
-        $scope.searchText='';
-        $scope.clickedStates = {};
-        $scope.searchIndicator = {
-            text: ''
-        }        
-            //$scope.formData_outsider = [];
+
+                $scope.selectDatFormType = 'manage';
+                $scope.action_tabs = 'manage_tabs';
+                $scope.selectTab($scope.action_tabs)
+
+                deferred.resolve(false);
+
+
+            };
+                
+            $('#modalConfirm_Recommendation').on('hidden.bs.modal', function() {
+                deferred.resolve(false);
+                $('#modalConfirm_Recommendation').off('hidden.bs.modal'); 
+            });
+                
+            return deferred.promise;
+        };
+        $scope.choosDataEmployee = function (item) {
+
+                var id = item.id;
+                var employee_name = item.employee_name;
+                var employee_displayname = item.employee_displayname;
+                var employee_email = item.employee_email;
+                var employee_position = item.employee_position;
+                var employee_img = item.employee_img;
+
+                var seq_session = $scope.selectdata_session;
+                var xformtype = $scope.selectDatFormType;
+
+                if (xformtype == "member") {
+
+                    var arr_items = $filter('filter')($scope.data_memberteam, function (item) {
+                        return (item.id_session == seq_session && item.user_name == employee_name);
+                    });
+
+                    console.log("arr_items",arr_items)
+                    if (arr_items.length == 0) {
+
+                        //add new employee 
+                        var seq = $scope.MaxSeqDataMemberteam;
+
+                        var newInput = clone_arr_newrow($scope.data_memberteam_def)[0];
+                        newInput.seq = seq;
+                        newInput.id = seq;
+                        newInput.no = (0);
+                        newInput.id_session = Number(seq_session);
+                        newInput.action_type = 'insert';
+                        newInput.action_change = 1;
+
+                        newInput.user_name = employee_name;
+                        newInput.user_displayname = employee_displayname;
+                        newInput.user_title = employee_position;
+                        newInput.user_img = employee_img;
+
+                        $scope.data_memberteam.push(newInput);
+                        running_no_level1($scope.data_memberteam, null, null);
+
+                        $scope.MaxSeqDataMemberteam = Number($scope.MaxSeqDataMemberteam) + 1
+
+                    }
+
+                }
+                else if (xformtype == "approver") {
+
+                    var arr_items_all = $filter('filter')($scope.data_approver, function (item) {
+                        return (item.id_session == seq_session && item.user_displayname != null);
+                    });
+                    var arr_items = $filter('filter')($scope.data_approver, function (item) {
+                        return (item.id_session == seq_session && item.user_name == employee_name);
+                    });
+
+                    if (arr_items.length == 0) {
+
+                        //add new employee to approve list ได้รายการเดียว 
+                        var seq = $scope.MaxSeqdataApprover;
+
+                        var newInput = clone_arr_newrow($scope.data_approver_def)[0];
+                        newInput.seq = seq;
+                        newInput.id = seq;
+                        newInput.no = (0);
+                        newInput.id_session = Number(seq_session);
+                        newInput.action_type = 'insert';
+                        newInput.action_change = 1;
+
+                        //approver or section_head
+                        newInput.approver_type = (arr_items_all.length == 0 ? 'section_head' : 'approver');
+
+                        newInput.user_name = employee_name;
+                        newInput.user_displayname = employee_displayname;
+                        newInput.user_title = employee_position;
+                        newInput.user_img = employee_img;
+
+                        $scope.data_approver.push(newInput);
+                        running_no_level1($scope.data_approver, null, null);
+
+                        newInput.no == 0 ? newInput.verified = true : newInput.verified = false;
+                        $scope.MaxSeqdataApprover = Number($scope.MaxSeqdataApprover) + 1
+
+                        $scope.data_approver.sort(function(a, b) {
+                            if (a.approver_type === "section_head") return -1;
+                            if (b.approver_type === "section_head") return 1;
+                            return 0;
+                        });
+
+                        console.log('data_approver ',$scope.data_approver)
+
+                        
+                    }
+
+                }
+                else if (xformtype == "worker") {
+
+                    var tasks = $filter('filter')($scope.data_tasks, function (item) {
+                        return (item.seq == seq_session);
+                    })[0];
+
+                    console.log("tasks",tasks)
+
+                    if (tasks) {
+                        $scope.MaxSeqdataWorkers = Number($scope.MaxSeqdataWorkers) + 1
+                        var seq_worker =  $scope.MaxSeqdataWorkers;
+                        var newInput = clone_arr_newrow($scope.data_workers_def)[0];
+                        newInput.seq = seq_worker;
+                        newInput.id = seq_worker;
+                        newInput.index_rows = tasks.index_rows;
+                        newInput.no = tasks.worker_list.no ? tasks.worker_list.no + 1 : tasks.worker_list.length + 1;
+                        newInput.id_session = Number(tasks.seq);
+                        newInput.id_tasks = Number(tasks.seq);
+                        newInput.id_pha = Number(tasks.id_pha);
+                        newInput.action_type = 'insert';
+                        newInput.action_change = 1;
+                        newInput.user_name = employee_name;
+                        newInput.user_displayname = employee_displayname;
+                        newInput.user_title = employee_position;
+                        newInput.user_img = employee_img;
+
+                        tasks.worker_list.push(newInput);
+
+                        tasks.numbers_of_workers = tasks.worker_list.length;
+                    }
+
+
+                }
+                else if (xformtype == "manage") {
+                    var data =  $scope.selectedData;
+
+                    if(!data) return;
+
+                    data.responder_action_type = employee_position
+                    data.responder_user_email = employee_email
+                    data.responder_user_name = employee_name
+                    data.responder_user_img = employee_img
+                    data.responder_user_id = id
+                    data.action_change = 1;
+    
+                    if ($scope.action_tabs === 'search_tab') {
+                        data.responder_user_displayname = employee_position + '-' + employee_displayname.split(" ")[0];   
+                    } 
+
+                    console.log("data",data)
+                    if (data) {
+                        $scope.showModal().then(function(applyRecommendation) {
+                            if (applyRecommendation) {
+                                $('#modalEmployeeAdd').modal('hide');
+                                console.log("Now it clicks yes to see other recommendations");
+                            } else {
+                                console.log("Now it clicks proceed to apply the recommendation");
+                            }
+                        });
+                    }
+                    //$('#modalEmployeeAdd').modal('hide');
+
+                }
+                apply();
+
+                if(xformtype == 'member' || xformtype == 'approver' || xformtype == 'specialist'){
+                    updateDataSessionAccessInfo('session');
+                }
+
+
+                if (xformtype == "approver_ta3" || xformtype == "edit_approver") {
+                    $('#modalEmployeeAdd').modal('hide');
+        
+                    $scope.clearFormData();
+                } else {
+                    $('#modalEmployeeAdd').modal('show');
+                }    
+        };
+
+        $scope.removeDataEmployee = function (seq, seq_session) {
+                const actions = $scope.selectDatFormType;
+
+                if (actions == 'member') {
+                    var arrdelete = $filter('filter')($scope.data_memberteam, function (item) {
+                        return (item.seq == seq && item.action_type == 'update');
+                    });
+
+                    if (arrdelete.length > 0) { $scope.data_memberteam_delete.push(arrdelete[0]); }
+
+                    $scope.data_memberteam = $filter('filter')($scope.data_memberteam, function (item) {
+                        return !(item.seq == seq && item.id_session == seq_session);
+                    });
+                    //if delete row 1 clear to null
+                    if ($scope.data_memberteam.length == 1 || $scope.data_memberteam.no == 1) {
+                        var keysToClear = ['user_name', 'user_displayname'];
+
+                        keysToClear.forEach(function (key) {
+                            $scope.data_memberteam[0][key] = null;
+                        });
+                        $scope.data_memberteam[0].no = 1;
+                    }
+                    running_no_level1($scope.data_memberteam, null, null)
+                }
+
+                if (actions == 'approver') {
+                    $scope.removeDataApprover(seq, seq_session)
+                }
+
+                if (actions == 'worker') {                    
+                    const index = $scope.data_worker_list.findIndex(item => item.id === seq.id && item.user_name === seq.user_name);
+                
+                    if (index !== -1) {
+                        $scope.data_worker_list.splice(index, 1);
+                        console.log("Item removed:", seq);
+                    } else {
+                        console.log("Item not found:", seq);
+                    }
+                
+                    console.log($scope.data_worker_list);
+                }
+                
+
+                if (actions == 'manage') {
+                    var data =  $scope.selectedData;
+
+                    if(!data) return;
+
+                    data.responder_user_displayname = null
+                    data.responder_action_type = null
+                    data.responder_user_email = null
+                    data.responder_user_name = null
+                    data.responder_user_img = null
+                    data.responder_user_id = null
+                    data.action_change = 1;
+                };
+                apply();
+        };
+
+        $scope.clearFormData = function() {
+            $scope.formData = [];
+            $scope.searchText='';
+            $scope.clickedStates = {};
+            $scope.searchIndicator = {
+                text: ''
+            }        
+                //$scope.formData_outsider = [];
         };
     
         $scope.removeDataApprover = function (seq, seq_session) {
@@ -7271,6 +7318,16 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $timeout(function() {
                 apply();
             }, 100);
+        }
+
+
+        //Apply action owner to task|recommendation
+        $scope.applyActionOwner = function(type){
+            if(type === 'All'){
+                console.log("ALllllllllllllllllllll")
+            }else{
+                
+            }
         }
 
     }

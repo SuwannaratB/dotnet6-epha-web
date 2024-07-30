@@ -3340,11 +3340,12 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content scrollbar" style="max-height: calc(100vh - 100px); overflow-y:auto;"">
                 <div class="modal-header" ng-if="selectDatFormType !== 'manage'">
-                    <div > 
+                    <div> 
                         <h5 class="text-900 mb-0" data-anchor="data-anchor" id="modalEmployeeCheckLabel">
                             <span class="me-2 text-primary"><B>|</B></span> Search Employee/Contract
                         </h5>
                     </div>
+
                     <button class="btn p-1" type="button" data-bs-dismiss="modal" aria-label="Close" ng-click="clearFormData()">
                         <svg class="svg-inline--fa fa-xmark fs--1" aria-hidden="true" focusable="false" data-prefix="fas"
                                 data-icon="xmark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"
@@ -3391,7 +3392,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div ng-show="action_tabs === 'search_tab'">
+                    <div ng-show="action_tabs === 'search_tab' || action_tabs === ''">
                         <div class="mb-4">
                             <div class="row g-3">
                                 <div class="col-auto">
@@ -3498,14 +3499,29 @@
                         </div>
                         @* end แสดงข้อมูลที่ ค้นหาตาม textsearch*@
                     </div>
-                    <div ng-show="action_tabs === 'manage_tabs'" class="p-4 bg-light rounded shadow-sm">
-                        <p class="h4 mb-4"><strong>Action Owner:</strong> <span>{{selectedData.responder_user_displayname}}</span></p>
-                        <p class="h5 text-muted mb-4">Managing Recommendations</p>
-                        <div class="mb-4 p-3 bg-white rounded border">
-                            <p class="mb-2"><strong>Comment:</strong> <span class="text-primary">{{selectedComment}}</span></p>
-                            <p class="mb-2"><strong>Factor:</strong> <span class="text-primary">{{selectedFactor}}</span></p>
-                            <p class="mb-0"><strong>Initial Risk:</strong> <span class="text-primary">{{selectedInitialRisk}}</span></p>
+                    <div ng-show="action_tabs === 'manage_tabs'" class="p-4 px-3 bg-light rounded shadow-sm">
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h5 class="text-muted">Managing Recommendations</h5>
+                            </div>
                         </div>
+                        <div class="row mb-4 p-2">
+                            <div class="col-12 bg-white rounded border p-3">
+                                <p class="mb-2"><strong>Comment:</strong> <span class="text-primary">{{selectedComment}}</span></p>
+                                <p class="mb-2"><strong>Factor:</strong> <span class="text-primary">{{selectedFactor}}</span></p>
+                                <p class="mb-0"><strong>Initial Risk:</strong> <span class="text-primary">{{selectedInitialRisk}}</span></p>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-8 d-flex align-items-center justify-content-start">
+                                <p class="m-0 text-center"><strong>Current Action Owner:</strong> {{selectedData.responder_user_displayname}}</p>
+                            </div>
+                            <div class="col-4 d-flex justify-content-end align-items-center">
+                                <button class="btn btn-primary btn-sm" ng-click="applyActionOwner('All')">Assign to All Tasks</button>
+                            </div>
+                        </div>
+
+                        <hr>
                         <div class="bg-white border-top border-bottom border-200 position-relative top-1 rounded">
                             <div class="table-responsive mx-n1 px-1">
                                 <table class="table table-sm fs--1 mb-0">
@@ -3513,30 +3529,23 @@
                                         <tr class="text-center">
                                             <th scope="col">Group</th>
                                             <th scope="col">Task</th>
-                                            <th scope="col">Health Effect Rating</th>
-                                            <th scope="col">Residual Risk Rating</th>
+                                            <th scope="col">Factor</th>
+                                            <th scope="col">Initail Risk Rating</th>
+                                            <th scope="col">Recommendation</th>
+                                            <th scope="col">owner</th>
                                             <th scope="col"></th>
                                         </tr>
                                     </thead>
                                     <tbody class="list">
                                         <tr class="hover-actions-trigger btn-reveal-trigger position-static text-center"
-                                            ng-class="{'row-faded': clickedStates[item.employee_name]}"
-                                            ng-repeat-start="groups in data_worksheet_show">
-                                            <td rowspan="{{groups.worksheet.length+1}}">{{groups.worker_group}}</td>
-                                            <td rowspan="{{groups.worksheet.length+1}}">{{groups.description}}</td>
+                                            ng-class="{'row-faded': clickedStates[item.employee_name]}" ng-repeat-start="groups in data_worksheet_show">
+                                            <td rowspan="{{data_worksheet_show.length+1}}">{{groups.worker_group}}{{groups.worksheet.length}}</td>
+                                            <td rowspan="{{data_worksheet_show.length+1}}">{{groups.description}}</td>
+                                            <td ng-if="$first" rowspan="{{(data_worksheet_show.length+1) * (groups.worksheet.length+1)}}">{{ selectedFactor }}</td>
+                                            <td class="text-center" ng-if="$first" rowspan="{{(data_worksheet_show.length+1) * (groups.worksheet.length+1)}}">{{ selectedInitialRisk }}</td>
+                                            <td class="text-center" ng-if="$first" rowspan="{{(data_worksheet_show.length+1) * (groups.worksheet.length+1)}}">{{ selectedComment }}</td>
                                             <tr ng-repeat="data in groups.worksheet">
-                                                <td class="text-center">
-                                                    <div class="effect-rating w-25 mx-auto" 
-                                                        ng-class="{
-                                                            'risk-acceptable': (data.health_effect_rating == '1'),
-                                                            'risk-low': (data.health_effect_rating == '2'),
-                                                            'risk-medium': (data.health_effect_rating == '3'),
-                                                            'risk-high': (data.health_effect_rating == '4'),
-                                                            'risk-very-high': (data.health_effect_rating == '5')}">
-                                                        {{data.health_effect_rating}}
-                                                    </div>
-                                                </td>
-                                                <td class="text-center">{{data.residual_risk_rating}}</td>
+                                                <td class="text-center">{{data.responder_user_name !== '' ? data.responder_user_name : ''}}</td>
                                                 <td class="text-center">
                                                     <span class="text-center mx-1 mx-auto" >
                                                         <button class="btn btn-outline-primary p-2"
@@ -3544,8 +3553,8 @@
                                                                 data-toggle="tooltip" 
                                                                 data-placement="top" 
                                                                 title="Choose Employee"
-                                                                ng-click="applyActionOwner(data)">
-                                                            <span class="" ng-if="selectDatFormType === 'manage'">Apply</span>
+                                                                ng-click="applyActionOwner('data')">
+                                                            <span class="" ng-if="selectDatFormType === 'manage'">Assign</span>
                                                         </button>
                                                     </span>
                                                 </td>
@@ -3660,8 +3669,8 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>*@
+                    </div>*@
+                </div>
 
                 <!------------contractor/out source-------------->
                 <div class="modal-header bg-soft" 
@@ -4744,7 +4753,40 @@
         </div>
     </div>
 
+    @* Modal Confirm *@
+    <div class="modal fade" id="modalConfirm_Recommendation" tabindex="-1" aria-labelledby="modalConfirm_Recommendation" aria-hidden="true"
+         style="display: none;">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="text-900 mb-0" data-anchor="data-anchor" id="modalConfirm">
+                        <span class=" me-2 text-primary"><B>|</B></span> Confirm Recommendation?
+                    </h5>
 
+                    <button class="btn p-1" type="button" data-bs-dismiss="modal" aria-label="Close">
+                        <svg class="svg-inline--fa fa-xmark fs--1" aria-hidden="true" focusable="false"
+                             data-prefix="fas" data-icon="xmark" role="img" xmlns="http://www.w3.org/2000/svg"
+                             viewBox="0 0 320 512" data-fa-i2svg="">
+                            <path fill="currentColor"
+                                  d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 
+                                  301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 
+                                  0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 
+                                  210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z">
+                            </path>
+                        </svg>
+                    </button>
+
+                </div>
+                <div class="modal-body">
+                    <p id="confirmationText">Would you like to proceed with this recommendation for <span class="fw-bold">{{selectedEmployee.employee_displayname}}</span> or review other areas with the same recommendation?</p>
+                    <div class="col-auto" style="float:right">
+                        <button id="proceedButton" style="width:100px;" class="btn btn-primary me-1 mb-1" type="button" ng-click="applyRecommendation(selectedEmployee, false)">Proceed</button>
+                        <button id="checkAreasButton" style="width:100px;" class="btn btn-outline-secondary me-1 mb-1 w-auto" type="button" ng-click="checkOtherAreas(selectedEmployee)">Check Other Areas</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>    
     @* Modal Confirm *@
     <div class="modal fade" id="modalConfirm" tabindex="-1" aria-labelledby="modalConfirm" aria-hidden="true"
          style="display: none;">
