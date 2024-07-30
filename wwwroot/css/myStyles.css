@@ -672,20 +672,20 @@ ul.nav li a.btn-nav-menu.btn-outline-primary:hover {
 }
 
 
-.btn-worksheet-filter {
+.btn-worksheet-filter, .btn-recommendations-filter {
   position: relative;
 }
 
-.bard {
+.bard, .bard-recommendations {
   position: absolute;
-  top: -10px;
-  right: -10px;
-  width: 20px;
-  height: 20px;
+  top: -12px;
+  right: -16px;
+  width: 60px;
+  height: 18px;
   background: #fff;
-  color: #333;
-  border: 1px solid #333;
-  border-radius: 50%;
+  color: #3874ff;
+  border: 1px solid #3874ff;
+  border-radius: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -702,7 +702,7 @@ ul.nav li a.btn-nav-menu.btn-outline-primary:hover {
 }
 
 /* dropdown filter risk */
-.container-worksheet-filter {
+.container-worksheet-filter, .container-recommendations-filter {
   position: absolute;
   display: flex;
   flex-direction: column;
@@ -728,11 +728,12 @@ ul.nav li a.btn-nav-menu.btn-outline-primary:hover {
 
 .list-container {
   display: flex;
-  gap: 80px;
+  gap: 56px;
 }
 
 .checkbox-container {
-  min-width: max-content;
+  min-width: 150px;
+  /* min-width: max-content; */
 }
 
 .checkbox-container .topic {

@@ -934,33 +934,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.searchdataMemberTeam = '';
         $scope.searchdataResponder = '';
         $scope.searchdataApprover = '';
-        $scope.searchQueryWorksheet = '';
-        $scope.countFilterWorksheet = '';
-
-        $scope.keywords = {
-            text:''
-        };
-
-        $scope.searchIndicator = {
-            text: ''
-        }
-
-        $scope.isFilterWorksheet = false;
-
-        $scope.data_initial_risk = [
-            { id: 'Acceptable Risk', name: 'Acceptable Risk' },
-            { id: 'Low', name: 'Low' },
-            { id: 'Meduim\r\n', name: 'Meduim' },
-            { id: 'High\r\n', name: 'High' },
-            { id: 'Very High', name: 'Very High' },
-        ];
-
-        $scope.mocTitle = {
-            default: 'Health Hazard for',
-            apu: '',
-            unit: ''
-        }
-
+        
+        // filter worksheet
         $scope.optionInitial = [
             {   
                 name: 'Acceptable', 
@@ -988,6 +963,70 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 selected: false 
             }
         ];
+        $scope.optionExposure = []
+        $scope.searchQueryWorksheet = ''; // search worksheet
+        $scope.isFilterWorksheet = false; // open or close modal filter worksheet
+        $scope.countFilterWorksheet = null; // amount options filter
+        $scope.selectFilterExposure = {
+            value: null
+        };
+        // filter recommendations
+        $scope.optionInitialRecommendations = [
+            {   
+                name: 'Acceptable', 
+                name_check: 'Acceptable Risk', 
+                selected: false 
+            },
+            { 
+                name: 'Low', 
+                name_check: 'Low', 
+                selected: false 
+            },
+            { 
+                name: 'Medium', 
+                name_check: 'Meduim', 
+                selected: false 
+            },
+            { 
+                name: 'High', 
+                name_check: 'High', 
+                selected: false 
+            },
+            { 
+                name: 'Very High', 
+                name_check: 'Very High', 
+                selected: false 
+            }
+        ];
+        $scope.optionExposureRecommendations = []
+        $scope.searchQueryRecommendations = ''; // search recommendations
+        $scope.isFilterRecommendations = false; // open or close modal filter recommendations
+        $scope.countFilterRecommendations = null; // amount options filter
+        $scope.selectFilterExposureRecommendations = {
+            value: null
+        };
+
+        $scope.keywords = {
+            text:''
+        };
+
+        $scope.searchIndicator = {
+            text: ''
+        }
+
+        $scope.data_initial_risk = [
+            { id: 'Acceptable Risk', name: 'Acceptable Risk' },
+            { id: 'Low', name: 'Low' },
+            { id: 'Meduim\r\n', name: 'Meduim' },
+            { id: 'High\r\n', name: 'High' },
+            { id: 'Very High', name: 'Very High' },
+        ];
+
+        $scope.mocTitle = {
+            default: 'Health Hazard for',
+            apu: '',
+            unit: ''
+        }
 
         $scope.status_monitoring = [
             { id: 1, name: 'Ongoing' },
@@ -1438,7 +1477,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                                 }
 
                                 get_data_after_save(false, (flow_action == 'submit' ? true : false), $scope.pha_seq);
-
                                 set_alert('Success', 'Data has been successfully saved.');
                                 apply();
                             },
@@ -1479,7 +1517,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                             success: function (data) {
 
                                 get_data_after_save(false, (flow_action == 'submit' ? true : false), $scope.pha_seq);
-
                                 set_alert('Success', 'Data has been successfully saved for PHA Conduct.');
                                 apply();
                             },
@@ -2123,21 +2160,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }, 100);
     }
 
-    $scope.filterInitialRiskRatingMain = function(item) {
-        for (let i = 0; i < item.worksheet.length; i++) {
-            if (item.worksheet[i].recommendations) {
-                return true;
-            } 
-            // for (let j = 0; j < item.worksheet[i].recommendations.length; j++) {
-            //     let element = item.worksheet[i].recommendations[j];
-            //     if (element.recommendations) {
-            //         return true;
-            //     } 
-            // }
-        }
-        return false;
-    };
-
     function setDefaultMettingDate(data){
         if(data.meeting_date) return
         
@@ -2145,20 +2167,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         var date = now.toISOString().split('T')[0]; // รับค่า YYYY-MM-DD
         data.meeting_date = date + "T00:00:00"; // ต่อด้วย "T00:00:00"
     }
-    
-    $scope.filterInitialRiskRating = function(item) { 
-        // for (let j = 0; j < item.recommendations.length; j++) {
-        //     let element = item.recommendations[j];
-        //     if (element.recommendations) {
-        //         return true;
-        //     } 
-        // }
-        if (item.recommendations) {
-            return true;
-        } 
-
-        return false
-    };
 
     function setup_summary(data_worksheet){
         console.log('setup_summary waitting...')
@@ -8209,7 +8217,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         return item.id_session === maxSession;
     };
 
-    // deopdown filter initial risk
+    // Modal Filter
     $scope.searchWorksheet = function(searchText){
         // if (!searchText) {
         //     return $scope.val_search = null
@@ -8232,63 +8240,288 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
     }
 
-    $scope.applyFilters = function(){
-        $scope.val_filterInitial = filterInitailRisk();
-        // เรียงข้อมูล display
-        if ($scope.val_filterInitial) {
-            // ถ้าเลือก Filter
-            $scope.display_worksheet_filter = $scope.val_filterInitial.displayFilter
-        } else {
-            // ไม่เลือก Filter
-            $scope.display_worksheet_filter = $scope.data_worksheet_list
+    $scope.openFilter = function(type){
+        if(type == 'worksheet') return $scope.isFilterWorksheet = !$scope.isFilterWorksheet
+        if(type == 'recommendations') return $scope.isFilterRecommendations = !$scope.isFilterRecommendations
+    }
+    
+    $scope.closeFilter = function(type){
+        if(type == 'worksheet') return $scope.isFilterWorksheet = false
+        if(type == 'recommendations') return $scope.isFilterRecommendations = false
+    }
+
+    $scope.setOptionExposure = function(change, type) {
+        if (type == 'worksheet') {
+            let uniqueExposures = new Set();
+    
+            $scope.data_worksheet_list.forEach(ws_ls => {
+                ws_ls.worksheet.forEach(ws => {
+                    if (ws.health_hazard) {
+                        uniqueExposures.add(ws.health_hazard);
+                    }
+                });
+            });
+            // Convert the Set back to an array of objects
+            $scope.optionExposure = Array.from(uniqueExposures).map(name => ({
+                name,
+                selected: false
+             }));
+    
+            //  console.log( $scope.selectFilterExposure.value )
+    
+            if(!change) return
+    
+            $scope.optionExposure.forEach(element => {
+                if (element.name == $scope.selectFilterExposure.value) {
+                    element.selected = true
+                }else{
+                    element.selected = false
+                }
+            });
+    
+            console.log($scope.optionExposure)
         }
-        // ปิด modal
-        $scope.closeFilterWorksheet();
+
+        if (type == 'recommendations') {
+            let uniqueExposures = new Set();
+    
+            $scope.data_worksheet_list.forEach(ws_ls => {
+                ws_ls.worksheet.forEach(ws => {
+                    if (ws.health_hazard && ws.recommendations) {
+                        uniqueExposures.add(ws.health_hazard);
+                    }
+                });
+            });
+            // Convert the Set back to an array of objects
+            $scope.optionExposureRecommendations = Array.from(uniqueExposures).map(name => ({
+                name,
+                selected: false
+             }));
+    
+            //  console.log( $scope.selectFilterExposure.value )
+    
+            if(!change) return
+    
+            $scope.optionExposureRecommendations.forEach(element => {
+                if (element.name == $scope.selectFilterExposureRecommendations.value) {
+                    element.selected = true
+                }else{
+                    element.selected = false
+                }
+            });
+    
+            console.log($scope.optionExposureRecommendations)
+        }
     }
 
-    $scope.clearFilters = function(){
-        // Data Initial Risk
-        $scope.optionInitial.forEach(element => {
-            element.selected = false
-        });
-        $scope.val_filterInitial = null;
-
-        // clear search
-        $scope.val_search = null
-        $scope.searchQueryWorksheet = ''
-
-        // เรียงข้อมูล display
-        $scope.display_worksheet_filter = $scope.data_worksheet_list
-        // ปิด modal
-        $scope.closeFilterWorksheet()
-    }
-
-    function filterInitailRisk(){
-        let selectFilter = $scope.optionInitial
-        .filter((option) => option.selected)
-        .map((option) => option.name_check);
+    $scope.applyFilters = function(type){
         
-        var displayFilter = []
-        var list = $scope.data_worksheet_list
-
-        if($scope.val_search) 
-            list = $scope.val_search.displayFilter
-
-        for (let i = 0; i < list.length; i++) {
-            let tmp_list = list[i].worksheet.filter((item) =>
-                selectFilter.includes(item.initial_risk_rating)
-            );
-            if (tmp_list.length > 0) {
-                var data = angular.copy(list[i])
-                data.worksheet = tmp_list
-                displayFilter.push(data)
+        if (type == 'worksheet') {
+            $scope.countFilterWorksheet = null
+            $scope.isProcessFilterWorksheet = false;
+            var init_worksheet = $scope.data_worksheet_list
+            // เช็คว่าข้อมูลที่ได้จากการ Filter Exposure
+            if (checkFilterExposure('worksheet')) {
+                $scope.val_filterExposure = filterExposure(init_worksheet, 'worksheet');
+                $scope.countFilterWorksheet =  $scope.countFilterWorksheet + $scope.val_filterExposure.selectFilter.length
+                init_worksheet = $scope.val_filterExposure.displayFilter
+                $scope.isProcessFilterWorksheet = true
             }
+            // เช็คว่าข้อมูลที่ได้จากการ Filter Initial
+            if (checkInitailRisk('worksheet')) {
+                $scope.val_filterInitial = filterInitailRisk(init_worksheet, 'worksheet');
+                $scope.countFilterWorksheet =  $scope.countFilterWorksheet + $scope.val_filterInitial.selectFilter.length
+                init_worksheet = $scope.val_filterInitial.displayFilter
+                $scope.isProcessFilterWorksheet = true
+            }
+            // เช็คถ้าไม่เลือก/ไม่เลือก Filter 
+            if ($scope.isProcessFilterWorksheet) {
+                $scope.display_worksheet_filter = init_worksheet
+            } else {
+                $scope.display_worksheet_filter = $scope.data_worksheet_list
+            }
+            // ปิด modal
+            $scope.closeFilter('worksheet');
         }
 
-        if(selectFilter.length == 0 || displayFilter.length == 0)
-            return null
+        if (type == 'recommendations') {
+            $scope.countFilterRecommendations = null
+            $scope.isProcessFilterRecommendations = false;
+            var init_worksheet = $scope.data_worksheet_list
+            // เช็คว่าข้อมูลที่ได้จากการ Filter Exposure
+            if (checkFilterExposure('recommendations')) {
+                $scope.val_filterExposureRecommendations = filterExposure(init_worksheet, 'recommendations');
+                $scope.countFilterRecommendations =  $scope.countFilterRecommendations + $scope.val_filterExposureRecommendations.selectFilter.length
+                init_worksheet = $scope.val_filterExposureRecommendations.displayFilter
+                $scope.isProcessFilterRecommendations = true
+            }
+            // เช็คว่าข้อมูลที่ได้จากการ Filter Initial
+            if (checkInitailRisk('recommendations')) {
+                $scope.val_filterInitialRecommendations = filterInitailRisk(init_worksheet, 'recommendations');
+                $scope.countFilterRecommendations =  $scope.countFilterRecommendations + $scope.val_filterInitialRecommendations.selectFilter.length
+                init_worksheet = $scope.val_filterInitialRecommendations.displayFilter
+                $scope.isProcessFilterRecommendations = true
+            }
+            // เช็คถ้าไม่เลือก/ไม่เลือก Filter 
+            if ($scope.isProcessFilterRecommendations) {
+                $scope.display_recommendations_filter = init_worksheet
+            } else {
+                $scope.display_recommendations_filter = setup_tabrecommendations($scope.data_worksheet_list)
+            }
+            // ปิด modal
+            $scope.closeFilter('recommendations');
+        }
+    }
 
-        return {  selectFilter, displayFilter }
+    $scope.clearFilters = function(type){
+        if (type == 'worksheet') {
+            // Data Exposure
+            $scope.val_filterExposure = null;
+            $scope.selectFilterExposure.value = ''
+            $scope.optionExposure.forEach(element => {
+                element.selected = false
+            });
+            // Data Initial Risk
+            $scope.val_filterInitial = null;
+            $scope.optionInitial.forEach(element => {
+                element.selected = false
+            });
+            // clear search
+            $scope.val_search = null
+            $scope.searchQueryWorksheet = ''
+            // clear count
+            $scope.countFilterWorksheet = null
+            // เรียงข้อมูล display
+            $scope.display_worksheet_filter = $scope.data_worksheet_list
+            // ปิด modal
+            // $scope.closeFilter('worksheet)
+        }
+
+        if (type == 'recommendations') {
+            // Data Exposure
+            $scope.val_filterExposureRecommendations = null;
+            $scope.selectFilterExposureRecommendations.value = ''
+            $scope.optionExposureRecommendations.forEach(element => {
+                element.selected = false
+            });
+            // clear count
+            $scope.countFilterRecommendations = null
+            // เรียงข้อมูล display
+            $scope.display_recommendations_filter = setup_tabrecommendations($scope.data_worksheet_list)
+            // ปิด modal
+            // $scope.closeFilter('recommendations)
+        }
+        
+    }
+
+    function checkFilterExposure(type){
+        if (type == 'worksheet') {
+            const result = $filter('filter')($scope.optionExposure, function (_item) { 
+                return _item.selected
+            });
+            if (result.length > 0) return true
+            return false
+        }
+
+        if (type == 'recommendations') {
+            const result = $filter('filter')($scope.optionExposureRecommendations, function (_item) { 
+                return _item.selected
+            });
+            if (result.length > 0) return true
+            return false
+        }
+    }
+
+    function checkInitailRisk(type){
+        if (type == 'worksheet') {
+            const result = $filter('filter')($scope.optionInitial, function (_item) { 
+                return _item.selected
+            });
+            if (result.length > 0) return true
+            return false
+        }
+
+        if (type == 'recommendations') {
+            const result = $filter('filter')($scope.optionInitialRecommendations, function (_item) { 
+                return _item.selected
+            });
+            if (result.length > 0) return true
+            return false
+        }
+    }
+
+    function filterExposure(init_worksheet, type){
+        if (type == 'worksheet') {
+            let selectFilter = $scope.optionExposure.filter((option) => option.selected).map((option) => option.name);
+
+            var displayFilter = []
+
+            for (let i = 0; i < init_worksheet.length; i++) {
+                let tmp_list = init_worksheet[i].worksheet.filter((item) =>
+                    selectFilter.includes(item.health_hazard)
+                );
+                if (tmp_list.length > 0) {
+                    var data = angular.copy(init_worksheet[i])
+                    data.worksheet = tmp_list
+                    displayFilter.push(data)
+                }
+            }
+
+            return {  selectFilter, displayFilter }
+        }
+
+        if (type == 'recommendations') {
+            let selectFilter = $scope.optionExposureRecommendations.filter((option) => option.selected).map((option) => option.name);
+
+            var displayFilter = []
+
+            for (let i = 0; i < init_worksheet.length; i++) {
+                let tmp_list = init_worksheet[i].worksheet.filter((item) =>
+                    selectFilter.includes(item.health_hazard) && item.recommendations
+                );
+                if (tmp_list.length > 0) {
+                    var data = angular.copy(init_worksheet[i])
+                    data.worksheet = tmp_list
+                    displayFilter.push(data)
+                }
+            }
+
+            return {  selectFilter, displayFilter }
+        }
+    }
+
+    function filterInitailRisk(init_worksheet, type){
+        if (type == 'worksheet') {
+            let selectFilter = $scope.optionInitial.filter((option) => option.selected).map((option) => option.name_check);
+            var displayFilter = []
+            for (let i = 0; i < init_worksheet.length; i++) {
+                let tmp_list = init_worksheet[i].worksheet.filter((item) =>
+                    selectFilter.includes(item.initial_risk_rating)
+                );
+                if (tmp_list.length > 0) {
+                    var data = angular.copy(init_worksheet[i])
+                    data.worksheet = tmp_list
+                    displayFilter.push(data)
+                }
+            }
+            return {  selectFilter, displayFilter }
+        }
+
+        if (type == 'recommendations') {
+            let selectFilter = $scope.optionInitialRecommendations.filter((option) => option.selected).map((option) => option.name_check);
+            var displayFilter = []
+            for (let i = 0; i < init_worksheet.length; i++) {
+                let tmp_list = init_worksheet[i].worksheet.filter((item) =>
+                    selectFilter.includes(item.initial_risk_rating) && item.recommendations
+                );
+                if (tmp_list.length > 0) {
+                    var data = angular.copy(init_worksheet[i])
+                    data.worksheet = tmp_list
+                    displayFilter.push(data)
+                }
+            }
+            return {  selectFilter, displayFilter }
+        }
     }
 
     function filterDescription(textSearch){
@@ -8312,17 +8545,19 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         return { searchQuery, displayFilter }
     }
-
-    // ////////////////////////////////////////////////
-
-    $scope.openFilterWorksheet = function(){
-        $scope.isFilterWorksheet = !$scope.isFilterWorksheet
-    }
     
-    $scope.closeFilterWorksheet = function(){
-        $scope.isFilterWorksheet = false
-    }
-    
+    // $document.on('click', function() {
+    //     $scope.$apply(function() {
+    //         $scope.isInitialRisk = false;
+    //     });
+    // });
+
+    // angular.element(document.querySelector('.btn-worksheet-filter')).on('click', function(event) {
+    //     event.stopPropagation();
+    // });
+    // angular.element(document.querySelector('.btn-filter-worksheet')).on('click', function(event) {
+    //     event.stopPropagation();
+    // });
     $scope.selectFilterInitialRisk = function(item){
         if(item == 'all') {
             // filter ข้อมูล
@@ -8342,39 +8577,34 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         return
     }
 
-    // $document.on('click', function() {
-    //     $scope.$apply(function() {
-    //         $scope.isInitialRisk = false;
-    //     });
-    // });
-
-    // angular.element(document.querySelector('.btn-worksheet-filter')).on('click', function(event) {
-    //     event.stopPropagation();
-    // });
-    // angular.element(document.querySelector('.btn-filter-worksheet')).on('click', function(event) {
-    //     event.stopPropagation();
-    // });
-
+    // Filter RealTime Worksheet
     $scope.filterInitialRiskRatingWorksheetMain = function(item){
-        if(!$scope.val_search && !$scope.val_filterInitial) return true
+        if(!$scope.isProcessFilterWorksheet) return true
+
+        const result = $filter('filter')($scope.display_worksheet_filter, function (_item) { 
+            return item.id_activity == _item.id_activity 
+        })[0];
+        // console.log(result.id_activity +' = '+true)
+        if(result) return true
+        // console.log(result.id_activity +' = '+false)
 
         // Search
-        if ($scope.val_search) {
-            return item.description.toLowerCase().includes($scope.val_search.searchQuery)      
-        }
+        // if ($scope.val_search) {
+        //     return item.description.toLowerCase().includes($scope.val_search.searchQuery)      
+        // }
 
-        for (let i = 0; i < item.worksheet.length; i++) {
+        // for (let i = 0; i < item.worksheet.length; i++) {
             // Filter Initial Risk
-            if ($scope.val_filterInitial) {
-                for (let j = 0; j < $scope.val_filterInitial.selectFilter.length; j++) {
-                    if (item.worksheet[i].initial_risk_rating === $scope.val_filterInitial.selectFilter[j] || 
-                        item.worksheet[i].initial_risk_rating === $scope.val_filterInitial.selectFilter[j] + '\r\n'
-                    ) {
-                        return true;
-                    }
-                }
-            }
-        }
+            // if ($scope.val_filterInitial) {
+            //     for (let j = 0; j < $scope.val_filterInitial.selectFilter.length; j++) {
+            //         if (item.worksheet[i].initial_risk_rating === $scope.val_filterInitial.selectFilter[j] || 
+            //             item.worksheet[i].initial_risk_rating === $scope.val_filterInitial.selectFilter[j] + '\r\n'
+            //         ) {
+            //             return true;
+            //         }
+            //     }
+            // }
+        // }
         return false;
         // if(!$scope.isFilterInitialRisk) return true
 
@@ -8392,15 +8622,27 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     $scope.filterInitialRiskRatingWorksheet = function(item){
         // console.log('worksheet val_filterInitial', $scope.val_filterInitial)
-        if(!$scope.val_filterInitial) return true
+        if(!$scope.isProcessFilterWorksheet) return true
 
-        for (let j = 0; j < $scope.val_filterInitial.selectFilter.length; j++) {
-            if (item.initial_risk_rating === $scope.val_filterInitial.selectFilter[j] || 
-                item.initial_risk_rating === $scope.val_filterInitial.selectFilter[j] + '\r\n'
-            ) {
-                return true;
-            }
+        for (let i = 0; i < $scope.display_worksheet_filter.length; i++) {
+            const result = $filter('filter')($scope.display_worksheet_filter[i].worksheet, function (_item) { 
+                return item.seq == _item.seq 
+            })[0];
+            
+            if(result) return true
         }
+        // console.log(result.id_activity +' = '+true)
+
+        // console.log(result.id_activity +' = '+false)
+        // if(!$scope.val_filterInitial) return true
+
+        // for (let j = 0; j < $scope.val_filterInitial.selectFilter.length; j++) {
+        //     if (item.initial_risk_rating === $scope.val_filterInitial.selectFilter[j] || 
+        //         item.initial_risk_rating === $scope.val_filterInitial.selectFilter[j] + '\r\n'
+        //     ) {
+        //         return true;
+        //     }
+        // }
 
         return false
 
@@ -8409,6 +8651,55 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         // return item.initial_risk_rating === $scope.isFilterInitialRisk || 
         //     item.initial_risk_rating === $scope.isFilterInitialRisk + '\r\n'
     }
+
+    // Filter RealTime Recommendations
+    $scope.filterInitialRiskRatingMain = function(item) {
+
+        // if(!$scope.isProcessFilterRecommendations) return true
+
+        const result = $filter('filter')($scope.display_recommendations_filter, function (_item) { 
+            return item.id_activity == _item.id_activity 
+        })[0];
+
+        if(result) return true
+
+        return false;
+        // for (let i = 0; i < item.worksheet.length; i++) {
+        //     if (item.worksheet[i].recommendations) {
+        //         return true;
+        //     } 
+            // for (let j = 0; j < item.worksheet[i].recommendations.length; j++) {
+            //     let element = item.worksheet[i].recommendations[j];
+            //     if (element.recommendations) {
+            //         return true;
+            //     } 
+            // }
+        // }
+
+    };
+    
+    $scope.filterInitialRiskRating = function(item) { 
+        // for (let j = 0; j < item.recommendations.length; j++) {
+        //     let element = item.recommendations[j];
+        //     if (element.recommendations) {
+        //         return true;
+        //     } 
+        // }
+        // if (item.recommendations) {
+            // if(!$scope.isProcessFilterRecommendations) return true
+            // console.log($scope.display_worksheet_filter)
+            for (let i = 0; i < $scope.display_recommendations_filter.length; i++) {
+                const result = $filter('filter')($scope.display_recommendations_filter[i].worksheet, function (_item) { 
+                    return item.seq == _item.seq 
+                })[0];
+
+                if(result) return true
+            }
+        // } 
+        
+
+        return false
+    };
 
     function filterDataWorksheet(){
         if(!$scope.isFilterInitialRisk) return
