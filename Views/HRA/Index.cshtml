@@ -34,10 +34,7 @@
 }
 
 <div class="content mt-1" style="font-size: 12px; min-height: auto !important; overflow-x:hidden;" id="divPage" ng-controller="ctrlAppPage">
-
-
     <div class="row g-0">
-
         <div class="col-6">
             <div class="card shadow-sm p-2 mb-3 bg-light rounded">
                 <div class="card-body p-2">
@@ -71,19 +68,13 @@
                                 <span ng-class="{ 'blinking-text': (minutes <= 10) }">{{counterText}} </span>
                             </div>
                        </div>
-
                     </div>
-
                     <div class="row">
                     </div>
-
                 </div>
             </div>
-
         </div>
-
         <div class="col-6 ">
-
             <div class="d-flex align-items-center py-2  justify-content-end">
                 <span class="mx-2">
                     <button class="btn btn-outline-secondary btn-sm" style="width: 100px;" ng-click="confirmBack()">BACK</button>
@@ -119,57 +110,33 @@
                     </button>
                 </span>
             </div>
-
             <div class="float-end pe-3">
                 <div class="form-check form-switch  disabled-link">
                     <input class="form-check-input" id="flexSwitchCheckChecked" type="checkbox" />
                     <label class="form-check-label" for="flexSwitchCheckChecked">History tracking record</label>
                 </div>
             </div>
-
         </div>
-
     </div>
 
     <div class="row g-0">
         <div class="col-12 ">
-
             <div class="card">
-
                 <div class="card-header mb-0 pb-0 border border-bottom-0 ">
-
-                    @*<ul class="nav nav-underline border-3 border-primary border-bottom p-0 m-0" id="myTab" role="tablist">
-
-                        <li ng-repeat="tab in tabs" class="mx-2  p-0 m-0" ng-if="tab.isShow || true">
-                            <a ng-click="changeTab(tab)"
-                               class="btn btn-outline-primary border border-0 "
-                               ng-class="{'btn btn-outline-primary border border-0 mx-2  p-1 m-0 active': (tab.isActive==true),'btn btn-outline-primary border border-0 mx-2  p-1 m-0': (tab.isActive==false) }"
-                               style="border-radius: 10px 10px 0px 0px !important;"
-                               id="{{tab.name}}-tab" name="{{tab.name}}-tab"
-                               data-bs-toggle="tab" href="#tab-{{tab.name}}" role="tab"
-                               aria-controls="tab-{{tab.name}}"
-                               aria-selected="tab.isActive">{{ tab.title }}</a>
-                        </li>
-                    </ul>*@
-
                     <ul class="nav nav-underline border-3 border-primary border-bottom " id="myTab" role="tablist" style="position: relative;">
-
                         <li ng-repeat="tab in tabs" ng-if="tab.isShow || true">
-                                <a ng-click="changeTab(tab)"
-                                    class="btn-nav-menu btn-outline-primary border border-0"
-                                    ng-class="{'btn active': (tab.isActive === true)}"
-                                    id="{{tab.name}}-tab" name="{{tab.name}}-tab"
-                                    data-bs-toggle="tab" href="#tab-{{tab.name}}" role="tab"
-                                    aria-controls="tab-{{tab.name}}"
-                                    aria-selected="{{tab.isActive}}">
-                                    {{ tab.title }}
-                                </a>
+                            <a ng-click="changeTab(tab)"
+                                class="btn-nav-menu btn-outline-primary border border-0"
+                                ng-class="{'btn active': (tab.isActive === true)}"
+                                id="{{tab.name}}-tab" name="{{tab.name}}-tab"
+                                data-bs-toggle="tab" href="#tab-{{tab.name}}" role="tab"
+                                aria-controls="tab-{{tab.name}}"
+                                aria-selected="{{tab.isActive}}">
+                                {{ tab.title }}
+                            </a>
                         </li>
                     </ul>
-
                 </div>
-
-
                 <div class="card-body tab-content" style="min-height: 66vh;">
                     <!-- general information start -->
                     <div class="" ng-class="{
@@ -3275,7 +3242,6 @@
         </div>
     </div>
 
-
     @* ************************************************************** *@
     <div class="modal fade modal-xl" id="modalMatrix_Rating_worksheet" tabindex="-1" aria-labelledby="modalMatrix_Rating_worksheetLabel" 
         aria-hidden="true">
@@ -3310,9 +3276,7 @@
             </div>
         </div>
     </div>
-
     @* ************************************************************** *@
-
 
     <!--Modal Risk-->
     <div class="modal fade modal-xl" id="modalRisk" tabindex="-1" aria-labelledby="modalEmployeeAddLabel"
@@ -3448,7 +3412,6 @@
                             <span class="me-2 text-primary"><B>|</B></span> Search Employee/Contract
                         </h5>
                     </div>
-
                     <button class="btn p-1" type="button" data-bs-dismiss="modal" aria-label="Close" ng-click="clearFormData()">
                         <svg class="svg-inline--fa fa-xmark fs--1" aria-hidden="true" focusable="false" data-prefix="fas"
                                 data-icon="xmark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"
@@ -3458,7 +3421,6 @@
                             </path>
                         </svg>
                     </button>
-
                 </div>
                 <div class="modal-header ps-0 pb-0" ng-if="selectDatFormType === 'manage' && params != 'edit_approver'">
                     <!-- For form_type === 'owner' -->
@@ -3676,7 +3638,6 @@
                         </div>                              
                     </div>
                 </div>
-
                 <!------------show name after add   --------------->
                 <div class="modal-header bg-soft" 
                     ng-if="selectDatFormType !== 'owner' && params !== 'edit_approver' && 
@@ -3687,7 +3648,6 @@
                         {{ selectDatFormType === 'member' ? 'Member Team' : 'Approver' }}
                     </h5>
                 </div>
-
                 <div class="modal-body" 
                     ng-if="(selectDatFormType !== 'owner' && (
                                 data_memberteam.length > 1 || 
@@ -3774,7 +3734,6 @@
                         </div>
                     </div>*@
                 </div>
-
                 <!------------contractor/out source-------------->
                 <div class="modal-header bg-soft" 
                     ng-if="!(selectDatFormType =='approver'|| selectDatFormType =='reviewer') && (showContractor || (data_relatedpeople_outsider | toArray | filter:{user_type: selectDatFormType}).length > 1)">
@@ -3850,64 +3809,6 @@
                         </div>
                     </div>
                 </div>
-
-
-                @*<div class="modal-header bg-soft" ng-if="!(selectDatFormType =='owner' )">
-
-                    <h5 class="text-900 mb-0" ng-if="selectDatFormType =='member'"> <span class=" me-2 text-primary"><B>|</B></span>Member Team</h5>
-                    <h5 class="text-900 mb-0" ng-if="selectDatFormType =='approver'"> <span class=" me-2 text-primary"><B>|</B></span>Assessment Team Leader</h5>
-
-                </div>*@
-
-                @* member 
-                <div class="modal-body" ng-if="selectDatFormType =='member'">
-                    <div class="col-auto" ng-repeat="item2 in data_memberteam | filter:{id_session: selectdata_session }"
-                         ng-if="!(item2.user_displayname ==''  || item2.user_displayname == null)">
-                        <div class="d-flex align-items-center p-1" style="height: 20px;">
-                            <button id="del-{{item2.seq}}" class="btn btn-link text-danger"
-                                    ng-class="{'d-none':(!tab_general_active)}"
-                                    ng-click="removeDataEmployee(item2.seq, selectdata_session)">
-                                Remove
-                            </button>
-                            <label class="mb-0 ms-3 text-1100 fw-bold"
-                                   style="width:80%;border-color: #f1f2f4;">{{ item2.user_displayname}}</label>
-
-                        </div>
-                    </div>
-
-                </div>
-
-                @* approver 
-                <div class="modal-body" ng-if="selectDatFormType =='approver'">
-                    @* start ข้อมูลเดียวกันกับตรง session Approver
-                    <div class="col-auto" ng-repeat="item2 in data_approver | filter:{id_session: selectdata_session }"
-                         ng-if="!(item2.user_displayname ==''  || item2.user_displayname == null)">
-                        <div class="d-flex align-items-center p-1" style="height: 20px;">
-                            <button id="del-{{item2.seq}}" class="btn btn-link text-danger"
-                                    ng-class="{'d-none':(!tab_general_active)}"
-                                    ng-click="removeDataApprover(item2.seq, selectdata_session)">
-                                Remove
-                            </button>
-                            <div class="form-check mt-1 mb-0 text-1100 fw-bold">
-                                <input class="form-check-input disabled-link" type="checkbox"
-                                       ng-if="item2.approver_type =='approver'" checked
-                                       ng-click="actionChangeSafety(item2,item2.seq)">
-                                <input class="form-check-input" type="checkbox"
-                                       ng-if="!(item2.approver_type =='approver')"
-                                       ng-click="actionChangeSafetyUnCheck(item2,item2.seq)">
-                                <label class="form-check-label fw-bold" for="approver_safety">
-                                    (QMTS)
-                                </label>
-                            </div>
-                            <label class="mb-0 ms-3 text-1100 fw-bold"
-                                   style="width:80%;border-color: #f1f2f4;">{{ item2.user_displayname}}</label>
-
-
-                        </div>
-                    </div>
-                    @* end ข้อมูลเดียวกันกับตรง session
-                </div>*@
-
             </div>
         </div>
     </div>
@@ -4558,7 +4459,6 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="modalCauseTextLabel">Details</h5>
-
                     <button class="btn p-1" type="button" data-bs-dismiss="modal" aria-label="Close">
                         <svg class="svg-inline--fa fa-xmark fs--1" aria-hidden="true" focusable="false" data-prefix="fas"
                              data-icon="xmark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"
@@ -4570,23 +4470,17 @@
                     </button>
                 </div>
                 <div class="modal-body">
-
                     <div class="row g-3">
                         <div class="" ng-repeat="itms_show in data_listworksheet_show ">
                             {{itms_show.workstep_no +'.'+ itms_show.cause}}
                         </div>
                     </div>
-
                 </div>
-
             </div>
         </div>
     </div>
     <!--Modal Cause Show-->
-    @*
 
-
-    *@
     @* e-Mail *@
     <!--Modal Check Send e-Mail Case Save for PHA Conduct -->
     <div class="modal fade" id="modalSendMailRegister" tabindex="-1" aria-labelledby="modalSendMailRegisterLabel"
@@ -4961,48 +4855,47 @@
         </div>
     </div>   
 
-<!-------- Modal Before Remove ------------->
-<div class="modal fade" id="removeModal" tabindex="-1" role="dialog" aria-labelledby="removeModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="removeModalLabel">Confirm Removal</h5>
-                    <button class="btn p-1" type="button" data-bs-dismiss="modal" aria-label="Close">
-                        <svg class="svg-inline--fa fa-xmark fs--1" aria-hidden="true" focusable="false"
-                             data-prefix="fas" data-icon="xmark" role="img" xmlns="http://www.w3.org/2000/svg"
-                             viewBox="0 0 320 512" data-fa-i2svg="">
-                            <path fill="currentColor"
-                                  d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 
-                                  301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 
-                                  0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 
-                                  210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z">
-                            </path>
-                        </svg>
-                    </button>
-            </div>
-            <div class="modal-body text-center">
-                <p class="mt-3" style="color: grey; font-weight: bold;">
-                    'Are you sure you want to remove this item?'
-                </p>
-            </div>
-            <div class="modal-footer justify-content-end">
-                <button type="button" class="btn btn-danger" data-dismiss="modal" ng-click="action_remove('yes')">Yes, Delete</button>
-                <button type="button" class="btn btn-light" ng-click="action_remove('no')">No, Keep It</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal autosaveModal" id="autosaved" tabindex="-1" role="dialog" aria-labelledby="autosavedModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content" style="background-color: #dff0d8;">
-            <div class="modal-body">
-                <strong>Success!</strong> Your work has been successfully saved.
+    <!-------- Modal Before Remove ------------->
+    <div class="modal fade" id="removeModal" tabindex="-1" role="dialog" aria-labelledby="removeModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="removeModalLabel">Confirm Removal</h5>
+                        <button class="btn p-1" type="button" data-bs-dismiss="modal" aria-label="Close">
+                            <svg class="svg-inline--fa fa-xmark fs--1" aria-hidden="true" focusable="false"
+                                data-prefix="fas" data-icon="xmark" role="img" xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 320 512" data-fa-i2svg="">
+                                <path fill="currentColor"
+                                    d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 
+                                    301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 
+                                    0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 
+                                    210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z">
+                                </path>
+                            </svg>
+                        </button>
+                </div>
+                <div class="modal-body text-center">
+                    <p class="mt-3" style="color: grey; font-weight: bold;">
+                        'Are you sure you want to remove this item?'
+                    </p>
+                </div>
+                <div class="modal-footer justify-content-end">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" ng-click="action_remove('yes')">Yes, Delete</button>
+                    <button type="button" class="btn btn-light" ng-click="action_remove('no')">No, Keep It</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
+    <div class="modal autosaveModal" id="autosaved" tabindex="-1" role="dialog" aria-labelledby="autosavedModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" style="background-color: #dff0d8;">
+                <div class="modal-body">
+                    <strong>Success!</strong> Your work has been successfully saved.
+                </div>
+            </div>
+        </div>
+    </div>
 
 </div>
 
