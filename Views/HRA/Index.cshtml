@@ -1560,18 +1560,18 @@
                                         ng-keyup="searchWorksheet($event.target.value)" 
                                         placeholder="Search Task Or Activity"> *@
                                     <button class="btn-worksheet-filter btn btn-primary d-flex gap-2" ng-click="openFilter('worksheet')">
-                                        <i class="fa-solid fa-filter"></i>
-                                        Filter
+                                        <i class="fa-solid fa-filter" ng-if="!countFilterWorksheet"></i>
                                         <div class="bard" ng-if="countFilterWorksheet">
-                                            {{countFilterWorksheet}} items
+                                            {{countFilterWorksheet}}
                                         </div>
+                                        Filter
                                     </button>
                                     @* Modal Filter Worksheet *@
                                    <div class="container-worksheet-filter" ng-if="isFilterWorksheet">
                                         <div class="d-flex align-items-center justify-content-end">
                                             <i class="fa-solid fa-xmark cursor-pointer" ng-click="closeFilter('worksheet')"></i>
                                         </div>
-                                        <div class="content-container d-flex flex-column p-2">
+                                        <div class="content-container d-flex flex-column p-4">
                                             <span class="title-filter">Filter Worksheet</span>
                                             <div class="list-container">
                                                 @* Initial Risk Rating *@
@@ -2237,19 +2237,19 @@
                                         ng-model="searchQueryWorksheet"
                                         ng-keyup="searchWorksheet($event.target.value)" 
                                         placeholder="Search Task Or Activity"> *@
-                                    <button class="btn-recommendations-filter btn btn-primary d-flex gap-2" ng-click="openFilter('recommendations')">
-                                        <i class="fa-solid fa-filter"></i>
-                                        Filter
+                                    <button class="btn-recommendations-filter btn btn-primary d-flex align-items-center gap-2" ng-click="openFilter('recommendations')">
+                                        <i class="fa-solid fa-filter" ng-if="!countFilterRecommendations"></i>
                                         <div class="bard-recommendations" ng-if="countFilterRecommendations">
-                                            {{countFilterRecommendations}} items
+                                            {{countFilterRecommendations}}
                                         </div>
+                                        Filter
                                     </button>
                                     <div class="container-recommendations-filter" ng-if="isFilterRecommendations">
                                         <div class="d-flex align-items-center justify-content-end">
                                             <i class="fa-solid fa-xmark cursor-pointer" ng-click="closeFilter('recommendations')"></i>
                                         </div>
                                         @* Modal Filter Recommendations *@
-                                        <div class="content-container d-flex flex-column p-2">
+                                        <div class="content-container d-flex flex-column p-4">
                                             <span class="title-filter">Filter Worksheet</span>
                                             <div class="list-container">
                                                 @* Initial Risk Rating *@
@@ -2272,6 +2272,21 @@
                                                         ng-model="selectFilterExposureRecommendations.value">
                                                         <option value="">All</option>
                                                         <option ng-repeat="item_option in optionExposureRecommendations" 
+                                                                ng-value="item_option.name">
+                                                            {{item_option.name}}
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                                @* Recommendations *@
+                                                <div class="checkbox-container">
+                                                    <div class="topic">Exposure Indicator</div>
+                                                    <select class="form-control"
+                                                        style="max-width: 150px; font-size: 10.24px;"
+                                                        ng-click="setOptionRecommendations('','recommendations')"
+                                                        ng-change="setOptionRecommendations('change','recommendations')"
+                                                        ng-model="selectFilterRecommendations.value">
+                                                        <option value="">All</option>
+                                                        <option ng-repeat="item_option in optionRecommendations" 
                                                                 ng-value="item_option.name">
                                                             {{item_option.name}}
                                                         </option>
@@ -2301,19 +2316,32 @@
                                 <table class="table fs--2 mb-0 table-bordered">
                                     <thead class="text-capitalize text-center bg-soft">
                                         <tr>
-                                            <th class="align-middle" colspan="1" rowspan="2">Job Type/Change Type</th>
-                                            <th class="align-middle" colspan="1" rowspan="2">Task Or Activity</th>
-                                            <th class="align-middle" colspan="1" rowspan="2">Sub Area</th>
-                                            <th class="align-middle" colspan="2" rowspan="1">Exposure Indicator</th>
-                                            <th class="align-middle" colspan="1" rowspan="2">Health Effect Rating</th>
-                                            <th class="align-middle text-center" colspan="2" rowspan="1">
+                                            <th class="align-middle">[4.1]</th>
+                                            <th class="align-middle">[4.2]</th>
+                                            <th class="align-middle">[4.3]</th>
+                                            <th class="align-middle" colspan="2">[4.4]</th>
+                                            <th class="align-middle">[4.5]</th> 
+                                            <th class="align-middle" colspan="2">[4.6]</th>
+                                            <th class="align-middle">[4.7]</th>
+                                            <th class="align-middle">[4.8]</th>
+                                            <th class="align-middle">[4.9]</th>
+                                            <th class="align-middle" colspan="2">[4.9]</th>
+                                            <th class="align-middle">[4.10]</th>
+                                        </tr>
+                                        <tr>
+                                            <th class="align-middle" rowspan="2">Job Type/Change Type</th>
+                                            <th class="align-middle" rowspan="2">Task Or Activity</th>
+                                            <th class="align-middle" rowspan="2">Sub Area</th>
+                                            <th class="align-middle" rowspan="1" colspan="2">Exposure Indicator</th>
+                                            <th class="align-middle" rowspan="2">Health Effect Rating</th>
+                                            <th class="align-middle" rowspan="1" colspan="2">
                                                 <b class="text-danger"> * </b>Risk Rating
                                             </th>
                                             @* <th class="align-middle" colspan="1" rowspan="2" ng-if="isDisableStatus">Document File</th> *@
-                                            <th class="align-middle text-center" colspan="1" rowspan="2">Recommendation</th>
-                                            <th class="align-middle text-center" colspan="1" rowspan="2">Action Owner</th>
-                                            <th class="align-middle text-center" colspan="1" rowspan="2">Action<br />Status<br />(Items)</th>
-                                            <th class="align-middle text-center" colspan="2" rowspan="1">
+                                            <th class="align-middle text-center" rowspan="2">Recommendation</th>
+                                            <th class="align-middle text-center" rowspan="2">Action Owner</th>
+                                            <th class="align-middle text-center" rowspan="2">Action<br />Status<br />(Items)</th>
+                                            <th class="align-middle text-center" rowspan="1" colspan="2">
                                                 <b class="text-danger"> * </b>Recommendations Close Plan
                                             </th>
                                             <th class="align-middle" colspan="1" rowspan="2">Action Close Date</th>
@@ -2360,9 +2388,9 @@
                                                     ng-repeat="(idx, ws) in item.worksheet | filter: filterInitialRiskRating" 
                                                     style="min-width: max-content;">
                                                     {{ ws.sub_area
-                                                        ? item.worksheet[idx - 1].sub_area == ws.sub_area 
+                                                        ? display_recommendations_filter[index].worksheet[idx - 1].sub_area == ws.sub_area
                                                             ? '' 
-                                                            : ws.sub_area 
+                                                            : ws.sub_area
                                                         : 'Not found'
                                                     }}
                                                 </div>
@@ -2370,25 +2398,27 @@
 
                                             <td>
                                                 <div class="d-flex flex-col"  
-                                                    ng-repeat="ws in item.worksheet | filter: filterInitialRiskRating">
+                                                    ng-repeat="(idx, ws) in item.worksheet | filter: filterInitialRiskRating">
                                                     <div class="box-recom " >
                                                         @* {{ ws.type_hazard }} *@
                                                         {{ ws.type_hazard
-                                                            ? item.worksheet[$index - 1].type_hazard == ws.type_hazard 
-                                                                || item.worksheet[$index - 1].sub_area == ws.sub_area 
+                                                            ? display_recommendations_filter[index].worksheet[idx - 1].sub_area == ws.sub_area && 
+                                                            display_recommendations_filter[index].worksheet[idx - 1].type_hazard == ws.type_hazard ||
+                                                            display_recommendations_filter[index].worksheet[idx - 1].fk_recommendations == ws.fk_recommendations
                                                                 ? '' 
-                                                                : ws.type_hazard 
+                                                                : ws.type_hazard
                                                             : 'Not found'
                                                         }}
+                                                        @* {{ws.type_hazard +' == '+item.worksheet[$index - 1].sub_area}} *@
                                                     </div>
                                                 </div>
                                             </td>
 
                                             <td>
                                                 <div class="d-flex flex-col"  
-                                                    ng-repeat="ws in item.worksheet | filter: filterInitialRiskRating">
+                                                    ng-repeat="(idx, ws) in item.worksheet | filter: filterInitialRiskRating">
                                                     <div class="box-recom " >
-                                                        <div  ng-if="display_worksheet_filter[index].worksheet[$index - 1].fk_recommendations != ws.fk_recommendations">
+                                                        <div ng-if=" display_recommendations_filter[index].worksheet[idx - 1].fk_recommendations != ws.fk_recommendations">
                                                             {{ ws.health_hazard }}
                                                         </div>
                                                     </div>
@@ -2398,8 +2428,8 @@
                                             <td>
                                                 <div class="d-flex justify-content-center box-recom " 
                                                     style="min-width: 58px;"
-                                                    ng-repeat="ws in item.worksheet | filter: filterInitialRiskRating">
-                                                    <div ng-if="ws.health_effect_rating && display_worksheet_filter[index].worksheet[$index - 1].fk_recommendations != ws.fk_recommendations">
+                                                    ng-repeat="(idx, ws) in item.worksheet | filter: filterInitialRiskRating">
+                                                    <div ng-if="ws.health_effect_rating && display_recommendations_filter[index].worksheet[idx - 1].fk_recommendations != ws.fk_recommendations">
                                                         <div class="effect-rating "
                                                             @* ng-click="openModalRisk(hazard, $index)" *@
                                                             ng-class="{
@@ -2417,9 +2447,9 @@
                                             <td class="align-top rating white-space-nowrap text-start">
                                                 <div class="box-recom " 
                                                     style="min-width: 100px; padding-top: 7px; text-align: center;"
-                                                    ng-repeat="ws in item.worksheet | filter: filterInitialRiskRating">
+                                                    ng-repeat="(idx, ws) in item.worksheet | filter: filterInitialRiskRating">
                                                     <div class="card-initial"
-                                                        ng-if="ws.initial_risk_rating && display_worksheet_filter[index].worksheet[$index - 1].fk_recommendations != ws.fk_recommendations"
+                                                        ng-if="ws.initial_risk_rating && display_recommendations_filter[index].worksheet[idx - 1].fk_recommendations != ws.fk_recommendations"
                                                         ng-class="{
                                                             'risk-acceptable': (ws.initial_risk_rating == 'Acceptable Risk' || ws.initial_risk_rating == 'Acceptable Risk\r\n'),
                                                             'risk-low': (ws.initial_risk_rating == 'Low' || ws.initial_risk_rating == 'Low\r\n'),
@@ -2432,9 +2462,9 @@
                                             </td>
   
                                             <td class="">
-                                                <div class="box-recom" ng-repeat="ws in item.worksheet | filter: filterInitialRiskRating">
+                                                <div class="box-recom" ng-repeat="(idx, ws) in item.worksheet | filter: filterInitialRiskRating">
                                                     <select class="form-select form-select-sm rounded-1" 
-                                                        ng-if="display_worksheet_filter[index].worksheet[$index - 1].fk_recommendations != ws.fk_recommendations"
+                                                        ng-if="display_recommendations_filter[index].worksheet[idx - 1].fk_recommendations != ws.fk_recommendations"
                                                         ng-class="{'disabled-link': isDisableStatus}"
                                                         ng-change="actionChangeResidualRiskRating(item, ws)"
                                                         ng-model="ws.residual_risk_rating" 
@@ -2449,7 +2479,7 @@
                                                 </div>
 
                                                 <div class="box-recom " 
-                                                    ng-if="ws.action_status == 'Close' && ws.residual_risk_rating"
+                                                    ng-if="ws.action_status == 'Close' && ws.residual_risk_rating && display_recommendations_filter[index].worksheet[idx - 1].fk_recommendations != ws.fk_recommendations"
                                                     style="min-width: max-content; padding-top: 7px; text-align: center;"
                                                     ng-repeat="ws in item.worksheet | filter: filterInitialRiskRating">
                                                     <div class="card-initial"

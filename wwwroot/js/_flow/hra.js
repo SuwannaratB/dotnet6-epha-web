@@ -998,11 +998,15 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 selected: false 
             }
         ];
+        $scope.optionRecommendations = []
         $scope.optionExposureRecommendations = []
         $scope.searchQueryRecommendations = ''; // search recommendations
         $scope.isFilterRecommendations = false; // open or close modal filter recommendations
         $scope.countFilterRecommendations = null; // amount options filter
         $scope.selectFilterExposureRecommendations = {
+            value: null
+        };
+        $scope.selectFilterRecommendations = {
             value: null
         };
 
@@ -1552,8 +1556,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     // set_alert('Error', arr[0].status);
                     set_alert('Success', 'Data has been successfully submitted.');
                     setTimeout(() => {
-                        window.open('hazop/search', "_top");
-                        // page_load();
+                        // window.open('hazop/search', "_top");
+                        page_load();
                         // window.location.reload()
                     }, 1000);
                 }
@@ -6668,7 +6672,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             // data recommendations
             changeDataRecomments(itemAll, item);
             // filter initial อีกครั้ง
-            $scope.applyFilters();
+            $scope.applyFilters('worksheet');
             // filterDataWorksheet();
             // tab summary
             $scope.data_summary = setup_summary($scope.data_worksheet_list);
@@ -7967,6 +7971,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         item.action_change = 1;
         // set tab recommendations อีกครั้ง
         $scope.display_recommendations_filter = setup_tabrecommendations($scope.data_worksheet_list)
+        // filter tab recommendations อีกครั้ง
+        $scope.applyFilters('recommendations')
+        console.log($scope.display_recommendations_filter)
     }
 
     $scope.actionChangeControl = function (itemAll, item) {
@@ -8314,8 +8321,44 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
     }
 
+    $scope.setOptionRecommendations = function(change, type) {
+        if (type == 'worksheet') {
+           
+        }
+
+        if (type == 'recommendations') {
+            let uniqueRecommendations = new Set();
+    
+            $scope.data_worksheet_list.forEach(ws_ls => {
+                ws_ls.worksheet.forEach(ws => {
+                    if (ws.health_hazard && ws.recommendations) {
+                        uniqueRecommendations.add(ws.recommendations);
+                    }
+                });
+            });
+            // Convert the Set back to an array of objects
+            $scope.optionRecommendations = Array.from(uniqueRecommendations).map(name => ({
+                name,
+                selected: false
+             }));
+    
+            //  console.log( $scope.selectFilterExposure.value )
+    
+            if(!change) return
+    
+            $scope.optionRecommendations.forEach(element => {
+                if (element.name == $scope.selectFilterRecommendations.value) {
+                    element.selected = true
+                }else{
+                    element.selected = false
+                }
+            });
+    
+            console.log($scope.optionRecommendations)
+        }
+    }
+
     $scope.applyFilters = function(type){
-        
         if (type == 'worksheet') {
             $scope.countFilterWorksheet = null
             $scope.isProcessFilterWorksheet = false;
@@ -8362,6 +8405,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 init_worksheet = $scope.val_filterInitialRecommendations.displayFilter
                 $scope.isProcessFilterRecommendations = true
             }
+            // เช็คว่าข้อมูลที่ได้จากการ Filter Recommendations
+            if (checkRecommendauions('recommendations')) {
+                $scope.val_filterRecommendations = filterRecommendations(init_worksheet, 'recommendations');
+                $scope.countFilterRecommendations =  $scope.countFilterRecommendations + $scope.val_filterRecommendations.selectFilter.length
+                init_worksheet = $scope.val_filterRecommendations.displayFilter
+                $scope.isProcessFilterRecommendations = true
+            }
             // เช็คถ้าไม่เลือก/ไม่เลือก Filter 
             if ($scope.isProcessFilterRecommendations) {
                 $scope.display_recommendations_filter = init_worksheet
@@ -8404,6 +8454,17 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.optionExposureRecommendations.forEach(element => {
                 element.selected = false
             });
+            // Data Initial Risk
+            $scope.val_filterInitialRecommendations = null;
+            $scope.optionInitialRecommendations.forEach(element => {
+                element.selected = false
+            });
+            // Data Recommendations
+            $scope.val_filterRecommendations = null;
+            $scope.selectFilterRecommendations.value = ''
+            $scope.optionRecommendations.forEach(element => {
+                element.selected = false
+            });
             // clear count
             $scope.countFilterRecommendations = null
             // เรียงข้อมูล display
@@ -8443,6 +8504,18 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         if (type == 'recommendations') {
             const result = $filter('filter')($scope.optionInitialRecommendations, function (_item) { 
+                return _item.selected
+            });
+            if (result.length > 0) return true
+            return false
+        }
+    }
+
+    function checkRecommendauions(type){
+        if (type == 'worksheet') {}
+
+        if (type == 'recommendations') {
+            const result = $filter('filter')($scope.optionRecommendations, function (_item) { 
                 return _item.selected
             });
             if (result.length > 0) return true
@@ -8520,6 +8593,29 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     displayFilter.push(data)
                 }
             }
+            return {  selectFilter, displayFilter }
+        }
+    }
+
+    function filterRecommendations(init_worksheet, type){
+        if (type == 'worksheet') {}
+
+        if (type == 'recommendations') {
+            let selectFilter = $scope.optionRecommendations.filter((option) => option.selected).map((option) => option.name);
+
+            var displayFilter = []
+
+            for (let i = 0; i < init_worksheet.length; i++) {
+                let tmp_list = init_worksheet[i].worksheet.filter((item) =>
+                    selectFilter.includes(item.recommendations)
+                );
+                if (tmp_list.length > 0) {
+                    var data = angular.copy(init_worksheet[i])
+                    data.worksheet = tmp_list
+                    displayFilter.push(data)
+                }
+            }
+
             return {  selectFilter, displayFilter }
         }
     }
