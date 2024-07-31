@@ -34,10 +34,7 @@
 }
 
 <div class="content mt-1" style="font-size: 12px; min-height: auto !important; overflow-x:hidden;" id="divPage" ng-controller="ctrlAppPage">
-
-
     <div class="row g-0">
-
         <div class="col-6">
             <div class="card shadow-sm p-2 mb-3 bg-light rounded">
                 <div class="card-body p-2">
@@ -71,19 +68,13 @@
                                 <span ng-class="{ 'blinking-text': (minutes <= 10) }">{{counterText}} </span>
                             </div>
                        </div>
-
                     </div>
-
                     <div class="row">
                     </div>
-
                 </div>
             </div>
-
         </div>
-
         <div class="col-6 ">
-
             <div class="d-flex align-items-center py-2  justify-content-end">
                 <span class="mx-2">
                     <button class="btn btn-outline-secondary btn-sm" style="width: 100px;" ng-click="confirmBack()">BACK</button>
@@ -119,57 +110,33 @@
                     </button>
                 </span>
             </div>
-
             <div class="float-end pe-3">
                 <div class="form-check form-switch  disabled-link">
                     <input class="form-check-input" id="flexSwitchCheckChecked" type="checkbox" />
                     <label class="form-check-label" for="flexSwitchCheckChecked">History tracking record</label>
                 </div>
             </div>
-
         </div>
-
     </div>
 
     <div class="row g-0">
         <div class="col-12 ">
-
             <div class="card">
-
                 <div class="card-header mb-0 pb-0 border border-bottom-0 ">
-
-                    @*<ul class="nav nav-underline border-3 border-primary border-bottom p-0 m-0" id="myTab" role="tablist">
-
-                        <li ng-repeat="tab in tabs" class="mx-2  p-0 m-0" ng-if="tab.isShow || true">
-                            <a ng-click="changeTab(tab)"
-                               class="btn btn-outline-primary border border-0 "
-                               ng-class="{'btn btn-outline-primary border border-0 mx-2  p-1 m-0 active': (tab.isActive==true),'btn btn-outline-primary border border-0 mx-2  p-1 m-0': (tab.isActive==false) }"
-                               style="border-radius: 10px 10px 0px 0px !important;"
-                               id="{{tab.name}}-tab" name="{{tab.name}}-tab"
-                               data-bs-toggle="tab" href="#tab-{{tab.name}}" role="tab"
-                               aria-controls="tab-{{tab.name}}"
-                               aria-selected="tab.isActive">{{ tab.title }}</a>
-                        </li>
-                    </ul>*@
-
                     <ul class="nav nav-underline border-3 border-primary border-bottom " id="myTab" role="tablist" style="position: relative;">
-
                         <li ng-repeat="tab in tabs" ng-if="tab.isShow || true">
-                                <a ng-click="changeTab(tab)"
-                                    class="btn-nav-menu btn-outline-primary border border-0"
-                                    ng-class="{'btn active': (tab.isActive === true)}"
-                                    id="{{tab.name}}-tab" name="{{tab.name}}-tab"
-                                    data-bs-toggle="tab" href="#tab-{{tab.name}}" role="tab"
-                                    aria-controls="tab-{{tab.name}}"
-                                    aria-selected="{{tab.isActive}}">
-                                    {{ tab.title }}
-                                </a>
+                            <a ng-click="changeTab(tab)"
+                                class="btn-nav-menu btn-outline-primary border border-0"
+                                ng-class="{'btn active': (tab.isActive === true)}"
+                                id="{{tab.name}}-tab" name="{{tab.name}}-tab"
+                                data-bs-toggle="tab" href="#tab-{{tab.name}}" role="tab"
+                                aria-controls="tab-{{tab.name}}"
+                                aria-selected="{{tab.isActive}}">
+                                {{ tab.title }}
+                            </a>
                         </li>
                     </ul>
-
                 </div>
-
-
                 <div class="card-body tab-content" style="min-height: 66vh;">
                     <!-- general information start -->
                     <div class="" ng-class="{
@@ -179,19 +146,34 @@
                          id="tab-general" role="tabpanel" aria-labelledby="general-tab">
                         @* General Start*@
                         <div class="m-3 row  gx-0 align-items-center ">
-                            <div class="card border-0">
+                            <div class="card p-2">
+                                <div class="row g-3 justify-content-between align-items-center pt-2 pb-3">
+                                    <div class="col-12 col-md">
+                                        <h5 class="text-900 mb-0"> 
+                                            <span class=" me-2 text-primary">
+                                                <B>|</B>
+                                            </span>
+                                            Health Risk Assessment:&nbsp;
+                                            <span class="fw-normal" 
+                                                style="font-size: 14px;"
+                                                ng-if="data_general[0].id_section || data_general[0].id_unit_no">
+                                                {{ data_general[0].id_sections}} 
+                                                <span ng-if="data_general[0].id_sections">at</span> 
+                                                {{mocTitle['unit']}}
+                                            </span>
+                                        </h5>
+                                    </div>
+                                </div>
                                 @* rows 1 *@
                                 <div class="mx-1 row g-3 align-items-center" ng-repeat="item in data_general ">
-
-                                    <h5>
-                                        HEALTH RISK ASSESSMENT :  
+                                    @* <div>
+                                        <b>HEALTH RISK ASSESSMENT :</b> &nbsp;
                                         <span class="fw-normal" ng-if="item.id_section || item.id_unit_no">
                                             {{ item.id_sections}} 
                                             <span ng-if="item.id_sections">at</span> 
                                             {{mocTitle['unit']}}
                                         </span>
-                                    </h5>
-
+                                    </div> *@
                                     <!-- company -->
                                     <div class="col-md-2 ">
                                         <label class="form-label ps-0" for="expense_type">
@@ -1560,18 +1542,18 @@
                                         ng-keyup="searchWorksheet($event.target.value)" 
                                         placeholder="Search Task Or Activity"> *@
                                     <button class="btn-worksheet-filter btn btn-primary d-flex gap-2" ng-click="openFilter('worksheet')">
-                                        <i class="fa-solid fa-filter"></i>
-                                        Filter
+                                        <i class="fa-solid fa-filter" ng-if="!countFilterWorksheet"></i>
                                         <div class="bard" ng-if="countFilterWorksheet">
-                                            {{countFilterWorksheet}} items
+                                            {{countFilterWorksheet}}
                                         </div>
+                                        Filter
                                     </button>
                                     @* Modal Filter Worksheet *@
                                    <div class="container-worksheet-filter" ng-if="isFilterWorksheet">
                                         <div class="d-flex align-items-center justify-content-end">
                                             <i class="fa-solid fa-xmark cursor-pointer" ng-click="closeFilter('worksheet')"></i>
                                         </div>
-                                        <div class="content-container d-flex flex-column p-2">
+                                        <div class="content-container d-flex flex-column p-4">
                                             <span class="title-filter">Filter Worksheet</span>
                                             <div class="list-container">
                                                 @* Initial Risk Rating *@
@@ -2237,19 +2219,19 @@
                                         ng-model="searchQueryWorksheet"
                                         ng-keyup="searchWorksheet($event.target.value)" 
                                         placeholder="Search Task Or Activity"> *@
-                                    <button class="btn-recommendations-filter btn btn-primary d-flex gap-2" ng-click="openFilter('recommendations')">
-                                        <i class="fa-solid fa-filter"></i>
-                                        Filter
+                                    <button class="btn-recommendations-filter btn btn-primary d-flex align-items-center gap-2" ng-click="openFilter('recommendations')">
+                                        <i class="fa-solid fa-filter" ng-if="!countFilterRecommendations"></i>
                                         <div class="bard-recommendations" ng-if="countFilterRecommendations">
-                                            {{countFilterRecommendations}} items
+                                            {{countFilterRecommendations}}
                                         </div>
+                                        Filter
                                     </button>
                                     <div class="container-recommendations-filter" ng-if="isFilterRecommendations">
                                         <div class="d-flex align-items-center justify-content-end">
                                             <i class="fa-solid fa-xmark cursor-pointer" ng-click="closeFilter('recommendations')"></i>
                                         </div>
                                         @* Modal Filter Recommendations *@
-                                        <div class="content-container d-flex flex-column p-2">
+                                        <div class="content-container d-flex flex-column p-4">
                                             <span class="title-filter">Filter Worksheet</span>
                                             <div class="list-container">
                                                 @* Initial Risk Rating *@
@@ -2272,6 +2254,21 @@
                                                         ng-model="selectFilterExposureRecommendations.value">
                                                         <option value="">All</option>
                                                         <option ng-repeat="item_option in optionExposureRecommendations" 
+                                                                ng-value="item_option.name">
+                                                            {{item_option.name}}
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                                @* Recommendations *@
+                                                <div class="checkbox-container">
+                                                    <div class="topic">Exposure Indicator</div>
+                                                    <select class="form-control"
+                                                        style="max-width: 150px; font-size: 10.24px;"
+                                                        ng-click="setOptionRecommendations('','recommendations')"
+                                                        ng-change="setOptionRecommendations('change','recommendations')"
+                                                        ng-model="selectFilterRecommendations.value">
+                                                        <option value="">All</option>
+                                                        <option ng-repeat="item_option in optionRecommendations" 
                                                                 ng-value="item_option.name">
                                                             {{item_option.name}}
                                                         </option>
@@ -2301,19 +2298,32 @@
                                 <table class="table fs--2 mb-0 table-bordered">
                                     <thead class="text-capitalize text-center bg-soft">
                                         <tr>
-                                            <th class="align-middle" colspan="1" rowspan="2">Job Type/Change Type</th>
-                                            <th class="align-middle" colspan="1" rowspan="2">Task Or Activity</th>
-                                            <th class="align-middle" colspan="1" rowspan="2">Sub Area</th>
-                                            <th class="align-middle" colspan="2" rowspan="1">Exposure Indicator</th>
-                                            <th class="align-middle" colspan="1" rowspan="2">Health Effect Rating</th>
-                                            <th class="align-middle text-center" colspan="2" rowspan="1">
+                                            <th class="align-middle">[4.1]</th>
+                                            <th class="align-middle">[4.2]</th>
+                                            <th class="align-middle">[4.3]</th>
+                                            <th class="align-middle" colspan="2">[4.4]</th>
+                                            <th class="align-middle">[4.5]</th> 
+                                            <th class="align-middle" colspan="2">[4.6]</th>
+                                            <th class="align-middle">[4.7]</th>
+                                            <th class="align-middle">[4.8]</th>
+                                            <th class="align-middle">[4.9]</th>
+                                            <th class="align-middle" colspan="2">[4.9]</th>
+                                            <th class="align-middle">[4.10]</th>
+                                        </tr>
+                                        <tr>
+                                            <th class="align-middle" rowspan="2">Job Type/Change Type</th>
+                                            <th class="align-middle" rowspan="2">Task Or Activity</th>
+                                            <th class="align-middle" rowspan="2">Sub Area</th>
+                                            <th class="align-middle" rowspan="1" colspan="2">Exposure Indicator</th>
+                                            <th class="align-middle" rowspan="2">Health Effect Rating</th>
+                                            <th class="align-middle" rowspan="1" colspan="2">
                                                 <b class="text-danger"> * </b>Risk Rating
                                             </th>
                                             @* <th class="align-middle" colspan="1" rowspan="2" ng-if="isDisableStatus">Document File</th> *@
-                                            <th class="align-middle text-center" colspan="1" rowspan="2">Recommendation</th>
-                                            <th class="align-middle text-center" colspan="1" rowspan="2">Action Owner</th>
-                                            <th class="align-middle text-center" colspan="1" rowspan="2">Action<br />Status<br />(Items)</th>
-                                            <th class="align-middle text-center" colspan="2" rowspan="1">
+                                            <th class="align-middle text-center" rowspan="2">Recommendation</th>
+                                            <th class="align-middle text-center" rowspan="2">Action Owner</th>
+                                            <th class="align-middle text-center" rowspan="2">Action<br />Status<br />(Items)</th>
+                                            <th class="align-middle text-center" rowspan="1" colspan="2">
                                                 <b class="text-danger"> * </b>Recommendations Close Plan
                                             </th>
                                             <th class="align-middle" colspan="1" rowspan="2">Action Close Date</th>
@@ -2360,9 +2370,9 @@
                                                     ng-repeat="(idx, ws) in item.worksheet | filter: filterInitialRiskRating" 
                                                     style="min-width: max-content;">
                                                     {{ ws.sub_area
-                                                        ? item.worksheet[idx - 1].sub_area == ws.sub_area 
+                                                        ? display_recommendations_filter[index].worksheet[idx - 1].sub_area == ws.sub_area
                                                             ? '' 
-                                                            : ws.sub_area 
+                                                            : ws.sub_area
                                                         : 'Not found'
                                                     }}
                                                 </div>
@@ -2370,25 +2380,27 @@
 
                                             <td>
                                                 <div class="d-flex flex-col"  
-                                                    ng-repeat="ws in item.worksheet | filter: filterInitialRiskRating">
+                                                    ng-repeat="(idx, ws) in item.worksheet | filter: filterInitialRiskRating">
                                                     <div class="box-recom " >
                                                         @* {{ ws.type_hazard }} *@
                                                         {{ ws.type_hazard
-                                                            ? item.worksheet[$index - 1].type_hazard == ws.type_hazard 
-                                                                || item.worksheet[$index - 1].sub_area == ws.sub_area 
+                                                            ? display_recommendations_filter[index].worksheet[idx - 1].sub_area == ws.sub_area && 
+                                                            display_recommendations_filter[index].worksheet[idx - 1].type_hazard == ws.type_hazard ||
+                                                            display_recommendations_filter[index].worksheet[idx - 1].fk_recommendations == ws.fk_recommendations
                                                                 ? '' 
-                                                                : ws.type_hazard 
+                                                                : ws.type_hazard
                                                             : 'Not found'
                                                         }}
+                                                        @* {{ws.type_hazard +' == '+item.worksheet[$index - 1].sub_area}} *@
                                                     </div>
                                                 </div>
                                             </td>
 
                                             <td>
                                                 <div class="d-flex flex-col"  
-                                                    ng-repeat="ws in item.worksheet | filter: filterInitialRiskRating">
+                                                    ng-repeat="(idx, ws) in item.worksheet | filter: filterInitialRiskRating">
                                                     <div class="box-recom " >
-                                                        <div  ng-if="display_worksheet_filter[index].worksheet[$index - 1].fk_recommendations != ws.fk_recommendations">
+                                                        <div ng-if=" display_recommendations_filter[index].worksheet[idx - 1].fk_recommendations != ws.fk_recommendations">
                                                             {{ ws.health_hazard }}
                                                         </div>
                                                     </div>
@@ -2398,8 +2410,8 @@
                                             <td>
                                                 <div class="d-flex justify-content-center box-recom " 
                                                     style="min-width: 58px;"
-                                                    ng-repeat="ws in item.worksheet | filter: filterInitialRiskRating">
-                                                    <div ng-if="ws.health_effect_rating && display_worksheet_filter[index].worksheet[$index - 1].fk_recommendations != ws.fk_recommendations">
+                                                    ng-repeat="(idx, ws) in item.worksheet | filter: filterInitialRiskRating">
+                                                    <div ng-if="ws.health_effect_rating && display_recommendations_filter[index].worksheet[idx - 1].fk_recommendations != ws.fk_recommendations">
                                                         <div class="effect-rating "
                                                             @* ng-click="openModalRisk(hazard, $index)" *@
                                                             ng-class="{
@@ -2417,9 +2429,9 @@
                                             <td class="align-top rating white-space-nowrap text-start">
                                                 <div class="box-recom " 
                                                     style="min-width: 100px; padding-top: 7px; text-align: center;"
-                                                    ng-repeat="ws in item.worksheet | filter: filterInitialRiskRating">
+                                                    ng-repeat="(idx, ws) in item.worksheet | filter: filterInitialRiskRating">
                                                     <div class="card-initial"
-                                                        ng-if="ws.initial_risk_rating && display_worksheet_filter[index].worksheet[$index - 1].fk_recommendations != ws.fk_recommendations"
+                                                        ng-if="ws.initial_risk_rating && display_recommendations_filter[index].worksheet[idx - 1].fk_recommendations != ws.fk_recommendations"
                                                         ng-class="{
                                                             'risk-acceptable': (ws.initial_risk_rating == 'Acceptable Risk' || ws.initial_risk_rating == 'Acceptable Risk\r\n'),
                                                             'risk-low': (ws.initial_risk_rating == 'Low' || ws.initial_risk_rating == 'Low\r\n'),
@@ -2432,9 +2444,9 @@
                                             </td>
   
                                             <td class="">
-                                                <div class="box-recom" ng-repeat="ws in item.worksheet | filter: filterInitialRiskRating">
+                                                <div class="box-recom" ng-repeat="(idx, ws) in item.worksheet | filter: filterInitialRiskRating">
                                                     <select class="form-select form-select-sm rounded-1" 
-                                                        ng-if="display_worksheet_filter[index].worksheet[$index - 1].fk_recommendations != ws.fk_recommendations"
+                                                        ng-if="display_recommendations_filter[index].worksheet[idx - 1].fk_recommendations != ws.fk_recommendations"
                                                         ng-class="{'disabled-link': isDisableStatus}"
                                                         ng-change="actionChangeResidualRiskRating(item, ws)"
                                                         ng-model="ws.residual_risk_rating" 
@@ -2449,7 +2461,7 @@
                                                 </div>
 
                                                 <div class="box-recom " 
-                                                    ng-if="ws.action_status == 'Close' && ws.residual_risk_rating"
+                                                    ng-if="ws.action_status == 'Close' && ws.residual_risk_rating && display_recommendations_filter[index].worksheet[idx - 1].fk_recommendations != ws.fk_recommendations"
                                                     style="min-width: max-content; padding-top: 7px; text-align: center;"
                                                     ng-repeat="ws in item.worksheet | filter: filterInitialRiskRating">
                                                     <div class="card-initial"
@@ -3245,7 +3257,6 @@
         </div>
     </div>
 
-
     @* ************************************************************** *@
     <div class="modal fade modal-xl" id="modalMatrix_Rating_worksheet" tabindex="-1" aria-labelledby="modalMatrix_Rating_worksheetLabel" 
         aria-hidden="true">
@@ -3280,9 +3291,7 @@
             </div>
         </div>
     </div>
-
     @* ************************************************************** *@
-
 
     <!--Modal Risk-->
     <div class="modal fade modal-xl" id="modalRisk" tabindex="-1" aria-labelledby="modalEmployeeAddLabel"
@@ -3418,7 +3427,6 @@
                             <span class="me-2 text-primary"><B>|</B></span> Search Employee/Contract
                         </h5>
                     </div>
-
                     <button class="btn p-1" type="button" data-bs-dismiss="modal" aria-label="Close" ng-click="clearFormData()">
                         <svg class="svg-inline--fa fa-xmark fs--1" aria-hidden="true" focusable="false" data-prefix="fas"
                                 data-icon="xmark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"
@@ -3428,7 +3436,6 @@
                             </path>
                         </svg>
                     </button>
-
                 </div>
                 <div class="modal-header ps-0 pb-0" ng-if="selectDatFormType === 'manage' && params != 'edit_approver'">
                     <!-- For form_type === 'owner' -->
@@ -3637,7 +3644,6 @@
                         </div>                              
                     </div>
                 </div>
-
                 <!------------show name after add   --------------->
                 <div class="modal-header bg-soft" 
                     ng-if="selectDatFormType !== 'owner' && params !== 'edit_approver' && 
@@ -3648,7 +3654,6 @@
                         {{ selectDatFormType === 'member' ? 'Member Team' : selectDatFormType === 'approver' ? 'Approver' : 'Action Owner' }}
                     </h5>
                 </div>
-
                 <div class="modal-body" 
                     ng-if="(selectDatFormType !== 'owner' && (
                                 data_memberteam.length > 1 || 
@@ -3735,7 +3740,6 @@
                         </div>
                     </div>
                 </div>
-
                 <!------------contractor/out source-------------->
                 <div class="modal-header bg-soft" 
                     ng-if="!(selectDatFormType =='approver'|| selectDatFormType =='reviewer') && (showContractor || (data_relatedpeople_outsider | toArray | filter:{user_type: selectDatFormType}).length > 1)">
@@ -3811,64 +3815,6 @@
                         </div>
                     </div>
                 </div>
-
-
-                @*<div class="modal-header bg-soft" ng-if="!(selectDatFormType =='owner' )">
-
-                    <h5 class="text-900 mb-0" ng-if="selectDatFormType =='member'"> <span class=" me-2 text-primary"><B>|</B></span>Member Team</h5>
-                    <h5 class="text-900 mb-0" ng-if="selectDatFormType =='approver'"> <span class=" me-2 text-primary"><B>|</B></span>Assessment Team Leader</h5>
-
-                </div>*@
-
-                @* member 
-                <div class="modal-body" ng-if="selectDatFormType =='member'">
-                    <div class="col-auto" ng-repeat="item2 in data_memberteam | filter:{id_session: selectdata_session }"
-                         ng-if="!(item2.user_displayname ==''  || item2.user_displayname == null)">
-                        <div class="d-flex align-items-center p-1" style="height: 20px;">
-                            <button id="del-{{item2.seq}}" class="btn btn-link text-danger"
-                                    ng-class="{'d-none':(!tab_general_active)}"
-                                    ng-click="removeDataEmployee(item2.seq, selectdata_session)">
-                                Remove
-                            </button>
-                            <label class="mb-0 ms-3 text-1100 fw-bold"
-                                   style="width:80%;border-color: #f1f2f4;">{{ item2.user_displayname}}</label>
-
-                        </div>
-                    </div>
-
-                </div>
-
-                @* approver 
-                <div class="modal-body" ng-if="selectDatFormType =='approver'">
-                    @* start ข้อมูลเดียวกันกับตรง session Approver
-                    <div class="col-auto" ng-repeat="item2 in data_approver | filter:{id_session: selectdata_session }"
-                         ng-if="!(item2.user_displayname ==''  || item2.user_displayname == null)">
-                        <div class="d-flex align-items-center p-1" style="height: 20px;">
-                            <button id="del-{{item2.seq}}" class="btn btn-link text-danger"
-                                    ng-class="{'d-none':(!tab_general_active)}"
-                                    ng-click="removeDataApprover(item2.seq, selectdata_session)">
-                                Remove
-                            </button>
-                            <div class="form-check mt-1 mb-0 text-1100 fw-bold">
-                                <input class="form-check-input disabled-link" type="checkbox"
-                                       ng-if="item2.approver_type =='approver'" checked
-                                       ng-click="actionChangeSafety(item2,item2.seq)">
-                                <input class="form-check-input" type="checkbox"
-                                       ng-if="!(item2.approver_type =='approver')"
-                                       ng-click="actionChangeSafetyUnCheck(item2,item2.seq)">
-                                <label class="form-check-label fw-bold" for="approver_safety">
-                                    (QMTS)
-                                </label>
-                            </div>
-                            <label class="mb-0 ms-3 text-1100 fw-bold"
-                                   style="width:80%;border-color: #f1f2f4;">{{ item2.user_displayname}}</label>
-
-
-                        </div>
-                    </div>
-                    @* end ข้อมูลเดียวกันกับตรง session
-                </div>*@
-
             </div>
         </div>
     </div>
@@ -4519,7 +4465,6 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="modalCauseTextLabel">Details</h5>
-
                     <button class="btn p-1" type="button" data-bs-dismiss="modal" aria-label="Close">
                         <svg class="svg-inline--fa fa-xmark fs--1" aria-hidden="true" focusable="false" data-prefix="fas"
                              data-icon="xmark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"
@@ -4531,23 +4476,17 @@
                     </button>
                 </div>
                 <div class="modal-body">
-
                     <div class="row g-3">
                         <div class="" ng-repeat="itms_show in data_listworksheet_show ">
                             {{itms_show.workstep_no +'.'+ itms_show.cause}}
                         </div>
                     </div>
-
                 </div>
-
             </div>
         </div>
     </div>
     <!--Modal Cause Show-->
-    @*
 
-
-    *@
     @* e-Mail *@
     <!--Modal Check Send e-Mail Case Save for PHA Conduct -->
     <div class="modal fade" id="modalSendMailRegister" tabindex="-1" aria-labelledby="modalSendMailRegisterLabel"
@@ -4922,48 +4861,47 @@
         </div>
     </div>   
 
-<!-------- Modal Before Remove ------------->
-<div class="modal fade" id="removeModal" tabindex="-1" role="dialog" aria-labelledby="removeModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="removeModalLabel">Confirm Removal</h5>
-                    <button class="btn p-1" type="button" data-bs-dismiss="modal" aria-label="Close">
-                        <svg class="svg-inline--fa fa-xmark fs--1" aria-hidden="true" focusable="false"
-                             data-prefix="fas" data-icon="xmark" role="img" xmlns="http://www.w3.org/2000/svg"
-                             viewBox="0 0 320 512" data-fa-i2svg="">
-                            <path fill="currentColor"
-                                  d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 
-                                  301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 
-                                  0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 
-                                  210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z">
-                            </path>
-                        </svg>
-                    </button>
-            </div>
-            <div class="modal-body text-center">
-                <p class="mt-3" style="color: grey; font-weight: bold;">
-                    'Are you sure you want to remove this item?'
-                </p>
-            </div>
-            <div class="modal-footer justify-content-end">
-                <button type="button" class="btn btn-danger" data-dismiss="modal" ng-click="action_remove('yes')">Yes, Delete</button>
-                <button type="button" class="btn btn-light" ng-click="action_remove('no')">No, Keep It</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal autosaveModal" id="autosaved" tabindex="-1" role="dialog" aria-labelledby="autosavedModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content" style="background-color: #dff0d8;">
-            <div class="modal-body">
-                <strong>Success!</strong> Your work has been successfully saved.
+    <!-------- Modal Before Remove ------------->
+    <div class="modal fade" id="removeModal" tabindex="-1" role="dialog" aria-labelledby="removeModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="removeModalLabel">Confirm Removal</h5>
+                        <button class="btn p-1" type="button" data-bs-dismiss="modal" aria-label="Close">
+                            <svg class="svg-inline--fa fa-xmark fs--1" aria-hidden="true" focusable="false"
+                                data-prefix="fas" data-icon="xmark" role="img" xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 320 512" data-fa-i2svg="">
+                                <path fill="currentColor"
+                                    d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 
+                                    301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 
+                                    0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 
+                                    210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z">
+                                </path>
+                            </svg>
+                        </button>
+                </div>
+                <div class="modal-body text-center">
+                    <p class="mt-3" style="color: grey; font-weight: bold;">
+                        'Are you sure you want to remove this item?'
+                    </p>
+                </div>
+                <div class="modal-footer justify-content-end">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" ng-click="action_remove('yes')">Yes, Delete</button>
+                    <button type="button" class="btn btn-light" ng-click="action_remove('no')">No, Keep It</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
+    <div class="modal autosaveModal" id="autosaved" tabindex="-1" role="dialog" aria-labelledby="autosavedModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" style="background-color: #dff0d8;">
+                <div class="modal-body">
+                    <strong>Success!</strong> Your work has been successfully saved.
+                </div>
+            </div>
+        </div>
+    </div>
 
 </div>
 

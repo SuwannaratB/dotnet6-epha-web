@@ -677,15 +677,16 @@ ul.nav li a.btn-nav-menu.btn-outline-primary:hover {
 }
 
 .bard, .bard-recommendations {
-  position: absolute;
+  /* position: absolute;
   top: -12px;
-  right: -16px;
-  width: 60px;
-  height: 18px;
+  right: -16px; */
+  width: 15px;
+  height: 15px;
+  padding-top: 2px;
   background: #fff;
   color: #3874ff;
-  border: 1px solid #3874ff;
-  border-radius: 20px;
+  /* border: 1px solid #3874ff; */
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
