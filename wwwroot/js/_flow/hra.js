@@ -7163,11 +7163,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                             data.responder_user_displayname = employee_position + '-' + employee_displayname.split(" ")[0];   
                         } 
 
-                        /*$scope.showModal().then(function(applyRecommendation) {
+                        $scope.showModal().then(function(applyRecommendation) {
                             if (applyRecommendation) {
                                 $('#modalEmployeeAdd').modal('hide');
                             }
-                        });*/
+                        });
                     }
                     //$('#modalEmployeeAdd').modal('hide');
 
