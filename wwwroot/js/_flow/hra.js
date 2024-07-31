@@ -9062,7 +9062,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 accessInfo.canCopy = false;
             }
         } else if(type === 'drawing'){
-            console.log('drawing item:', item);
     
             if(index === 0) {
                 if (item.document_name !== null || item.document_no !== null || item.descriptions !== null ||

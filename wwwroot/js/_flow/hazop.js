@@ -7707,6 +7707,69 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
 
 
+    
+    $scope.accessInfoMap = {};
+
+    $scope.getAccessInfo = function(item, index, type) {
+        let accessInfo = {
+            canRemove: false,
+            canCopy: false,
+        };
+    
+        if(type == 'session'){
+            let approverData = $scope.data_approver.filter(data => data.id_session === item.id);
+            let memberTeamData = $scope.data_memberteam.filter(data => data.id_session === item.id);
+            let relatedPeopleData = $scope.data_relatedpeople.filter(data => data.id_session === item.id);
+    
+            if ($scope.data_general[0].expense_type === 'CAPEX') {
+
+                if (index === 0 && 
+                    (approverData.length === 0 || approverData[0].user_name == null) &&
+                    (memberTeamData.length === 0 || memberTeamData[0].user_name == null) &&
+                    (relatedPeopleData.length === 0 || relatedPeopleData[0].user_name == null)) {
+                    accessInfo.canRemove = false;
+                } else {
+                    accessInfo.canRemove = true;
+                }
+        
+                if ((approverData.length > 0 && approverData[0].user_name != null) ||
+                    (memberTeamData.length > 0 && memberTeamData[0].user_name != null) ||
+                    (relatedPeopleData.length > 0 && relatedPeopleData[0].user_name != null)) {
+                    accessInfo.canCopy = true;
+                } else {
+                    accessInfo.canCopy = false;
+                }
+
+            } else {
+                if (index === 0 && 
+                    (approverData.length === 0 || approverData[0].user_name == null)) {
+                    accessInfo.canRemove = false;
+                } else {
+                    accessInfo.canRemove = true;
+                }
+        
+                if ((approverData.length > 0 && approverData[0].user_name != null)) {
+                    accessInfo.canCopy = true;
+                } else {
+                    accessInfo.canCopy = false;
+                }
+            }
+        } else if(type === 'drawing'){
+
+            if(index === 0) {
+                if (item.document_name !== null || item.document_no !== null || item.descriptions !== null ||
+                    item.document_file_name !== null || item.document_file_path !== null) {
+                    accessInfo.canRemove = true;
+                } else {
+                    accessInfo.canRemove = false;
+                }
+            } else {
+                accessInfo.canRemove = true;
+            }
+        }
+    };
+    
+    
     //access each role
     $scope.Access_check = function(task) {
         let accessInfo = {

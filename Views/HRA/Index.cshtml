@@ -563,98 +563,70 @@
                                             </thead>
                                             <tbody class="" id="customer-rating-table-body">
                                                 <tr ng-repeat="item in data_session | orderBy:no" class=""
+                                                    ng-class="{'bg-light-grey': $index % 2 === 0}"
                                                     ng-init="getAccessInfo(item, $index,'session')">
 
-                                                    <td class="align-top text-top" style="width: 30px;">
-                                                        <h6 class="fw-semi-bold text-center pt-1">{{item.no}}</h6>
+                                                    <td class="text-center" style="width: 30px;">
+                                                        <div class="pt-1 ">
+                                                            <h6 class="fw-semi-bold">{{$index + 1}}</h6>
+                                                        </div>
                                                     </td>
 
-                                                    @* Member Team *@
-                                                    <td class="align-top col-auto" style="min-width: 500px;">
+                                                    <td class="align-top col-auto p-3" style="min-width: 700px;">
                                                         <div class="row d-flex">
-                                                            <!-- Member Team/Attendees Section -->
-                                                            <div class="col-6">
-                                                                <div class="row">
-                                                                    <button class="btn btn-outline-secondary p-0 cursor-pointer col-auto" 
-                                                                        ng-show="tab_general_active || (data_header[0].pha_status === 22 && flow_role_type === 'admin')"
-                                                                        style="color: #2445fc; background-color: #f1f2f4; border-color: #f1f2f4;"
-                                                                        ng-click="openDataEmployeeAdd(item, 'member')"
-                                                                        ng-class="{'disabled-link': isDisableStatus}">
-                                                                        <span class="far fa-address-book fa-lg pe-1"></span>
+                                                            <!-- Member Team Section -->
+                                                            <div class="col-5">
+                                                                <div class="mb-2 d-flex align-items-center">
+                                                                    <button class="btn btn-outline-primary btn-sm d-flex align-items-center mb-2 custom-btn p-2"
+                                                                            style="color: #2445fc; background-color: #f1f2f4; border-color: #2445fc; transition: all 0.3s ease;"
+                                                                            ng-click="openDataEmployeeAdd(item, 'member')">
+                                                                        <span class="far fa-address-book fa-lg pe-2"></span>
                                                                         Add Member Team/Attendees
                                                                     </button>
-                                                                    <h6 class="text-primary ps-0" ng-show="!tab_general_active && (data_header[0].pha_status !== 22 || flow_role_type !== 'admin')">
-                                                                        Member Team/Attendees
-                                                                    </h6>
                                                                 </div>
-                                                                <div class="row" 
-                                                                    ng-repeat="item2 in data_memberteam" 
-                                                                    ng-if="(item2.user_name !== null && item2.user_displayname !== null) && item2.id_session === item.seq">
-                                                                    <div class="col-8 align-items-center  p-1">
-                                                                        <label class="mb-0 text-1100 fw-bold" style="width:100%;border-color: #f1f2f4;">
-                                                                            {{ item2.user_displayname}}
-                                                                        </label>
-                                                                    </div>
-                                                                    <div class="col-4 align-items-center  p-1">
-                                                                        <label class="mb-0 text-1100 fw-bold" style="width:80%;border-color: #f1f2f4;">
-                                                                            {{ item2.user_title}}
-                                                                        </label>
+
+                                                                <div ng-repeat="item2 in data_memberteam" 
+                                                                    ng-if="item2.user_name !== null && item2.id_session === item.seq" class="mb-2 p-2 px-0 border-bottom">
+                                                                    <div class="d-flex align-items-center">
+                                                                        <label class="mb-0 fw-bold text-1100" style="width: 80%;">{{ item2.user_displayname }}</label>
+                                                                        <label class="mb-0 fw-bold text-1100 text-center" style="width: 20%;">{{ item2.user_title }}</label>
                                                                     </div>
                                                                 </div>
-                                                                <!-- data_relatedpeople_outsider -->
-                                                                <div class="row" ng-repeat="item2 in data_relatedpeople_outsider | toArray | filter:{user_type: 'member'}" 
-                                                                    ng-if="(item2.user_displayname !== null) && item2.id_session === item.seq">
-                                                                    <div class="col-8 align-items-center  p-1">
-                                                                        <label class="mb-0 text-1100 fw-bold"
-                                                                            style="width:80%;border-color: #f1f2f4;">
-                                                                            {{ item2.user_displayname}}
-                                                                        </label>
+
+                                                                <div ng-repeat="item2 in data_relatedpeople_outsider | toArray | filter:{user_type: 'member'}" 
+                                                                    ng-if="item2.user_displayname !== null && item2.id_session === item.seq" class="mb-2 p-2 px-0 border-bottom">
+                                                                    <div class="d-flex align-items-center">
+                                                                        <label class="mb-0 fw-bold text-1100" style="width: 80%;">{{ item2.user_displayname }}</label>
+                                                                        <label class="mb-0 fw-bold text-1100 text-center" style="width: 20%;">{{ item2.user_title }}</label>
                                                                     </div>
-                                                                    <div class="col-4 align-items-center  p-1">
-                                                                        <label class="mb-0 text-1100 fw-bold"
-                                                                                style="width:80%;border-color: #f1f2f4;">
-                                                                                {{ item2.user_title}}
-                                                                        </label>
-                                                                    </div>                                                                    
-                                                                </div>                                                                
+                                                                </div>
                                                             </div>
 
-                                                            <div class="col-6" ng-if="!(data_general[0].expense_type=='MOC')">
-                                                                <div class="row" ng-show="tab_general_active || (data_header[0].pha_status === 22 && flow_role_type === 'admin')">
-                                                                    <button class="btn btn-outline-secondary p-0 cursor-pointer col-auto" 
-                                                                        style="color: #2445fc; background-color: #f1f2f4; border-color: #f1f2f4;"
-                                                                        ng-click="openDataEmployeeAdd(item,'approver')"
-                                                                        ng-class="{'disabled-link': isDisableStatus}">
-                                                                        <span class="far fa-address-book fa-lg"></span>
+                                                            <!-- Approver Section -->
+                                                            <div class="col-5"">
+                                                                <div class="mb-2 d-flex align-items-center">
+                                                                    <button class="btn btn-outline-primary btn-sm d-flex align-items-center mb-2 custom-btn"
+                                                                            style="color: #2445fc; background-color: #f1f2f4; border-color: #2445fc; transition: all 0.3s ease;"
+                                                                            ng-click="openDataEmployeeAdd(item, 'approver')" title="Assign approvers for this session">
+                                                                        <span class="far fa-address-book fa-lg pe-2"></span>
                                                                         Add Assessment Team Leader
                                                                     </button>
-                                                                    <h6 class="text-primary ps-0" ng-show="!tab_general_active && (data_header[0].pha_status !== 22 || flow_role_type !== 'admin')">
-                                                                        Assessment Team Leader
-                                                                    </h6>
                                                                 </div>
-                                                                <div class="" ng-repeat="item2 in data_approver | filter:{id_session:item.seq }">
-                                                                    <div class="row align-items-center  p-1">
-                                                                        @* <label class="mb-0 text-1100 fw-bold" 
-                                                                            style="width:80%;border-color: #f1f2f4;"
-                                                                            ng-if=" (item2.approver_type=='approver' && item2.user_displayname)">
-                                                                               {{ '(QMTS)' + item2.user_displayname}}
-                                                                        </label> *@
-                                                                        <div class="col-8 align-items-center  p-1">
-                                                                            <label class="mb-0 text-1100 fw-bold" tyle="width:100%;border-color: #f1f2f4;">
-                                                                                {{ item2.approver_type == 'section_head' && item2.user_displayname ? '(Verified)' : ''}}  
-                                                                                {{ item2.user_displayname}}       
-                                                                            </label>
-                                                                        </div>
-                                                                        <div class="col-4 align-items-center  p-1">
-                                                                            <label class="mb-0 text-1100 fw-bold" style="width:80%;border-color: #f1f2f4;">
-                                                                                {{ item2.user_title}}
-                                                                            </label>
-                                                                        </div>                                                                        
+
+                                                                <div ng-repeat="item2 in data_approver" 
+                                                                    ng-if="item2.user_name !== null && item2.id_session === item.seq" class="mb-2 p-2 px-0 border-bottom">
+                                                                    <div class="d-flex align-items-center">
+                                                                        <label class="mb-0 fw-bold text-1100" style="width: 80%;" ">
+                                                                            {{ item2.approver_type == 'section_head' && item2.user_displayname ? '(Verified)' : ''}}  
+                                                                            {{ item2.user_displayname}}   
+                                                                        </label>
+                                                                        <label class="mb-0 fw-bold text-1100 text-center" style="width: 20%;">{{ item2.user_title }}</label>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </td>
+
 
                                                     @* Session Date *@
                                                     <td class="align-top">
@@ -3456,7 +3428,7 @@
                                        class="btn border border-0 "
                                        ng-class="{'btn border border-0 border-bottom border-primary text-primary active': (action_tabs === 'manage_tabs'),'btn border border-0 ': (action_tabs === 'search_tab') }"
                                        style="border-radius: 10px 10px 0px 0px !important;"
-                                       aria-selected="tab.isActive">Manage Recommendations}</a>
+                                       aria-selected="tab.isActive">Manage Recommendations</a>
                                 </li>
                             </ul>
                         </div>

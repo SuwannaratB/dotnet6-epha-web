@@ -8002,33 +8002,40 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             let relatedPeopleData = $scope.data_relatedpeople.filter(data => data.id_session === item.id);
     
             if ($scope.data_general[0].expense_type === 'CAPEX') {
-                if (index === 0 && approverData.length === 0 && memberTeamData.length === 0 && relatedPeopleData.length === 0) {
+
+                if (index === 0 && 
+                    (approverData.length === 0 || approverData[0].user_name == null) &&
+                    (memberTeamData.length === 0 || memberTeamData[0].user_name == null) &&
+                    (relatedPeopleData.length === 0 || relatedPeopleData[0].user_name == null)) {
                     accessInfo.canRemove = false;
                 } else {
                     accessInfo.canRemove = true;
                 }
-    
-                if (approverData.length > 0 || memberTeamData.length > 0 || relatedPeopleData.length > 0) {
+        
+                if ((approverData.length > 0 && approverData[0].user_name != null) ||
+                    (memberTeamData.length > 0 && memberTeamData[0].user_name != null) ||
+                    (relatedPeopleData.length > 0 && relatedPeopleData[0].user_name != null)) {
                     accessInfo.canCopy = true;
                 } else {
                     accessInfo.canCopy = false;
                 }
+
             } else {
-                if (index === 0 && memberTeamData.length === 0) {
+                if (index === 0 && 
+                    (approverData.length === 0 || approverData[0].user_name == null)) {
                     accessInfo.canRemove = false;
                 } else {
                     accessInfo.canRemove = true;
                 }
-    
-                if (memberTeamData.length > 0) {
+        
+                if ((approverData.length > 0 && approverData[0].user_name != null)) {
                     accessInfo.canCopy = true;
                 } else {
                     accessInfo.canCopy = false;
                 }
             }
         } else if(type === 'drawing'){
-            console.log('drawing item:', item);
-    
+
             if(index === 0) {
                 if (item.document_name !== null || item.document_no !== null || item.descriptions !== null ||
                     item.document_file_name !== null || item.document_file_path !== null) {
@@ -8040,12 +8047,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 accessInfo.canRemove = true;
             }
         }
-    
-        console.log('accessInfo before updating map:', accessInfo);
-    
-        $scope.accessInfoMap[item.id] = accessInfo;
-    
-        console.log('accessInfoMap after update:', $scope.accessInfoMap);
     };
     
     
@@ -8068,15 +8069,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             // Check if the task belongs to the user (TA2)
             if ($scope.user_name === task.user_name) {
                 accessInfo.isTA2 = true;
-                accessInfo.canAccess = true; // TA2 should have access to their own tasks
-                console.log("User is TA2, granting access:", accessInfo);
+                accessInfo.canAccess = true; 
             } else {
                 // Check if the user is a TA3 for this task
                 for (let item of $scope.data_approver_ta3) {
                     if (item.id_approver === task.id && $scope.user_name == item.user_name) {
                         accessInfo.isTA3 = true;
                         accessInfo.canAccess = true; // TA3 should not have access
-                        console.log("User is TA3, not granting access:", accessInfo);
                         break;
                     }
                 }
