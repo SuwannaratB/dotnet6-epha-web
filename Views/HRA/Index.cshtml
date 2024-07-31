@@ -3445,10 +3445,11 @@
                                 </li>
                                 <li class="mx-2" ng-if="tab.isShow || true">
                                     <a ng-click="selectTab('manage_tabs')"
+                                        ng-if="selectedData.responder_user_displayname !== null || selectedData.responder_user_displayname !== '' "
                                        class="btn border border-0 "
                                        ng-class="{'btn border border-0 border-bottom border-primary text-primary active': (action_tabs === 'manage_tabs'),'btn border border-0 ': (action_tabs === 'search_tab') }"
                                        style="border-radius: 10px 10px 0px 0px !important;"
-                                       aria-selected="tab.isActive">Manage Recommendations</a>
+                                       aria-selected="tab.isActive">Manage Recommendations {{selectedData}}</a>
                                 </li>
                             </ul>
                         </div>
@@ -3578,19 +3579,12 @@
                                 <h5 class="text-muted">Managing Recommendations</h5>
                             </div>
                         </div>
-                        <div class="row mb-4 p-2">
-                            <div class="col-12 bg-white rounded border p-3">
-                                <p class="mb-2"><strong>Comment:</strong> <span class="text-primary">{{selectedComment}}</span></p>
-                                <p class="mb-2"><strong>Factor:</strong> <span class="text-primary">{{selectedFactor}}</span></p>
-                                <p class="mb-0"><strong>Initial Risk:</strong> <span class="text-primary">{{selectedInitialRisk}}</span></p>
-                            </div>
-                        </div>
                         <div class="row mb-3">
                             <div class="col-8 d-flex align-items-center justify-content-start">
                                 <p class="m-0 text-center"><strong>Current Action Owner:</strong> {{selectedData.responder_user_displayname}}</p>
                             </div>
                             <div class="col-4 d-flex justify-content-end align-items-center">
-                                <button class="btn btn-primary btn-sm" ng-click="applyActionOwner('All')">Assign to All Tasks</button>
+                                <button class="btn btn-primary btn-sm" ng-click="applyActionOwner('all')">Assign to All Tasks</button>
                             </div>
                         </div>
 
@@ -3612,25 +3606,22 @@
                                     <tbody class="list">
                                         <tr class="hover-actions-trigger btn-reveal-trigger position-static text-center"
                                             ng-class="{'row-faded': clickedStates[item.employee_name]}" ng-repeat-start="groups in data_worksheet_show">
-                                            <td rowspan="{{data_worksheet_show.length+1}}">{{groups.worker_group}}{{groups.worksheet.length}}</td>
-                                            <td rowspan="{{data_worksheet_show.length+1}}">{{groups.description}}</td>
-                                            <td ng-if="$first" rowspan="{{(data_worksheet_show.length+1) * (groups.worksheet.length+1)}}">{{ selectedFactor }}</td>
-                                            <td class="text-center" ng-if="$first" rowspan="{{(data_worksheet_show.length+1) * (groups.worksheet.length+1)}}">{{ selectedInitialRisk }}</td>
-                                            <td class="text-center" ng-if="$first" rowspan="{{(data_worksheet_show.length+1) * (groups.worksheet.length+1)}}">{{ selectedComment }}</td>
+                                            <td class="border-active" rowspan="{{data_worksheet_show.length+1}}">{{groups.worker_group}}</td>
+                                            <td class="border-active" rowspan="{{data_worksheet_show.length+1}}">{{groups.description}}</td>
+                                            <td class="border-active" ng-if="$first" rowspan="{{(data_worksheet_show.length+1) * (groups.worksheet.length+1)}}">{{ selectedFactor }}</td>
+                                            <td class="text-center border-active" ng-if="$first" rowspan="{{(data_worksheet_show.length+1) * (groups.worksheet.length+1)}}">{{ selectedInitialRisk }}</td>
+                                            <td class="text-center border-active" ng-if="$first" rowspan="{{(data_worksheet_show.length+1) * (groups.worksheet.length+1)}}">{{ selectedComment ? selectedComment : '' }}</td>
                                             <tr ng-repeat="data in groups.worksheet">
-                                                <td class="text-center">{{data.responder_user_name !== '' ? data.responder_user_name : ''}}</td>
+                                                <td class="text-center">{{ (data.responder_user_name !== '' && data.responder_user_name !== null) ? data.responder_user_name : '' }}</td>
                                                 <td class="text-center">
-                                                    <span class="text-center mx-1 mx-auto" >
-                                                        <button class="btn btn-outline-primary p-2"
-                                                                ng-class="{'btn-clicked': clickedStates[data.employee_name]}" 
-                                                                data-toggle="tooltip" 
-                                                                data-placement="top" 
-                                                                title="Choose Employee"
-                                                                ng-click="applyActionOwner('data')">
-                                                            <span class="" ng-if="selectDatFormType === 'manage'">Assign</span>
-                                                        </button>
+                                                    <span>
+                                                        <button ng-if="data.responder_user_name !== '' && data.responder_user_name !== null" 
+                                                            class="btn btn-outline-danger p-2" ng-click="UnapplyActionOwner(data.seq)">Unassign</button>
+                                                        <button ng-if="data.responder_user_name === '' || data.responder_user_name === null"
+                                                            class="btn btn-outline-primary p-2" ng-click="applyActionOwner('data', data.seq)">Assign</button>                                                        
                                                     </span>
                                                 </td>
+
                                             </tr>
                                         </tr>
                                         <tr ng-repeat-end></tr>
@@ -3654,7 +3645,7 @@
                             (selectDatFormType === 'approver' && data_approver.length > 1))">
                     <h5 class="text-900 mb-0">
                         <span class="me-2 text-primary"><b>|</b></span> 
-                        {{ selectDatFormType === 'member' ? 'Member Team' : 'Approver' }}
+                        {{ selectDatFormType === 'member' ? 'Member Team' : selectDatFormType === 'approver' ? 'Approver' : 'Action Owner' }}
                     </h5>
                 </div>
 
@@ -3663,7 +3654,7 @@
                                 data_memberteam.length > 1 || 
                                 data_approver.length > 1 || 
                                 data_worker_list.length > 1 ||
-                                selectedData.responder_user_displayname )
+                                (selectedData.responder_user_displayname && action_tabs === 'search_tab'))
                             )">
                     @* list default *@
                     <div class="body-default" ng-if="selectDatFormType == 'member' || selectDatFormType == 'approver'">
@@ -3724,7 +3715,7 @@
                             </div>
                         </div>
                     </div>
-                    @* list manage 
+                    @* list manage *@
                     <div class="body-manage"  ng-if="selectDatFormType == 'manage' && action_tabs !== 'manage'">
                         <div class="col-auto py-2" ng-if="selectedData.responder_user_displayname">
                             <div class="d-flex align-items-center p-1" style="height: 20px;">
@@ -3742,7 +3733,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>*@
+                    </div>
                 </div>
 
                 <!------------contractor/out source-------------->
