@@ -6832,12 +6832,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.selectTab = function(tab) {
             $scope.action_tabs = tab;
 
-            console.log("manage_ws_recom",$scope.manage_ws_recom)
-
-            console.log("tab",tab)
-
-
-            // Activate the filter when the "manage" tab is selected
             if (tab === 'manage_tabs') {
                 var manage = $scope.manage_ws_recom
                 $scope.selectedComment = manage.recommendations;
@@ -6858,18 +6852,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.worksheet_Filter = function(items) {
             if (!$scope.isFilterActive) return items;
 
-            console.log(items)
         
             const selectedComment = $scope.selectedComment.trim().toLowerCase();
             const selectedFactor = $scope.selectedFactor;
             const selectedInitialRisk = $scope.selectedInitialRisk.trim().toLowerCase();
             const selectedFactor_id = $scope.manage_ws_recom.id_hazard;
-
-            console.log("Selected Comment:", selectedComment);
-            console.log("Selected Factor:", selectedFactor);
-            console.log("Selected Initial Risk:", selectedInitialRisk);
-            console.log("selectedFactor_id:", selectedFactor_id);
-
             return items.map(item => {
                 if (!item.worksheet) return null; // Check if worksheet exists
         
@@ -6877,10 +6864,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     const recommendations = worksheetItem.recommendations ? worksheetItem.recommendations.trim().toLowerCase() : null;
                     const id_hazard = worksheetItem.id_hazard ? worksheetItem.id_hazard : null;
                     const initialRisk = worksheetItem.initial_risk_rating ? worksheetItem.initial_risk_rating.trim().toLowerCase() : null;
-        
-                    console.log("Worksheet Item - Recommendations:", recommendations);
-                    console.log("Worksheet Item - ID Hazard:", id_hazard);
-                    console.log("Worksheet Item - Initial Risk:", initialRisk);
+
         
                     return (selectedComment && recommendations && recommendations === selectedComment) &&
                            (selectedFactor && id_hazard && id_hazard === selectedFactor_id) &&
@@ -7162,27 +7146,24 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                     if(!data) return;
 
-                    data.responder_action_type = employee_position
-                    data.responder_user_email = employee_email
-                    data.responder_user_name = employee_name
-                    data.responder_user_img = employee_img
-                    data.responder_user_id = id
-                    data.action_change = 1;
-    
-                    if ($scope.action_tabs === 'search_tab') {
-                        data.responder_user_displayname = employee_position + '-' + employee_displayname.split(" ")[0];   
-                    } 
-
-                    console.log("data",data)
                     if (data) {
-                        $scope.showModal().then(function(applyRecommendation) {
+
+                        data.responder_action_type = employee_position
+                        data.responder_user_email = employee_email
+                        data.responder_user_name = employee_name
+                        data.responder_user_img = employee_img
+                        data.responder_user_id = id
+                        data.action_change = 1;
+        
+                        if ($scope.action_tabs === 'search_tab') {
+                            data.responder_user_displayname = employee_position + '-' + employee_displayname.split(" ")[0];   
+                        } 
+
+                        /*$scope.showModal().then(function(applyRecommendation) {
                             if (applyRecommendation) {
                                 $('#modalEmployeeAdd').modal('hide');
-                                console.log("Now it clicks yes to see other recommendations");
-                            } else {
-                                console.log("Now it clicks proceed to apply the recommendation");
                             }
-                        });
+                        });*/
                     }
                     //$('#modalEmployeeAdd').modal('hide');
 
@@ -7328,15 +7309,132 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }, 100);
         }
 
-
         //Apply action owner to task|recommendation
-        $scope.applyActionOwner = function(type){
-            if(type === 'All'){
-                console.log("ALllllllllllllllllllll")
-            }else{
-                
+        $scope.applyActionOwner = function(type, seq) {
+            var user_item = $scope.selectedData;
+        
+            console.log("$scope.selectedData", $scope.selectedData);
+        
+            var id = user_item.id;
+            var employee_name = user_item.employee_name;
+            var employee_displayname = user_item.employee_displayname;
+            var employee_email = user_item.employee_email;
+            var employee_position = user_item.employee_position;
+            var employee_img = user_item.employee_img;
+        
+            if (type === 'all') {
+                $scope.data_worksheet_show.forEach(function(showItem) {
+                    showItem.worksheet.forEach(function(showWorksheetItem) {
+                        showWorksheetItem.responder_action_type = employee_position;
+                        showWorksheetItem.responder_user_email = employee_email;
+                        showWorksheetItem.responder_user_displayname = employee_displayname;
+                        showWorksheetItem.responder_user_name = employee_name;
+                        showWorksheetItem.responder_user_img = employee_img;
+                        showWorksheetItem.responder_user_id = id;
+                        showWorksheetItem.action_change = 1;
+        
+                        $scope.data_worksheet_list.forEach(function(listItem) {
+                            const matchingWorksheetItem = listItem.worksheet.find(item => item.seq === showWorksheetItem.seq);
+        
+                            if (matchingWorksheetItem) {
+                                matchingWorksheetItem.responder_action_type = employee_position;
+                                matchingWorksheetItem.responder_user_email = employee_email;
+                                matchingWorksheetItem.responder_user_displayname = employee_displayname;
+                                matchingWorksheetItem.responder_user_name = employee_name;
+                                matchingWorksheetItem.responder_user_img = employee_img;
+                                matchingWorksheetItem.responder_user_id = id;
+                                matchingWorksheetItem.action_change = 1;
+        
+                                console.log("matchingWorksheetItem", matchingWorksheetItem);
+                            }
+                        });
+                    });
+                });
+            } else {
+                $scope.data_worksheet_list.forEach(function(listItem) {
+                    if (Array.isArray(listItem.worksheet)) {
+                        listItem.worksheet.forEach(function(worksheet_list_item) {
+                            if (worksheet_list_item.seq === seq) {
+                                worksheet_list_item.responder_action_type = employee_position;
+                                worksheet_list_item.responder_user_email = employee_email;
+                                worksheet_list_item.responder_user_name = employee_name;
+                                worksheet_list_item.responder_user_img = employee_img;
+                                worksheet_list_item.responder_user_id = id;
+                                worksheet_list_item.action_change = 1;
+                            }
+                        });
+                    }
+                });
+        
+                $scope.data_worksheet_show.forEach(function(listItem) {
+                    if (Array.isArray(listItem.worksheet)) {
+                        listItem.worksheet.forEach(function(worksheet_show_item) {
+                            if (worksheet_show_item.seq === seq) {
+                                worksheet_show_item.responder_action_type = employee_position;
+                                worksheet_show_item.responder_user_email = employee_email;
+                                worksheet_show_item.responder_user_name = employee_name;
+                                worksheet_show_item.responder_user_img = employee_img;
+                                worksheet_show_item.responder_user_id = id;
+                                worksheet_show_item.action_change = 1;
+        
+                                console.log("worksheet_item", worksheet_show_item);
+                            }
+                        });
+                    }
+                });
+        
+                console.log(" $scope.data_worksheet_show", $scope.data_worksheet_show);
             }
-        }
+        
+            // Ensure changes are applied within AngularJS context
+            $scope.$applyAsync();
+        };
+        
+
+
+        $scope.UnapplyActionOwner = function(seq) {
+
+            console.log("seq",seq)
+            $scope.data_worksheet_list.forEach(function(listItem) {
+                if (Array.isArray(listItem.worksheet)) {
+                    listItem.worksheet.forEach(function(worksheet_item) {
+                            
+                        if (worksheet_item.seq === seq) {
+
+                            worksheet_item.responder_action_type = null;
+                            worksheet_item.responder_user_email = null;
+                            worksheet_item.responder_user_name = null;
+                            worksheet_item.responder_user_img = null;
+                            worksheet_item.responder_user_id = null;
+                            worksheet_item.action_change = 1;
+                        }
+    
+                        console.log("matchingWorksheetItem", worksheet_item);
+                    
+                    });
+                }
+            });
+        
+            $scope.data_worksheet_show.forEach(function(listItem) {
+                if (Array.isArray(listItem.worksheet)) {
+                    listItem.worksheet.forEach(function(worksheet_item) {
+                            
+                        if (worksheet_item.seq === seq) {
+                            worksheet_item.responder_action_type = null;
+                            worksheet_item.responder_user_email = null;
+                            worksheet_item.responder_user_name = null;
+                            worksheet_item.responder_user_img = null;
+                            worksheet_item.responder_user_id = null;
+                            worksheet_item.action_change = 1;
+                        }
+        
+                            console.log("worksheet_item", worksheet_item);
+                    
+                    });
+                }
+            });
+        };
+        
 
     }
 
