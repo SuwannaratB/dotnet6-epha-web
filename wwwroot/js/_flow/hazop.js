@@ -6700,6 +6700,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.data_general[0].action_change = 1;
         }
 
+        updateDataSessionAccessInfo()
+
+
         apply();
     }
 
@@ -7371,6 +7374,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             
         }
 
+        console.log("555555555",xformtype)
+
+        if(xformtype == 'member' || xformtype == 'approver' || xformtype == 'specialist'){
+            console.log("now we will call")
+            updateDataSessionAccessInfo('session');
+        }
+
+
         //clear_valid_items($scope.recomment_clear_valid);
         $scope.recomment_clear_valid = '';
 
@@ -7706,8 +7717,22 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     }
 
+    function updateDataSessionAccessInfo(type) {
 
-    
+        if(type == 'session'){
+
+            $scope.data_session.forEach((item, index) => {
+                $scope.getAccessInfo(item, index,type);
+            });
+        }else{
+            
+            $scope.data_drawing.forEach((item, index) => {
+                $scope.getAccessInfo(item, index,'drawing');
+            });
+        }
+
+    }
+
     $scope.accessInfoMap = {};
 
     $scope.getAccessInfo = function(item, index, type) {
@@ -7719,22 +7744,20 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         if(type == 'session'){
             let approverData = $scope.data_approver.filter(data => data.id_session === item.id);
             let memberTeamData = $scope.data_memberteam.filter(data => data.id_session === item.id);
-            let relatedPeopleData = $scope.data_relatedpeople.filter(data => data.id_session === item.id);
+            //let relatedPeopleData = $scope.data_relatedpeople.filter(data => data.id_session === item.id);
     
             if ($scope.data_general[0].expense_type === 'CAPEX') {
 
                 if (index === 0 && 
                     (approverData.length === 0 || approverData[0].user_name == null) &&
-                    (memberTeamData.length === 0 || memberTeamData[0].user_name == null) &&
-                    (relatedPeopleData.length === 0 || relatedPeopleData[0].user_name == null)) {
+                    (memberTeamData.length === 0 || memberTeamData[0].user_name == null)) {
                     accessInfo.canRemove = false;
                 } else {
                     accessInfo.canRemove = true;
                 }
         
                 if ((approverData.length > 0 && approverData[0].user_name != null) ||
-                    (memberTeamData.length > 0 && memberTeamData[0].user_name != null) ||
-                    (relatedPeopleData.length > 0 && relatedPeopleData[0].user_name != null)) {
+                    (memberTeamData.length > 0 && memberTeamData[0].user_name != null)) {
                     accessInfo.canCopy = true;
                 } else {
                     accessInfo.canCopy = false;
@@ -7742,13 +7765,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             } else {
                 if (index === 0 && 
-                    (approverData.length === 0 || approverData[0].user_name == null)) {
+                    (memberTeamData.length === 0 || memberTeamData[0].user_name == null)) {
                     accessInfo.canRemove = false;
                 } else {
                     accessInfo.canRemove = true;
                 }
         
-                if ((approverData.length > 0 && approverData[0].user_name != null)) {
+                if ((memberTeamData.length > 0 && memberTeamData[0].user_name != null)) {
                     accessInfo.canCopy = true;
                 } else {
                     accessInfo.canCopy = false;
@@ -7767,6 +7790,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 accessInfo.canRemove = true;
             }
         }
+
+        $scope.accessInfoMap[item.id] = accessInfo;
     };
     
     
@@ -7796,9 +7821,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 for (let item of $scope.data_approver_ta3) {
                     if (item.id_approver === task.id && $scope.user_name == item.user_name) {
                         accessInfo.isTA3 = true;
-                        accessInfo.canAccess = true; // TA3 should not have access
-                        console.log("User is TA3, not granting access:", accessInfo);
-                        break;
+                        accessInfo.canAccess = true; // TA3 should not have access                       
                     }
                 }
             }

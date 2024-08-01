@@ -6390,10 +6390,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     $scope.master_toc_list.some(toc => toc.id === item.id_plant_area)
                 );
 
-                
-
-                console.log("update ap",$scope.data_general)
-                console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",)
+            
                 $scope.master_unit_no_list = angular.copy(master);
 
             }
@@ -6554,9 +6551,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         $scope.actionChangeWorksheet = function (_arr, _seq, type_text) {
 
-            console.log('Start Date:', _arr.estimated_start_date);
-            console.log('End Date:', _arr.estimated_end_date);
-            
             //if (_arr.recommendations == null || _arr.recommendations == '') {
             //    if (_arr.recommendations_no == null || _arr.recommendations_no == '') {
             //        //recommendations != '' ให้ running action no  

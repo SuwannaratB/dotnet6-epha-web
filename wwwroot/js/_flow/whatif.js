@@ -2982,9 +2982,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 case 'session':
                     var shouldShowModal = false;
 
-                    console.log("$scope.data_memberteam",$scope.data_memberteam)
-                    console.log("$scope.data_approver",$scope.data_approver)
-
                     for (var i = 0; i < $scope.data_memberteam.length; i++) {
                         var member = $scope.data_memberteam[i];
                         if ((member.id_session === seq && member.user_displayname !== null)) {
@@ -3002,7 +2999,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         }                        
                     }
 
-                    if (shouldShowModal || data.meeting_date !== null ) {
+                    if (shouldShowModal) {
                         $('#removeModal').modal('show');
                     } else {
                         $scope.removeDataSession($scope.seqToRemove, $scope.indexToRemove);
@@ -6747,7 +6744,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.selectedItemListView = _seq;
         }
 
-        updateDataSessionAccessInfo('session')
+        updateDataSessionAccessInfo()
 
         
         $scope.unsavedChanges = true;
@@ -7591,7 +7588,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
 
         if(xformtype == 'member' || xformtype == 'approver' || xformtype == 'specialist'){
-            updateDataSessionAccessInfo();
+            updateDataSessionAccessInfo('session');
         }
 
         //clear_valid_items($scope.recomment_clear_valid);
@@ -7973,8 +7970,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     function updateDataSessionAccessInfo(type) {
 
-        console.log("will update data")
         if(type == 'session'){
+
             $scope.data_session.forEach((item, index) => {
                 $scope.getAccessInfo(item, index,type);
             });
@@ -8022,13 +8019,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             } else {
                 if (index === 0 && 
-                    (approverData.length === 0 || approverData[0].user_name == null)) {
+                    (memberTeamData.length === 0 || memberTeamData[0].user_name == null)) {
                     accessInfo.canRemove = false;
                 } else {
                     accessInfo.canRemove = true;
                 }
         
-                if ((approverData.length > 0 && approverData[0].user_name != null)) {
+                if ((memberTeamData.length > 0 && memberTeamData[0].user_name != null)) {
                     accessInfo.canCopy = true;
                 } else {
                     accessInfo.canCopy = false;
@@ -8047,6 +8044,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 accessInfo.canRemove = true;
             }
         }
+
+
+        $scope.accessInfoMap[item.id] = accessInfo;
     };
     
     

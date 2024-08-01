@@ -32,7 +32,7 @@
 }
 
 
-.modal:nth-of-type(even) {
+.modal #modalConfirm_Recommendation:nth-of-type(even) {
     z-index: 1062 !important;
 }
 .modal-backdrop.show:nth-of-type(even) {

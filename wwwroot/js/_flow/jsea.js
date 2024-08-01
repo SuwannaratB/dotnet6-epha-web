@@ -2001,10 +2001,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 arr.header[0].flow_mail_to_member = (arr.header[0].flow_mail_to_member == null ? 0 : arr.header[0].flow_mail_to_member);
                 $scope.data_header = JSON.parse(replace_hashKey_arr(arr.header));
                 set_form_action(action_part_befor, !action_submit, page_load);
-                set_access_formaction(arr)
-
-                console.log("at this line general will",$scope.tab_general_active)
-
+                set_access_formaction(arr);
                 
                 //ตรวจสอบเพิ่มเติม
                 if (arr.user_in_pha_no[0].pha_no == '' && $scope.flow_role_type != 'admin') {
@@ -2115,6 +2112,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     set_form_action(action_part_befor, !action_submit, page_load);
                     set_form_access(pha_status,$scope.params,$scope.flow_role_type)
                     set_tab_focus(pha_status,action_part_befor)
+                    set_date_time()
 
                     $timeout(function() {
                         try {
@@ -2567,6 +2565,20 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 $scope.isMainApprover = false; 
             }
         }
+    }
+    function set_date_time(){
+        $scope.set_date_time = function() {
+            angular.element(document).ready(function() {
+                flatpickr("#datepicker", {
+                    dateFormat: "d/m/Y",
+                    onChange: function(selectedDates, dateStr, instance) {
+                        $scope.$apply(function() {
+                            $scope.selectedDate = dateStr;
+                        });
+                    }
+                });
+            });
+        };
     }
     function check_case_member_review() {
 
@@ -5568,31 +5580,27 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     //relatedpeople end
 
 
-
-    $scope.openDataEmployeeAdd = function (item, form_type,index) {
+    $scope.openDataEmployeeAdd = function (item, form_type, index) {
 
         $scope.selectedData = item;
         $scope.selectdata_session = item.seq;
-        $scope.selectDatFormType = form_type;//member, approver, owner
+        $scope.selectDatFormType = form_type; // member, approver, owner
         $scope.employeelist_show = [];
         $scope.searchText = '';
         $scope.approve_index = index;
 
     
-        /*if (form_type == 'attendees' || form_type == 'specialist') {
-            add_relatedpeople_outsider(form_type, item.seq);
-        }*/
-
-        //$scope.getFormData()
+        // Get form data if needed
         $scope.formData = $scope.getFormData();
-        //$scope.formData_outsider = $scope.getOutsourceFormData();
+    
 
-        apply();
-
+        // Open the modal
         $('#modalEmployeeAdd').modal({
             backdrop: 'static',
-            keyboard: false 
+            keyboard: false
         }).modal('show');
+
+        
     };
 
     function add_relatedpeople_outsider(xformtype, seq_session) {
@@ -6444,14 +6452,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     };
 
     function updateDataSessionAccessInfo(type) {
-
-        console.log("will update data")
         if(type == 'session'){
             $scope.data_session.forEach((item, index) => {
                 $scope.getAccessInfo(item, index,type);
             });
         }else{
-            console.log("will update data for data_drawing")
             
             $scope.data_drawing.forEach((item, index) => {
                 $scope.getAccessInfo(item, index,'drawing');
@@ -6513,17 +6518,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     //access each role
     $scope.Access_check = function(task) {
 
-        // If user is an admin, allow access
         if ($scope.flow_role_type === 'admin') {
             return true;
         }
 
-        // If user is an employee and the task belongs to them, allow access
         if ($scope.flow_role_type === 'employee' && $scope.user_name === task.user_name) {
             return true;
         }
 
-        // Default to no access
         return false;
     };
     
