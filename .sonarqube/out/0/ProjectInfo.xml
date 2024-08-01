@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ProjectInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.sonarsource.com/msbuild/integration/2015/1">
+  <ProjectName>dotnet6-epha-web</ProjectName>
+  <ProjectLanguage>C#</ProjectLanguage>
+  <ProjectType>Product</ProjectType>
+  <ProjectGuid>61c78411-b1f3-4f4c-9684-bb0af4d5dbfb</ProjectGuid>
+  <FullPath>/Users/dave/developer/dotnet/dotnet6-epha-web/dotnet6-epha-web.csproj</FullPath>
+  <IsExcluded>false</IsExcluded>
+  <AnalysisResults>
+    <AnalysisResult Id="FilesToAnalyze" Location="/Users/dave/developer/dotnet/dotnet6-epha-web/.sonarqube/conf/0/FilesToAnalyze.txt" />
+  </AnalysisResults>
+  <AnalysisSettings>
+    <Property Name="sonar.cs.roslyn.reportFilePaths">/Users/dave/developer/dotnet/dotnet6-epha-web/.sonarqube/out/0/Issues.json</Property>
+    <Property Name="sonar.cs.analyzer.projectOutPaths">/Users/dave/developer/dotnet/dotnet6-epha-web/.sonarqube/out/0</Property>
+  </AnalysisSettings>
+  <Configuration>Debug</Configuration>
+  <Platform>AnyCPU</Platform>
+  <TargetFramework>net6.0</TargetFramework>
+</ProjectInfo>

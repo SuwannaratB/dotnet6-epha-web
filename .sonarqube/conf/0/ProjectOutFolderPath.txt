@@ -1,0 +1,1 @@
+/Users/dave/developer/dotnet/dotnet6-epha-web/.sonarqube/out/0

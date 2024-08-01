@@ -83,7 +83,9 @@
                     <button class="btn btn-danger btn-sm" style="width: 100px;" ng-click="confirmCancle()">CANCEL</button>
                 </span>
                 <span class="mx-2" ng-if="save_type">
-                    <button class="btn btn-primary btn-sm" style="width: 100px;" ng-click="confirmSave('save')">SAVE</button>
+                    <button class="btn btn-primary btn-sm" style="min-width: 100px;" ng-click="confirmSave('save')">
+                        {{isEditWorksheet ? 'Edit Worksheet' : 'SAVE'}}
+                    </button>
                 </span>
                 <span class="mx-2" ng-if="action_to_review_type">
                     <button class="btn btn-warning btn-sm" style="width: 200px;"
@@ -2115,7 +2117,7 @@
                                                             <div class="d-flex flex-column justify-content-center font-sans-serif btn-reveal-trigger position-static" 
                                                                 ng-class="">
                                                                 <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 p-1" 
-                                                                    ng-class="{'disabled-link': isDisableStatus}"
+                                                                    ng-class="{'disabled-link': isDisableStatus && !isEditWorksheet}"
                                                                     type="button" 
                                                                     data-bs-toggle="dropdown" 
                                                                     data-boundary="window" 
@@ -2144,7 +2146,7 @@
                                                             </div>
                                                         </div>
                                                         <textarea class="form-control form-control-sm " 
-                                                            ng-class="{'disabled-link': isDisableStatus}"
+                                                            ng-class="{'disabled-link': !isDisableStatus && !isEditWorksheet}"
                                                             rows="2" 
                                                             type="text"
                                                             style="width: 200px; height: 100%; font-size: 10.24px;"
