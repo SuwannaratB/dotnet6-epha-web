@@ -3610,7 +3610,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             newInput.document_file = arr[i].document_file;
             newInput.comment = arr[i].comment;
         };
-        running_no_level1($scope.data_drawing, iNo, index, newInput);
+        running_no_level1($scope.data_drawing, iNo, index);
 
         $scope.selectDrawingDoc = xValues;
         apply();
@@ -3628,7 +3628,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         if ($scope.data_drawing.length == 0) {
             $scope.addDrawingDoc();
         }
-        running_no_level1($scope.data_drawing, null, index, null);
+        running_no_level1($scope.data_drawing, null, index);
 
         apply();
     };

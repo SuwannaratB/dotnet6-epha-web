@@ -342,6 +342,12 @@ namespace dotnet6_epha_web.Controllers
         [HttpPost]
         public async Task<IActionResult> set_session_doc([FromBody] LoadSessionDataViewModel model)
         {
+
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
             _sessionAuthen.service_api_url = _IConfiguration["EndPoint:service_api_url"];
             _sessionAuthen.controller_action_befor = model.controller_action_befor;// "Home/Portal"; 
             _sessionAuthen.pha_seq = model.pha_seq;
@@ -370,6 +376,12 @@ namespace dotnet6_epha_web.Controllers
         [HttpPost]
         public async Task<IActionResult> follow_back_search(LoadSessionDataViewModel model)
         {
+
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
             _sessionAuthen.pha_seq = "";
             _sessionAuthen.pha_type_doc = "search";
             _sessionAuthen.role_type = _sessionAuthen.role_type;
@@ -383,6 +395,12 @@ namespace dotnet6_epha_web.Controllers
         [HttpPost]
         public async Task<IActionResult> case_new_document([FromBody] LoadSessionDataViewModel model)
         {
+
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+                        
             _sessionAuthen.pha_seq = model.pha_seq;
             _sessionAuthen.pha_type_doc = model.pha_type_doc;
             _sessionAuthen.role_type = _sessionAuthen.role_type;
@@ -396,6 +414,12 @@ namespace dotnet6_epha_web.Controllers
         [HttpPost]
         public async Task<IActionResult> next_page([FromBody] LoadSessionDataViewModel model)
         {
+
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
             _sessionAuthen.pha_type_doc = (model.pha_type_doc + "");
             _sessionAuthen.role_type = _sessionAuthen.role_type;
 

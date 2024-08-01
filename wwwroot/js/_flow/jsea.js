@@ -2112,7 +2112,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     set_form_action(action_part_befor, !action_submit, page_load);
                     set_form_access(pha_status,$scope.params,$scope.flow_role_type)
                     set_tab_focus(pha_status,action_part_befor)
-                    set_date_time()
 
                     $timeout(function() {
                         try {
@@ -2566,20 +2565,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
         }
     }
-    function set_date_time(){
-        $scope.set_date_time = function() {
-            angular.element(document).ready(function() {
-                flatpickr("#datepicker", {
-                    dateFormat: "d/m/Y",
-                    onChange: function(selectedDates, dateStr, instance) {
-                        $scope.$apply(function() {
-                            $scope.selectedDate = dateStr;
-                        });
-                    }
-                });
-            });
-        };
-    }
+
     function check_case_member_review() {
 
         if ($scope.data_header[0].pha_status == 12
@@ -5737,7 +5723,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 }
                 break;
         }
-};
+    };
 
     
     $scope.clickedStates = {};

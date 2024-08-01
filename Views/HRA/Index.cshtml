@@ -62,7 +62,7 @@
                             <span> {{data_header[0].pha_status_displayname}}</span>
                         </div>
 
-                        <div class="col-auto" ng-if="data_header[0].pha_status === 11 || data_header[0].pha_status === 12"><!----ng-class="{ 'd-none': (minutes > 9) }"------>
+                        <div class="col-auto" ng-if="data_header[0].pha_status === 11 || data_header[0].pha_status === 12">
                             <div class="col-auto">
                                 <b>Auto-Save Interval :</b> <br>
                                 <span ng-class="{ 'blinking-text': (minutes <= 10) }">{{counterText}} </span>
@@ -124,21 +124,23 @@
     <div class="row g-0">
         <div class="col-12 ">
             <div class="card">
-                <div class="card-header mb-0 pb-0 border border-bottom-0 ">
+                <div class="card-header mb-0 pb-0 border border-bottom-0">
                     <ul class="nav nav-underline border-3 border-primary border-bottom " id="myTab" role="tablist" style="position: relative;">
+
                         <li ng-repeat="tab in tabs" ng-if="tab.isShow || true">
-                            <a ng-click="changeTab(tab)"
-                                class="btn-nav-menu btn-outline-primary border border-0"
-                                ng-class="{'btn active': (tab.isActive === true)}"
-                                id="{{tab.name}}-tab" name="{{tab.name}}-tab"
-                                data-bs-toggle="tab" href="#tab-{{tab.name}}" role="tab"
-                                aria-controls="tab-{{tab.name}}"
-                                aria-selected="{{tab.isActive}}">
-                                {{ tab.title }}
-                            </a>
+                                <a ng-click="changeTab(tab)"
+                                    class="btn-nav-menu btn-outline-primary border border-0"
+                                    ng-class="{'btn active': (tab.isActive === true)}"
+                                    id="{{tab.name}}-tab" name="{{tab.name}}-tab"
+                                    data-bs-toggle="tab" href="#tab-{{tab.name}}" role="tab"
+                                    aria-controls="tab-{{tab.name}}"
+                                    aria-selected="{{tab.isActive}}">
+                                    {{ tab.title }}
+                                </a>
                         </li>
                     </ul>
                 </div>
+
                 <div class="card-body tab-content" style="min-height: 66vh;">
                     <!-- general information start -->
                     <div class="" ng-class="{
@@ -186,7 +188,6 @@
                                             <a class="form-label far fa-comment-alt text-warning cursor-pointer" 
                                                 data-bs-toggle="tooltip"
                                                 data-bs-placement="top" 
-                                                name="departments" 
                                                 title="" 
                                                 data-bs-html="true">
                                             </a>
@@ -215,7 +216,6 @@
                                             <a class="form-label far fa-comment-alt text-warning cursor-pointer" 
                                                 data-bs-toggle="tooltip"
                                                data-bs-placement="top" 
-                                               name="sections" 
                                                title="" 
                                                data-bs-html="true">
                                             </a>
@@ -247,7 +247,6 @@
                                             <a class="form-label far fa-comment-alt text-warning cursor-pointer" 
                                                 data-bs-toggle="tooltip"
                                                 data-bs-placement="top" 
-                                                name="company" 
                                                 title="" 
                                                 data-bs-html="true">
                                             </a>
@@ -270,14 +269,16 @@
                                         <div class="row g-0 align-items-center">
                                             <div class="col-12 p-1  ">
                                                 <label class="form-label ps-0" for="area"><b class="text-danger d-none"> * </b>Area Process Unit </label>
-                                                <label class="form-label ps-0" ng-if="select_history_tracking_record">
-                                                    <a class="form-label far fa-comment-alt text-warning cursor-pointer" 
+                                                    <label class="form-label ps-0" ng-if="select_history_tracking_record">
+                                                        <a class="form-label far fa-comment-alt text-warning cursor-pointer" 
                                                         data-bs-toggle="tooltip"
                                                         data-bs-placement="top" 
-                                                        title=" Area Process Unit : A" 
-                                                        data-bs-html="true">
-                                                    </a>
-                                                </label>
+                                                        title="Area Process Unit: A" 
+                                                        data-bs-html="true"
+                                                        aria-label="Area Process Unit">
+                                                        </a>
+                                                    </label>
+
                                                 <label class="form-label ps-0" for="area"></label>
                                                 <select class="form-control js-choice-apu"
                                                         ng-class="{'disabled-link': isDisableStatus}"
@@ -1314,7 +1315,6 @@
                                             <tr>
                                                 <th class="align-middle text-start" style="width: 20%;">Area</th>
                                                 <th class="align-middle text-start" style="width: 20%;">Worker Group</th>
-                                                <!-- Uncomment if needed: <th class="align-middle text-start">Employees / Staff Members</th> -->
                                             </tr>
                                         </thead>
 
@@ -1332,7 +1332,6 @@
                                                     </p>
                                                 </td>
 
-                                                <!----span work lenght rowspan=""----->
                                                 <td class="align-top rating white-space-nowrap px-1" style="width: 250px;" > 
                                                     <div class="d-flex align-items-center mx-1 p-1">
                                                         <div style="padding-right: 8px;">
@@ -1384,8 +1383,7 @@
                                                     </div>
                                                 </td>
 
-                                                <!----span work/task lenght rowspan=""----->
-                                                <td class="align-top status text-center px-1" ><!----span same id work group? same no. ----->
+                                                <td class="align-top status text-center px-1" >
                                                     <p class="p-3">
                                                         <b>{{ item.numbers_of_workers }}</b>
                                                     </p>
@@ -1716,11 +1714,11 @@
                                             </th>
                                             <th class="align-top cursor-pointer" ng-click="Matrix_Rating('Exposure_Rating')">
                                                 Exposure<br/>Rating = [3.6] <br/>vs [3.9]
-                                                <a class="fa-solid fa-subtitles" style="color: #1985a1"></a>
+                                                <a class="fa-solid fa-subtitles" aria-label="Exposure Risk Rating" style="color: #1985a1"></a>
                                             </th>
                                             <th class="align-top cursor-pointer" ng-click="Matrix_Rating('Frequency_Rating')">
                                                 Initial Risk<br/>Rating = [3.5]<br/>vs [3.10]
-                                                <a class="fa-solid fa-subtitles" style="color: #fa6607"></a>
+                                                <a class="fa-solid fa-subtitles" aria-label="Initial Risk Rating" style="color: #fa6607"></a>
                                             </th>
                                             <th class="align-top" >Hierarchy of Control (ALARP)</th>
                                             <th class="align-top" >Effective?</th>

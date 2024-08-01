@@ -283,6 +283,10 @@ namespace dotnet6_epha_web.Controllers
         [HttpPost]
         public async Task<IActionResult> set_session_doc([FromBody] LoadSessionDataViewModel model)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
             _sessionAuthen.service_api_url = _IConfiguration["EndPoint:service_api_url"];
             _sessionAuthen.controller_action_befor = model.controller_action_befor;// "Home/Portal"; 
             _sessionAuthen.pha_seq = model.pha_seq;

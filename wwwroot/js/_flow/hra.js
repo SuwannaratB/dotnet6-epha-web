@@ -59,10 +59,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         try {
 
             if ($scope.object_items_name != idinput) {
-                var dropdown = document.querySelector(`.autocomplete-dropdown-${$scope.object_items_name}`);
+                let dropdown = document.querySelector(`.autocomplete-dropdown-${$scope.object_items_name}`);
                 dropdown.style.display = 'block';
             }
-            var dropdown = document.querySelector(`.autocomplete-dropdown-${idinput}`);
+            let dropdown = document.querySelector(`.autocomplete-dropdown-${idinput}`);
             $scope.object_items_name = idinput;
 
             if ($scope.autoText[idinput] && $scope.autoText[idinput].length > 0) {
@@ -85,7 +85,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         $scope.autoText[idinput] = item.name;
         $scope.filteredItems[idinput] = [];
         try {
-            var dropdown = document.querySelector(`.autocomplete-dropdown-${idinput}`);
+            let dropdown = document.querySelector(`.autocomplete-dropdown-${idinput}`);
             if (dropdown) {
                 dropdown.style.display = 'none';
             }
@@ -119,10 +119,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     
     // Track location changes
     $rootScope.$on('$locationChangeStart', function(event, next, current) {
-        console.log('Location is changing from:', current, 'to:', next);
-
         if (unsavedChanges) {
-            var confirmLeave = $window.confirm("You have unsaved changes. Are you sure you want to leave?");
+            let confirmLeave = $window.confirm("You have unsaved changes. Are you sure you want to leave?");
             if (!confirmLeave) {
                 event.preventDefault();
             }
@@ -131,9 +129,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     // close tab / browser window
     $window.addEventListener('beforeunload', function(event) {
-        console.log("Trigger Ec=vent",event)
         if (unsavedChanges) {
-            var confirmationMessage = 'You have unsaved changes. Are you sure you want to leave?';
+            let confirmationMessage = 'You have unsaved changes. Are you sure you want to leave?';
     
             event.preventDefault();
             event.returnValue = confirmationMessage;
@@ -141,7 +138,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
     });
 
-    var interval; 
+    let interval; 
 
     // Initialize the timer
     $scope.startTimer = function() {
@@ -153,8 +150,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
 
         interval = $interval(function () {
-            var minutes = Math.floor($scope.counter / 60); 
-            var seconds = $scope.counter % 60;
+            let minutes = Math.floor($scope.counter / 60); 
+            let seconds = $scope.counter % 60;
     
             // Display remaining time in minutes and seconds
             $scope.counterText = minutes + ' min. ' + seconds + ' sec.';
@@ -3299,7 +3296,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
 
 
-            running_no_format_1($scope.data_session, null, index, null);
+            running_no_format_1($scope.data_session, null, index);
             apply();
         };
 
@@ -3348,7 +3345,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 newInput.document_file = arr[i].document_file;
                 newInput.comment = arr[i].comment;
             };
-            running_no_format_1($scope.data_drawing, iNo, index, newInput);
+            running_no_format_1($scope.data_drawing, iNo);
 
             $scope.selectDrawingDoc = xValues;
             apply();
@@ -3377,7 +3374,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 $scope.data_drawing[0].no = 1;
             }
 
-            running_no_format_1($scope.data_drawing, null, index, null); //index??
+            running_no_format_1($scope.data_drawing, null, index); //index??
 
             apply();
 
@@ -4166,7 +4163,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 $scope.addDataSubAreas();
             }
 
-            running_no_level1($scope.data_subareas, null, index, null);
+            running_no_level1($scope.data_subareas, null, index);
             apply();
         };
 
@@ -4208,7 +4205,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 $scope.addDataHazard(); return;
             }
 
-            running_no_level1($scope.data_hazard, null, index, null);
+            running_no_level1($scope.data_hazard, null, index);
 
             if (!arrdelete[0].id_type_hazard) {
                 genareate_worksheet();
@@ -5532,7 +5529,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
             $('#modalEditConfirm').modal('hide');
             setTimeout(function() {
-                save_data_create(action, 'save');
+                save_data_create(action);
             }, 200); 
         }else{
             $('#modalEditConfirm').modal('hide');

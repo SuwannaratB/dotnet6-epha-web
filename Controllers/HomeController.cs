@@ -97,6 +97,11 @@ namespace dotnet6_epha_web.Controllers
         [HttpPost]
         public async Task<IActionResult> next_page([FromBody] LoadSessionDataViewModel model)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
             _sessionAuthen.pha_type_doc = (model.pha_type_doc + "");
             _sessionAuthen.role_type = _sessionAuthen.role_type;
 
