@@ -1,0 +1,57 @@
+textarea {
+    scrollbar-width: thin;
+    scrollbar-color: #f1f2f4 #fff;
+}
+
+.validation-message {
+    height: 14px;
+    color: red;
+    font-size: 10px;
+    text-align: start;
+    padding-left: 6px;
+}
+
+
+.hidden {
+    display: none;
+}
+
+.title {
+    margin-top: 10px;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.dropdown {
+    min-width: 200px
+}
+
+.btn-outline-gray {
+    color: #525b75;
+    background: transparent;
+    border: 1px solid #525b75;
+}
+
+.new {
+    position: absolute;
+    top: 50%;
+    left: 18px;
+    transform: translate(-50%, -50%);
+    border: 1px solid #0a7b00;
+    color: #0a7b00;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 0px 5px;
+    border-radius: 10px;
+    /* Blinking effect */
+    animation: blink 4s infinite;
+}
+
+@keyframes blink {
+    0%, 50%, 100% {
+        opacity: 1;
+    }
+    25%, 75% {
+        opacity: 0;
+    }
+}
