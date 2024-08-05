@@ -47,19 +47,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             }
         } catch { }
     };
-
-    function set_alert(status, msg) {
-        alert(status + ":" + msg);
-    }
-    function replace_hashKey_arr(_arr) {
-        var json = JSON.stringify(_arr, function (key, value) {
-            if (key == "$$hashKey") {
-                return undefined;
-            }
-            return value;
-        });
-        return json;
-    }
     function clone_arr_newrow(arr_items) {
         var arr_clone = []; var arr_clone_def = [];
         try {
@@ -81,7 +68,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         return arr_clone;
     }
 
-    $("#divLoading").hide();
+    //$("#divLoading").hide();
     $scope.handleLinkClick = function (val) {
         // ทำสิ่งต่าง ๆ เมื่อคลิกลิงก์
         console.log('Link clicked!');
@@ -89,49 +76,46 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         $scope.tabChange = val;
     }
 
+
+    function set_alert(status, msg) {
+        alert(status + ":" + msg);
+    }
+
     //call ws get data
     if (true) {
         get_data(true);
         function get_max_id() {
             var arr = $filter('filter')($scope.data_all.max, function (item) {
-                return (item.name == 'seq');
+                return (item.name == 'register_account');
             });
             var iMaxSeq = 1; if (arr.length > 0) { iMaxSeq = arr[0].values; }
-            $scope.MaxSeqData = iMaxSeq;
+            $scope.MaxSeqDataRegister = iMaxSeq;
+
 
         }
-        
         function arr_def() {
+
             $scope.user_name = conFig.user_name();
             $scope.flow_role_type = conFig.role_type();//admin,request,responder,approver
 
             $scope.data_all = [];
+            $scope.sqe_selected = 0;
 
-            $scope.data = [];
-            $scope.data_delete = [];
+            $scope.data_register = [];
+            $scope.data_register_delete = [];
 
-            $scope.data_departments = [];
-            $scope.data_sections = [];
-            $scope.data_toc = [];
+            $scope.employeelist = [];
+            $scope.employeelist_def = [];
+            $scope.employeelist_show = [];
 
-            //ไม่แน่ใจว่า list เก็บ model เป็น value หรือ text นะ 
-            $scope.data_filter = [{ id_key1: 0, id_key2: 0 }];
-
-            $scope.area_selected = [0];
-            $scope.plant_selected = [0];
-            $scope.toc_selected = [0];
-
-            $scope.selected = {
-                hazard_type: ''
-            };
+            $scope.exportfile = [{ DownloadPath: '', Name: '' }];
         }
-
         function get_data(page_load) {
             arr_def();
+
             var user_name = conFig.user_name();
             call_api_load(page_load, user_name);
         }
-
         function get_data_after_save(page_load) {
             var user_name = conFig.user_name();
             call_api_load(false, user_name);
@@ -141,7 +125,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             var user_name = $scope.user_name;
 
             $.ajax({
-                url: url_ws + "masterdata/get_master_hazard_riskfactors",
+                url: url_ws + "masterdata/get_manageuser",
                 data: '{"user_name":"' + user_name + '"}',
                 type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
                 beforeSend: function () {
@@ -151,15 +135,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                     $("#divLoading").hide();
                 },
                 success: function (data) {
-
                     var arr = data;
-                    $scope.data_all = arr;
 
-                    $scope.data = arr.data;
-                    $scope.data_def = clone_arr_newrow(arr.data);
-                    $scope.data_hazard_type = JSON.parse(replace_hashKey_arr(arr.hazard_type));
-                    // $scope.hazard_type_selected = [arr.hazard_type[0].id]; 
-                    setPagination()
+                    $scope.data_all = arr;
+                    $scope.data_register = arr.register_account;
+                    $scope.data_register_def = clone_arr_newrow(arr.register_account);
+
+                    $scope.employeelist = arr.employee;
+                    $scope.employeelist_def = clone_arr_newrow(arr.employee);
 
                     get_max_id();
 
@@ -179,103 +162,124 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             });
 
         }
-         
-        $scope.addData = function (item) {
+        $scope.addDataEmployee = function (item) {
 
-            //add new  
-            var id_sections_group = item.id_sections_group;
-            var seq = $scope.MaxSeqData;
+            //add new employee 
+            var seq = $scope.MaxSeqDataRegister;
 
-            var newInput = clone_arr_newrow($scope.data_def)[0];
+            var newInput = clone_arr_newrow($scope.data_register_def)[0];
             newInput.seq = seq;
-            newInput.id = 0;
-            newInput.active_type = 1;
+            newInput.register_type = 0;
+            newInput.accept_status = 1;
+            newInput.user_name = '';
+            newInput.user_displayname = '';
+            newInput.user_email = '';
+            newInput.user_password = '';
+            newInput.user_password_confirm = '';
 
-            newInput.id_hazard_type = $scope.selected['hazard_type']; 
-            // newInput.id_hazard_type = $scope.hazard_type_selected[0]; 
-            newInput.health_hazards = '';
-            newInput.hazards_rating = '';
-            newInput.standard_type_text = '';
-            newInput.standard_value = '';
-            newInput.standard_unit = '';
-            newInput.standard_desc = '';
-      
             newInput.action_type = 'insert';
             newInput.action_change = 1;
 
-            $scope.data.push(newInput);
+            $scope.data_register.push(newInput);
 
-            $scope.MaxSeqData = Number($scope.MaxSeqData) + 1
+            $scope.MaxSeqDataRegister = Number($scope.MaxSeqDataRegister) + 1
             apply();
         }
         
-        $scope.removeData = function (seq, index) {
-            var arrdelete = $filter('filter')($scope.data, function (item) {
-                return (item.seq == seq);
-            });
+        $scope.removeDataEmployee = function (seq, index) {
+                // Show the confirmation dialog
+                Swal.fire({
+                    title: "Are you sure?",
+                    text: "You won't be able to revert this!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Yes, delete it!"
+                
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Perform the deletion if confirmed
+                        var arrdelete = $filter('filter')($scope.data_register, function (item) {
+                            return item.seq == seq;
+                        });
+        
+                        if (arrdelete.length > 0) { 
+                            $scope.data_register_delete.push(arrdelete[0]); 
+                        }
 
-            if (arrdelete.length > 0) { $scope.data_delete.push(arrdelete[0]); }
-
-            $scope.data = $filter('filter')($scope.data, function (item) {
-                return (item.seq != arrdelete[0].seq);
-            });
-            if ($scope.data.length == 0) {
-                $scope.addData();
-                return;
-            }
-            apply();
-
-        };
-        $scope.actionChangeGroupSubArea = function (arr, field) {
-            arr.action_change = 1;
-
-            if (field == "accept_status") {
-                arr.active_type = 0
-            } else if (field == "inaccept_status") {
-                arr.active_type = 1
-            }
-            apply();
+                        $scope.data_register = $filter('filter')($scope.data_register, function (item) {
+                            return item.seq != arrdelete[0].seq;
+                        });
+                        if ($scope.data_register.length == 0) {
+                            $scope.addDataEmployee();
+                            return;
+                        }
+                        
+                        $scope.$apply(); 
+                        
+                        // Show success message
+                        Swal.fire({
+                            title: "Deleted!",
+                            text: "Your file has been deleted.",
+                            icon: "success",
+                            timer: 1000,
+                            showConfirmButton: false
+                        });
+                    }
+                });
         }
+
         $scope.actionChangedData = function (arr, field) {
             arr.action_change = 1;
-
-            if (field == "accept_status") {
-                arr.active_type = 0
-            } else if (field == "inaccept_status") {
-                arr.active_type = 1
+            if(!arr.user_password || !arr.user_password_confirm && !(arr.user_password == arr.user_password_confirm)) {
+                
+                alert('Passwords do not match.');
             }
             apply();
         }
+    }
 
-        $scope.actionChangedMaster = function (field) {
-            console.log(field)
-            if (field == 'hazard_type') {
-                console.log($scope.selected['hazard_type'])
-            }
+    if (true) {
+        $scope.fillterDataEmployeeAdd = function () {
+            $scope.employeelist_show = [];
+            var searchText = $scope.searchText;
+            if (!searchText) { return; }
 
-            //if (field == "plant") {
-            //    $scope.plant_selected = [arr.plant[0].id];
-            //}
-            //if (field == "area") {
-            //    $scope.area_selected = [arr.area[0].id];
-            //} 
+            var items = angular.copy($scope.employeelist_def, items);
+            if (searchText.length < 3) { return items; }
+
+            getEmployees(searchText, function (data) {
+                $scope.employeelist_show = data.employee
+                apply();
+            });
+        };
+        function getEmployees(keywords, callback) {
+            $.ajax({
+                url: url_ws + "Flow/employees_search",
+                data: '{"user_filter_text":"' + keywords + '"'
+                    + ',"max_rows":"10"'
+                    + '}',
+                type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+                beforeSend: function () {
+                    $("#divLoading").show();
+                },
+                complete: function () {
+                    $("#divLoading").hide();
+                },
+                success: function (data) {
+                    callback(data);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    if (jqXHR.status == 500) {
+                        alert('Internal error: ' + jqXHR.responseText);
+                    } else {
+                        alert('Unexpected ' + textStatus);
+                    }
+                }
+
+            });
         }
-
-        $scope.newData = function(){
-            const row = document.getElementById('row-' + 20);
-            if (row) {
-                row.scrollIntoView({ behavior: 'smooth', block: 'end' });
-                // เพิ่ม margin-top ให้กับ .table-container
-                // const container = document.querySelector('.table-container');
-                // if (container) {
-                //     container.style.marginTop = '175px'; 
-                //     console.log(container)
-                // }
-            }
-           
-        }
-
-
     }
 
     //call ws set data
@@ -285,25 +289,33 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         }
         $scope.confirmSave = function () {
 
-            var action = "";
+            var arr = $scope.data_register;
+            var passwordsMatch = true;
+            for (var i = 0; i < arr.length; i++) {
+                if (arr[i].user_password !== arr[i].user_password_confirm) {
+                    passwordsMatch = false;
+                    alert('Passwords do not match for user: ' + arr[i].username);
+                    break;
+                }
+            }
 
-            save_data();
+            save_data("save");
         }
         function save_data(action) {
 
             var user_name = $scope.user_name;
-            var flow_role_type = $scope.flow_role_type;
+            var role_type = $scope.flow_role_type;
 
             //save 
             var flow_action = action || 'save';
 
-            var json_data = check_data();
+            var json_register = check_data_register();
 
             $.ajax({
-                url: url_ws + "masterdata/set_master_hazard_riskfactors",
+                url: url_ws + "masterdata/set_manageuser",
                 data: '{"user_name":"' + user_name + '"'
-                    + ',"role_type":"' + flow_role_type + '"'
-                    + ',"json_data": ' + JSON.stringify(json_data)
+                    + ',"role_type":"' + role_type + '"'
+                    + ',"json_register_account": ' + JSON.stringify(json_register)
                     + '}',
                 type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
                 beforeSend: function () {
@@ -344,63 +356,22 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             });
 
         }
-        function check_data() {
+        function check_data_register() {
 
             var arr_active = [];
-            angular.copy($scope.data, arr_active);
+            angular.copy($scope.data_register, arr_active);
             var arr_json = $filter('filter')(arr_active, function (item) {
                 return ((item.action_type == 'update' && item.action_change == 1) || item.action_type == 'insert');
             });
 
-            for (var i = 0; i < $scope.data_delete.length; i++) {
-                $scope.data_delete[i].action_type = 'delete';
-                arr_json.push($scope.data_delete[i]);
+            for (var i = 0; i < $scope.data_register_delete.length; i++) {
+                $scope.data_register_delete[i].action_type = 'delete';
+                arr_json.push($scope.data_register_delete[i]);
             }
             return angular.toJson(arr_json);
         }
-    }
-
-    function setPagination(){
-        // Pagination settings
-        $scope.pageSize = 10; // จำนวนข้อมูลต่อหน้า
-        $scope.currentPage = 1; // หน้าปัจจุบัน
-        $scope.totalPages = Math.ceil($scope.data.length / $scope.pageSize); // จำนวนหน้าทั้งหมด
-
-        // สร้างลิสต์ของตัวเลขหน้า
-        $scope.pages = Array.from({ length: $scope.totalPages }, (v, k) => k + 1);
-        $scope.paginate()
 
     }
 
-    // ฟังก์ชันสำหรับจัดข้อมูลตามหน้า
-    $scope.paginate = function() {
-        const start = ($scope.currentPage - 1) * $scope.pageSize;
-        const end = start + $scope.pageSize;
-        $scope.paginatedData = $scope.data.slice(start, end);
-        console.log( $scope.paginatedData)
-        console.log( $scope.data)
-    };
-
-    // ฟังก์ชันสำหรับเปลี่ยนหน้า
-    $scope.setPage = function(page) {
-        $scope.currentPage = page;
-        $scope.paginate();
-    };
-
-    // ฟังก์ชันสำหรับไปหน้าก่อนหน้า
-    $scope.prevPage = function() {
-        if ($scope.currentPage > 1) {
-        $scope.currentPage--;
-        $scope.paginate();
-        }
-    };
-
-    // ฟังก์ชันสำหรับไปหน้าถัดไป
-    $scope.nextPage = function() {
-        if ($scope.currentPage < $scope.totalPages) {
-        $scope.currentPage++;
-        $scope.paginate();
-        }
-    };
 
 });
