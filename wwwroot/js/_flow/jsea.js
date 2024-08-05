@@ -477,10 +477,27 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             if ($scope.data_header[0].pha_status == 11) {
                 if (selectedTab.name == 'worksheet') {
                     //$('#modalPleaseRegister').modal('show');
+                    if(!validBeforRegister()) {
+                        // remove tab
+                        selectedTab.isActive = false;
+                        var tabPane = document.getElementById("tab-" + selectedTab.name);
+                        if (tabPane) tabPane.classList.remove('show', 'active');
+                        // set tab general
+                        $scope.tabs[0].isActive = true;
+                        var activeTabPane = document.getElementById("tab-" + $scope.tabs[0].name);
+                        if (activeTabPane) {
+                            setTimeout(() => {
+                                activeTabPane.classList.add('show', 'active');
+                                $scope.action_part = 1
+                                var activeTabBtn = document.getElementById($scope.tabs[0].name + "-tab");
+                                if (activeTabBtn) activeTabBtn.classList.add('active');
+                            }, 1000);
+                        }
+                        
+                        return set_alert('Warning',$scope.validMessage)
+                    }
 
-                    $scope.confirmSave('confirm_submit_register_without')
-
-                    return;
+                    return $scope.confirmSave('confirm_submit_register_without')
                 }
             }
         } catch (error) { }
@@ -6521,7 +6538,36 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         return false;
     };
     
+    function validBeforRegister() {
+        if (validGeneral() && validDrawing()) {
+            return true
+        }
+
+        return false
+    }
     
-    
+    function validGeneral(){
+        console.log($scope.data_general[0])
+        console.log($scope.data_drawing)
+        if (!$scope.data_general[0].pha_request_name) {
+            if(!$scope.data_general[0].pha_request_name) $scope.validMessage = 'Please select a valid Task Name'
+            $scope.goback_tab = 'general';
+            return false
+        }
+        $scope.validMessage = ''
+        return true
+    }
+
+    function validDrawing(){
+        for (let i = 0; i < $scope.data_drawing.length; i++) {
+            if (!$scope.data_drawing[i].document_file_name) {
+                if(!$scope.data_drawing[i].document_file_name) $scope.validMessage = 'Please select a valid Document File'
+                $scope.goback_tab = 'general';
+                return false
+            }
+        }
+        $scope.validMessage = ''
+        return true
+    }
 
 });
