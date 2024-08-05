@@ -94,13 +94,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         get_data(true);
         function get_max_id() {
             var arr = $filter('filter')($scope.data_all.max, function (item) {
-                return (item.name == 'seq');
+                return (item.name == 'unit');
             });
             var iMaxSeq = 1; if (arr.length > 0) { iMaxSeq = arr[0].values; }
             $scope.MaxSeqData = iMaxSeq;
 
+
         }
-        
         function arr_def() {
             $scope.user_name = conFig.user_name();
             $scope.flow_role_type = conFig.role_type();//admin,request,responder,approver
@@ -110,8 +110,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             $scope.data = [];
             $scope.data_delete = [];
 
-            $scope.data_departments = [];
-            $scope.data_sections = [];
+            $scope.data_area = [];
+            $scope.data_plant = [];
             $scope.data_toc = [];
 
             //ไม่แน่ใจว่า list เก็บ model เป็น value หรือ text นะ 
@@ -120,18 +120,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             $scope.area_selected = [0];
             $scope.plant_selected = [0];
             $scope.toc_selected = [0];
-
-            $scope.selected = {
-                hazard_type: ''
-            };
         }
-
         function get_data(page_load) {
             arr_def();
+
             var user_name = conFig.user_name();
             call_api_load(page_load, user_name);
         }
-
         function get_data_after_save(page_load) {
             var user_name = conFig.user_name();
             call_api_load(false, user_name);
@@ -141,7 +136,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             var user_name = $scope.user_name;
 
             $.ajax({
-                url: url_ws + "masterdata/get_master_hazard_riskfactors",
+                url: url_ws + "masterdata/get_master_unit",
                 data: '{"user_name":"' + user_name + '"}',
                 type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
                 beforeSend: function () {
@@ -151,15 +146,21 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                     $("#divLoading").hide();
                 },
                 success: function (data) {
-
                     var arr = data;
+
                     $scope.data_all = arr;
 
-                    $scope.data = arr.data;
-                    $scope.data_def = clone_arr_newrow(arr.data);
-                    $scope.data_hazard_type = JSON.parse(replace_hashKey_arr(arr.hazard_type));
-                    // $scope.hazard_type_selected = [arr.hazard_type[0].id]; 
-                    setPagination()
+                    $scope.data = arr.unit;
+                    $scope.data_def = clone_arr_newrow(arr.unit);
+
+
+                    $scope.data_area = JSON.parse(replace_hashKey_arr(arr.area));
+                    $scope.data_plant = JSON.parse(replace_hashKey_arr(arr.plant));
+                    $scope.data_toc = JSON.parse(replace_hashKey_arr(arr.toc));
+
+                    $scope.plant_selected = [arr.plant[0].id];
+                    $scope.area_selected = [arr.area[0].id];
+                    $scope.toc_selected = [arr.toc[0].id];
 
                     get_max_id();
 
@@ -179,27 +180,24 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             });
 
         }
-         
+
+
         $scope.addData = function (item) {
 
             //add new  
-            var id_sections_group = item.id_sections_group;
             var seq = $scope.MaxSeqData;
 
             var newInput = clone_arr_newrow($scope.data_def)[0];
             newInput.seq = seq;
             newInput.id = 0;
             newInput.active_type = 1;
+            newInput.name = '';
+            newInput.descriptions = '';
 
-            newInput.id_hazard_type = $scope.selected['hazard_type']; 
-            // newInput.id_hazard_type = $scope.hazard_type_selected[0]; 
-            newInput.health_hazards = '';
-            newInput.hazards_rating = '';
-            newInput.standard_type_text = '';
-            newInput.standard_value = '';
-            newInput.standard_unit = '';
-            newInput.standard_desc = '';
-      
+            newInput.id_company = $scope.plant_selected[0];
+            newInput.id_area = $scope.area_selected[0];
+            newInput.id_plant_area = $scope.toc_selected[0];
+
             newInput.action_type = 'insert';
             newInput.action_change = 1;
 
@@ -208,7 +206,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             $scope.MaxSeqData = Number($scope.MaxSeqData) + 1
             apply();
         }
-        
         $scope.removeData = function (seq, index) {
             var arrdelete = $filter('filter')($scope.data, function (item) {
                 return (item.seq == seq);
@@ -226,16 +223,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             apply();
 
         };
-        $scope.actionChangeGroupSubArea = function (arr, field) {
-            arr.action_change = 1;
 
-            if (field == "accept_status") {
-                arr.active_type = 0
-            } else if (field == "inaccept_status") {
-                arr.active_type = 1
-            }
-            apply();
-        }
         $scope.actionChangedData = function (arr, field) {
             arr.action_change = 1;
 
@@ -246,12 +234,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             }
             apply();
         }
-
         $scope.actionChangedMaster = function (field) {
-            console.log(field)
-            if (field == 'hazard_type') {
-                console.log($scope.selected['hazard_type'])
-            }
 
             //if (field == "plant") {
             //    $scope.plant_selected = [arr.plant[0].id];
@@ -260,22 +243,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             //    $scope.area_selected = [arr.area[0].id];
             //} 
         }
-
-        $scope.newData = function(){
-            const row = document.getElementById('row-' + 20);
-            if (row) {
-                row.scrollIntoView({ behavior: 'smooth', block: 'end' });
-                // เพิ่ม margin-top ให้กับ .table-container
-                // const container = document.querySelector('.table-container');
-                // if (container) {
-                //     container.style.marginTop = '175px'; 
-                //     console.log(container)
-                // }
-            }
-           
-        }
-
-
     }
 
     //call ws set data
@@ -300,9 +267,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             var json_data = check_data();
 
             $.ajax({
-                url: url_ws + "masterdata/set_master_hazard_riskfactors",
+                url: url_ws + "masterdata/set_master_unit",
                 data: '{"user_name":"' + user_name + '"'
                     + ',"role_type":"' + flow_role_type + '"'
+                    + ',"page_name":"unit"'
                     + ',"json_data": ' + JSON.stringify(json_data)
                     + '}',
                 type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
@@ -360,47 +328,5 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         }
     }
 
-    function setPagination(){
-        // Pagination settings
-        $scope.pageSize = 10; // จำนวนข้อมูลต่อหน้า
-        $scope.currentPage = 1; // หน้าปัจจุบัน
-        $scope.totalPages = Math.ceil($scope.data.length / $scope.pageSize); // จำนวนหน้าทั้งหมด
-
-        // สร้างลิสต์ของตัวเลขหน้า
-        $scope.pages = Array.from({ length: $scope.totalPages }, (v, k) => k + 1);
-        $scope.paginate()
-
-    }
-
-    // ฟังก์ชันสำหรับจัดข้อมูลตามหน้า
-    $scope.paginate = function() {
-        const start = ($scope.currentPage - 1) * $scope.pageSize;
-        const end = start + $scope.pageSize;
-        $scope.paginatedData = $scope.data.slice(start, end);
-        console.log( $scope.paginatedData)
-        console.log( $scope.data)
-    };
-
-    // ฟังก์ชันสำหรับเปลี่ยนหน้า
-    $scope.setPage = function(page) {
-        $scope.currentPage = page;
-        $scope.paginate();
-    };
-
-    // ฟังก์ชันสำหรับไปหน้าก่อนหน้า
-    $scope.prevPage = function() {
-        if ($scope.currentPage > 1) {
-        $scope.currentPage--;
-        $scope.paginate();
-        }
-    };
-
-    // ฟังก์ชันสำหรับไปหน้าถัดไป
-    $scope.nextPage = function() {
-        if ($scope.currentPage < $scope.totalPages) {
-        $scope.currentPage++;
-        $scope.paginate();
-        }
-    };
 
 });
