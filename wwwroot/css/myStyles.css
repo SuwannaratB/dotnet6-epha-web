@@ -28,7 +28,7 @@ a, i {
 }
 
 .d-none {
-    display: none;
+    display: none !important;
 }
 
 .my-text {
@@ -41,28 +41,47 @@ a, i {
 
 .effect-rating {
     padding: 2px 8px;
-    background: red;
-    color: white;
+    /* background: red; */
+    /* color: white; */
     font-weight: bold;
-    font-size: 16px;
+    font-size: 14px;
     border-radius: 6px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
 }
-.effect-rating.active{
-    padding: 2px 8px;
-    background: red;
-    color: white;
-    border: 2px solid blue;
-    font-weight: bold;
-    font-size: 16px;
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
+
+  /* Risk Rating */
+  .risk-acceptable {
+    background: #a0ff80;
+    color: #258a03;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+  }
+  .risk-low {
+    background: #73e600;
+    color: #457c0e;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+  }
+  .risk-medium {
+    background: #e6e600;
+    color: #727200 !important;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+  }
+  .risk-high {
+    background: #fe0000;
+    color: #ffd9d9;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+  }
+  .risk-very-high {
+    background: #b20000;
+    color: #ffdcdc;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+  }
+
+.standard {
+  font-size: 14px;
+  font-weight: 600;
 }
 
 .mr-27 {
@@ -113,7 +132,7 @@ a, i {
 /* dropdown */
 .dropbtn {
     width: 100%;
-    min-height: 39px;
+    height: 39px;
     background: transparent;
     /* color: white; */
     text-align: start;
@@ -123,6 +142,7 @@ a, i {
     border-radius: 6px;
     margin-top: 2px;
     cursor: pointer;
+    overflow: auto;
 }
 
 /* .dropbtn:hover, .dropbtn:focus {
@@ -378,7 +398,7 @@ background-color: #3e8e41;
   .box {
     min-width: 100px;
     width: 100%;
-    height: 60px;
+    height: 62px;
     padding: 8px;
     margin-bottom: 4px;
     border-bottom: 1px solid #e3e6ed;
@@ -389,7 +409,7 @@ background-color: #3e8e41;
   .box-recom {
     min-width: 100px;
     width: 100%;
-    height: 60px;
+    height: 62px;
     padding: 8px;
     margin-bottom: 4px;
     /* border-bottom: 1px solid #e3e6ed; */
@@ -406,6 +426,13 @@ background-color: #3e8e41;
   .disbox {
     border: none !important;
   }
+
+  /* Firefox */
+  .box, .box-recom, .dropbtn, textarea {
+    scrollbar-width: thin;
+    scrollbar-color: #f1f2f4 #fff;
+  }
+
 
   .placeholder-right::placeholder {
     text-align: right;
@@ -426,12 +453,23 @@ background-color: #3e8e41;
   }
 
   .card-initial {
-    background: #25b003;
-    color: white;
+    display: flex;
+    /* background: #25b003; */
+    /* color: white; */
     padding: 4px 14px;
-    border-radius: 6px
+    border-radius: 6px;
+    min-height: 26px;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
   }
 
+  .drop-initial {
+    /* background: #25b003; */
+    /* color: white; */
+    font-weight: 800;
+    padding-right: 15px;
+  }
   
   .card-copy {
     border: 1px dashed #3874ff;
@@ -484,9 +522,6 @@ background-color: #3e8e41;
     cursor: pointer;
   }
 
-
-
-
 /*Modal*/
 
 /* Style for all readonly textareas */
@@ -527,9 +562,234 @@ background-color: #3e8e41;
   cursor: pointer !important;
 }
 
+.form-control[disabled] {
+  background-color: #e9ecef;
+  color: #495057; 
+  pointer-events: none; 
+}
+
+.form-control[disabled]::-ms-expand {
+  display: none;
+}
+
+.form-control[disabled] {
+  -webkit-appearance: none;
+  -moz-appearance: none; 
+  appearance: none;
+}
+
+.form-control[disabled]::after {
+  content: none; /* Remove the dropdown arrow */
+}
+
 
 
 /*end date start date validate*/
 .ng-invalid-min {
   border-color: red; /* Change border color to red */
 }
+
+.is-invalid {
+  border-color: #dc3545; /* Red border for invalid fields */
+}
+
+.ng-invalid .ng-invalid-required{
+  border-color: #dc3545; /* Red border for invalid fields */
+}
+
+.invalid-feedback {
+  color: #dc3545; /* Red text for error messages */
+  font-size: 10px;
+  display: none;
+}
+
+.invalid-feedback.ng-show {
+  display: block; /* Show error message when validation fails */
+}
+
+.input-container.input-invalid {
+  position: relative;
+}
+
+.input-container.input-invalid input {
+  border: 1px solid red;
+  padding-right: 24px; /* Adjust padding to make space for the icon */
+}
+
+.input-container.input-invalid .input-invalid-icon {
+  position: absolute;
+  content: "⚠️"; 
+  color: red;
+  right: 8px; /* Adjust position of the icon */
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.input-container.input-invalid input::-webkit-calendar-picker-indicator {
+  color: red; /* Hide the default calendar icon */
+}
+
+ul.nav li a.btn-nav-menu.btn-outline-primary {
+  border-radius: 10px 10px 0px 0px; 
+  padding: 0.625rem 1.5rem; 
+  font-size: 0.8rem; 
+  font-weight: 700; 
+  line-height: 1.2; 
+  text-align: center; 
+  display: inline-block; 
+  vertical-align: middle;
+  text-decoration: none;
+}
+
+ul.nav li a.btn-nav-menu.btn-outline-primary:hover {
+  background-color: #f0f0f0;
+  color: #0056b3;
+  transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition effect */
+}
+
+.card-menu{
+  padding: 14px 2px;
+  border-radius: 8px;
+  transition: transform .2s;
+}
+
+.card-menu:hover {
+  box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+  /* transform: scale(1.02);  */
+}
+
+.rows-modal-risk-active {
+  background: #e3e6ed;
+}
+.rows-modal-risk:hover {
+  background: #e3e6ed;
+}
+
+.td-border {
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+
+
+.btn-worksheet-filter, .btn-recommendations-filter {
+  position: relative;
+}
+
+.bard, .bard-recommendations {
+  /* position: absolute;
+  top: -12px;
+  right: -16px; */
+  width: 15px;
+  height: 15px;
+  padding-top: 2px;
+  background: #fff;
+  color: #3874ff;
+  /* border: 1px solid #3874ff; */
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* worksheet */
+.container-header-number {
+  padding-top: 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+/* dropdown filter risk */
+.container-worksheet-filter, .container-recommendations-filter {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  padding: 18px;
+  top: 44px;
+  right: 0;
+  border-radius: 4px;
+  z-index: 99;
+  box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 2px, 
+  rgba(0, 0, 0, 0.07) 0px 2px 4px, 
+  rgba(0, 0, 0, 0.07) 0px 4px 8px, 
+  rgba(0, 0, 0, 0.07) 0px 8px 16px, 
+  rgba(0, 0, 0, 0.07) 0px 16px 32px, 
+  rgba(0, 0, 0, 0.07) 0px 32px 64px;
+}
+
+.title-filter {
+  font-size: 16px; 
+  font-weight: 800; 
+  padding-bottom: 16px;
+}
+
+.list-container {
+  display: flex;
+  gap: 56px;
+}
+
+.checkbox-container {
+  min-width: 150px;
+  /* min-width: max-content; */
+}
+
+.checkbox-container .topic {
+  color: #979797;
+  padding-bottom: 6px !important;
+}
+
+.btn-filter-worksheet {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  gap: 2px;
+  /* background: #fff; */
+  padding: 4px;
+  /* min-width: 48px; */
+  width: 70px;
+  height: 22px;
+  border-radius: 4px;
+  border: 1px solid #dedede;
+  box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+}
+
+.filter-risk-container {
+  position: absolute;
+  right: -37px;
+  top: 20px;
+  background: #dedede;
+  padding: 6px;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  font-size: 10.24px;
+  color: black;
+  font-weight: 600;
+  box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 2px, 
+              rgba(0, 0, 0, 0.07) 0px 2px 4px, 
+              rgba(0, 0, 0, 0.07) 0px 4px 8px, 
+              rgba(0, 0, 0, 0.07) 0px 8px 16px, 
+              rgba(0, 0, 0, 0.07) 0px 16px 32px, 
+              rgba(0, 0, 0, 0.07) 0px 32px 64px;
+}
+
+.filter-risk-list {
+  min-width: 100%;
+  width: max-content;
+  padding: 6px 12px;
+  border-radius: 4px;
+}
+
+.filter-risk-list:hover {
+  background: #0e8dff;
+  color: #fff;
+}
+
+

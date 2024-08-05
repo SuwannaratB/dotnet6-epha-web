@@ -111,8 +111,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             $scope.data_delete = [];
               
             //ไม่แน่ใจว่า list เก็บ model เป็น value หรือ text นะ 
-            $scope.data_filter = [{ id_key1: 0, id_key2: 0 }];
-             
+            $scope.data_filter = [{ id_key1: 0, id_key2: 0 }]; 
         }
         function get_data(page_load) {
             arr_def();
@@ -143,8 +142,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
                     $scope.data_all = arr;
 
-                    $scope.data = arr.sections_group;
-                    $scope.data_def = clone_arr_newrow(arr.sections_group);
+                    $scope.data = arr.data;
+                    $scope.data_def = clone_arr_newrow(arr.data);
                        
                     get_max_id();
 

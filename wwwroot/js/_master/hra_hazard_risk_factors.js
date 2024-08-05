@@ -100,6 +100,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             $scope.MaxSeqData = iMaxSeq;
 
         }
+        
         function arr_def() {
             $scope.user_name = conFig.user_name();
             $scope.flow_role_type = conFig.role_type();//admin,request,responder,approver
@@ -119,13 +120,18 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             $scope.area_selected = [0];
             $scope.plant_selected = [0];
             $scope.toc_selected = [0];
+
+            $scope.selected = {
+                hazard_type: ''
+            };
         }
+
         function get_data(page_load) {
             arr_def();
-
             var user_name = conFig.user_name();
             call_api_load(page_load, user_name);
         }
+
         function get_data_after_save(page_load) {
             var user_name = conFig.user_name();
             call_api_load(false, user_name);
@@ -135,7 +141,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             var user_name = $scope.user_name;
 
             $.ajax({
-                url: url_ws + "masterdata/get_master_sub_area_equipmet",
+                url: url_ws + "masterdata/get_master_hazard_riskfactors",
                 data: '{"user_name":"' + user_name + '"}',
                 type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
                 beforeSend: function () {
@@ -149,12 +155,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                     var arr = data;
                     $scope.data_all = arr;
 
-                    $scope.data = arr.unit;
-                    $scope.data_def = clone_arr_newrow(arr.unit);
-
+                    $scope.data = arr.data;
+                    $scope.data_def = clone_arr_newrow(arr.data);
                     $scope.data_hazard_type = JSON.parse(replace_hashKey_arr(arr.hazard_type));
-
-                    $scope.hazard_type_selected = [arr.plant[0].id]; 
+                    // $scope.hazard_type_selected = [arr.hazard_type[0].id]; 
+                    setPagination()
 
                     get_max_id();
 
@@ -186,8 +191,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             newInput.id = 0;
             newInput.active_type = 1;
 
-            newInput.id_hazard_type = $scope.hazard_type_selected[0]; 
-
+            newInput.id_hazard_type = $scope.selected['hazard_type']; 
+            // newInput.id_hazard_type = $scope.hazard_type_selected[0]; 
             newInput.health_hazards = '';
             newInput.hazards_rating = '';
             newInput.standard_type_text = '';
@@ -203,6 +208,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             $scope.MaxSeqData = Number($scope.MaxSeqData) + 1
             apply();
         }
+        
         $scope.removeData = function (seq, index) {
             var arrdelete = $filter('filter')($scope.data, function (item) {
                 return (item.seq == seq);
@@ -240,7 +246,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             }
             apply();
         }
+
         $scope.actionChangedMaster = function (field) {
+            console.log(field)
+            if (field == 'hazard_type') {
+                console.log($scope.selected['hazard_type'])
+            }
 
             //if (field == "plant") {
             //    $scope.plant_selected = [arr.plant[0].id];
@@ -249,6 +260,22 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             //    $scope.area_selected = [arr.area[0].id];
             //} 
         }
+
+        $scope.newData = function(){
+            const row = document.getElementById('row-' + 20);
+            if (row) {
+                row.scrollIntoView({ behavior: 'smooth', block: 'end' });
+                // เพิ่ม margin-top ให้กับ .table-container
+                // const container = document.querySelector('.table-container');
+                // if (container) {
+                //     container.style.marginTop = '175px'; 
+                //     console.log(container)
+                // }
+            }
+           
+        }
+
+
     }
 
     //call ws set data
@@ -273,7 +300,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             var json_data = check_data();
 
             $.ajax({
-                url: url_ws + "masterdata/set_master_sub_area_equipmet",
+                url: url_ws + "masterdata/set_master_hazard_riskfactors",
                 data: '{"user_name":"' + user_name + '"'
                     + ',"role_type":"' + flow_role_type + '"'
                     + ',"json_data": ' + JSON.stringify(json_data)
@@ -333,5 +360,47 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         }
     }
 
+    function setPagination(){
+        // Pagination settings
+        $scope.pageSize = 10; // จำนวนข้อมูลต่อหน้า
+        $scope.currentPage = 1; // หน้าปัจจุบัน
+        $scope.totalPages = Math.ceil($scope.data.length / $scope.pageSize); // จำนวนหน้าทั้งหมด
+
+        // สร้างลิสต์ของตัวเลขหน้า
+        $scope.pages = Array.from({ length: $scope.totalPages }, (v, k) => k + 1);
+        $scope.paginate()
+
+    }
+
+    // ฟังก์ชันสำหรับจัดข้อมูลตามหน้า
+    $scope.paginate = function() {
+        const start = ($scope.currentPage - 1) * $scope.pageSize;
+        const end = start + $scope.pageSize;
+        $scope.paginatedData = $scope.data.slice(start, end);
+        console.log( $scope.paginatedData)
+        console.log( $scope.data)
+    };
+
+    // ฟังก์ชันสำหรับเปลี่ยนหน้า
+    $scope.setPage = function(page) {
+        $scope.currentPage = page;
+        $scope.paginate();
+    };
+
+    // ฟังก์ชันสำหรับไปหน้าก่อนหน้า
+    $scope.prevPage = function() {
+        if ($scope.currentPage > 1) {
+        $scope.currentPage--;
+        $scope.paginate();
+        }
+    };
+
+    // ฟังก์ชันสำหรับไปหน้าถัดไป
+    $scope.nextPage = function() {
+        if ($scope.currentPage < $scope.totalPages) {
+        $scope.currentPage++;
+        $scope.paginate();
+        }
+    };
 
 });

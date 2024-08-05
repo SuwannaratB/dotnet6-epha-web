@@ -3,30 +3,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
     $('#divLoading').hide();
 
 
-    var unsavedChanges = false;
-
-    // Track location changes
-    $rootScope.$on('$locationChangeStart', function(event, next, current) {
-        if (unsavedChanges) {
-            var confirmLeave = $window.confirm("You have unsaved changes. Are you sure you want to leave?");
-            if (!confirmLeave) {
-                event.preventDefault();
-            }
-        }
-    });
-
-    // close tab / browser window
-    $window.addEventListener('beforeunload', function(event) {
-        if (unsavedChanges) {
-            var confirmationMessage = 'You have unsaved changes. Are you sure you want to leave?';
-    
-            event.preventDefault();
-            event.returnValue = confirmationMessage;
-            return confirmationMessage;
-        }
-    });
-
-
     //  add file 
     $scope.clearFileName = function (detail_seq,inputId) {
 
@@ -234,7 +210,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
 
         } catch (ex) { alert(ex); }
 
-        unsavedChanges = true;
     }
 
     $scope.truncateFilename = function(filename, length) {
@@ -295,6 +270,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
     }
 
     $scope.toggleChanged = function() {
+        $scope.toggleStatus = !$scope.toggleStatus
         if ($scope.toggleStatus) {
             var list =  $filter('filter')($scope.data_details_old, function (item) { 
                 return (item.responder_user_name == $scope.user_name); 
@@ -465,12 +441,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
         apply();
     }
     $scope.removeDataWorksheetDrawing = function (item_draw, seq_nodeworksheet) {
+        console.log("item_draw",item_draw)
+        console.log("$scope.data_drawingworksheet",$scope.data_drawingworksheet)
         var seq = item_draw.seq;
-        var fileUpload = document.getElementById('attfile-' + seq);
+        /*var fileUpload = document.getElementById('attfile-' + seq);
         var fileNameDisplay = document.getElementById('filename' + seq);
 
         fileUpload.value = ''; // ล้างค่าใน input file
-        fileNameDisplay.textContent = ''; // ล้างข้อความที่แสดงชื่อไฟล์
+        fileNameDisplay.textContent = ''; // ล้างข้อความที่แสดงชื่อไฟล์*/
 
         //หา same  id_worksheet if > 1 splice item_draw , if === 1 set null
         var item_draw_worksheet = $scope.data_drawingworksheet.filter(function(item) {
@@ -649,6 +627,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                     $scope.master_no = [{ id: 4, name: 4 }, { id: 5, name: 5 }, { id: 6, name: 6 }, { id: 7, name: 7 }, { id: 8, name: 8 }, { id: 9, name: 9 }, { id: 10, name: 10 }];
                     $scope.ram_rows_level = 5;
                     $scope.ram_columns_level = 5;
+
                     
                 }   
                 
@@ -657,6 +636,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                 $scope.DetailsShow = '' + arr.pha_doc[0].pha_no + ' (' + arr.pha_doc[0].pha_request_name + ')';
                 $scope.DetailsShow2 = '' + arr.pha_doc[0].pha_status_desc;
                 $scope.document_module = (arr.pha_doc[0].pha_status == 13 ? 'followup' : 'review_followup');
+                
+                $scope.toggleChanged();
+
                 apply();
             },
             error: function (jqXHR, textStatus, errorThrown) {
@@ -675,7 +657,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
         window.open(page, "_top");
     }
     $scope.confirmFollowBack = function () {
-        window.open('Hazop/Followup', "_top")
+        window.open('home/hometasks', "_top")
         // var page = conFig.controller_action_befor();
         // window.open(page, "_top")
     }
@@ -691,11 +673,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
 
             if (item.implement) {
                 // const validRemark = set_valid_items(item.responder_comment, 'remark-'+ item.seq);
-                const validUploadFile = set_valid_items($scope.fileInfoSpan, 'upload_file-'+ item.seq);
+                /*const validUploadFile = set_valid_items($scope.fileInfoSpan, 'upload_file-'+ item.seq);
 
                 if (!validUploadFile) {
                     $scope.confirmSaveFollowup('save', item);
-                }
+                }*/
             }else {
                 var docfiles = $filter('filter')($scope.data_drawingworksheet, function (_item) {
                     return (_item.id_worksheet == item.seq && 
@@ -704,12 +686,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                 })[0];
 
                 const validRemark = set_valid_items(item.responder_comment, 'remark-'+ item.seq);
-                const validUploadFile = set_valid_items(docfiles.document_file_name, 'upload_file-'+ item.seq);
+                //const validUploadFile = set_valid_items(docfiles.document_file_name, 'upload_file-'+ item.seq);
                 const validComment= set_valid_items(item.reviewer_comment, 'comment-'+ item.seq);
-                if (!validRemark && !validUploadFile && !validComment) {
+                if (!validRemark  && !validComment) {
                     $scope.confirmSaveFollowup('save', item);
                 }
-            }
+            }//&& !validUploadFile
 
         } else if ($scope.flow_status == 14) {
             item.action_change = 1;
@@ -722,7 +704,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
             $scope.confirmSaveReviewFollowup('save', item);
         }
 
-        unsavedChanges = false;
     };
 
     $scope.actionImplement = function (item) {
@@ -745,7 +726,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
 
                 if (!_item.implement) {
                     // set_valid_items(_item.responder_comment, 'remark-'+_item.seq);
-                    set_valid_items($scope.fileInfoSpan, 'upload_file-'+_item.seq);
+                    //set_valid_items($scope.fileInfoSpan, 'upload_file-'+_item.seq);
                 }else {
                     clear_valid_items('remark-'+_item.seq);
                     clear_valid_items('upload_file-'+_item.seq);
@@ -753,7 +734,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
              
             }
         });
-        unsavedChanges = true;
     }
 
     $scope.actionInput = function (item) {
@@ -765,7 +745,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
             }
         });
 
-        unsavedChanges = true;
     }
 
     $scope.setSeqUpload = function (seq) {
@@ -800,7 +779,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
         clear_form_valid();
 
         if (action == 'submit') {
-            unsavedChanges = false;
             //เนื่องจากย้ายมาในระดับ row
             $scope.id_worksheet_select = item.seq;
             //if (item.document_file_size == 0 || item.document_file_size == null) {
@@ -1023,19 +1001,33 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                         $scope.Action_Msg_Header = 'Success';
                         $scope.Action_Msg_Detail = 'Data has been successfully submitted.';
                     }
+
                     apply();
 
                     if (true) {
+                        console.log("it true")
                         var arr = $filter('filter')($scope.data_details, function (item) {
                             return (item.responder_action_type == 2);
                         });
 
                         console.log("=>",arr)
                         if (arr.length == $scope.data_details.length) {
+                            console.log("will Portal")
+
                             window.open("Home/Portal", "_top");
                         } else { 
-                            $('#modalMsg').modal('show');
+                            console.log("will reload")
+                            setTimeout(function() {
+                                $('#modalMsg').modal('show');
+                            }, 1000); 
+                            $('#modalMsg').modal('hide');
+
+                            setTimeout(function() {
+                                // location.reload();
+                                window.open("Home/Portal", "_top");
+                            }, 2000); 
                         }
+                        
                     }
 
                 }
@@ -1153,7 +1145,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                             $('#modalMsg').modal('show');
                         }
                     }
-
+                    page_load()
                 }
 
 
@@ -1364,7 +1356,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
             } catch (e) { }
         }
 
-        unsavedChanges = true;
         apply();
 
         $('#modalRAM').modal('show');
@@ -1412,18 +1403,38 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
         $('#modalExportReviewerFile').modal('show');
     }
 
-    $scope.openModalTempletes = function (data_type) {
+
+    $scope.openModalTempletes = function(data_type, actions,seq_worksheet) {
         var user_name = $scope.data_details[0].responder_user_name;
         var seq = $scope.data_details[0].id_pha;
         var sub_software = $scope.data_details[0].pha_sub_software;
+    
+        var url = '';
+        var data = '';
 
-        $.ajax({
-            url: url_ws + "Flow/export_recommendation_by_action_owner",
-            data: '{"sub_software":"' + sub_software + 
+        console.log("seq_worksheet",seq_worksheet)
+    
+        // Determine the URL and data string based on the action type
+        if (actions === 'owner') {
+            url = url_ws + "Flow/export_recommendation_by_action_owner";
+            data = '{"sub_software":"' + sub_software + 
                     '","user_name":"' + user_name + 
                     '","seq":"' + seq + 
                     '","export_type":"' + data_type + 
-                    '"}',
+                    '"}'
+        } else if (actions === 'item') {
+            url = url_ws + "Flow/export_recommendation_by_item";
+            data = '{"sub_software":"' + sub_software + 
+                    '","user_name":"' + user_name + 
+                    '","seq":"' + seq + 
+                    '","export_type":"' + data_type +
+                    '","seq_worksheet":"' + seq_worksheet + 
+                    '"}'
+        }
+
+        $.ajax({
+            url: url,
+            data: data,
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
             beforeSend: function () {
                 $('#modalExportFile').modal('hide');
@@ -1459,13 +1470,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
         });
     }
 
-    //toggle to show own or all 
-    $scope.showOwnTasks = false;
-
-    $scope.toggleTasksView = function() {
-        $scope.showOwnTasks = !$scope.showOwnTasks;
-    };
-
     //access each role
     $scope.Access_check = function(task) {
         // If user is an admin, allow access
@@ -1482,7 +1486,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
         return false;
     };
     
-
+    $scope.hasResponderUserDisplayName = function(item) {
+        return item.responder_user_displayname && item.responder_user_displayname.trim() !== '';
+    };
 
     
 });

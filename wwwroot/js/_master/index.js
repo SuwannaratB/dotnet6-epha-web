@@ -13,10 +13,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, conFig) {
     role_menu();
 
     function role_menu() {
-
         $scope.role_type = conFig.role_type();
         $scope.user_name = conFig.user_name();
-
         $scope.menu_hometasks = true;
         $scope.menu_search = true;
         $scope.menu_hazop = false;
@@ -32,11 +30,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, conFig) {
         } else {
             $scope.menu_report = false;
         }
-
-
         //call api
         var user_name = $scope.user_name;
-
         $.ajax({
             url: url_ws + "Login/check_authorization_page",
             data: '{"user_name":"' + user_name + '"}',
@@ -50,7 +45,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, conFig) {
             success: function (data) {
                 var arr = data;
                 if (arr.length > 0) {
-
                     //$scope.menu_hazop = arr.some(item => item.page_controller === 'hazop');
                     //$scope.menu_jsea = arr.some(item => item.page_controller === 'jsea');
                     //$scope.menu_whatif = arr.some(item => item.page_controller === 'whatif');
@@ -63,22 +57,18 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, conFig) {
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 if (jqXHR.status == 500) {
-                    alert('Internal error: ' + jqXHR.responseText);
+                    // alert('Internal error: ' + jqXHR.responseText);
                 } else {
-                    alert('Unexpected ' + textStatus);
+                    // alert('Unexpected ' + textStatus);
                 }
             }
-
         });
-
         role_menu_sub();
-         
         $scope.menu_main_jseamodule = false;
         $scope.menu_main_whatifmodule = false;
     };
 
     function role_menu_sub() {
-
         var action_menu_def = true;
         //$scope.menu_main_manageuser = action_menu_def;
         //$scope.menu_main_storagelocation = action_menu_def;
@@ -118,11 +108,5 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, conFig) {
         $scope.menu_frequencylevel = action_menu_def;
         $scope.menu_compareexposurerating = action_menu_def;
         $scope.menu_compareinitialriskrating = action_menu_def; 
-
     }
-
-
-
-
-
 });

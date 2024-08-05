@@ -6,8 +6,6 @@ using ServicesAuthen;
 using Newtonsoft.Json;
 using Models;
 using Helperselpers;
-using System.Security.Cryptography;
-
 
 namespace dotnet6_epha_web.Controllers
 {
@@ -23,6 +21,7 @@ namespace dotnet6_epha_web.Controllers
             IConfiguration IConfiguration
         )
         {
+
             _sessionAuthen = sessionAuthen;
             _logger = logger;
             _IConfiguration = IConfiguration;
@@ -71,7 +70,6 @@ namespace dotnet6_epha_web.Controllers
             ViewData["pha_status"] = _sessionAuthen.pha_status;
             ViewData["controller_action_befor"] = "home/portal";
             ViewData["service_api_url"] = _sessionAuthen.service_api_url;
-            ViewData["pha_sub_software"] = _sessionAuthen.pha_sub_software;
 
             return View();
         }
@@ -90,17 +88,20 @@ namespace dotnet6_epha_web.Controllers
             ViewData["pha_no"] = null;
             ViewData["pha_status"] = null;
             ViewData["pha_type_doc"] = null;
-            ViewData["pha_sub_software"] = _sessionAuthen.pha_sub_software;
             ViewData["controller_action_befor"] = "home/portal";
             ViewData["service_api_url"] = _sessionAuthen.service_api_url;
 
 
             return View();
         }
-
         [HttpPost]
         public async Task<IActionResult> next_page([FromBody] LoadSessionDataViewModel model)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
             _sessionAuthen.pha_type_doc = (model.pha_type_doc + "");
             _sessionAuthen.role_type = _sessionAuthen.role_type;
 
@@ -118,19 +119,10 @@ namespace dotnet6_epha_web.Controllers
 
                 _sessionAuthen.responder_user_name = (model.responder_user_name + "");
 
+                //res_page.page = model.pha_sub_software + "/followup";
+                //res_page.page = model.pha_sub_software + "/followupUpdate";
                 res_page.page = (model.pha_sub_software == "jsea" ? model.pha_sub_software : "hazop") + @"/followupUpdate";
                 _sessionAuthen.pha_sub_software = (model.pha_sub_software + "");
-            }
-            else if (_sessionAuthen.pha_type_doc == "followup_from_portal")
-            {
-                _sessionAuthen.pha_sub_software = (model.pha_sub_software + "");
-                _sessionAuthen.controller_action_befor = (model.pha_sub_software + "");
-                //_sessionAuthen.controller_action_befor = (model.controller_action_befor + "");
-                _sessionAuthen.pha_seq = (model.pha_seq + "");
-
-                _sessionAuthen.responder_user_name = (model.responder_user_name + "");
-                res_page.page = @"hazop/followup";
-
             }
             else
             {
