@@ -860,6 +860,22 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         return true
     }
 
+    function validRecommendations(){
+        for (let i = 0; i < $scope.data_worksheet_list.length; i++) {
+            var arr = $filter('filter')($scope.data_worksheet_list[i].worksheet, function (_item) { 
+                return (_item.recommendations && !_item.estimated_end_date);
+            })
+
+            if(arr.length > 0){
+                $scope.validMessage = 'Please select a valid End Date'
+                $scope.goback_tab = 'manage';
+                return false
+            } 
+        }
+        $scope.validMessage = ''
+        return true
+    }
+
 
     function arr_def() {
         $scope.currentYear = new Date().getFullYear();
@@ -5389,6 +5405,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                                 if(isRecom) break;
                             }
                             if (!isRecom) return set_alert('Warning','Please provide a valid Manage Recommendations')
+                            
+                            // validation
+                            if(!validRecommendations()) {
+                                return set_alert('Warning',$scope.validMessage)
+                            }
                         }
 
                     }
@@ -5513,6 +5534,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 console.log("$scope.params")
                 return $('#modalEditConfirm').modal('show');
             }   
+
             save_data_create(action);
 
         }
