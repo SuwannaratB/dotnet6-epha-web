@@ -128,6 +128,11 @@ a, i {
 .cant-Access {
     pointer-events: none;
 }
+.disabled-link {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
 
 /* dropdown */
 .dropbtn {

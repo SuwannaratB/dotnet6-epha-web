@@ -1579,9 +1579,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     function save_data_approver(action) {
 
-        console.log("call to submit 2")
-
-
         var user_name = $scope.user_name;
         var token_doc = $scope.token_doc + "";
         var pha_seq = $scope.data_header[0].seq;
@@ -1613,6 +1610,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         } else { set_alert('Error', 'No Data.'); return; }
         var json_drawingapprover = check_data_drawingwapprover(id_session);
 
+
+        console.log("arr_json",arr_json)
         $.ajax({
             url: url_ws + "flow/set_approve",
             data: '{"sub_software":"hra","user_name":"' + user_name + '","role_type":"' + flow_role_type + '","action":"' + flow_action + '","token_doc":"' + pha_seq + '","pha_status":"' + pha_status + '"'
@@ -1975,8 +1974,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                 //ตรวจสอบเพิ่มเติม workflow
                 if (true) {
+                    set_form_action(action_part_befor, !action_submit, page_load);
+                    set_form_access($scope.pha_status,$scope.params,$scope.flow_role_type);
                     try{
-                        set_form_action(action_part_befor, !action_submit, page_load);
                         if (arr.user_in_pha_no[0].pha_no == '' && $scope.flow_role_type != 'admin') {
                             if (arr.data_header[0].action_type != 'insert') {
                                 $scope.tab_general_active = false;
@@ -2005,75 +2005,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         }
                     }catch{}
 
-                }
-
-                if(true){
-                    if($scope.params != 'edit_approver'){
-                        $scope.action_owner_active = true;
-                    }  
-    
-                    if($scope.params !== null){    
-                        if($scope.params != 'edit_approver'){
-                            $scope.action_owner_active = true;
-                        }  
-                        
-        
-                        if($scope.params !== 'edit') {
-                            $scope.tab_general_active = false;
-                            $scope.tab_node_active = false;
-                            $scope.tab_worksheet_active = false;
-                            $scope.tab_managerecom_active = false;
-                            $scope.tab_approver_active = false;
-        
-                            if($scope.params === 'edit_action_owner'){
-                                $scope.action_owner_active = true;
-                            } 
-        
-                            if($scope.params === 'edit_approver'){
-                                $scope.action_owner_active = false;
-        
-                            }  
-        
-                        }
-        
-                        if($scope.params === 'edit' && $scope.flow_role_type === 'admin') {
-                            $scope.tab_general_active = true;
-                            $scope.tab_node_active = true;
-                            $scope.tab_worksheet_active = true;
-                            $scope.tab_managerecom_active = true;
-                            $scope.tab_approver_active = true;
-        
-                            $scope.save_type = true;
-                        }
-                    } else if ($scope.params === null && arr.header[0].pha_status === 21) {
-                        if (Array.isArray($scope.data_approver)) {
-                            let mainApprover = $scope.data_approver.find(item => item.approver_type === 'approver' && item.user_name === $scope.user_name);
-                    
-                            if (mainApprover) {
-                                $scope.isMainApprover = true;
-                            } else {
-                                $scope.isMainApprover = false;
-                            }
-                        } else {
-                            console.log('$scope.data_approver is not an array or is undefined.');
-                            $scope.isMainApprover = false; 
-                        }
-                    } else if ($scope.params === null && arr.header[0].pha_status === 22) {
-                        console.log("will set page access for like conduct")
-    
-                        $scope.tab_general_active = false;
-                        $scope.tab_node_active = false;
-                        $scope.tab_worksheet_active = true;
-                        $scope.tab_managerecom_active = true;
-                        $scope.tab_approver_active = true;
-
-                        //set true for general
-                        $scope.tabs[0].isActive = true;  
-                        console.log("$scope.tabs",$scope.tabs)
-
-                        //admin can see and active $scope.flow_role_type === 'admin' 
-                        //general session active
-                    }
                 }
 
                 //add Please select in list master
@@ -2562,6 +2493,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.tab_general_active = true;
         $scope.tab_worksheet_active = true;
         $scope.tab_approver_active = true;
+        $scope.tab_managerecom_active = false;
+
 
         $scope.action_part = action_part_befor;
 
@@ -2612,12 +2545,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             check_case_member_review();
 
             $scope.tab_worksheet_show = true;
-            $scope.tab_worksheet_active = true;
+
 
             $scope.submit_type = true;
 
             $scope.tab_general_active = true;
             $scope.tab_worksheet_active = true;
+            $scope.tab_managerecom_active = true;
         }
         else if ($scope.data_header[0].pha_status == 13) {
             $scope.tab_worksheet_show = true;
@@ -2727,7 +2661,80 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.submit_review = false;
         }
     }
+    function set_form_access(pha_status,params,flow_role_type){
+        if(pha_status === 11 || pha_status === 12){
+            $scope.can_edit = true;
 
+        }
+        if(params != 'edit_approver'){
+            $scope.action_owner_active = true;
+        }  
+
+        if(params !== null){
+
+            if(params != 'edit_approver'){
+                $scope.action_owner_active = true;
+            }  
+            
+
+            if(params !== 'edit') {
+                $scope.tab_general_active = false;
+                $scope.tab_node_active = false;
+                $scope.tab_worksheet_active = false;
+                $scope.tab_managerecom_active = false;
+                $scope.tab_approver_active = false;
+
+                if(params === 'edit_action_owner'){
+                    $scope.action_owner_active = true;
+                    $scope.tab_managerecom_active = true;
+
+                } 
+
+                if(params === 'edit_approver'){
+                    $scope.action_owner_active = false;
+
+                }  
+
+                $scope.can_edit = false;
+
+
+            }
+
+            if(params === 'edit' && flow_role_type === 'admin') {
+                $scope.tab_general_active = true;
+                $scope.tab_node_active = true;
+                $scope.tab_worksheet_active = true;
+                $scope.tab_managerecom_active = true;
+                $scope.tab_approver_active = true;
+
+                $scope.save_type = true;
+                $scope.can_edit = true;
+
+            }
+        }else if (params === null && pha_status === 21) {
+            if (Array.isArray($scope.data_approver)) {
+                let mainApprover = $scope.data_approver.find(item => item.approver_type === 'approver' && item.user_name === $scope.user_name);
+        
+                if (mainApprover) {
+                    $scope.can_edit = true;
+                } else {
+                    $scope.can_edit = false;
+                }
+            } else {
+                $scope.can_edit = false; 
+            }
+
+            if($scope.data_approver){
+                $scope.data_approver_ta3.filter(item => {
+                    if(item.user_name === $scope.user_name){
+                        $scope.tab_approver_active = true;
+
+                    }
+                })
+            }
+        }
+
+    }
     function set_format_date_time() {
 
         //data_general
@@ -5502,6 +5509,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
             // Check follow up edit
             if ($scope.params) {
+
+                console.log("$scope.params")
                 return $('#modalEditConfirm').modal('show');
             }   
             save_data_create(action);
@@ -5538,10 +5547,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
     
         $scope.confirmDialogApprover = function (_item, action) {
-            console.log("call to submit 1")
+
             $scope.data_drawing_approver.forEach(function(item) {
                 item.action_type === 'new' ? 'insert' : item.action_type;
             });
+
             var arr_chk = _item;
             $scope.item_approver_active = [];
             $scope.item_approver_active.push(_item);
@@ -7115,6 +7125,19 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     }
 
                 }
+                else if (xformtype == 'edit_approver') {
+                    var result = $scope.data_approver.find(item => item.id == $scope.selectedData.id);
+        
+                    if (result) {
+                        result.action_change = 1;
+                        result.user_displayname = item.employee_displayname;
+                        result.user_img = item.employee_img;
+                        result.user_name = item.employee_name;
+                        result.user_title = employee_position;
+
+                    }
+                    $('#modalEmployeeAdd').modal('hide');
+                }
                 else if (xformtype == "worker") {
 
                     var tasks = $filter('filter')($scope.data_tasks, function (item) {
@@ -7175,11 +7198,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                             data.responder_user_displayname = employee_position + '-' + employee_displayname.split(" ")[0];   
                         } 
 
-                        $scope.showModal().then(function(applyRecommendation) {
-                            if (applyRecommendation) {
-                                $('#modalEmployeeAdd').modal('hide');
-                            }
-                        });
+                        if($scope.params !== 'edit_action_owner'){
+                            $scope.showModal().then(function(applyRecommendation) {
+                                if (applyRecommendation) {
+                                    $('#modalEmployeeAdd').modal('hide');
+                                }
+                            });
+                        }
+
                     }
                     //$('#modalEmployeeAdd').modal('hide');
 
@@ -9094,21 +9120,39 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.accessInfoMap[item.id] = accessInfo;
     };
     
+    //access each role
     $scope.Access_check = function(task) {
-        // console.log("Checking access for task:", task);
-
+        let accessInfo = {
+            canAccess: false,
+            isTA2: false,
+            isTA3: false
+        };
+    
         // If user is an admin, allow access
         if ($scope.flow_role_type === 'admin') {
-            return true;
+            accessInfo.canAccess = true;
+            return accessInfo;
         }
-
-        // If user is an employee and the task belongs to them, allow access
-        if ($scope.flow_role_type === 'employee' && $scope.user_name === task.user_name) {
-            return true;
+    
+        // If user is an employee
+        if ($scope.flow_role_type === 'employee') {
+            // Check if the task belongs to the user (TA2)
+            if ($scope.user_name === task.user_name) {
+                accessInfo.isTA2 = true;
+                accessInfo.canAccess = true; // TA2 should have access to their own tasks
+                console.log("User is TA2, granting access:", accessInfo);
+            } else {
+                // Check if the user is a TA3 for this task
+                for (let item of $scope.data_approver_ta3) {
+                    if (item.id_approver === task.id && $scope.user_name == item.user_name) {
+                        accessInfo.isTA3 = true;
+                        accessInfo.canAccess = true; // TA3 should not have access                       
+                    }
+                }
+            }
         }
-
-        // Default to no access
-        return false;
+    
+        return accessInfo;
     };
 
     setTimeout(() => {
