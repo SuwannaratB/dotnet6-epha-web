@@ -784,7 +784,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     $scope.fileSelectApprover = function (input, file_part) {
         //drawing, responder, approver
         var file_doc = $scope.data_header[0].pha_no;
-
         const fileInput = input;
         const fileSeq = fileInput.id.split('-')[1];
         const fileInfoSpan = document.getElementById('filename-approver-' + fileSeq);
@@ -794,19 +793,25 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             const fileName = file.name;
             const fileSize = Math.round(file.size / 1024);
             fileInfoSpan.textContent = `${fileName} (${fileSize} KB)`;
-
+            // check .pdf
             if (fileName.toLowerCase().indexOf('.pdf') == -1) {
+                fileInput.value = '';
                 fileInfoSpan.textContent = "";
-                set_alert('Warning', 'Please select a PDF file.');
-                return;
+                set_alert('Warning', 'Please select a PDF file.')
+                return apply()
             }
-
-            var file_path = uploadFileApprover(file, fileSeq, fileName, fileSize, file_part, file_doc);
+            // check size 
+            if (fileSize > 10000) {
+                fileInput.value = '';
+                fileInfoSpan.textContent = "";
+                set_alert('Warning', 'File size is too large. Please select a file smaller than 10 MB.')
+                return apply() 
+            }
+            // var file_path = uploadFileApprover(file, fileSeq, fileName, fileSize, file_part, file_doc);
 
         } else {
             fileInfoSpan.textContent = "";
         }
-
     }
 
     $scope.truncateFilename = function(filename, length) {
@@ -2488,7 +2493,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
 
             if($scope.data_approver){
-                $scope.data_approver_ta3.filter(item => {
+                $scope.data_approver.filter(item => {
                     if(item.user_name === $scope.user_name){
                         $scope.tab_approver_active = true;
 
@@ -5254,10 +5259,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
 
     function set_alert(header, detail) {
-
         $scope.Action_Msg_Header = header;
         $scope.Action_Msg_Detail = detail;
-
         $('#modalMsg').modal('show');
     }
     function set_alert_confirm(header, detail) {
