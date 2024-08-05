@@ -900,8 +900,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         fd.append("file_doc", file_doc);
         fd.append("sub_software", 'jsea');
 
- 
-
         try {
             const request = new XMLHttpRequest();
             request.open("POST", url_ws + 'Flow/uploadfile_data');
@@ -928,7 +926,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         if (arr.length > 0) {
                             arr[0].document_file_name = file_name;
                             arr[0].document_file_size = file_size;
-                            arr[0].document_file_path = (url_ws.replace('/api/', '')) + file_path; //(url_ws.replace('/api/', '/')) + 'AttachedFileTemp/Hazop/' + file_name;
+                            arr[0].document_file_path = (url_ws.replace('/api/', '')) + file_path;
                             arr[0].document_module = 'approver';
                             arr[0].action_change = 1;
                             apply();
@@ -2113,6 +2111,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     set_form_access(pha_status,$scope.params,$scope.flow_role_type)
                     set_tab_focus(pha_status,action_part_befor)
 
+                    if($scope.pha_status === 11){
+                        addDefaultMember();
+
+                    }
+
+
                     $timeout(function() {
                         try {
                             if (typeof page_load !== 'undefined' && page_load === true) {
@@ -2177,7 +2181,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 }
 
 
-                addDefaultMember();
 
             },
             error: function (jqXHR, textStatus, errorThrown) {
@@ -2209,7 +2212,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         //$scope.MaxSeqDataMemberteam = 2;
         //$scope.selectdata_session = 138;
-        $scope.selectDatFormType= 'member';
+        $scope.selectDatFormType = 'member';
         $scope.setDefualt = true;
         $scope.choosDataEmployee(data)
         $scope.setDefualt = false;
@@ -5578,7 +5581,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     
         // Get form data if needed
         $scope.formData = $scope.getFormData();
-    
 
         // Open the modal
         $('#modalEmployeeAdd').modal({
@@ -5731,7 +5733,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     $scope.choosDataEmployee = function (item) {
         var id = item.id;
         var employee_name = item.employee_name;
-        var employee_displayname = item.employee_displayname;
+        var employee_displayname = (item.employee_displayname !== null && item.employee_displayname !== '') ? item.employee_displayname : item.employee_name;
         var employee_email = item.employee_email;
         var employee_position = item.employee_position;
         var employee_img = item.employee_img;
@@ -5744,6 +5746,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 return (item.id_session == seq_session && item.user_name == employee_name);
             });
         
+            console.log("member",item)
+            console.log("employee_displayname",employee_displayname)
             if (arr_items.length == 0) {
 
                 //add new employee 
@@ -5767,6 +5771,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                 $scope.MaxSeqDataMemberteam = Number($scope.MaxSeqDataMemberteam) + 1
             }
+
+            console.log("$scope.data_memberteam$scope.data_memberteam$scope.data_memberteam$scope.data_memberteam",$scope.data_memberteam)
 
         }
         else if (xformtype == "approver") {
