@@ -7642,7 +7642,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         
         var general = $scope.data_general[0]
 
-        console.log("general",general)
         if (type == 'section') {
             var result_section = $filter('filter')($scope.data_sections, function (item) {
                 return (item.id == general.id_sections);
@@ -7662,19 +7661,15 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 return
             }
 
-            $scope.mocTitle['unit'] = result_unitno.name
+            if(result_unitno) $scope.mocTitle['unit'] = result_unitno.name
         }
 
         general.pha_request_name = $scope.mocTitle['default'] + ' ' + $scope.mocTitle['section'] + ' at' + $scope.mocTitle['unit']
         general.action_change = 1;
-        console.log('general ',general)
     }
 
     function setDefaultMocTIltle(){
         var general = $scope.data_general[0]
-
-        console.log("==========================================",general)
-
         if (general.id_sections) {
             var result_section = general.id_sections;
 
@@ -7686,7 +7681,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 return (item.id == general.id_unit_no);
             })[0];
 
-            $scope.mocTitle['unit'] = result_unitno.name
+           if(result_unitno) $scope.mocTitle['unit'] = result_unitno.name
         }
 
     }

@@ -51,6 +51,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
     function set_alert(status, msg) {
         alert(status + ":" + msg);
     } 
+
     function replace_hashKey_arr(_arr) {
         var json = JSON.stringify(_arr, function (key, value) {
             if (key == "$$hashKey") {
@@ -92,14 +93,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
     //call ws get data
     if (true) {
         get_data(true);
+
         function get_max_id() {
             var arr = $filter('filter')($scope.data_all.max, function (item) {
-                return (item.name == 'toc');
+                return (item.name == 'seq');
             });
-            var iMaxSeq = 1; if (arr.length > 0) { iMaxSeq = arr[0].values; }
+            var iMaxSeq = 1; 
+            if (arr.length > 0) { iMaxSeq = arr[0].values; }
             $scope.MaxSeqData = iMaxSeq;
-
-
         }
         function arr_def() {
             $scope.user_name = conFig.user_name();
@@ -118,6 +119,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
             $scope.area_selected = [0];
             $scope.plant_selected = [0];
+
+            $scope.selected = {
+                area: ''
+            };
         }
         function get_data(page_load) {
             arr_def();
@@ -145,25 +150,17 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                 },
                 success: function (data) {
                     var arr = data;
-
                     $scope.data_all = arr;
-
                     $scope.data = arr.toc;
                     $scope.data_def = clone_arr_newrow(arr.toc);
-
-
                     $scope.data_area = JSON.parse(replace_hashKey_arr(arr.area));
                     $scope.data_plant = JSON.parse(replace_hashKey_arr(arr.plant));
-
                     $scope.plant_selected = [arr.plant[0].id];
                     $scope.area_selected = [arr.area[0].id];
-
+                    setDataFilter()
+                    setPagination()
                     get_max_id();
-
                     apply();
-
-                    console.log($scope);
-
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     if (jqXHR.status == 500) {
@@ -178,86 +175,66 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         }
 
 
-        $scope.addData = function (item) {
-
-            //add new  
-            var seq = $scope.MaxSeqData;
-
-            var newInput = clone_arr_newrow($scope.data_def)[0];
-            newInput.seq = seq;
-            newInput.id = 0;
-            newInput.active_type = 1;
-            newInput.name = '';
-            newInput.descriptions = '';
-
-            newInput.id_company = $scope.plant_selected[0];
-            newInput.id_area = $scope.area_selected[0];
-
-            newInput.action_type = 'insert';
-            newInput.action_change = 1;
-
-            $scope.data.push(newInput);
-
-            $scope.MaxSeqData = Number($scope.MaxSeqData) + 1
-            apply();
-        }
+        // $scope.addData = function (item) {
+        //     var seq = $scope.MaxSeqData;
+        //     var newInput = clone_arr_newrow($scope.data_def)[0];
+        //     newInput.seq = seq;
+        //     newInput.id = 0;
+        //     newInput.active_type = 1;
+        //     newInput.name = '';
+        //     newInput.descriptions = '';
+        //     newInput.id_company = $scope.plant_selected[0];
+        //     newInput.id_area = $scope.area_selected[0];
+        //     newInput.action_type = 'insert';
+        //     newInput.action_change = 1;
+        //     $scope.data.push(newInput);
+        //     $scope.MaxSeqData = Number($scope.MaxSeqData) + 1
+        //     apply();
+        // }
 
 
-        $scope.removeData = function(seq, index) {
-            Swal.fire({
-                title: "Are you sure?",
-                text: "You won't be able to revert this!",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Yes, delete it!"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Perform the deletion if confirmed
-                    var arrdelete = $filter('filter')($scope.data, function(item) {
-                        return item.seq == seq;
-                    });
+        // $scope.removeData = function(seq, index) {
+        //     Swal.fire({
+        //         title: "Are you sure?",
+        //         text: "You won't be able to revert this!",
+        //         icon: "warning",
+        //         showCancelButton: true,
+        //         confirmButtonColor: "#3085d6",
+        //         cancelButtonColor: "#d33",
+        //         confirmButtonText: "Yes, delete it!"
+        //     }).then((result) => {
+        //         if (result.isConfirmed) {
+        //             var arrdelete = $filter('filter')($scope.data, function(item) {
+        //                 return item.seq == seq;
+        //             });
     
-                    if (arrdelete.length > 0) {
-                        $scope.data_delete.push(arrdelete[0]);
-                    }
+        //             if (arrdelete.length > 0) {
+        //                 $scope.data_delete.push(arrdelete[0]);
+        //             }
     
-                    $scope.data = $filter('filter')($scope.data, function(item) {
-                        return item.seq != arrdelete[0].seq;
-                    });
+        //             $scope.data = $filter('filter')($scope.data, function(item) {
+        //                 return item.seq != arrdelete[0].seq;
+        //             });
     
-                    if ($scope.data.length == 0) {
-                        $scope.addData();
-                        return;
-                    }
+        //             if ($scope.data.length == 0) {
+        //                 $scope.addData();
+        //                 return;
+        //             }
                     
-                    $scope.$apply(); 
+        //             $scope.$apply(); 
                     
-                    // Show success message
-                    Swal.fire({
-                        title: "Deleted!",
-                        text: "Your file has been deleted.",
-                        icon: "success",
-                        timer: 1000,
-                        showConfirmButton: false
-                    });
-                }
-            });
-        };
+        //             Swal.fire({
+        //                 title: "Deleted!",
+        //                 text: "Your file has been deleted.",
+        //                 icon: "success",
+        //                 timer: 1000,
+        //                 showConfirmButton: false
+        //             });
+        //         }
+        //     });
+        // };
         
-
-        $scope.actionChangedData = function (arr, field) {
-            arr.action_change = 1;
-
-            if (field == "accept_status") {
-                arr.active_type = 0
-            } else if (field == "inaccept_status") {
-                arr.active_type = 1
-            }
-            apply();
-        }
-        $scope.actionChangedMaster = function ( field) {
+        // $scope.actionChangedMaster = function ( field) {
 
             //if (field == "plant") {
             //    $scope.plant_selected = [arr.plant[0].id];
@@ -265,91 +242,294 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             //if (field == "area") {
             //    $scope.area_selected = [arr.area[0].id];
             //} 
-        }
+        // }
     }
 
-    //call ws set data
-    if (true) {
-        $scope.confirmBack = function () {
-            window.open("/Master/Index", "_top");
-        }
-        $scope.confirmSave = function () {
+    ///////////////////////////  API Function  ///////////////////////////
+    function save_data(action) {
+        var user_name = $scope.user_name;
+        var flow_role_type = $scope.flow_role_type;
+        //save 
+        var flow_action = action || 'save';
+        var json_data = check_data();
+        $.ajax({
+            url: url_ws + "masterdata/set_master_toc",
+            data: '{"user_name":"' + user_name + '"'
+                + ',"role_type":"' + flow_role_type + '"'
+                + ',"page_name":"toc"'
+                + ',"json_data": ' + JSON.stringify(json_data)
+                + '}',
+            type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+            beforeSend: function () {
+                $("#divLoading").show();
 
-            var action = "";
-
-            save_data();
-        }
-        function save_data(action) {
-
-            var user_name = $scope.user_name;
-            var flow_role_type = $scope.flow_role_type;
-
-            //save 
-            var flow_action = action || 'save';
-
-            var json_data = check_data();
-
-            $.ajax({
-                url: url_ws + "masterdata/set_master_toc",
-                data: '{"user_name":"' + user_name + '"'
-                    + ',"role_type":"' + flow_role_type + '"'
-                    + ',"page_name":"toc"'
-                    + ',"json_data": ' + JSON.stringify(json_data)
-                    + '}',
-                type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
-                beforeSend: function () {
-                    $("#divLoading").show();
-
-                },
-                complete: function () {
-                    $("#divLoading").hide();
-                },
-                success: function (data) {
-                    var arr = data;
-                    console.log(arr);
-
-                    if (arr[0].status == 'true') {
-                        $scope.pha_type_doc = 'update';
-
-                        if (action == 'save') {
-                            get_data_after_save(false);
-
-                            set_alert('Success', 'Data has been successfully saved.');
-                            apply();
-                        }
-                    }
-                    else {
-                        set_alert('Error', arr[0].status);
-                        apply();
-                    }
-
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    if (jqXHR.status == 500) {
-                        alert('Internal error: ' + jqXHR.responseText);
-                    } else {
-                        alert('Unexpected ' + textStatus);
-                    }
+            },
+            complete: function () {
+                $("#divLoading").hide();
+            },
+            success: function (data) {
+                var arr = data;
+                if(arr[0].status == 'false') {
+                    showAlert('Error', arr[0].status, 'error', function() {
+                        apply()
+                    });
+                    return
                 }
-
-            });
-
-        }
-        function check_data() {
-
-            var arr_active = [];
-            angular.copy($scope.data, arr_active);
-            var arr_json = $filter('filter')(arr_active, function (item) {
-                return ((item.action_type == 'update' && item.action_change == 1) || item.action_type == 'insert');
-            });
-
-            for (var i = 0; i < $scope.data_delete.length; i++) {
-                $scope.data_delete[i].action_type = 'delete';
-                arr_json.push($scope.data_delete[i]);
+                $scope.pha_type_doc = 'update';
+                showAlert('Success', 'Data has been successfully saved.', 'success', function() {
+                    get_data_after_save(false);
+                    apply();
+                });
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                if (jqXHR.status == 500) {
+                    alert('Internal error: ' + jqXHR.responseText);
+                } else {
+                    alert('Unexpected ' + textStatus);
+                }
             }
-            return angular.toJson(arr_json);
+
+        });
+
+    }
+
+    ///////////////////////////  Main Functions  ///////////////////////////
+    $scope.confirmSave = function () {
+        if(!validation()) {
+           return showAlert(`Invalid Data`,`The data you entered is invalid. Please check and try again.`, `error`);
+        } 
+
+        showConfirm(   'Are you sure?',    
+            'Do you really want to proceed?', 
+            'info',              
+            'Yes, Save',            
+            'No',  
+            '#3874ff',      
+            function() {
+                save_data();
+            }
+        );
+        
+    }
+
+    $scope.confirmBack = function () {
+        window.open("/Master/Index", "_top");
+    }
+
+    $scope.newData = function (item) {
+        var seq = Number($scope.MaxSeqData);
+        console.log($scope.MaxSeqData)
+        var newInput = clone_arr_newrow($scope.data_def)[0];
+        newInput.seq = seq;
+        newInput.id = 0;
+        newInput.active_type = 1;
+        newInput.name = '';
+        newInput.descriptions = '';
+        newInput.id_company = 1;
+        newInput.id_area = '';
+        newInput.action_type = 'insert';
+        newInput.action_change = 1;
+        $scope.data.push(newInput);
+        $scope.MaxSeqData = Number($scope.MaxSeqData) + 1
+        $scope.selected['area'] = ''
+        console.log($scope.data)
+        setDataFilter()
+        setPagination()
+        apply();
+        newTag(`new-${seq}`);
+        console.log(seq)
+    }
+
+    $scope.removeData = function(item){
+        showConfirm(   'Are you sure?',             // Title
+            'Do you really want to proceed?', // Text
+            'error',                   // Icon (e.g., 'success', 'error', 'warning')
+            'Yes, Delete',              // Custom text for the confirm button
+            'No',  
+            '#d33',      
+            function() {
+                if(!item) return showAlert('Error', 'Data remove not Found!', 'error');
+
+                var del_item = $filter('filter')($scope.data, function (_item) {
+                    return (_item.seq == item.seq);
+                })[0];
+        
+                if(!del_item) return showAlert('Error', 'Data remove not Found!', 'error');
+        
+                $scope.data_delete.push(del_item)
+
+                $scope.data = $filter('filter')($scope.data, function (_item) {
+                    return (_item.seq != del_item.seq);
+                });
+
+                showAlert('Success', 'Data has been successfully Deleted.', 'success', function() {
+                    setDataFilter()
+                    setPagination()
+                    apply();
+                });
+            }
+        );
+    }
+
+    $scope.actionfilter = function(section, data){
+        console.log(data)
+        if(!data) {
+            $scope.data_filter = $scope.data
+            // set pagination
+            return setPagination()
+        }
+
+        // if (section == 'plant') {
+        //     $scope.data_filter = $filter('filter')($scope.data, function (_item) {
+        //         return (_item.id_area == data);
+        //     });
+        //     return setPagination()
+        // }
+
+        if (section == 'area') {
+            $scope.data_filter = $filter('filter')($scope.data, function (_item) {
+                return (_item.id_area == data);
+            });
+            // set pagination
+            return setPagination()
         }
     }
 
+    $scope.actionChangedData = function (arr, field) {
+        arr.action_change = 1;
+
+        if (field == "accept_status") {
+            arr.active_type = 0
+        } else if (field == "inaccept_status") {
+            arr.active_type = 1
+        }
+        apply();
+    }
+
+    function check_data() {
+        var arr_active = [];
+        angular.copy($scope.data, arr_active);
+        var arr_json = $filter('filter')(arr_active, function (item) {
+            return ((item.action_type == 'update' && item.action_change == 1) || item.action_type == 'insert');
+        });
+
+        for (var i = 0; i < $scope.data_delete.length; i++) {
+            $scope.data_delete[i].action_type = 'delete';
+            arr_json.push($scope.data_delete[i]);
+        }
+        console.log(arr_json)
+        return angular.toJson(arr_json);
+    }
+
+    ///////////////////////////  Pagination  ///////////////////////////
+    function setPagination(){
+        // Pagination settings
+        $scope.pageSize = 8; // จำนวนข้อมูลต่อหน้า
+        $scope.currentPage = 1; // หน้าปัจจุบัน
+        $scope.totalPages = Math.ceil($scope.data_filter.length / $scope.pageSize); // จำนวนหน้าทั้งหมด
+        // สร้างลิสต์ของตัวเลขหน้า
+        $scope.pages = Array.from({ length: $scope.totalPages }, (v, k) => k + 1);
+        $scope.paginate()
+    }
+
+    // ฟังก์ชันสำหรับจัดข้อมูลตามหน้า
+    $scope.paginate = function() {
+        const start = ($scope.currentPage - 1) * $scope.pageSize;
+        const end = start + $scope.pageSize;
+        $scope.paginatedData = $scope.data_filter.slice(start, end);
+    };
+
+    // ฟังก์ชันสำหรับเปลี่ยนหน้า
+    $scope.setPage = function(page) {
+        $scope.currentPage = page;
+        $scope.paginate();
+    };
+
+    // ฟังก์ชันสำหรับไปหน้าก่อนหน้า
+    $scope.prevPage = function() {
+        if ($scope.currentPage > 1) {
+        $scope.currentPage--;
+        $scope.paginate();
+        }
+    };
+
+    // ฟังก์ชันสำหรับไปหน้าถัดไป
+    $scope.nextPage = function() {
+        if ($scope.currentPage < $scope.totalPages) {
+        $scope.currentPage++;
+        $scope.paginate();
+        }
+    };
+
+    //////////////////////////  Future ///////////////////////////
+    function validation(){
+        var list = $filter('filter')($scope.data, function (_item) {
+            return (!_item.name || !_item.id_company || !_item.id_area);
+        });
+        if(list.length > 0) return false
+        return true
+    }
+
+    function setDataFilter(){
+        $scope.data.sort((a, b) => b.seq - a.seq);
+        $scope.data_filter = $scope.data
+        $scope.selected['area'] = ''
+    }
+
+    function newTag(id_elemet){
+        setTimeout(() => {
+            var element = document.getElementById(id_elemet);
+            element.classList.remove("hidden");
+        }, 10);
+    }
+
+    function validationNumber(data, field) {
+        const cleanedValue = data[field].replace(/[^0-9]/g, '');
+        if (cleanedValue === '') {
+            data[field] = null;
+        } else {
+            data[field] = cleanedValue;
+        }
+    }
+
+     //////////////////////////  Alert ///////////////////////////
+     function showAlert(title, text, icon, callback) {
+        Swal.fire({
+            title: title,
+            text: text,
+            icon: icon,
+            showConfirmButton: false, // ซ่อนปุ่มยืนยัน
+            timer: 3000, // ตั้งเวลาให้ปิดเองหลังจาก 3 วินาที
+            timerProgressBar: true, // แสดง progress bar
+        }).then((result) => {
+            if (typeof callback === 'function') {
+                callback();
+            }
+        });
+    }
+    
+    function showConfirm(title, text, icon, 
+        confirmButtonText = 'OK', 
+        cancelButtonText = 'Cancel', 
+        confirmButtonColor, 
+        callback) {
+        Swal.fire({
+            title: title,
+            text: text,
+            icon: icon,
+            showConfirmButton: true, // Show the confirm button
+            showCancelButton: true, // Show the cancel button
+            confirmButtonText: confirmButtonText, // Custom text for the confirm button
+            cancelButtonText: cancelButtonText, // Custom text for the cancel button
+            timer: null, // Do not auto-close
+            timerProgressBar: false, // Disable progress bar
+            confirmButtonColor: confirmButtonColor,
+        }).then((result) => {
+            // Check if the user clicked the confirm button
+            if (result.isConfirmed && typeof callback === 'function') {
+                callback();
+            }
+        });
+    }
 
 });
