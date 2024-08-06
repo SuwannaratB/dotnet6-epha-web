@@ -200,11 +200,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
             var newInput = clone_arr_newrow($scope.data_def)[0];
             newInput.seq = seq;
-            newInput.id = 0;
+            newInput.id = seq;
             newInput.active_type = 1;
             newInput.guide_words = '';
             newInput.deviations = '';
             newInput.process_deviation = '';
+            newInput.no = seq;
             newInput.no_deviations = seq;
             newInput.no_guide_words = seq;
             newInput.def_selected = 0;
@@ -212,6 +213,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             newInput.id_area_application = area_application.id;
             newInput.parameter = param.name;
             newInput.area_application = area_application.name;
+            newInput.disable_page = 0;
 
             newInput.action_type = 'insert';
             newInput.action_change = 1;
@@ -273,9 +275,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             arr.action_change = 1;
             if (field === "active_type") {
 
-                arr.active_type = arr.active_type === '1' ? '1' : '0';  // Checkbox state determines the value
+                arr.active_type = arr.active_type === 1 ? 1 : 0; 
             } else if (field === "def_selected") {
-                arr.def_selected = arr.def_selected === '1' ? '1' : '0';
+                arr.def_selected = arr.def_selected === 1 ? 1 : 0;
             }
             apply();
             console.log('Updated item:', arr);
@@ -344,7 +346,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                 //     }
                 //     return;
                 // }
-                var file_path = uploadFile(file, fileSeq, fileName, fileSize);
+                var file_path = uploadFile();
     
                 $scope.previousFile = fileInput;
                 $scope.prevIileInfoSpan = fileInfoSpan.textContent;
@@ -525,7 +527,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             var arr_active = [];
             angular.copy($scope.data, arr_active);
             var arr_json = $filter('filter')(arr_active, function (item) {
-                return ((item.action_type == 'update' && item.action_change == 1) || item.action_type == 'insert');
+                return ((item.action_type == 'update' && item.action_change != 0) || item.action_type == 'insert');
             });
 
             for (var i = 0; i < $scope.data_delete.length; i++) {

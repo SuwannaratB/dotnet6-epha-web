@@ -222,10 +222,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         $scope.actionChangedData = function (arr, field) {
             arr.action_change = 1;
 
-            if (field == "accept_status") {
-                arr.active_type = 0
-            } else if (field == "inaccept_status") {
-                arr.active_type = 1
+            if (field === "active_type") {
+
+                arr.active_type = arr.active_type === 1 ? 1 : 0; 
             }
             apply();
         }
