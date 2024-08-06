@@ -148,32 +148,39 @@
                                 </div>
 
                                 <div class="row g-3 align-items-center pt-2">
-                                    <div class="col-auto">
-                                        <button class="btn btn-custom d-flex align-items-center"
-                                            style=" background-color: #0d6efd; padding: 0;">
-                                            <!-- Icon -->
-                                            <div class="icon-button"
-                                                style="border: 2px solid #0d6efd; background-color: #0d6efd; color: #ffffff; padding: 15px; display: flex; align-items: center; justify-content: center;">
-                                                <span class="fa-solid fa-arrow-up-from-bracket fa-lg"></span>
-                                            </div>
-                                            <!-- Text and File Input -->
-                                            <div class="d-flex flex-grow-1 align-items-center ms-2"
-                                                style="border: 2px solid #0d6efd; background-color: #ffffff; color: #0d6efd; padding: 15px; position: relative; flex: 1; min-width: 0;">
-                                                <span class="nametext filename-text me-2 d-none"
-                                                    id="filename{{item.seq}}">
-                                                    {{fileLabel}}
-                                                </span>
-                                                <label class="dz-message-text fw-bold mb-0 cursor-pointer"
-                                                    for="attfile-{{item.seq}}"
-                                                    style="flex-grow: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                                                    {{fileLabel}}
-                                                </label>
-                                                <input type="file" id="attfile-{{item_x.seq}}" class="cursor-pointer"
-                                                    ngf-select="Fileselect($file)"
-                                                    />
-                                            </div>
-                                        </button>
-                                    </div>
+                                    <div class="btn-group">
+                                                                <div class="icon-button border p-3" style="border-color: #0d6efd; background-color: #0d6efd;">
+                                                                    <span class="fa-solid fa-arrow-up-from-bracket fa-lg" style="color: #ffffff;"></span>
+                                                                    <span  class="fa-solid fa-file-pdf fa-lg" style="color: #ffffff;"></span>                                                                </div>
+                                                                <button class="Upload-button btn ps-3" >
+                                                                    <label class="dz-message-text  fw-bold cursor-pointer"
+                                                                        for="attfile-{{item.seq}}" >
+                                                                        Upload File(Word, Excel, PDF, Image)
+                                                                    </label>
+                                                                    <input type="file" id="attfile-{{item.seq}}"
+                                                                        name="file{{item.seq}}"
+                                                                        onchange="angular.element(this).scope().fileSelect(this)"
+                                                                        style="display:none" />
+                                                                </button>
+                                                                <button class="Upload-button btn ps-3">
+                                                                    <div class="d-flex align-items-center">
+                                                                        <span class="mr-3 nametext"
+                                                                            id="filename{{item.seq}}" 
+                                                                            
+                                                                            ng-click="downloadFile(item)"
+                                                                            >
+                                                                            <b style="font-size:x-small;">
+                                                                                {{truncateFilename(item.document_file_name, 20)}} ({{item.document_file_size}} KB)
+                                                                            </b>
+                                                                        </span>
+                                                                        <a id="deluploadfile-{{item.seq}}" class="btn btn-link text-danger p-0 ms-2"
+                                                                                
+                                                                                ng-click="clearFileName(item.seq)">
+                                                                            <span class="fa-regular fa-trash-can fa-lg"></span>
+                                                                        </a>
+                                                                    </div>
+                                                                </button> 
+                                                            </div> 
                                 </div>
 
 

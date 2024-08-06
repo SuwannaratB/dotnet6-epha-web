@@ -194,7 +194,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         });
     }
 
-    ///////////////////////////  Main Function  ///////////////////////////
+    ///////////////////////////  Main Functions  ///////////////////////////
     $scope.confirmSave = function () {
         if(!validation()) {
            return showAlert(`Invalid Data`,`The data you entered is invalid. Please check and try again.`, `error`);

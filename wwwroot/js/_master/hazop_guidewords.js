@@ -48,7 +48,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         } catch { }
     };
 
-    $scope.actionChange = function (_arr, type_text) {
+    $scope.actionChange = function (_arr, field) {
         //var _seq = _arr.seq;
 
         //$scope.data_filter[0].id = _seq;
@@ -116,6 +116,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             $scope.data_filter = [{ id_parameter: 0, id_area_application: 0 }];
              
             $scope.data_delete = [];
+
+            $scope.data_drawing = [];
+            $scope.data_drawing_delete = [];
 
             $scope.user_name = conFig.user_name();
             $scope.flow_role_type = conFig.role_type();//admin,request,responder,approver
@@ -186,7 +189,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         $scope.addData = function (item) {
 
             //add new  
-            var seq = $scope.MaxSeqData;
+            var seq = $scope.MaxSeqDataSeq;
+            var param = $scope.master_parameter.find(function(item) {
+                return item.id === $scope.data_filter[0].id_parameter;
+            });
+            
+            var area_application = $scope.master_area_application.find(function(item){
+                return item.id === $scope.data_filter[0].id_area_application;
+            })
 
             var newInput = clone_arr_newrow($scope.data_def)[0];
             newInput.seq = seq;
@@ -195,17 +205,23 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             newInput.guide_words = '';
             newInput.deviations = '';
             newInput.process_deviation = '';
-            newInput.no_deviation
-
-            newInput.id_parameter = $scope.data_filter[0].id_parameter;
-            newInput.id_area_application = $scope.data_filter[0].id_area_application;
+            newInput.no_deviations = seq;
+            newInput.no_guide_words = seq;
+            newInput.def_selected = 0;
+            newInput.id_parameter = param.id;
+            newInput.id_area_application = area_application.id;
+            newInput.parameter = param.name;
+            newInput.area_application = area_application.name;
 
             newInput.action_type = 'insert';
             newInput.action_change = 1;
 
             $scope.data.push(newInput);
 
-            $scope.MaxSeqData = Number($scope.MaxSeqData) + 1
+            $scope.MaxSeqDataSeq = Number($scope.MaxSeqDataSeq) + 1
+
+            console.log('parameter select :' + $scope.data_filter[0].id_parameter );
+            console.log('area select :' + $scope.data_filter[0].id_area_application );
             apply();
         }
 
@@ -255,13 +271,182 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
         $scope.actionChangedData = function (arr, field) {
             arr.action_change = 1;
+            if (field === "active_type") {
 
-            if (field == "accept_status") {
-                arr.active_type = 0
-            } else if (field == "inaccept_status") {
-                arr.active_type = 1
+                arr.active_type = arr.active_type === '1' ? '1' : '0';  // Checkbox state determines the value
+            } else if (field === "def_selected") {
+                arr.def_selected = arr.def_selected === '1' ? '1' : '0';
             }
             apply();
+            console.log('Updated item:', arr);
+        }
+
+        $scope.showFileName = function (inputId) {
+            var fileUpload = document.getElementById('file-upload-' + inputId);
+            var fileNameDisplay = document.getElementById('fileNameDisplay-' + inputId);
+            var del = document.getElementById('del' + inputId);
+    
+            if (fileUpload !== null) { // check ว่าตัวแปรเป็นค่าว่างไม 
+                fileUpload.onchange = function () {
+                    const selectedFile = fileUpload.files[0].name; // get ชื่อไฟล์ 
+                    // console.log(selectedFile); // แสดงชื่อไฟล์ผ่าน console 
+                    fileNameDisplay.textContent = ' File is ' + selectedFile + '';
+                };
+                del.style.display = "block";
+            } else {
+                console.error("fileUpload null.");
+            }
+        }
+    
+        $scope.clearFileName = function (inputId) {
+            var fileUpload = document.getElementById('file-upload-' + inputId);
+            var fileNameDisplay = document.getElementById('fileNameDisplay-' + inputId);
+            var del = document.getElementById('del' + inputId);
+            fileUpload.value = ''; // ล้างค่าใน input file
+            fileNameDisplay.textContent = ''; // ล้างข้อความที่แสดงชื่อไฟล์
+            del.style.display = "none";
+        }
+
+        function truncateFilename(filename, length) {
+            if (!filename) return '';
+            if (filename.length <= length) return filename;
+            const start = filename.slice(0, Math.floor(length / 2));
+            const end = filename.slice(-Math.floor(length / 2));
+            return `${start}.......${end}`;
+          }
+
+          $scope.fileSelect = function (input) {
+            //drawing
+    
+            const fileInput = input;
+            const fileSeq = fileInput.id.split('-')[1];
+            const fileInfoSpan = document.getElementById('filename' + fileSeq);
+    
+            if (fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                const fileName = file.name;
+                const fileSize = Math.round(file.size / 1024);
+                //fileInfoSpan.textContent = `${fileName} (${fileSize} KB)`;
+    
+                let shortenedFileName = fileName.length > 20 ? fileName.substring(0, 20) + '...' : fileName;
+                fileInfoSpan.textContent = `${shortenedFileName} (${fileSize} KB)`;
+    
+    
+                // if (fileName.toLowerCase().indexOf('.pdf') == -1) {
+                //     fileInfoSpan.textContent = "";
+                //     set_alert_warning('Warning', 'Please select a PDF file.');
+                //     $scope.status_upload = false;
+    
+                //     if ($scope.previousFile) {
+                //         input = $scope.previousFile;
+                //         document.getElementById('filename' + fileSeq).textContent = $scope.prevIileInfoSpan;
+                //         $scope.status_upload = true;
+                //     }
+                //     return;
+                // }
+                var file_path = uploadFile(file, fileSeq, fileName, fileSize);
+    
+                $scope.previousFile = fileInput;
+                $scope.prevIileInfoSpan = fileInfoSpan.textContent;
+                $scope.status_upload = true;
+    
+            } else {
+                fileInfoSpan.textContent = "";
+                if ($scope.previousFile) {
+                    input = $scope.previousFile;
+                    document.getElementById('filename' + fileSeq).textContent = $scope.prevIileInfoSpan;
+                    $scope.status_upload = true;
+                }
+            }
+        }
+        
+        function uploadFile(file_obj, seq, file_name, file_size, json_drawing) {
+    
+            var fd = new FormData();
+            //Take the first selected file
+            // fd.append("file_obj", file_obj);
+            // fd.append("file_seq", seq);
+            // fd.append("file_name", file_name);
+            // fd.append("file_size", file_size);
+            // fd.append("module", 'guide_words');
+            fd.append("json_drawing", JSON.stringify(json_drawing));
+    
+            try {
+                const request = new XMLHttpRequest();
+                request.open("POST", url_ws + 'masterdata/set_master_guidewords');
+                //request.send(fd);
+                // ,"json_drawing": ' + JSON.stringify(json_drawing)
+    
+                request.onreadystatechange = function () {
+                    if (request.readyState === XMLHttpRequest.DONE) {
+                        if (request.status === 200) {
+                            // รับค่าที่ส่งมาจาก service ที่ตอบกลับมาด้วย responseText
+                            const responseFromService = request.responseText;
+                            // ทำอะไรกับข้อมูลที่ได้รับเช่น แสดงผลหรือประมวลผลต่อไป
+                            console.log(responseFromService);
+    
+                            const jsonArray = JSON.parse(responseFromService);
+    
+                            var file_name = jsonArray[0].ATTACHED_FILE_NAME;
+                            var file_path = jsonArray[0].ATTACHED_FILE_PATH;
+    
+                            var arr = $filter('filter')($scope.data_drawing, function (item) { return (item.seq == seq); });
+                            if (arr.length > 0) {
+                                arr[0].action_change = 0;
+                                arr[0].document_file_name = file_name;
+                                arr[0].document_file_path = (url_ws.replace('/api/', '')) + file_path;// (url_ws.replace('/api/', '/')) + 'AttachedFileTemp/Hazop/' + file_name;
+                                arr[0].document_file_size = file_size;
+                                arr[0].document_module = "guide_words";
+                                arr[0].module = "guide_words";
+                                arr[0].seq = seq;
+                                $scope.$apply();
+    
+                            }
+
+                            console.log('file path' +file_path);
+                        } else {
+                            console.error('มีข้อผิดพลาด: ' + request.status);
+                        }
+                    }
+                };
+    
+                request.send(fd);
+    
+            } catch { }
+    
+            return "";
+        }
+
+        $scope.removeDrawingDoc = function (seq, index) {
+            var arrdelete = $filter('filter')($scope.data_drawing, function (item) {
+                return (item.seq == seq && item.action_type == 'update');
+            });
+            if (arrdelete.length > 0) { $scope.data_drawing_delete.push(arrdelete[0]); }
+    
+            $scope.data_drawing = $filter('filter')($scope.data_drawing, function (item) {
+                return !(item.seq == seq);
+            });
+    
+            if ($scope.data_drawing.length == 0) {
+                $scope.addDrawingDoc();
+            }
+    
+            //if delete row 1 clear to null
+            if ($scope.data_drawing.length == 1 || $scope.data_drawing.no == 1) {
+                var keysToClear = ['document_name', 'document_no', 'descriptions'];
+    
+    
+                keysToClear.forEach(function (key) {
+                    $scope.data_drawing[0][key] = null;
+                });
+    
+                $scope.data_drawing[0].no = 1;
+            }
+    
+            running_no_format_1($scope.data_drawing, null, index, null); //index??
+    
+            apply();
+    
         }
 
     }
@@ -334,6 +519,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             });
 
         }
+
         function check_data() {
 
             var arr_active = [];

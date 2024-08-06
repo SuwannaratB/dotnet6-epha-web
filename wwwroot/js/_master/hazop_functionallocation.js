@@ -96,6 +96,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
             $scope.data_delete = [];
 
+            $scope.data_drawing = [];
+            $scope.data_drawing_delete = [];
+
             $scope.user_name = conFig.user_name();
             $scope.flow_role_type = conFig.role_type();//admin,request,responder,approver
 
@@ -227,6 +230,32 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             apply();
         }
 
+        $scope.showFileName = function (inputId) {
+            var fileUpload = document.getElementById('file-upload-' + inputId);
+            var fileNameDisplay = document.getElementById('fileNameDisplay-' + inputId);
+            var del = document.getElementById('del' + inputId);
+    
+            if (fileUpload !== null) { // check ว่าตัวแปรเป็นค่าว่างไม 
+                fileUpload.onchange = function () {
+                    const selectedFile = fileUpload.files[0].name; // get ชื่อไฟล์ 
+                    // console.log(selectedFile); // แสดงชื่อไฟล์ผ่าน console 
+                    fileNameDisplay.textContent = ' File is ' + selectedFile + '';
+                };
+                del.style.display = "block";
+            } else {
+                console.error("fileUpload null.");
+            }
+        }
+    
+        $scope.clearFileName_non_case = function (inputId) {
+            var fileUpload = document.getElementById('file-upload-' + inputId);
+            var fileNameDisplay = document.getElementById('fileNameDisplay-' + inputId);
+            var del = document.getElementById('del' + inputId);
+            fileUpload.value = ''; // ล้างค่าใน input file
+            fileNameDisplay.textContent = ''; // ล้างข้อความที่แสดงชื่อไฟล์
+            del.style.display = "none";
+        }
+
         function truncateFilename(filename, length) {
             if (!filename) return '';
             if (filename.length <= length) return filename;
@@ -234,48 +263,51 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             const end = filename.slice(-Math.floor(length / 2));
             return `${start}.......${end}`;
           }
-          
-          $scope.selectFile = function(file) {
-            console.log('selectFile function called');
-            
-            if (file) {
-              const fileName = file.name;
-              const fileSize = Math.round(file.size / 1024);
-              const fileSeq = file.$ngfDataUrl.split('-')[1]; 
-              const fileInfoSpan = document.getElementById('filename' + fileSeq);
-      
-              try {
-                const truncatedFileName = truncateFilename(fileName, 20);
-                if (fileInfoSpan) {
-                  fileInfoSpan.textContent = `${truncatedFileName} (${fileSize} KB)`;
+
+          $scope.fileSelect = function (input) {
+            //drawing
+    
+            const fileInput = input;
+            const fileSeq = fileInput.id.split('-')[1];
+            const fileInfoSpan = document.getElementById('filename' + fileSeq);
+    
+            if (fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                const fileName = file.name;
+                const fileSize = Math.round(file.size / 1024);
+                //fileInfoSpan.textContent = `${fileName} (${fileSize} KB)`;
+    
+                let shortenedFileName = fileName.length > 20 ? fileName.substring(0, 20) + '...' : fileName;
+                fileInfoSpan.textContent = `${shortenedFileName} (${fileSize} KB)`;
+    
+    
+                if (fileName.toLowerCase().indexOf('.pdf') == -1) {
+                    fileInfoSpan.textContent = "";
+                    set_alert_warning('Warning', 'Please select a PDF file.');
+                    $scope.status_upload = false;
+    
+                    if ($scope.previousFile) {
+                        input = $scope.previousFile;
+                        document.getElementById('filename' + fileSeq).textContent = $scope.prevIileInfoSpan;
+                        $scope.status_upload = true;
+                    }
+                    return;
                 }
-              } catch (error) {
-                console.error('Error updating file info:', error);
-              }
-      
-              const allowedFileTypes = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'jpg', 'png', 'gif'];
-              const fileExtension = fileName.split('.').pop().toLowerCase();
-      
-              if (allowedFileTypes.includes(fileExtension)) {
-              
-                console.log('File attached successfully.');
-              } else {
-                $('#modalMsgFileError').modal({
-                  backdrop: 'static',
-                  keyboard: false 
-                }).modal('show');
-                console.warn('Please select a PDF, Word, Excel, or Image file.');
-              }
-              
-              // Example upload function call
-              var file_path = uploadFile(file, fileSeq, fileName, fileSize);
+                var file_path = uploadFile(file, fileSeq, fileName, fileSize);
+    
+                $scope.previousFile = fileInput;
+                $scope.prevIileInfoSpan = fileInfoSpan.textContent;
+                $scope.status_upload = true;
+    
             } else {
-              const fileInfoSpan = document.getElementById('filename' + fileSeq);
-              if (fileInfoSpan) {
                 fileInfoSpan.textContent = "";
-              }
+                if ($scope.previousFile) {
+                    input = $scope.previousFile;
+                    document.getElementById('filename' + fileSeq).textContent = $scope.prevIileInfoSpan;
+                    $scope.status_upload = true;
+                }
             }
-          };
+        }
         
         function uploadFile(file_obj, seq, file_name, file_size) {
     
@@ -284,6 +316,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             fd.append("file_obj", file_obj);
             fd.append("file_seq", seq);
             fd.append("file_name", file_name);
+            fd.append("file_size", file_size);
             fd.append("module", 'functional_location');
     
             try {
@@ -311,12 +344,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                                 arr[0].document_file_path = (url_ws.replace('/api/', '')) + file_path;// (url_ws.replace('/api/', '/')) + 'AttachedFileTemp/Hazop/' + file_name;
                                 arr[0].document_file_size = file_size;
                                 arr[0].document_module = "functional_location";
-                                arr[0].module = "functional_location"
+                                arr[0].module = "functional_location";
+                                arr[0].seq = seq;
                                 $scope.$apply();
     
                             }
                         } else {
-                            // 
                             console.error('มีข้อผิดพลาด: ' + request.status);
                         }
                     }
@@ -359,7 +392,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
     
             apply();
     
-        };
+        }
     }
 
 

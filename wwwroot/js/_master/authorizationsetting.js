@@ -429,9 +429,15 @@ AppMenuPage.controller(
         apply();
         $("#modalMenuList").modal("show");
       };
-      $scope.choosDataMenu = function (item, choos_menu) {
-        if (choos_menu == 1) {
-        }
+      $scope.choosDataMenu = function (arr, field) {
+      
+            if (field === "choos_menu") {
+
+                arr.choos_menu = arr.choos_menu === '1' ? '1' : '0';  
+                
+            } 
+            apply();
+            console.log('Updated item:', arr.choos_menu);
       };
     }
 

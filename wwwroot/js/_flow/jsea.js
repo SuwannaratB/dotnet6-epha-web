@@ -477,10 +477,27 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             if ($scope.data_header[0].pha_status == 11) {
                 if (selectedTab.name == 'worksheet') {
                     //$('#modalPleaseRegister').modal('show');
+                    if(!validBeforRegister()) {
+                        // remove tab
+                        selectedTab.isActive = false;
+                        var tabPane = document.getElementById("tab-" + selectedTab.name);
+                        if (tabPane) tabPane.classList.remove('show', 'active');
+                        // set tab general
+                        $scope.tabs[0].isActive = true;
+                        var activeTabPane = document.getElementById("tab-" + $scope.tabs[0].name);
+                        if (activeTabPane) {
+                            setTimeout(() => {
+                                activeTabPane.classList.add('show', 'active');
+                                $scope.action_part = 1
+                                var activeTabBtn = document.getElementById($scope.tabs[0].name + "-tab");
+                                if (activeTabBtn) activeTabBtn.classList.add('active');
+                            }, 1000);
+                        }
+                        
+                        return set_alert('Warning',$scope.validMessage)
+                    }
 
-                    $scope.confirmSave('confirm_submit_register_without')
-
-                    return;
+                    return $scope.confirmSave('confirm_submit_register_without')
                 }
             }
         } catch (error) { }
@@ -768,7 +785,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     $scope.fileSelectApprover = function (input, file_part) {
         //drawing, responder, approver
         var file_doc = $scope.data_header[0].pha_no;
-
         const fileInput = input;
         const fileSeq = fileInput.id.split('-')[1];
         const fileInfoSpan = document.getElementById('filename-approver-' + fileSeq);
@@ -778,19 +794,25 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             const fileName = file.name;
             const fileSize = Math.round(file.size / 1024);
             fileInfoSpan.textContent = `${fileName} (${fileSize} KB)`;
-
+            // check .pdf
             if (fileName.toLowerCase().indexOf('.pdf') == -1) {
+                fileInput.value = '';
                 fileInfoSpan.textContent = "";
-                set_alert('Warning', 'Please select a PDF file.');
-                return;
+                set_alert('Warning', 'Please select a PDF file.')
+                return apply()
             }
-
-            var file_path = uploadFileApprover(file, fileSeq, fileName, fileSize, file_part, file_doc);
+            // check size 
+            if (fileSize > 10000) {
+                fileInput.value = '';
+                fileInfoSpan.textContent = "";
+                set_alert('Warning', 'File size is too large. Please select a file smaller than 10 MB.')
+                return apply() 
+            }
+            // var file_path = uploadFileApprover(file, fileSeq, fileName, fileSize, file_part, file_doc);
 
         } else {
             fileInfoSpan.textContent = "";
         }
-
     }
 
     $scope.truncateFilename = function(filename, length) {
@@ -2471,8 +2493,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 $scope.can_edit = false; 
             }
 
-            if($scope.data_approver_ta3){
-                $scope.data_approver_ta3.filter(item => {
+            if($scope.data_approver){
+                $scope.data_approver.filter(item => {
                     if(item.user_name === $scope.user_name){
                         $scope.tab_approver_active = true;
 
@@ -5244,10 +5266,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
 
     function set_alert(header, detail) {
-
         $scope.Action_Msg_Header = header;
         $scope.Action_Msg_Detail = detail;
-
         $('#modalMsg').modal('show');
     }
     function set_alert_confirm(header, detail) {
@@ -6566,5 +6586,37 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     
         return accessInfo;
     };
+    
+    function validBeforRegister() {
+        if (validGeneral() && validDrawing()) {
+            return true
+        }
+
+        return false
+    }
+    
+    function validGeneral(){
+        console.log($scope.data_general[0])
+        console.log($scope.data_drawing)
+        if (!$scope.data_general[0].pha_request_name) {
+            if(!$scope.data_general[0].pha_request_name) $scope.validMessage = 'Please select a valid Task Name'
+            $scope.goback_tab = 'general';
+            return false
+        }
+        $scope.validMessage = ''
+        return true
+    }
+
+    function validDrawing(){
+        for (let i = 0; i < $scope.data_drawing.length; i++) {
+            if (!$scope.data_drawing[i].document_file_name) {
+                if(!$scope.data_drawing[i].document_file_name) $scope.validMessage = 'Please select a valid Document File'
+                $scope.goback_tab = 'general';
+                return false
+            }
+        }
+        $scope.validMessage = ''
+        return true
+    }
 
 });
