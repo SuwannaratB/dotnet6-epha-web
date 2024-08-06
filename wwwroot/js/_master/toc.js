@@ -309,7 +309,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                 save_data();
             }
         );
-        
     }
 
     $scope.confirmBack = function () {
@@ -332,12 +331,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         $scope.data.push(newInput);
         $scope.MaxSeqData = Number($scope.MaxSeqData) + 1
         $scope.selected['area'] = ''
-        console.log($scope.data)
         setDataFilter()
         setPagination()
         apply();
         newTag(`new-${seq}`);
-        console.log(seq)
     }
 
     $scope.removeData = function(item){
