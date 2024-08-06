@@ -22,24 +22,222 @@
 
     <script src="~/assets/js/config.js"></script>
 
-
     <script src="~/assets/js/all.min.js"></script>
 
+    <link rel="stylesheet" href="~/css/masterStyles/main_style.css">
+
 }
-<div class="content mt-1" style="font-size: 12px; min-height: auto!important;" id="divPage" ng-controller="ctrlAppPage">
 
+<div class="p-6" id="divPage" ng-controller="ctrlAppPage">
+    <div class="card container mt-6 px-6 py-4">
+        <div class="title">
+            <span class=" me-2 text-primary"><B>|</B></span> 
+            Complex(TOC)
+        </div>
+        <hr>
+        <div class="d-flex align-items-end justify-content-between pb-2">
+            <div class="d-flex gap-4">
+                <button class="btn btn-sm btn-success gap-2" ng-click="newData()">
+                    <i class="fa-solid fa-plus"></i>
+                    New Complex(TOC)
+                </button>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-sm btn-outline-gray gap-2" ng-click="">
+                        <i class="fa-solid fa-file-arrow-down" style="color: burlywood;"></i>
+                        Import Excel
+                    </button>
+                    <button class="btn btn-sm btn-outline-gray gap-2" ng-click="">
+                        <i class="fa-solid fa-download" style="color: darkcyan;"></i>
+                        Export Excel
+                    </button>
+                </div>
+            </div>
+            <div class="d-flex align-items-end gap-4">
+                <div class="dropdown">
+                    <label class="form-label ps-0 pb-1 col-auto" for="plant">Plant</label>
+                    <select class="form-control mb-0 col-auto" 
+                        ng-model="selected.plant"
+                        ng-change="actionfilter('plant', selected.plant)">
+                        <option value="">All</option>
+                        <option ng-repeat="item2 in data_plant" ng-value="item2.id">
+                            {{item2.name}}
+                        </option>
+                    </select>
+                </div>
+                <div class="dropdown">
+                    <label class="form-label ps-0 pb-1 col-auto" for="area">Area Process Unit</label>
+                    <select class="form-control mb-0 col-auto" 
+                        ng-model="selected.area"
+                        ng-change="actionfilter('area', selected.area)">
+                        <option value="">All</option>
+                        <option ng-repeat="item2 in data_area" ng-value="item2.id">
+                            {{item2.name}}
+                        </option>
+                    </select>
+                </div>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-sm btn-secondary" style="width: 100px;" ng-click="confirmBack()">Back</button>
+                    <button class="btn btn-sm btn-primary " style="width: 100px;" ng-click="confirmSave()">Save</button>
+                </div>
+            </div>
+        </div>
+        <div class="card p-2 overflow-auto">
+            <table class="table table-sm fs--1 mb-0" >
+                <thead class="bg-white"> 
+                    <tr class="text-center">
+                        <th class="align-middle"  style="min-width: 90px">No</th>
+                        <th class="align-middle">TOC</th>
+                        <th class="align-middle">Company</th>
+                        <th class="align-middle">Area</th>
+                        <th class="align-middle">Description</th>
+                        <th class="align-middle" style="min-width:100px">Active</th>
+                        <th class="align-middle" style="min-width:100px">Management</th>
+                    </tr>
+                </thead>
+                <tbody class="list">
+                    <tr class="hover-actions-trigger btn-reveal-trigger position-static text-center"
+                         ng-repeat="item in paginatedData" id="tr-{{item.seq}}">
+
+                        <td class="align-middle position-relative">
+                            <div id="new-{{item.seq}}" class="new hidden">New</div>
+                            {{$index + 1 + ((currentPage - 1) * pageSize)}}
+                        </td>
+
+                        <td class="align-middle ">
+                            <div class="col-auto pt-2">
+                                <textarea class="form-control form-control-sm " 
+                                    rows="1" 
+                                    type="text"
+                                    style=" min-width: 160px;"
+                                    placeholder="Name"
+                                    ng-required="true"
+                                    ng-model="item.name"
+                                    ng-change="actionChangedData(item,'name')">
+                                </textarea>
+                                <div class="validation-message">{{item.name ? '' : 'field is required.'}}</div>
+                            </div>
+                        </td>
+
+                        <td class="align-middle ">
+                            <div class="col-auto pt-2">
+                                <select class="form-control mb-0 col-auto" 
+                                    style="min-width: 160px;"
+                                    placeholder="Name"
+                                    ng-model="item.id_company"
+                                    ng-change="actionChangedData(item,'compay')">
+                                    <option ng-value="item.id_company">
+                                        {{item.id_company}}
+                                    </option>
+                                </select>
+                                <div class="validation-message">{{item.id_company ? '' : 'field is required.'}}</div>
+                            </div>
+                        </td>
+
+                        <td class="align-middle ">
+                            <div class="col-auto pt-2">
+                                <select class="form-control mb-0 col-auto" 
+                                    style="min-width: 160px;"
+                                    placeholder="Name"
+                                    ng-model="item.id_area"
+                                    ng-change="actionChangedData(item,'area')">
+                                    <option ng-repeat="item2 in data_area" ng-value="item2.id">
+                                        {{item2.name}}
+                                    </option>
+                                </select>
+                                <div class="validation-message">{{item.id_area ? '' : 'field is required.'}}</div>
+                            </div>
+                        </td>
+
+                        <td class="align-middle ">
+                            <div class="col-auto pt-2">
+                                <input class="form-control" 
+                                    id="name" 
+                                    data-ng-model="item.descriptions" 
+                                    type="text" 
+                                    placeholder="Name"
+                                    ng-change="actionChangedData(item,'descriptions')" />
+                                <div class="validation-message">{{true ? '' : 'field is required.'}}</div>
+                            </div>
+                        </td>
+
+                        <td class="align-middle">
+                            <input type="checkbox" 
+                                class="form-check-input"
+                                style="cursor: pointer;width:20px; height:20px;"
+                                ng-if="(item.active_type==1)" 
+                                checked
+                                ng-click="actionChangedData(item,'accept_status')">
+                            <input type="checkbox" 
+                                class="form-check-input"
+                                style="cursor: pointer;width:20px; height:20px;"
+                                ng-if="!(item.active_type==1)"
+                                ng-click="actionChangedData(item,'inaccept_status')">
+                        </td>
+
+                        <td class="align-middle ">
+                            <button class="btn btn-outline-secondary p-2"
+                                style="color: #ff2828; background-color: #f1f2f4; border-color: #ff2828;"
+                                ng-click=removeData(item)
+                                data-toggle="tooltip"
+                                data-placement="top"
+                                title="Remove">
+                                <span class="fa-regular fa-trash-can fa-lg"></span>
+                            </button>
+                            @* <button class="btn btn-outline-secondary p-2"
+                                style="color: #0abe0a; background-color: #f1f2f4; border-color: #0abe0a;"
+                                ng-click=addData(item.seq,$index)
+                                data-toggle="tooltip"
+                                data-placement="top"
+                                title="Add">
+                                <span class="fas fa-square-plus fa-lg"></span>
+                            </button> *@
+                        </td>
+                    </tr>
+
+                    <tr ng-if="data_filter.length == 0">
+                        <td colspan="10">
+                            <p class="mb-0 ms-3 text-1100 fw-bold text-center"> Not Found </p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <ul class="pagination d-flex align-items-center justify-content-center mt-2">
+                <li class="page-item" ng-class="{disabled: currentPage === 1}">
+                    <a class="page-link" href="" ng-click="prevPage()" tabindex="-1">Previous</a>
+                </li>
+                <li class="page-item" ng-show="1 < currentPage - range" ng-click="setPage(1)">
+                    <a class="page-link" href="">1</a>
+                </li>
+                <li class="page-item" ng-show="1 < currentPage - range">
+                    <span class="page-link">...</span>
+                </li>
+                <li class="page-item" ng-repeat="page in pages"
+                    ng-show="page >= currentPage - range && page <= currentPage + range"
+                    ng-class="{active: currentPage === page}">
+                    <a class="page-link" href="" ng-click="setPage(page)">{{page}}</a>
+                </li>
+                <li class="page-item" ng-show="totalPages > currentPage + range">
+                    <span class="page-link">...</span>
+                </li>
+                <li class="page-item" ng-show="totalPages > currentPage + range" ng-click="setPage(totalPages)">
+                    <a class="page-link" href="">{{totalPages}}</a>
+                </li>
+                <li class="page-item" ng-class="{disabled: currentPage === totalPages}">
+                    <a class="page-link" href="" ng-click="nextPage()">Next</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+
+@* <div class="content mt-1" style="font-size: 12px; min-height: auto!important;" id="divPage" ng-controller="ctrlAppPage">
     <div class="row g-0">
-
         <div class="col-12">
-
             <div class="card shadow-sm p-2 mb-3 bg-light rounded">
-
                 <div class="card-body p-2">
-
                     <div class="row">
-
                         <div class="m-3 row  gx-0 align-items-center">
-
                             <div class="card px-2"
                                 style="padding: 20px 20px 20px 20px; max-width: calc(100% - 30px); box-sizing: border-box;">
                                 <div class="row g-3 justify-content-between align-items-center pt-2 pb-3">
@@ -115,7 +313,7 @@
                                                 ng-click="confirmSave()">Save</button>
                                         </div>
                                     </div>
-                                    @* --- Start เพิ่ม/แก้ไข Account Contracter ตรงนี้ --- *@
+
                                     <div class="bg-white border-top border-bottom border-200 position-relative top-1">
                                         <div class="table-responsive scrollbar-overlay mx-n1 px-1">
                                             <table class="table table-sm fs--1 mb-0">
@@ -180,15 +378,9 @@
                                                     </tr>
                                                 </tbody>
                                             </table>
-
                                         </div>
-
                                     </div>
-
-                                    @* --- End เพิ่ม/แก้ไข Account Contracter ตรงนี้ --- *@
                                 </div>
-
-
                             </div>
                         </div>
                         <div class="m-3 row  gx-0 align-items-center d-none">
@@ -196,19 +388,12 @@
                                 File Atthachment : เอกสารประกอบไม่ใช่การ Import data เข้าระบบ
                             </div>
                         </div>
-
                     </div>
-
                 </div>
-
-
             </div>
         </div>
-
     </div>
-
-
-</div>
+</div> *@
 @section Scripts {
 
     <script src="~/assets/js/angular.min.js"></script>

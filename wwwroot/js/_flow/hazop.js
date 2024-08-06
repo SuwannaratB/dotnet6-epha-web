@@ -7374,7 +7374,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             
         }
 
-        console.log("555555555",xformtype)
 
         if(xformtype == 'member' || xformtype == 'approver' || xformtype == 'specialist'){
             console.log("now we will call")

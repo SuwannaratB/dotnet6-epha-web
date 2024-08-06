@@ -571,13 +571,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                     iNoNew++;
                 };
 
-                // implement to numbers
-                for (let i = 0; i < arr.details.length; i++) {
-                    arr.details[i].implement = parseInt(arr.details[i].implement);
-                    // set true false 
-                    arr.details[i].implement = arr.details[i].implement === 1;
-                }
-
                 $scope.data_pha_doc = arr.pha_doc;//pha_status,pha_no
                 $scope.data_header = arr.general;
                 $scope.data_general = arr.general;
@@ -595,10 +588,15 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
 
                 // add key implement def true for status 13 
                 $scope.data_details.forEach(function(_item) {
-                    if ($scope.data_pha_doc != 14 && _item.responder_comment === null) {
-                        _item.implement = true;
-                    } 
+                    if ($scope.data_pha_doc != 14  && _item.responder_action_type === 0) {
+                        console.log("we will set it to false")
+                        _item.implement = false;
+                    }else{
+                        console.log("it ")
+                        _item.implement = _item.implement === 1 ? true : false;
+                    }
                 });
+
 
                 if (true) {
                     $scope.MaxSeqdata_drawing_worksheet = 0;
@@ -672,12 +670,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
             item.action_change = 1;
 
             if (item.implement) {
+                console.log(item.implement)
                 // const validRemark = set_valid_items(item.responder_comment, 'remark-'+ item.seq);
                 /*const validUploadFile = set_valid_items($scope.fileInfoSpan, 'upload_file-'+ item.seq);
 
                 if (!validUploadFile) {
                     $scope.confirmSaveFollowup('save', item);
                 }*/
+                    $scope.confirmSaveFollowup('save', item);
             }else {
                 var docfiles = $filter('filter')($scope.data_drawingworksheet, function (_item) {
                     return (_item.id_worksheet == item.seq && 
@@ -725,8 +725,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                 _item.implement = !_item.implement;
 
                 if (!_item.implement) {
-                    // set_valid_items(_item.responder_comment, 'remark-'+_item.seq);
-                    //set_valid_items($scope.fileInfoSpan, 'upload_file-'+_item.seq);
+                    set_valid_items(_item.responder_comment, 'remark-'+_item.seq);
+                    set_valid_items($scope.fileInfoSpan, 'upload_file-'+_item.seq);
                 }else {
                     clear_valid_items('remark-'+_item.seq);
                     clear_valid_items('upload_file-'+_item.seq);
@@ -922,12 +922,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
     $scope.confirmSaveFollowup = function (action, _item) {
         var arr_active = [];
         angular.copy($scope.data_details, arr_active);
+        
 
         if (action == 'save') {
             var arr_json = $filter('filter')(arr_active, function (item) {
-                return ((item.seq == _item.seq && item.action_type == 'update' && item.action_change == 1 && item.responder_active_row !== 0)
+                return ((item.seq == _item.seq && item.action_type == 'update' && item.action_change == 1 )
                     || item.action_type == 'insert');
             });
+
         } else {
             var arr_json = $filter('filter')(arr_active, function (item) {
                 return (item.seq == _item.seq);
@@ -944,7 +946,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
             arr_json[i].implement = arr_json[i].implement === true ? 1 : 0;
         }        
 
-        console.log("arr_json",arr_json)
         var json_managerecom = angular.toJson(arr_json);
         var json_drawingworksheet = check_data_drawingworksheet(_item.seq);
 
@@ -1005,18 +1006,25 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                     apply();
 
                     if (true) {
-                        console.log("it true")
                         var arr = $filter('filter')($scope.data_details, function (item) {
-                            return (item.responder_action_type == 2);
+                            return (item.responder_action_type == 0 || item.responder_action_type == 1);
                         });
 
-                        console.log("=>",arr)
-                        if (arr.length == $scope.data_details.length) {
-                            console.log("will Portal")
-
-                            window.open("Home/Portal", "_top");
+                        if (arr.length) {
+                            if ($scope.user_name) {
+                                console.log("$scope.user_name",$scope.user_name)
+                                var userExists = arr.some(function(detail) {
+                                    return detail.responder_user_name === $scope.user_name;
+                                });
+                            
+                                if (!userExists) {
+                                    window.open("Home/Portal", "_top");
+                                }else{
+                                    get_detail(true)
+                                }
+                            }
+                            
                         } else { 
-                            console.log("will reload")
                             setTimeout(function() {
                                 $('#modalMsg').modal('show');
                             }, 1000); 
