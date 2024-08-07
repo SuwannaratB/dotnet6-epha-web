@@ -203,7 +203,8 @@ AppMenuPage.controller(
         newInput.seq = seq;
         newInput.id = seq;
         newInput.active_type = 1;
-        newInput.data_role_type = '';
+        newInput.name = "xxx";
+        newInput.descriptions = "xxxtxxx";
         newInput.default_type = 0;
         newInput.action_type = "insert";
         newInput.action_change = 1;
@@ -250,7 +251,7 @@ AppMenuPage.controller(
               return;
             }
 
-            $scope.$apply();
+            apply();
 
             // Show success message
             Swal.fire({
@@ -271,7 +272,12 @@ AppMenuPage.controller(
             item.active_type = 0;
         } else if (field === "inaccept_status") {
             item.active_type = 1;
+        } else if (field === 'name'){
+          item.name === item.name;
         }
+        console.log('update:', item)
+        apply();
+
     };
     
     }
@@ -299,20 +305,14 @@ AppMenuPage.controller(
 
         $.ajax({
           url: url_ws + "masterdata/set_authorizationsetting",
-          data:
-            '{"user_name":"' +
-            user_name +
-            '"' +
-            ',"role_type":"' +
-            flow_role_type +
-            '"' +
-            ',"json_role_type": ' +
-            JSON.stringify(json_role_type) +
-            ',"json_menu_setting": ' +
+          data: '{"user_name":"' + user_name + '"'
+          + ',"role_type":"' + flow_role_type + '"'
+          + ',"json_role_type": ' + JSON.stringify(json_role_type)
+          + ',"json_menu_setting": ' +
             JSON.stringify(json_menu_setting) +
             ',"json_role_setting": ' +
             JSON.stringify(json_role_setting) +
-            "}",
+            '}',
           type: "POST",
           contentType: "application/json; charset=utf-8",
           dataType: "json",
@@ -326,20 +326,22 @@ AppMenuPage.controller(
             var arr = data;
             console.log(arr);
 
-            if (arr[0].status == "true") {
-              $scope.action_type = "update";
+            if (arr[0].status == 'true') {
+                $scope.pha_type_doc = 'update';
 
-              if (action == "save") {
-                get_data_after_save(false);
+                if (action == 'save') {
+                    get_data_after_save(false);
 
-                set_alert("Success", "Data has been successfully saved.");
-                apply();
-              }
-            } else {
-              set_alert("Error", arr[0].status);
-              apply();
+                    set_alert('Success', 'Data has been successfully saved.');
+                    apply();
+                }
             }
-          },
+            else {
+                set_alert('Error', arr[0].status);
+                apply();
+            }
+
+        },
           error: function (jqXHR, textStatus, errorThrown) {
             if (jqXHR.status == 500) {
               alert("Internal error: " + jqXHR.responseText);
@@ -437,7 +439,7 @@ AppMenuPage.controller(
                 
             } 
             apply();
-            console.log('Updated item:', arr.choos_menu);
+            console.log('Updated item:', arr);
       };
     }
 
@@ -489,10 +491,10 @@ AppMenuPage.controller(
           contentType: "application/json; charset=utf-8",
           dataType: "json",
           beforeSend: function () {
-            //$("#divLoading").show();
+            $("#divLoading").show();
           },
           complete: function () {
-            //$("#divLoading").hide();
+            $("#divLoading").hide();
           },
           success: function (data) {
             callback(data);

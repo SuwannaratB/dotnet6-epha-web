@@ -272,7 +272,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         }
 
         $scope.actionChangedData = function (arr, field) {
-            arr.action_change = 1;
+            arr.action_change = '1';
+
             if (field === "active_type") {
 
                 arr.active_type = arr.active_type === 1 ? 1 : 0; 
@@ -371,9 +372,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                         if (request.status === 200) {
                             try {
                                 const responseFromService = request.responseText;
-                                const jsonArray = JSON.parse(responseFromService);
 
                                 console.log(responseFromService);
+                                
+                                const jsonArray = JSON.parse(responseFromService);
 
                                 // Handle response from service
                                 if (jsonArray.length > 0) {
@@ -488,7 +490,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                 },
                 success: function (data) {
                     var arr = data;
-                    console.log(arr);
+                    console.log(arr); 
 
                     if (arr[0].status == 'true') {
                         $scope.pha_type_doc = 'update';
@@ -519,19 +521,28 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         }
 
         function check_data() {
-
+            console.log('Before processing:', $scope.data);
+        
             var arr_active = [];
             angular.copy($scope.data, arr_active);
+        
+            // Debugging
+            console.log('After copying:', arr_active);
+        
             var arr_json = $filter('filter')(arr_active, function (item) {
-                return ((item.action_type == 'update' && item.action_change != 0) || item.action_type == 'insert');
+                return ((item.action_type == 'update' && item.action_change == 1) || item.action_type == 'insert');
             });
-
+        
             for (var i = 0; i < $scope.data_delete.length; i++) {
                 $scope.data_delete[i].action_type = 'delete';
                 arr_json.push($scope.data_delete[i]);
             }
+        
+            console.log('After filtering:', arr_json);
+            
             return angular.toJson(arr_json);
         }
+        
 
         function check_data_drawing() {
              
