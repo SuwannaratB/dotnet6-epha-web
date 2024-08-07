@@ -317,108 +317,104 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             return `${start}.......${end}`;
           }
 
-          $scope.fileSelect = function (input) {
-            //drawing
-    
+        $scope.selectFile = function (input) {
             const fileInput = input;
             const fileSeq = fileInput.id.split('-')[1];
             const fileInfoSpan = document.getElementById('filename' + fileSeq);
-    
+        
             if (fileInput.files.length > 0) {
                 const file = fileInput.files[0];
                 const fileName = file.name;
-                const fileSize = Math.round(file.size / 1024);
-                //fileInfoSpan.textContent = `${fileName} (${fileSize} KB)`;
-    
+                const fileSize = Math.round(file.size / 1024); // Size in KB
+        
+                // Update file info display
                 let shortenedFileName = fileName.length > 20 ? fileName.substring(0, 20) + '...' : fileName;
                 fileInfoSpan.textContent = `${shortenedFileName} (${fileSize} KB)`;
-    
-    
-                // if (fileName.toLowerCase().indexOf('.pdf') == -1) {
-                //     fileInfoSpan.textContent = "";
-                //     set_alert_warning('Warning', 'Please select a PDF file.');
-                //     $scope.status_upload = false;
-    
-                //     if ($scope.previousFile) {
-                //         input = $scope.previousFile;
-                //         document.getElementById('filename' + fileSeq).textContent = $scope.prevIileInfoSpan;
-                //         $scope.status_upload = true;
-                //     }
-                //     return;
-                // }
-                var file_path = uploadFile();
-    
+        
                 $scope.previousFile = fileInput;
-                $scope.prevIileInfoSpan = fileInfoSpan.textContent;
+                $scope.prevFileInfoSpan = fileInfoSpan.textContent;
                 $scope.status_upload = true;
-    
+        
+                // Get JSON data
+                var json_drawing = check_data_drawing(); // Get JSON string for drawing data
+                var json_data = check_data(); // Get JSON string for data
+        
+                var file_path = uploadFile(json_drawing, json_data); // Call the upload function without file content
             } else {
                 fileInfoSpan.textContent = "";
+        
                 if ($scope.previousFile) {
-                    input = $scope.previousFile;
-                    document.getElementById('filename' + fileSeq).textContent = $scope.prevIileInfoSpan;
+                    fileInput = $scope.previousFile;
+                    fileInfoSpan.textContent = $scope.prevFileInfoSpan;
                     $scope.status_upload = true;
                 }
             }
         }
+        function uploadFile(json_drawing, json_data) {
+            var user_name = $scope.user_name;
+            var fileSeq;
         
-        function uploadFile(file_obj, seq, file_name, file_size, json_drawing) {
-    
-            var fd = new FormData();
-            //Take the first selected file
-            // fd.append("file_obj", file_obj);
-            // fd.append("file_seq", seq);
-            // fd.append("file_name", file_name);
-            // fd.append("file_size", file_size);
-            // fd.append("module", 'guide_words');
-            fd.append("json_drawing", JSON.stringify(json_drawing));
-    
+            // Create JSON object
+            const payload = {
+                user_name: user_name,
+                json_data: json_data, // JSON string directly
+                json_drawing: json_drawing // JSON string directly
+            };
+        
             try {
                 const request = new XMLHttpRequest();
-                request.open("POST", url_ws + 'masterdata/set_master_guidewords');
-                //request.send(fd);
-                // ,"json_drawing": ' + JSON.stringify(json_drawing)
-    
+                request.open("POST", url_ws + 'masterdata/set_master_guidewords', true);
+                request.setRequestHeader('Content-Type', 'application/json'); // Set content type to JSON
+        
                 request.onreadystatechange = function () {
                     if (request.readyState === XMLHttpRequest.DONE) {
                         if (request.status === 200) {
-                            // รับค่าที่ส่งมาจาก service ที่ตอบกลับมาด้วย responseText
-                            const responseFromService = request.responseText;
-                            // ทำอะไรกับข้อมูลที่ได้รับเช่น แสดงผลหรือประมวลผลต่อไป
-                            console.log(responseFromService);
-    
-                            const jsonArray = JSON.parse(responseFromService);
-    
-                            var file_name = jsonArray[0].ATTACHED_FILE_NAME;
-                            var file_path = jsonArray[0].ATTACHED_FILE_PATH;
-    
-                            var arr = $filter('filter')($scope.data_drawing, function (item) { return (item.seq == seq); });
-                            if (arr.length > 0) {
-                                arr[0].action_change = 0;
-                                arr[0].document_file_name = file_name;
-                                arr[0].document_file_path = (url_ws.replace('/api/', '')) + file_path;// (url_ws.replace('/api/', '/')) + 'AttachedFileTemp/Hazop/' + file_name;
-                                arr[0].document_file_size = file_size;
-                                arr[0].document_module = "guide_words";
-                                arr[0].module = "guide_words";
-                                arr[0].seq = seq;
-                                $scope.$apply();
-    
-                            }
+                            try {
+                                const responseFromService = request.responseText;
+                                const jsonArray = JSON.parse(responseFromService);
 
-                            console.log('file path' +file_path);
+                                console.log(responseFromService);
+
+                                // Handle response from service
+                                if (jsonArray.length > 0) {
+                                    const file_name = jsonArray[0].ATTACHED_FILE_NAME;
+                                    const file_path = jsonArray[0].ATTACHED_FILE_PATH;
+        
+                                    // Example of updating $scope or other state
+                                    const arr = $filter('filter')($scope.data_drawing, function (item) {
+                                        return (item.seq === fileSeq);
+                                    });
+        
+                                    if (arr.length > 0) {
+                                        arr[0].action_change = 1;
+                                        arr[0].document_file_name = file_name;
+                                        arr[0].document_file_path = (url_ws.replace('/api/', '')) + file_path;
+                                        arr[0].document_file_size = Math.round(file.size / 1024); // Size in KB
+                                        arr[0].document_module = "guide_words";
+                                        arr[0].module = "guide_words";
+                                        arr[0].seq = fileSeq;
+                                        $scope.$apply();
+
+                                        console.log(file_name);
+                                    }
+                                }
+                            } catch (error) {
+                                console.error('Failed to parse response:', error);
+                            }
                         } else {
-                            console.error('มีข้อผิดพลาด: ' + request.status);
+                            console.error('Error occurred: ' + request.status);
                         }
                     }
                 };
-    
-                request.send(fd);
-    
-            } catch { }
-    
-            return "";
+        
+                // Send JSON payload
+                request.send(JSON.stringify(payload));
+        
+            } catch (error) {
+                console.error('Request failed:', error);
+            }
         }
-
+        
         $scope.removeDrawingDoc = function (seq, index) {
             var arrdelete = $filter('filter')($scope.data_drawing, function (item) {
                 return (item.seq == seq && item.action_type == 'update');

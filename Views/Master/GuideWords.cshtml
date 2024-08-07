@@ -165,7 +165,7 @@
                                                                         style="cursor: pointer;width:20px; height:20px;"
                                                                         type="checkbox"
                                                                         ng-model="item.def_selected"
-                                                                        ng-true-value="'1'" ng-false-value="'0'"
+                                                                        ng-true-value="1" ng-false-value="0"
                                                                         ng-change="actionChangedData(item,'def_selected')" />
                                                                 </div>
                                                             </td>
@@ -196,7 +196,7 @@
                                                                         id="flexSwitchCheckChecked"
                                                                         style="cursor: pointer; width: 20px; height: 20px;"
                                                                         type="checkbox" ng-model="item.active_type"
-                                                                        ng-true-value="'1'" ng-false-value="'0'"
+                                                                        ng-true-value="1" ng-false-value="0"
                                                                         ng-change="actionChangedData(item, 'active_type')" />
                                                                 </div>
                                                             </td>
@@ -235,24 +235,25 @@
         <button class="Upload-button btn ps-3" style="border: 1px solid #0d6efd; background-color: transparent; color: #0d6efd; width: fit-content;">
 
             <label class="dz-message-text fw-bold cursor-pointer" for="attfile-{{item.seq}}">
-                Upload File (Word, Excel, PDF, Image)
+                <span ng-if="!item.document_file_name">Upload File (Word, Excel, PDF, Image)</span>
+        <span ng-if="item.document_file_name">{{truncateFilename(item.document_file_name, 20)}} ({{item.document_file_size}} KB)</span>
             </label>
-            <input type="file" id="attfile-{{item.seq}}" name="file{{item.seq}}" onchange="angular.element(this).scope().fileSelect(this)" style="display:none" />
+            <input type="file" id="attfile-{{item.seq}}" name="file{{item.seq}}" 
+            onchange="angular.element(this).scope().selectFile(this)" style="display:none" />
         </button>
-        <button class="Upload-button btn ps-3" style="border: none; background-color: transparent; color: #0d6efd;"
-        ng-if="item.document_file_size !== null">
+        @* <button class="Upload-button btn ps-3" style="border: none; background-color: transparent; color: #0d6efd;"
+        ng-if="!item.document_file_size">
             <div class="d-flex align-items-center">
                 <span class="mr-3 nametext" id="filename{{item.seq}}" ng-click="downloadFile(item)">
                     <b style="font-size:x-small;">
-                        {{data_drawing}}
                         {{truncateFilename(item.document_file_name, 20)}} ({{item.document_file_size}} KB)
                     </b>
                 </span>
-                <a id="deluploadfile-{{item.seq}}" class="btn btn-link text-danger p-0 ms-2" ng-click="clearFileName(item.seq)">
+                <a id="deluploadfile-{{item.seq}}" class="btn btn-link text-danger p-0 ms-2" ng-click="clearFileName(item)">
                     <span class="fa-regular fa-trash-can fa-lg"></span>
                 </a>
             </div>
-        </button>
+        </button> *@
     </div>
 </div>
 

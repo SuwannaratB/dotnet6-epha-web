@@ -211,7 +211,7 @@ AppMenuPage.controller(
         $scope.data_role_type.push(newInput);
         $scope.MaxSeqDataRoleType = Number($scope.MaxSeqDataRoleType) + 1;
 
-        $scope.$apply();
+        apply();
       }
 
       $scope.removeData = function (seq, index) {
@@ -433,7 +433,7 @@ AppMenuPage.controller(
       
             if (field === "choos_menu") {
 
-                arr.choos_menu = arr.choos_menu === '1' ? '1' : '0';  
+                arr.choos_menu = arr.choos_menu === 1 ? 1 : 0;  
                 
             } 
             apply();
