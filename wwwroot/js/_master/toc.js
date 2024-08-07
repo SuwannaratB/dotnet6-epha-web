@@ -16,236 +16,47 @@ AppMenuPage.filter('MultiFieldFilter', function () {
 });
 AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) {
 
-    //  scroll  table header freezer 
-    $scope.handleScroll = function () {
-        const tableContainer = angular.element(document.querySelector('#table-container'));
-        const thead = angular.element(document.querySelector('thead'));
-
-        if (tableContainer && thead) {
-            const containerRect = tableContainer[0].getBoundingClientRect();
-            const containerTop = containerRect.top;
-            const containerBottom = containerRect.bottom;
-
-            const tableRect = thead[0].getBoundingClientRect();
-            const tableTop = tableRect.top;
-            const tableBottom = tableRect.bottom;
-
-            if (containerTop > tableTop || containerBottom < tableBottom) {
-                thead.addClass('sticky');
-            } else {
-                thead.removeClass('sticky');
-            }
-        }
-    };
-
     var url_ws = conFig.service_api_url();
 
-    function apply() {
-        try {
-            if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
-                $scope.$apply();
-            }
-        } catch { }
-    };
-
-    function set_alert(status, msg) {
-        alert(status + ":" + msg);
-    } 
-
-    function replace_hashKey_arr(_arr) {
-        var json = JSON.stringify(_arr, function (key, value) {
-            if (key == "$$hashKey") {
-                return undefined;
-            }
-            return value;
-        });
-        return json;
-    }
-    function clone_arr_newrow(arr_items) {
-        var arr_clone = []; var arr_clone_def = [];
-        try {
-            angular.copy(arr_items, arr_clone_def);
-
-            if (arr_clone_def.length > 0) {
-                arr_clone_def = arr_clone_def.map(function (item) {
-                    var newObj = {};
-                    for (var key in item) {
-                        newObj[key] = null;
-                    }
-                    return newObj;
-
-                });
-                arr_clone.push(arr_clone_def[0]);
-            } else { arr_clone = arr_clone_def; }
-
-        } catch { }
-        return arr_clone;
-    }
-
-    $("#divLoading").hide();
-    $scope.handleLinkClick = function (val) {
-        // ทำสิ่งต่าง ๆ เมื่อคลิกลิงก์
-        console.log('Link clicked!');
-        // คุณสามารถเพิ่มโค้ดอื่น ๆ ที่คุณต้องการทำในฟังก์ชันนี้ได้ 
-        $scope.tabChange = val;
-    }
-
-    //call ws get data
-    if (true) {
-        get_data(true);
-
-        function get_max_id() {
-            var arr = $filter('filter')($scope.data_all.max, function (item) {
-                return (item.name == 'seq');
-            });
-            var iMaxSeq = 1; 
-            if (arr.length > 0) { iMaxSeq = arr[0].values; }
-            $scope.MaxSeqData = iMaxSeq;
-        }
-        function arr_def() {
-            $scope.user_name = conFig.user_name();
-            $scope.flow_role_type = conFig.role_type();//admin,request,responder,approver
-
-            $scope.data_all = [];
-
-            $scope.data = [];
-            $scope.data_delete = [];
-
-            $scope.data_area = [];
-            $scope.data_plant = [];
-
-            //ไม่แน่ใจว่า list เก็บ model เป็น value หรือ text นะ 
-            $scope.data_filter = [{ id_key1: 0, id_key2: 0 }];
-
-            $scope.area_selected = [0];
-            $scope.plant_selected = [0];
-
-            $scope.selected = {
-                area: ''
-            };
-        }
-        function get_data(page_load) {
-            arr_def();
-
-            var user_name = conFig.user_name();
-            call_api_load(page_load, user_name);
-        }
-        function get_data_after_save(page_load) {
-            var user_name = conFig.user_name();
-            call_api_load(false, user_name);
-        }
-
-        function call_api_load(page_load) {
-            var user_name = $scope.user_name;
-
-            $.ajax({
-                url: url_ws + "masterdata/get_master_toc",
-                data: '{"user_name":"' + user_name + '"}',
-                type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
-                beforeSend: function () {
-                    $("#divLoading").show();
-                },
-                complete: function () {
-                    $("#divLoading").hide();
-                },
-                success: function (data) {
-                    var arr = data;
-                    $scope.data_all = arr;
-                    $scope.data = arr.toc;
-                    $scope.data_def = clone_arr_newrow(arr.toc);
-                    $scope.data_area = JSON.parse(replace_hashKey_arr(arr.area));
-                    $scope.data_plant = JSON.parse(replace_hashKey_arr(arr.plant));
-                    $scope.plant_selected = [arr.plant[0].id];
-                    $scope.area_selected = [arr.area[0].id];
-                    setDataFilter()
-                    setPagination()
-                    get_max_id();
-                    apply();
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    if (jqXHR.status == 500) {
-                        alert('Internal error: ' + jqXHR.responseText);
-                    } else {
-                        alert('Unexpected ' + textStatus);
-                    }
-                }
-
-            });
-
-        }
-
-
-        // $scope.addData = function (item) {
-        //     var seq = $scope.MaxSeqData;
-        //     var newInput = clone_arr_newrow($scope.data_def)[0];
-        //     newInput.seq = seq;
-        //     newInput.id = 0;
-        //     newInput.active_type = 1;
-        //     newInput.name = '';
-        //     newInput.descriptions = '';
-        //     newInput.id_company = $scope.plant_selected[0];
-        //     newInput.id_area = $scope.area_selected[0];
-        //     newInput.action_type = 'insert';
-        //     newInput.action_change = 1;
-        //     $scope.data.push(newInput);
-        //     $scope.MaxSeqData = Number($scope.MaxSeqData) + 1
-        //     apply();
-        // }
-
-
-        // $scope.removeData = function(seq, index) {
-        //     Swal.fire({
-        //         title: "Are you sure?",
-        //         text: "You won't be able to revert this!",
-        //         icon: "warning",
-        //         showCancelButton: true,
-        //         confirmButtonColor: "#3085d6",
-        //         cancelButtonColor: "#d33",
-        //         confirmButtonText: "Yes, delete it!"
-        //     }).then((result) => {
-        //         if (result.isConfirmed) {
-        //             var arrdelete = $filter('filter')($scope.data, function(item) {
-        //                 return item.seq == seq;
-        //             });
-    
-        //             if (arrdelete.length > 0) {
-        //                 $scope.data_delete.push(arrdelete[0]);
-        //             }
-    
-        //             $scope.data = $filter('filter')($scope.data, function(item) {
-        //                 return item.seq != arrdelete[0].seq;
-        //             });
-    
-        //             if ($scope.data.length == 0) {
-        //                 $scope.addData();
-        //                 return;
-        //             }
-                    
-        //             $scope.$apply(); 
-                    
-        //             Swal.fire({
-        //                 title: "Deleted!",
-        //                 text: "Your file has been deleted.",
-        //                 icon: "success",
-        //                 timer: 1000,
-        //                 showConfirmButton: false
-        //             });
-        //         }
-        //     });
-        // };
-        
-        // $scope.actionChangedMaster = function ( field) {
-
-            //if (field == "plant") {
-            //    $scope.plant_selected = [arr.plant[0].id];
-            //}
-            //if (field == "area") {
-            //    $scope.area_selected = [arr.area[0].id];
-            //} 
-        // }
-    }
+    get_data(true);
 
     ///////////////////////////  API Function  ///////////////////////////
+    function call_api_load(page_load) {
+        var user_name = $scope.user_name;
+        $.ajax({
+            url: url_ws + "masterdata/get_master_toc",
+            data: '{"user_name":"' + user_name + '"}',
+            type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+            beforeSend: function () {
+                $("#divLoading").show();
+            },
+            complete: function () {
+                $("#divLoading").hide();
+            },
+            success: function (data) {
+                var arr = data;
+                $scope.data_all = arr;
+                $scope.data = arr.toc;
+                $scope.data_def = clone_arr_newrow(arr.toc);
+                $scope.data_area = JSON.parse(replace_hashKey_arr(arr.area));
+                $scope.data_plant = JSON.parse(replace_hashKey_arr(arr.plant));
+                $scope.plant_selected = [arr.plant[0].id];
+                $scope.area_selected = [arr.area[0].id];
+                setDataFilter()
+                setPagination()
+                get_max_id();
+                apply();
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                if (jqXHR.status == 500) {
+                    alert('Internal error: ' + jqXHR.responseText);
+                } else {
+                    alert('Unexpected ' + textStatus);
+                }
+            }
+        });
+    }
+
     function save_data(action) {
         var user_name = $scope.user_name;
         var flow_role_type = $scope.flow_role_type;
@@ -294,6 +105,17 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
     }
 
     ///////////////////////////  Main Functions  ///////////////////////////
+    function get_data(page_load) {
+        arr_def();
+        var user_name = conFig.user_name();
+        call_api_load(page_load, user_name);
+    }
+
+    function get_data_after_save(page_load) {
+        var user_name = conFig.user_name();
+        call_api_load(false, user_name);
+    }
+
     $scope.confirmSave = function () {
         if(!validation()) {
            return showAlert(`Invalid Data`,`The data you entered is invalid. Please check and try again.`, `error`);
@@ -403,6 +225,63 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         apply();
     }
 
+    function replace_hashKey_arr(_arr) {
+        var json = JSON.stringify(_arr, function (key, value) {
+            if (key == "$$hashKey") {
+                return undefined;
+            }
+            return value;
+        });
+        return json;
+    }
+
+    function clone_arr_newrow(arr_items) {
+        var arr_clone = []; var arr_clone_def = [];
+        try {
+            angular.copy(arr_items, arr_clone_def);
+
+            if (arr_clone_def.length > 0) {
+                arr_clone_def = arr_clone_def.map(function (item) {
+                    var newObj = {};
+                    for (var key in item) {
+                        newObj[key] = null;
+                    }
+                    return newObj;
+
+                });
+                arr_clone.push(arr_clone_def[0]);
+            } else { arr_clone = arr_clone_def; }
+
+        } catch { }
+        return arr_clone;
+    }
+
+    function get_max_id() {
+        var arr = $filter('filter')($scope.data_all.max, function (item) {
+            return (item.name == 'seq');
+        });
+        var iMaxSeq = 1; 
+        if (arr.length > 0) { iMaxSeq = arr[0].values; }
+        $scope.MaxSeqData = iMaxSeq;
+    }
+    
+    function arr_def() {
+        $scope.user_name = conFig.user_name();
+        $scope.flow_role_type = conFig.role_type();//admin,request,responder,approver
+        $scope.data_all = [];
+        $scope.data = [];
+        $scope.data_delete = [];
+        $scope.data_area = [];
+        $scope.data_plant = [];
+        //ไม่แน่ใจว่า list เก็บ model เป็น value หรือ text นะ 
+        $scope.data_filter = [{ id_key1: 0, id_key2: 0 }];
+        $scope.area_selected = [0];
+        $scope.plant_selected = [0];
+        $scope.selected = {
+            area: ''
+        };
+    }
+
     function check_data() {
         var arr_active = [];
         angular.copy($scope.data, arr_active);
@@ -417,6 +296,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         console.log(arr_json)
         return angular.toJson(arr_json);
     }
+
+    function apply() {
+        try {
+            if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
+                $scope.$apply();
+            }
+        } catch { }
+    };
 
     ///////////////////////////  Pagination  ///////////////////////////
     function setPagination(){
