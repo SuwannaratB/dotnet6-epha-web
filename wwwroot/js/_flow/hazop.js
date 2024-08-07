@@ -7035,6 +7035,22 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.owner_status = 'employee'; //1 for em || 2 for teams to sent to p'kul
         }
 
+        console.log("item===========================================",item)
+
+        if(form_type === "approver"){
+            $scope.data_approver.forEach(item => {
+                if (item.user_name) {
+                    $scope.clickedStates[item.user_name] = true;
+                }
+            });
+        }else if(form_type === "member"){
+            $scope.data_memberteam.forEach(item => {
+                if (item.user_name) {
+                    $scope.clickedStates[item.user_name] = true;
+                }
+            });        
+        }
+
         apply();
         //alert($scope.selectDatFormType);
         $('#modalEmployeeAdd').modal({
@@ -7410,7 +7426,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         //$scope.formData_outsider = [];
     };
 
-    $scope.removeDataEmployee = function (seq, seq_session,type) {
+    $scope.removeDataEmployee = function (data, seq_session,type) {
+
+        var seq = data.seq;
+
+        $scope.clickedStates[data.user_name] = false;
 
         if(type === 'member'){
             var arrdelete = $filter('filter')($scope.data_memberteam, function (item) {

@@ -114,7 +114,7 @@
                         Change Action Owner
                     </button>
                 </span>
-                <span class="mx-2" ng-if="params == 'edit_approver' && action_part == 7">
+                <span class="mx-2" ng-if="params == 'edit_approver' && action_part == 4">
                     <button class="btn btn-primary btn-sm" 
                         ng-click="confirmSave('save')">
                         Change Approver
@@ -3877,16 +3877,16 @@
                                             @*<th class="" scope="col">Employee Type</th>*@
                                         </tr>
                                     </thead>
-                                    <tbody class=" list">
-                                            <tr class="hover-actions-trigger btn-reveal-trigger position-static text-center"
-                                                ng-class="{'row-faded': clickedStates[item.employee_name] || (selectDatFormType === 'approver_ta3' && data_approver_ta3[0].user_name === item.employee_name)}"
-                                                ng-repeat="item in employeelist_show">
-                                                
-                                                <!-----------ng-if="employeelist_show.length > 0 && employeelist_show[0].employee_displayname !== null" ------->
+                                    <tbody class=" list" style="border-collapse: separate; border-spacing: 0 10px; width: 100%;">
+                                        <tr class="hover-actions-trigger btn-reveal-trigger position-static text-center cursor-pointer modal-employee"
+                                            ng-class="{'selected-row': clickedStates[item.employee_name]}"
+                                            style="margin: 10px 0; padding: 20px; border-radius: 15px; transition: background-color 0.3s ease, box-shadow 0.3s ease; box-shadow: 0 4px 10px rgba(0,0,0,0.1); background: white;"
+                                            ng-repeat="item in employeelist_show"
+                                            ng-click="choosDataEmployee(item)">
                                                 <td class="">
                                                     <span class="mx-1">
                                                         <button class="btn btn-outline-secondary p-1 cursor-pointer"
-                                                                ng-class="{'btn-clicked': clickedStates[item.employee_name],'skeleton': loadingData, 'disabled': selectDatFormType === 'approver_ta3' && data_approver_ta3[0].user_name === item.employee_name}" 
+                                                                ng-class="{'btn-outline-primary': !clickedStates[item.employee_name], 'btn-clicked': clickedStates[item.employee_name]}"                                                             
                                                                 style="color: #2445fc; background-color: #f1f2f4; border-color: #2445fc;"
                                                                 data-toggle="tooltip" 
                                                                 data-placement="top" 
@@ -3939,11 +3939,15 @@
                                     </tbody>
                                 </table>
                                 <div class="pagination-container" ng-show="employeelist_show.length > 1">
-                                    <button class="pagination-button" ng-disabled="currentPage === 1" ng-click="action_changepage('prevPage')">Previous</button>
-                                    <!-- Page numbers -->
-                                    <span class="pagination-info">Page {{currentPage }} of {{ totalPages}}</span>
-                                    <!-- Next page button -->
-                                    <button class="pagination-button" ng-disabled="currentPage === totalPages" ng-click="action_changepage('nextPage')">Next</button>
+                                    <button class="pagination-button" ng-disabled="currentPage === 1" ng-click="action_changepage('prevPage')">
+                                        Previous
+                                    </button>
+                                    <span class="pagination-info">
+                                        Page {{currentPage}} of {{totalPages}}
+                                    </span>
+                                    <button class="pagination-button" ng-disabled="currentPage === totalPages" ng-click="action_changepage('nextPage')">
+                                        Next
+                                    </button>
                                 </div>
 
                             </div>
@@ -3974,7 +3978,8 @@
 
                 <div class="modal-body h-50"  
                     ng-if="(selectDatFormType !== 'owner' && selectDatFormType !== 'approver_ta3' && params !== 'edit_approver' && (data_memberteam || data_approver).length > 1 )">
-                    <div class="col-auto py-2" ng-repeat="item2 in (selectDatFormType === 'member' ? data_memberteam : data_approver) | toArray | filter:{id_session: selectdata_session }"
+                    <div class="col-auto py-1 mb-3 border-bottom" ng-repeat="item2 in (selectDatFormType === 'member' ? data_memberteam : data_approver) | toArray | filter:{id_session: selectdata_session }"
+                        style="background-color: #fff; border-radius: 5px; padding: 8px;"
                         ng-if="!(item2.user_displayname == '' || item2.user_displayname == null)">
                         <div class="d-flex align-items-center p-1" style="height: 20px;">
                              <button class="btn btn-outline-secondary p-1" 

@@ -688,9 +688,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             } catch { 
                 $("#divLoading").hide(); 
-             }
+            }
 
-             updateDataSessionAccessInfo();
+             updateDataSessionAccessInfo('session')
+
         } else {
             fileInfoSpan.textContent = "";
         }
@@ -2534,7 +2535,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }  
 
         if($scope.params !== null){
-            console.log("$scope.params",$scope.params)
 
             if($scope.params != 'edit_approver'){
                 $scope.action_owner_active = true;
@@ -2553,7 +2553,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 } 
 
                 if($scope.params === 'edit_approver'){
+                    console.log("now we will edite / change apprfover ",$scope.params )
                     $scope.action_owner_active = false;
+                    $scope.save_type = false;
 
                 }  
 
@@ -4722,6 +4724,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
         }
 
+        // Check follow up edit
+        if ($scope.params) {
+            return $('#modalEditConfirm').modal('show');
+        }
+
         if(action === 'save' && $scope.isMainApprover){
             return $('#modalEditConfirm').modal('show');
         }
@@ -5598,6 +5605,20 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.searchText = '';
         $scope.approve_index = index;
 
+
+        if(form_type === "approver"){
+            $scope.data_approver.forEach(item => {
+                if (item.user_name) {
+                    $scope.clickedStates[item.user_name] = true;
+                }
+            });
+        }else if(form_type === "member"){
+            $scope.data_memberteam.forEach(item => {
+                if (item.user_name) {
+                    $scope.clickedStates[item.user_name] = true;
+                }
+            });        
+        }
     
         // Get form data if needed
         $scope.formData = $scope.getFormData();
@@ -5766,8 +5787,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 return (item.id_session == seq_session && item.user_name == employee_name);
             });
         
-            console.log("member",item)
-            console.log("employee_displayname",employee_displayname)
             if (arr_items.length == 0) {
 
                 //add new employee 
@@ -5957,7 +5976,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         $scope.formData = $scope.getFormData();
         $scope.clickedStates[item.employee_name] = true;
-        //$scope.formData_outsider = $scope.getOutsourceFormData();
+
 
         if (xformtype == "owner" || xformtype == "approver_ta3" || xformtype == "edit_approver") {
             $('#modalEmployeeAdd').modal('hide');
@@ -5981,7 +6000,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         //$scope.formData_outsider = [];
     };
 
-    $scope.removeData = function(seq, seq_session, selectDatFormType) {
+    $scope.removeData = function(data, seq_session, selectDatFormType) {
+
+        var seq = data.seq;
+
+        $scope.clickedStates[data.user_name] = false;
 
         // Handle different cases based on selectDatFormType
         switch (selectDatFormType) {
@@ -6009,6 +6032,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             default:
                 break;
         }
+        
+
     };
 
     $scope.removeDataEmployee = function (seq, seq_session) {
@@ -6529,16 +6554,37 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     //access each role
     $scope.Access_check = function(task) {
-
+        let accessInfo = {
+            canAccess: false,
+            isTA2: false,
+            isTA3: false
+        };
+    
+        // If user is an admin, allow access
         if ($scope.flow_role_type === 'admin') {
-            return true;
+            accessInfo.canAccess = true;
+            return accessInfo;
         }
-
-        if ($scope.flow_role_type === 'employee' && $scope.user_name === task.user_name) {
-            return true;
+    
+        // If user is an employee
+        if ($scope.flow_role_type === 'employee') {
+            // Check if the task belongs to the user (TA2)
+            if ($scope.user_name === task.user_name) {
+                accessInfo.isTA2 = true;
+                accessInfo.canAccess = true; // TA2 should have access to their own tasks
+                console.log("User is TA2, granting access:", accessInfo);
+            } else {
+                // Check if the user is a TA3 for this task
+                for (let item of $scope.data_approver_ta3) {
+                    if (item.id_approver === task.id && $scope.user_name == item.user_name) {
+                        accessInfo.isTA3 = true;
+                        accessInfo.canAccess = true;               
+                    }
+                }
+            }
         }
-
-        return false;
+    
+        return accessInfo;
     };
     
     function validBeforRegister() {

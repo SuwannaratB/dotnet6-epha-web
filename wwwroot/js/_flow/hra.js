@@ -6859,6 +6859,20 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 $scope.action_tabs = 'search_tab'; //1 for em || 2 for teams to sent to p'kul
             }
 
+            if(form_type === "approver"){
+                $scope.data_approver.forEach(item => {
+                    if (item.user_name) {
+                        $scope.clickedStates[item.user_name] = true;
+                    }
+                });
+            }else if(form_type === "member"){
+                $scope.data_memberteam.forEach(item => {
+                    if (item.user_name) {
+                        $scope.clickedStates[item.user_name] = true;
+                    }
+                });        
+            }
+
             apply();
             $('#modalEmployeeAdd').modal({
                 backdrop: 'static',
@@ -7055,6 +7069,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 
             return deferred.promise;
         };
+
+        $scope.clickedStates = {};
+        
         $scope.choosDataEmployee = function (item) {
 
                 var id = item.id;
@@ -7066,6 +7083,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                 var seq_session = $scope.selectdata_session;
                 var xformtype = $scope.selectDatFormType;
+
+                $scope.clickedStates[item.employee_name] = true;
 
                 if (xformtype == "member") {
 
@@ -7158,6 +7177,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         result.user_title = employee_position;
 
                     }
+                    
+                    
                     $('#modalEmployeeAdd').modal('hide');
                 }
                 else if (xformtype == "worker") {
@@ -7238,6 +7259,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     updateDataSessionAccessInfo('session');
                 }
 
+                console.log("==================================================")
+                console.log("$scope.clickedStates",$scope.clickedStates)
+                console.log("==================================================")
 
                 if (xformtype == "approver_ta3" || xformtype == "edit_approver") {
                     $('#modalEmployeeAdd').modal('hide');
@@ -7248,8 +7272,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 }    
         };
 
-        $scope.removeDataEmployee = function (seq, seq_session) {
+        $scope.removeDataEmployee = function (data, seq_session) {
                 const actions = $scope.selectDatFormType;
+
+                var seq = data.seq;
+
+                $scope.clickedStates[data.user_name] = false;
 
                 if (actions == 'member') {
                     var arrdelete = $filter('filter')($scope.data_memberteam, function (item) {
@@ -9157,7 +9185,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             if ($scope.user_name === task.user_name) {
                 accessInfo.isTA2 = true;
                 accessInfo.canAccess = true; // TA2 should have access to their own tasks
-                console.log("User is TA2, granting access:", accessInfo);
             } else {
                 // Check if the user is a TA3 for this task
                 for (let item of $scope.data_approver_ta3) {
