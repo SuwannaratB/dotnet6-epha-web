@@ -7035,8 +7035,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.owner_status = 'employee'; //1 for em || 2 for teams to sent to p'kul
         }
 
-        console.log("item===========================================",item)
-
         if(form_type === "approver"){
             $scope.data_approver.forEach(item => {
                 if (item.user_name) {

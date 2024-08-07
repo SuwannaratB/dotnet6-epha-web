@@ -1,4 +1,4 @@
-﻿@{
+@{
     ViewData["Title"] = "HRA Sub-Sofware";
 
     Layout = "~/Views/Shared/_LayoutWeb.cshtml";
@@ -1732,8 +1732,9 @@
                                             <th class=" align-top" >Frequency Level</th>
                                             <th class=" align-top" >Exposure Band</th>
                                             <th class=" align-top" >standard</th>
-                                            <th class=" align-top" ng-click="Matrix_Rating('Exposure_Level')">
+                                            <th class=" align-top cursor-pointer" ng-click="Matrix_Rating('Exposure_Level')">
                                                 Exposure<br/>Level = [3.7] <br/>vs [3.8]
+                                                <a class="fa-solid fa-subtitles" aria-label="Exposure_Level" style="color: #19a139"></a>
                                             </th>
                                             <th class="align-top cursor-pointer" ng-click="Matrix_Rating('Exposure_Rating')">
                                                 Exposure<br/>Rating = [3.6] <br/>vs [3.9]
@@ -3244,8 +3245,8 @@
                         src="~/assets/img/exposure_rating.png" 
                         style="max-width: 100%; max-height: 100%; height: auto; width: auto; display: block; margin: auto;">
                     <img ng-if="select_modal === 'Frequency_Rating'" 
-                        src="~/assets/img/risk_rating.png" 
-                        style="max-width: 100%; max-height: 100%; height: auto; width: auto; display: block; margin: auto;">
+                        src="/assets/img/risk_rating.png" 
+                        style="max-width: 100%; max-height: 80%; height: auto; width: 800px; display: block; margin: auto;object-fit: cover;">
                     <img ng-if="select_modal === 'Exposure_Level'" 
                         src="~/assets/img/exposure_level.png" 
                         style="max-width: 100%; max-height: 100%; height: auto; width: auto; display: block; margin: auto;">
@@ -3412,20 +3413,24 @@
                                         style="border-radius: 10px 10px 0px 0px !important;"
                                        aria-selected="tab.isActive">Search Employee/Contract</a>
                                 </li>
-                                <li class="mx-2" ng-if="tab.isShow || true" ng-class="{ 'no-drop': params === 'edit_action_owner','disabled-link', params === 'edit_action_owner' }">
+                                <li class="mx-2" ng-if="tab.isShow || true" ng-class="{ 'no-drop': params === 'edit_action_owner', 'disabled-link': params === 'edit_action_owner' }">
                                     <a ng-click="selectTab('manage_tabs')"
                                     class="btn border border-0"
-                                    ng-class="{'btn border border-0 border-bottom border-primary text-primary active': (action_tabs === 'manage_tabs'),
-                                                'btn border border-0': (action_tabs === 'search_tab'),
-                                                'btn border border-0 cant-Access disabled-link': !selectedData.responder_user_displayname,
-                                                'btn border border-0 cant-Access disabled-link': params === 'edit_action_owner'}"
+                                    ng-class="{
+                                        'btn border border-0 border-bottom border-primary text-primary active': action_tabs === 'manage_tabs',
+                                        'btn border border-0': action_tabs === 'search_tab',
+                                        'btn border border-0 cant-Access disabled-link': !selectedData.responder_user_displayname || params === 'edit_action_owner'
+                                    }"
                                     style="border-radius: 10px 10px 0px 0px !important;"
                                     ng-disabled="!selectedData.responder_user_displayname || params === 'edit_action_owner'"
                                     aria-selected="tab.isActive"
-                                    ng-style="{'opacity': selectedData.responder_user_displayname  === null ? 0.5 : 1, 'pointer-events': selectedData.responder_user_displayname  === null ? 'none' : 'auto'}">
-                                    Manage Recommendations
+                                    ng-style="{
+                                        'opacity': selectedData.responder_user_displayname === null ? 0.5 : 1, 
+                                        'pointer-events': selectedData.responder_user_displayname === null ? 'none' : 'auto'}">
+                                        Manage Recommendations
                                     </a>
                                 </li>
+
                             </ul>
                         </div>
                     </nav>
@@ -3622,7 +3627,7 @@
                 </div>
 
                 <!-------------- Show name after add------------------------------->
-                <div class="modal-header bg-light" ng-if="formData.length > 1" 
+                <div class="modal-header bg-light" 
                     style="border-bottom: 1px solid #e9ecef; padding: 15px 20px;"
                     ng-if="selectDatFormType !== 'owner' && params !== 'edit_approver' && 
                             ((selectDatFormType === 'member' && data_memberteam.length > 1) || 

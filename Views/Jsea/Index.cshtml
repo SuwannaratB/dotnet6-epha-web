@@ -873,7 +873,7 @@
                                                                     </div>
                                                                 </div>
 
-                                                                <div ng-repeat="item2 in data_relatedpeople_outsider | toArray | filter:{id_session: selectdata_session, user_type:'specialist'}" 
+                                                                <div ng-repeat="item2 in data_relatedpeople_outsider | toArray | filter:{id_session: item.seq, user_type:'specialist'}" 
                                                                     ng-if="item2.user_displayname !== null && item2.id_session === item.seq" class="mb-2 p-2 border-bottom">
                                                                     <div class="d-flex align-items-center">
                                                                         <label class="mb-0 fw-bold text-1100" style="width: 80%;">{{ item2.user_displayname }}</label>
@@ -2437,7 +2437,7 @@
                                         </thead>
 
                                         <tbody class="list" id="customer-rating-table-body">
-                                            <tr ng-repeat="item in data_approver | orderBy:['no']"
+                                            <tr ng-repeat="item in data_approver | filter: { id_session: data_drawing_approver[0].id_session }""
                                                 ng-init="accessInfo = Access_check(item)"
                                                 ng-style="{ 'background-color': accessInfo.canAccess ? '' : '#f9fbff' }"
                                                 ng-class="{ 'task-highlight':  accessInfo.canAccess}"       
@@ -3894,11 +3894,15 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body text-start" style="font-size: 1rem; color: #333;">
-                <p class="mt-3" style="color: grey; font-weight: bold;">
-                    {{ typeToRemove == 'template' 
-                    ? 'Are you sure you want to remove this uploaded file? This action will delete all data from the worksheet, including related information. This action cannot be undone.'
-                    : 'Are you sure you want to remove this item?' }}                </p>
+            <div class="modal-body text-start" style="font-size: 1rem; color: #333;" >
+                <p class="mt-3" style="color: grey; font-weight: bold;" ng-if="typeToRemove != 'template'">
+                    Are you sure you want to remove this item?              
+                </p>
+
+                <p class="mt-3" style="color: grey; font-weight: bold;" ng-if="typeToRemove == 'template' ">
+                    Are you sure you want to remove this uploaded file? <br>
+                    This action will delete all data from the worksheet, including related information. This action cannot be undone.
+                </p>
             </div>
             <div class="modal-footer justify-content-end" style="border-top: none;">
                 <button type="button" class="btn btn-light" data-bs-dismiss="modal" ng-click="action_remove('no')" style="border-radius: 5px; padding: 0.5rem 1rem; margin-right: 10px;">No, Keep It</button>
