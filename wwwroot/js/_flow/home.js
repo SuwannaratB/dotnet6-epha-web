@@ -42,6 +42,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, conFig) {
             },
             success: function (data) {
                 var arr = data;
+                console.log("================================================",arr)
                 if (arr.length > 0) {
                     $scope.menu_hazop = arr.some(item => item.page_controller === 'hazop');
                     $scope.menu_jsea = arr.some(item => item.page_controller === 'jsea');
@@ -84,7 +85,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, conFig) {
       
         var controller_action_befor = 'Home/Portal'; 
         var controller_text = "home";
-        var pha_type_doc = 'followup_from_portal'; 
+        var pha_type_doc = 'create'; 
         var pha_sub_software = page.toUpperCase();  
 
         $.ajax({

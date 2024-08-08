@@ -602,7 +602,7 @@
                                                         <div class="row d-flex">
                                                             <!-- Member Team Section -->
                                                             <div class="col-5">
-                                                                <div class="mb-2 d-flex align-items-center">
+                                                                <div class="mb-2 d-flex align-items-center" ng-if="tab_general_active">
                                                                     <button class="btn btn-outline-primary btn-sm d-flex align-items-center mb-2 custom-btn p-2"
                                                                             style="color: #2445fc; background-color: #f1f2f4; border-color: #2445fc; transition: all 0.3s ease;"
                                                                             ng-click="openDataEmployeeAdd(item, 'member')">
@@ -610,6 +610,8 @@
                                                                         Add Member Team/Attendees
                                                                     </button>
                                                                 </div>
+                                                                <div ng-if="!tab_general_active"><h6>Member Team</h6></div>
+
 
                                                                 <div ng-repeat="item2 in data_memberteam" 
                                                                     ng-if="item2.user_name !== null && item2.id_session === item.seq" class="mb-2 p-2 px-0 border-bottom">
@@ -630,7 +632,7 @@
 
                                                             <!-- Approver Section -->
                                                             <div class="col-5"">
-                                                                <div class="mb-2 d-flex align-items-center">
+                                                                <div class="mb-2 d-flex align-items-center" ng-if="tab_general_active">
                                                                     <button class="btn btn-outline-primary btn-sm d-flex align-items-center mb-2 custom-btn"
                                                                             style="color: #2445fc; background-color: #f1f2f4; border-color: #2445fc; transition: all 0.3s ease;"
                                                                             ng-click="openDataEmployeeAdd(item, 'approver')" title="Assign approvers for this session">
@@ -638,6 +640,8 @@
                                                                         Add Assessment Team Leader
                                                                     </button>
                                                                 </div>
+                                                                <div ng-if="!tab_general_active"><h6>Assessment Team Leader</h6></div>
+
 
                                                                 <div ng-repeat="item2 in data_approver" 
                                                                     ng-if="item2.user_name !== null && item2.id_session === item.seq" class="mb-2 p-2 px-0 border-bottom">

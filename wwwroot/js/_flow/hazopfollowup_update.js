@@ -270,6 +270,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
     }
 
     $scope.toggleChanged = function() {
+
+        if($scope.flow_role_type === 'admin'){
+            return false;
+        }
+
         $scope.toggleStatus = !$scope.toggleStatus
         if ($scope.toggleStatus) {
             var list =  $filter('filter')($scope.data_details_old, function (item) { 
@@ -589,7 +594,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                 // add key implement def true for status 13 
                 $scope.data_details.forEach(function(_item) {
                     if ($scope.data_pha_doc != 14  && _item.responder_action_type === 0) {
-                        console.log("we will set it to false")
                         _item.implement = false;
                     }else{
                         console.log("it ")
@@ -634,8 +638,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                 $scope.DetailsShow = '' + arr.pha_doc[0].pha_no + ' (' + arr.pha_doc[0].pha_request_name + ')';
                 $scope.DetailsShow2 = '' + arr.pha_doc[0].pha_status_desc;
                 $scope.document_module = (arr.pha_doc[0].pha_status == 13 ? 'followup' : 'review_followup');
-                
-                $scope.toggleChanged();
+ 
+                if($scope.flow_role_type != 'admin'){
+                    $scope.toggleChanged();
+                }                
 
                 apply();
             },
