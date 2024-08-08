@@ -196,24 +196,24 @@ AppMenuPage.controller(
       }
 
       $scope.addData = function (item) {
-        //add new
         var seq = $scope.MaxSeqDataRoleType;
-
+    
         var newInput = clone_arr_newrow($scope.data_role_type_def)[0];
         newInput.seq = seq;
         newInput.id = seq;
         newInput.active_type = 1;
-        newInput.name = "xxx";
-        newInput.descriptions = "xxxtxxx";
+        newInput.name = "";  
+        newInput.descriptions = "";
         newInput.default_type = 0;
         newInput.action_type = "insert";
-        newInput.action_change = 1;
-
+        newInput.action_change = 1;  
+    
         $scope.data_role_type.push(newInput);
         $scope.MaxSeqDataRoleType = Number($scope.MaxSeqDataRoleType) + 1;
-
+    
         apply();
-      }
+    }
+    
 
       $scope.removeData = function (seq, index) {
         // Show the confirmation dialog
@@ -355,19 +355,28 @@ AppMenuPage.controller(
       function check_data_role_type() {
         var arr_active = [];
         angular.copy($scope.data_role_type, arr_active);
+    
+        // Ensure you are getting the expected data
+        console.log("Active Data Before Filter:", arr_active);
+    
         var arr_json = $filter("filter")(arr_active, function (item) {
-          return (
-            (item.action_type == "update" && item.action_change == 1) ||
-            item.action_type == "insert"
-          );
+            return item.action_change == 1 || item.action_type == "insert";
         });
-
+    
+        // Ensure `arr_json` is filtered correctly
+        console.log("Filtered Data:", arr_json);
+    
         for (var i = 0; i < $scope.data_role_type_delete.length; i++) {
-          $scope.data_role_type_delete[i].action_type = "delete";
-          arr_json.push($scope.data_role_type_delete[i]);
+            $scope.data_role_type_delete[i].action_type = "delete";
+            arr_json.push($scope.data_role_type_delete[i]);
         }
+    
+        // Log the final data to be sent
+        console.log("Data to be Sent:", arr_json);
+    
         return angular.toJson(arr_json);
-      }
+    }
+    
       function check_data_menu_setting() {
         var arr_active = [];
         angular.copy($scope.data_menu_setting, arr_active);

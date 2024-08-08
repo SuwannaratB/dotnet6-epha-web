@@ -366,37 +366,37 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                 const request = new XMLHttpRequest();
                 request.open("POST", url_ws + 'masterdata/set_master_guidewords', true);
                 request.setRequestHeader('Content-Type', 'application/json'); // Set content type to JSON
-        
+    
                 request.onreadystatechange = function () {
                     if (request.readyState === XMLHttpRequest.DONE) {
                         if (request.status === 200) {
                             try {
-                                const responseFromService = request.responseText;
+                            const responseFromService = request.responseText;
 
-                                console.log(responseFromService);
-                                
-                                const jsonArray = JSON.parse(responseFromService);
-
+                            console.log(responseFromService);
+    
+                            const jsonArray = JSON.parse(responseFromService);
+    
                                 // Handle response from service
                                 if (jsonArray.length > 0) {
                                     const file_name = jsonArray[0].ATTACHED_FILE_NAME;
                                     const file_path = jsonArray[0].ATTACHED_FILE_PATH;
-        
+    
                                     // Example of updating $scope or other state
                                     const arr = $filter('filter')($scope.data_drawing, function (item) {
                                         return (item.seq === fileSeq);
                                     });
         
-                                    if (arr.length > 0) {
+                            if (arr.length > 0) {
                                         arr[0].action_change = 1;
-                                        arr[0].document_file_name = file_name;
-                                        arr[0].document_file_path = (url_ws.replace('/api/', '')) + file_path;
-                                        arr[0].document_file_size = Math.round(file.size / 1024); // Size in KB
-                                        arr[0].document_module = "guide_words";
-                                        arr[0].module = "guide_words";
+                                arr[0].document_file_name = file_name;
+                                arr[0].document_file_path = (url_ws.replace('/api/', '')) + file_path;
+                                arr[0].document_file_size = Math.round(file.size / 1024); // Size in KB
+                                arr[0].document_module = "guide_words";
+                                arr[0].module = "guide_words";
                                         arr[0].seq = fileSeq;
-                                        $scope.$apply();
-
+                                $scope.$apply();
+    
                                         console.log(file_name);
                                     }
                                 }
