@@ -1500,6 +1500,41 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
         return false;
     };
     
+        //access each role
+        $scope.Access_check = function(task) {
+            let accessInfo = {
+                canAccess: false,
+                isAdmin: false,
+                isEmployee: false,
+                isOwner:false
+            };
+        
+            // If user is an admin, allow access
+            if ($scope.flow_role_type === 'admin') {
+                accessInfo.canAccess = true;
+                accessInfo.isAdmin = true;
+                                
+                return accessInfo;
+            }
+        
+            // If user is an employee
+            if ($scope.flow_role_type === 'employee') {
+                // Check if the task belongs to the user (TA2)
+                if ($scope.user_name === task.user_name) {
+
+                    accessInfo.isOwner = true;
+                    accessInfo.canAccess = true; 
+                } else {
+
+                    accessInfo.isEmployee = true;
+                    accessInfo.canAccess = false; 
+                }
+            }
+        
+            return accessInfo;
+        };
+    
+        
     $scope.hasResponderUserDisplayName = function(item) {
         return item.responder_user_displayname && item.responder_user_displayname.trim() !== '';
     };

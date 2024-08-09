@@ -895,16 +895,15 @@
                                                         <div class="row g-2" ng-class="{'disabled-link':(!tab_general_active)}">
 
                                                             <span class="row ms-1 p-0">
-
                                                                 <span class="col-md-4  p-1 ">
                                                                     <label class="form-label d-none" for="meeting_date">Meeting Date</label>
-
-                                                                    <div class="flatpickr-input-container">
-                                                                        <input type="text" id="meeting_date" class="form-control rounded-1 datetimepicker flatpickr-input" 
-                                                                            ng-model="item.meeting_date" placeholder="dd/mm/yyyy">
-                                                                        <i class="flatpickr-icon"></i>
-                                                                    </div>
-
+                                                                    <input type="date" 
+                                                                        class="form-control rounded-1 datetimepicker cursor-pointer" 
+                                                                        id="meeting_date" 
+                                                                        name="meeting_date"
+                                                                        ng-change="actionChange(item,item.seq,'')"
+                                                                        ng-model="item.meeting_date" 
+                                                                        placeholder="dd/mm/yyyy">
                                                                 </span>
 
                                                                 <span class="col-md-3  p-1 d-flex">

@@ -1590,6 +1590,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 } else {
                     apply();
                     set_alert('Error', arr[0].status);
+                    //window.open('hazop/search', "_top");
                 }
 
             },
@@ -5257,7 +5258,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     function set_alert(header, detail) {
         $scope.Action_Msg_Header = header;
         $scope.Action_Msg_Detail = detail;
-        $('#modalMsg').modal('show');
+        $timeout(function() {
+            $('#modalMsg').modal('show');
+        });   
     }
     function set_alert_confirm(header, detail) {
 
@@ -5266,7 +5269,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.Action_Msg_Header = header;
         $scope.Action_Msg_Detail = detail;
 
-        $('#modalMsg').modal('show');
+        $timeout(function() {
+            $('#modalMsg').modal('show');
+        });   
     }
 
 
@@ -5985,7 +5990,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.clickedStates = {};
         $scope.searchIndicator = {
             text: ''
-        }        
+        }    
+        $scope.showContractor = false;    
         //$scope.formData_outsider = [];
     };
 
