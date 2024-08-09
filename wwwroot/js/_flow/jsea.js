@@ -1587,9 +1587,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         return;
                     }
 
-                } else {
-                    apply();
-                    set_alert('Error', arr[0].status);
+                } else  {
+                    //set_alert('Error', arr[0].status);
+                    $('#returnModal').modal({
+                        backdrop: 'static',
+                        keyboard: false 
+                    }).modal('show');
                     //window.open('hazop/search', "_top");
                 }
 
@@ -2983,8 +2986,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
 
     $scope.triggerRemove = function(data,seq, index, type) {
-        console.log("data",data)
-        console.log("index, type",index, type)
         if (seq !== null && index !== null) {
             $scope.seqToRemove = seq;
             $scope.indexToRemove = index;

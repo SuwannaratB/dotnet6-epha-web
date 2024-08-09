@@ -1499,10 +1499,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     }
                 }
                 else {
-                    set_alert_warning('Error', arr[0].status);
-                    window.open('hazop/search', "_top");
-
-                    apply();
+                    $('#returnModal').modal({
+                        backdrop: 'static',
+                        keyboard: false 
+                    }).modal('show');
                 }
             },
             error: function (jqXHR, textStatus, errorThrown) {
