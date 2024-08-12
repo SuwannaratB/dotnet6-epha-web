@@ -102,8 +102,9 @@
                         <th class="align-middle"  style="min-width: 90px">No</th>
                         <th class="align-middle">Name</th>
                         <th class="align-middle">Description</th>
-                        <th class="align-middle"  style="width: 100px;">Area Process Unit</th>
-                        <th class="align-middle">Complex (TOC)</th>
+                        <th class="align-middle" style="width: 120px;">Company</th>
+                        <th class="align-middle" style="width: 120px;">Area Process Unit</th>
+                        <th class="align-middle" style="width: 120px;">Complex (TOC)</th>
                         <th class="align-middle" style="min-width:100px">Active</th>
                         <th class="align-middle" style="min-width:100px">Management</th>
                     </tr>
@@ -151,6 +152,20 @@
                              <div class="col-auto pt-2">
                                 <select class="form-control mb-0 col-auto" 
                                     placeholder="Name"
+                                    ng-model="item.id_company"
+                                    ng-change="actionChangedData(item,'company')">
+                                    <option  ng-value="item.id_company">
+                                        {{item.id_company}}
+                                    </option>
+                                </select>
+                                <div class="validation-message">{{item.id_company ? '' : 'field is required.'}}</div>
+                            </div>
+                        </td>
+
+                        <td class="align-middle ">
+                             <div class="col-auto pt-2">
+                                <select class="form-control mb-0 col-auto" 
+                                    placeholder="Name"
                                     ng-model="item.id_area"
                                     ng-change="actionChangedData(item,'area')">
                                     <option ng-repeat="item2 in data_area" ng-value="item2.id">
@@ -160,6 +175,7 @@
                                 <div class="validation-message">{{item.id_area ? '' : 'field is required.'}}</div>
                             </div>
                         </td>
+                        
                         <td class="align-middle ">
                             <div class="col-auto pt-2">
                                <select class="form-control mb-0 col-auto" 

@@ -125,7 +125,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                 save_data();
             }
         );
-        
     }
 
     $scope.confirmBack = function () {
