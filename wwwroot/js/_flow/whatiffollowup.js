@@ -284,7 +284,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                         }
                         return value;
                     });
-                    $scope.master_apu = JSON.parse(json);
+                    //$scope.master_apu = JSON.parse(json);
                     try { 
                     var json = JSON.stringify(arr.his_approver, function (key, value) {
                         if (key === "$$hashKey") {
@@ -341,32 +341,37 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                 //admin,request,responder,approver
                 if ($scope.flow_role_type == 'admin') { $scope.tabChange = 'worksheet'; } else { $scope.tabChange = 'responder'; }
 
-                $scope.master_unit_no_show = $filter('filter')($scope.master_unit_no, function (item) { return (item.id_apu == $scope.master_apu[0].id); });
+                try{
 
-                if ($scope.data_general[0].master_apu == null || $scope.data_general[0].master_apu == '') {
-                    $scope.data_general[0].master_apu = null;
-                    var arr_clone_def = { id: $scope.data_general[0].master_apu, name: 'Please select' };
-                    $scope.master_apu.splice(0, 0, arr_clone_def);
-                }
-                if ($scope.data_general[0].master_functional == null || $scope.data_general[0].master_functional == '') {
-                    $scope.data_general[0].master_functional = null;
-                    var arr_clone_def = { id: $scope.data_general[0].master_functional, name: 'Please select' };
-                    $scope.master_functional.splice(0, 0, arr_clone_def);
-                }
-                if ($scope.data_general[0].id_business_unit == null) {
-                    $scope.data_general[0].id_business_unit = null;
-                    var arr_clone_def = { id: $scope.data_general[0].id_business_unit, name: 'Please select' };
-                    $scope.master_business_unit.splice(0, 0, arr_clone_def);
-                }
-                if ($scope.data_general[0].master_unit_no == null || $scope.data_general[0].master_unit_no == '') {
-                    $scope.data_general[0].master_unit_no = null;
-                    var arr_clone_def = { id: $scope.data_general[0].master_unit_no, name: 'Please select' };
-                    $scope.master_unit_no.splice(0, 0, arr_clone_def);
-                }
-                if ($scope.master_approver[0].employee_name == null || $scope.master_approver[0].employee_name == '') {
-                    $scope.master_approver[0].employee_name = null;
-                    var arr_clone_def = { id: $scope.master_approver[0].employee_name, name: 'Please select' };
-                    $scope.master_approver.splice(0, 0, arr_clone_def);
+                    $scope.master_unit_no_show = $filter('filter')($scope.master_unit_no, function (item) { return (item.id_apu == $scope.master_apu[0].id); });
+
+                    if ($scope.data_general[0].master_apu == null || $scope.data_general[0].master_apu == '') {
+                        $scope.data_general[0].master_apu = null;
+                        var arr_clone_def = { id: $scope.data_general[0].master_apu, name: 'Please select' };
+                        $scope.master_apu.splice(0, 0, arr_clone_def);
+                    }
+                    if ($scope.data_general[0].master_functional == null || $scope.data_general[0].master_functional == '') {
+                        $scope.data_general[0].master_functional = null;
+                        var arr_clone_def = { id: $scope.data_general[0].master_functional, name: 'Please select' };
+                        $scope.master_functional.splice(0, 0, arr_clone_def);
+                    }
+                    if ($scope.data_general[0].id_business_unit == null) {
+                        $scope.data_general[0].id_business_unit = null;
+                        var arr_clone_def = { id: $scope.data_general[0].id_business_unit, name: 'Please select' };
+                        $scope.master_business_unit.splice(0, 0, arr_clone_def);
+                    }
+                    if ($scope.data_general[0].master_unit_no == null || $scope.data_general[0].master_unit_no == '') {
+                        $scope.data_general[0].master_unit_no = null;
+                        var arr_clone_def = { id: $scope.data_general[0].master_unit_no, name: 'Please select' };
+                        $scope.master_unit_no.splice(0, 0, arr_clone_def);
+                    }
+                    if ($scope.master_approver[0].employee_name == null || $scope.master_approver[0].employee_name == '') {
+                        $scope.master_approver[0].employee_name = null;
+                        var arr_clone_def = { id: $scope.master_approver[0].employee_name, name: 'Please select' };
+                        $scope.master_approver.splice(0, 0, arr_clone_def);
+                    }
+                }catch{
+
                 }
 
                 apply();

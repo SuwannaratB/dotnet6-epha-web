@@ -1,5 +1,3 @@
-
-using Helpers;
 using Helperselpers;
 using ServicesAuthen;
  
@@ -52,4 +50,3 @@ app.Run();
 
 builder.Services.AddScoped<sessionAuthen>();
 builder.Services.AddScoped<WSSoaps>();
-builder.Services.AddScoped<ExportExcel>();

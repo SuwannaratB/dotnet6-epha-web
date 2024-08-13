@@ -1564,15 +1564,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     }
 
                 } else {
-                    console.log('else')
-                    apply();
-                    // set_alert('Error', arr[0].status);
-                    set_alert('Success', 'Data has been successfully submitted.');
-                    setTimeout(() => {
-                        // window.open('hazop/search', "_top");
-                        page_load();
-                        // window.location.reload()
-                    }, 1000);
+                    $('#returnModal').modal({
+                        backdrop: 'static',
+                        keyboard: false 
+                    }).modal('show');
                 }
 
 

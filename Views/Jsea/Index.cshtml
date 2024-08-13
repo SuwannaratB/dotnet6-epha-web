@@ -791,7 +791,7 @@
                                                         <div class="row d-flex">
                                                             <!-- Member Team Section -->
                                                             <div class="col-4">
-                                                                <div class="mb-2 d-flex align-items-center">
+                                                                <div class="mb-2 d-flex align-items-center" ng-if="tab_general_active">
                                                                     <button class="btn btn-outline-primary btn-sm d-flex align-items-center mb-2 custom-btn p-2"
                                                                             style="color: #2445fc; background-color: #f1f2f4; border-color: #2445fc; transition: all 0.3s ease;"
                                                                             ng-click="openDataEmployeeAdd(item, 'member')">
@@ -806,6 +806,7 @@
                                                                         <i class="fa-solid fa-circle-info fa-lg" style="color: #2445fc;"></i>
                                                                     </span>
                                                                 </div>
+                                                                <div ng-if="!tab_general_active"><h6>Member Team</h6></div>
 
                                                                 <div ng-repeat="item2 in data_memberteam" 
                                                                     ng-if="item2.user_name !== null && item2.id_session === item.seq" class="mb-2 p-2 px-0 border-bottom">
@@ -825,8 +826,8 @@
                                                             </div>
 
                                                             <!-- Approver Section -->
-                                                            <div class="col-4">
-                                                                <div class="mb-2 d-flex align-items-center">
+                                                            <div class="col-4"  >
+                                                                <div class="mb-2 d-flex align-items-center" ng-if="tab_general_active">
                                                                     <button class="btn btn-outline-primary btn-sm d-flex align-items-center mb-2 custom-btn"
                                                                             style="color: #2445fc; background-color: #f1f2f4; border-color: #2445fc; transition: all 0.3s ease;"
                                                                             ng-click="openDataEmployeeAdd(item, 'approver')" title="Assign approvers for this session">
@@ -834,6 +835,7 @@
                                                                         Add Safety Reviewer
                                                                     </button>
                                                                 </div>
+                                                                <div ng-if="!tab_general_active"><h6>Safety Reviewer</h6></div>
 
                                                                 <div ng-repeat="item2 in data_approver" 
                                                                     ng-if="item2.user_name !== null && item2.id_session === item.seq" class="mb-2 p-2 px-0 border-bottom">
@@ -846,10 +848,12 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
+                                                            
+
 
                                                             <!-- Specialist Section -->
                                                             <div class="col-4" >
-                                                                <div class="mb-2 d-flex align-items-center">
+                                                                <div class="mb-2 d-flex align-items-center" ng-if="tab_general_active">
                                                                     <button class="btn btn-outline-primary btn-sm d-flex align-items-center mb-2 custom-btn"
                                                                             style="color: #2445fc; background-color: #f1f2f4; border-color: #2445fc; transition: all 0.3s ease;"
                                                                             ng-click="openDataEmployeeAdd(item, 'specialist')" data-bs-toggle="tooltip" title="Add specialists (e.g., Third party, Licensor, etc)">
@@ -864,6 +868,7 @@
                                                                         <i class="fa-solid fa-circle-info fa-lg" style="color: #2445fc;"></i>
                                                                     </span>
                                                                 </div>
+                                                                <div ng-if="!tab_general_active"><h6>Specialist</h6></div>
 
                                                                 <div ng-repeat="item2 in data_relatedpeople | toArray | filter:{ user_type:'specialist'}" 
                                                                     ng-if="item2.user_displayname !== null && item2.id_session === item.seq" class="mb-2 p-2 px-0 border-bottom">
@@ -873,7 +878,7 @@
                                                                     </div>
                                                                 </div>
 
-                                                                <div ng-repeat="item2 in data_relatedpeople_outsider | toArray | filter:{id_session: selectdata_session, user_type:'specialist'}" 
+                                                                <div ng-repeat="item2 in data_relatedpeople_outsider | toArray | filter:{id_session: item.seq, user_type:'specialist'}" 
                                                                     ng-if="item2.user_displayname !== null && item2.id_session === item.seq" class="mb-2 p-2 border-bottom">
                                                                     <div class="d-flex align-items-center">
                                                                         <label class="mb-0 fw-bold text-1100" style="width: 80%;">{{ item2.user_displayname }}</label>
@@ -890,16 +895,15 @@
                                                         <div class="row g-2" ng-class="{'disabled-link':(!tab_general_active)}">
 
                                                             <span class="row ms-1 p-0">
-
                                                                 <span class="col-md-4  p-1 ">
                                                                     <label class="form-label d-none" for="meeting_date">Meeting Date</label>
-
-                                                                    <div class="flatpickr-input-container">
-                                                                        <input type="text" id="meeting_date" class="form-control rounded-1 datetimepicker flatpickr-input" 
-                                                                            ng-model="item.meeting_date" placeholder="dd/mm/yyyy">
-                                                                        <i class="flatpickr-icon"></i>
-                                                                    </div>
-
+                                                                    <input type="date" 
+                                                                        class="form-control rounded-1 datetimepicker cursor-pointer" 
+                                                                        id="meeting_date" 
+                                                                        name="meeting_date"
+                                                                        ng-change="actionChange(item,item.seq,'')"
+                                                                        ng-model="item.meeting_date" 
+                                                                        placeholder="dd/mm/yyyy">
                                                                 </span>
 
                                                                 <span class="col-md-3  p-1 d-flex">
@@ -2437,7 +2441,7 @@
                                         </thead>
 
                                         <tbody class="list" id="customer-rating-table-body">
-                                            <tr ng-repeat="item in data_approver | orderBy:['no']"
+                                            <tr ng-repeat="item in data_approver | filter: { id_session: data_drawing_approver[0].id_session }""
                                                 ng-init="accessInfo = Access_check(item)"
                                                 ng-style="{ 'background-color': accessInfo.canAccess ? '' : '#f9fbff' }"
                                                 ng-class="{ 'task-highlight':  accessInfo.canAccess}"       
@@ -3880,33 +3884,61 @@
         </div>
     </div>
 
+    <!-- Action Modal Template -->
+    <div class="modal fade" id="returnModal" tabindex="-1" role="dialog" aria-labelledby="returnModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content" style="border-radius: 8px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); min-width: 700px;">
+                <div class="modal-header" style="border-bottom: none; align-items: center; background-color: #f92222; display: flex;">
+                    <h5 class="text-900 mb-0" id="modalEditConfirm">
+                        <i class="fa-solid fa-triangle-exclamation" style="color: white; font-size: 1.5rem; margin-right: 10px;"></i>
+                        <span class="text-white ms-2" style="font-weight: bold;">Error</span> 
+                    </h5>
+                </div>
 
-<!-------- Modal Before Remove ------------->
-<div class="modal fade" id="removeModal" tabindex="-1" role="dialog" aria-labelledby="removeModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content" style="border-radius: 8px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);">
-            <div class="modal-header" style="border-bottom: none; display: flex; align-items: center; background-color: #f8f9fa;">
-                <svg class="bi bi-exclamation-triangle-fill" width="24" height="24" fill="red" style="margin-right: 10px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
-                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0-1A6 6 0 1 0 8 2a6 6 0 0 0 0 12zM7.998 4a.905.905 0 0 1 .902.902v4.196a.905.905 0 0 1-1.804 0V4.902A.905.905 0 0 1 7.998 4zm-.125 7.75a.908.908 0 0 1 1.25 0 .908.908 0 0 1 0 1.25.908.908 0 0 1-1.25 0 .908.908 0 0 1 0-1.25z"/>
-                </svg>
-                <h5 class="modal-title" id="removeModalLabel" style="font-size: 1.25rem; font-weight: 600;">Confirm Removal</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="border: none; background: none;">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body text-start" style="font-size: 1rem; color: #333;">
-                <p class="mt-3" style="color: grey; font-weight: bold;">
-                    {{ typeToRemove == 'template' 
-                    ? 'Are you sure you want to remove this uploaded file? This action will delete all data from the worksheet, including related information. This action cannot be undone.'
-                    : 'Are you sure you want to remove this item?' }}                </p>
-            </div>
-            <div class="modal-footer justify-content-end" style="border-top: none;">
-                <button type="button" class="btn btn-light" data-bs-dismiss="modal" ng-click="action_remove('no')" style="border-radius: 5px; padding: 0.5rem 1rem; margin-right: 10px;">No, Keep It</button>
-                <button type="button" class="btn btn-danger" data-bs-dismiss="modal" ng-click="action_remove('yes')" style="background-color: #ff4d4d; border-color: #ff4d4d; border-radius: 5px; padding: 0.5rem 1rem;">Yes, Delete</button>
+                <div class="modal-body text-start" style="font-size: 1rem; color: #333;">
+                    <p class="mt-3" style="color: grey;">
+                        Unfortunately, an error occurred during the processing of your request. Please contact the system administrator for further assistance.
+                    </p>
+                </div>
+                <div class="modal-footer justify-content-end" style="border-top: none;">
+                    <a href="Home/Portal" class="btn btn-light" style="border-radius: 5px; padding: 0.5rem 1rem; margin-right: 10px; text-decoration: none; display: inline-block; text-align: center; border: 1px solid #ccc; background-color: #f8f9fa;">
+                        Return to Home page
+                    </a>
+                </div>
+
             </div>
         </div>
     </div>
-</div>
+    <!-------- Modal Before Remove ------------->
+    <div class="modal fade" id="removeModal" tabindex="-1" role="dialog" aria-labelledby="removeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" >
+            <div class="modal-content" style="border-radius: 8px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);">
+                <div class="modal-header" style="border-bottom: none; display: flex; align-items: center; background-color: #f8f9fa;">
+                    <svg class="bi bi-exclamation-triangle-fill" width="24" height="24" fill="red" style="margin-right: 10px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0-1A6 6 0 1 0 8 2a6 6 0 0 0 0 12zM7.998 4a.905.905 0 0 1 .902.902v4.196a.905.905 0 0 1-1.804 0V4.902A.905.905 0 0 1 7.998 4zm-.125 7.75a.908.908 0 0 1 1.25 0 .908.908 0 0 1 0 1.25.908.908 0 0 1-1.25 0 .908.908 0 0 1 0-1.25z"/>
+                    </svg>
+                    <h5 class="modal-title" id="removeModalLabel" style="font-size: 1.25rem; font-weight: 600;">Confirm Removal</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="border: none; background: none;">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body text-start" style="font-size: 1rem; color: #333;" >
+                    <p class="mt-3" style="color: grey; font-weight: bold;" ng-if="typeToRemove != 'template'">
+                        Are you sure you want to remove this item?              
+                    </p>
+
+                    <p class="mt-3" style="color: grey; font-weight: bold;" ng-if="typeToRemove == 'template' ">
+                        Are you sure you want to remove this uploaded file? <br>
+                        <span style="color: grey; font-weight: normal;">This action will delete all data from the worksheet, including related information. This action cannot be undone.</span>
+                    </p>
+                </div>
+                <div class="modal-footer justify-content-end" style="border-top: none;">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal" ng-click="action_remove('no')" style="border-radius: 5px; padding: 0.5rem 1rem; margin-right: 10px;">No, Keep It</button>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal" ng-click="action_remove('yes')" style="background-color: #ff4d4d; border-color: #ff4d4d; border-radius: 5px; padding: 0.5rem 1rem;">Yes, Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 <div class="modal autosaveModal" id="autosaved" tabindex="-1" role="dialog" aria-labelledby="autosavedModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">

@@ -243,7 +243,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         var user_name = $scope.user_name;
         var token_doc = '';
 
-        var sub_software = $scope.pha_sub_software.toLowerCase();
+        var sub_software = 'hazop';
+        //var sub_software = $scope.pha_sub_software.toLowerCase();
         var type_doc = 'search';
 
         $.ajax({

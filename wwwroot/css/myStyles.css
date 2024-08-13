@@ -818,4 +818,7 @@ ul.nav li a.btn-nav-menu.btn-outline-primary:hover {
   color: #fff;
 }
 
-
+/*Follow up border*/
+.table-bordered th, .table-bordered td {
+  border: 1px solid #ddd; 
+}

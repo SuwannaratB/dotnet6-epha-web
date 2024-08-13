@@ -40,6 +40,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                 $scope.data_def = clone_arr_newrow(arr.toc);
                 $scope.data_area = JSON.parse(replace_hashKey_arr(arr.area));
                 $scope.data_plant = JSON.parse(replace_hashKey_arr(arr.plant));
+                $scope.data_company = JSON.parse(replace_hashKey_arr(arr.company));
                 $scope.plant_selected = [arr.plant[0].id];
                 $scope.area_selected = [arr.area[0].id];
                 setDataFilter()
@@ -139,14 +140,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
     $scope.newData = function (item) {
         var seq = Number($scope.MaxSeqData);
-        console.log($scope.MaxSeqData)
         var newInput = clone_arr_newrow($scope.data_def)[0];
         newInput.seq = seq;
         newInput.id = 0;
         newInput.active_type = 1;
         newInput.name = '';
         newInput.descriptions = '';
-        newInput.id_company = 1;
+        newInput.id_company = '';
         newInput.id_area = '';
         newInput.action_type = 'insert';
         newInput.action_change = 1;
@@ -155,8 +155,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         $scope.selected['area'] = ''
         setDataFilter()
         setPagination()
-        apply();
-        newTag(`new-${seq}`);
+        $scope.setPage($scope.totalPages)
+        newTag(`new-${seq}`)
+        apply()
     }
 
     $scope.removeData = function(item){
@@ -222,6 +223,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         } else if (field == "inaccept_status") {
             arr.active_type = 1
         }
+        console.log(arr)
         apply();
     }
 
@@ -273,6 +275,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         $scope.data_delete = [];
         $scope.data_area = [];
         $scope.data_plant = [];
+        $scope.data_company = [];
         //ไม่แน่ใจว่า list เก็บ model เป็น value หรือ text นะ 
         $scope.data_filter = [{ id_key1: 0, id_key2: 0 }];
         $scope.area_selected = [0];
@@ -355,7 +358,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
     }
 
     function setDataFilter(){
-        $scope.data.sort((a, b) => b.seq - a.seq);
+        // $scope.data.sort((a, b) => b.seq - a.seq);
         $scope.data_filter = $scope.data
         $scope.selected['area'] = ''
     }

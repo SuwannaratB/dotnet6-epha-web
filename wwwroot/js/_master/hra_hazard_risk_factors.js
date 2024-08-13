@@ -84,7 +84,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             success: function (data) {
                 var arr = data;
                 $scope.data_all = arr;
-                $scope.data = arr.data.sort((a, b) => b.seq - a.seq);
+                $scope.data = arr.data
                 $scope.data_filter = $scope.data;
                 $scope.data_def = clone_arr_newrow(arr.data);
                 $scope.data_hazard_type = JSON.parse(replace_hashKey_arr(arr.hazard_type));
@@ -233,13 +233,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         newInput.action_type = 'insert';
         newInput.action_change = 1;
         $scope.data.push(newInput);
-        $scope.data.sort((a, b) => b.seq - a.seq);
         $scope.MaxSeqData = Number($scope.MaxSeqData) + 1
-        $scope.selected.hazard_type = ''
         setDataFilter()
         setPagination()
+        $scope.setPage($scope.totalPages)
+        newTag(`new-${seq}`)
         apply();
-        newTag(`new-${seq}`);
     }
 
     $scope.removeData = function(item){

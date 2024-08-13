@@ -1587,9 +1587,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         return;
                     }
 
-                } else {
-                    apply();
-                    set_alert('Error', arr[0].status);
+                } else  {
+                    //set_alert('Error', arr[0].status);
+                    $('#returnModal').modal({
+                        backdrop: 'static',
+                        keyboard: false 
+                    }).modal('show');
+                    //window.open('hazop/search', "_top");
                 }
 
             },
@@ -2517,81 +2521,70 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.changeTab(arr_tab[0], arr_tab[0].name);
         }
     }
-    function set_access_formaction(arr){
-
-        //params === admin action
-
-        //pha_status
+    function set_access_formaction(arr) {
+        // params === admin action
+    
+        // pha_status
         /*
         11 D => allow active all
         12 Con => active all
         21 approver => active approver tab  && isMain can edit worksheet
-        13 floow up => !active all
-        14 floow up => !active all
+        13 follow up => !active all
+        14 follow up => !active all
         */
-       
-        if($scope.params != 'edit_approver'){
+    
+        if ($scope.params !== 'edit_approver') {
             $scope.action_owner_active = true;
-        }  
+        }
+    
+        if ($scope.params !== null) {
 
-        if($scope.params !== null){
-
-            if($scope.params != 'edit_approver'){
-                $scope.action_owner_active = true;
-            }  
-            
-
-            if($scope.params !== 'edit') {
+    
+            if ($scope.params !== 'edit') {
                 $scope.tab_general_active = false;
                 $scope.tab_node_active = false;
                 $scope.tab_worksheet_active = false;
                 $scope.tab_managerecom_active = false;
                 $scope.tab_approver_active = false;
-
-                if($scope.params === 'edit_action_owner'){
-                    $scope.action_owner_active = true;
-                } 
-
-                if($scope.params === 'edit_approver'){
-                    console.log("now we will edite / change apprfover ",$scope.params )
-                    $scope.action_owner_active = false;
-                    $scope.save_type = false;
-
-                }  
-
+    
             }
-
-            if($scope.params === 'edit' && $scope.flow_role_type === 'admin') {
+    
+            if ($scope.params === 'edit' && $scope.flow_role_type === 'admin') {
                 $scope.tab_general_active = true;
                 $scope.tab_node_active = true;
                 $scope.tab_worksheet_active = true;
                 $scope.tab_managerecom_active = true;
                 $scope.tab_approver_active = true;
-
                 $scope.save_type = true;
             }
+
+
+            if ($scope.params === 'edit_approver') {
+                $scope.action_owner_active = false;
+                $scope.save_type = false;
+            }else if ($scope.params !== 'edit_approver') {
+                $scope.action_owner_active = true;
+            }
+
+
+
         } else if ($scope.params === null && arr.header[0].pha_status === 21) {
             if (Array.isArray($scope.data_approver)) {
                 let mainApprover = $scope.data_approver.find(item => item.approver_type === 'approver' && item.user_name === $scope.user_name);
-        
-                if (mainApprover) {
-                    $scope.isMainApprover = true;
-                } else {
-                    $scope.isMainApprover = false;
-                }
-
-                
+    
+                $scope.isMainApprover = !!mainApprover;
+    
                 $scope.tab_general_active = false;
                 $scope.tab_worksheet_active = false;
                 $scope.tab_managerecom_active = false;
                 $scope.tab_approver_active = true;
-
             } else {
                 console.log('$scope.data_approver is not an array or is undefined.');
-                $scope.isMainApprover = false; 
+                $scope.isMainApprover = false;
             }
         }
     }
+    
 
     function check_case_member_review() {
 
@@ -2993,8 +2986,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
 
     $scope.triggerRemove = function(data,seq, index, type) {
-        console.log("data",data)
-        console.log("index, type",index, type)
         if (seq !== null && index !== null) {
             $scope.seqToRemove = seq;
             $scope.indexToRemove = index;
@@ -5268,7 +5259,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     function set_alert(header, detail) {
         $scope.Action_Msg_Header = header;
         $scope.Action_Msg_Detail = detail;
-        $('#modalMsg').modal('show');
+        $timeout(function() {
+            $('#modalMsg').modal('show');
+        });   
     }
     function set_alert_confirm(header, detail) {
 
@@ -5277,7 +5270,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.Action_Msg_Header = header;
         $scope.Action_Msg_Detail = detail;
 
-        $('#modalMsg').modal('show');
+        $timeout(function() {
+            $('#modalMsg').modal('show');
+        });   
     }
 
 
@@ -5996,7 +5991,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.clickedStates = {};
         $scope.searchIndicator = {
             text: ''
-        }        
+        }    
+        $scope.showContractor = false;    
         //$scope.formData_outsider = [];
     };
 

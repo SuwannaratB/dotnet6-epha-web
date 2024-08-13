@@ -24,36 +24,202 @@
 
     <script src="~/assets/js/all.min.js"></script>
 
+    <link rel="stylesheet" href="~/css/masterStyles/main_style.css">
+
 }
 
+<div class="p-6" id="divPage" ng-controller="ctrlAppPage">
+    <div class="card container mt-6 px-6 py-4">
+        <div class="title">
+            <span class=" me-2 text-primary"><B>|</B></span> 
+            Functional Location
+        </div>
+        <hr>
+        <div class="d-flex align-items-end justify-content-between pb-2">
+            <div class="d-flex gap-4">
+                <button class="d-flex btn btn-sm btn-success gap-2" ng-click="newData()">
+                    <i class="fa-solid fa-plus"></i>
+                    New Functional Location
+                </button>
+                <div class="d-flex gap-2">
+                    <div class="btn-File-Atthachment">
+                        <button class="d-flex btn btn-sm btn-outline-gray gap-2" ng-click="triggerFileUpload()">
+                            <i class="fa-solid fa-folder-open" ng-if="!fileName" style="color: cornflowerblue;"></i>
+                            <i class="fa-solid fa-file-pdf" ng-if="fileName" style="color: red;"></i>
+                            {{ fileName ? truncateFilename(fileName, 14) :'Import File Atthachment' }}
+                            <i class="fa-solid fa-xmark" ng-if="fileName" style="color: red;"></i>
+                        </button>
+                        @* เอกสารประกอบไม่ใช่การ Import data เข้าระบบ *@
+                        <input type="file"
+                            id="fileInput"
+                            style="display:none"
+                            accept=".xls,.xlsx,.pdf" 
+                            onchange="angular.element(this).scope().handleFileSelect(this)" />
+                    </div>
+                    <button class="d-flex btn btn-sm btn-outline-gray gap-2" ng-click="">
+                        <i class="fa-solid fa-file-arrow-down" style="color: burlywood;"></i>
+                        Import Excel
+                    </button>
+                    <button class="d-flex btn btn-sm btn-outline-gray gap-2" ng-click="">
+                        <i class="fa-solid fa-download" style="color: darkcyan;"></i>
+                        Export Excel
+                    </button>
+                </div>
+            </div>
+            <div class="d-flex align-items-end gap-4">
+                @* <div class="dropdown">
+                    <label class="form-label ps-0 pb-1 col-auto" for="plant">Plant</label>
+                    <select class="form-control mb-0 col-auto" 
+                        ng-model="selected.plant"
+                        ng-change="actionfilter('plant', selected.plant)">
+                        <option value="">All</option>
+                        <option ng-repeat="item2 in data_plant" ng-value="item2.id">
+                            {{item2.name}}
+                        </option>
+                    </select>
+                </div>
+                <div class="dropdown">
+                    <label class="form-label ps-0 pb-1 col-auto" for="area">Area Process Unit</label>
+                    <select class="form-control mb-0 col-auto" 
+                        ng-model="selected.area"
+                        ng-change="actionfilter('area', selected.area)">
+                        <option value="">All</option>
+                        <option ng-repeat="item2 in data_area" ng-value="item2.id">
+                            {{item2.name}}
+                        </option>
+                    </select>
+                </div> *@
+                <div class="d-flex gap-2">
+                    <button class="btn btn-sm btn-secondary" style="width: 100px;" ng-click="confirmBack()">Back</button>
+                    <button class="btn btn-sm btn-primary " style="width: 100px;" ng-click="confirmSave()">Save</button>
+                </div>
+            </div>
+        </div>
+         @* <span class="d-flex align-items-end pl-2 pb-2" style="font-size: 10px;">เบื้องต้นใช้ค่า field : functional_location ที่นำไปแสดงเท่านั้น</span> *@
+        <div class="card p-2 overflow-auto">
+            <table class="table table-sm fs--1 mb-0" >
+                <thead class="bg-white"> 
+                    <tr class="text-center">
+                        <th class="align-middle"  style="min-width: 90px">No</th>
+                        <th class="align-middle">Name</th>
+                        <th class="align-middle" style="min-width:100px">Active</th>
+                        <th class="align-middle" style="min-width:100px">Management</th>
+                    </tr>
+                </thead>
+                <tbody class="list">
+                    <tr class="hover-actions-trigger btn-reveal-trigger position-static text-center"
+                         ng-repeat="item in paginatedData" id="tr-{{item.seq}}">
+
+                        <td class="align-middle position-relative">
+                            <div id="new-{{item.seq}}" class="new hidden">New</div>
+                            {{$index + 1 + ((currentPage - 1) * pageSize)}}
+                        </td>
+
+                        <td class="align-middle ">
+                            <div class="col-auto pt-2">
+                                <textarea class="form-control form-control-sm " 
+                                    rows="1" 
+                                    type="text"
+                                    style=" min-width: 160px;"
+                                    placeholder="Name"
+                                    ng-required="true"
+                                    ng-model="item.functional_location"
+                                    ng-change="actionChangedData(item,'functional_location')">
+                                </textarea>
+                                <div class="validation-message">{{item.functional_location ? '' : 'field is required.'}}</div>
+                            </div>
+                        </td>
+
+                        <td class="align-middle">
+                            <input type="checkbox" 
+                                class="form-check-input"
+                                style="cursor: pointer;width:20px; height:20px;"
+                                ng-if="(item.active_type==1)" 
+                                checked
+                                ng-click="actionChangedData(item,'accept_status')">
+                            <input type="checkbox" 
+                                class="form-check-input"
+                                style="cursor: pointer;width:20px; height:20px;"
+                                ng-if="!(item.active_type==1)"
+                                ng-click="actionChangedData(item,'inaccept_status')">
+                        </td>
+
+                        <td class="align-middle ">
+                            <button class="btn btn-outline-secondary p-2"
+                                style="color: #ff2828; background-color: #f1f2f4; border-color: #ff2828;"
+                                ng-click=removeData(item)
+                                data-toggle="tooltip"
+                                data-placement="top"
+                                title="Remove">
+                                <span class="fa-regular fa-trash-can fa-lg"></span>
+                            </button>
+                            @* <button class="btn btn-outline-secondary p-2"
+                                style="color: #0abe0a; background-color: #f1f2f4; border-color: #0abe0a;"
+                                ng-click=addData(item.seq,$index)
+                                data-toggle="tooltip"
+                                data-placement="top"
+                                title="Add">
+                                <span class="fas fa-square-plus fa-lg"></span>
+                            </button> *@
+                        </td>
+                    </tr>
+
+                    <tr ng-if="data_filter.length == 0">
+                        <td colspan="10">
+                            <p class="mb-0 ms-3 text-1100 fw-bold text-center"> Not Found </p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <ul class="pagination d-flex align-items-center justify-content-center mt-2">
+                <li class="page-item" ng-class="{disabled: currentPage === 1}">
+                    <a class="page-link" href="" ng-click="prevPage()" tabindex="-1">Previous</a>
+                </li>
+                <li class="page-item" ng-show="1 < currentPage - range" ng-click="setPage(1)">
+                    <a class="page-link" href="">1</a>
+                </li>
+                <li class="page-item" ng-show="1 < currentPage - range">
+                    <span class="page-link">...</span>
+                </li>
+                <li class="page-item" ng-repeat="page in pages"
+                    ng-show="page >= currentPage - range && page <= currentPage + range"
+                    ng-class="{active: currentPage === page}">
+                    <a class="page-link" href="" ng-click="setPage(page)">{{page}}</a>
+                </li>
+                <li class="page-item" ng-show="totalPages > currentPage + range">
+                    <span class="page-link">...</span>
+                </li>
+                <li class="page-item" ng-show="totalPages > currentPage + range" ng-click="setPage(totalPages)">
+                    <a class="page-link" href="">{{totalPages}}</a>
+                </li>
+                <li class="page-item" ng-class="{disabled: currentPage === totalPages}">
+                    <a class="page-link" href="" ng-click="nextPage()">Next</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+@* 
 <div class="content mt-1" style="font-size: 12px; min-height: auto!important;" id="divPage" ng-controller="ctrlAppPage">
-
     <div class="row g-0">
-
         <div class="col-12">
-
             <div class="card shadow-sm p-2 mb-3 bg-light rounded">
-
                 <div class="card-body p-2">
-
                     <div class="row">
-
                         <div class="m-3 row  gx-0 align-items-center">
-
                             <div class="card px-2"
                                 style="padding: 20px 20px 20px 20px; max-width: calc(100% - 30px); box-sizing: border-box;">
                                 <div class="row g-3 justify-content-between align-items-center pt-2 pb-3">
                                     <div class="col-6 col-md">
                                         <h5 class="text-900 mb-0" data-anchor="data-anchor"> <span
-                                                class=" me-2 text-primary"><B>|</B></span>Funtional Location</h5>
+                                                class=" me-2 text-primary"><B>|</B></span>Funtional Location
+                                        </h5>
                                     </div>
                                     <div style="padding: 20px 4px 20px 4px;">
                                         <hr style="margin: 0 4px; border: 0; border-top: 1px solid #ccc;" />
                                     </div>
-
                                     <div class="row g-3 align-items-center pt-2">
                                         <div class="col-auto d-none">
-
                                             <h6 class="fw-semi-bold text-primary ng-binding"><b></b></h6>
                                         </div>
                                         <div class="col-md-10 pt-3">
@@ -65,28 +231,21 @@
                                                     Location</span>
                                             </button>
                                         </div>
-
-
                                         <div class="col-auto pt-3">
                                             <div class="position-relative">
                                                 <button class="btn btn-secondary btn-sm" style="width: 100px;"
-                                                    ng-click="confirmBack()">Back</button>
+                                                    ng-click="confirmBack()">Back
+                                                </button>
                                                 <button class="btn btn-primary btn-sm" style="width: 100px;"
-                                                    ng-click="confirmSave()">Save</button>
+                                                    ng-click="confirmSave()">Save
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-
                                 <div class="row g-3 justify-content-between align-items-center pt-2 pb-3">
-
-
                                     <div class="table-responsive scrollbar " id="table-container">
                                         เบื้องต้นใช้ค่า field : functional_location ที่นำไปแสดงเท่านั้น
-                                        @*seq,id,notif_date,notif_time,notification,orders,typ,p,pls,functional_location,descriptions_func,descriptions
-                                        ,mn_wk,plnt,reported_by,required_start,required_end,user_status,date_update,active_type
-                                        *@
-
                                         <table class="table fs--2 mb-0 " cellpadding="0" cellspacing="0">
                                             <thead class=" text-uppercase  text-center  bg-soft "
                                                 style="font-size: 10px;" id="myHeader">
@@ -95,7 +254,6 @@
                                                     <td style='padding: 15px;'>Functional Location</td>
                                                     <td style='padding: 15px;'>Active</td>
                                                     <td style='padding: 15px;'></td>
-
                                                 </tr>
                                             </thead>
                                             <tbody class="customer-rating-table-body">
@@ -113,14 +271,12 @@
                                                     </td>
                                                     <td class="align-top text-center">
                                                         <div class="p-1 ">
-                                                            
                                                                <input class="form-check-input"
                                                                    style="cursor: pointer;width:20px; height:20px;"
-
-       id="flexSwitchCheckChecked"
-       type="checkbox"
-       ng-checked="item.active_type == 1"
-       ng-if="item.active_type !== undefined" />
+                                                                    id="flexSwitchCheckChecked"
+                                                                    type="checkbox"
+                                                                    ng-checked="item.active_type == 1"
+                                                                    ng-if="item.active_type !== undefined" />
                                                         </div>
                                                     </td>
                                                     <td class="align-top text-center">
@@ -132,74 +288,56 @@
                                                                 ng-click=removeData(item.seq,$index)>
                                                                 <span class="fa-regular fa-trash-can fa-lg"></span>
                                                             </button>
-                                                            
                                                         </div>
                                                     </td>
                                                 </tr>
                                             </tbody>
-
                                         </table>
-
                                     </div>
-
                                 </div>
                                 <div>
                                     File Atthachment : เอกสารประกอบไม่ใช่การ Import data เข้าระบบ
                                 </div>
-
                                 <div class="row g-3 align-items-center pt-2">
                                     <div class="btn-group">
-                                                                <div class="icon-button border p-3" style="border-color: #0d6efd; background-color: #0d6efd;">
-                                                                    <span class="fa-solid fa-arrow-up-from-bracket fa-lg" style="color: #ffffff;"></span>
-                                                                    <span  class="fa-solid fa-file-pdf fa-lg" style="color: #ffffff;"></span>                                                                </div>
-                                                                <button class="Upload-button btn ps-3" style="border: 1px solid #0d6efd; background-color: transparent; color: #0d6efd; width: fit-content;" >
-                                                                    <label class="dz-message-text  fw-bold cursor-pointer"
-                                                                        for="attfile-{{item.seq}}" >
-                                                                        Upload File(Word, Excel, PDF, Image) {{truncateFilename(item.document_file_name, 20)}} ({{item.document_file_size}} KB)
-                                                                    </label>
-                                                                    <input type="file" id="attfile-{{item.seq}}"
-                                                                        name="file{{item.seq}}"
-                                                                        onchange="angular.element(this).scope().fileSelect(this)"
-                                                                        style="display:none" />
-                                                                </button>
-                                                                <button class="Upload-button btn ps-3">
-                                                                    <div class="d-flex align-items-center">
-                                                                        <span class="mr-3 nametext"
-                                                                            id="filename{{item.seq}}" 
-                                                                            
-                                                                            ng-click="downloadFile(item)"
-                                                                            >
-                                                                            <b style="font-size:x-small;">
-                                                                                {{truncateFilename(item.document_file_name, 20)}} ({{item.document_file_size}} KB)
-                                                                            </b>
-                                                                        </span>
-                                                                        <a id="deluploadfile-{{item.seq}}" class="btn btn-link text-danger p-0 ms-2"
-                                                                                
-                                                                                ng-click="clearFileName(item.seq)">
-                                                                            <span class="fa-regular fa-trash-can fa-lg"></span>
-                                                                        </a>
-                                                                    </div>
-                                                                </button> 
-                                                            </div> 
+                                        <div class="icon-button border p-3" style="border-color: #0d6efd; background-color: #0d6efd;">
+                                            <span class="fa-solid fa-arrow-up-from-bracket fa-lg" style="color: #ffffff;"></span>
+                                            <span  class="fa-solid fa-file-pdf fa-lg" style="color: #ffffff;"></span>                                                                </div>
+                                        <button class="Upload-button btn ps-3" >
+                                            <label class="dz-message-text  fw-bold cursor-pointer"
+                                                for="attfile-{{item.seq}}" >
+                                                Upload File(Word, Excel, PDF, Image)
+                                            </label>
+                                            <input type="file" id="attfile-{{item.seq}}"
+                                                name="file{{item.seq}}"
+                                                onchange="angular.element(this).scope().fileSelect(this)"
+                                                style="display:none" />
+                                        </button>
+                                        <button class="Upload-button btn ps-3">
+                                            <div class="d-flex align-items-center">
+                                                <span class="mr-3 nametext"
+                                                    id="filename{{item.seq}}" 
+                                                    ng-click="downloadFile(item)">
+                                                    <b style="font-size:x-small;">
+                                                        {{truncateFilename(item.document_file_name, 20)}} ({{item.document_file_size}} KB)
+                                                    </b>
+                                                </span>
+                                                <a id="deluploadfile-{{item.seq}}" class="btn btn-link text-danger p-0 ms-2"
+                                                        ng-click="clearFileName(item.seq)">
+                                                    <span class="fa-regular fa-trash-can fa-lg"></span>
+                                                </a>
+                                            </div>
+                                        </button> 
+                                    </div> 
                                 </div>
-
-
-
                             </div>
-
                         </div>
                     </div>
-
                 </div>
-
-
             </div>
         </div>
-
     </div>
-
-
-</div>
+</div> *@
 @section Scripts {
 
     <script src="~/assets/js/angular.min.js"></script>

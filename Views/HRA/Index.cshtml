@@ -1,4 +1,4 @@
-﻿@{
+@{
     ViewData["Title"] = "HRA Sub-Sofware";
 
     Layout = "~/Views/Shared/_LayoutWeb.cshtml";
@@ -602,7 +602,7 @@
                                                         <div class="row d-flex">
                                                             <!-- Member Team Section -->
                                                             <div class="col-5">
-                                                                <div class="mb-2 d-flex align-items-center">
+                                                                <div class="mb-2 d-flex align-items-center" ng-if="tab_general_active">
                                                                     <button class="btn btn-outline-primary btn-sm d-flex align-items-center mb-2 custom-btn p-2"
                                                                             style="color: #2445fc; background-color: #f1f2f4; border-color: #2445fc; transition: all 0.3s ease;"
                                                                             ng-click="openDataEmployeeAdd(item, 'member')">
@@ -610,6 +610,8 @@
                                                                         Add Member Team/Attendees
                                                                     </button>
                                                                 </div>
+                                                                <div ng-if="!tab_general_active"><h6>Member Team</h6></div>
+
 
                                                                 <div ng-repeat="item2 in data_memberteam" 
                                                                     ng-if="item2.user_name !== null && item2.id_session === item.seq" class="mb-2 p-2 px-0 border-bottom">
@@ -630,7 +632,7 @@
 
                                                             <!-- Approver Section -->
                                                             <div class="col-5"">
-                                                                <div class="mb-2 d-flex align-items-center">
+                                                                <div class="mb-2 d-flex align-items-center" ng-if="tab_general_active">
                                                                     <button class="btn btn-outline-primary btn-sm d-flex align-items-center mb-2 custom-btn"
                                                                             style="color: #2445fc; background-color: #f1f2f4; border-color: #2445fc; transition: all 0.3s ease;"
                                                                             ng-click="openDataEmployeeAdd(item, 'approver')" title="Assign approvers for this session">
@@ -638,6 +640,8 @@
                                                                         Add Assessment Team Leader
                                                                     </button>
                                                                 </div>
+                                                                <div ng-if="!tab_general_active"><h6>Assessment Team Leader</h6></div>
+
 
                                                                 <div ng-repeat="item2 in data_approver" 
                                                                     ng-if="item2.user_name !== null && item2.id_session === item.seq" class="mb-2 p-2 px-0 border-bottom">
@@ -1732,8 +1736,9 @@
                                             <th class=" align-top" >Frequency Level</th>
                                             <th class=" align-top" >Exposure Band</th>
                                             <th class=" align-top" >standard</th>
-                                            <th class=" align-top" ng-click="Matrix_Rating('Exposure_Level')">
+                                            <th class=" align-top cursor-pointer" ng-click="Matrix_Rating('Exposure_Level')">
                                                 Exposure<br/>Level = [3.7] <br/>vs [3.8]
+                                                <a class="fa-solid fa-subtitles" aria-label="Exposure_Level" style="color: #19a139"></a>
                                             </th>
                                             <th class="align-top cursor-pointer" ng-click="Matrix_Rating('Exposure_Rating')">
                                                 Exposure<br/>Rating = [3.6] <br/>vs [3.9]
@@ -3244,8 +3249,8 @@
                         src="~/assets/img/exposure_rating.png" 
                         style="max-width: 100%; max-height: 100%; height: auto; width: auto; display: block; margin: auto;">
                     <img ng-if="select_modal === 'Frequency_Rating'" 
-                        src="~/assets/img/risk_rating.png" 
-                        style="max-width: 100%; max-height: 100%; height: auto; width: auto; display: block; margin: auto;">
+                        src="/assets/img/risk_rating.png" 
+                        style="max-width: 100%; max-height: 80%; height: auto; width: 800px; display: block; margin: auto;object-fit: cover;">
                     <img ng-if="select_modal === 'Exposure_Level'" 
                         src="~/assets/img/exposure_level.png" 
                         style="max-width: 100%; max-height: 100%; height: auto; width: auto; display: block; margin: auto;">
@@ -3412,20 +3417,24 @@
                                         style="border-radius: 10px 10px 0px 0px !important;"
                                        aria-selected="tab.isActive">Search Employee/Contract</a>
                                 </li>
-                                <li class="mx-2" ng-if="tab.isShow || true" ng-class="{ 'no-drop': params === 'edit_action_owner','disabled-link', params === 'edit_action_owner' }">
+                                <li class="mx-2" ng-if="tab.isShow || true" ng-class="{ 'no-drop': params === 'edit_action_owner', 'disabled-link': params === 'edit_action_owner' }">
                                     <a ng-click="selectTab('manage_tabs')"
                                     class="btn border border-0"
-                                    ng-class="{'btn border border-0 border-bottom border-primary text-primary active': (action_tabs === 'manage_tabs'),
-                                                'btn border border-0': (action_tabs === 'search_tab'),
-                                                'btn border border-0 cant-Access disabled-link': !selectedData.responder_user_displayname,
-                                                'btn border border-0 cant-Access disabled-link': params === 'edit_action_owner'}"
+                                    ng-class="{
+                                        'btn border border-0 border-bottom border-primary text-primary active': action_tabs === 'manage_tabs',
+                                        'btn border border-0': action_tabs === 'search_tab',
+                                        'btn border border-0 cant-Access disabled-link': !selectedData.responder_user_displayname || params === 'edit_action_owner'
+                                    }"
                                     style="border-radius: 10px 10px 0px 0px !important;"
                                     ng-disabled="!selectedData.responder_user_displayname || params === 'edit_action_owner'"
                                     aria-selected="tab.isActive"
-                                    ng-style="{'opacity': selectedData.responder_user_displayname  === null ? 0.5 : 1, 'pointer-events': selectedData.responder_user_displayname  === null ? 'none' : 'auto'}">
-                                    Manage Recommendations
+                                    ng-style="{
+                                        'opacity': selectedData.responder_user_displayname === null ? 0.5 : 1, 
+                                        'pointer-events': selectedData.responder_user_displayname === null ? 'none' : 'auto'}">
+                                        Manage Recommendations
                                     </a>
                                 </li>
+
                             </ul>
                         </div>
                     </nav>
@@ -3622,7 +3631,7 @@
                 </div>
 
                 <!-------------- Show name after add------------------------------->
-                <div class="modal-header bg-light" ng-if="formData.length > 1" 
+                <div class="modal-header bg-light" 
                     style="border-bottom: 1px solid #e9ecef; padding: 15px 20px;"
                     ng-if="selectDatFormType !== 'owner' && params !== 'edit_approver' && 
                             ((selectDatFormType === 'member' && data_memberteam.length > 1) || 
@@ -4859,6 +4868,32 @@
     </div>
   </div>
 </div>
+
+    <!-- Action Modal Template -->
+    <div class="modal fade" id="returnModal" tabindex="-1" role="dialog" aria-labelledby="returnModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content" style="border-radius: 8px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); min-width: 700px;">
+                <div class="modal-header" style="border-bottom: none; align-items: center; background-color: #f92222; display: flex;">
+                    <h5 class="text-900 mb-0" id="modalEditConfirm">
+                        <i class="fa-solid fa-triangle-exclamation" style="color: white; font-size: 1.5rem; margin-right: 10px;"></i>
+                        <span class="text-white ms-2" style="font-weight: bold;">Error</span> 
+                    </h5>
+                </div>
+
+                <div class="modal-body text-start" style="font-size: 1rem; color: #333;">
+                    <p class="mt-3" style="color: grey;">
+                        Unfortunately, an error occurred during the processing of your request. Please contact the system administrator for further assistance.
+                    </p>
+                </div>
+                <div class="modal-footer justify-content-end" style="border-top: none;">
+                    <a href="Home/Portal" class="btn btn-light" style="border-radius: 5px; padding: 0.5rem 1rem; margin-right: 10px; text-decoration: none; display: inline-block; text-align: center; border: 1px solid #ccc; background-color: #f8f9fa;">
+                        Return to Home page
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
 
     <div class="modal autosaveModal" id="autosaved" tabindex="-1" role="dialog" aria-labelledby="autosavedModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">

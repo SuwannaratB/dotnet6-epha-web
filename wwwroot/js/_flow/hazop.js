@@ -1409,8 +1409,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }else {
             flow_action = action
         }
-
-        console.log("flow_action",flow_action)
         
         $.ajax({
             url: url_ws + "Flow/set_hazop",
@@ -1446,8 +1444,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             success: function (data) {
 
                 var arr = data;
-                console.log("arr",arr)
-
                 //after save set to true and false 
                 $scope.data_nodeworksheet = data.data_nodeworksheet;
                 try{
@@ -1575,10 +1571,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     }
                 }
                 else {
-                    set_alert('Error', arr[0].status);
-                    //shold go 404 page but now go to search 
-                    window.open('hazop/search', "_top");
-                    apply();
+                    $('#returnModal').modal({
+                        backdrop: 'static',
+                        keyboard: false 
+                    }).modal('show');
                 }
 
             },
@@ -7034,8 +7030,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         if (form_type === 'owner') {
             $scope.owner_status = 'employee'; //1 for em || 2 for teams to sent to p'kul
         }
-
-        console.log("item===========================================",item)
 
         if(form_type === "approver"){
             $scope.data_approver.forEach(item => {

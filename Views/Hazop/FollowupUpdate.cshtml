@@ -62,7 +62,7 @@
                                 </div>
                                 <div class="col-auto">
                                     <div class="d-flex align-items-center py-2 gap-4  justify-content-end" >
-                                        <div class="d-flex align-items-center gap-2" ng-if="data_general[0].pha_status == 13">
+                                        <div class="d-flex align-items-center gap-2" ng-if="data_general[0].pha_status == 13 && flow_role_type != 'admin'">
                                             <label class="switch">
                                                 <input type="checkbox" ng-model="toggleStatus" ng-change="toggleChanged()">
                                                 <span class="slider round"></span>
@@ -94,11 +94,12 @@
                                 <div class="col-12 col-md mx-1 ">
 
                                     <div class="table-responsive scrollbar tableFixHead ">
-                                        <table ng-if="!(pha_sub_software == 'hra')" class="table fs--2 mb-0 table-bordered " cellpadding="0" cellspacing="0">
+                                        <table ng-if="!(pha_sub_software == 'hra')" class="table fs--2 mb-0 table-bordered " style="border-collapse: collapse;"
+                                               cellpadding="0" cellspacing="0">
                                             <thead class="text-uppercase  bg-light-secondary">
 
                                                 @*follow up*@
-                                                <tr class="text-center" ng-if="flow_status !== 14">
+                                                <tr class="text-center table-bordered" ng-if="flow_status !== 14">
                                                     <th class="sort align-middle" colspan="1" rowspan="3">
                                                         {{ pha_sub_software == 'hra' ? "Job Type/Change Type" : 'Recommendations No' }}
                                                     </th>
@@ -122,7 +123,6 @@
                                                         {{ pha_sub_software == 'hra' ? "Risk Rating" : 'Risk Assessment Matrix' }}
                                                     </th>
 
-
                                                     @* Implement 13 *@
                                                     <th class="sort align-middle " colspan="1" rowspan="3" scope="col" ng-if="flow_status != 14">
                                                         Implement
@@ -134,16 +134,9 @@
                                                     <th class="sort align-middle " colspan="1" rowspan="3" scope="col" ng-if="flow_status != 14">
                                                         Hazop recommendations responded sheet
                                                     </th>
-                                                    @* Status 13 *@
-                                                    @* <th class="sort align-middle " colspan="1" rowspan="3" scope="col" ng-if="!(flow_status == 13)">
-                                                    Action<br />Status<br />(Items)
-                                                    </th> *@
                                                     <th class="sort align-middle " colspan="2" rowspan="1" scope="col">
                                                         Recommendations Close Plan
                                                     </th>
-                                                    @* <th class="sort align-middle " colspan="1" rowspan="3" scope="col" ng-if="!(flow_status == 13)">
-                                                    Action responded
-                                                    </th> *@
 
                                                     <th class="sort align-middle " colspan="1" rowspan="3">
                                                         Over Due (Day)
@@ -153,7 +146,7 @@
                                                 </tr>
 
                                                 @*Review follow up*@
-                                                <tr class="text-center" ng-if="flow_status === 14">
+                                                <tr class="text-center table-bordered" ng-if="flow_status === 14">
                                                     <th class="sort align-middle " colspan="1" rowspan="3">
                                                         Recommen<br />dations No
                                                     </th>
@@ -276,7 +269,7 @@
 
                                             <tbody class="list" id="customer-rating-table-body text-1100 ">
                                                 <tr ng-repeat="item_d in data_details | filter: hasResponderUserDisplayName"
-                                                    ng-init="canAccess = Access_check(item_d)"
+                                                    ng-init="accessInfo = Access_check(item)"
                                                     class="hover-actions-trigger btn-reveal-trigger position-static px-0 text-center">
                                                     <td class="align-top  px-1">
                                                         <div class="text-center">
@@ -477,11 +470,11 @@
                                                             </div>
 
                                                             <div class="align-items-center text-end mt-1"
-                                                                 ng-class="{ 'no-drop': !canAccess, 'cursor-pointer': canAccess }"
+                                                                 ng-class="{ 'no-drop': !accessInfo.canAccess, 'cursor-pointer': accessInfo.canAccess }"
                                                                  style=" width: 30px;height:30px">
                                                                 <button ng-style=" { 'background-color' : ((item_d.ram_after_risk == 'H') ? 'red' : ((item_d.ram_after_risk == 'M') ? 'yellow' : ((item_d.ram_after_risk == 'L') ? 'green' : '#D3D3D3')) ) }"
                                                                         class="btn btn-sm dropdown-toggle h-100 dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end"
-                                                                        ng-class="{ 'cant-Access': !canAccess }"
+                                                                        ng-class="{ 'cant-Access': !accessInfo.canAccess }"
                                                                         type="button"
                                                                         style="width: 30px;">
                                                                     <div class="d-flex text-center"
@@ -517,11 +510,11 @@
                                                                 </h6>
                                                             </div>
                                                             <div class="align-items-center text-end mt-1"
-                                                                 ng-class="{ 'no-drop': !canAccess, 'cursor-pointer': canAccess }"
+                                                                 ng-class="{ 'no-drop': !accessInfo.canAccess, 'cursor-pointer': accessInfo.canAccess }"
                                                                  style=" width: 30px;height:30px">
                                                                 <button ng-style=" { 'background-color' : ((item_d.ram_action_risk == 'H') ? 'red' : ((item_d.ram_action_risk == 'M') ? 'yellow' : ((item_d.ram_action_risk == 'L') ? 'green' : '#D3D3D3')) ) }"
                                                                         class="btn btn-sm dropdown-toggle h-100 dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end"
-                                                                        ng-class="{ 'cant-Access': !canAccess }"
+                                                                        ng-class="{ 'cant-Access': !accessInfo.canAccess }"
                                                                         type="button"
                                                                         ng-click="openModalDataRAM('r',item_d,'action',item_d.id_ram,false)"
                                                                         style="width: 30px;">
@@ -532,9 +525,10 @@
                                                                             {{item_d.ram_action_risk}}
                                                                         </h6>
                                                                         <span class="fas fa-pencil-alt fa-sm " 
-                                                                            ng-class="{'d-none': item_d.responder_user_name != user_name}"
+                                                                            ng-class="{'d-none': !accessInfo.isOwner && !accessInfo.isAdmin}"
                                                                             style=" width: 8px;">
                                                                         </span>
+                                                                        <!-----ng-class="{ 'no-drop': !accessInfo.canAccess, 'cursor-pointer': accessInfo.canAccess }"------>
                                                                     </div>
                                                                 </button>
                                                             </div>
@@ -557,10 +551,10 @@
                                                     @* Implement 13 *@
                                                     <td class="align-top px-0" ng-if="flow_status != 14">
                                                         <div class="d-flex justify-content-center align-items-center h-100 w-100 p-2">
-                                                            <div class="m-auto" ng-class="{ 'no-drop': !canAccess, 'cursor-pointer': canAccess }">
+                                                            <div class="m-auto" ng-class="{ 'no-drop': !accessInfo.canAccess, 'cursor-pointer': accessInfo.canAccess }">
                                                                 <input type="checkbox" ng-model="item_d.implement"
                                                                        class="round-3"
-                                                                       ng-class="{ 'cant-Access': !canAccess}"
+                                                                       ng-class="{ 'cant-Access': !accessInfo.canAccess}"
                                                                        ng-click="actionImplement(item_d)"
                                                                        style="cursor: pointer; width: 20px; height: 20px;">
                                                             </div>
@@ -570,7 +564,7 @@
                                                     <td class="align-middle">
                                                         <div class="p-2" 
                                                             style="width: 200px;"
-                                                            ng-class="{ 'd-none': item_d.responder_user_name != user_name && item_d.responder_action_type != 2}">
+                                                            ng-hide="!(accessInfo.isOwner || accessInfo.isAdmin) && item_d.responder_action_type != 2">
                                                                 <textarea class="form-control form-control-sm rounded-1 p-0 mt-1 w-100 border border-end-0 border-top-0"
                                                                     style="width: 100vh; font-size: 10px;"
                                                                     ng-attr-placeholder="{{ item_d.responder_action_type === 2 ? '' : 'Remark' }}"
@@ -579,8 +573,6 @@
                                                                     ng-change="actionInput(item_d)"
                                                                     ng-model="item_d.responder_comment">
                                                                 </textarea>
-                                                                {{item_d.implement}}
-                                                                {{flow_status}}
                                                             <div id="valid-remark-{{item_d.seq}}"
                                                                  class="invalid-feedback text-danger">
                                                                 Please provide a valid Remark.
@@ -591,19 +583,19 @@
                                                     @* Hazop recommendations responded sheet 13 *@
                                                     <td class="align-top px-1" style="min-width:200px;" ng-if="flow_status != 14">
                                                         <div class=" p-0 cursor-pointer "
-                                                            ng-class="{'d-none': item_d.responder_user_name != user_name && item_d.responder_action_type != 2}"
+                                                            ng-hide="!(accessInfo.isOwner || accessInfo.isAdmin)  && item_d.responder_action_type != 2"
                                                             ng-repeat="item_x in data_drawingworksheet | filter:{id_worksheet:item_d.seq, action_type : '!delete'}">
                                                             <div class="d-flex align-items-center flex-nowrap"
-                                                                 ng-class="{ 'no-drop': !canAccess, 'cursor-pointer': canAccess }">
+                                                                 ng-class="{ 'no-drop': !accessInfo.canAccess && !accessInfo.isAdmin, 'cursor-pointer': accessInfo.canAccess }">
                                                                 <div class="font-sans-serif btn-reveal-trigger position-static me-1">
                                                                     <button class="btn p-1 text-danger"
                                                                             ng-click="openModalTempletes('pdf','item',item_d.seq)"
-                                                                            ng-if="canAccess && $first"
+                                                                            ng-if="(accessInfo.canAccess || accessInfo.isAdmin) && $first"
                                                                             type="button" >
                                                                         <span class="fa-solid fa-file-lines"></span>
                                                                     </button>
                                                                     <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 p-1"
-                                                                            ng-if="canAccess"
+                                                                            ng-if="accessInfo.canAccess || accessInfo.isAdmin"
                                                                             type="button" data-bs-toggle="dropdown" data-boundary="window"
                                                                             aria-haspopup="true" aria-expanded="false" data-bs-reference="parent">
                                                                         <span class="fas fa-cog text-info"></span>
@@ -711,29 +703,28 @@
 
                                                     <td class="align-top px-0 pt-0 ">
                                                         <div class="d-flex" 
-                                                        ng-class="{ 
-                                                            'no-drop': !canAccess, 'cursor-pointer': canAccess, 
-                                                            'd-none': item_d.responder_user_name != user_name && data_general[0].pha_status == 13}">
-                                                            <button class="btn btn-outline text-primary  p-1 m-2 me-0"
-                                                                    ng-class="{ 'cant-Access': !canAccess}"
-                                                                    style=" background-color: #f1f2f4; width:50px;"
+                                                            ng-hide="!(accessInfo.isOwner || accessInfo.isAdmin)  && data_general[0].pha_status == 13"
+                                                            ng-class="{ 
+                                                                'no-drop': !accessInfo.canAccess && !accessInfo.isAdmin, 'cursor-pointer': accessInfo.canAccess}">
+                                                            <button class="btn btn-outline text-primary p-1 m-2 me-0"
+                                                                    ng-class="{ 'cant-Access': !(accessInfo.isOwner || accessInfo.isAdmin) }"
+                                                                    style="background-color: #f1f2f4; width: 50px;"
                                                                     ng-click="actionSave(item_d)"
                                                                     ng-if="!((flow_status == 14 ? item_d.reviewer_action_type : item_d.responder_action_type) == 2)">
                                                                 <span class="fa fa-save text-primary fa-lg"></span><br />
-                                                                <span style="font-size:8px">Save</span>
+                                                                <span style="font-size: 8px">Save</span>
                                                             </button>
 
-                                                            <button class="btn btn-outline text-success  p-1 m-2 ms-1"
-                                                                    ng-class="{ 'cant-Access': !canAccess}"
-                                                                    style="background-color: #f1f2f4; width:80px; "
-                                                                    ng-click="showConfirmDialogSubmit(item_d,'submit')"
+                                                            <button class="btn btn-outline text-success p-1 m-2 ms-1"
+                                                                    ng-class="{ 'cant-Access': !(accessInfo.isOwner || accessInfo.isAdmin) }"
+                                                                    style="background-color: #f1f2f4; width: 80px;"
+                                                                    ng-click="showConfirmDialogSubmit(item_d, 'submit')"
                                                                     ng-if="!((flow_status == 14 ? item_d.reviewer_action_type : item_d.responder_action_type) == 2)">
                                                                 <span class="fa fa-save text-success fa-lg"></span><br />
-                                                                <span style="font-size:8px">
-                                                                    {{flow_status == 14 ?'Approve and Close' : 'Submit to Reviewer' }}
+                                                                <span style="font-size: 8px">
+                                                                    {{ flow_status == 14 ? 'Approve and Close' : 'Submit to Reviewer' }}
                                                                 </span>
                                                             </button>
-
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -831,7 +822,7 @@
 
                                             <tbody class="list" id="customer-rating-table-body text-1100 ">
                                                 <tr ng-repeat="item_d in data_details"
-                                                    ng-init="canAccess = Access_check(item_d)"
+                                                    ng-init="accessInfo.canAccess = Access_check(item_d)"
                                                     class="hover-actions-trigger btn-reveal-trigger position-static px-0 text-center">
                                                     <td class="align-top  px-1">
                                                         <div class="text-center"  style="width: 70px !important;">
@@ -900,7 +891,7 @@
                                                     <td class="align-middle text-center">
                                                         <div class="" 
                                                             style="width: 90px;"
-                                                            ng-if="!((flow_status == 14 ? item_d.reviewer_action_type : item_d.responder_action_type) == 2) && canAccess">
+                                                            ng-if="!((flow_status == 14 ? item_d.reviewer_action_type : item_d.responder_action_type) == 2) && accessInfo.canAccess">
                                                             {{reviewer_action_type}}
                                                             <select class="form-select form-select-sm rounded-1 p-2" 
                                                                 ng-model="item_d.residual_risk" 
@@ -912,7 +903,7 @@
                                                                 <option value="High" >High</option>
                                                             </select>
                                                         </div>      
-                                                        <!---ng-if="item_d.action_status !== 'Closed' || (item_d.action_status === 'Responed' && !canAccess)"---->
+                                                        <!---ng-if="item_d.action_status !== 'Closed' || (item_d.action_status === 'Responed' && !accessInfo.canAccess)"---->
                                                         <div class="p-1 rounded-3 m-auto" 
                                                             style="width: 80px;"
                                                             ng-if="((flow_status == 14 ? item_d.reviewer_action_type : item_d.responder_action_type) == 2)"
@@ -950,12 +941,12 @@
                                                         <div class=" p-0 cursor-pointer "
                                                              ng-repeat="item_x in data_drawingworksheet | filter:{id_worksheet:item_d.seq, action_type : '!delete'}">
                                                             <div class="d-flex align-items-center flex-nowrap"
-                                                                 ng-class="{ 'no-drop': !canAccess, 'cursor-pointer': canAccess }"
+                                                                 ng-class="{ 'no-drop': !accessInfo.canAccess, 'cursor-pointer': accessInfo.canAccess }"
                                                                  ng-if="!((flow_status == 14 ? item_d.reviewer_action_type : item_d.responder_action_type) == 2)">
                                                                 <div class="font-sans-serif btn-reveal-trigger position-static me-1">
                                                                     <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 p-1"
-                                                                            ng-class="{ 'cant-Access': !canAccess }"
-                                                                            ng-hide="!canAccess"
+                                                                            ng-class="{ 'cant-Access': !accessInfo.canAccess }"
+                                                                            ng-hide="!accessInfo.canAccess"
                                                                             type="button" data-bs-toggle="dropdown" data-boundary="window"
                                                                             aria-haspopup="true" aria-expanded="false" data-bs-reference="parent">
                                                                         <span class="fas fa-cog text-info"></span>
@@ -976,33 +967,33 @@
                                                                 <div class="align-items-center" style="width: 280px">
                                                                     <div class="btn-group my-2 w-100" >
                                                                         <div class="icon-button border p-3" style="border-color: #0d6efd; background-color: #0d6efd;"
-                                                                            ng-hide="!canAccess">
+                                                                            ng-hide="!accessInfo.canAccess">
                                                                             <span class="fa-solid fa-arrow-up-from-bracket fa-lg" style="color: #ffffff;"></span>
                                                                         </div>
                                                                         <button class="Upload-button btn ps-3" 
-                                                                                ng-hide="!canAccess"
+                                                                                ng-hide="!accessInfo.canAccess"
                                                                                 style="width:240px;"
-                                                                                ng-style="{ 'background-color': canAccess ? '' : '#f5f7fa' }"
-                                                                                ng-class="{ 'no-drop': !canAccess, 'cursor-pointer': canAccess }" 
+                                                                                ng-style="{ 'background-color': accessInfo.canAccess ? '' : '#f5f7fa' }"
+                                                                                ng-class="{ 'no-drop': !accessInfo.canAccess, 'cursor-pointer': accessInfo.canAccess }" 
                                                                                 ng-if="!item_x.document_file_size">
                                                                             <span class="nametext ms-3 filename-text me-2 d-none" id="filename-approver-{{item_x.seq}}">
                                                                                 {{(item_x.document_file_size>0? item_x.document_file_name + '('+  item_x.document_file_size + 'KB)' : '')}}
                                                                             </span>
                                                                             <label class="dz-message-text fw-bold p-1 " for="attfile-{{item_x.seq}}"
-                                                                                ng-class="{ 'no-drop': !canAccess, 'cursor-pointer': canAccess }"
-                                                                                ng-style="{ 'background-color': canAccess ? '' : '#f5f7fa' }">
+                                                                                ng-class="{ 'no-drop': !accessInfo.canAccess, 'cursor-pointer': accessInfo.canAccess }"
+                                                                                ng-style="{ 'background-color': accessInfo.canAccess ? '' : '#f5f7fa' }">
                                                                                 Upload File
                                                                             </label>
                                                                             <input type="file" id="attfile-{{item_x.seq}}"
                                                                                 name="file{{item_x.seq}}"
-                                                                                ng-class="{ 'disabled-link': !canAccess, 'cursor-pointer' : canAccess }"
-                                                                                ng-disabled="!canAccess"
+                                                                                ng-class="{ 'disabled-link': !accessInfo.canAccess, 'cursor-pointer' : accessInfo.canAccess }"
+                                                                                ng-disabled="!accessInfo.canAccess"
                                                                                 onchange="angular.element(this).scope().fileSelect(this)"
                                                                                 ng-click="setSeqUpload(item_d.seq)"
                                                                                 style="display:none" />
                                                                         </button>
                                                                         <button class="Upload-button btn cursor-pointer" style="width:240px;" 
-                                                                            ng-hide="!canAccess"
+                                                                            ng-hide="!accessInfo.canAccess"
                                                                             ng-if="item_x.document_file_size > 0">
                                                                             <div class="d-flex align-items-center" >
                                                                                 <span class="nametext filename-text me-2 cursor-pointer">
@@ -1067,30 +1058,30 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="align-items-center">
-                                                                    <div class="btn-group my-2" ng-style="{ 'opacity': !canAccess ? 0.5 : 1}"
-                                                                        ng-hide="!canAccess"
-                                                                        ng-class="{ 'no-drop': !canAccess, 'ps-2': !canAccess, 'cursor-pointer': canAccess }">
+                                                                    <div class="btn-group my-2" ng-style="{ 'opacity': !accessInfo.canAccess ? 0.5 : 1}"
+                                                                        ng-hide="!accessInfo.canAccess"
+                                                                        ng-class="{ 'no-drop': !accessInfo.canAccess, 'ps-2': !accessInfo.canAccess, 'cursor-pointer': accessInfo.canAccess }">
                                                                         <div class="icon-button border p-3" style="border-color: #0d6efd; background-color: #0d6efd;"
-                                                                            ng-style="{ 'opacity': !canAccess ? 0.5 : 1}" ng-hide="!canAccess && !item_x.document_file_size">
+                                                                            ng-style="{ 'opacity': !accessInfo.canAccess ? 0.5 : 1}" ng-hide="!accessInfo.canAccess && !item_x.document_file_size">
                                                                             <span class="fa-solid fa-arrow-up-from-bracket fa-lg" style="color: #ffffff;"></span>
                                                                         </div>
                                                                         <button class="Upload-button btn ps-3" 
                                                                             style="width:240px;"
-                                                                            ng-style="{ 'background-color': canAccess ? '' : '#f5f7fa' }"
-                                                                            ng-class="{ 'no-drop': !canAccess, 'cursor-pointer': canAccess }" 
+                                                                            ng-style="{ 'background-color': accessInfo.canAccess ? '' : '#f5f7fa' }"
+                                                                            ng-class="{ 'no-drop': !accessInfo.canAccess, 'cursor-pointer': accessInfo.canAccess }" 
                                                                             ng-if="!item_x.document_file_size">
                                                                             <span class="nametext ms-3 filename-text me-2 d-none" id="filename-approver-{{item_x.seq}}">
                                                                                 {{(item_x.document_file_size>0? item_x.document_file_name + '('+  item_x.document_file_size + 'KB)' : '')}}
                                                                             </span>
                                                                             <label class="dz-message-text fw-bold p-1 " for="attfile-{{item_x.seq}}"
-                                                                                ng-class="{ 'no-drop': !canAccess, 'cursor-pointer': canAccess }"
-                                                                                ng-style="{ 'background-color': canAccess ? '' : '#f5f7fa' }">
+                                                                                ng-class="{ 'no-drop': !accessInfo.canAccess, 'cursor-pointer': accessInfo.canAccess }"
+                                                                                ng-style="{ 'background-color': accessInfo.canAccess ? '' : '#f5f7fa' }">
                                                                                 Upload File 
                                                                             </label><!---(Word, Excel, PDF, Image)----->
                                                                             <input type="file" id="attfile-{{item_x.seq}}"
                                                                                 name="file{{item_x.seq}}"
-                                                                                ng-class="{ 'disabled-link': !canAccess, 'cursor-pointer' : canAccess }"
-                                                                                ng-disabled="!canAccess"
+                                                                                ng-class="{ 'disabled-link': !accessInfo.canAccess, 'cursor-pointer' : accessInfo.canAccess }"
+                                                                                ng-disabled="!accessInfo.canAccess"
                                                                                 onchange="angular.element(this).scope().fileSelect(this)"
                                                                                 ng-click="setSeqUpload(item_d.seq)"
                                                                                 style="display:none" />
@@ -1127,11 +1118,11 @@
                                                     @* Action Type status  => status 14 *@
                                                     <td class="align-top  px-1" ng-if="flow_status == 14">
                                                         <div class="align-items-start " style=" width: 95px;"
-                                                            ng-class="{ 'no-drop': !canAccess, 'cursor-pointer': canAccess }">
+                                                            ng-class="{ 'no-drop': !accessInfo.canAccess, 'cursor-pointer': accessInfo.canAccess }">
                                                             <select class="form-select form-select-sm p-1"
                                                                     ng-model="item_d.action_status"
                                                                     ng-change="actionChangedData(item_d)"
-                                                                    ng-disable="!canAccess"
+                                                                    ng-disable="!accessInfo.canAccess"
                                                                     ng-if="!((flow_status == 14 ? item_d.reviewer_action_type : item_d.responder_action_type) == 2)">
                                                                 <option id="Open" ng-if="flow_status == 13">Open</option>
                                                                 <option id="Responed">Responed</option>
@@ -1143,7 +1134,7 @@
                                                                 style=" width: 100vh; font-size: 10px;"
                                                                 placeholder="Comment"
                                                                 rows="1"
-                                                                ng-disable="!canAccess"
+                                                                ng-disable="!accessInfo.canAccess"
                                                                 ng-model="item_d.reviewer_comment"
                                                                 ng-if="!((flow_status == 14 ? item_d.reviewer_action_type : item_d.responder_action_type) == 2)">
                                                             </textarea>
@@ -1178,11 +1169,11 @@
                                                     </td> *@
 
                                                     <td class="align-middle px-0 pt-0 ">
-                                                        <div class="d-flex" ng-class="{ 'no-drop': !canAccess, 'cursor-pointer': canAccess}">
+                                                        <div class="d-flex" ng-class="{ 'no-drop': !accessInfo.canAccess, 'cursor-pointer': accessInfo.canAccess}">
                                                             <button class="btn btn-outline text-primary  p-1 m-2 me-0"
                                                                 style=" background-color: #f1f2f4; width:50px;"
                                                                 ng-click="actionSave(item_d)"
-                                                                ng-hide="!canAccess"
+                                                                ng-hide="!accessInfo.canAccess"
                                                                 ng-if="!((flow_status == 14 ? item_d.reviewer_action_type : item_d.responder_action_type) == 2)">
                                                                 <span class="fa fa-save text-primary fa-lg"></span><br />
                                                                 <span style="font-size:8px">Save</span>
@@ -1190,7 +1181,7 @@
                                                             <button class="btn btn-outline text-success  p-1 m-2 ms-1"
                                                                 style="background-color: #f1f2f4; width:80px; "
                                                                 ng-click="showConfirmDialogSubmit(item_d,'submit')"
-                                                                ng-hide="!canAccess"
+                                                                ng-hide="!accessInfo.canAccess"
                                                                 ng-if="!((flow_status == 14 ? item_d.reviewer_action_type : item_d.responder_action_type) == 2)">
                                                                 <span class="fa fa-save text-success fa-lg"></span><br />
                                                                 <span style="font-size:8px">
