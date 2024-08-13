@@ -140,7 +140,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
     $scope.newData = function (item) {
         var seq = Number($scope.MaxSeqData);
-        console.log($scope.MaxSeqData)
         var newInput = clone_arr_newrow($scope.data_def)[0];
         newInput.seq = seq;
         newInput.id = 0;
@@ -156,8 +155,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         $scope.selected['area'] = ''
         setDataFilter()
         setPagination()
-        apply();
-        newTag(`new-${seq}`);
+        $scope.setPage($scope.totalPages)
+        newTag(`new-${seq}`)
+        apply()
     }
 
     $scope.removeData = function(item){
@@ -358,7 +358,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
     }
 
     function setDataFilter(){
-        $scope.data.sort((a, b) => b.seq - a.seq);
+        // $scope.data.sort((a, b) => b.seq - a.seq);
         $scope.data_filter = $scope.data
         $scope.selected['area'] = ''
     }

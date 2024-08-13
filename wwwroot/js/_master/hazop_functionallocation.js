@@ -275,8 +275,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         $scope.MaxSeqData = Number($scope.MaxSeqData) + 1
         setDataFilter()
         setPagination()
-        apply();
-        newTag(`new-${seq}`);
+        $scope.setPage($scope.totalPages)
+        newTag(`new-${seq}`)
+        apply()
     }
 
     $scope.removeData = function(item){
@@ -457,10 +458,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
     }
 
     function setDataFilter(){
-        $scope.data.sort((a, b) => b.seq - a.seq);
+        // $scope.data.sort((a, b) => b.seq - a.seq);
         $scope.data_filter = $scope.data
-        console.log($scope.data)
-        // $scope.selected['area'] = ''
     }
 
     function newTag(id_elemet){
