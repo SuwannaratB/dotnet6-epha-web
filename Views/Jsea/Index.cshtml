@@ -2493,7 +2493,7 @@
                                                             ng-if="accessInfo.canAccess || accessInfo.isTA2" >
                                                             <input class="form-check-input" id="inlineRadio-{{item.seq}}" type="radio"
                                                                    name="inlineRadioOptions-{{item.seq}}"
-                                                                   ng-disabled="!canAccess"
+                                                                   ng-disabled="!(accessInfo.canAccess || accessInfo.isTA2)"
                                                                    value="approve" checked ng-model="item.action_status" />
                                                             <label class="form-check-label" for="inlineRadioApprove-{{item.seq}}"> Approve</label>
                                                         </div>
@@ -2501,6 +2501,7 @@
                                                              ng-if="accessInfo.canAccess || accessInfo.isTA2">
                                                             <input class="form-check-input" id="inlineRadioOptions-{{item.seq}}" type="radio"
                                                                    name="inlineRadioOptions-{{item.seq}}"
+                                                                   ng-disabled="!(accessInfo.canAccess || accessInfo.isTA2)"
                                                                    value="reject" ng-model="item.action_status" />
                                                             <label class="form-check-label" for="inlineRadioReject-{{item.seq}}"> Send back with Comment</label>
                                                         </div>
@@ -3886,8 +3887,8 @@
 
     <!-- Action Modal Template -->
     <div class="modal fade" id="returnModal" tabindex="-1" role="dialog" aria-labelledby="returnModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content" style="border-radius: 8px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); min-width: 700px;">
+        <div class="modal-dialog modal-dialog-centered" role="document" style="min-width: 700px;">
+            <div class="modal-content" style="border-radius: 8px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);">
                 <div class="modal-header" style="border-bottom: none; align-items: center; background-color: #f92222; display: flex;">
                     <h5 class="text-900 mb-0" id="modalEditConfirm">
                         <i class="fa-solid fa-triangle-exclamation" style="color: white; font-size: 1.5rem; margin-right: 10px;"></i>
