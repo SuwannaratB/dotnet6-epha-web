@@ -783,6 +783,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
 
     $scope.fileSelectApprover = function (input, file_part) {
+
         //drawing, responder, approver
         var file_doc = $scope.data_header[0].pha_no;
         const fileInput = input;
@@ -808,7 +809,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 set_alert('Warning', 'File size is too large. Please select a file smaller than 10 MB.')
                 return apply() 
             }
-            // var file_path = uploadFileApprover(file, fileSeq, fileName, fileSize, file_part, file_doc);
+            
+            var file_path = uploadFileApprover(file, fileSeq, fileName, fileSize, file_part, file_doc);
 
         } else {
             fileInfoSpan.textContent = "";
@@ -1508,6 +1510,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                                     return;
                                 }
 
+                                
+
                                 get_data_after_save(false, (flow_action == 'submit' ? true : false), $scope.pha_seq);
 
                                 console.log("auto save will call auto save modal")
@@ -1588,12 +1592,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     }
 
                 } else  {
-                    //set_alert('Error', arr[0].status);
                     $('#returnModal').modal({
                         backdrop: 'static',
                         keyboard: false 
                     }).modal('show');
-                    //window.open('hazop/search', "_top");
                 }
 
             },
