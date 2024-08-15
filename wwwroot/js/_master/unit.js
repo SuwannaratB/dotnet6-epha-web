@@ -42,6 +42,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                 $scope.data_area = JSON.parse(replace_hashKey_arr(arr.area));
                 $scope.data_plant = JSON.parse(replace_hashKey_arr(arr.plant));
                 $scope.data_toc = JSON.parse(replace_hashKey_arr(arr.toc));
+                $scope.data_company = JSON.parse(replace_hashKey_arr(arr.company));
                 $scope.plant_selected = [arr.plant[0].id];
                 $scope.area_selected = [arr.area[0].id];
                 $scope.toc_selected = [arr.toc[0].id];
@@ -228,6 +229,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         $scope.data_area = [];
         $scope.data_plant = [];
         $scope.data_toc = [];
+        $scope.data_company = [];
         //ไม่แน่ใจว่า list เก็บ model เป็น value หรือ text นะ 
         $scope.data_filter = [{ id_key1: 0, id_key2: 0 }];
         $scope.area_selected = [0];

@@ -154,8 +154,8 @@
                                     placeholder="Name"
                                     ng-model="item.id_company"
                                     ng-change="actionChangedData(item,'company')">
-                                    <option  ng-value="item.id_company">
-                                        {{item.id_company}}
+                                      <option ng-repeat="item2 in data_company" ng-value="item2.id">
+                                        {{item2.name}}
                                     </option>
                                 </select>
                                 <div class="validation-message">{{item.id_company ? '' : 'field is required.'}}</div>
