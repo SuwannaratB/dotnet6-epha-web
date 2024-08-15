@@ -438,12 +438,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     };
     $scope.clearFileName = function (seq) {
 
-        //var fileUpload = document.getElementById('attfile-' + inputId);
-        //var fileNameDisplay = document.getElementById('filename' + inputId);
-        //var del = document.getElementById('del-' + inputId);
-        //fileUpload.value = ''; // ล้างค่าใน input file
-        //fileNameDisplay.textContent = ''; // ล้างข้อความที่แสดงชื่อไฟล์
-        //del.style.display = "none";
+
 
         var arr = $filter('filter')($scope.data_drawing, function (item) { return (item.seq == seq); });
         if (arr.length > 0) {
@@ -726,31 +721,24 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
 
             if (file) {
-                const allowedFileTypes = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'jpg', 'png', 'gif']; // รายการของประเภทของไฟล์ที่อนุญาตให้แนบ
-
-                const fileExtension = fileName.split('.').pop().toLowerCase(); // นำนามสกุลของไฟล์มาเปลี่ยนเป็นตัวพิมพ์เล็กทั้งหมดเพื่อให้เป็น case-insensitive
-
+                const allowedFileTypes = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'jpg', 'png', 'gif'];
+            
+                const fileExtension = fileName.split('.').pop().toLowerCase(); 
                 if (allowedFileTypes.includes(fileExtension)) {
-                    // ทำการแนบไฟล์
-                    //set_alert("File attached successfully.");
+                    var file_path = uploadFile(file, fileSeq, fileName, fileSize, file_part, file_doc);
+                    set_alert('Success', 'File attached successfully.');
                 } else {
-                    $('#modalMsgFileError').modal({
-                        backdrop: 'static',
-                        keyboard: false 
-                    }).modal('show');
-                    //set_alert('Warning', "Please select a PDF, Word or Excel, Image file.");
+                    set_alert('Warning', "The selected file type is not supported. Please upload a PDF, Word, Excel, or Image file.");
                 }
+            
             } else {
                 console.log("No file selected.");
+                set_alert('Error', "No file selected. Please select a file to upload.");
             }
-
-
-            var file_path = uploadFile(file, fileSeq, fileName, fileSize, file_part, file_doc);
 
         } else {
             fileInfoSpan.textContent = "";
         }
-        // $("#divLoading").hide(); 
     }   
 
     $scope.fileSelectRAM = function (input) {
@@ -849,7 +837,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         // รับค่าที่ส่งมาจาก service ที่ตอบกลับมาด้วย responseText
                         const responseFromService = request.responseText;
                         // ทำอะไรกับข้อมูลที่ได้รับเช่น แสดงผลหรือประมวลผลต่อไป
-                        console.log(responseFromService);
 
                         const jsonArray = JSON.parse(responseFromService);
 
@@ -3039,6 +3026,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 case 'template' :
                     $('#removeModal').modal('show');
                     break;
+                case 'uploadfile' :
+                    $('#removeModal').modal('show');
+                    break;
                 default:
                     $('#removeModal').modal('show');
             }
@@ -3060,6 +3050,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     $scope.clearFileUploadName();
                     $scope.clearFileUploadData();
                     break;
+                case 'uploadfile' :
+                    $scope.clearFileName( $scope.seqToRemove);
+                    break;                    
                 default:
                     console.error('Unknown type:', $scope.typeToRemove);
             }

@@ -1102,7 +1102,7 @@
                                                                     class="btn btn-sm transition-none btn-reveal fs--2 p-1"
                                                                     ng-class="{'disabled-link':(!tab_general_active)}"
                                                                     style="display: none;"
-                                                                    ng-click="clearFileName(item.seq)">
+                                                                    ng-click="triggerRemove(item,item.seq,'','uploadfile')"><!----ng-click="clearFileName(item.seq)"----->
                                                                 <a class="text-decoration-none text-danger">
                                                                     <span class="fas fa-times"></span>
                                                                 </a>
@@ -1136,7 +1136,7 @@
                                                                         </span>
                                                                         <a id="deluploadfile-{{item.seq}}" class="btn btn-link text-danger p-0 ms-2"
                                                                                 ng-class="{'d-none':(!tab_general_active)}"
-                                                                                ng-click="clearFileName(item.seq)">
+                                                                                ng-click="triggerRemove(item,item.seq,'','uploadfile')"><!---ng-click="clearFileName(item.seq)--->
                                                                             <span class="fa-regular fa-trash-can fa-lg"></span>
                                                                         </a>
 
