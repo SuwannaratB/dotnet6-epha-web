@@ -3293,6 +3293,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 case 'NodeDrawing' :
                     $scope.removeDataNodeDrawing($scope.seqToRemove, $scope.indexToRemove);
                     break;
+                case 'uploadfile' :
+                    $scope.clearFileName( $scope.seqToRemove);
+                    break;        
                 default:
                     console.error('Unknown type:', $scope.typeToRemove);
             }
@@ -3925,6 +3928,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         var targetNode = $filter('filter')($scope.data_nodedrawing, function(item) {
             return item.seq === seq;
         })[0];
+        
         
         if (targetNode) {
             var id_node = targetNode.id_node;

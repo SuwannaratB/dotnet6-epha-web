@@ -3193,6 +3193,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     case 'NodeDrawing' :
                         $scope.removeDataNodeDrawing($scope.seqToRemove, $scope.indexToRemove);
                         break;
+                    case 'uploadfile' :
+                        $scope.clearFileName( $scope.seqToRemove);
+                        break;            
                     default:
                         console.error('Unknown type:', $scope.typeToRemove)
                 }

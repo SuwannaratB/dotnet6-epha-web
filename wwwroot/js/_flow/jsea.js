@@ -853,6 +853,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                             arr[0].action_change = 1;
                             apply();
 
+
+                            console.log(arr)
                         }
                     } else {
                         // กรณีเกิดข้อผิดพลาดในการร้องขอไปยัง server
