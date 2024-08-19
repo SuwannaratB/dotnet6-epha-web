@@ -258,62 +258,69 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                 $("#divLoading").hide();
             },
             success: function (data) {
-                var arr = data;
-                console.log(arr);
-
-                if (page_load) { 
-
-                    $scope.data_all = arr;
-               
-                }
-
-                var iNoNew = 1;
-                for (let i = 0; i < arr.header.length; i++) {
-                    arr.header[i].no = (iNoNew);
-                    iNoNew++;
-                };
-
-                $scope.data_header_def = arr.header;
-                $scope.data_header = arr.header;
-                $scope.flow_status = arr.header[0].pha_status;
-
-                $scope.data_header_all = arr.header_all;
-
-                $scope.data_general = arr.general;
-                if ($scope.data_general[0].pha_sub_software == null) {
-                    $scope.data_general[0].pha_sub_software = 'HAZOP';
-                    $scope.data_general[0].expense_type = 'OPEX';
-                    $scope.data_general[0].id_apu = null;
-                    $scope.data_general[0].approver_user_name = null;
-                }
-                angular.copy($scope.data_general, $scope.data_general_def);
-
-
-                //แสดงปุ่ม 
-                $scope.cancle_type = true;
-                $scope.export_type = false;
-                $scope.submit_type = true;
-
-
-                try {
-                    if (conFig.pha_type_doc == 'followup') {
-                        if ($scope.data_header[0].action_type == 'insert') {
-                            var page = "Home/Portal";
-                            window.open(page, "_top");
-                        }
-                    } else {
-                        if ($scope.data_header[0].action_type == 'insert') {
-                            $scope.confirmCreate();
-                            return;
-                        }
+                if(data[0].status == 'true'){
+                    var arr = data;
+                    console.log(arr);
+    
+                    if (page_load) { 
+    
+                        $scope.data_all = arr;
+                   
                     }
-                } catch { }
-
-                //admin,request,responder,approver
-                if ($scope.flow_role_type == 'admin') { $scope.tabChange = 'worksheet'; } else { $scope.tabChange = 'responder'; }
-  
-                apply();
-               
+    
+                    var iNoNew = 1;
+                    for (let i = 0; i < arr.header.length; i++) {
+                        arr.header[i].no = (iNoNew);
+                        iNoNew++;
+                    };
+    
+                    $scope.data_header_def = arr.header;
+                    $scope.data_header = arr.header;
+                    $scope.flow_status = arr.header[0].pha_status;
+    
+                    $scope.data_header_all = arr.header_all;
+    
+                    $scope.data_general = arr.general;
+                    if ($scope.data_general[0].pha_sub_software == null) {
+                        $scope.data_general[0].pha_sub_software = 'HAZOP';
+                        $scope.data_general[0].expense_type = 'OPEX';
+                        $scope.data_general[0].id_apu = null;
+                        $scope.data_general[0].approver_user_name = null;
+                    }
+                    angular.copy($scope.data_general, $scope.data_general_def);
+    
+    
+                    //แสดงปุ่ม 
+                    $scope.cancle_type = true;
+                    $scope.export_type = false;
+                    $scope.submit_type = true;
+    
+    
+                    try {
+                        if (conFig.pha_type_doc == 'followup') {
+                            if ($scope.data_header[0].action_type == 'insert') {
+                                var page = "Home/Portal";
+                                window.open(page, "_top");
+                            }
+                        } else {
+                            if ($scope.data_header[0].action_type == 'insert') {
+                                $scope.confirmCreate();
+                                return;
+                            }
+                        }
+                    } catch { }
+    
+                    //admin,request,responder,approver
+                    if ($scope.flow_role_type == 'admin') { $scope.tabChange = 'worksheet'; } else { $scope.tabChange = 'responder'; }
+      
+                    apply();
+                   
+                }else if (data[0].status == 'false'){
+                    page = "hazop/index?create"
+                    window.open(`${page}`, "_top")
+    
+                    return true;
+                }
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 if (jqXHR.status == 500) {

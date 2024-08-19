@@ -332,7 +332,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                 }
 
                 apply();
-                console.log($scope);
+                
                 try {
                     if (page_load == true || true) {
                         const choices0 = new Choices('.js-choice-company');

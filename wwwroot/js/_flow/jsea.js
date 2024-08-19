@@ -5589,7 +5589,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
 
     $scope.openDataEmployeeAdd = function (item, form_type, index) {
-
         $scope.selectedData = item;
         $scope.selectdata_session = item.seq;
         $scope.selectDatFormType = form_type; // member, approver, owner
@@ -5598,19 +5597,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.approve_index = index;
 
 
-        if(form_type === "approver"){
-            $scope.data_approver.forEach(item => {
-                if (item.user_name) {
-                    $scope.clickedStates[item.user_name] = true;
-                }
-            });
-        }else if(form_type === "member"){
-            $scope.data_memberteam.forEach(item => {
-                if (item.user_name) {
-                    $scope.clickedStates[item.user_name] = true;
-                }
-            });        
-        }
+        updateClickedStates(form_type);
     
         // Get form data if needed
         $scope.formData = $scope.getFormData();
@@ -5623,6 +5610,22 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         
     };
+
+    function updateClickedStates(form_type) {
+        let data = [];
+    
+        if (form_type === 'approver') {
+            data = $scope.data_approver;
+        } else if (form_type === 'member') {
+            data = $scope.data_memberteam;
+        }
+    
+        data.forEach(item => {
+            if (item.user_name && item.id_session == $scope.selectedData.seq) {
+                $scope.clickedStates[item.user_name] = true;
+            }
+        });
+    }
 
     function add_relatedpeople_outsider(xformtype, seq_session) {
 
