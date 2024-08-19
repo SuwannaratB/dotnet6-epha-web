@@ -7687,14 +7687,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             if(!result_unitno) {
                 $scope.mocTitle['unit'] = ''
-                general.pha_request_name = $scope.mocTitle['default'] + ' ' + $scope.mocTitle['section'] + ' at' + $scope.mocTitle['unit']
+                general.pha_request_name = $scope.mocTitle['default'] + ' ' + $scope.mocTitle['section'] + ' at ' + $scope.mocTitle['unit']
                 return
             }
 
             if(result_unitno) $scope.mocTitle['unit'] = result_unitno.name
         }
 
-        general.pha_request_name = $scope.mocTitle['default'] + ' ' + $scope.mocTitle['section'] + ' at' + $scope.mocTitle['unit']
+        general.pha_request_name = $scope.mocTitle['default'] + ' ' + $scope.mocTitle['section'] + ' at ' + $scope.mocTitle['unit']
         general.action_change = 1;
     }
 
