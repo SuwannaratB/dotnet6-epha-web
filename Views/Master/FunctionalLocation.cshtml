@@ -41,7 +41,7 @@
                     <i class="fa-solid fa-plus"></i>
                     New Functional Location
                 </button>
-                <div class="d-flex gap-2">
+                @* <div class="d-flex gap-2">
                     <div class="btn-File-Atthachment">
                         <button class="d-flex btn btn-sm btn-outline-gray gap-2" ng-click="triggerFileUpload()">
                             <i class="fa-solid fa-folder-open" ng-if="!fileName" style="color: cornflowerblue;"></i>
@@ -49,7 +49,6 @@
                             {{ fileName ? truncateFilename(fileName, 14) :'Import File Atthachment' }}
                             <i class="fa-solid fa-xmark" ng-if="fileName" style="color: red;"></i>
                         </button>
-                        @* เอกสารประกอบไม่ใช่การ Import data เข้าระบบ *@
                         <input type="file"
                             id="fileInput"
                             style="display:none"
@@ -64,7 +63,7 @@
                         <i class="fa-solid fa-download" style="color: darkcyan;"></i>
                         Export Excel
                     </button>
-                </div>
+                </div> *@
             </div>
             <div class="d-flex align-items-end gap-4">
                 @* <div class="dropdown">
