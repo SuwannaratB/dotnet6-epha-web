@@ -250,6 +250,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
             beforeSend: function () {
                 $("#divLoading").show();
+                $('#divPage').addClass('d-none');
+
             },
             complete: function () {
                 $("#divLoading").hide();
@@ -374,8 +376,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
                 }
 
+                $('#divPage').removeClass('d-none');
+
+
                 apply();
-                console.log($scope);
                 try {
                     const choicesapu = new Choices('.js-choice-apu');
                     const choicesfunc = new Choices('.js-choice-functional');
@@ -384,6 +388,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
                     const choicesapprover = new Choices('.js-choice-approver');
                 } catch { }
+
 
             },
             error: function (jqXHR, textStatus, errorThrown) {

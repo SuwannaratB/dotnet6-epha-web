@@ -253,6 +253,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
             beforeSend: function () {
                 $("#divLoading").show();
+                $('#divPage').addClass('d-none');
+
             },
             complete: function () {
                 $("#divLoading").hide();
@@ -312,6 +314,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                 //admin,request,responder,approver
                 if ($scope.flow_role_type == 'admin') { $scope.tabChange = 'worksheet'; } else { $scope.tabChange = 'responder'; }
   
+                $('#divPage').removeClass('d-none');
+
                 apply();
             },
             error: function (jqXHR, textStatus, errorThrown) {

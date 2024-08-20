@@ -1725,6 +1725,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             beforeSend: function () {
                 //if (!page_load) { $('#modalLoadding').modal('show'); }
                 $('#divLoading').show();
+                $('#divPage').addClass('d-none');
+
             },
             complete: function () {
                 //if (!page_load) { $('#modalLoadding').modal('hide'); }
@@ -2071,6 +2073,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 filterDataWorksheet();
 
                 $scope.unsavedChanges = false;
+                $('#divPage').removeClass('d-none');
+
 
                 $scope.$apply();
             },
