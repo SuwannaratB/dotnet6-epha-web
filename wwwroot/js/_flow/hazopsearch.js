@@ -104,7 +104,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                 $('#divLoading').hide();
             },
             success: function (data) {
-                var arr = data;
+                var arr = data 
+                arr.results.sort((a, b) => b.id - a.id);
                 console.log(arr);
 
                 setTimeout(function () { var v = 0; }, 10000);
