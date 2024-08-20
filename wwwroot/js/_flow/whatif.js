@@ -1720,6 +1720,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
             beforeSend: function () {
                 $('#divLoading').show();
+                $('#divPage').addClass('d-none');
+
             },
             complete: function () {
                 $('#divLoading').hide();
@@ -1978,42 +1980,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         }
                     }catch{}
 
-                    /*try {
-                        $scope.master_apu = JSON.parse(replace_hashKey_arr(arr.apu));
-                        $scope.master_functional = JSON.parse(replace_hashKey_arr(arr.functional));
-                        $scope.master_business_unit = JSON.parse(replace_hashKey_arr(arr.business_unit));
-                        $scope.master_business_unit_def = JSON.parse(replace_hashKey_arr(arr.business_unit));
-                        $scope.master_unit_no = JSON.parse(replace_hashKey_arr(arr.unit_no));
-                        $scope.master_ram = JSON.parse(replace_hashKey_arr(arr.ram));
-
-
-
-                        if ($scope.data_general[0].master_apu == null || $scope.data_general[0].master_apu == '') {
-                            $scope.data_general[0].master_apu = null;
-                            //var arr_clone_def = { id: $scope.data_general[0].master_apu, name: 'Please select' };
-                            var arr_clone_def = { id: null, name: 'Please select' };
-                            $scope.master_apu.splice(0, 0, arr_clone_def);
-                        }
-                        if ($scope.data_general[0].master_functional == null) {
-                            $scope.data_general[0].master_functional = null;
-                            //var arr_clone_def = { id: $scope.data_general[0].master_functional, name: 'Please select' };
-                            var arr_clone_def = { id: null, name: 'Please select' };
-                            $scope.master_functional.splice(0, 0, arr_clone_def);
-                        }
-                        if ($scope.data_general[0].id_business_unit == null) {
-                            $scope.data_general[0].id_business_unit = null;
-                            //var arr_clone_def = { id: $scope.data_general[0].id_business_unit, name: 'Please select' };
-                            var arr_clone_def = { id: null, name: 'Please select' };
-                            $scope.master_business_unit.splice(0, 0, arr_clone_def);
-                        }
-                        if ($scope.data_general[0].master_unit_no == null || $scope.data_general[0].master_unit_no == '') {
-                            $scope.data_general[0].master_unit_no = null;
-                            //var arr_clone_def = { id: $scope.data_general[0].master_unit_no, name: 'Please select' };
-                            var arr_clone_def = { id: null, name: 'Please select' };
-                            $scope.master_unit_no.splice(0, 0, arr_clone_def);
-                        }
-                    } catch (ex) { alert(ex); console.clear(); }*/
-
                     var pha_status = $scope.data_header[0].pha_status
                     set_form_action(action_part_befor, !action_submit, page_load);
                     set_form_access(pha_status,$scope.params,$scope.flow_role_type)
@@ -2081,7 +2047,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     $scope.startTimer();  
                 }
                 $scope.unsavedChanges= false;
-
+                $('#divPage').removeClass('d-none');
 
             },
             error: function (jqXHR, textStatus, errorThrown) {
