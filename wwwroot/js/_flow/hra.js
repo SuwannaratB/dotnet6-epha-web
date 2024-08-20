@@ -8084,7 +8084,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
 
     $scope.processExposure = function (itemAll, hazard){
-        hazard.exposure_band = hazard.exposure_band.replace(/[^0-9.]/g, '');
+        /*hazard.exposure_band = hazard.exposure_band.replace(/[^0-9.]/g, '');
         // ตรวจสอบว่ามีจุดทศนิยมมากกว่าหนึ่งจุดหรือไม่
         var parts = hazard.exposure_band.split('.');
         if (parts.length > 2) {
@@ -8092,7 +8092,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             hazard.exposure_band = parts[0] + '.' + parts.slice(1).join('');
         }
 
-        hazard.exposure_band = parseFloat( hazard.exposure_band);
+        hazard.exposure_band = parseFloat( hazard.exposure_band);*/
 
         if(!hazard.exposure_band || !hazard.standard_value){
             hazard.id_exposure_level = null;

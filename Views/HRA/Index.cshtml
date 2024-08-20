@@ -1926,9 +1926,10 @@
                                                         >
                                                         <input class="form-control form-control-sm placeholder-right" 
                                                             style="min-width: 100px; font-size: 10.24px;"
-                                                            type="text" 
+                                                            type="number" 
+                                                            step="0.01" 
                                                             placeholder=""
-                                                            ng-keyup="processExposure(item,ws)"
+                                                            ng-change="processExposure(item, ws)" 
                                                             ng-model="ws.exposure_band">
                                                         ppm
                                                     </div>
