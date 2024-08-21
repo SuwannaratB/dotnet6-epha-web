@@ -95,6 +95,20 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
     };
 
 });
+AppMenuPage.directive('stringToNumber', function() {
+    return {
+      require: 'ngModel',
+      link: function(scope, element, attrs, ngModel) {
+        ngModel.$parsers.push(function(value) {
+          return '' + value;
+        });
+        ngModel.$formatters.push(function(value) {
+          return parseFloat(value);
+        });
+      }
+    };
+  });
+
 AppMenuPage.filter('toArray', function() {
     return function(obj) {
       if (!obj) {
@@ -408,53 +422,22 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
         };
 
-        /*$scope.fileSelect = function (input, file_part) {
-            //drawing, responder, approver
-            var file_doc = $scope.data_header[0].pha_no;
-
-            const fileInput = input;
-            const fileSeq = fileInput.id.split('-')[1];
-            const fileInfoSpan = document.getElementById('filename' + fileSeq);
-
-            if (fileInput.files.length > 0) {
-                const file = fileInput.files[0];
-                const fileName = file.name;
-                const fileSize = Math.round(file.size / 1024);
-                try {
-                    fileInfoSpan.textContent = `${fileName} (${fileSize} KB)`;
-                } catch { }
-                if (file) {
-                    const allowedFileTypes = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'jpg', 'png', 'gif']; // รายการของประเภทของไฟล์ที่อนุญาตให้แนบ
-
-                    const fileExtension = fileName.split('.').pop().toLowerCase(); // นำนามสกุลของไฟล์มาเปลี่ยนเป็นตัวพิมพ์เล็กทั้งหมดเพื่อให้เป็น case-insensitive
-
-                    if (allowedFileTypes.includes(fileExtension)) {
-                        // ทำการแนบไฟล์
-                        //set_alert("File attached successfully.");
-                    } else {
-                        $('#modalMsgFileError').modal('show');
-                        //set_alert('Warning', "Please select a PDF, Word or Excel, Image file.");
-                    }
-                } else {
-                    console.log("No file selected.");
-                }
-
-
-                var file_path = uploadFile(file, fileSeq, fileName, fileSize, file_part, file_doc);
-
-            } else {
-                fileInfoSpan.textContent = "";
-            }
-        }*/
 
         $scope.truncateFilename = function(filename, length) {
             if (!filename) return '';
             if (filename.length <= length) return filename;
-            const start = filename.slice(0, Math.floor(length / 2));
-            const end = filename.slice(-Math.floor(length / 2));
-            return `${start}.......${end}`;
+            
+            const ellipsis = '...';
+            const charsToShow = length - ellipsis.length;
+            const frontChars = Math.ceil(charsToShow / 2);
+            const backChars = Math.floor(charsToShow / 2);
+            
+            const start = filename.slice(0, frontChars);
+            const end = filename.slice(-backChars);
+            
+            return `${start}${ellipsis}${end}`;
         };
-
+            
         $scope.fileSelect = function (input, file_part) {
             var file_doc = $scope.data_header[0].pha_no;
             const fileInput = input;
@@ -485,33 +468,26 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     
     
                 if (file) {
-                    const allowedFileTypes = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'jpg', 'png', 'gif']; // รายการของประเภทของไฟล์ที่อนุญาตให้แนบ
-    
-                    const fileExtension = fileName.split('.').pop().toLowerCase(); // นำนามสกุลของไฟล์มาเปลี่ยนเป็นตัวพิมพ์เล็กทั้งหมดเพื่อให้เป็น case-insensitive
-    
+                    const allowedFileTypes = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'jpg', 'png', 'gif'];
+                
+                    const fileExtension = fileName.split('.').pop().toLowerCase(); 
                     if (allowedFileTypes.includes(fileExtension)) {
-                        // ทำการแนบไฟล์
-                        //set_alert("File attached successfully.");
+                        var file_path = uploadFile(file, fileSeq, fileName, fileSize, file_part, file_doc);
                     } else {
-                        $('#modalMsgFileError').modal({
-                            backdrop: 'static',
-                            keyboard: false 
-                        }).modal('show');
-                        //set_alert('Warning', "Please select a PDF, Word or Excel, Image file.");
+                        set_alert('Warning', "The selected file type is not supported. Please upload a PDF, Word, Excel, or Image file.");
                     }
+                
                 } else {
                     console.log("No file selected.");
+                    set_alert('Error', "No file selected. Please select a file to upload.");
                 }
-    
-    
-                var file_path = uploadFile(file, fileSeq, fileName, fileSize, file_part, file_doc);
     
             } else {
                 fileInfoSpan.textContent = "";
             }
         }
                   
-        function uploadFile(file_obj, seq, file_name, file_size, file_part, file_doc) {
+        function uploadFile_test(file_obj, seq, file_name, file_size, file_part, file_doc) {
 
             var fd = new FormData();
             //Take the first selected file
@@ -533,27 +509,52 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 request.onreadystatechange = function () {
                     if (request.readyState === XMLHttpRequest.DONE) {
                         if (request.status === 200) {
+
                             // รับค่าที่ส่งมาจาก service ที่ตอบกลับมาด้วย responseText
                             const responseFromService = request.responseText;
-                            // ทำอะไรกับข้อมูลที่ได้รับเช่น แสดงผลหรือประมวลผลต่อไป
-                            console.log(responseFromService);
 
-                            const jsonArray = JSON.parse(responseFromService);
+                            if(responseFromService && responseFromService.msg[0].STATUS === "true"){
 
-                            var file_name = jsonArray[0].ATTACHED_FILE_NAME;
-                            var file_path = jsonArray[0].ATTACHED_FILE_PATH;
+                                // ทำอะไรกับข้อมูลที่ได้รับเช่น แสดงผลหรือประมวลผลต่อไป
+                                const jsonArray = JSON.parse(responseFromService);
 
-                            var arr = $filter('filter')($scope.data_drawing, function (item) { return (item.seq == seq); });
-                            if (arr.length > 0) {
-                                arr[0].document_file_name = file_name;
-                                arr[0].document_file_size = file_size;
-                                //'https://localhost:7098/api/' + '/AttachedFileTemp/hazop/HAZOP-2023-0000016-DRAWING-202312231716.PDF'
-                                arr[0].document_file_path = (url_ws.replace('/api/', '')) + file_path;// (url_ws.replace('/api/', '/')) + 'AttachedFileTemp/Hazop/' + file_name;
-                                arr[0].document_module = 'hra';
-                                arr[0].action_change = 1;
-                                apply();
+                                var file_name = jsonArray[0].ATTACHED_FILE_NAME;
+                                var file_path = jsonArray[0].ATTACHED_FILE_PATH;
 
+                                if(file_part == 'drawing'){
+                                    
+                                    var arr = $filter('filter')($scope.data_drawing, function (item) { return (item.seq == seq); });
+                                    if (arr.length > 0) {
+                                        arr[0].document_file_name = file_name;
+                                        arr[0].document_file_size = file_size;
+                                        //'https://localhost:7098/api/' + '/AttachedFileTemp/hazop/HAZOP-2023-0000016-DRAWING-202312231716.PDF'
+                                        arr[0].document_file_path = (url_ws.replace('/api/', '')) + file_path;// (url_ws.replace('/api/', '/')) + 'AttachedFileTemp/Hazop/' + file_name;
+                                        arr[0].document_module = 'hra';
+                                        arr[0].action_change = 1;
+                                        apply();
+
+                                    }
+                                } else if (file_part == 'approver'){
+                                    
+                                    var arr = $filter('filter')($scope.data_drawing_approver, function (item) { return (item.seq == seq); });
+                                    if (arr.length > 0) {
+                                        arr[0].document_file_name = file_name;
+                                        arr[0].document_file_size = file_size;
+                                        arr[0].document_file_path = (url_ws.replace('/api/', '')) + file_path;// (url_ws.replace('/api/', '/')) + 'AttachedFileTemp/Hazop/' + file_name;
+                                        arr[0].document_module = 'approver';
+                                        arr[0].action_change = 1;
+                                        arr[0].action_type = arr[0].action_type === 'new' ? 'insert' : arr[0].action_type;
+                                        apply();
+        
+                                    }
+
+                                }
+
+
+                            }else{
+                                set_alert('Warning', 'Unable to connect to the service. Please check your internet connection or try again later.');
                             }
+
                         } else {
                             // กรณีเกิดข้อผิดพลาดในการร้องขอไปยัง server
                             console.error('มีข้อผิดพลาด: ' + request.status);
@@ -574,37 +575,43 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             var file_doc = $scope.data_header[0].pha_no;
         
             const fileInput = input;
-            const fileSeq = fileInput.id.split('-')[1];
+            const fileSeq = fileInput.id.split('-')[2];
             const fileInfoSpan = document.getElementById('filename-approver-' + fileSeq);
         
             if (fileInput.files.length > 0) {
                 const file = fileInput.files[0];
                 const fileName = file.name;
-                const fileSize = Math.round(file.size / 1024);
-        
-                console.log("fileSize",fileSize)
-                if (fileSize > 10240) {
+                const fileSizeKB = Math.round(file.size / 1024);
+
+                const maxFileSizeKB = 10240; // 10 MB in KB
+                const allowedFileTypes = ['pdf', 'eml', 'msg'];
+                            
+                if (fileSizeKB > maxFileSizeKB) {
                     fileInfoSpan.textContent = "";
                     set_alert('Warning', 'File size exceeds 10 MB. Please select a smaller file.');
                     return;
                 }
-        
-                fileInfoSpan.textContent = `${fileName} (${fileSize} KB)`;
-        
-                if (fileName.toLowerCase().indexOf('.pdf') == -1) {
-                    fileInfoSpan.textContent = "";
-                    set_alert('Warning', 'Please select a PDF file.');
-                    return;
+                        
+                const fileExtension = fileName.split('.').pop().toLowerCase(); 
+            
+                
+                if (allowedFileTypes.includes(fileExtension)) {
+                    console.log(fileSeq)
+
+                    var file_path = uploadFile(file, fileSeq, fileName, fileSizeKB, file_part, file_doc);
+                } else {
+                    set_alert('Warning', "Unsupported file type. Please upload a PDF, EML, or MSG file.");
                 }
+                
         
-                var file_path = uploadFileApprover(file, fileSeq, fileName, fileSize, file_part, file_doc);
+                
             } else {
                 fileInfoSpan.textContent = "";
             }
         }
         
 
-        function uploadFileApprover(file_obj, seq, file_name, file_size, file_part, file_doc) {
+        function uploadFile(file_obj, seq, file_name, file_size, file_part, file_doc) {
 
             var fd = new FormData();
             //Take the first selected file
@@ -625,35 +632,77 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 request.onreadystatechange = function () {
                     if (request.readyState === XMLHttpRequest.DONE) {
                         if (request.status === 200) {
+
                             // รับค่าที่ส่งมาจาก service ที่ตอบกลับมาด้วย responseText
                             const responseFromService = request.responseText;
-                            // ทำอะไรกับข้อมูลที่ได้รับเช่น แสดงผลหรือประมวลผลต่อไป
-                            console.log(responseFromService);
+                            let parsedResponse;
+                            
+                            try {
+                                parsedResponse = JSON.parse(responseFromService);
+                            } catch (e) {
+                                console.error("Failed to parse JSON response:", e);
+                                return;
+                            }
+                            
+                            console.log(parsedResponse);
+                            
+                            // Now you can safely access the properties
+                            if (parsedResponse && parsedResponse.msg && parsedResponse.msg[0].STATUS === "true") {
 
-                            const jsonArray = JSON.parse(responseFromService);
+                                // ทำอะไรกับข้อมูลที่ได้รับเช่น แสดงผลหรือประมวลผลต่อไป
+                                const jsonArray = JSON.parse(responseFromService);
 
-                            var file_name = jsonArray[0].ATTACHED_FILE_NAME;
-                            var file_path = jsonArray[0].ATTACHED_FILE_PATH;
+                                var file_name = jsonArray.msg[0].ATTACHED_FILE_NAME;
+                                var file_path = jsonArray.msg[0].ATTACHED_FILE_PATH;
 
-                            var arr = $filter('filter')($scope.data_drawing_approver, function (item) { return (item.seq == seq); });
-                            console.log(arr)
-                            if (arr.length > 0) {
-                                arr[0].document_file_name = file_name;
-                                arr[0].document_file_size = file_size;
-                                arr[0].document_file_path = (url_ws.replace('/api/', '')) + file_path;// (url_ws.replace('/api/', '/')) + 'AttachedFileTemp/Hazop/' + file_name;
-                                arr[0].document_module = 'approver';
-                                arr[0].action_change = 1;
-                                arr[0].action_type = arr[0].action_type === 'new' ? 'insert' : arr[0].action_type;
-                                apply();
+                                if(file_part == 'drawing'){
+                                    
+                                    var arr = $filter('filter')($scope.data_drawing, function (item) { return (item.seq == seq); });
+                                    if (arr.length > 0) {
+                                        arr[0].document_file_name = file_name;
+                                        arr[0].document_file_size = file_size;
+                                        //'https://localhost:7098/api/' + '/AttachedFileTemp/hazop/HAZOP-2023-0000016-DRAWING-202312231716.PDF'
+                                        arr[0].document_file_path = (url_ws.replace('/api/', '')) + file_path;// (url_ws.replace('/api/', '/')) + 'AttachedFileTemp/Hazop/' + file_name;
+                                        arr[0].document_module = 'hra';
+                                        arr[0].action_change = 1;
+                                        apply();
 
+                                    }
+                                } else if (file_part == 'approver'){
+                                    
+                                    var arr = $filter('filter')($scope.data_drawing_approver, function (item) { return (item.seq == seq); });
+                                    if (arr.length > 0) {
+                                        arr[0].document_file_name = file_name;
+                                        arr[0].document_file_size = file_size;
+                                        arr[0].document_file_path = (url_ws.replace('/api/', '')) + file_path;// (url_ws.replace('/api/', '/')) + 'AttachedFileTemp/Hazop/' + file_name;
+                                        arr[0].document_module = 'approver';
+                                        arr[0].action_change = 1;
+                                        arr[0].action_type = arr[0].action_type === 'new' ? 'insert' : arr[0].action_type;
+                                        apply();
+        
+                                        console.log(arr)
+
+                                    }
+
+
+                                }
+
+                                $("#divLoading").hide(); 
+                                set_alert('Success', 'File attached successfully.');
+
+                            }else{
+
+                                $("#divLoading").hide(); 
+                                set_alert('Warning', 'Unable to connect to the service. Please check your internet connection or try again later.');
                             }
 
                         } else {
+                            $("#divLoading").hide(); 
+
                             // กรณีเกิดข้อผิดพลาดในการร้องขอไปยัง server
                             console.error('มีข้อผิดพลาด: ' + request.status);
                         }
                     }
-                    $("#divLoading").hide(); 
 
                 };
 
@@ -665,6 +714,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             return "";
         }
+
 
         $scope.truncateFilename = function(filename, length) {
             if (!filename) return '';
@@ -1621,8 +1671,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         } else { set_alert('Error', 'No Data.'); return; }
         var json_drawingapprover = check_data_drawingwapprover(id_session);
 
-
-        console.log("arr_json",arr_json)
         $.ajax({
             url: url_ws + "flow/set_approve",
             data: '{"sub_software":"hra","user_name":"' + user_name + '","role_type":"' + flow_role_type + '","action":"' + flow_action + '","token_doc":"' + pha_seq + '","pha_status":"' + pha_status + '"'
@@ -1680,8 +1728,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     }
                 }
                 else {
-                    set_alert('Error', arr[0].status);
-                    apply();
+                    $('#returnModal').modal({
+                        backdrop: 'static',
+                        keyboard: false 
+                    }).modal('show');
                 }
 
             },

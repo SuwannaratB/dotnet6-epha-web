@@ -615,26 +615,20 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             
 
             if (file) {
-                const allowedFileTypes = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'jpg', 'png', 'gif']; // รายการของประเภทของไฟล์ที่อนุญาตให้แนบ
-
-                const fileExtension = fileName.split('.').pop().toLowerCase(); // นำนามสกุลของไฟล์มาเปลี่ยนเป็นตัวพิมพ์เล็กทั้งหมดเพื่อให้เป็น case-insensitive
-
+                const allowedFileTypes = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'jpg', 'png', 'gif'];
+            
+                const fileExtension = fileName.split('.').pop().toLowerCase(); 
                 if (allowedFileTypes.includes(fileExtension)) {
-                    // ทำการแนบไฟล์
-                    //set_alert("File attached successfully.");
+                    var file_path = uploadFile(file, fileSeq, fileName, fileSize, file_part, file_doc);
+                    set_alert('Success', 'File attached successfully.');
                 } else {
-                    $('#modalMsgFileError').modal({
-                        backdrop: 'static',
-                        keyboard: false 
-                    }).modal('show');
-                    //set_alert('Warning', "Please select a PDF, Word or Excel, Image file.");
+                    set_alert('Warning', "The selected file type is not supported. Please upload a PDF, Word, Excel, or Image file.");
                 }
+            
             } else {
                 console.log("No file selected.");
+                set_alert('Error', "No file selected. Please select a file to upload.");
             }
-
-
-            var file_path = uploadFile(file, fileSeq, fileName, fileSize, file_part, file_doc);
 
         } else {
             fileInfoSpan.textContent = "";
@@ -678,26 +672,38 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         var file_doc = $scope.data_header[0].pha_no;
 
         const fileInput = input;
-        const fileSeq = fileInput.id.split('-')[1];
+        const fileSeq = fileInput.id.split('-')[2];
         const fileInfoSpan = document.getElementById('filename-approver-' + fileSeq);
 
         if (fileInput.files.length > 0) {
             const file = fileInput.files[0];
             const fileName = file.name;
-            const fileSize = Math.round(file.size / 1024);
+            const fileSizeKB = Math.round(file.size / 1024);
             //fileInfoSpan.textContent = `${fileName} (${fileSize} KB)`;
 
             let shortenedFileName = fileName.length > 20 ? fileName.substring(0, 20) + '...' : fileName;
-            fileInfoSpan.textContent = `${shortenedFileName} (${fileSize} KB)`;
+            fileInfoSpan.textContent = `${shortenedFileName} (${fileSizeKB} KB)`;
 
-
-            if (fileName.toLowerCase().indexOf('.pdf') == -1) {
+            const maxFileSizeKB = 10240; // 10 MB in KB
+            const allowedFileTypes = ['pdf', 'eml', 'msg'];
+                    
+            if (fileSizeKB > maxFileSizeKB) {
                 fileInfoSpan.textContent = "";
-                set_alert('Warning', 'Please select a PDF file.');
+                set_alert('Warning', 'File size exceeds 10 MB. Please select a smaller file.');
                 return;
             }
+                    
+            const fileExtension = fileName.split('.').pop().toLowerCase(); 
+        
+            
+            if (allowedFileTypes.includes(fileExtension)) {
+                console.log(fileSeq)
 
-            var file_path = uploadFileApprover(file, fileSeq, fileName, fileSize, file_part, file_doc);
+                var file_path = uploadFileApprover(file, fileSeq, fileName, fileSizeKB, file_part, file_doc);
+            } else {
+                set_alert('Warning', "Unsupported file type. Please upload a PDF, EML, or MSG file.");
+            }
+            
 
         } else {
             fileInfoSpan.textContent = "";
@@ -819,28 +825,48 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             request.onreadystatechange = function () {
                 if (request.readyState === XMLHttpRequest.DONE) {
                     if (request.status === 200) {
-                        // รับค่าที่ส่งมาจาก service ที่ตอบกลับมาด้วย responseText
-                        const responseFromService = request.responseText;
-                        // ทำอะไรกับข้อมูลที่ได้รับเช่น แสดงผลหรือประมวลผลต่อไป
-                        console.log(responseFromService);
+                            // รับค่าที่ส่งมาจาก service ที่ตอบกลับมาด้วย responseText
+                            const responseFromService = request.responseText;
+                            let parsedResponse;
+                            
+                            try {
+                                parsedResponse = JSON.parse(responseFromService);
+                            } catch (e) {
+                                console.error("Failed to parse JSON response:", e);
+                                return;
+                            }
+                            
+                            console.log(parsedResponse);
+                            
+                            // Now you can safely access the properties
+                            if (parsedResponse && parsedResponse.msg && parsedResponse.msg[0].STATUS === "true") {
 
-                        const jsonArray = JSON.parse(responseFromService);
+                                // ทำอะไรกับข้อมูลที่ได้รับเช่น แสดงผลหรือประมวลผลต่อไป
+                                const jsonArray = JSON.parse(responseFromService);
 
-                        var file_name = jsonArray[0].ATTACHED_FILE_NAME;
-                        var file_path = jsonArray[0].ATTACHED_FILE_PATH;
+                                var file_name = jsonArray.msg[0].ATTACHED_FILE_NAME;
+                                var file_path = jsonArray.msg[0].ATTACHED_FILE_PATH;
 
-                        var arr = $filter('filter')($scope.data_drawing_approver, function (item) { return (item.seq == seq); });
-                        if (arr.length > 0) {
-                            arr[0].document_file_name = file_name;
-                            arr[0].document_file_size = file_size;
-                            arr[0].document_file_path = (url_ws.replace('/api/', '')) + file_path;// (url_ws.replace('/api/', '/')) + 'AttachedFileTemp/Hazop/' + file_name;
-                            arr[0].document_module = 'approver';
-                            arr[0].action_change = 1;
-                            apply();
+                                var arr = $filter('filter')($scope.data_drawing_approver, function (item) { return (item.seq == seq); });
+                                if (arr.length > 0) {
+                                    arr[0].document_file_name = file_name;
+                                    arr[0].document_file_size = file_size;
+                                    arr[0].document_file_path = (url_ws.replace('/api/', '')) + file_path;// (url_ws.replace('/api/', '/')) + 'AttachedFileTemp/Hazop/' + file_name;
+                                    arr[0].document_module = 'approver';
+                                    arr[0].action_change = 1;
+                                    arr[0].action_type = arr[0].action_type === 'new' ? 'insert' : arr[0].action_type;
+                                    apply();
+    
+                                }
 
-                        }
+                                $("#divLoading").hide(); 
+                                set_alert('Success', 'File attached successfully.');
 
-                        console.log("show approver",$scope.data_drawing_approver)
+                            }else{
+
+                                $("#divLoading").hide(); 
+                                set_alert('Warning', 'Unable to connect to the service. Please check your internet connection or try again later.');
+                            }
                     } else {
                         // กรณีเกิดข้อผิดพลาดในการร้องขอไปยัง server
                         console.error('มีข้อผิดพลาด: ' + request.status);
