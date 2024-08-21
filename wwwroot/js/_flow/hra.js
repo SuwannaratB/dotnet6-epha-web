@@ -1559,7 +1559,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     else {
                         console.log('open else')
                         set_alert('Success', 'Data has been successfully submitted.');
-                        // window.open('hazop/search', "_top");
+                        window.open('hazop/search', "_top");
                         return;
                     }
 
@@ -3005,7 +3005,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 arr_tasks[i].worker_list = workerList;
                 arr_tasks[i].numbers_of_workers = workerList.length;
             }
-
+            console.log(arr_tasks)
             return  groupDescriptions(arr_tasks);
         }
 
@@ -3088,7 +3088,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             var list = $filter('filter')($scope.master_worker_group, function (item) { 
                 return (item.id == task.id_worker_group); 
             })[0];
+            var list2 = $filter('filter')($scope.master_worker_list, function (item) { 
+                return (item.id_worker_group == task.id_worker_group); 
+            });
+            task.numbers_of_workers = list2.length
             task.worker_group = list.name
+            task.worker_list = list2;
             task.action_change = 1;
             // worksheet
             var ws = $filter('filter')($scope.data_worksheet_list, function (item) { 
@@ -6138,6 +6143,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     }
                 }
             }
+
+            for (var i = 0; i < $scope.data_workers_delete.length; i++) {
+                $scope.data_workers_delete[i].action_type = 'delete';
+                workerList.push($scope.data_workers_delete[i]);
+            }
             console.log('arr worker json => ',(workerList))
             return angular.toJson(workerList);
         }
@@ -6296,7 +6306,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
 
         function check_data_drawingwapprover(id_session) {
-
             var pha_seq = $scope.data_header[0].seq;
 
             for (var i = 0; i < $scope.data_drawing_approver.length; i++) {
@@ -7079,7 +7088,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.clickedStates = {};
         
         $scope.choosDataEmployee = function (item) {
-
                 var id = item.id;
                 var employee_name = item.employee_name;
                 var employee_displayname = item.employee_displayname;
@@ -7188,11 +7196,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     $('#modalEmployeeAdd').modal('hide');
                 }
                 else if (xformtype == "worker") {
-
                     var tasks = $filter('filter')($scope.data_tasks, function (item) {
                         return (item.seq == seq_session);
                     })[0];
-
 
                     if (tasks) {
                         $scope.MaxSeqdataWorkers = Number($scope.MaxSeqdataWorkers) + 1
@@ -7311,10 +7317,16 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     $scope.removeDataApprover(seq, seq_session)
                 }
 
-                if (actions == 'worker') {                    
-                    const index = $scope.data_worker_list.findIndex(item => item.id === seq.id && item.user_name === seq.user_name);
+                if (actions == 'worker') {                 
+                    const index = $scope.data_worker_list.findIndex(item => item.id === data.id && item.user_name === data.user_name);
                 
                     if (index !== -1) {
+                        var delItem = $filter('filter')($scope.data_worker_list, function (item) {
+                            return item.id === data.id && item.user_name === data.user_name;
+                        })[0];
+
+                        $scope.data_workers_delete.push(delItem);
+
                         $scope.data_worker_list.splice(index, 1);
                         console.log("Item removed:", seq);
                     } else {
