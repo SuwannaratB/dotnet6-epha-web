@@ -680,7 +680,7 @@
 
 
                                                                 <span class="col-md-1 p-1 d-flex">
-                                                                    <label class="form-label p-0 pt-2"><b class="text-danger"> * </b>Time</label>
+                                                                    <label class="d-flex form-label p-0 pt-2"><b class="text-danger"> * </b>Time</label>
                                                                 </span>
 
                                                                 <span class="col-md-3  p-1 d-flex" ng-class="{'input-invalid': !item.meeting_date && item.validated}">
@@ -2698,7 +2698,7 @@
                                                     </div>  
                                                 </td> *@
 
-                                                <td class="align-top rating px-1 d-flex flex-column align-items-center justify-content-start" >
+                                                <td class="align-top rating px-1 d-flex flex-column align-items-center justify-content-start" style="border: none;">
                                                     <div class="d-flex justify-content-start flex-column px-4 w-100">
                                                         <div class="py-1 mb-3">
                                                             <button class="btn btn-outline-secondary p-1 cursor-pointer col-auto" 
@@ -3515,11 +3515,10 @@
                                             <td class="">
                                                 <span class="mx-1">
                                                     <button class="btn btn-outline-primary p-1 cursor-pointer"
-                                                            ng-class="{'btn-outline-primary': !clickedStates[item.employee_name], 'btn-clicked': clickedStates[item.employee_name]}"                                                             
-                                                            data-toggle="tooltip" 
-                                                            data-placement="top" 
-                                                            title="choose Employee"
-                                                            ng-click="choosDataEmployee(item)">
+                                                        ng-class="{'btn-outline-primary': !clickedStates[item.employee_name], 'btn-clicked': clickedStates[item.employee_name]}"                                                             
+                                                        data-toggle="tooltip" 
+                                                        data-placement="top" 
+                                                        title="choose Employee" >
                                                         <span class="fa-solid fa-user-plus" ng-if="selectDatFormType !== 'owner' && params !== 'edit_approver'">Add</span>
                                                         <span class="fa-solid fa-user-check" ng-if="selectDatFormType === 'owner' || params === 'edit_approver'">selecte</span>
                                                         <span class="fa-solid fa-paper-plane" ng-if="selectDatFormType === 'approver_ta3' && params !== 'edit_approver'">selecte</span>
@@ -3793,16 +3792,20 @@
                                             </span>
                                         </td>
                                         <td class="">
-                                            <input type="text" class="form-control form-control-sm" placeholder="Name"
+                                            <input type="text" 
+                                                class="form-control form-control-sm" 
+                                                placeholder="Name"
                                                 style="width: 100%;"
                                                 ng-model="itemRel.user_displayname"
                                                 ng-change="actionChange(itemRel,itemRel.seq,'')">
                                         </td>
                                         <td class="">
-                                            <input type="text" class="form-control form-control-sm" placeholder="Title"
-                                                    style="width: 100%;"
-                                                    ng-model="itemRel.user_title"
-                                                    ng-change="actionChange(itemRel,itemRel.seq,'')">
+                                            <input type="text" 
+                                                class="form-control form-control-sm" 
+                                                placeholder="Title"
+                                                style="width: 100%;"
+                                                ng-model="itemRel.user_title"
+                                                ng-change="actionChange(itemRel,itemRel.seq,'')">
                                         </td>
                                     </tr>                                    
                                 </tbody>
