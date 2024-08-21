@@ -725,10 +725,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             
                 const fileExtension = fileName.split('.').pop().toLowerCase(); 
                 if (allowedFileTypes.includes(fileExtension)) {
-                    var file_path = uploadFile(file, fileSeq, fileName, fileSize, file_part, file_doc);
-                    set_alert('Success', 'File attached successfully.');
+    
+                    var file_path = uploadFile(file, fileSeq, fileName, fileSizeKB, file_part, file_doc);
                 } else {
-                    set_alert('Warning', "The selected file type is not supported. Please upload a PDF, Word, Excel, or Image file.");
+                    set_alert('Warning', "Unsupported file type. Please upload a PDF, EML, or MSG file.");
                 }
             
             } else {
@@ -781,25 +781,30 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         if (fileInput.files.length > 0) {
             const file = fileInput.files[0];
             const fileName = file.name;
-            const fileSize = Math.round(file.size / 1024);
-            fileInfoSpan.textContent = `${fileName} (${fileSize} KB)`;
-            // check .pdf
-            if (fileName.toLowerCase().indexOf('.pdf') == -1) {
-                fileInput.value = '';
+            const fileSizeKB = Math.round(file.size / 1024);
+
+            const maxFileSizeKB = 10240; // 10 MB in KB
+            const allowedFileTypes = ['pdf', 'eml', 'msg'];
+                        
+            if (fileSizeKB > maxFileSizeKB) {
                 fileInfoSpan.textContent = "";
-                set_alert('Warning', 'Please select a PDF file.')
-                return apply()
+                set_alert('Warning', 'File size exceeds 10 MB. Please select a smaller file.');
+                return;
             }
-            // check size 
-            if (fileSize > 10000) {
-                fileInput.value = '';
-                fileInfoSpan.textContent = "";
-                set_alert('Warning', 'File size is too large. Please select a file smaller than 10 MB.')
-                return apply() 
+                    
+            const fileExtension = fileName.split('.').pop().toLowerCase(); 
+        
+            
+            if (allowedFileTypes.includes(fileExtension)) {
+                console.log(fileSeq)
+
+                var file_path = uploadFile(file, fileSeq, fileName, fileSizeKB, file_part, file_doc);
+            } else {
+                set_alert('Warning', "Unsupported file type. Please upload a PDF, EML, or MSG file.");
             }
             
-            var file_path = uploadFileApprover(file, fileSeq, fileName, fileSize, file_part, file_doc);
-
+    
+            
         } else {
             fileInfoSpan.textContent = "";
         }
@@ -823,52 +828,96 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         fd.append("file_doc", file_doc);
         fd.append("file_part", file_part);//drawing, responder, approver
         fd.append("file_doc", file_doc);
-        fd.append("sub_software", 'jsea');
+        fd.append("sub_software", 'hra');
 
         try {
             $("#divLoading").show(); 
+
             const request = new XMLHttpRequest();
             request.open("POST", url_ws + 'Flow/uploadfile_data');
-            //request.send(fd);
 
             request.onreadystatechange = function () {
                 if (request.readyState === XMLHttpRequest.DONE) {
                     if (request.status === 200) {
+
                         // รับค่าที่ส่งมาจาก service ที่ตอบกลับมาด้วย responseText
                         const responseFromService = request.responseText;
-                        // ทำอะไรกับข้อมูลที่ได้รับเช่น แสดงผลหรือประมวลผลต่อไป
-
-                        const jsonArray = JSON.parse(responseFromService);
-
-                        var file_name = jsonArray[0].ATTACHED_FILE_NAME;
-                        var file_path = jsonArray[0].ATTACHED_FILE_PATH;
-
-                        var arr = $filter('filter')($scope.data_drawing, function (item) { return (item.seq == seq); });
-                        if (arr.length > 0) {
-                            arr[0].document_file_name = file_name;
-                            arr[0].document_file_size = file_size;
-                            //'https://localhost:7098/api/' + '/AttachedFileTemp/hazop/HAZOP-2023-0000016-DRAWING-202312231716.PDF'
-                            arr[0].document_file_path = (url_ws.replace('/api/', '')) + file_path;// (url_ws.replace('/api/', '/')) + 'AttachedFileTemp/Hazop/' + file_name;
-                            arr[0].document_module = 'jsea';
-                            arr[0].action_change = 1;
-                            apply();
-
-
-                            console.log(arr)
+                        let parsedResponse;
+                        
+                        try {
+                            parsedResponse = JSON.parse(responseFromService);
+                        } catch (e) {
+                            console.error("Failed to parse JSON response:", e);
+                            return;
                         }
+                        
+                        console.log(parsedResponse);
+                        
+                        // Now you can safely access the properties
+                        if (parsedResponse && parsedResponse.msg && parsedResponse.msg[0].STATUS === "true") {
+
+                            // ทำอะไรกับข้อมูลที่ได้รับเช่น แสดงผลหรือประมวลผลต่อไป
+                            const jsonArray = JSON.parse(responseFromService);
+
+                            var file_name = jsonArray.msg[0].ATTACHED_FILE_NAME;
+                            var file_path = jsonArray.msg[0].ATTACHED_FILE_PATH;
+
+                            if(file_part == 'drawing'){
+                                
+                                var arr = $filter('filter')($scope.data_drawing, function (item) { return (item.seq == seq); });
+                                if (arr.length > 0) {
+                                    arr[0].document_file_name = file_name;
+                                    arr[0].document_file_size = file_size;
+                                    //'https://localhost:7098/api/' + '/AttachedFileTemp/hazop/HAZOP-2023-0000016-DRAWING-202312231716.PDF'
+                                    arr[0].document_file_path = (url_ws.replace('/api/', '')) + file_path;// (url_ws.replace('/api/', '/')) + 'AttachedFileTemp/Hazop/' + file_name;
+                                    arr[0].document_module = 'hra';
+                                    arr[0].action_change = 1;
+                                    apply();
+
+                                }
+                            } else if (file_part == 'approver'){
+                                
+                                var arr = $filter('filter')($scope.data_drawing_approver, function (item) { return (item.seq == seq); });
+                                if (arr.length > 0) {
+                                    arr[0].document_file_name = file_name;
+                                    arr[0].document_file_size = file_size;
+                                    arr[0].document_file_path = (url_ws.replace('/api/', '')) + file_path;// (url_ws.replace('/api/', '/')) + 'AttachedFileTemp/Hazop/' + file_name;
+                                    arr[0].document_module = 'approver';
+                                    arr[0].action_change = 1;
+                                    arr[0].action_type = arr[0].action_type === 'new' ? 'insert' : arr[0].action_type;
+                                    apply();
+    
+                                    console.log(arr)
+
+                                }
+
+
+                            }
+
+                            $("#divLoading").hide(); 
+                            set_alert('Success', 'File attached successfully.');
+
+                        }else{
+
+                            $("#divLoading").hide(); 
+                            set_alert('Warning', 'Unable to connect to the service. Please check your internet connection or try again later.');
+                        }
+
                     } else {
+                        $("#divLoading").hide(); 
+
                         // กรณีเกิดข้อผิดพลาดในการร้องขอไปยัง server
                         console.error('มีข้อผิดพลาด: ' + request.status);
                     }
-                    $("#divLoading").hide(); 
                 }
+
             };
 
             request.send(fd);
 
-        } catch { 
+        } catch {
             $("#divLoading").hide(); 
-        }
+         }
 
         return "";
     }
@@ -5075,6 +5124,17 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     }
                 }
             } catch {}  
+
+            try {
+                if (copy_data_approver[i].date_review !== null) {
+                    var date_review = new Date(copy_data_approver[i].date_review);
+                    if (!isNaN(date_review.getTime())) {
+                        var date_review_utc = new Date(Date.UTC(date_review.getFullYear(), date_review.getMonth(), date_review.getDate()));
+                        copy_data_approver[i].date_review = date_review_utc.toISOString().split('T')[i];
+                    }
+                }
+            } catch {} 
+    
         }
 
         return angular.toJson(copy_data_approver);

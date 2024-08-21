@@ -3635,11 +3635,24 @@
                                                         Please provide a valid document file.
                                                     </div>
                                                 </td>
-                                                <td class="align-top white-space-nowrap">
-                                                    <div class="col-md-12 p-1 ps-3">
-                                                        <label class="text-1100 fw-bold ">
+                                                <td class="align-top white-space-nowrap ">
+                                                    <div class="col-md-12 ps-3">
+                                                        <span class="col-md-4  p-1 ">
+                                                            <label class="form-label d-none" for="meeting_date">Action Date</label>
+
+                                                            <input type="date" class="form-control rounded-1 datetimepicker cursor-pointer flatpickr-input" 
+                                                                    id="action_date" name="action_date"
+                                                                    ng-disabled="item.approver_action_type === 2"
+                                                                    ng-hide="!accessInfo.canAccess"
+                                                                    ng-change="actionChange(item,item.seq,'action_date')"
+                                                                    ng-model="item.date_review" placeholder="dd/mm/yyyy">
+                                                            <label class="text-1100 fw-bold " ng-if="item.approver_action_type == 2">
+                                                                {{item.date_review}}
+                                                            </label>
+                                                        </span>
+                                                        @*<label class="text-1100 fw-bold ">
                                                             {{item.date_review_show}}
-                                                        </label>
+                                                        </label>*@
                                                     </div>
                                                 </td>
                                                 <td class="align-top px-1 py-3" ng-class="{'disabled-link': (!tab_approver_active)}">
