@@ -275,19 +275,22 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 return;
             }
     
-            if ($scope.data_header[0].pha_status === 11 || $scope.data_header[0].pha_status === 12) {
-                $scope.stopTimer();
-                $scope.startTimer();
-    
-                if (Array.isArray(newValues) && Array.isArray(oldValues)) {
-                    if (!isEqual(newValues, oldValues, data)) {
-    
+            if ($scope.data_header && $scope.data_header[0] && $scope.data_header[0].pha_status) {
+                if ($scope.data_header[0].pha_status === 11 || $scope.data_header[0].pha_status === 12) {
+                    $scope.stopTimer();
+                    $scope.startTimer();
+            
+                    if (Array.isArray(newValues) && Array.isArray(oldValues)) {
+                        if (!isEqual(newValues, oldValues, data)) {
+                            $scope.unsavedChanges = true;
+                        }
+                    } else if (!_.isEqual(newValues, oldValues)) {
                         $scope.unsavedChanges = true;
                     }
-                } else if (!_.isEqual(newValues, oldValues)) {
-                    $scope.unsavedChanges = true;
                 }
             }
+
+
     
         }, true);
     }
@@ -1531,7 +1534,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         return;
                     }
                     else {
-                        console.log('open else')
                         set_alert('Success', 'Data has been successfully submitted.');
                         window.open('hazop/search', "_top");
                         return;
@@ -1630,7 +1632,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         if (arr[0].pha_status == '13') {
                             //กรณีที่ TA2 approve all
                             if($scope.flow_role_type == 'admin') {
-                                return page_load();
+                                return  get_data_after_save(false,  true , $scope.pha_seq);
+
                             }
                             window.open('hazop/search', "_top");
                         } else if (arr[0].pha_status == '22') {
@@ -1681,7 +1684,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.user_name = user_name;
         } else { pha_seq = $scope.pha_seq; }
 
+        $('#divPage').addClass('d-none'); 
+
         call_api_load(page_load, action_submit, user_name, pha_seq);
+        
+        setTimeout(function() {
+            $('#divPage').removeClass('d-none');
+        }, 1000);
+
     }
 
     function get_data_after_save(page_load, action_submit, pha_seq) {
@@ -1701,7 +1711,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             beforeSend: function () {
                 //if (!page_load) { $('#modalLoadding').modal('show'); }
                 $('#divLoading').show();
-                $('#divPage').addClass('d-none');
 
             },
             complete: function () {
@@ -2047,8 +2056,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 filterDataWorksheet();
 
                 $scope.unsavedChanges = false;
-                $('#divPage').removeClass('d-none');
-
 
                 $scope.$apply();
             },
@@ -2158,26 +2165,39 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
 
     function setup_recommen_setting(recommendations, recommentSetting){
-        // ฟังก์ชั่นเพื่อเรียงลำดับข้อมูล recommendations ตาม no
-        recommendations.sort(function(a, b) {
-            return a.no - b.no;
-        });
+        
+        if (!recommendations || recommendations.length === 0) {
+            $('#divPage').addClass('d-none'); 
+            
+            // ถ้าไม่มีข้อมูล ให้แสดง modal
+            $('#returnModal').modal({
+                backdrop: 'static',
+                keyboard: false 
+            }).modal('show');
+        } else {
+            // ฟังก์ชั่นเพื่อเรียงลำดับข้อมูล recommendations ตาม no
+            recommendations.sort(function(a, b) {
+                return a.no - b.no;
+            });
 
-        for (let i = 0; i < recommentSetting.length; i++) {
+            for (let i = 0; i < recommentSetting.length; i++) {
 
-            $scope.MaxSeqdataRecommenSetting = Number($scope.MaxSeqdataRecommenSetting) + 1;
-            var xValues = $scope.MaxSeqdataRecommenSetting;
-
-            recommentSetting[i].id = xValues
-            recommentSetting[i].seq = xValues
-            recommentSetting[i].action_change = 1
-            recommentSetting[i].no = i + 1
-            recommentSetting[i].index_rows = i
-            recommentSetting[i].id_pha = recommendations[i].id_pha
-            recommentSetting[i].recommendations = recommendations[i].recommendations
+                $scope.MaxSeqdataRecommenSetting = Number($scope.MaxSeqdataRecommenSetting) + 1;
+                var xValues = $scope.MaxSeqdataRecommenSetting;
+    
+                recommentSetting[i].id = xValues
+                recommentSetting[i].seq = xValues
+                recommentSetting[i].action_change = 1
+                recommentSetting[i].no = i + 1
+                recommentSetting[i].index_rows = i
+                recommentSetting[i].id_pha = recommendations[i].id_pha
+                recommentSetting[i].recommendations = recommendations[i].recommendations
+            }
+            console.log('recommentSetting => ',recommentSetting)
+            return recommentSetting
         }
-        console.log('recommentSetting => ',recommentSetting)
-        return recommentSetting
+
+
     }
     
     function setup_worksheet(subArea_list, worker_list, resWorksheet) {
@@ -6812,6 +6832,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
 
     $(document).ready(function () {
+        
         page_load();
     });
 
