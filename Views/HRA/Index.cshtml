@@ -694,7 +694,7 @@
                                                                         id="st_meet" 
                                                                         name="st_meet"
                                                                         style="width:20px; height: 20px; max-height:30px"
-                                                                        ng-change="actionChange(item,item.seq,'')"
+                                                                        ng-change="actionChange(item,item.seq,'meeting_time')"
                                                                         ng-model="item.meeting_start_time" 
                                                                         value="{{formatTo24Hour(item.meeting_start_time)}}"
                                                                         type="time" 
@@ -704,7 +704,7 @@
                                                                         ng-class="{'ng-invalid': !item.meeting_start_time_hh && item.validated,'disabled-link': isDisableStatus}"
                                                                         ng-model="item.meeting_start_time_hh"
                                                                         style="width:60px;  height: 40px;" 
-                                                                        ng-change="actionChange(item,item.seq,'')">
+                                                                        ng-change="actionChange(item,item.seq,'meeting_time')">
                                                                         <option ng-repeat="item2 in master_hours" ng-value="item2.id">
                                                                             {{item2.name}}
                                                                         </option>
@@ -713,7 +713,7 @@
                                                                         ng-class="{'ng-invalid': !item.meeting_start_time_hh && item.validated,'disabled-link': isDisableStatus}"
                                                                         ng-model="item.meeting_start_time_mm"
                                                                         style="width:60px;height: 40px;" 
-                                                                        ng-change="actionChange(item,item.seq,'')">
+                                                                        ng-change="actionChange(item,item.seq,'meeting_time')">
                                                                         <option ng-repeat="item2 in master_minutes" ng-value="item2.id">
                                                                             {{item2.name}}
                                                                         </option>
@@ -731,7 +731,7 @@
                                                                         id="et_meet" 
                                                                         name="et_meet"
                                                                         ng-class="{'disabled-link': isDisableStatus}"
-                                                                        ng-change="actionChange(item,item.seq,'')"
+                                                                        ng-change="actionChange(item,item.seq,'meeting_time')"
                                                                         ng-model="item.meeting_end_time"
                                                                         type="time" 
                                                                         placeholder="hour : minute"
@@ -740,7 +740,7 @@
                                                                         ng-class="{'ng-invalid': !item.meeting_end_time_hh && item.validated,'disabled-link': isDisableStatus}"
                                                                         ng-model="item.meeting_end_time_hh"
                                                                         style="width:60px; height: 40px;" 
-                                                                        ng-change="actionChange(item,item.seq,'')">
+                                                                        ng-change="actionChange(item,item.seq,'meeting_time')">
                                                                         <option ng-repeat="item2 in master_hours" ng-value="item2.id">
                                                                             {{item2.name}}
                                                                         </option>
@@ -749,7 +749,7 @@
                                                                         ng-class="{'ng-invalid': !item.meeting_end_time_hh && item.validated,'disabled-link': isDisableStatus}"
                                                                         ng-model="item.meeting_end_time_mm"
                                                                         style="width:60px; height: 40px;" 
-                                                                        ng-change="actionChange(item,item.seq,'')">
+                                                                        ng-change="actionChange(item,item.seq,'meeting_time')">
                                                                         <option ng-repeat="item2 in master_minutes" ng-value="item2.id">
                                                                             {{item2.name}}
                                                                         </option>

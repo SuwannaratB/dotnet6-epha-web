@@ -6447,8 +6447,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     arr_check[0].action_new_row = 1;
                     $scope.data_general[0].target_start_date = _arr.meeting_date;
                 }
-                console.log($scope.data_general[0])
+
             }
+
+            if(type_text == 'meeting_date' || type_text == 'meeting_date'){
+                updateDataSessionAccessInfo('session');
+
+            }
+
             if (type_text == "unit_no") {
 
                 //update id_apu ด้วย 
@@ -7105,9 +7111,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.checkOtherAreas = function() {
                 $('#modalConfirm_Recommendation').modal('hide');
 
-
-                console.log("$scope.selectedUser",$scope.selectedUser)
-
                 $scope.selectDatFormType = 'manage';
                 $scope.action_tabs = 'manage_tabs';
                 $scope.selectTab($scope.action_tabs)
@@ -7138,7 +7141,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 var seq_session = $scope.selectdata_session;
                 var xformtype = $scope.selectDatFormType;
 
+                if (xformtype === "manage") {
+                    // ล้างค่าทั้งหมดใน clickedStates
+                    $scope.clickedStates = {};
+                }
+                
+                // ตั้งค่า clickedStates สำหรับ employee_name ที่คลิก
                 $scope.clickedStates[item.employee_name] = true;
+
 
                 if (xformtype == "member") {
 
@@ -7293,7 +7303,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                             data.responder_user_displayname = employee_position + '-' + employee_displayname.split(" ")[0];   
                         } 
 
-                        if($scope.params !== 'edit_action_owner'){
+                        $scope.data_worksheet_show = $scope.worksheet_Filter($scope.data_worksheet_list)
+
+                        if($scope.params !== 'edit_action_owner' && $scope.data_worksheet_show.length > 1){
                             $scope.showModal().then(function(applyRecommendation) {
                                 if (applyRecommendation) {
                                     $('#modalEmployeeAdd').modal('hide');
@@ -7310,10 +7322,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 if(xformtype == 'member' || xformtype == 'approver' || xformtype == 'specialist'){
                     updateDataSessionAccessInfo('session');
                 }
-
-                console.log("==================================================")
-                console.log("$scope.clickedStates",$scope.clickedStates)
-                console.log("==================================================")
 
                 if (xformtype == "approver_ta3" || xformtype == "edit_approver") {
                     $('#modalEmployeeAdd').modal('hide');
@@ -9163,7 +9171,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     function updateDataSessionAccessInfo(type) {
 
-        console.log("will update data")
         if(type == 'session'){
         console.log("will update data session",type)
 
@@ -9171,7 +9178,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 $scope.getAccessInfo(item, index,type);
             });
         }else{
-            console.log("will update data for data_drawing")
             
             $scope.data_drawing.forEach((item, index) => {
                 $scope.getAccessInfo(item, index,'drawing');
@@ -9206,6 +9212,26 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             } else {
                 accessInfo.canCopy = false;
             }
+
+            let meeting_data = $scope.data_session.filter(data => data.id === item.id);
+
+            if (
+                meeting_data[0].meeting_date != null || 
+                meeting_data[0].meeting_start_time != null || 
+                meeting_data[0].meeting_start_time_hh != null || 
+                meeting_data[0].meeting_start_time_mm != null || 
+                meeting_data[0].meeting_end_time != null || 
+                meeting_data[0].meeting_end_time_hh != null || 
+                meeting_data[0].meeting_end_time_mm != null
+            ) {
+                accessInfo.canCopy = true;
+                accessInfo.canRemove = true;
+                console.log("Conditions met: canCopy and canRemove are set to true");
+            } else {
+                console.log("Conditions not met: all values are null or undefined");
+            }
+            
+            
         } else if(type === 'drawing'){
     
             if(index === 0) {
