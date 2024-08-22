@@ -233,15 +233,15 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                 if (page_load) {
 
                     $scope.data_all = arr;
-                    $scope.master_company = JSON.parse(replace_hashKey_arr(arr.company));
-                    $scope.master_apu = JSON.parse(replace_hashKey_arr(arr.apu));   
-                    $scope.master_toc = JSON.parse(replace_hashKey_arr(arr.toc));  
-                    $scope.master_unit_no = JSON.parse(replace_hashKey_arr(arr.unit_no));  
-                    $scope.master_tagid = JSON.parse(replace_hashKey_arr(arr.tagid));  
-                    $scope.master_tagid_audition = JSON.parse(replace_hashKey_arr(arr.tagid_audition));  //ใช้ใน tag id audition 
-                    $scope.master_approver = JSON.parse(replace_hashKey_arr(arr.employee)); 
+                    // $scope.master_company = JSON.parse(replace_hashKey_arr(arr.company));
+                    // $scope.master_apu = JSON.parse(replace_hashKey_arr(arr.apu));   
+                    // $scope.master_toc = JSON.parse(replace_hashKey_arr(arr.toc));  
+                    // $scope.master_unit_no = JSON.parse(replace_hashKey_arr(arr.unit_no));  
+                    // $scope.master_tagid = JSON.parse(replace_hashKey_arr(arr.tagid));  
+                    // $scope.master_tagid_audition = JSON.parse(replace_hashKey_arr(arr.tagid_audition));  //ใช้ใน tag id audition 
+                    // $scope.master_approver = JSON.parse(replace_hashKey_arr(arr.employee)); 
 
-                    $scope.employeelist = JSON.parse(replace_hashKey_arr(arr.employee)); 
+                    // $scope.employeelist = JSON.parse(replace_hashKey_arr(arr.employee)); 
 
                     $scope.master_ram = arr.ram;
                     $scope.master_ram_level = arr.ram_level;
@@ -315,21 +315,21 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                     var arr_clone_def = { id: $scope.data_general[0].master_functional, name: 'Please select' };
                     $scope.master_functional.splice(0, 0, arr_clone_def);
                 }
-                if ($scope.data_general[0].id_business_unit == null) {
-                    $scope.data_general[0].id_business_unit = null;
-                    var arr_clone_def = { id: $scope.data_general[0].id_business_unit, name: 'Please select' };
-                    $scope.master_business_unit.splice(0, 0, arr_clone_def);
-                }
-                if ($scope.data_general[0].master_unit_no == null || $scope.data_general[0].master_unit_no == '') {
-                    $scope.data_general[0].master_unit_no = null;
-                    var arr_clone_def = { id: $scope.data_general[0].master_unit_no, name: 'Please select' };
-                    $scope.master_unit_no.splice(0, 0, arr_clone_def);
-                }
-                if ($scope.master_approver[0].employee_name == null || $scope.master_approver[0].employee_name == '') {
-                    $scope.master_approver[0].employee_name = null;
-                    var arr_clone_def = { id: $scope.master_approver[0].employee_name, name: 'Please select' };
-                    $scope.master_approver.splice(0, 0, arr_clone_def);
-                }
+                // if ($scope.data_general[0].id_business_unit == null) {
+                //     $scope.data_general[0].id_business_unit = null;
+                //     var arr_clone_def = { id: $scope.data_general[0].id_business_unit, name: 'Please select' };
+                //     $scope.master_business_unit.splice(0, 0, arr_clone_def);
+                // }
+                // if ($scope.data_general[0].master_unit_no == null || $scope.data_general[0].master_unit_no == '') {
+                //     $scope.data_general[0].master_unit_no = null;
+                //     var arr_clone_def = { id: $scope.data_general[0].master_unit_no, name: 'Please select' };
+                //     $scope.master_unit_no.splice(0, 0, arr_clone_def);
+                // }
+                // if ($scope.master_approver[0].employee_name == null || $scope.master_approver[0].employee_name == '') {
+                //     $scope.master_approver[0].employee_name = null;
+                //     var arr_clone_def = { id: $scope.master_approver[0].employee_name, name: 'Please select' };
+                //     $scope.master_approver.splice(0, 0, arr_clone_def);
+                // }
 
                 apply();
                 console.log($scope);

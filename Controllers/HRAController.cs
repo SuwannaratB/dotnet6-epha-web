@@ -280,6 +280,28 @@ namespace dotnet6_epha_web.Controllers
             return View();
         }
 
+        public IActionResult Followup()
+        {
+            if (_sessionAuthen.role_type == "" || _sessionAuthen.role_type == null)
+            {
+                return RedirectToAction("Index", "Login");
+            }
+
+            _sessionAuthen.service_api_url = _IConfiguration["EndPoint:service_api_url"];
+            _sessionAuthen.controller_action_befor = "Home/Portal";
+             
+            ViewData["user_display"] = _sessionAuthen.user_display;
+            ViewData["user_name"] = _sessionAuthen.user_name;
+            ViewData["role_type"] = _sessionAuthen.role_type;
+            ViewData["controller_action_befor"] = _sessionAuthen.controller_action_befor;
+            ViewData["service_api_url"] = _sessionAuthen.service_api_url;
+
+            //กรณีที่มีเลข seq แสดงว่ามาจากหน้า search ให้ แสดง details เลย  
+            ViewData["pha_seq"] = _sessionAuthen.pha_seq;
+
+            return View();
+        }
+
         [HttpPost]
         public async Task<IActionResult> set_session_doc([FromBody] LoadSessionDataViewModel model)
         {
