@@ -1035,15 +1035,18 @@
                                                                     </div>
                                                                 </td>
 
+                                                                    
                                                                 <td class="align-top text-center">
-                                                                    <div class="p-1 ">
-                                                                        <h6 class="fw-semi-bold" ng-if="!(item_h.pha_version_desc ==null)">{{ item_h.pha_version_text + '('+ item_h.pha_version_desc +')'}}</h6>
-                                                                        <h6 class="fw-semi-bold" ng-if="(item_h.pha_version_desc ==null)">{{ item_h.pha_version_text}}</h6>
+                                                                    <div class="p-1">
+                                                                        <h6 class="fw-semi-bold" ng-if="item_h.pha_version_desc">{{ item_h.pha_version_text + '('+ item_h.pha_version_desc +')' }}</h6>
+                                                                        <h6 class="fw-semi-bold" ng-if="!item_h.pha_version_desc">{{ item_h.pha_version_text}}</h6>
                                                                     </div>
                                                                 </td>
 
+
                                                                 <td class="align-top">
                                                                     <div class="p-1 ">
+
                                                                         <h6 class="fw-semi-bold">{{item_h.request_user_displayname}}</h6>
                                                                     </div>
                                                                 </td>
