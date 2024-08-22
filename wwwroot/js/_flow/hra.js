@@ -474,6 +474,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     if (allowedFileTypes.includes(fileExtension)) {
                         var file_path = uploadFile(file, fileSeq, fileName, fileSize, file_part, file_doc);
                     } else {
+                        $scope.goback_tab = 'approver';
                         set_alert('Warning', "The selected file type is not supported. Please upload a PDF, Word, Excel, or Image file.");
                     }
                 
@@ -504,6 +505,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                             
                 if (fileSizeKB > maxFileSizeKB) {
                     fileInfoSpan.textContent = "";
+                    $scope.goback_tab = 'approver';
                     set_alert('Warning', 'File size exceeds 10 MB. Please select a smaller file.');
                     return;
                 }
@@ -516,6 +518,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                     var file_path = uploadFile(file, fileSeq, fileName, fileSizeKB, file_part, file_doc);
                 } else {
+                    $scope.goback_tab = 'approver';
                     set_alert('Warning', "Unsupported file type. Please upload a PDF, EML, or MSG file.");
                 }
                 
@@ -609,6 +612,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                             }else{
 
                                 $("#divLoading").hide(); 
+                                $scope.goback_tab = 'approver';
+                                
                                 set_alert('Warning', 'Unable to connect to the service. Please check your internet connection or try again later.');
                             }
 
@@ -1146,6 +1151,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 }
             });
         }
+
+
+        console.log("$scope.data_header[0].pha_status == 12 ",$scope.data_header[0].pha_status == 12 )
         
         try {
             if ($scope.data_header[0].pha_status == 11) {
