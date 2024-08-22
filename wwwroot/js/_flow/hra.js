@@ -1885,11 +1885,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         $scope.data_drawing_approver_old = (arr.drawing_approver);
                     }
 
-                    // Monitoring
-                    if ($scope.data_header[0].approve_action_type == 2) {
-                        $scope.data_recomment_setting = setup_recommen_setting(arr.recommendations, arr.recom_setting)
-                    }
-
                     // Summary of Risk Management
                     $scope.data_summary = setup_summary( $scope.data_worksheet_list);
 
@@ -2167,41 +2162,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         return data
     }
 
-    function setup_recommen_setting(recommendations, recommentSetting){
-        
-        if (!recommendations || recommendations.length === 0) {
-            $('#divPage').addClass('d-none'); 
-            
-            // ถ้าไม่มีข้อมูล ให้แสดง modal
-            $('#returnModal').modal({
-                backdrop: 'static',
-                keyboard: false 
-            }).modal('show');
-        } else {
-            // ฟังก์ชั่นเพื่อเรียงลำดับข้อมูล recommendations ตาม no
-            recommendations.sort(function(a, b) {
-                return a.no - b.no;
-            });
-
-            for (let i = 0; i < recommentSetting.length; i++) {
-
-                $scope.MaxSeqdataRecommenSetting = Number($scope.MaxSeqdataRecommenSetting) + 1;
-                var xValues = $scope.MaxSeqdataRecommenSetting;
-    
-                recommentSetting[i].id = xValues
-                recommentSetting[i].seq = xValues
-                recommentSetting[i].action_change = 1
-                recommentSetting[i].no = i + 1
-                recommentSetting[i].index_rows = i
-                recommentSetting[i].id_pha = recommendations[i].id_pha
-                recommentSetting[i].recommendations = recommendations[i].recommendations
-            }
-            console.log('recommentSetting => ',recommentSetting)
-            return recommentSetting
-        }
-
-
-    }
     
     function setup_worksheet(subArea_list, worker_list, resWorksheet) {
         if (worker_list.length > 0) {
