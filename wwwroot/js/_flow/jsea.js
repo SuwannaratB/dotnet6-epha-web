@@ -3033,88 +3033,93 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.seqToRemove = seq;
             $scope.indexToRemove = index;
             $scope.typeToRemove = type;
-            switch($scope.typeToRemove) {
-                case 'session':
-                    var shouldShowModal = false;
-
-                    for (var i = 0; i < $scope.data_memberteam.length; i++) {
-                        var member = $scope.data_memberteam[i];
-                        if ((member.id_session === seq && member.user_displayname !== null)) {
+        
+            const shouldShowModalForSession = () => {
+                let shouldShowModal = false;
+                const dataLists = [$scope.data_memberteam, $scope.data_approver, $scope.data_relatedpeople];
+                
+                for (const list of dataLists) {
+                    for (const item of list) {
+                        if (item.id_session === seq && item.user_displayname !== null) {
                             shouldShowModal = true;
-                            break; 
+                            break;
                         }
                     }
-
-                    for (var i = 0; i < $scope.data_approver.length; i++){
-                        var approver = $scope.data_approver[i];
-
-                        if ((approver.id_session === seq && approver.user_displayname !== null)) {
-                            shouldShowModal = true;
-                            break; 
-                        }                        
-                    }
-
-                    
-                    for (var i = 0; i < $scope.data_relatedpeople.length; i++){
-                        var relatedpeople = $scope.data_relatedpeople[i];
-
-                        if ((relatedpeople.id_session === seq && relatedpeople.user_displayname !== null)) {
-                            shouldShowModal = true;
-                            break; 
-                        }                        
-                    }
-
-                    if (shouldShowModal || data.meeting_date !== null ) {
-                        $('#removeModal').modal('show');
+                    if (shouldShowModal) break;
+                }
+        
+                return shouldShowModal || data.meeting_date !== null;
+            };
+        
+            const actionMap = {
+                'session': () => {
+                    if (shouldShowModalForSession()) {
+                        $('#removeModal').modal({
+                            backdrop: 'static',
+                            keyboard: false 
+                        }).modal('show');
                     } else {
                         $scope.removeDataSession($scope.seqToRemove, $scope.indexToRemove);
                     }
-                    break;
-                case 'DrawingDoc':
-                    if(data.document_file_name !== null || data.document_file_path !== null || data.descriptions !== null || data.document_name !== null){
-                        $('#removeModal').modal('show');
-                    }else{
+                },
+                'DrawingDoc': () => {
+                    if (data.document_file_name !== null || data.document_file_path !== null || data.descriptions !== null || data.document_name !== null) {
+                        $('#removeModal').modal({
+                            backdrop: 'static',
+                            keyboard: false 
+                        }).modal('show');
+                    } else {
                         $scope.removeDrawingDoc($scope.seqToRemove, $scope.indexToRemove);
                     }
-                    break;
-                case 'template' :
-                    $('#removeModal').modal('show');
-                    break;
-                case 'uploadfile' :
-                    $('#removeModal').modal('show');
-                    break;
-                default:
-                    $('#removeModal').modal('show');
-            }
+                },
+                'template': () => {
+                    $('#removeModal').modal({
+                        backdrop: 'static',
+                        keyboard: false 
+                    }).modal('show');
+                },
+                'uploadfile': () => {
+                    $('#removeModal').modal({
+                        backdrop: 'static',
+                        keyboard: false 
+                    }).modal('show');
+                },
+                'default': () => {
+                    $('#removeModal').modal({
+                        backdrop: 'static',
+                        keyboard: false 
+                    }).modal('show');
+                }
+            };
+        
+            (actionMap[$scope.typeToRemove] || actionMap['default'])();
+        
         } else {
             console.error('is null');
         }
+        
     };
 
     $scope.action_remove = function(action) {
         if (action === 'yes') {
-            switch($scope.typeToRemove) {
-                case 'session':
-                    $scope.removeDataSession($scope.seqToRemove, $scope.indexToRemove);
-                    break;
-                case 'DrawingDoc':
-                    $scope.removeDrawingDoc($scope.seqToRemove, $scope.indexToRemove);
-                    break;
-                case 'template' :
+            const actionMap = {
+                'session': () => $scope.removeDataSession($scope.seqToRemove, $scope.indexToRemove),
+                'DrawingDoc': () => $scope.removeDrawingDoc($scope.seqToRemove, $scope.indexToRemove),
+                'template': () => {
                     $scope.clearFileUploadName();
                     $scope.clearFileUploadData();
-                    break;
-                case 'uploadfile' :
-                    $scope.clearFileName( $scope.seqToRemove);
-                    break;                    
-                default:
-                    console.error('Unknown type:', $scope.typeToRemove);
-            }
+                },
+                'uploadfile': () => $scope.clearFileName($scope.seqToRemove),
+                'default': () => console.error('Unknown type:', $scope.typeToRemove)
+            };
+    
+            (actionMap[$scope.typeToRemove] || actionMap['default'])();
             $('#removeModal').modal('hide');
         } else {
             $('#removeModal').modal('hide');
         }
     };
+    
     
 
     $scope.addDataSession = function (seq, index) {
@@ -5319,10 +5324,21 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     function set_alert(header, detail) {
         $scope.Action_Msg_Header = header;
         $scope.Action_Msg_Detail = detail;
+    
         $timeout(function() {
-            $('#modalMsg').modal('show');
-        });   
+            $('#modalMsg').modal({
+                backdrop: 'static',
+                keyboard: false 
+            }).modal('show');
+    
+            if (header === 'Success') {
+                $timeout(function() {
+                    $('#modalMsg').modal('hide');
+                }, 2000);
+            }
+        });
     }
+    
     function set_alert_confirm(header, detail) {
 
         $scope.Action_Msg_Confirm = true;

@@ -415,6 +415,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         };
         $scope.clearFileName = function (seq) {
 
+
+
             var arr = $filter('filter')($scope.data_drawing, function (item) { return (item.seq == seq); });
             if (arr.length > 0) {
                 arr[0].document_file_name = null;
@@ -423,6 +425,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 arr[0].action_change = 1;
                 apply();
             }
+    
         };
 
 
@@ -3128,9 +3131,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 ws[i].action_change = 1;
                 
             }
-            console.log('tsks ', task)
-            console.log('ws ', ws)
-            console.log('data_worksheet_list ', $scope.data_worksheet_list)
         }
 
         $scope.changeDescription = function (dec) {
@@ -3145,95 +3145,159 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             ws.description = dec.descriptions
         }
 
-        $scope.triggerRemove = function(data,seq, index, type) {
-            console.log("data",data)
-            console.log("index, type",index, type)
+        function showRemoveModal(){
+            $('#removeModal').modal({
+                backdrop: 'static',
+                keyboard: false
+            }).modal('show');
+        }
+
+        $scope.triggerRemove = function(data,item, index, type) {
+
+            console.log("datadatadatadatadatadatadata",data)
+            console.log("===========================",item)
             if (seq !== null && index !== null) {
-                $scope.seqToRemove = seq;
+                $scope.dataToRemove = data;
                 $scope.indexToRemove = index;
                 $scope.typeToRemove = type;
-                switch($scope.typeToRemove) {
-                    case 'session':
-                        var shouldShowModal = false;
-                        for (var i = 0; i < $scope.data_memberteam.length; i++) {
-                            var member = $scope.data_memberteam[i];
 
-                            if ((member.id_session === seq && member.user_displayname !== null)) {
+                if(type == 'SubAreasList' || type == 'HazardList' || type == 'CommentOfWorksheet' || type == 'HealthHazard'){
+                    var list = item;
+                    $scope.dataListToRemove = list;
+                }else{
+                    var seq = item;
+                    $scope.seqToRemove = seq;
+                }
+            
+                const actionMap = {
+                    'session': () => {
+                        let shouldShowModal = false;
+                        for (let i = 0; i < $scope.data_memberteam.length; i++) {
+                            const member = $scope.data_memberteam[i];
+                            if (member.id_session === seq && member.user_displayname !== null) {
                                 shouldShowModal = true;
-                                break; 
+                                break;
                             }
                         }
-    
-                        for (var i = 0; i < $scope.data_approver.length; i++){
-                            var approver = $scope.data_approver[i];
-    
-                            if ((approver.id_session === seq && approver.user_displayname !== null)) {
+            
+                        for (let i = 0; i < $scope.data_approver.length; i++) {
+                            const approver = $scope.data_approver[i];
+                            if (approver.id_session === seq && approver.user_displayname !== null) {
                                 shouldShowModal = true;
-                                break; 
-                            }                        
+                                break;
+                            }
                         }
-    
-                        if (shouldShowModal ) {
-                            $('#removeModal').modal('show');
-                            //$scope.$broadcast('openRemoveModal');
+            
+                        if (shouldShowModal) {
+                            showRemoveModal();
                         } else {
                             $scope.removeDataSession($scope.seqToRemove, $scope.indexToRemove);
                         }
-                        break;
-                    case 'DrawingDoc':
-                        if(data.document_file_name !== null || data.document_file_path !== null || data.descriptions !== null || data.document_name !== null){
-                            $('#removeModal').modal('show');
-                        }else{
+                    },
+                    'DrawingDoc': () => {
+                        if (data.document_file_name !== null || data.document_file_path !== null || data.descriptions !== null || data.document_name !== null) {
+                            showRemoveModal();
+                        } else {
                             $scope.removeDrawingDoc($scope.seqToRemove, $scope.indexToRemove);
                         }
-                        break;
-                    case 'nodelist' :
-                        if(data.design_conditions !== null || data.design_intent !== null || data.node !== null || data.node_boundary !== null || data.operating_conditions !== null){
-                            $('#removeModal').modal('show');
-                        }else{
+                    },
+                    'nodelist': () => {
+                        if (data.design_conditions !== null || data.design_intent !== null || data.node !== null || data.node_boundary !== null || data.operating_conditions !== null) {
+                            showRemoveModal();
+                        } else {
                             $scope.removeDataNodeList($scope.seqToRemove, $scope.indexToRemove);
                         }
-                        break;
-                    case 'NodeDrawing' :
-                        if(data.descriptions !== null || data.id_drawing !== null ){
-                            $('#removeModal').modal('show');
-                        }else{
+                    },
+                    'NodeDrawing': () => {
+                        if (data.descriptions !== null || data.id_drawing !== null) {
+                            showRemoveModal();
+                        } else {
                             $scope.removeDataNodeDrawing($scope.seqToRemove, $scope.indexToRemove);
-                        }                                        
-                        break;
-                    default:
-                        $('#removeModal').modal('show');
-                }
+                        }
+                    },
+                    'SubAreasList': () => {
+                        if (data.sub_area != null && data.sub_area !== '') {
+                            showRemoveModal();
+                        } else {
+                            $scope.removeDataSubAreasList($scope.dataToRemove, $scope.indexToRemove);
+                        }
+                    },
+                    'HazardList': () => {
+                        if (list.type_hazard != null && list.type_hazard !== '') {
+                            showRemoveModal();
+                        } else {
+                            $scope.removeDataHazardList($scope.dataToRemove, $scope.dataListToRemove, $scope.indexToRemove);
+                        }
+                    },
+                    'HealthHazard': () => {
+                        if (list.health_hazard != null && list.health_hazard !== '') {
+                            showRemoveModal();
+                        } else {
+                            $scope.removeDataHealthHazard($scope.dataToRemove, $scope.dataListToRemove, $scope.indexToRemove);
+                        }
+                    },
+                    'Tasks': () => {
+                        if ((data.worker_group != null && data.worker_group !== '') || 
+                            (data.description != null && data.description !== '')) {
+                            showRemoveModal();
+                        } else {
+                            $scope.removeDataTasks($scope.dataToRemove, $scope.indexToRemove);
+                        }
+                    },
+                    'Descriptions': () => {
+                        if (data.description != null && data.description !== '') {
+                            showRemoveModal();
+                        } else {
+                            $scope.removeDescriptions($scope.dataToRemove, $scope.indexToRemove);
+                        }
+                    },
+                    'CommentOfWorksheet': () => {
+                        if (list.recommendations != null && list.recommendations !== '') {
+                            showRemoveModal();
+                        } else {
+                            $scope.removeCommentOfWorksheet($scope.dataToRemove, $scope.seqToRemove, $scope.indexToRemove);
+                        }
+                    },
+                    'default': () => {
+                        showRemoveModal();
+                    }
+                };
+            
+                (actionMap[$scope.typeToRemove] || actionMap['default'])();
+            
             } else {
                 console.error('is null');
             }
+            
         };
         
         $scope.action_remove = function(action) {
             if (action === 'yes') {
-                switch($scope.typeToRemove) {
-                    case 'session':
-                        $scope.removeDataSession($scope.seqToRemove, $scope.indexToRemove);
-                        break;
-                    case 'DrawingDoc':
-                        $scope.removeDrawingDoc($scope.seqToRemove, $scope.indexToRemove);
-                        break;
-                    case 'nodelist' :
-                        $scope.removeDataNodeList($scope.seqToRemove, $scope.indexToRemove);
-                        break;
-                    case 'NodeDrawing' :
-                        $scope.removeDataNodeDrawing($scope.seqToRemove, $scope.indexToRemove);
-                        break;
-                    case 'uploadfile' :
-                        $scope.clearFileName( $scope.seqToRemove);
-                        break;            
-                    default:
-                        console.error('Unknown type:', $scope.typeToRemove)
-                }
+                const actionMap = {
+                    'session': () => $scope.removeDataSession($scope.seqToRemove, $scope.indexToRemove),
+                    'DrawingDoc': () => $scope.removeDrawingDoc($scope.seqToRemove, $scope.indexToRemove),
+                    'nodelist': () => $scope.removeDataNodeList($scope.seqToRemove, $scope.indexToRemove),
+                    'NodeDrawing': () => $scope.removeDataNodeDrawing($scope.seqToRemove, $scope.indexToRemove),
+                    'uploadfile': () => $scope.clearFileName($scope.seqToRemove),
+                    'HealthHazard': () => $scope.removeDataHealthHazard($scope.dataToRemove, $scope.dataListToRemove, $scope.indexToRemove),
+                    'HazardList': () => $scope.removeDataHazardList($scope.dataToRemove, $scope.dataListToRemove, $scope.indexToRemove),
+                    'SubAreasList': () => $scope.removeDataSubAreasList($scope.dataToRemove, $scope.indexToRemove),
+                    'Tasks': () => $scope.removeDataTasks($scope.dataToRemove,$scope.indexToRemove),
+                    'Descriptions': () => $scope.removeDescriptions($scope.dataToRemove,$scope.indexToRemove),
+                    'CommentOfWorksheet': () => $scope.removeCommentOfWorksheet($scope.dataToRemove, $scope.seqToRemove, $scope.indexToRemove),
+                    'ApproverDrawing': () => $scope.removeDataApproverDrawing($scope.dataToRemove, $scope.seqToRemove)
+                };
+            
+                // เรียกฟังก์ชันตาม typeToRemove ถ้าไม่พบให้เรียกฟังก์ชัน console.error
+                (actionMap[$scope.typeToRemove] || function() {
+                    console.error('Unknown type:', $scope.typeToRemove);
+                })();
+            
                 $('#removeModal').modal('hide');
             } else {
                 $('#removeModal').modal('hide');
             }
+            
         };
         
         $scope.addDataSession = function (seq, index) {
@@ -3837,7 +3901,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 // เรียงข้อมูล display
                 $scope.display_worksheet_filter = angular.copy($scope.data_worksheet_list)
 
-                console.log('data_worksheet_list', $scope.data_worksheet_list)
             }
         };
 
@@ -6410,10 +6473,21 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         function set_alert(header, detail) {
             $scope.Action_Msg_Header = header;
             $scope.Action_Msg_Detail = detail;
+        
             $timeout(function() {
-                $('#modalMsg').modal('show');
+                $('#modalMsg').modal({
+                    backdrop: 'static',
+                    keyboard: false 
+                }).modal('show');
+        
+                if (header === 'Success') {
+                    $timeout(function() {
+                        $('#modalMsg').modal('hide');
+                    }, 2000);
+                }
             });
         }
+        
 
         function set_alert_confirm(header, detail) {
             $scope.Action_Msg_Confirm = true;

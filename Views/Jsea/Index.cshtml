@@ -1143,31 +1143,6 @@
                                                                     </div>
                                                                 </button> 
                                                             </div>                                                                                                                                                                                
-                                                            @*<div class=" align-items-center p-1 cursor-pointer ">
-
-                                                                <br ng-if="item.document_file_size>0">
-                                                                <label class="dz-message-text text-primary fw-bold cursor-pointer"
-                                                                       for="attfile-{{item.seq}}" ng-class="{'d-none':(!tab_general_active)}">
-                                                                    <i class="fa-solid fa-arrow-up-from-bracket fa-xl me-3"></i>Upload File(Word, Excel, PDF, Image)
-                                                                </label>
-                                                                <input type="file" id="attfile-{{item.seq}}"
-                                                                       name="file{{item.seq}}"
-                                                                       onchange="angular.element(this).scope().fileSelect(this,'drawing')"
-                                                                       style="display:none" />
-                                                                <button id="del-{{item.seq}}" class="btn btn-link text-danger"
-                                                                        ng-class="{'d-none':(!tab_general_active)}"
-                                                                        ng-click="clearFileName(item.seq)"
-                                                                        ng-if="item.document_file_size>0">
-                                                                    <span class="fa-regular fa-trash-can fa-lg"></span>
-                                                                </button>
-                                                                <br>
-                                                                <a class="nametext ms-3 filename-text me-2"
-                                                                   ng-class="{'d-none':(tab_general_active)}"
-                                                                   ng-click="downloadFile(item)">
-                                                                    <i class="far fa-file-pdf text-danger"></i> 
-                                                                    {{(item.document_file_size>0? item.document_file_name + '('+  item.document_file_size + 'KB)' : '')}}
-                                                                </a>
-                                                            </div>*@
                                                         </div>
                                                         <div class=" align-items-center p-1 cursor-pointer " ng-if="!tab_general_active">
                                                             <a class="nametext ms-3 filename-text me-2"
@@ -1293,48 +1268,13 @@
                                     <div class="row ps-2 mt-2">
                                         <div class="col-12 mt-4"
                                              ng-repeat="itemRam in master_ram | toArray | filter:{id: data_general[0].id_ram}">
-                                                  <div class="row">
-                                                    <div class="col-12 d-flex justify-content-center">
-                                                        <div class="row" style="background-color : #F8F8F8 ; width:75%;">
-                                                            <img ng-src="{{itemRam.document_file_path}}" class="cursor-pointer" />
-                                                        </div>
+                                            <div class="row">
+                                                <div class="col-12 d-flex justify-content-center">
+                                                    <div class="row" style="background-color : #F8F8F8 ; width:75%;">
+                                                        <img ng-src="{{itemRam.document_file_path}}" class="cursor-pointer" />
                                                     </div>
                                                 </div>
-                                            @* <div class="row">
-                                                <div class="col-12">
-                                                    <div class="p-0 cursor-pointer " ng-class="{'d-none':(!tab_node_active)}">
-
-                                                        <div ng-if="!((select_rows_level==4 && select_columns_level==4) || (select_rows_level==5 && select_columns_level==5))">
-                                                            <br>
-                                                            <label class="dz-message-text text-primary fw-bold"
-                                                                   for="attfile-ram-{{itemRam.seq}}">
-                                                                <i class="fa-solid fa-arrow-up-from-bracket fa-xl me-3"></i>Upload (image File)
-                                                            </label>
-                                                            <input type="file" id="attfile-ram-{{itemRam.seq}}"
-                                                                   name="file_ram_{{itemRam.seq}}"
-                                                                   onchange="angular.element(this).scope().fileSelectRAM(this)"
-                                                                   style="display: none;" />
-
-                                                            <span class="mr-3 dz-message-text text-primary fw-bold" id="filename_ram_{{itemRam.seq}}">
-                                                                RAM File Name : {{(itemRam.document_file_size>0? itemRam.document_file_name + '('+  itemRam.document_file_size + 'KB)' :itemRam.document_file_name )}}
-                                                            </span>
-
-                                                            <button id="del-ram-{{itemRam.seq}}" class="btn btn-link text-danger"
-                                                                    ng-click="clearFileNameRAM(itemRam.seq)">
-                                                                <span class="fa-regular fa-trash-can fa-lg"></span>
-                                                            </button>
-                                                        </div>
-
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-12 d-flex justify-content-center">
-                                                        <div class="row" style="background-color : #F8F8F8 ; width:75%;">
-                                                            <img src="{{itemRam.document_file_path}}" class="cursor-pointer" />
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div> *@
+                                            </div>
                                         </div>
 
                                         <div class="col-6 mt-4" style="background-color : #F8F8F8;  height:350px;"
@@ -3109,14 +3049,7 @@
                     </div>
 
                 </div>
-                <div class="modal-footer" ng-if="Action_Msg_Header == 'Success'">
-                    <div class="d-flex flex-column align-items-center bg-primary"
-                         ng-if="!Action_Msg_Confirm">
-                        <button class="btn p-2 px-8 text-white" type="button" data-bs-dismiss="modal" aria-label="Close">
-                            OK
-                        </button>
-                    </div>
-                </div>
+
 
                 <div class="modal-body" ng-if="Action_Msg_Header == 'Warning'">
                     <div class="d-flex justify-content-center align-items-center mb-3">

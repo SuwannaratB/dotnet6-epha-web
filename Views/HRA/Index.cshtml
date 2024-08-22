@@ -904,8 +904,8 @@
                                                                         <a id="deluploadfile-{{item.seq}}" 
                                                                             class="btn btn-link text-danger p-0 ms-2"
                                                                             ng-class="{'d-none': isDisableStatus}"
-                                                                            ng-click="clearFileName(item.seq)">
-                                                                            <span class="fa-regular fa-trash-can fa-lg"></span>
+                                                                            ng-click="triggerRemove(item,item.seq,'','uploadfile')">
+                                                                            <span class="fa-regular fa-trash-can fa-lg"></span><!----ng-click="clearFileName(item.seq)"---->
                                                                         </a>
                                                                     </div>
                                                                 </button> 
@@ -1055,7 +1055,8 @@
                                                                 <div class="dropdown-divider" ng-if="!(item.no == 1)"></div>
                                                                 <a class="dropdown-item text-danger" 
                                                                     ng-if="!(item.no == 1)"
-                                                                    ng-click="removeDataSubAreasList(item, $index)">
+                                                                    ng-click="triggerRemove(item, '', $index,'SubAreasList')">
+                                                                    <!---ng-click="removeDataSubAreasList(item, $index)">----->
                                                                    <span class="fas fa-times-circle"></span> 
                                                                    Remove
                                                                 </a>
@@ -1133,7 +1134,8 @@
                                                                     <div class="dropdown-divider" ng-if="!(item_list.no == 1)"></div>
                                                                     <a class="dropdown-item text-danger" 
                                                                         ng-if="!(item_list.no == 1)"
-                                                                        ng-click="removeDataHazardList(item, item_list, $index)">
+                                                                        ng-click="triggerRemove(item, item_list, $index,'HazardList')">
+                                                                        <!---ng-click="removeDataHazardList(item, item_list, $index)"----->
                                                                         <span class="fas fa-times-circle"></span>
                                                                         Remove
                                                                     </a>
@@ -1190,7 +1192,8 @@
                                                                     <div class="dropdown-divider"  ng-if="(item_list.no_type_hazard == item.hazard[$index - 1].no_type_hazard)"></div>
                                                                     <a class="dropdown-item text-danger" 
                                                                         ng-if="(item_list.no_type_hazard == item.hazard[$index - 1].no_type_hazard)"
-                                                                        ng-click="removeDataHealthHazard(item, item_list, $index)">
+                                                                        ng-click="triggerRemove(item, item_list, $index,'HealthHazard')">
+                                                                        <!---ng-click="removeDataHealthHazard(item, item_list, $index)"----->
                                                                         <span class="fas fa-times-circle"></span>
                                                                         Remove
                                                                     </a>
@@ -1389,9 +1392,10 @@
                                                                     <div class="dropdown-divider" ng-if="!(item.no == 1)"></div>
                                                                     <a class="dropdown-item text-danger" 
                                                                         ng-if="!(item.no == 1)"
-                                                                        ng-click="removeDataTasks(item,$index)">
-                                                                       <span class="fas fa-times-circle"></span> 
-                                                                       Remove
+                                                                        ng-click="triggerRemove(item, '', $index,'Tasks')">
+                                                                        <!---ng-click="removeDataTasks(item,$index)"----->
+                                                                        <span class="fas fa-times-circle"></span> 
+                                                                        Remove
                                                                     </a>
                                                                 </div>
                                                             </div>
@@ -1457,7 +1461,8 @@
                                                                                 <a class="dropdown-item text-danger" 
                                                                                     style="cursor: pointer;"
                                                                                     ng-if="item_d.no != 1" 
-                                                                                    ng-click="removeDescriptions(item, $index)">
+                                                                                    ng-click="triggerRemove(item, '', $index,'Descriptions')">
+                                                                                    <!---ng-click="removeDescriptions(item, $index)"----->
                                                                                     <span class="fas fa-times-circle"></span> 
                                                                                     Remove
                                                                                 </a>
@@ -2165,10 +2170,10 @@
                                                                     <div class="dropdown-divider"></div>
                                                                     <a class="dropdown-item text-danger" 
                                                                         style="cursor: pointer;"
-                                                                        ng-click="removeCommentOfWorksheet(item, ws, $index)">
-                                                                        @* ng-click="removeComments(ws, ws)"> *@
-                                                                        <span class="fas fa-times-circle"></span> 
-                                                                        Remove 
+                                                                        ng-click="triggerRemove(item, ws, $index,'CommentOfWorksheet')">
+                                                                        <!---ng-click="removeCommentOfWorksheet(item, ws, $index)"----->
+                                                                    <span class="fas fa-times-circle"></span> 
+                                                                        Remove
                                                                     </a>
                                                                 </div>
                                                             </div>
@@ -2864,10 +2869,11 @@
                                                                         Add
                                                                     </a>
                                                                     <div class="dropdown-divider"></div>
-                                                                    <a class="dropdown-item text-danger"
-                                                                        ng-click=removeDataApproverDrawing(item_x,item_d.seq)>
-                                                                        <span class="fas fa-times-circle"></span> 
-                                                                         Remove
+                                                                    <a class="dropdown-item text-danger" 
+                                                                        ng-click="triggerRemove(item_x,item_d.seq, $index,'ApproverDrawing')">
+                                                                        <!---ng-click=removeDataApproverDrawing(item_x,item_d.seq)----->
+                                                                    <span class="fas fa-times-circle"></span> 
+                                                                        Remove
                                                                     </a>
                                                                 </div>
                                                             </div>
@@ -3904,14 +3910,6 @@
                     </div>
 
                 </div>
-                <div class="modal-footer" ng-if="Action_Msg_Header == 'Success'">
-                    <div class="d-flex flex-column align-items-center bg-primary"
-                         ng-if="!Action_Msg_Confirm">
-                        <button class="btn p-2 px-8 text-white" type="button" data-bs-dismiss="modal" aria-label="Close">
-                            OK
-                        </button>
-                    </div>
-                </div>
 
                 <div class="modal-body" ng-if="Action_Msg_Header === 'Warning'">
                     <div class="d-flex justify-content-center align-items-center mb-3 ">
@@ -4872,14 +4870,14 @@
       </div>
       <div class="modal-body text-start" style="font-size: 1rem; color: #333;">
         <p class="mt-3" style="color: grey; font-weight: bold;">
-          {{ modalCtrl.typeToRemove == 'template' 
+          {{ typeToRemove == 'template' 
           ? 'Are you sure you want to remove this uploaded file? This action will delete all data from the worksheet, including related information. This action cannot be undone.'
           : 'Are you sure you want to remove this item?' }}
         </p>
       </div>
       <div class="modal-footer justify-content-end" style="border-top: none;">
-        <button type="button" class="btn btn-light" data-bs-dismiss="modal" ng-click="modalCtrl.actionRemove('no')" style="border-radius: 5px; padding: 0.5rem 1rem; margin-right: 10px;">No, Keep It</button>
-        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" ng-click="modalCtrl.actionRemove('yes')" style="background-color: #ff4d4d; border-color: #ff4d4d; border-radius: 5px; padding: 0.5rem 1rem;">Yes, Delete</button>
+        <button type="button" class="btn btn-light" data-bs-dismiss="modal" ng-click="action_remove('no')" style="border-radius: 5px; padding: 0.5rem 1rem; margin-right: 10px;">No, Keep It</button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" ng-click="action_remove('yes')" style="background-color: #ff4d4d; border-color: #ff4d4d; border-radius: 5px; padding: 0.5rem 1rem;">Yes, Delete</button>
       </div>
     </div>
   </div>
