@@ -27,6 +27,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             url: url_ws + "masterdata/get_master_area",
             data: '{"user_name":"' + user_name + '"}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+            headers: {
+                'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val() // รับค่าจาก form เพื่อป้องกัน CSRF
+            },
             beforeSend: function () {
                 $("#divLoading").show();
             },
@@ -67,6 +70,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                 + ',"json_data": ' + JSON.stringify(json_data)
                 + '}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+            headers: {
+                'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val() // รับค่าจาก form เพื่อป้องกัน CSRF
+            },
             beforeSend: function () {
                 $("#divLoading").show();
 

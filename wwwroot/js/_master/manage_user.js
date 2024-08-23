@@ -128,6 +128,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                 url: url_ws + "masterdata/get_manageuser",
                 data: '{"user_name":"' + user_name + '"}',
                 type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+                headers: {
+                    'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val() // รับค่าจาก form เพื่อป้องกัน CSRF
+                },
                 beforeSend: function () {
                     $("#divLoading").show();
                 },
@@ -261,6 +264,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                     + ',"max_rows":"10"'
                     + '}',
                 type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+                headers: {
+                    'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val() // รับค่าจาก form เพื่อป้องกัน CSRF
+                },
                 beforeSend: function () {
                     $("#divLoading").show();
                 },
@@ -318,6 +324,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                     + ',"json_register_account": ' + JSON.stringify(json_register)
                     + '}',
                 type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+                headers: {
+                    'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val() // รับค่าจาก form เพื่อป้องกัน CSRF
+                },
                 beforeSend: function () {
                     $("#divLoading").show();
 

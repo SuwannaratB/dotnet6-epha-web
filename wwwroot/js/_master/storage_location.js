@@ -135,6 +135,9 @@ AppMenuPage.controller(
           type: "POST",
           contentType: "application/json; charset=utf-8",
           dataType: "json",
+          headers: {
+            'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val() // รับค่าจาก form เพื่อป้องกัน CSRF
+        },
           beforeSend: function () {
             $("#divLoading").show();
           },

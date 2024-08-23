@@ -140,6 +140,9 @@
                             url: url_ws + "Login/register_account",
                             data: '{"user_displayname":"' + user_displayname + '","user_email":"' + user_email + '","user_password":"' + user_password + '","user_password_confirm":"' + user_password_confirm + '"}',
                             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+                            headers: {
+                                'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val() // รับค่าจาก form เพื่อป้องกัน CSRF
+                            },
                             beforeSend: function () {
                                 $('#divLoading').show();
                             },

@@ -74,6 +74,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             url: url_ws + "Flow/load_notification",
             data: '{"sub_software":"' + sub_software +'","user_name":"' + user_name + '","token_doc":"' + token_doc + '","type_doc":"' + type_doc + '"}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+            headers: {
+                'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val() // รับค่าจาก form เพื่อป้องกัน CSRF
+            },
             beforeSend: function () {
                 $("#divLoading").show();
             },
@@ -117,6 +120,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             data: '{"pha_seq":"' + pha_seq + '","pha_no":"' + pha_no + '"'
                 + ',"sub_software":"' + pha_sub_software + '"}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+            headers: {
+                'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val() // รับค่าจาก form เพื่อป้องกัน CSRF
+            },
             beforeSend: function () {
                 $("#divLoading").show();
             },
@@ -154,6 +160,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             data: '{"pha_seq":"' + pha_seq + '","pha_no":"' + pha_no + '"'
                 + ',"sub_software":"' + pha_sub_software + '"}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+            headers: {
+                'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val() // รับค่าจาก form เพื่อป้องกัน CSRF
+            },
             beforeSend: function () {
                 $("#divLoading").show();
             },

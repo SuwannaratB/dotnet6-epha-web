@@ -251,6 +251,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             url: url_ws + "Flow/load_follow_up",
             data: '{"sub_software":"' + sub_software +'","user_name":"' + user_name + '","token_doc":"' + token_doc + '","type_doc":"' + type_doc + '"}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+            headers: {
+                'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val() // รับค่าจาก form เพื่อป้องกัน CSRF
+            },
             beforeSend: function () {
                 $("#divLoading").show();
                 $('#divPage').addClass('d-none');
@@ -372,6 +375,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                 + ',"controller_action_befor":"hazop/followup"'
                 + '}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+            headers: {
+                'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val() // รับค่าจาก form เพื่อป้องกัน CSRF
+            },
             beforeSend: function () {
                 $("#divLoading").show();
             },
@@ -402,6 +408,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             data: '{"pha_seq":"' + conFig.pha_seq + '","pha_no":"' + conFig.pha_no + '","pha_type_doc":"' + conFig.pha_type_doc + '"'
                 + ',"pha_sub_software":"' + controller_text + '","pha_status":"' + pha_status + '"}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+            headers: {
+                'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val() // รับค่าจาก form เพื่อป้องกัน CSRF
+            },
             beforeSend: function () {
                 $("#divLoading").show();
             },
@@ -442,6 +451,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             data: '{"pha_seq":"' + conFig.pha_seq + '","pha_type_doc":"' + conFig.pha_type_doc + '"'
                 + ',"pha_sub_software":"' + controller_text + '","pha_status":"' + pha_status + '"}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+            headers: {
+                'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val() // รับค่าจาก form เพื่อป้องกัน CSRF
+            },
             beforeSend: function () {
                 $("#divLoading").show();
             },

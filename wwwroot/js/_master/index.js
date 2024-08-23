@@ -36,6 +36,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, conFig) {
             url: url_ws + "Login/check_authorization_page",
             data: '{"user_name":"' + user_name + '"}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+            headers: {
+                'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val() // รับค่าจาก form เพื่อป้องกัน CSRF
+            },
             beforeSend: function () {
                 $('#divLoading').show();
             },
