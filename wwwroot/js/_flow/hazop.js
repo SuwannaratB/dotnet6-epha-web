@@ -1141,21 +1141,26 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             },
             success: function (data) {
                 var arr = data;
-
-                if (arr.length > 0) {
-                    if (arr[0].ATTACHED_FILE_NAME != '') {
-                        var path = (url_ws).replace('/api/', '') + arr[0].ATTACHED_FILE_PATH;
-                        var name = arr[0].ATTACHED_FILE_NAME;
+            
+                if (arr && arr.msg && arr.msg.length > 0) { 
+                    console.log("have array");
+            
+                    if (arr.msg[0].STATUS === "true") { 
+                        console.log("it true");
+                        var path = (url_ws).replace('/api/', '') + arr.msg[0].ATTACHED_FILE_PATH;
+                        var name = arr.msg[0].ATTACHED_FILE_NAME;
                         $scope.exportfile[0].DownloadPath = path;
                         $scope.exportfile[0].Name = name;
-
-
+            
                         $('#modalExportFile').modal('show');
-                        //$('#modalLoadding').modal('hide');
-                        apply();
+                        $("#divLoading").hide(); 
+            
+                    } else {
+                        $("#divLoading").hide();
+                        set_alert('Warning', arr.msg[0].IMPORT_DATA_MSG); 
                     }
                 } else {
-                    set_alert('Error', arr[0].IMPORT_DATA_MSG);
+                    set_alert('Warning', 'Unable to connect to the service. Please check your internet connection or try again later.');
                 }
             },
             error: function (jqXHR, textStatus, errorThrown) {
