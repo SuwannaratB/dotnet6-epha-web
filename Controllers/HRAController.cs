@@ -334,6 +334,24 @@ namespace dotnet6_epha_web.Controllers
             return Ok(res_page);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> follow_back_search(LoadSessionDataViewModel model)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            _sessionAuthen.pha_seq = "";
+            _sessionAuthen.pha_type_doc = "search";
+            _sessionAuthen.role_type = _sessionAuthen.role_type;
+
+            LoginViewModel res_page = new LoginViewModel();
+            res_page.seq = _sessionAuthen.pha_seq;
+
+            return Ok(res_page);
+        }
 
         [HttpPost] 
         public IActionResult Privacy()
