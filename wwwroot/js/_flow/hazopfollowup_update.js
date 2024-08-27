@@ -121,13 +121,16 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
         }
     }   
 
-    function uploadFile(file_obj, seq, file_name, file_size) {
+    function uploadFile(file_obj, seq, file_name, file_size, file_part, file_doc) {
 
         var fd = new FormData();
         //Take the first selected file
         fd.append("file_obj", file_obj);
         fd.append("file_seq", seq);
         fd.append("file_name", file_name);
+        fd.append("file_doc", file_doc);
+        fd.append("file_part", file_part);//drawing, responder, approver
+        fd.append("file_doc", file_doc);
 
         // JavaScript file-like object 
         try {

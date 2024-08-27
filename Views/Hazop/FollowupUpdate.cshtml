@@ -332,7 +332,7 @@
                                                                             <input type="file" id="attfile-{{item_x.seq}}"
                                                                                    name="file{{item_x.seq}}"
                                                                                    onchange="
-                                                                                angular.element(this).scope().fileSelect(this);"
+                                                                                angular.element(this).scope().fileSelect(this, 'followupreview');"
                                                                                    ng-click="
                                                                                 alert(item_x.seq);
                                                                                 setSeqUpload(item_d.seq)"
@@ -633,7 +633,7 @@
                                                                                 id="attfile-{{item_x.seq}}"
                                                                                 name="file{{item_x.seq}}"
                                                                                 onchange="
-                                                                                angular.element(this).scope().fileSelect(this);"
+                                                                                angular.element(this).scope().fileSelect(this, 'followupreview');"
                                                                                 ng-click="
                                                                                     alert(item_x.seq);
                                                                                     setSeqUpload(item_d.seq)"
@@ -966,9 +966,14 @@
                                                                 </div>
                                                                 <div class="align-items-center" style="width: 280px">
                                                                     <div class="btn-group my-2 w-100" >
-                                                                        <div class="icon-button border p-3" style="border-color: #0d6efd; background-color: #0d6efd;"
+                                                                        <div ng-if="!item_x.document_file_size" class="icon-button border p-3" style="border-color: #0d6efd; background-color: #0d6efd;"
                                                                             ng-hide="!accessInfo.canAccess">
                                                                             <span class="fa-solid fa-arrow-up-from-bracket fa-lg" style="color: #ffffff;"></span>
+                                                                        </div>
+                                                                        <div ng-if="item_x.document_file_size" class="icon-button border p-3" style="border-color: #0d6efd; background-color: #0d6efd;"
+                                                                            ng-hide="!accessInfo.canAccess">
+                                                                            @* <span class="fa-solid fa-arrow-up-from-bracket fa-lg" style="color: #ffffff;"></span> *@
+                                                                            <span class="fa-solid far fa-file-pdf fa-lg" style="color: #ffffff;"></span>
                                                                         </div>
                                                                         <button class="Upload-button btn ps-3" 
                                                                                 ng-hide="!accessInfo.canAccess"
@@ -988,7 +993,7 @@
                                                                                 name="file{{item_x.seq}}"
                                                                                 ng-class="{ 'disabled-link': !accessInfo.canAccess, 'cursor-pointer' : accessInfo.canAccess }"
                                                                                 ng-disabled="!accessInfo.canAccess"
-                                                                                onchange="angular.element(this).scope().fileSelect(this)"
+                                                                                onchange="angular.element(this).scope().fileSelect(this, 'followupreview')"
                                                                                 ng-click="setSeqUpload(item_d.seq)"
                                                                                 style="display:none" />
                                                                         </button>
@@ -1082,7 +1087,7 @@
                                                                                 name="file{{item_x.seq}}"
                                                                                 ng-class="{ 'disabled-link': !accessInfo.canAccess, 'cursor-pointer' : accessInfo.canAccess }"
                                                                                 ng-disabled="!accessInfo.canAccess"
-                                                                                onchange="angular.element(this).scope().fileSelect(this)"
+                                                                                onchange="angular.element(this).scope().fileSelect(this, 'followupreview')"
                                                                                 ng-click="setSeqUpload(item_d.seq)"
                                                                                 style="display:none" />
 
