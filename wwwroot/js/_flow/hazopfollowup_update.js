@@ -154,53 +154,71 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                 request.onreadystatechange = function () {
                     if (request.readyState === XMLHttpRequest.DONE) {
                         if (request.status === 200) {
+    
                             // รับค่าที่ส่งมาจาก service ที่ตอบกลับมาด้วย responseText
                             const responseFromService = request.responseText;
-                            // ทำอะไรกับข้อมูลที่ได้รับเช่น แสดงผลหรือประมวลผลต่อไป
-                            console.log(responseFromService);
-
-                            const jsonArray = JSON.parse(responseFromService);
-
-                            var file_name = jsonArray[0].ATTACHED_FILE_NAME;
-                            var file_path = jsonArray[0].ATTACHED_FILE_PATH;
-
-                            console.log("$scope.seqUpload",$scope.seqUpload)
-                            var arr_details = $filter('filter')($scope.data_details, function (item) { return (item.seq == $scope.seqUpload); });
-                            console.log("arr_details",arr_details)
-                            if (arr_details.length > 0 ) {
-                                if($scope.data_header[0].pha_status === 13){
-                                    arr_details[0].document_file_name_owner = file_name;
-                                    arr_details[0].document_file_size_owner = file_size;
-                                    arr_details[0].document_file_path_owner = (url_ws.replace('/api/', '')) + file_path;// (url_ws.replace('/api/', '/')) + 'AttachedFileTemp/Hazop/' + file_name;
-                                    arr_details[0].action_change = 1;
-                                    apply();
-                                }else if($scope.data_header[0].pha_status === 14){
-                                    arr_details[0].document_file_name = file_name;
-                                    arr_details[0].document_file_size = file_size;
-                                    arr_details[0].document_file_path = (url_ws.replace('/api/', '')) + file_path;// (url_ws.replace('/api/', '/')) + 'AttachedFileTemp/Hazop/' + file_name;
-                                    arr_details[0].action_change = 1;
-                                    apply();
-                                }
+                            let parsedResponse;
+                            
+                            try {
+                                parsedResponse = JSON.parse(responseFromService);
+                            } catch (e) {
+                                console.error("Failed to parse JSON response:", e);
+                                return;
                             }
 
-                            var arr = $filter('filter')($scope.data_drawingworksheet, function (item) { return (item.seq == seq); });
-                            if (arr.length > 0) {
-                                arr[0].document_file_name = file_name;
-                                arr[0].document_file_size = file_size;
-                                arr[0].document_file_path = (url_ws.replace('/api/', '')) + file_path;// (url_ws.replace('/api/', '/')) + 'AttachedFileTemp/Hazop/' + file_name;
-                                arr[0].document_module = $scope.document_module;
-                                arr[0].action_change = 1;
-                                clear_valid_items('upload_file-'+ $scope.seqUpload);
-                                $scope.seqUpload = null;
-                                apply();
+                            if (parsedResponse && parsedResponse.msg && parsedResponse.msg[0].STATUS === "true") {
 
+                                // ทำอะไรกับข้อมูลที่ได้รับเช่น แสดงผลหรือประมวลผลต่อไป
+                                const jsonArray = JSON.parse(responseFromService);
+    
+                                var file_name = jsonArray.msg[0].ATTACHED_FILE_NAME;
+                                var file_path = jsonArray.msg[0].ATTACHED_FILE_PATH;
+                                
+                                var arr_details = $filter('filter')($scope.data_details, function (item) { return (item.seq == $scope.seqUpload); });
+                                if (arr_details.length > 0 ) {
+                                    if($scope.data_header[0].pha_status === 13){
+                                        arr_details[0].document_file_name_owner = file_name;
+                                        arr_details[0].document_file_size_owner = file_size;
+                                        arr_details[0].document_file_path_owner = (url_ws.replace('/api/', '')) + file_path;// (url_ws.replace('/api/', '/')) + 'AttachedFileTemp/Hazop/' + file_name;
+                                        arr_details[0].action_change = 1;
+                                        apply();
+                                    }else if($scope.data_header[0].pha_status === 14){
+                                        arr_details[0].document_file_name = file_name;
+                                        arr_details[0].document_file_size = file_size;
+                                        arr_details[0].document_file_path = (url_ws.replace('/api/', '')) + file_path;// (url_ws.replace('/api/', '/')) + 'AttachedFileTemp/Hazop/' + file_name;
+                                        arr_details[0].action_change = 1;
+                                        apply();
+                                    }
+                                }
+
+                                var arr = $filter('filter')($scope.data_drawingworksheet, function (item) { return (item.seq == seq); });
+                                if (arr.length > 0) {
+                                    arr[0].document_file_name = file_name;
+                                    arr[0].document_file_size = file_size;
+                                    arr[0].document_file_path = (url_ws.replace('/api/', '')) + file_path;// (url_ws.replace('/api/', '/')) + 'AttachedFileTemp/Hazop/' + file_name;
+                                    arr[0].document_module = $scope.document_module;
+                                    arr[0].action_change = 1;
+                                    clear_valid_items('upload_file-'+ $scope.seqUpload);
+                                    $scope.seqUpload = null;
+                                    apply();
+
+                                }
+
+                                $("#divLoading").hide(); 
+                                set_alert('Success', 'File attached successfully.');
+    
+                            }else{
+    
+                                $("#divLoading").hide(); 
+                                set_alert('Warning', 'Unable to connect to the service. Please check your internet connection or try again later.');
                             }
 
                         } else {
+                            $("#divLoading").hide(); 
+
                             // กรณีเกิดข้อผิดพลาดในการร้องขอไปยัง server
                             console.error('มีข้อผิดพลาด: ' + request.status);
                         }
-                        $("#divLoading").hide(); 
                     }
                 };
 
