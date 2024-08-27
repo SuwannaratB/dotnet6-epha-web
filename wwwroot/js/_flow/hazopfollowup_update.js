@@ -95,39 +95,35 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
 
 
             if (file) {
-                const allowedFileTypes = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'jpg', 'png', 'gif']; // รายการของประเภทของไฟล์ที่อนุญาตให้แนบ
-
-                const fileExtension = fileName.split('.').pop().toLowerCase(); // นำนามสกุลของไฟล์มาเปลี่ยนเป็นตัวพิมพ์เล็กทั้งหมดเพื่อให้เป็น case-insensitive
-
+                const allowedFileTypes = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'jpg', 'png', 'gif'];
+            
+                const fileExtension = fileName.split('.').pop().toLowerCase(); 
                 if (allowedFileTypes.includes(fileExtension)) {
-                    // ทำการแนบไฟล์
-                    //set_alert("File attached successfully.");
+                    var file_path = uploadFile(file, fileSeq, fileName, fileSizeKB, file_part, file_doc);
                 } else {
-                    $('#modalMsgFileError').modal({
-                        backdrop: 'static',
-                        keyboard: false 
-                    }).modal('show');
-                    //set_alert('Warning', "Please select a PDF, Word or Excel, Image file.");
+                    set_alert('Warning', "The selected file type is not supported. Please upload a PDF, Word, Excel, or Image file.");
                 }
+            
             } else {
-                console.log("No file selected.");
+                set_alert('Error', "No file selected. Please select a file to upload.");
             }
-
-
-            var file_path = uploadFile(file, fileSeq, fileName, fileSize, file_part, file_doc);
 
         } else {
             fileInfoSpan.textContent = "";
         }
     }   
 
-    function uploadFile(file_obj, seq, file_name, file_size) {
+    function uploadFile(file_obj, seq, file_name, file_size, file_part, file_doc) {
 
+        console.log("call upload file ")
         var fd = new FormData();
         //Take the first selected file
         fd.append("file_obj", file_obj);
         fd.append("file_seq", seq);
         fd.append("file_name", file_name);
+
+        fd.append("file_doc", file_doc);
+        fd.append("file_part", file_part);//drawing, responder, approver
 
         // JavaScript file-like object 
         try {
@@ -1503,6 +1499,24 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                 }
             }
 
+        });
+    }
+
+    function set_alert(header, detail) {
+        $scope.Action_Msg_Header = header;
+        $scope.Action_Msg_Detail = detail;
+    
+        $timeout(function() {
+            $('#modalMsg').modal({
+                backdrop: 'static',
+                keyboard: false 
+            }).modal('show');
+    
+            if (header === 'Success') {
+                $timeout(function() {
+                    $('#modalMsg').modal('hide');
+                }, 2000);
+            }
         });
     }
 

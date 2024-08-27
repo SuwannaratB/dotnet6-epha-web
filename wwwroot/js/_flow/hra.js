@@ -9198,7 +9198,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     //     return item.initial_risk_rating === 'Meduim' || 
     //         item.initial_risk_rating === 'Meduim\r\n' || 
     //         item.initial_risk_rating === 'High' ||
-    //         item.initial_risk_rating === 'High\r\n'||
+    //         item.initial_risk_rating === 'High\r\n'||fileSelect
     //         item.initial_risk_rating === 'Very High' ||
     //         item.initial_risk_rating === 'Very High\r\n' ||
     //         item.hierarchy_of_control != null;
