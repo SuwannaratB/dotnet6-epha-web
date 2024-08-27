@@ -2267,7 +2267,7 @@
                                                     </select>
                                                 </div>
                                                 @* Recommendations *@
-                                                <div class="checkbox-container">
+                                                <div class="checkbox-container d-none">
                                                     <div class="topic">Exposure Indicator</div>
                                                     <select class="form-control"
                                                         style="max-width: 150px; font-size: 10.24px;"
@@ -3265,11 +3265,11 @@
                 </div>
                 <div class="modal-body" style="overflow: hidden; padding: 1rem;">
                     <img ng-if="select_modal === 'Exposure_Rating'" 
-                        src="~/assets/img/exposure_rating.png" 
-                        style="max-width: 100%; max-height: 100%; height: auto; width: auto; display: block; margin: auto;">
-                    <img ng-if="select_modal === 'Frequency_Rating'" 
                         src="/assets/img/risk_rating.png" 
                         style="max-width: 100%; max-height: 80%; height: auto; width: 800px; display: block; margin: auto;object-fit: cover;">
+                    <img ng-if="select_modal === 'Frequency_Rating'" 
+                        src="~/assets/img/exposure_rating.png" 
+                        style="max-width: 100%; max-height: 100%; height: auto; width: auto; display: block; margin: auto;">
                     <img ng-if="select_modal === 'Exposure_Level'" 
                         src="~/assets/img/exposure_level.png" 
                         style="max-width: 100%; max-height: 100%; height: auto; width: auto; display: block; margin: auto;">
@@ -3735,7 +3735,7 @@
                         </div>
                     </div>
                     @* list manage *@
-                    <div class="body-manage"  ng-if="selectDatFormType == 'manage' && action_tabs !== 'manage'">
+                    <div class="body-manage"  ng-if="selectDatFormType == 'manage' && action_tabs !== 'manage_tabs'">
                         <div class="col-auto py-2" ng-if="selectedData.responder_user_displayname">
                             <div class="d-flex align-items-center p-1" style="height: 20px;">
                                 <button class="btn btn-outline-secondary p-1" 
@@ -3747,7 +3747,7 @@
                                         ng-if="selectedData.responder_user_displayname">
                                     <span class="fa-regular fa-trash-can fa-lg"></span>
                                 </button>                  
-                                <div class="mb-0 ms-3 text-1100 fw-bold" style="width: 80%; border-color: #f1f2f4;">
+                                <div class="mb-0 ms-3 text-1100 fw-bold" style="width: 80%; border-color: #f1f2f4;" ng-if="action_tabs !== 'manage_tabs'">
                                     {{ selectedData.responder_user_displayname }}
                                 </div>
                             </div>
