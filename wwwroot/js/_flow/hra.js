@@ -8745,7 +8745,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 init_worksheet = $scope.val_filterInitial.displayFilter
                 $scope.isProcessFilterWorksheet = true
             }
-            // เช็คถ้าไม่เลือก/ไม่เลือก Filter 
+            // เช็คถ้าเลือก/ไม่เลือก Filter 
             if ($scope.isProcessFilterWorksheet) {
                 $scope.display_worksheet_filter = init_worksheet
             } else {
@@ -8936,8 +8936,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             let selectFilter = $scope.optionInitial.filter((option) => option.selected).map((option) => option.name_check);
             var displayFilter = []
             for (let i = 0; i < init_worksheet.length; i++) {
-                let tmp_list = init_worksheet[i].worksheet.filter((item) =>
-                    selectFilter.includes(item.initial_risk_rating)
+                let tmp_list = init_worksheet[i].worksheet.filter((item) =>{
+                        const rating = item.initial_risk_rating;
+                        return rating && selectFilter.includes(rating.trim());
+                    }
                 );
                 if (tmp_list.length > 0) {
                     var data = angular.copy(init_worksheet[i])
