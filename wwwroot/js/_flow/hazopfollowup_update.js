@@ -121,6 +121,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
         fd.append("file_obj", file_obj);
         fd.append("file_seq", seq);
         fd.append("file_name", file_name);
+        fd.append("file_doc", file_doc);
+        fd.append("file_part", file_part);//drawing, responder, approver
+        fd.append("file_doc", file_doc);
 
         fd.append("file_doc", file_doc);
         fd.append("file_part", file_part);//drawing, responder, approver

@@ -401,7 +401,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         apply();
     }
     $scope.selectDetails = function (arr) {
-
         $scope.tabUpdateFollowUp = true;
 
         var controller_text = 'Hazop';//fix เนื่องจากมีหน้าเดียวใช้ด้วยกัน
