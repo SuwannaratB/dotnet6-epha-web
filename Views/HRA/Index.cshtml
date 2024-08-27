@@ -110,12 +110,12 @@
                         Change Approver
                     </button>
                 </span>            
-                <span class="mx-2" ng-if="action_to_review_type">
+                @*<span class="mx-2" ng-if="action_to_review_type">
                     <button class="btn btn-warning btn-sm" style="width: 200px;"
                             ng-click="confirmMailtoMemberReview('submit')">
                         <span style="font-size:9px">EMAIL TO MEMBER TEAM REVIEW</span>
                     </button>
-                </span>
+                </span>*@
                 <span class="mx-2" ng-if="submit_type">
                     <button class="btn btn-success btn-sm" style="width: 150px;"
                             ng-if=" data_header[0].pha_status == 11 " ng-click="confirmSave('confirm_submit_register_without')">
@@ -3615,11 +3615,15 @@
                                     <tbody class="list">
                                         <tr class="hover-actions-trigger btn-reveal-trigger position-static text-center"
                                             ng-class="{'row-faded': clickedStates[item.employee_name]}" ng-repeat-start="groups in data_worksheet_show">
-                                            <td class="border-active" rowspan="{{data_worksheet_show.length+1}}">{{groups.worker_group}}</td>
-                                            <td class="border-active" rowspan="{{data_worksheet_show.length+1}}">{{groups.description}}</td>
-                                            <td class="border-active" ng-if="$first" rowspan="{{(data_worksheet_show.length+1) * (groups.worksheet.length+1)}}">{{ selectedFactor }}</td>
-                                            <td class="text-center border-active" ng-if="$first" rowspan="{{(data_worksheet_show.length+1) * (groups.worksheet.length+1)}}">{{ selectedInitialRisk }}</td>
-                                            <td class="text-center border-active" ng-if="$first" rowspan="{{(data_worksheet_show.length+1) * (groups.worksheet.length+1)}}">{{ selectedComment ? selectedComment : '' }}</td>
+                                            <td class="border-active" 
+                                                ng-if="$index === 0 || groups.id !== data_worksheet_show[$index - 1].id"
+                                                rowspan="{{ (data_worksheet_show | filter:{id:groups.id}).length * 3}}">
+                                                {{groups.worker_group}}
+                                            </td>
+                                            <td class="border-active" rowspan="2">{{groups.description}}</td>
+                                            <td class="border-active" ng-if="$first" rowspan="{{data_worksheet_show.length * 4}}">{{ selectedFactor }}</td>
+                                            <td class="text-center border-active" ng-if="$first" rowspan="{{data_worksheet_show.length * 4}}">{{ selectedInitialRisk }}</td>
+                                            <td class="text-center border-active" ng-if="$first" rowspan="{{data_worksheet_show.length * 4}}">{{ selectedComment ? selectedComment : '' }}</td>
                                             <tr ng-repeat="data in groups.worksheet">
                                                 <td class="text-center border-active">
                                                     <span ng-show="data.responder_user_displayname !== '' && data.responder_user_displayname !== null"></span>{{data.responder_user_displayname}}</td>
@@ -3739,7 +3743,7 @@
                                         data-toggle="tooltip" 
                                         data-placement="top" 
                                         title="Remove"
-                                        ng-click="removeDataEmployee(item2, selectdata_session)"
+                                        ng-click="removeDataEmployee(selectedData, selectdata_session)"
                                         ng-if="selectedData.responder_user_displayname">
                                     <span class="fa-regular fa-trash-can fa-lg"></span>
                                 </button>                  

@@ -6926,6 +6926,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         };
 
         $scope.openDataEmployeeAdd = function (item, form_type) {
+
+            console.log(item)
             $scope.selectedData = item;
 
             $scope.selectedUser = {
@@ -7003,10 +7005,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             if (!$scope.isFilterActive) return items;
 
         
-            const selectedComment = $scope.selectedComment.trim().toLowerCase();
+            const selectedComment = $scope.selectedComment ? $scope.selectedComment.trim().toLowerCase() : '';
             const selectedFactor = $scope.selectedFactor;
-            const selectedInitialRisk = $scope.selectedInitialRisk.trim().toLowerCase();
+            const selectedInitialRisk = $scope.selectedInitialRisk ? $scope.selectedInitialRisk.trim().toLowerCase() : '';
             const selectedFactor_id = $scope.manage_ws_recom.id_hazard;
+
+
             return items.map(item => {
                 if (!item.worksheet) return null; // Check if worksheet exists
         
@@ -7020,12 +7024,18 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                            (selectedFactor && id_hazard && id_hazard === selectedFactor_id) &&
                            (selectedInitialRisk && initialRisk && initialRisk === selectedInitialRisk);
                 });
-        
+
+                // Check for uniqueness based on ID before returning the item  && !uniqueIds.has(item.id)
                 if (filteredWorksheet.length > 0) {
+                    //uniqueIds.add(item.id); // Add the ID to the set of unique IDs
+                    console.log("Filtered Item:", { ...item, worksheet: filteredWorksheet });
                     return { ...item, worksheet: filteredWorksheet };
                 }
+
                 return null;
+
             }).filter(item => item !== null);
+                    
         };
         
         $scope.fillterDataEmployeeAdd = function (type) {
@@ -7340,7 +7350,16 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                             data.responder_user_displayname = employee_position + '-' + employee_displayname.split(" ")[0];   
                         } 
 
+                        var manage = $scope.manage_ws_recom
+                        $scope.selectedComment = manage.recommendations;
+                        $scope.selectedFactor = manage.health_hazard;
+                        $scope.selectedInitialRisk = manage.initial_risk_rating;
+        
+                        $scope.isFilterActive = true;
+        
                         $scope.data_worksheet_show = $scope.worksheet_Filter($scope.data_worksheet_list)
+
+                        console.log("$scope.data_worksheet_show",$scope.data_worksheet_show)
 
                         if($scope.params !== 'edit_action_owner' && $scope.data_worksheet_show.length > 1){
                             $scope.showModal().then(function(applyRecommendation) {
@@ -7372,6 +7391,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.removeDataEmployee = function (data, seq_session) {
                 const actions = $scope.selectDatFormType;
 
+                console.log(data)
+                
                 var seq = data.seq;
 
                 $scope.clickedStates[data.user_name] = false;
@@ -7402,8 +7423,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     $scope.removeDataApprover(seq, seq_session)
                 }
 
-                if (actions == 'worker') {                 
-                    const index = $scope.data_worker_list.findIndex(item => item.id === data.id && item.user_name === data.user_name);
+                if (actions == 'worker') {    
+                    console.log(data)
+
+                    const index = $scope.data_worker_list.findIndex(item => item.seq === data.seq && item.user_name === data.user_name);
                 
                     if (index !== -1) {
                         var delItem = $filter('filter')($scope.data_worker_list, function (item) {
@@ -9329,7 +9352,5 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         });
     }, 10); 
     
-
-
     
 });
