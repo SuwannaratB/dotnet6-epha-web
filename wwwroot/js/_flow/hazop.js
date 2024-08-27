@@ -844,9 +844,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                             console.error("Failed to parse JSON response:", e);
                             return;
                         }
-                        
-                        console.log(parsedResponse);
-                        
+                                                
                         // Now you can safely access the properties
                         if (parsedResponse && parsedResponse.msg && parsedResponse.msg[0].STATUS === "true") {
 
