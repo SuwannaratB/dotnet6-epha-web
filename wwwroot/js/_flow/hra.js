@@ -1156,8 +1156,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             });
         }
 
-
-        console.log("$scope.data_header[0].pha_status == 12 ",$scope.data_header[0].pha_status == 12 )
         
         try {
             if ($scope.data_header[0].pha_status == 11) {
@@ -1196,13 +1194,18 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 }
                 
                 if (selectedTab.name === 'manage') {
+
+                    console.log("======================Befor==========================")
+                    console.log($scope.data_worksheet_list)
+
+                    console.log("================================================")
+
                     for (let i = 0; i < $scope.data_worksheet_list.length; i++) {
                         for (let j = 0; j < $scope.data_worksheet_list[i].worksheet.length; j++) {
-                            let riskRating = $scope.data_worksheet_list[i].worksheet[j].initial_risk_rating;
+                            let recommendations = $scope.data_worksheet_list[i].worksheet[j].recommendations;
                             
-                            if (riskRating === 'Meduim' || riskRating === 'High' || riskRating === 'Very High' ||
-                                riskRating === 'Meduim\r\n' || riskRating === 'High\r\n' || riskRating === 'Very High\r\n'
-                            ){
+                            if (recommendations != null && recommendations != '')
+                            {
                                 if (!$scope.data_worksheet_list[i].worksheet[j].estimated_start_date) {
                                     var today = new Date();
                                     var start_date_utc = new Date(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()));
@@ -1211,7 +1214,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                                 }
                             }
                         }
+                        
                     }
+
+                    
+                    console.log("======================After==========================")
+                    console.log($scope.data_worksheet_list)
+
+                    console.log("================================================")
                 }
             }
 

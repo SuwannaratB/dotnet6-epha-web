@@ -1,5 +1,5 @@
 
-AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$rootScope,$window) {
+AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$rootScope,$window,$timeout) {
     $('#divLoading').hide();
 
 
@@ -83,7 +83,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
         if (fileInput.files.length > 0) {
             const file = fileInput.files[0];
             const fileName = file.name;
-            const fileSize = Math.round(file.size / 1024);
+            const fileSizeKB = Math.round(file.size / 1024);
             try {
                 const truncatedFileName = truncateFilename(fileName, 20);
                 if (fileInfoSpan) {
