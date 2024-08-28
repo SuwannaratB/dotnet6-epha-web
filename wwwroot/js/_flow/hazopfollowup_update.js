@@ -1,5 +1,5 @@
 
-AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$rootScope,$window) {
+AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$rootScope,$window,$timeout) {
     $('#divLoading').hide();
 
 
@@ -99,7 +99,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
             
                 const fileExtension = fileName.split('.').pop().toLowerCase(); 
                 if (allowedFileTypes.includes(fileExtension)) {
-                    var file_path = uploadFile(file, fileSeq, fileName, fileSizeKB, file_part, file_doc);
+                    var file_path = uploadFile(file, fileSeq, fileName, fileSize, file_part, file_doc);
                 } else {
                     set_alert('Warning', "The selected file type is not supported. Please upload a PDF, Word, Excel, or Image file.");
                 }

@@ -6426,6 +6426,15 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     }
                 } catch { }
             }
+
+            // set default estimated_start_date
+            arr_worksheet.forEach(ws => {
+                if (ws.recommendations && !ws.estimated_start_date) {
+                    ws.estimated_start_date = new Date()
+                    ws.action_change = 1;
+                }
+            });
+            
             return arr_worksheet; 
         }
         
