@@ -835,7 +835,7 @@
                                                     @* Task or Activity *@
                                                     <td class="align-top  px-1">
                                                         <div class="d-flex text-start">
-                                                            <p class="mb-0 ms-3 fw-bold" rows="3">
+                                                            <p class="mb-0 ms-3 fw-bold" style="width: 68px;" rows="3">
                                                                 {{ item_d.descriptions ? item_d.descriptions : 'Not found' }}
                                                             </p>
                                                         </div>
@@ -843,14 +843,14 @@
 
                                                     <td class="align-top  px-1">
                                                         <div class="align-items-center ">
-                                                            <p class="mb-0 ms-3 fw-bold" style="width: 30px;" rows="3">
+                                                            <p class="mb-0 ms-3 fw-bold" style="width: 68px;" rows="3">
                                                                 {{ item_d.sub_area ? item_d.sub_area : 'Not found' }}
                                                             </p>
                                                         </div>
                                                     </td>
                                                     <td class="align-top  px-1">
                                                         <div class="align-items-center ">
-                                                            <p class="mb-0 ms-3 fw-bold" style="width: 30px;" rows="3">
+                                                            <p class="mb-0 ms-3 fw-bold" style="width: 68px;" rows="3">
                                                                 {{ item_d.type_hazard ? item_d.type_hazard : 'Not found' }}
                                                             </p>
                                                         </div>
@@ -939,7 +939,7 @@
                                                     @* Recommendations responded sheet  => status 13 *@
                                                     <td class="align-middle px-1" style="min-width:200px;" ng-if="flow_status != 14">
                                                         <div class=" p-0 cursor-pointer "
-                                                             ng-repeat="item_x in data_drawingworksheet | filter:{id_worksheet:item_d.seq, action_type : '!delete'}">
+                                                            ng-repeat="item_x in data_drawingworksheet | filter:{id_worksheet:item_d.seq, action_type : '!delete'}">
                                                             <div class="d-flex align-items-center flex-nowrap"
                                                                  ng-class="{ 'no-drop': !accessInfo.canAccess, 'cursor-pointer': accessInfo.canAccess }"
                                                                  ng-if="!((flow_status == 14 ? item_d.reviewer_action_type : item_d.responder_action_type) == 2)">
