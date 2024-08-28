@@ -6494,7 +6494,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             }
 
-            if(type_text == 'meeting_date' || type_text == 'meeting_date'){
+            if(type_text == 'meeting_date' || type_text == 'meeting_time'){
                 updateDataSessionAccessInfo('session');
 
             }
@@ -6619,7 +6619,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
 
             action_type_changed(_arr, _seq);
-            updateDataSessionAccessInfo()
 
 
             apply();
@@ -9255,7 +9254,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     }
 
-    $scope.accessInfoMap = {};
+    $scope.sessionAccessInfoMap = {};
+    $scope.drawingAccessInfoMap = {};
 
     $scope.getAccessInfo = function(item, index, type) {
         let accessInfo = {
@@ -9295,10 +9295,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             ) {
                 accessInfo.canCopy = true;
                 accessInfo.canRemove = true;
-                console.log("Conditions met: canCopy and canRemove are set to true");
-            } else {
-                console.log("Conditions not met: all values are null or undefined");
-            }
+            } 
+
+            $scope.sessionAccessInfoMap[item.id] = accessInfo;
             
             
         } else if(type === 'drawing'){
@@ -9313,9 +9312,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             } else {
                 accessInfo.canRemove = true;
             }
+
+            $scope.drawingAccessInfoMap[item.id] = accessInfo;
         }
         
-        $scope.accessInfoMap[item.id] = accessInfo;
+        
     };
     
     //access each role

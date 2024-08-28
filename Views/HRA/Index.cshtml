@@ -769,7 +769,7 @@
                                                                     <button class="btn btn-outline-secondary p-2" 
                                                                         ng-class="{'disabled-link': isDisableStatus}"
                                                                         style="color: #ff2828; background-color: #f1f2f4; border-color: #ff2828;"
-                                                                        ng-disabled="!accessInfoMap[item.id].canRemove"
+                                                                        ng-disabled="!sessionAccessInfoMap[item.id].canRemove"
                                                                         ng-click="triggerRemove(item,item.seq,$index,'session')">
                                                                         <span class="fa-regular fa-trash-can fa-lg"></span>
                                                                     </button>
@@ -778,7 +778,7 @@
                                                                 <span class="mx-1">
                                                                     <button class="btn btn-outline-secondary p-2" 
                                                                         ng-class="{'disabled-link': isDisableStatus}"
-                                                                        ng-disabled="!accessInfoMap[item.id].canCopy"  
+                                                                        ng-disabled="!sessionAccessInfoMap[item.id].canCopy"  
                                                                         style="color: #2445fc; background-color: #f1f2f4; border-color: #2445fc;"
                                                                         ng-click=copyDataSession(item.seq,$index)>
                                                                         <span class="fas fa-copy fa-lg"></span>
@@ -937,7 +937,7 @@
                                                                         ng-class="{'disabled-link': isDisableStatus}"
                                                                         style="color: #ff2828; background-color: #f1f2f4; border-color: #ff2828;"
                                                                         ng-click="triggerRemove(item,item.seq,$index,'DrawingDoc')"
-                                                                        ng-disabled="!accessInfoMap[item.id].canRemove"   
+                                                                        ng-disabled="!drawingAccessInfoMap[item.id].canRemove"   
                                                                         data-toggle="tooltip" 
                                                                         data-placement="top" 
                                                                         title="Remove">
