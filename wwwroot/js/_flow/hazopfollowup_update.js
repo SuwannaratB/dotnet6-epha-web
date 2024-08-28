@@ -595,11 +595,17 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                     iNoNew++;
                 };
 
+                if (arr.general[0].pha_sub_software == 'hra') {
+                    arr.details = setupDetails(arr.details)
+                    arr.drawingworksheet = setupDrawingworksheet(arr.drawingworksheet, arr.details)
+                }
+
                 $scope.data_pha_doc = arr.pha_doc;//pha_status,pha_no
                 $scope.data_header = arr.general;
                 $scope.data_general = arr.general;
                 $scope.data_details = arr.details;
                 $scope.data_details_old = arr.details;
+
                 //call to check who can Access
                 /*console.log($scope.data_details[0].responder_user_name)
                 if($scope.data_details){
@@ -675,6 +681,30 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
             }
 
         });
+    }
+
+    function setupDetails(details){
+        if(!details) return [];
+
+        details.forEach(element => {
+            element.recommendations
+        });
+
+        details = $filter('filter')(details, function (_item) {
+            return _item.recommendations
+        });
+
+        return details
+    }
+
+    function setupDrawingworksheet(drawing, details){
+        if(!drawing && !details) return [];
+
+        const result = drawing.filter(dw =>
+            details.some(detail => detail.seq === dw.id_worksheet)
+          );
+
+        return result
     }
  
     $scope.confirmFollowBackSearch = function () {

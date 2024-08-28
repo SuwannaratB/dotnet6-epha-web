@@ -1631,10 +1631,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         set_alert('Success', 'Data has been successfully submitted.');
                         if (arr[0].pha_status == '13') {
                             //กรณีที่ TA2 approve all
-                            if($scope.flow_role_type == 'admin') {
-                                return  get_data_after_save(false,  true , $scope.pha_seq);
-
-                            }
+                            // if($scope.flow_role_type == 'admin') {
+                            //     return  get_data_after_save(false,  true , $scope.pha_seq);
+                            // }
                             window.open('hazop/search', "_top");
                         } else if (arr[0].pha_status == '22') {
                             //กรณีที่ TA2 approve reject
