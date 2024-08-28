@@ -569,7 +569,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                                 return;
                             }
                                                         
-                            // Now you can safely access the properties
                             if (parsedResponse && parsedResponse.msg && parsedResponse.msg[0].STATUS === "true") {
 
                                 // ทำอะไรกับข้อมูลที่ได้รับเช่น แสดงผลหรือประมวลผลต่อไป
@@ -1195,11 +1194,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 
                 if (selectedTab.name === 'manage') {
 
-                    console.log("======================Befor==========================")
-                    console.log($scope.data_worksheet_list)
-
-                    console.log("================================================")
-
                     for (let i = 0; i < $scope.data_worksheet_list.length; i++) {
                         for (let j = 0; j < $scope.data_worksheet_list[i].worksheet.length; j++) {
                             let recommendations = $scope.data_worksheet_list[i].worksheet[j].recommendations;
@@ -1217,11 +1211,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         
                     }
 
-                    
-                    console.log("======================After==========================")
-                    console.log($scope.data_worksheet_list)
-
-                    console.log("================================================")
                 }
             }
 

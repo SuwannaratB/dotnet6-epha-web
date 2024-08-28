@@ -3915,25 +3915,30 @@
 
                 </div>
 
-                <div class="modal-body" ng-if="Action_Msg_Header === 'Warning'">
-                    <div class="d-flex justify-content-center align-items-center mb-3 ">
+                <div class="modal-body" ng-if="Action_Msg_Header !== 'Success'">
+                    <div class="d-flex justify-content-center align-items-center mb-3">
                         <h5 class="mb-0 text-center ms-5" style="font-size: 40px; font-weight: bold;" data-anchor="data-anchor" id="modalMsgLabel">
-                            {{Action_Msg_Header}}
+                            {{ Action_Msg_Header }}
                         </h5>
                     </div>
                     <div class="d-flex justify-content-center align-items-center mt-3 mb-3">
                         <p class="lh-lg mb-0 text-center" style="font-size: 16px;">
-                            {{ Action_Msg_Detail}}
+                            {{ Action_Msg_Detail }}
                         </p>
                     </div>
                     <div class="d-flex flex-column align-items-center" ng-if="!Action_Msg_Confirm">
                         <button class="btn p-2 px-8 text-white" type="button" data-bs-dismiss="modal" aria-label="Close"
                                 ng-click="goBackToTab()"
-                                ng-class="{ 'bg-warning' : (Action_Msg_Header == 'Warning'? true :false),'bg-primary' : (Action_Msg_Header == 'Warning'? false :true) }">
-                            {{ Action_Msg_Header == 'Warning' ? 'Go back' : 'OK' }}
+                                ng-class="{
+                                    'bg-warning': Action_Msg_Header === 'Warning',
+                                    'bg-danger': Action_Msg_Header === 'Error',
+                                    'bg-primary': Action_Msg_Header !== 'Warning' && Action_Msg_Header !== 'Error'
+                                }">
+                            {{ Action_Msg_Header === 'Warning' ? 'Go back' : (Action_Msg_Header === 'Error' ? 'Dismiss' : 'OK') }}
                         </button>
                     </div>
                 </div>
+
 
                 <div class="modal-body d-flex flex-column justify-content-center mb-4"
                      ng-if="Action_Msg_Confirm && Action_Msg_Header == 'Warning'">
