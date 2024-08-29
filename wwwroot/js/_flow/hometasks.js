@@ -346,8 +346,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                                                     
                 if (arr && arr.msg && arr.msg[0].STATUS === "true") {
 
-                    // ทำอะไรกับข้อมูลที่ได้รับเช่น แสดงผลหรือประมวลผลต่อไป
-                    const jsonArray = JSON.parse(responseFromService);
+                    const jsonArray = arr;
 
                     if (jsonArray) {
                         var file_path = (url_ws).replace('/api/', '') + jsonArray.msg[0].ATTACHED_FILE_PATH;
@@ -361,7 +360,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                     }
 
                     $("#divLoading").hide(); 
-                    set_alert('Success', 'File attached successfully.');
 
                 }else{
                     $("#divLoading").hide();                     
