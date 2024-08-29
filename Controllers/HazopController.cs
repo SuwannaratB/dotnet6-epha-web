@@ -181,7 +181,7 @@ namespace dotnet6_epha_web.Controllers
                 _sessionAuthen.pha_status = (model.pha_status + "");
                 _sessionAuthen.responder_user_name = (model.responder_user_name + "");
 
-                res_page.page = model.pha_sub_software + "/FollowupUpdate";
+                res_page.page = "Hazop/FollowupUpdate";;
             }
             else if (_sessionAuthen.pha_type_doc == "edit")
             {
