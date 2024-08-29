@@ -939,7 +939,8 @@
                                                     @* Recommendations responded sheet  => status 13 *@
                                                     <td class="align-middle px-1" style="min-width:200px;" ng-if="flow_status != 14">
                                                         <div class=" p-0 cursor-pointer "
-                                                            ng-repeat="item_x in data_drawingworksheet | filter:{id_worksheet:item_d.seq, action_type : '!delete'}">
+                                                            ng-repeat="item_x in data_drawingworksheet | filter:{action_type : '!delete'}"
+                                                            ng-if="item_x.id_worksheet == item_d.seq">
                                                             <div class="d-flex align-items-center flex-nowrap"
                                                                  ng-class="{ 'no-drop': !accessInfo.canAccess, 'cursor-pointer': accessInfo.canAccess }"
                                                                  ng-if="!((flow_status == 14 ? item_d.reviewer_action_type : item_d.responder_action_type) == 2)">
@@ -1041,7 +1042,8 @@
                                                     @* Recommendations responded sheet => status 14 *@
                                                     <td class="align-top px-1" style="min-width:200px;" ng-if="flow_status == 14">
                                                         <div class=" p-0 cursor-pointer "
-                                                             ng-repeat="item_x in data_drawingworksheet | filter:{id_worksheet:item_d.seq, action_type : '!delete'}">
+                                                             ng-repeat="item_x in data_drawingworksheet | filter:{id_worksheet:item_d.seq, action_type : '!delete'}"
+                                                              ng-if="item_x.id_worksheet == item_d.seq">
                                                             <div class="d-flex flex-nowrap"
                                                                  ng-if="!((flow_status == 14 ? item_d.reviewer_action_type : item_d.responder_action_type) == 2)">
                                                                 <div class="d-flex align-items-center font-sans-serif btn-reveal-trigger position-static me-1">

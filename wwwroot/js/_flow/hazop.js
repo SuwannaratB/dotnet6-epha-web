@@ -1519,7 +1519,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 }catch{}
 
                 if (arr[0].status == 'true') {
-                    $scope.unsavedChanges  = false;
 
                     $scope.pha_type_doc = 'update';
                     

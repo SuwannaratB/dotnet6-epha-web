@@ -1389,7 +1389,19 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         var json_general =  check_data_general();
         var json_header = check_data_header();
 
-        var flow_action = (action == 'submit_complete' ? 'submit' : action);
+        var flow_action = '';
+
+        if(action == 'submit_complete'){
+            flow_action = 'submit'
+        }else if(action == 'change_action_owner'){
+            flow_action = 'change_action_owner'
+        }else if(action == 'change_approver'){
+            flow_action = 'change_approver'
+        }else if(action == 'submit'){
+            flow_action = action
+        }else {
+            flow_action = action
+        }
 
         var json_session = check_data_session();
         var json_memberteam = check_data_memberteam();
@@ -1406,7 +1418,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         var json_worksheet = check_data_worksheet_list(flow_action);
         var json_recommendations = check_data_recommendations(flow_action);
         // var json_worksheet = '[]';
-
+       
   $.ajax({
             url: url_ws + "Flow/set_hra",
             data: '{"user_name":"' + user_name + '","token_doc":"' + token_doc + '","pha_status":"' + pha_status + '","pha_version":"' + pha_version + '","action_part":"' + action_part + '"'
@@ -1438,7 +1450,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 var arr = data;
 
                 if (arr[0].status == 'true') {
-                    $scope.unsavedChanges  = false;
 
                     $scope.pha_type_doc = 'update';
                     if (action == 'save') {
@@ -1545,9 +1556,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         keyboard: false 
                     }).modal('show');
                 }
-
-
-                
 
             },
             error: function (jqXHR, textStatus, errorThrown) {
@@ -2684,6 +2692,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     $scope.action_owner_active = true;
                     $scope.tab_managerecom_active = true;
 
+                    var tag_name = 'manage';
+                    var arr_tab = $filter('filter')($scope.tabs, function (item) {
+                        return ((item.name == tag_name));
+                    });
+                    if (arr_tab.length > 0) {
+                        $scope.changeTab(arr_tab[0], tag_name);
+                    }
                 } 
 
                 if(params === 'edit_approver'){
@@ -5583,8 +5598,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
             // Check follow up edit
             if ($scope.params) {
-
-                console.log("$scope.params")
                 return $('#modalEditConfirm').modal('show');
             }   
 
