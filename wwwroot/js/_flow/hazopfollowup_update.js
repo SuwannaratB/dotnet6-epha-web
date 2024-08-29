@@ -670,7 +670,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                 }                
 
 
-                console.log("===============================",$scope.data_drawingworksheet)
                 $('#divPage').removeClass('d-none');
 
                 apply();
@@ -730,7 +729,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
             item.action_change = 1;
 
             if (item.implement) {
-                console.log(item.implement)
                 // const validRemark = set_valid_items(item.responder_comment, 'remark-'+ item.seq);
                 /*const validUploadFile = set_valid_items($scope.fileInfoSpan, 'upload_file-'+ item.seq);
 
@@ -1068,7 +1066,16 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                     if (true) {
                         if (action === 'save' || $scope.flow_role_type === 'admin') {
                             
-                            get_detail(true);
+                            
+                            var arr = $filter('filter')($scope.data_details, function(item) {
+                                return item.responder_action_type === 0 || item.responder_action_type === 1;
+                            });
+
+                            if(arr.length > 0){
+                                get_detail(true);
+                            }else if ($scope.flow_role_type === 'admin') {
+                                window.open("Home/Portal", "_top");
+                            }
 
                         } else {
 
