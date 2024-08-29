@@ -153,7 +153,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                 request.onreadystatechange = function () {
                     if (request.readyState === XMLHttpRequest.DONE) {
                         if (request.status === 200) {
-    
                             // รับค่าที่ส่งมาจาก service ที่ตอบกลับมาด้วย responseText
                             const responseFromService = request.responseText;
                             let parsedResponse;
@@ -178,13 +177,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                                     if($scope.data_header[0].pha_status === 13){
                                         arr_details[0].document_file_name_owner = file_name;
                                         arr_details[0].document_file_size_owner = file_size;
-                                        arr_details[0].document_file_path_owner = (url_ws.replace('/api/', '')) + file_path;// (url_ws.replace('/api/', '/')) + 'AttachedFileTemp/Hazop/' + file_name;
+                                        arr_details[0].document_file_path_owner = service_file_url + file_path;// (url_ws.replace('/api/', '/')) + 'AttachedFileTemp/Hazop/' + file_name;
                                         arr_details[0].action_change = 1;
                                         apply();
                                     }else if($scope.data_header[0].pha_status === 14){
                                         arr_details[0].document_file_name = file_name;
                                         arr_details[0].document_file_size = file_size;
-                                        arr_details[0].document_file_path = (url_ws.replace('/api/', '')) + file_path;// (url_ws.replace('/api/', '/')) + 'AttachedFileTemp/Hazop/' + file_name;
+                                        arr_details[0].document_file_path = service_file_url + file_path;// (url_ws.replace('/api/', '/')) + 'AttachedFileTemp/Hazop/' + file_name;
                                         arr_details[0].action_change = 1;
                                         apply();
                                     }
@@ -194,7 +193,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                                 if (arr.length > 0) {
                                     arr[0].document_file_name = file_name;
                                     arr[0].document_file_size = file_size;
-                                    arr[0].document_file_path = (url_ws.replace('/api/', '')) + file_path;// (url_ws.replace('/api/', '/')) + 'AttachedFileTemp/Hazop/' + file_name;
+                                    arr[0].document_file_path = service_file_url + file_path;// (url_ws.replace('/api/', '/')) + 'AttachedFileTemp/Hazop/' + file_name;
                                     arr[0].document_module = $scope.document_module;
                                     arr[0].action_change = 1;
                                     clear_valid_items('upload_file-'+ $scope.seqUpload);

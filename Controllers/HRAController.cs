@@ -211,6 +211,7 @@ namespace dotnet6_epha_web.Controllers
             }
 
             _sessionAuthen.service_api_url = _IConfiguration["EndPoint:service_api_url"];
+            ViewBag.service_file_url = _IConfiguration["EndPoint:service_file_url"];
 
             if (_sessionAuthen.controller_action_befor == "")
             {
@@ -300,6 +301,38 @@ namespace dotnet6_epha_web.Controllers
             ViewData["pha_seq"] = _sessionAuthen.pha_seq;
 
             return View();
+        }
+
+        public IActionResult FollowupUpdate()
+        {
+            if (_sessionAuthen.role_type == "" || _sessionAuthen.role_type == null)
+            {
+                return RedirectToAction("Index", "Login");
+            }
+
+            _sessionAuthen.service_api_url = _IConfiguration["EndPoint:service_api_url"];
+            ViewBag.service_file_url = _IConfiguration["EndPoint:service_file_url"];
+            
+            if ((_sessionAuthen.controller_action_befor + "").ToString() == null)
+            {
+                _sessionAuthen.controller_action_befor = "Home/Portal";
+            }
+
+            ViewData["user_display"] = _sessionAuthen.user_display;
+            ViewData["user_name"] = _sessionAuthen.user_name;
+            ViewData["role_type"] = _sessionAuthen.role_type;
+            ViewData["controller_action_befor"] = _sessionAuthen.controller_action_befor;
+            ViewData["service_api_url"] = _sessionAuthen.service_api_url;
+
+            //กรณีที่มีเลข seq แสดงว่ามาจากหน้า search ให้ แสดง details เลย  
+            ViewData["pha_sub_software"] = _sessionAuthen.pha_sub_software;
+            ViewData["pha_seq"] = _sessionAuthen.pha_seq;
+            ViewData["pha_no"] = _sessionAuthen.pha_no;
+            ViewData["pha_status"] = _sessionAuthen.pha_status;
+            ViewData["responder_user_name"] = _sessionAuthen.responder_user_name;
+
+            //return View();
+            return RedirectToAction("FollowupUpdate", "Hazop");
         }
 
         [HttpPost]
