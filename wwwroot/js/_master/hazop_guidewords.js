@@ -214,7 +214,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                             if (arr.length > 0) {
                                 arr[0].action_change = 0;
                                 arr[0].document_file_name = file_name;
-                                arr[0].document_file_path = (url_ws.replace('/api/', '')) + file_path;// (url_ws.replace('/api/', '/')) + 'AttachedFileTemp/Hazop/' + file_name;
+                                arr[0].document_file_path = service_file_url + file_path;// (url_ws.replace('/api/', '/')) + 'AttachedFileTemp/Hazop/' + file_name;
                                 arr[0].document_file_size = file_size;
                                 arr[0].document_module = "guide_words";
                                 arr[0].module = "guide_words";

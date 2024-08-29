@@ -590,7 +590,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                                 console.log("file_path",file_path)
                                 $scope.data_general[0].file_upload_name = file_name;
                                 $scope.data_general[0].file_upload_size = fileSize;
-                                $scope.data_general[0].file_upload_path = (url_ws.replace('/api/', '')) + file_path;
+                                $scope.data_general[0].file_upload_path = service_file_url + file_path;
                                 $scope.data_general[0].action_change = 1;
                                 set_data_general()
                             }
@@ -726,7 +726,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 const fileExtension = fileName.split('.').pop().toLowerCase(); 
                 if (allowedFileTypes.includes(fileExtension)) {
     
-                    var file_path = uploadFile(file, fileSeq, fileName, fileSizeKB, file_part, file_doc);
+                    var file_path = uploadFile(file, fileSeq, fileName, fileSize, file_part, file_doc);
                 } else {
                     set_alert('Warning', "Unsupported file type. Please upload a PDF, EML, or MSG file.");
                 }
@@ -869,7 +869,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                                     arr[0].document_file_name = file_name;
                                     arr[0].document_file_size = file_size;
                                     //'https://localhost:7098/api/' + '/AttachedFileTemp/hazop/HAZOP-2023-0000016-DRAWING-202312231716.PDF'
-                                    arr[0].document_file_path = (url_ws.replace('/api/', '')) + file_path;// (url_ws.replace('/api/', '/')) + 'AttachedFileTemp/Hazop/' + file_name;
+                                    arr[0].document_file_path = service_file_url + file_path;// (url_ws.replace('/api/', '/')) + 'AttachedFileTemp/Hazop/' + file_name;
                                     arr[0].document_module = 'hra';
                                     arr[0].action_change = 1;
                                     apply();
@@ -881,7 +881,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                                 if (arr.length > 0) {
                                     arr[0].document_file_name = file_name;
                                     arr[0].document_file_size = file_size;
-                                    arr[0].document_file_path = (url_ws.replace('/api/', '')) + file_path;// (url_ws.replace('/api/', '/')) + 'AttachedFileTemp/Hazop/' + file_name;
+                                    arr[0].document_file_path = service_file_url + file_path;// (url_ws.replace('/api/', '/')) + 'AttachedFileTemp/Hazop/' + file_name;
                                     arr[0].document_module = 'approver';
                                     arr[0].action_change = 1;
                                     arr[0].action_type = arr[0].action_type === 'new' ? 'insert' : arr[0].action_type;
@@ -989,7 +989,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         if (arr.length > 0) {
                             arr[0].document_file_name = file_name;
                             arr[0].document_file_size = file_size;
-                            arr[0].document_file_path = (url_ws.replace('/api/', '')) + file_path;
+                            arr[0].document_file_path = service_file_url + file_path;
                             arr[0].document_module = 'approver';
                             arr[0].action_change = 1;
                             apply();
