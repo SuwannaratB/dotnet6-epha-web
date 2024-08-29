@@ -2510,52 +2510,28 @@
                                                 <div class="box-recom " 
                                                     ng-repeat="ws in item.worksheet | filter: filterInitialRiskRating"
                                                     style="width: 200px; overflow: hidden;">
-                                                    <div class="d-flex justify-content-center w-100" ng-show="item.id_worker_group"
-                                                          ng-class="{'disabled-link': (!action_owner_active) || (item.action_status === 'Responed')}">
-                                                        <button class="btn btn-outline-secondary p-1 cursor-pointer col-auto" 
-                                                            ng-class="{
-                                                                        'btn btn-dark': item.action_status === 'Responded',
-                                                                        'btn btn-link': item.action_status !== 'Responded' || item.action_status !== 'Close'}"
-                                                            style="color: #2445fc; background-color: #f1f2f4; border-color: #f1f2f4;"
-                                                            ng-click="openDataEmployeeAdd(ws,'manage')">
-                                                            <span class="far fa-address-book fa-lg pe-1"></span>
-                                                            Add action owner
-                                                        </button>
+                                                    <div class="d-flex align-items-center justify-items-center w-100" ng-show="item.id_worker_group"
+                                                          ng-class="{'disabled-link': (!action_owner_active) || (ws.action_status === 'Responed')}">
+                                                        <div ng-class="{'disabled-link': (!action_owner_active) || (ws.action_status === 'Responed')}">
+                                                            <button ng-click="openDataEmployeeAdd(ws,'manage')"
+                                                                    class="px-0 mx-1"
+                                                                    ng-class="{
+                                                                        'btn btn-dark': ws.action_status === 'Responded',
+                                                                        'btn btn-link': ws.action_status !== 'Responded' || ws.action_status !== 'Close'
+                                                                    }"
+                                                                    data-toggle="tooltip" 
+                                                                    title="Add Employee">
+                                                                <span class="far fa-address-book"></span>
+                                                            </button>
+                                                        </div>
+                                                        <p class="m-0 text-1100 fw-bold" style="width: 115px;" >
+                                                            {{ws.responder_user_displayname}}
+                                                        </p>   
                                                     </div>  
-                                                    <p class="text-center fw-bold p-2">{{ws.responder_user_displayname}}</p>
                                                 </div>
-                                            </td>
 
-                                            @* <td class="align-top rating white-space-nowrap" ng-if="data_header[0].pha_status >12">
-                                                <div class="ms-3 text-start d-none">
-                                                    <a class="nametext ms-3 filename-text me-2 cursor-pointer" 
-                                                        ng-click="downloadFileOwner(item)"
-                                                        ng-if="!(item.document_file_path =='' || item.document_file_path == null)">
-                                                        <i class="far fa-file-pdf text-danger"></i>The Responder has attached the file.
-                                                    </a>
-                                                    <br ng-if="!(item.document_file_admin_path =='')" />
-                                                    <a class="nametext ms-3 filename-text me-2 cursor-pointer" ng-click="downloadFileReviewer(item)"
-                                                       ng-if="!(item.document_file_admin_path =='' || item.document_file_path == null)">
-                                                        <i class="far fa-file-pdf text-danger"></i>The Reviewer has attached the file.
-                                                    </a>
-                                                </div>
-                                                <div class="ms-3 text-start"
-                                                     ng-repeat="item_x in data_drawingworksheet_responder | filter:{id_worksheet:item.seq}"
-                                                     ng-click="downloadFileOwner(item)"
-                                                     ng-if="$index == 0">
-                                                    <a class="nametext ms-3 filename-text me-2 cursor-pointer" ng-click="downloadFileOwner(item)">
-                                                        <i class="far fa-file-pdf text-danger"></i>The Responder has attached the file.
-                                                    </a>
-                                                </div>
-                                                <div class="ms-3 text-start"
-                                                     ng-repeat="item_x in data_drawingworksheet_reviewer | filter:{id_worksheet:item.seq}"
-                                                     ng-click="downloadFileReviewer(item)"
-                                                     ng-if="$index == 0">
-                                                    <a class="nametext ms-3 filename-text me-2 cursor-pointer" ng-click="downloadFileReviewer(item)">
-                                                        <i class="far fa-file-pdf text-danger"></i>The Reviewer has attached the file.
-                                                    </a>
-                                                </div>
-                                            </td> *@
+
+                                            </td>
 
                                             <td class="align-top rating white-space-nowrap">
                                                 <div class="box-recom " ng-repeat="ws in item.worksheet | filter: filterInitialRiskRating">
