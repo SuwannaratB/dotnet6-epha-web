@@ -665,6 +665,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                 $scope.document_module = (arr.pha_doc[0].pha_status == 13 ? 'followup' : 'review_followup');
  
                 if($scope.flow_role_type != 'admin'){
+                    $scope.toggleStatus = false;
                     $scope.toggleChanged();
                 }                
 
@@ -1065,37 +1066,40 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                     apply();
 
                     if (true) {
-                        var arr = $filter('filter')($scope.data_details, function (item) {
-                            return (item.responder_action_type == 0 || item.responder_action_type == 1);
-                        });
+                        if (action === 'save' || $scope.flow_role_type === 'admin') {
+                            
+                            get_detail(true);
 
-                        if (arr.length) {
-                            if ($scope.user_name) {
-                                console.log("$scope.user_name",$scope.user_name)
+                        } else {
+
+                            var arr = $filter('filter')($scope.data_details, function(item) {
+                                return item.responder_action_type === 0 || item.responder_action_type === 1;
+                            });
+                    
+                            if (arr.length && $scope.user_name) {
                                 var userExists = arr.some(function(detail) {
                                     return detail.responder_user_name === $scope.user_name;
                                 });
-                            
-                                if (!userExists) {
+                    
+                                if (userExists) {
+                                    get_detail(true);
+                                } else {
                                     window.open("Home/Portal", "_top");
-                                }else{
-                                    get_detail(true)
                                 }
+                            } else { 
+                                setTimeout(function() {
+                                    $('#modalMsg').modal('show');
+                                }, 1000); 
+                    
+                                $('#modalMsg').modal('hide');
+                    
+                                setTimeout(function() {
+                                    window.open("Home/Portal", "_top");
+                                }, 2000); 
                             }
-                            
-                        } else { 
-                            setTimeout(function() {
-                                $('#modalMsg').modal('show');
-                            }, 1000); 
-                            $('#modalMsg').modal('hide');
-
-                            setTimeout(function() {
-                                // location.reload();
-                                window.open("Home/Portal", "_top");
-                            }, 2000); 
                         }
-                        
                     }
+                    
 
                 }
 
