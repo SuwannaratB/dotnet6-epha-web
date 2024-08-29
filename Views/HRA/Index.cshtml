@@ -2690,19 +2690,6 @@
                                                     </div>
                                                 </td>
 
-                                                @* <td>
-                                                    <div class="d-flex justify-content-center ps-2 py-1">
-                                                        <button class="btn btn-outline-secondary p-2 cursor-pointer col-auto" 
-                                                                ng-disabled="item.worker_list.length == 0 && item.worker_group != 'Other'"
-                                                                style="color: #2445fc; background-color: #f1f2f4; border-color: #2445fc;"
-                                                                ng-click="openDataEmployeeAdd(item,'worker')">
-                                                            <span class="far fa-address-book fa-lg pe-1"></span>
-                                                            Add Workers
-                                                        </button>
-
-                                                    </div>  
-                                                </td> *@
-
                                                 <td class="align-top rating px-1 d-flex flex-column align-items-center justify-content-start" style="border: none;">
                                                     <div class="d-flex justify-content-start flex-column px-4 w-100">
                                                         <div class="py-1 mb-3">
@@ -2723,7 +2710,7 @@
 
                                                 <td class="align-top status text-center px-1" >
                                                     <p class="p-3">
-                                                        <b>{{ item.numbers_of_workers }}</b>
+                                                        <b>{{ item.worker_list.length }}</b>
                                                     </p>
                                                 </td>
                                             </tr>

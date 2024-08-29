@@ -7277,8 +7277,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                             return 0;
                         });
 
-                        console.log('data_approver ',$scope.data_approver)
-
                         
                     }
 
@@ -7299,11 +7297,18 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     $('#modalEmployeeAdd').modal('hide');
                 }
                 else if (xformtype == "worker") {
+
+
                     var tasks = $filter('filter')($scope.data_tasks, function (item) {
                         return (item.seq == seq_session);
                     })[0];
 
-                    if (tasks) {
+
+                    var arr_items = $filter('filter')(tasks.worker_list, function (item) {
+                        return (item.user_name == employee_name);
+                    });
+
+                    if (arr_items.length == 0) {
                         $scope.MaxSeqdataWorkers = Number($scope.MaxSeqdataWorkers) + 1
                         var seq_worker =  $scope.MaxSeqdataWorkers;
                         var newInput = clone_arr_newrow($scope.data_workers_def)[0];
@@ -7365,7 +7370,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         
                         $scope.data_worksheet_show = $scope.worksheet_Filter($scope.data_worksheet_list)
 
-                        console.log("$scope.data_worksheet_show",$scope.data_worksheet_show)
 
                         if($scope.params !== 'edit_action_owner' && $scope.data_worksheet_show.length > 1){
                             $scope.showModal().then(function(applyRecommendation) {
@@ -7396,8 +7400,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         $scope.removeDataEmployee = function (data, seq_session) {
                 const actions = $scope.selectDatFormType;
-
-                console.log(data)
                 
                 var seq = data.seq;
 
@@ -7430,7 +7432,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 }
 
                 if (actions == 'worker') {    
-                    console.log(data)
+
 
                     const index = $scope.data_worker_list.findIndex(item => item.seq === data.seq && item.user_name === data.user_name);
                 
@@ -7445,6 +7447,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         console.log("Item removed:", seq);
                     } else {
                         console.log("Item not found:", seq);
+                    }
+
+                    var tasks = $filter('filter')($scope.data_tasks, function (item) {
+                        return (item.seq == data.seq);
+                    })[0];
+
+                    if(tasks){
+                        tasks.numbers_of_workers = tasks.worker_list.length;
                     }
 
                     $scope.selectedUser = {};
