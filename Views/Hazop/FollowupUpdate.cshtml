@@ -1002,7 +1002,7 @@
                                                                             ng-hide="!accessInfo.canAccess"
                                                                             ng-if="item_x.document_file_size > 0">
                                                                             <div class="d-flex align-items-center" >
-                                                                                <span class="nametext filename-text me-2 cursor-pointer">
+                                                                                <span class="nametext filename-text me-2 cursor-pointer" ng-click="downloadFile(item_x)">
                                                                                     {{ item_x.document_file_name }} ({{ item_x.document_file_size }} KB)
                                                                                 </span>
                                                                             </div>
@@ -1701,7 +1701,7 @@
     <script src="~/assets/js/phoenix.js"></script>
     <script src="~/assets/js/choices.min.js"></script>
     <script src="~/assets/js/fakedata.js"></script>
-
+    <script type="text/javascript">var service_file_url = "@ViewBag.service_file_url";</script>
     <script src="~/js/_flow/hazopfollowup_update.js"></script>
 
 

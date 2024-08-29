@@ -156,6 +156,7 @@ namespace dotnet6_epha_web.Controllers
             }
 
             _sessionAuthen.service_api_url = _IConfiguration["EndPoint:service_api_url"];
+            ViewBag.service_file_url = _IConfiguration["EndPoint:service_file_url"];
 
             if (_sessionAuthen.controller_action_befor == "")
             {
