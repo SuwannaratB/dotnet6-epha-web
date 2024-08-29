@@ -607,10 +607,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                 $scope.data_details_old = arr.details;
 
                 //call to check who can Access
-                /*console.log($scope.data_details[0].responder_user_name)
-                if($scope.data_details){
-                    $scope.canAccess($scope.data_details)
-                }*/
                 $scope.data_drawingworksheet = arr.drawingworksheet;
                 $scope.data_drawingworksheet_responder = arr.drawingworksheet_responder;
                 $scope.data_drawingworksheet_reviewer = arr.drawingworksheet_reviewer;

@@ -2794,7 +2794,7 @@
 
                                                 </td>
                                                 <td class="align-top white-space-nowrap text-start" ng-class="{'disabled-link':(!tab_approver_active)}">
-                                                    <div class="col-md-12 p-1 ps-3" ng-if="!(item.approver_action_type == 2 || data_header[0].pha_status != 21)" >
+                                                    <div class="col-md-12 p-1 ps-3" ng-if="!(item.approver_action_type == 2 || data_header[0].pha_status != 21 || params != 'edit')" >
                                                             <textarea class="form-control rounded-1" 
                                                                     id="floatingTextarea2" 
                                                                     placeholder="{{ accessInfo.canAccess ? 'Enter your comment' : '' }}"
@@ -2804,7 +2804,7 @@
                                                             Please select a valid comment.
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-12 p-1 ps-3" ng-if="(item.approver_action_type == 2 || data_header[0].pha_status != 21 )">
+                                                    <div class="col-md-12 p-1 ps-3" ng-if="(item.approver_action_type == 2 || data_header[0].pha_status != 21 || params != 'edit' )">
 
                                                         <p class="fw-bold" ng-if="item.comment"
                                                            ng-class="{'disabled-link': !tab_approver_active || !canAccess}" >

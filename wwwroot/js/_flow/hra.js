@@ -1940,21 +1940,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                     $scope.selectActiveNotification = (arr.header[0].active_notification == 1 ? true : false);
 
-                    if (page_load && arr.header[0].pha_status >= 21) {
-                        const newTab = { name: 'approver', action_part: 8, title: 'Assessment Team Leader (QMTS)', isActive: false, isShow: false }
-                        $scope.tabs.splice(5, 0, newTab)
-                        // $scope.tabs = [
-                        //     { name: 'general', action_part: 1, title: 'General Information', isActive: true, isShow: false },
-                        //     { name: 'list_areas', action_part: 2, title: 'List of Areas to Be Assessed and Health Hazards or Risk Factors', isActive: false, isShow: false },
-                        //     { name: 'list_worker', action_part: 3, title: 'List of Worker Groups and Description of Tasks', isActive: false, isShow: false },
-                        //     { name: 'worksheet', action_part: 5, title: $scope.sub_software + ' Worksheet', isActive: false, isShow: false },
-                        //     { name: 'manage', action_part: 6, title: 'Manage Recommendations', isActive: false, isShow: false },
-                        //     { name: 'approver', action_part: 8, title: 'Assessment Team Leader (QMTS)', isActive: false, isShow: false },
-                        //     { name: 'list_name', action_part: 7, title: 'List of Name', isActive: false, isShow: false },
-                        //     { name: 'report', action_part: 9, title: 'Report', isActive: false, isShow: false },
-                        //     { name: 'summary', action_part: 11, title: 'Summary of Risk Management', isActive: false, isShow: false }
-                        // ];
+                    if ((page_load && arr.header[0].pha_status >= 21) || ($scope.params && arr.header[0].pha_status >= 21)) {
+                        const newTab = { name: 'approver', action_part: 8, title: 'Assessment Team Leader (QMTS)', isActive: false, isShow: false };
+                        $scope.tabs.splice(5, 0, newTab);
                     }
+                    
 
                     //check stamp send maito Member --> action submit
                     if (true) {
@@ -2004,6 +1994,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     }catch{}
 
                 }
+                console.log($scope.tabs)
+
 
                 //add Please select in list master
                 if (true) {
@@ -2048,6 +2040,19 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         // set tab
                         $scope.changeTab(newTab)   
                     }
+
+                    console.log(page_load)
+                    console.log(arr.header[0].pha_status)
+                    console.log($scope.params)
+
+                    if (page_load && [13,14,21, 81, 91].includes(arr.header[0].pha_status) && $scope.params === 'edit') {
+                        const newTab = { name: 'approver', action_part: 8, title: 'Assessment Team Leader (QMTS)', isActive: false, isShow: false };
+                        $scope.tabs.splice(5, 0, newTab);
+                        // set tab
+                        $scope.changeTab(newTab);
+                    }
+                    
+                    console.log($scope.tabs)
                     // { name: 'summary', action_part: 11, title: 'Summary of Risk Management', isActive: false, isShow: false }
                 }
 
@@ -2056,6 +2061,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                 // filter initial อีกครั้ง
                 filterDataWorksheet();
+
 
                 $scope.unsavedChanges = false;
 
