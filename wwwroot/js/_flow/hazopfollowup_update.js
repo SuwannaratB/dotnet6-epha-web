@@ -83,7 +83,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
         if (fileInput.files.length > 0) {
             const file = fileInput.files[0];
             const fileName = file.name;
-            const fileSizeKB = Math.round(file.size / 1024);
+            const fileSize = Math.round(file.size / 1024);
             try {
                 const truncatedFileName = truncateFilename(fileName, 20);
                 if (fileInfoSpan) {
@@ -99,7 +99,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
             
                 const fileExtension = fileName.split('.').pop().toLowerCase(); 
                 if (allowedFileTypes.includes(fileExtension)) {
-                    var file_path = uploadFile(file, fileSeq, fileName, fileSizeKB, file_part, file_doc);
+                    var file_path = uploadFile(file, fileSeq, fileName, fileSize, file_part, file_doc);
                 } else {
                     set_alert('Warning', "The selected file type is not supported. Please upload a PDF, Word, Excel, or Image file.");
                 }
