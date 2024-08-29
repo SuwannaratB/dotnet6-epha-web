@@ -14,7 +14,7 @@ AppMenuPage.filter('MultiFieldFilter', function () {
         });
     };
 });
-AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) {
+AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$timeout) {
     $('#divLoading').hide();
 
 
@@ -111,6 +111,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
             beforeSend: function () {
                 $("#divLoading").show();
+                $('#divPage').addClass('d-none');
+
             },
             complete: function () {
                 $("#divLoading").hide();
@@ -140,6 +142,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                 } 
                 $scope.select_actionReq_type = 'all'
                 $scope.subSoftwateChange();
+                $('#divPage').removeClass('d-none');
 
                 apply();
 
@@ -340,19 +343,29 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             success: function (data) {
                 var arr = data;
 
-                if (arr.length > 0) {
-                    if (arr[0].ATTACHED_FILE_NAME != '') {
-                        var path = (url_ws).replace('/api/', '') + arr[0].ATTACHED_FILE_PATH;
-                        var name = arr[0].ATTACHED_FILE_NAME;
-                        $scope.exportfile[0].DownloadPath = path;
-                        $scope.exportfile[0].Name = name;
+                                                    
+                if (arr && arr.msg && arr.msg[0].STATUS === "true") {
+
+                    // ทำอะไรกับข้อมูลที่ได้รับเช่น แสดงผลหรือประมวลผลต่อไป
+                    const jsonArray = JSON.parse(responseFromService);
+
+                    if (jsonArray) {
+                        var file_path = (url_ws).replace('/api/', '') + jsonArray.msg[0].ATTACHED_FILE_PATH;
+                        var file_name = jsonArray.msg[0].ATTACHED_FILE_NAME;
+                        $scope.exportfile[0].DownloadPath = file_path;
+                        $scope.exportfile[0].Name = file_name;
 
 
                         $('#modalExportFile').modal('show');
                         apply();
                     }
-                } else {
-                    set_alert('Error', arr[0].IMPORT_DATA_MSG);
+
+                    $("#divLoading").hide(); 
+                    set_alert('Success', 'File attached successfully.');
+
+                }else{
+                    $("#divLoading").hide();                     
+                    set_alert('Warning', 'An unexpected error occurred. Please try again later or reach out to support if the problem continues.');
                 }
             },
             error: function (jqXHR, textStatus, errorThrown) {
@@ -366,5 +379,23 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         });
 
     }
+
+    function set_alert(header, detail) {
+        $scope.Action_Msg_Header = header;
+        $scope.Action_Msg_Detail = detail;
+
+        $timeout(function() {
+            $('#modalMsgAlert').modal({
+                backdrop: 'static',
+                keyboard: false 
+            }).modal('show');
+    
+            if (header === 'Success') {
+                $timeout(function() {
+                    $('#modalMsgAlert').modal('hide');
+                }, 2000);
+            }
+        });
+    };
 
 });

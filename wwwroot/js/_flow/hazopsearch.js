@@ -96,6 +96,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                     //$('#divLoading').hide(); 
                 }
                 $('#divLoading').show();
+                $('#divPage').addClass('d-none');
+
             },
             complete: function () {
                 if (page_load == false) {
@@ -104,7 +106,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                 $('#divLoading').hide();
             },
             success: function (data) {
-                var arr = data;
+                var arr = data 
+                arr.results.sort((a, b) => b.id - a.id);
                 console.log(arr);
 
                 setTimeout(function () { var v = 0; }, 10000);
@@ -241,6 +244,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                 } catch { }
                 // load filter
                 $scope.actionChange($scope.data_conditions[0]);
+                $('#divPage').removeClass('d-none');
+
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 if (jqXHR.status == 500) {
@@ -422,7 +427,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                 );
             });
 
-            console.log("Filtered Results:", arr_search);
             $scope.data_results = arr_search;
             apply();
         } catch {

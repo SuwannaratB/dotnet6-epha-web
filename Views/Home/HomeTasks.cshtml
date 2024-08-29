@@ -25,7 +25,7 @@
 
 }
 
-<div class="content mt-1" style="font-size: 12px; min-height: auto!important;" id="divPage" ng-controller="ctrlAppPage">
+<div class="content mt-1 d-none" style="font-size: 12px; min-height: auto!important;" id="divPage" ng-controller="ctrlAppPage">
 
     <div class="modal fade" id="modalMsg" tabindex="-1" aria-labelledby="modalMsgLabel" aria-hidden="true"
          style="display: none;">
@@ -595,6 +595,83 @@
             </div>
         </div>
 
+    </div>
+
+    <div class="modal fade" id="modalMsgAlert" tabindex="-1" aria-labelledby="modalMsgAlertLabel"
+         aria-hidden="true" style="display: none;">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="width: 100%; min-height: 300px;">
+                <div class="modal-header justify-content-center align-items-center" style="display: flex !important;"
+                     ng-class="{ 'bg-warning' : (Action_Msg_Header == 'Warning'? true :false),'bg-primary' : (Action_Msg_Header == 'Warning'? false :true) }">
+                    <div class="d-flex mb-2 d-none">
+                        <i class="fa-solid fa-triangle-exclamation fa-lg" ng-if="Action_Msg_Header == 'Warning'"
+                           style="color: rgb(255, 255, 255); font-size: 80px; font-weight: bold;"></i>
+                        <i class="fa-solid fa-circle-check fa-lg" ng-if="Action_Msg_Header != 'Warning'"
+                           style="color: rgb(255, 255, 255); font-size: 80px; font-weight: bold;"></i>
+                    </div>
+                </div>
+                <div class="modal-body" ng-if="Action_Msg_Header == 'Success'">
+                    <div class="d-flex justify-content-center align-items-center mb-3">
+                        <h5 class="mb-0 text-center " style="font-size: 40px; font-weight: bold;" data-anchor="data-anchor" id="modalMsgAlertLabel">
+                            {{Action_Msg_Header}}
+                        </h5>
+                    </div>
+                    <div class="d-flex justify-content-center align-items-center mt-3 mb-3">
+                        <p class="lh-lg mb-0 text-center" style="font-size: 16px;">
+                            {{ Action_Msg_Detail}}
+                        </p>
+                    </div>
+
+                </div>
+
+                <div class="modal-body" ng-if="Action_Msg_Header !== 'Success'">
+                    <div class="d-flex justify-content-center align-items-center mb-3">
+                        <h5 class="mb-0 text-center ms-5" style="font-size: 40px; font-weight: bold;" data-anchor="data-anchor" id="modalMsgAlertLabel">
+                            {{ Action_Msg_Header }}
+                        </h5>
+                    </div>
+                    <div class="d-flex justify-content-center align-items-center mt-3 mb-3">
+                        <p class="lh-lg mb-0 text-center" style="font-size: 16px;">
+                            {{ Action_Msg_Detail }}
+                        </p>
+                    </div>
+                    <div class="d-flex flex-column align-items-center" ng-if="!Action_Msg_Confirm">
+                        <button class="btn p-2 px-8 text-white" type="button" data-bs-dismiss="modal" aria-label="Close"
+                                ng-click="goBackToTab()"
+                                ng-class="{
+                                    'bg-warning': Action_Msg_Header === 'Warning',
+                                    'bg-danger': Action_Msg_Header === 'Error',
+                                    'bg-primary': Action_Msg_Header !== 'Warning' && Action_Msg_Header !== 'Error'
+                                }">
+                            {{ Action_Msg_Header === 'Warning' ? 'Go back' : (Action_Msg_Header === 'Error' ? 'Dismiss' : 'OK') }}
+                        </button>
+                    </div>
+                </div>
+
+                <div class="modal-body d-flex flex-column justify-content-center mb-4"
+                     ng-if="Action_Msg_Confirm && Action_Msg_Header == 'Warning'">
+                    <h5 class="mb-3 text-center" style="font-size: 16px; font-weight: bold;">
+                        Do you want to continue?
+                    </h5>
+                </div>
+                <div class="modal-footer" ng-if="Action_Msg_Confirm && Action_Msg_Header == 'Warning'">
+                    <div class="d-flex justify-content-center align-items-center">
+                        <button class="btn btn-phoenix-primary px-7 p-2 m-2" ng-click="confirmSubmit('yes')"
+                                data-bs-dismiss="modal">
+                            <a class="dropdown-item text-primary">
+                                <span class="fas fa-check"></span> Yes
+                            </a>
+                        </button>
+                        <button class="btn btn-phoenix-primary px-7 p-2 m-2" ng-click="confirmSubmit('no')"
+                                data-bs-dismiss="modal">
+                            <a class="dropdown-item text-primary">
+                                <span class="fas fa-times"></span> No
+                            </a>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
 </div>

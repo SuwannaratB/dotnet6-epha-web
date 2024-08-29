@@ -171,6 +171,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
 
         $scope.data_header = [];
+        $scope.data_header_all = [];
         $scope.data_general = [];
         $scope.data_approver = [];
 
@@ -233,15 +234,15 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                 if (page_load) {
 
                     $scope.data_all = arr;
-                    $scope.master_company = JSON.parse(replace_hashKey_arr(arr.company));
-                    $scope.master_apu = JSON.parse(replace_hashKey_arr(arr.apu));   
-                    $scope.master_toc = JSON.parse(replace_hashKey_arr(arr.toc));  
-                    $scope.master_unit_no = JSON.parse(replace_hashKey_arr(arr.unit_no));  
-                    $scope.master_tagid = JSON.parse(replace_hashKey_arr(arr.tagid));  
-                    $scope.master_tagid_audition = JSON.parse(replace_hashKey_arr(arr.tagid_audition));  //ใช้ใน tag id audition 
-                    $scope.master_approver = JSON.parse(replace_hashKey_arr(arr.employee)); 
+                    // $scope.master_company = JSON.parse(replace_hashKey_arr(arr.company));
+                    // $scope.master_apu = JSON.parse(replace_hashKey_arr(arr.apu));   
+                    // $scope.master_toc = JSON.parse(replace_hashKey_arr(arr.toc));  
+                    // $scope.master_unit_no = JSON.parse(replace_hashKey_arr(arr.unit_no));  
+                    // $scope.master_tagid = JSON.parse(replace_hashKey_arr(arr.tagid));  
+                    // $scope.master_tagid_audition = JSON.parse(replace_hashKey_arr(arr.tagid_audition));  //ใช้ใน tag id audition 
+                    // $scope.master_approver = JSON.parse(replace_hashKey_arr(arr.employee)); 
 
-                    $scope.employeelist = JSON.parse(replace_hashKey_arr(arr.employee)); 
+                    // $scope.employeelist = JSON.parse(replace_hashKey_arr(arr.employee)); 
 
                     $scope.master_ram = arr.ram;
                     $scope.master_ram_level = arr.ram_level;
@@ -270,6 +271,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                 $scope.data_header_def = arr.header;
                 $scope.data_header = arr.header;
                 $scope.flow_status = arr.header[0].pha_status;
+
+                $scope.data_header_all = arr.header_all;
 
                 $scope.data_general = arr.general;
                 if ($scope.data_general[0].pha_sub_software == null) {
@@ -315,21 +318,21 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                     var arr_clone_def = { id: $scope.data_general[0].master_functional, name: 'Please select' };
                     $scope.master_functional.splice(0, 0, arr_clone_def);
                 }
-                if ($scope.data_general[0].id_business_unit == null) {
-                    $scope.data_general[0].id_business_unit = null;
-                    var arr_clone_def = { id: $scope.data_general[0].id_business_unit, name: 'Please select' };
-                    $scope.master_business_unit.splice(0, 0, arr_clone_def);
-                }
-                if ($scope.data_general[0].master_unit_no == null || $scope.data_general[0].master_unit_no == '') {
-                    $scope.data_general[0].master_unit_no = null;
-                    var arr_clone_def = { id: $scope.data_general[0].master_unit_no, name: 'Please select' };
-                    $scope.master_unit_no.splice(0, 0, arr_clone_def);
-                }
-                if ($scope.master_approver[0].employee_name == null || $scope.master_approver[0].employee_name == '') {
-                    $scope.master_approver[0].employee_name = null;
-                    var arr_clone_def = { id: $scope.master_approver[0].employee_name, name: 'Please select' };
-                    $scope.master_approver.splice(0, 0, arr_clone_def);
-                }
+                // if ($scope.data_general[0].id_business_unit == null) {
+                //     $scope.data_general[0].id_business_unit = null;
+                //     var arr_clone_def = { id: $scope.data_general[0].id_business_unit, name: 'Please select' };
+                //     $scope.master_business_unit.splice(0, 0, arr_clone_def);
+                // }
+                // if ($scope.data_general[0].master_unit_no == null || $scope.data_general[0].master_unit_no == '') {
+                //     $scope.data_general[0].master_unit_no = null;
+                //     var arr_clone_def = { id: $scope.data_general[0].master_unit_no, name: 'Please select' };
+                //     $scope.master_unit_no.splice(0, 0, arr_clone_def);
+                // }
+                // if ($scope.master_approver[0].employee_name == null || $scope.master_approver[0].employee_name == '') {
+                //     $scope.master_approver[0].employee_name = null;
+                //     var arr_clone_def = { id: $scope.master_approver[0].employee_name, name: 'Please select' };
+                //     $scope.master_approver.splice(0, 0, arr_clone_def);
+                // }
 
                 apply();
                 console.log($scope);
@@ -397,15 +400,63 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         item.action_change = 1;
         apply();
     }
-    $scope.selectDetails = function (item) {
-
+    $scope.selectDetails = function (arr) {
         $scope.tabUpdateFollowUp = true;
-        $scope.flow_status = item.pha_status;
 
-        if ($scope.tabChange == 'worksheet') { get_detail(item.pha_no, ''); }
-        else { get_detail(item.pha_no, item.responder_user_name); }
+        var controller_text = 'Hazop';//fix เนื่องจากมีหน้าเดียวใช้ด้วยกัน
+        var pha_type_doc = 'followupupdate';
+        var pha_sub_software = arr.pha_sub_software;
+        var pha_seq = arr.pha_seq;
+        var pha_status = arr.pha_status;
+        var responder_user_name = '';
 
-        $scope.DetailsShow = ($scope.tabChange == 'worksheet' ? 'PHA No. : ' + item.pha_no : 'Responder : ' + item.responder_user_displayname);
+
+        //a.pha_sub_software, a.seq as pha_seq,a.pha_no, g.pha_request_name, a.pha_status, vw.user_displayname as responder_user_displayname
+        if ($scope.tabChange == 'worksheet') {
+            var _arrcheck = $filter('filter')($scope.data_header_all, function (item) {
+                return (item.pha_no == arr.pha_no);
+            });
+        } else {
+            var _arrcheck = $filter('filter')($scope.data_header_all, function (item) {
+                return (item.responder_user_displayname == arr.responder_user_displayname);
+            });
+        }
+        if (_arrcheck.length == 0) {
+            return;
+        } else {
+            pha_seq = _arrcheck[0].pha_seq;
+            pha_no = _arrcheck[0].pha_no;
+            pha_status = _arrcheck[0].pha_status;
+            responder_user_name = ''; //_arrcheck[0].responder_user_name;
+        }
+
+        $.ajax({
+            url: controller_text + "/next_page",
+            data: '{"pha_sub_software":"' + pha_sub_software + '","pha_seq":"' + pha_seq + '","pha_no":"' + pha_no + '","pha_type_doc":"' + pha_type_doc + '","responder_user_name":"' + responder_user_name + '"'
+                + ',"controller_page":"' + controller_text + '","pha_status":"' + pha_status + '"'
+                + ',"controller_action_befor":"hra/followup"'
+                + '}',
+            type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+            beforeSend: function () {
+                $("#divLoading").show();
+            },
+            complete: function () {
+                $("#divLoading").hide();
+            },
+            success: function (data) {
+                var arr = data;
+                window.open(data.page, "_top");
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                if (jqXHR.status == 500) {
+                    alert('Internal error: ' + jqXHR.responseText);
+                } else {
+                    alert('Unexpected ' + textStatus);
+                }
+            }
+
+        });
+
     }
     $scope.selectDoc = function (item) {
 

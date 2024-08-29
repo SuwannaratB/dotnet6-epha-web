@@ -30,7 +30,7 @@
     <link rel="stylesheet" href="~/css/myStyles.css">
 }
 
-<div class="content mt-1" style="font-size: 12px;" id="divPage" ng-controller="ctrlAppPage"
+<div class="content main-content d-none mt-1" style="font-size: 12px;" id="divPage" ng-controller="ctrlAppPage"
      ng-click="toggleResultsVisibility()">
 
 
@@ -3613,19 +3613,18 @@
                                                                     <span class="nametext ms-3 filename-text me-2 d-none" id="filename-approver-{{item_x.seq}}">
                                                                         {{(item_x.document_file_size>0? item_x.document_file_name + '('+  item_x.document_file_size + 'KB)' : '')}}
                                                                     </span>
-                                                                    <label class="dz-message-text fw-bold p-1 " for="attfile-{{item_x.seq}}">
+                                                                    <label class="dz-message-text fw-bold p-1 " for="attfile-approver-{{item_x.seq}}">
                                                                         Upload File (Max size 10mb)
                                                                     </label>
-                                                                    <input type="file" id="attfile-{{item_x.seq}}"
-                                                                        name="file{{item_x.seq}}"
+                                                                    <input type="file" id="attfile-approver-{{item_x.seq}}"
+                                                                        name="file_approver_{{item_x.seq}}"
                                                                         onchange="angular.element(this).scope().fileSelectApprover(this, 'approver')"
                                                                         style="display:none" />
-
                                                                 </button>
                                                                 <button class="Upload-button btn cursor-pointer" style="width:250px;" ng-if="item_x.document_file_size > 0">
                                                                     <div class="d-flex align-items-center">
                                                                         <span class="nametext filename-text me-2 cursor-pointer" ng-click="downloadFile(item_x)">
-                                                                            {{ item_x.document_file_name }} ({{ item_x.document_file_size }} KB)
+                                                                            {{truncateFilename(item_x.document_file_name, 20)}} ({{item_x.document_file_size}} KB)
                                                                         </span>
                                                                     </div>
                                                                 </button>
@@ -3636,11 +3635,22 @@
                                                         Please provide a valid document file.
                                                     </div>
                                                 </td>
-                                                <td class="align-top white-space-nowrap">
-                                                    <div class="col-md-12 p-1 ps-3">
-                                                        <label class="text-1100 fw-bold ">
+                                                <td class="align-top white-space-nowrap ">
+                                                    <div class="col-md-12 ps-3">
+                                                        <span class="col-md-4  p-1 ">
+                                                            <label class="form-label d-none" for="meeting_date">Action Date</label>
+
+                                                            <input type="date" class="form-control rounded-1 datetimepicker cursor-pointer flatpickr-input" 
+                                                                    id="action_date" name="action_date"
+                                                                    ng-disabled="item.approver_action_type === 2"
+                                                                    ng-hide="!accessInfo.canAccess"
+                                                                    ng-change="actionChange(item,item.seq,'action_date')"
+                                                                    ng-model="item.date_review" placeholder="dd/mm/yyyy">
+
+                                                        </span>
+                                                        @*<label class="text-1100 fw-bold ">
                                                             {{item.date_review_show}}
-                                                        </label>
+                                                        </label>*@
                                                     </div>
                                                 </td>
                                                 <td class="align-top px-1 py-3" ng-class="{'disabled-link': (!tab_approver_active)}">

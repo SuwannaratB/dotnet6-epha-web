@@ -35,7 +35,7 @@
     
 }
 
-<div class="content mt-1" style="font-size: 12px; min-height: auto !important; overflow-x:hidden;" id="divPage"
+<div class="content mt-1 d-none" style="font-size: 12px; min-height: auto !important; overflow-x:hidden;" id="divPage"
      ng-controller="ctrlAppPage"
      ng-click="toggleResultsVisibility()">
 
@@ -1143,31 +1143,6 @@
                                                                     </div>
                                                                 </button> 
                                                             </div>                                                                                                                                                                                
-                                                            @*<div class=" align-items-center p-1 cursor-pointer ">
-
-                                                                <br ng-if="item.document_file_size>0">
-                                                                <label class="dz-message-text text-primary fw-bold cursor-pointer"
-                                                                       for="attfile-{{item.seq}}" ng-class="{'d-none':(!tab_general_active)}">
-                                                                    <i class="fa-solid fa-arrow-up-from-bracket fa-xl me-3"></i>Upload File(Word, Excel, PDF, Image)
-                                                                </label>
-                                                                <input type="file" id="attfile-{{item.seq}}"
-                                                                       name="file{{item.seq}}"
-                                                                       onchange="angular.element(this).scope().fileSelect(this,'drawing')"
-                                                                       style="display:none" />
-                                                                <button id="del-{{item.seq}}" class="btn btn-link text-danger"
-                                                                        ng-class="{'d-none':(!tab_general_active)}"
-                                                                        ng-click="clearFileName(item.seq)"
-                                                                        ng-if="item.document_file_size>0">
-                                                                    <span class="fa-regular fa-trash-can fa-lg"></span>
-                                                                </button>
-                                                                <br>
-                                                                <a class="nametext ms-3 filename-text me-2"
-                                                                   ng-class="{'d-none':(tab_general_active)}"
-                                                                   ng-click="downloadFile(item)">
-                                                                    <i class="far fa-file-pdf text-danger"></i> 
-                                                                    {{(item.document_file_size>0? item.document_file_name + '('+  item.document_file_size + 'KB)' : '')}}
-                                                                </a>
-                                                            </div>*@
                                                         </div>
                                                         <div class=" align-items-center p-1 cursor-pointer " ng-if="!tab_general_active">
                                                             <a class="nametext ms-3 filename-text me-2"
@@ -1293,48 +1268,13 @@
                                     <div class="row ps-2 mt-2">
                                         <div class="col-12 mt-4"
                                              ng-repeat="itemRam in master_ram | toArray | filter:{id: data_general[0].id_ram}">
-                                                  <div class="row">
-                                                    <div class="col-12 d-flex justify-content-center">
-                                                        <div class="row" style="background-color : #F8F8F8 ; width:75%;">
-                                                            <img ng-src="{{itemRam.document_file_path}}" class="cursor-pointer" />
-                                                        </div>
+                                            <div class="row">
+                                                <div class="col-12 d-flex justify-content-center">
+                                                    <div class="row" style="background-color : #F8F8F8 ; width:75%;">
+                                                        <img ng-src="{{itemRam.document_file_path}}" class="cursor-pointer" />
                                                     </div>
                                                 </div>
-                                            @* <div class="row">
-                                                <div class="col-12">
-                                                    <div class="p-0 cursor-pointer " ng-class="{'d-none':(!tab_node_active)}">
-
-                                                        <div ng-if="!((select_rows_level==4 && select_columns_level==4) || (select_rows_level==5 && select_columns_level==5))">
-                                                            <br>
-                                                            <label class="dz-message-text text-primary fw-bold"
-                                                                   for="attfile-ram-{{itemRam.seq}}">
-                                                                <i class="fa-solid fa-arrow-up-from-bracket fa-xl me-3"></i>Upload (image File)
-                                                            </label>
-                                                            <input type="file" id="attfile-ram-{{itemRam.seq}}"
-                                                                   name="file_ram_{{itemRam.seq}}"
-                                                                   onchange="angular.element(this).scope().fileSelectRAM(this)"
-                                                                   style="display: none;" />
-
-                                                            <span class="mr-3 dz-message-text text-primary fw-bold" id="filename_ram_{{itemRam.seq}}">
-                                                                RAM File Name : {{(itemRam.document_file_size>0? itemRam.document_file_name + '('+  itemRam.document_file_size + 'KB)' :itemRam.document_file_name )}}
-                                                            </span>
-
-                                                            <button id="del-ram-{{itemRam.seq}}" class="btn btn-link text-danger"
-                                                                    ng-click="clearFileNameRAM(itemRam.seq)">
-                                                                <span class="fa-regular fa-trash-can fa-lg"></span>
-                                                            </button>
-                                                        </div>
-
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-12 d-flex justify-content-center">
-                                                        <div class="row" style="background-color : #F8F8F8 ; width:75%;">
-                                                            <img src="{{itemRam.document_file_path}}" class="cursor-pointer" />
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div> *@
+                                            </div>
                                         </div>
 
                                         <div class="col-6 mt-4" style="background-color : #F8F8F8;  height:350px;"
@@ -2584,11 +2524,11 @@
                                                                     <span class="nametext ms-3 filename-text me-2 d-none" id="filename-approver-{{item_x.seq}}">
                                                                         {{(item_x.document_file_size>0? item_x.document_file_name + '('+  item_x.document_file_size + 'KB)' : '')}}
                                                                     </span>
-                                                                    <label class="dz-message-text fw-bold p-1 " for="attfile-{{item_x.seq}}">
+                                                                    <label class="dz-message-text fw-bold p-1 " for="attfile-approver-{{item_x.seq}}">
                                                                         Upload File (Max size 10mb)
                                                                     </label>
-                                                                    <input type="file" id="attfile-{{item_x.seq}}"
-                                                                        name="file{{item_x.seq}}"
+                                                                    <input type="file" id="attfile-approver-{{item_x.seq}}"
+                                                                        name="file_approver_{{item_x.seq}}"
                                                                         onchange="angular.element(this).scope().fileSelectApprover(this, 'approver')"
                                                                         style="display:none" />
 
@@ -2596,7 +2536,7 @@
                                                                 <button class="Upload-button btn cursor-pointer" style="width:250px;" ng-if="item_x.document_file_size > 0">
                                                                     <div class="d-flex align-items-center">
                                                                         <span class="nametext filename-text me-2 cursor-pointer" ng-click="downloadFile(item_x)">
-                                                                            {{ item_x.document_file_name }} ({{ item_x.document_file_size }} KB)
+                                                                            {{truncateFilename(item_x.document_file_name, 20)}} ({{item_x.document_file_size}} KB)
                                                                         </span>
                                                                     </div>
                                                                 </button>
@@ -2615,13 +2555,11 @@
 
                                                             <input type="date" class="form-control rounded-1 datetimepicker cursor-pointer flatpickr-input" 
                                                                     id="action_date" name="action_date"
-                                                                    ng-if="!(item.approver_action_type == 2 || data_header[0].pha_status != 21)"
-                                                                    ng-hide="!canAccess"
+                                                                    ng-disabled="item.approver_action_type === 2"
+                                                                    ng-hide="!accessInfo.canAccess"
                                                                     ng-change="actionChange(item,item.seq,'action_date')"
                                                                     ng-model="item.date_review" placeholder="dd/mm/yyyy">
-                                                            <label class="text-1100 fw-bold " ng-if="item.approver_action_type == 2">
-                                                                {{item.date_review}}
-                                                            </label>
+
                                                         </span>
                                                         @*<label class="text-1100 fw-bold ">
                                                             {{item.date_review_show}}
@@ -3111,14 +3049,7 @@
                     </div>
 
                 </div>
-                <div class="modal-footer" ng-if="Action_Msg_Header == 'Success'">
-                    <div class="d-flex flex-column align-items-center bg-primary"
-                         ng-if="!Action_Msg_Confirm">
-                        <button class="btn p-2 px-8 text-white" type="button" data-bs-dismiss="modal" aria-label="Close">
-                            OK
-                        </button>
-                    </div>
-                </div>
+
 
                 <div class="modal-body" ng-if="Action_Msg_Header == 'Warning'">
                     <div class="d-flex justify-content-center align-items-center mb-3">

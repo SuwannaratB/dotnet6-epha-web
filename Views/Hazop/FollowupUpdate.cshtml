@@ -21,7 +21,7 @@
     <link rel="stylesheet" href="~/css/myStyles.css">
 }
 
-<div class="content mt-1" style="font-size: 12px; min-height: auto!important;" id="divPage" ng-controller="ctrlAppPage">
+<div class="content mt-1 d-none" style="font-size: 12px; min-height: auto!important;" id="divPage" ng-controller="ctrlAppPage">
 
     <div class="row g-0">
 
@@ -332,7 +332,7 @@
                                                                             <input type="file" id="attfile-{{item_x.seq}}"
                                                                                    name="file{{item_x.seq}}"
                                                                                    onchange="
-                                                                                angular.element(this).scope().fileSelect(this);"
+                                                                                angular.element(this).scope().fileSelect(this, 'followupreview');"
                                                                                    ng-click="
                                                                                 alert(item_x.seq);
                                                                                 setSeqUpload(item_d.seq)"
@@ -633,7 +633,7 @@
                                                                                 id="attfile-{{item_x.seq}}"
                                                                                 name="file{{item_x.seq}}"
                                                                                 onchange="
-                                                                                angular.element(this).scope().fileSelect(this);"
+                                                                                angular.element(this).scope().fileSelect(this, 'followupreview');"
                                                                                 ng-click="
                                                                                     alert(item_x.seq);
                                                                                     setSeqUpload(item_d.seq)"
@@ -835,7 +835,7 @@
                                                     @* Task or Activity *@
                                                     <td class="align-top  px-1">
                                                         <div class="d-flex text-start">
-                                                            <p class="mb-0 ms-3 fw-bold" rows="3">
+                                                            <p class="mb-0 ms-3 fw-bold" style="width: 68px;" rows="3">
                                                                 {{ item_d.descriptions ? item_d.descriptions : 'Not found' }}
                                                             </p>
                                                         </div>
@@ -843,14 +843,14 @@
 
                                                     <td class="align-top  px-1">
                                                         <div class="align-items-center ">
-                                                            <p class="mb-0 ms-3 fw-bold" style="width: 30px;" rows="3">
+                                                            <p class="mb-0 ms-3 fw-bold" style="width: 68px;" rows="3">
                                                                 {{ item_d.sub_area ? item_d.sub_area : 'Not found' }}
                                                             </p>
                                                         </div>
                                                     </td>
                                                     <td class="align-top  px-1">
                                                         <div class="align-items-center ">
-                                                            <p class="mb-0 ms-3 fw-bold" style="width: 30px;" rows="3">
+                                                            <p class="mb-0 ms-3 fw-bold" style="width: 68px;" rows="3">
                                                                 {{ item_d.type_hazard ? item_d.type_hazard : 'Not found' }}
                                                             </p>
                                                         </div>
@@ -939,7 +939,7 @@
                                                     @* Recommendations responded sheet  => status 13 *@
                                                     <td class="align-middle px-1" style="min-width:200px;" ng-if="flow_status != 14">
                                                         <div class=" p-0 cursor-pointer "
-                                                             ng-repeat="item_x in data_drawingworksheet | filter:{id_worksheet:item_d.seq, action_type : '!delete'}">
+                                                            ng-repeat="item_x in data_drawingworksheet | filter:{id_worksheet:item_d.seq, action_type : '!delete'}">
                                                             <div class="d-flex align-items-center flex-nowrap"
                                                                  ng-class="{ 'no-drop': !accessInfo.canAccess, 'cursor-pointer': accessInfo.canAccess }"
                                                                  ng-if="!((flow_status == 14 ? item_d.reviewer_action_type : item_d.responder_action_type) == 2)">
@@ -966,9 +966,14 @@
                                                                 </div>
                                                                 <div class="align-items-center" style="width: 280px">
                                                                     <div class="btn-group my-2 w-100" >
-                                                                        <div class="icon-button border p-3" style="border-color: #0d6efd; background-color: #0d6efd;"
+                                                                        <div ng-if="!item_x.document_file_size" class="icon-button border p-3" style="border-color: #0d6efd; background-color: #0d6efd;"
                                                                             ng-hide="!accessInfo.canAccess">
                                                                             <span class="fa-solid fa-arrow-up-from-bracket fa-lg" style="color: #ffffff;"></span>
+                                                                        </div>
+                                                                        <div ng-if="item_x.document_file_size" class="icon-button border p-3" style="border-color: #0d6efd; background-color: #0d6efd;"
+                                                                            ng-hide="!accessInfo.canAccess">
+                                                                            @* <span class="fa-solid fa-arrow-up-from-bracket fa-lg" style="color: #ffffff;"></span> *@
+                                                                            <span class="fa-solid far fa-file-pdf fa-lg" style="color: #ffffff;"></span>
                                                                         </div>
                                                                         <button class="Upload-button btn ps-3" 
                                                                                 ng-hide="!accessInfo.canAccess"
@@ -988,7 +993,7 @@
                                                                                 name="file{{item_x.seq}}"
                                                                                 ng-class="{ 'disabled-link': !accessInfo.canAccess, 'cursor-pointer' : accessInfo.canAccess }"
                                                                                 ng-disabled="!accessInfo.canAccess"
-                                                                                onchange="angular.element(this).scope().fileSelect(this)"
+                                                                                onchange="angular.element(this).scope().fileSelect(this, 'followupreview')"
                                                                                 ng-click="setSeqUpload(item_d.seq)"
                                                                                 style="display:none" />
                                                                         </button>
@@ -1082,7 +1087,7 @@
                                                                                 name="file{{item_x.seq}}"
                                                                                 ng-class="{ 'disabled-link': !accessInfo.canAccess, 'cursor-pointer' : accessInfo.canAccess }"
                                                                                 ng-disabled="!accessInfo.canAccess"
-                                                                                onchange="angular.element(this).scope().fileSelect(this)"
+                                                                                onchange="angular.element(this).scope().fileSelect(this, 'followupreview')"
                                                                                 ng-click="setSeqUpload(item_d.seq)"
                                                                                 style="display:none" />
 
@@ -1447,6 +1452,86 @@
         </div>
     </div>
     <!--Modal Check ปุ่ม Submit-->
+    <!--Modal Save Start-->
+    <div class="modal fade" id="modalMsg" tabindex="-1" aria-labelledby="modalMsgLabel"
+         aria-hidden="true" style="display: none;">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="width: 100%; min-height: 300px;">
+                <div class="modal-header justify-content-center align-items-center" style="display: flex !important;"
+                     ng-class="{ 'bg-warning' : (Action_Msg_Header == 'Warning'? true :false),'bg-primary' : (Action_Msg_Header == 'Warning'? false :true) }">
+                    <div class="d-flex mb-2 d-none">
+                        <i class="fa-solid fa-triangle-exclamation fa-lg" ng-if="Action_Msg_Header == 'Warning'"
+                           style="color: rgb(255, 255, 255); font-size: 80px; font-weight: bold;"></i>
+                        <i class="fa-solid fa-circle-check fa-lg" ng-if="Action_Msg_Header != 'Warning'"
+                           style="color: rgb(255, 255, 255); font-size: 80px; font-weight: bold;"></i>
+                    </div>
+                </div>
+                <div class="modal-body" ng-if="Action_Msg_Header == 'Success'">
+                    <div class="d-flex justify-content-center align-items-center mb-3">
+                        <h5 class="mb-0 text-center " style="font-size: 40px; font-weight: bold;" data-anchor="data-anchor" id="modalMsgLabel">
+                            {{Action_Msg_Header}}
+                        </h5>
+                    </div>
+                    <div class="d-flex justify-content-center align-items-center mt-3 mb-3">
+                        <p class="lh-lg mb-0 text-center" style="font-size: 16px;">
+                            {{ Action_Msg_Detail}}
+                        </p>
+                    </div>
+
+                </div>
+                <div class="modal-footer" ng-if="Action_Msg_Header == 'Success'">
+                    <div class="d-flex flex-column align-items-center bg-primary" >
+                        <button class="btn p-2 px-8 text-white" type="button" data-bs-dismiss="modal" aria-label="Close" ng-click="reloadPage()">
+                            OK
+                        </button>
+                    </div>
+                </div>
+
+                <div class="modal-body" ng-if="Action_Msg_Header == 'Warning'">
+                    <div class="d-flex justify-content-center align-items-center mb-3">
+                        <h5 class="mb-0 text-center ms-5" style="font-size: 40px; font-weight: bold;" data-anchor="data-anchor" id="modalMsgLabel">
+                            {{Action_Msg_Header}}
+                        </h5>
+                    </div>
+                    <div class="d-flex justify-content-center align-items-center mt-3 mb-3">
+                        <p class="lh-lg mb-0 text-center" style="font-size: 16px;">
+                            {{ Action_Msg_Detail}}
+                        </p>
+                    </div>
+                    <div class="d-flex flex-column align-items-center" ng-if="!Action_Msg_Confirm">
+                        <button class="btn p-2 px-8 text-white" type="button" data-bs-dismiss="modal" aria-label="Close" 
+                                ng-click="goBackToTab()"
+                                ng-class="{ 'bg-warning' : (Action_Msg_Header == 'Warning'? true :false),'bg-primary' : (Action_Msg_Header == 'Warning'? false :true) }">
+                            {{ Action_Msg_Header == 'Warning' ? 'Go back' : 'OK' }}
+                        </button>
+                    </div>
+                </div>
+
+                <div class="modal-body d-flex flex-column justify-content-center mb-4"
+                     ng-if="Action_Msg_Confirm && Action_Msg_Header == 'Warning'">
+                    <h5 class="mb-3 text-center" style="font-size: 16px; font-weight: bold;">
+                        Do you want to continue?
+                    </h5>
+                </div>
+                <div class="modal-footer" ng-if="Action_Msg_Confirm && Action_Msg_Header == 'Warning'">
+                    <div class="d-flex justify-content-center align-items-center">
+                        <button class="btn btn-phoenix-primary px-7 p-2 m-2" ng-click="confirmSubmit('yes')"
+                                data-bs-dismiss="modal">
+                            <a class="dropdown-item text-primary">
+                                <span class="fas fa-check"></span> Yes
+                            </a>
+                        </button>
+                        <button class="btn btn-phoenix-primary px-7 p-2 m-2" ng-click="confirmSubmit('no')"
+                                data-bs-dismiss="modal">
+                            <a class="dropdown-item text-primary">
+                                <span class="fas fa-times"></span> No
+                            </a>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <!--Modal Export File Start-->
     <div class="modal fade" id="modalExportFile" tabindex="-1" aria-labelledby="modalExportFileLabel"
          aria-hidden="true" style="display: none;">
