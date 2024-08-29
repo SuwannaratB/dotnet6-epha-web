@@ -1,40 +1,293 @@
 ﻿@{
     ViewData["Title"] = "Manage User";
-
     Layout = "~/Views/Shared/_LayoutWeb.cshtml";
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.3/angular.min.js"></script>
-
     <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&amp;display=swap"
           rel="stylesheet">
-
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
-
     <link rel="stylesheet" href="~/assets/css/theme.min.css">
-
     <link rel="stylesheet" href="~/assets/css/tablefreezer.css">
-
     <link href="~/assets/css/theme.min.css" type="text/css" rel="stylesheet" id="style-default">
     <link href="~/assets/css/choices.min.css" type="text/css" rel="stylesheet">
-
     <script src="~/assets/js/config.js"></script>
-
+    <link rel="stylesheet" href="~/css/masterStyles/main_style.css">
 }
 
+<div class="p-6" id="divPage" ng-controller="ctrlAppPage">
+    <div class="card container mt-6 px-6 py-4">
+        <div class="title">
+            <span class=" me-2 text-primary"><B>|</B></span> 
+            Manage User (Employee and Contracter)
+        </div>
+        <hr>
+        <div class="d-flex align-items-end justify-content-between pb-2">
+            <div class="d-flex gap-4">
+                <button class="btn btn-sm btn-success d-flex gap-2" ng-click="newData()">
+                    <i class="fa-solid fa-plus"></i>
+                    New User
+                </button>
+                @* <div class="d-flex gap-2">
+                    <button class="btn btn-sm btn-outline-gray gap-2" ng-click="">
+                        <i class="fa-solid fa-file-arrow-down" style="color: burlywood;"></i>
+                        Import Excel
+                    </button>
+                    <button class="btn btn-sm btn-outline-gray gap-2" ng-click="">
+                        <i class="fa-solid fa-download" style="color: darkcyan;"></i>
+                        Export Excel
+                    </button>
+                </div> *@
+            </div>
+            <div class="d-flex align-items-end gap-4">
+                @* <div class="dropdown">
+                    <label class="form-label ps-0 pb-1 col-auto" for="hazard_type">Type of Hazard </label>
+                    <select class="form-control mb-0 col-auto" 
+                        ng-model="selected.hazard_type"
+                        ng-change="actionfilter('hazard_type', selected.hazard_type)">
+                        <option value="">All</option>
+                        <option ng-repeat="item2 in data_hazard_type" ng-value="item2.id">
+                            {{item2.name}}
+                        </option>
+                    </select>
+                </div> *@
+                <div class="d-flex gap-2">
+                    <button class="btn btn-sm btn-secondary" style="width: 100px;" ng-click="confirmBack()">Back</button>
+                    <button class="btn btn-sm btn-primary " style="width: 100px;" ng-click="confirmSave()">Save</button>
+                </div>
+            </div>
+        </div>
+        <div class="card p-2 overflow-auto">
+            <table class="table table-sm fs--1 mb-0" >
+                <thead class="bg-white"> 
+                    <tr class="text-center">
+                        <th class="align-middle"  style="min-width: 90px">No</th>
+                        <th class="align-middle">User Name</th>
+                        <th class="align-middle">Displayname</th>
+                        <th class="align-middle" style="min-width:100px">E-Mail</th>
+                        <th class="align-middle" style="min-width:100px">Password</th>
+                        <th class="align-middle" style="min-width:100px">Confirm Password</th>
+                        <th class="align-middle" style="min-width:100px">Accept Status</th>
+                        <th class="align-middle" style="min-width:100px">Management</th>
+                    </tr>
+                </thead>
+                <tbody class="list">
+                    <tr class="hover-actions-trigger btn-reveal-trigger position-static text-center"
+                         ng-repeat="item in paginatedData" id="tr-{{item.seq}}">
 
-<div class="content mt-1" style="font-size: 12px; min-height: auto!important;" id="divPage" ng-controller="ctrlAppPage">
+                        <td class="align-middle position-relative">
+                            <div id="new-{{item.seq}}" class="new hidden">New</div>
+                            {{$index + 1 + ((currentPage - 1) * pageSize)}}
+                        </td>
 
+                        <td class="align-middle ">
+                            <div class="col-auto pt-2">
+                                <input class="form-control" 
+                                    id="name" 
+                                    data-ng-model="item.user_name" 
+                                    type="text" 
+                                    placeholder="Name"
+                                    ng-change="actionChangedData(item,'user_name')" />
+                                <div class="validation-message">{{item.user_name ? '' : 'field is required.'}}</div>
+                            </div>
+                        </td>
+
+                        <td class="align-middle ">
+                            <div class="col-auto pt-2">
+                                <input class="form-control" 
+                                    id="name" 
+                                    data-ng-model="item.user_displayname" 
+                                    type="text" 
+                                    placeholder="Name"
+                                    ng-change="actionChangedData(item,'user_displayname')" />
+                                <div class="validation-message">{{item.user_displayname ? '' : 'field is required.'}}</div>
+                            </div>
+                        </td>
+
+                        <td class="align-middle ">
+                            <div class="col-auto pt-2">
+                                <input class="form-control" 
+                                    id="name" 
+                                    data-ng-model="item.user_email" 
+                                    type="text" 
+                                    placeholder="Name"
+                                    ng-change="actionChangedData(item,'user_email')" />
+                                <div class="validation-message">{{item.user_email ? '' : 'field is required.'}}</div>
+                            </div>
+                        </td>
+
+                        <td class="align-middle ">
+                            <div class="col-auto pt-2">
+                                <input class="form-control" 
+                                    id="name" 
+                                    data-ng-model="item.user_password" 
+                                    type="text" 
+                                    placeholder="Name"
+                                    ng-change="actionChangedData(item,'user_password')" />
+                                <div class="validation-message">{{item.user_password ? '' : 'field is required.'}}</div>
+                            </div>
+                        </td>
+
+                        <td class="align-middle ">
+                            <div class="col-auto pt-2">
+                                <input class="form-control" 
+                                    id="name" 
+                                    data-ng-model="item.user_password_confirm" 
+                                    type="text" 
+                                    placeholder="Name"
+                                    ng-change="actionChangedData(item,'user_password_confirm')" />
+                                <div class="validation-message">{{item.user_password_confirm ? '' : 'field is required.'}}</div>
+                            </div>
+                        </td>
+
+                        <td class="align-middle">
+                            <input type="checkbox" 
+                                class="form-check-input"
+                                style="cursor: pointer;width:20px; height:20px;"
+                                ng-if="(item.accept_status==1)" 
+                                checked
+                                ng-click="actionChangedData(item,'accept_status')">
+                            <input type="checkbox" 
+                                class="form-check-input"
+                                style="cursor: pointer;width:20px; height:20px;"
+                                ng-if="!(item.accept_status==1)"
+                                ng-click="actionChangedData(item,'inaccept_status')">
+                        </td>
+
+                        <td class="align-middle ">
+                            <button class="btn btn-outline-secondary p-2"
+                                style="color: #ff2828; background-color: #f1f2f4; border-color: #ff2828;"
+                                ng-click=removeData(item)
+                                data-toggle="tooltip"
+                                data-placement="top"
+                                title="Remove">
+                                <span class="fa-regular fa-trash-can fa-lg"></span>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr ng-if="data_filter.length == 0">
+                        <td colspan="10">
+                            <p class="mb-0 ms-3 text-1100 fw-bold text-center"> Not Found </p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <ul class="pagination d-flex align-items-center justify-content-center mt-2">
+                <li class="page-item" ng-class="{disabled: currentPage === 1}">
+                    <a class="page-link" href="" ng-click="prevPage()" tabindex="-1">Previous</a>
+                </li>
+                <li class="page-item" ng-show="1 < currentPage - range" ng-click="setPage(1)">
+                    <a class="page-link" href="">1</a>
+                </li>
+                <li class="page-item" ng-show="1 < currentPage - range">
+                    <span class="page-link">...</span>
+                </li>
+                <li class="page-item" ng-repeat="page in pages"
+                    ng-show="page >= currentPage - range && page <= currentPage + range"
+                    ng-class="{active: currentPage === page}">
+                    <a class="page-link" href="" ng-click="setPage(page)">{{page}}</a>
+                </li>
+                <li class="page-item" ng-show="totalPages > currentPage + range">
+                    <span class="page-link">...</span>
+                </li>
+                <li class="page-item" ng-show="totalPages > currentPage + range" ng-click="setPage(totalPages)">
+                    <a class="page-link" href="">{{totalPages}}</a>
+                </li>
+                <li class="page-item" ng-class="{disabled: currentPage === totalPages}">
+                    <a class="page-link" href="" ng-click="nextPage()">Next</a>
+                </li>
+            </ul>
+        </div>
+        @* ------------ *@
+        <div class="d-flex align-items-end justify-content-between pb-2 mt-4">
+            <div class="d-flex gap-4">
+                <div class="search-box position-relative">
+                    <input class="form-control search-input search"
+                        ng-model="filterEmployee.search" 
+                        placeholder="Search"
+                        ng-change="fillterDataEmployeeAdd()" />
+                    <span class="fas fa-search search-box-icon"></span>
+                </div>
+            </div>
+        </div>
+        <div class="card p-2 overflow-auto">
+            <table class="table table-sm fs--1 mb-0" >
+                <thead class="bg-white"> 
+                    <tr class="text-center">
+                        <th class="align-middle"  style="min-width: 90px">No</th>
+                        <th class="align-middle">Employee</th>
+                        <th class="align-middle">Indicator</th>
+                        <th class="align-middle" style="min-width:100px">E-Mail</th>
+                        <th class="align-middle" style="min-width:100px">Employee Type</th>
+                    </tr>
+                </thead>
+                <tbody class="list">
+                    <tr class="hover-actions-trigger btn-reveal-trigger position-static text-center"
+                         ng-repeat="item in paginatedDataEmp" id="tr-{{item.seq}}">
+
+                        <td class="align-middle position-relative">
+                            {{$index + 1 + ((currentPageEmp - 1) * pageSizeEmp)}}
+                        </td>
+
+                        <td class="align-middle ">
+                            <div class="p-2">{{item.employee_displayname}}</div>
+                        </td>
+
+                        <td class="align-middle ">
+                           <div class="p-2">{{item.employee_position}}-{{item.employee_name}}</div>
+                        </td>
+
+                        <td class="align-middle ">
+                           <div class="p-2">{{item.employee_email}}</div>
+                        </td>
+
+                        <td class="align-middle ">
+                           <div class="p-2">{{item.employee_position}}</div>
+                        </td>
+
+                    </tr>
+                    <tr ng-if="data_filter.length == 0">
+                        <td colspan="10">
+                            <p class="mb-0 ms-3 text-1100 fw-bold text-center"> Not Found </p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <ul class="pagination d-flex align-items-center justify-content-center mt-2">
+                <li class="page-item" ng-class="{disabled: currentPageEmp === 1}">
+                    <a class="page-link" href="" ng-click="prevPageEmp()" tabindex="-1">Previous</a>
+                </li>
+                <li class="page-item" ng-show="1 < currentPageEmp - range" ng-click="setPageEmp(1)">
+                    <a class="page-link" href="">1</a>
+                </li>
+                <li class="page-item" ng-show="1 < currentPageEmp - range">
+                    <span class="page-link">...</span>
+                </li>
+                <li class="page-item" ng-repeat="page in pagesEmp"
+                    ng-show="page >= currentPageEmp - range && page <= currentPageEmp + range"
+                    ng-class="{active: currentPageEmp === page}">
+                    <a class="page-link" href="" ng-click="setPageEmp(page)">{{page}}</a>
+                </li>
+                <li class="page-item" ng-show="totalPagesEmp > currentPageEmp + range">
+                    <span class="page-link">...</span>
+                </li>
+                <li class="page-item" ng-show="totalPagesEmp > currentPageEmp + range" ng-click="setPageEmp(totalPagesEmp)">
+                    <a class="page-link" href="">{{totalPagesEmp}}</a>
+                </li>
+                <li class="page-item" ng-class="{disabled: currentPageEmp === totalPagesEmp}">
+                    <a class="page-link" href="" ng-click="nextPageEmp()">Next</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+
+@* <div class="content mt-1" style="font-size: 12px; min-height: auto!important;" id="divPage" ng-controller="ctrlAppPage">
     <div class="row g-0">
-
         <div class="col-12">
-
             <div class="card shadow-sm p-2 mb-3 bg-light rounded">
-
                 <div class="card-body p-2">
-
                     <div class="row card">
-
                         <div class="m-3 row  gx-0 align-items-center">
-
                             <div class="card px-2"
                                 style="padding: 20px 20px 20px 20px; max-width: calc(100% - 30px); box-sizing: border-box;">
                                 <div class="row g-3 justify-content-between align-items-center pt-2 pb-3">
@@ -44,7 +297,6 @@
                                     <div style="padding: 10px 4px 10px 4px;">
                                         <hr style="margin: 0 4px; border: 0; border-top: 1px solid #ccc;" />
                                     </div>
-
                                     <div class="row g-3 justify-content-between align-items-center pt-2">
                                         <div class="col-md-10 pt-3 ps-4 align-items-start">
                                             <button class="btn btn-custom btn-sm"
@@ -64,9 +316,7 @@
                                         </div>
                                     </div>
                                 </div>
-
                                 <div class="row g-3 justify-content-between align-items-center pt-2 pb-3">
-                                    @* --- Start เพิ่ม/แก้ไข Account Contracter ตรงนี้ --- *@
                                     <div class="bg-white border-top border-bottom border-200 position-relative top-1">
                                         <div class="table-responsive scrollbar-overlay mx-n1 px-1">
                                             <table class="table table-sm fs--1 mb-0">
@@ -86,56 +336,77 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody class=" list">
-
                                                     <tr class="hover-actions-trigger btn-reveal-trigger position-static text-center"
-                                                    ng-repeat="item in data_register ">
+                                                        ng-repeat="item in data_register ">
                                                         <td class="">
-                                                            <input type="checkbox" class="form-check-input"
-                                                                   style="cursor: pointer;width:20px; height:20px;"
-                                                                   ng-if="(item.accept_status==1)" checked
-                                                                   ng-click="actionChangedData(item,'accept_status')">
-
-                                                            <input type="checkbox" class="form-check-input"
-                                                                   style="cursor: pointer;width:20px; height:20px;"
-                                                                   ng-if="!(item.accept_status==1)" checked
-                                                                   ng-click="actionChangedData(item,'accept_status')">
+                                                            <input type="checkbox" 
+                                                                class="form-check-input"
+                                                                style="cursor: pointer;width:20px; height:20px;"
+                                                                ng-if="(item.accept_status==1)" 
+                                                                ng-click="actionChangedData(item,'accept_status')"
+                                                                checked>
+                                                            <input type="checkbox" 
+                                                                class="form-check-input"
+                                                                style="cursor: pointer;width:20px; height:20px;"
+                                                                ng-if="!(item.accept_status==1)" 
+                                                                ng-click="actionChangedData(item,'accept_status')"
+                                                                checked>
                                                         </td>
 
                                                         <td class="">
-                                                            <input class="form-control" id="name" data-ng-model="item.user_name" type="text" placeholder="Name"
-                                                                   ng-change="actionChangedData(item,'user_displayname')" />
+                                                            <input class="form-control" 
+                                                                id="name" 
+                                                                data-ng-model="item.user_name" 
+                                                                type="text" 
+                                                                placeholder="Name"
+                                                                ng-change="actionChangedData(item,'user_displayname')" />
                                                         </td>
 
                                                         <td class="">
-                                                            <input class="form-control" id="name" data-ng-model="item.user_displayname" type="text" placeholder="Name"
-                                                                   ng-change="actionChangedData(item,'user_displayname')" />
+                                                            <input class="form-control" 
+                                                                id="name" 
+                                                                data-ng-model="item.user_displayname" 
+                                                                type="text" 
+                                                                placeholder="Name"
+                                                                ng-change="actionChangedData(item,'user_displayname')" />
                                                         </td>
 
                                                         <td class="">
-                                                            <input class="form-control" id="email" data-ng-model="item.user_email" type="email"
-                                                                   placeholder="name@example.com"
-                                                                   ng-change="actionChangedData(item,'user_email')" />
+                                                            <input class="form-control" 
+                                                                id="email" 
+                                                                data-ng-model="item.user_email" 
+                                                                type="email"
+                                                                placeholder="name@example.com"
+                                                                ng-change="actionChangedData(item,'user_email')" />
                                                         </td>
+
                                                         <td class="">
-                                                            <input class="form-control form-icon-input" id="user_password" data-ng-model="item.user_password"
-                                                                   ng-change="actionChangedData(item,'user_password')" />
+                                                            <input class="form-control form-icon-input" 
+                                                                id="user_password" 
+                                                                data-ng-model="item.user_password"
+                                                                ng-change="actionChangedData(item,'user_password')" />
                                                         </td>
+
                                                         <td class="">
-                                                            <input class="form-control form-icon-input" id="user_password_confirm" data-ng-model="item.user_password_confirm"
-                                                                   placeholder="Confirm Password"
-                                                                   ng-change="actionChangedData(item,'user_password_confirm')" />
+                                                            <input class="form-control form-icon-input" 
+                                                                id="user_password_confirm" 
+                                                                data-ng-model="item.user_password_confirm"
+                                                                placeholder="Confirm Password"
+                                                                ng-change="actionChangedData(item,'user_password_confirm')" />
                                                         </td>
+
                                                         <td class="text-center">
                                                             <button class="btn btn-outline-secondary p-2"
-                                                                    data-toggle="tooltip"
-                                                                    data-placement="top"
-                                                                    title="Remove"
-                                                                    style="color: #ff2828; background-color: #f1f2f4; border-color: #ff2828;"
-                                                                    ng-click="removeDataEmployee(item.seq, $index)"
-                                                                    ng-if="!(item.register_type==1)">
+                                                                data-toggle="tooltip"
+                                                                data-placement="top"
+                                                                title="Remove"
+                                                                style="color: #ff2828; background-color: #f1f2f4; border-color: #ff2828;"
+                                                                ng-click="removeDataEmployee(item.seq, $index)"
+                                                                ng-if="!(item.register_type==1)">
                                                                 <span class="fa-regular fa-trash-can fa-lg"></span>
                                                             </button>
                                                         </td>
+                                                        
                                                     </tr>
                                                     <tr ng-if="item.user_displayname === null">
                                                         <td colspan="5">
@@ -148,28 +419,17 @@
                                         </div>
 
                                     </div>
-                                    
-                                    @* --- End เพิ่ม/แก้ไข Account Contracter ตรงนี้ --- *@
                                 </div>
-
-                            
                             </div>
                         </div>
-
                         <div class="m-3 row  gx-0 align-items-center">
-
                             <div class="card px-2"
                                 style="padding: 20px 20px 20px 20px; max-width: calc(100% - 30px); box-sizing: border-box;">
                                 <div class="row g-3 justify-content-between align-items-center pt-2 pb-3">
-
                                     <div class="mb-4">
-
                                         <div class="row g-3">
-
                                             <div class="col-auto">
-
                                                 <div class="search-box position-relative">
-
                                                     <input class="form-control search-input search"
                                                            ng-model="searchText" placeholder="Search"
                                                            ng-change="fillterDataEmployeeAdd()" />
@@ -179,10 +439,7 @@
                                             </div>
 
                                         </div>
-
                                     </div>
-
-                                    @* start แสดงข้อมูลที่ ค้นหาตาม textsearch*@
                                     <div class="bg-white border-top border-bottom border-200 position-relative top-1">
                                         <div class="table-responsive scrollbar-overlay mx-n1 px-1">
                                             <table class="table table-sm fs--1 mb-0">
@@ -193,7 +450,6 @@
                                                         <th class="pe-5" scope="col">Indicator</th>
                                                         <th class="pe-5" scope="col">E-Mail</th>
                                                         <th class="pe-5" scope="col">Employee Type</th>
-
                                                     </tr>
                                                 </thead>
                                                 <tbody class=" list">
@@ -231,9 +487,6 @@
 
                                         </div>
                                     </div>
-                                    @* end แสดงข้อมูลที่ ค้นหาตาม textsearch*@
-
-
                                 </div>
 
                             </div>
@@ -248,8 +501,7 @@
         </div>
     </div>
 
-</div>
-</div>
+</div> *@
 
 @section Scripts {
 
