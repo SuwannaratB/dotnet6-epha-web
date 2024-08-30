@@ -3131,8 +3131,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         $scope.triggerRemove = function(data,item, index, type) {
 
-            console.log("datadatadatadatadatadatadata",data)
-            console.log("===========================",item)
             if (seq !== null && index !== null) {
                 $scope.dataToRemove = data;
                 $scope.indexToRemove = index;

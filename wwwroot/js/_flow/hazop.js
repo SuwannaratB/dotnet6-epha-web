@@ -3285,97 +3285,105 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     }
 
-    $scope.triggerRemove = function(data,seq, index, type) {
-        console.log("data",data)
-        console.log("index, type",index, type)
+    function showRemoveModal(){
+        $('#removeModal').modal({
+            backdrop: 'static',
+            keyboard: false
+        }).modal('show');
+    }
+
+    $scope.triggerRemove = function(data,item, index, type) {
+
         if (seq !== null && index !== null) {
-            $scope.seqToRemove = seq;
+            $scope.dataToRemove = data;
             $scope.indexToRemove = index;
             $scope.typeToRemove = type;
-            switch($scope.typeToRemove) {
-                case 'session':
-                    var shouldShowModal = false;
 
-                    console.log("$scope.data_memberteam",$scope.data_memberteam)
-                    console.log("$scope.data_approver",$scope.data_approver)
-
-                    for (var i = 0; i < $scope.data_memberteam.length; i++) {
-                        var member = $scope.data_memberteam[i];
-                        if ((member.id_session === seq && member.user_displayname !== null)) {
+            if(type == 'SubAreasList' || type == 'HazardList' || type == 'CommentOfWorksheet' || type == 'HealthHazard'){
+                var list = item;
+                $scope.dataListToRemove = list;
+            }else{
+                var seq = item;
+                $scope.seqToRemove = seq;
+            }
+        
+            const actionMap = {
+                'session': () => {
+                    let shouldShowModal = false;
+                    for (let i = 0; i < $scope.data_memberteam.length; i++) {
+                        const member = $scope.data_memberteam[i];
+                        if (member.id_session === seq && member.user_displayname !== null) {
                             shouldShowModal = true;
-                            break; 
+                            break;
                         }
                     }
-
-                    for (var i = 0; i < $scope.data_approver.length; i++){
-                        var approver = $scope.data_approver[i];
-
-                        if ((approver.id_session === seq && approver.user_displayname !== null)) {
+        
+                    for (let i = 0; i < $scope.data_approver.length; i++) {
+                        const approver = $scope.data_approver[i];
+                        if (approver.id_session === seq && approver.user_displayname !== null) {
                             shouldShowModal = true;
-                            break; 
-                        }                        
+                            break;
+                        }
                     }
-
-                    if (shouldShowModal || data.meeting_date !== null ) {
-                        $('#removeModal').modal('show');
+        
+                    if (shouldShowModal) {
+                        showRemoveModal();
                     } else {
                         $scope.removeDataSession($scope.seqToRemove, $scope.indexToRemove);
                     }
-                    break;
-                case 'DrawingDoc':
-                    if(data.document_file_name !== null || data.document_file_path !== null || data.descriptions !== null || data.document_name !== null){
-                        $('#removeModal').modal('show');
-                    }else{
+                },
+                'DrawingDoc': () => {
+                    if (data.document_file_name !== null || data.document_file_path !== null || data.descriptions !== null || data.document_name !== null) {
+                        showRemoveModal();
+                    } else {
                         $scope.removeDrawingDoc($scope.seqToRemove, $scope.indexToRemove);
                     }
-                    break;
-                case 'nodelist' :
+                },
+                'nodelist': () => {
                     if(data.design_conditions !== null || data.design_intent !== null || data.node !== null || data.node_boundary !== null || data.operating_conditions !== null){
-                        $('#removeModal').modal('show');
+                        showRemoveModal();
                     }else{
                         $scope.removeDataNodeList($scope.seqToRemove, $scope.indexToRemove);
                     }
-                    break;
-                case 'NodeDrawing' :
+                },
+                'NodeDrawing': () => {
                     if(data.descriptions !== null || data.id_drawing !== null ){
-                        $('#removeModal').modal('show');
+                        showRemoveModal();
                     }else{
                         $scope.removeDataNodeDrawing($scope.seqToRemove, $scope.indexToRemove);
-                    }                                        
-                    break;
-                default:
-                    $('#removeModal').modal('show');
-            }
+                    }    
+                },
+                'default': () => {
+                    showRemoveModal();
+                }
+            };
+        
+            (actionMap[$scope.typeToRemove] || actionMap['default'])();
+        
         } else {
             console.error('is null');
         }
+        
     };
-    
     $scope.action_remove = function(action) {
         if (action === 'yes') {
-            switch($scope.typeToRemove) {
-                case 'session':
-                    $scope.removeDataSession($scope.seqToRemove, $scope.indexToRemove);
-                    break;
-                case 'DrawingDoc':
-                    $scope.removeDrawingDoc($scope.seqToRemove, $scope.indexToRemove);
-                    break;
-                case 'nodelist' :
-                    $scope.removeDataNodeList($scope.seqToRemove, $scope.indexToRemove);
-                    break;
-                case 'NodeDrawing' :
-                    $scope.removeDataNodeDrawing($scope.seqToRemove, $scope.indexToRemove);
-                    break;
-                case 'uploadfile' :
-                    $scope.clearFileName( $scope.seqToRemove);
-                    break;        
-                default:
-                    console.error('Unknown type:', $scope.typeToRemove);
-            }
+            const actionMap = {
+                'session': () => $scope.removeDataSession($scope.seqToRemove, $scope.indexToRemove),
+                'DrawingDoc': () => $scope.removeDrawingDoc($scope.seqToRemove, $scope.indexToRemove),
+                'nodelist': () => $scope.removeDataNodeList($scope.seqToRemove, $scope.indexToRemove),
+                'NodeDrawing': () => $scope.removeDataNodeDrawing($scope.seqToRemove, $scope.indexToRemove),
+                'uploadfile': () => $scope.clearFileName($scope.seqToRemove),
+            };
+        
+            (actionMap[$scope.typeToRemove] || function() {
+                console.error('Unknown type:', $scope.typeToRemove);
+            })();
+        
             $('#removeModal').modal('hide');
         } else {
             $('#removeModal').modal('hide');
         }
+        
     };
     
     $scope.addDataSession = function (seq, index) {
