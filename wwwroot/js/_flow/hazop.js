@@ -595,6 +595,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
         } catch (error) { }
 
+
         angular.forEach($scope.tabs, function (tab) {
             tab.isActive = false;
         });
@@ -617,27 +618,40 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
 
     $scope.changeTab_Focus = function (selectedTab, nameTab) {
-
         angular.forEach($scope.tabs, function (tab) {
             tab.isActive = false;
         });
-        selectedTab[0].isActive = true;
-        console.log(selectedTab)
 
-        // Set focus to the clicked tab element
-        /*try {
-            document.getElementById(selectedTab[0].name + "-tab").addEventListener("click", function (event) {
-                ev = event.target
-            });
+        // Set all tabs to inactive
+        angular.forEach($scope.tabs, function (tab) {
+            tab.isActive = false;
+            var tabPane = document.getElementById("tab-" + tab.name);
+            if (tabPane) {
+                tabPane.classList.remove('show', 'active');
+            }
+        });
 
-            var tabElement = angular.element(ev);
-            console.log("tabElement",tabElement)
+        if(Array.isArray){
+            selectedTab[0].isActive = true;
+            var activeTabPane = document.getElementById("tab-" + selectedTab[0].name);
+            if (activeTabPane) {
+                activeTabPane.classList.add('show', 'active');
+            }
 
-            tabElement[0].focus();
+            console.log("show tabs",$scope.tabs)
+            check_tab(selectedTab[0].name);
 
-        } catch (error) { }*/
+        }else{
+            selectedTab.isActive = true;
+            var activeTabPane = document.getElementById("tab-" + selectedTab.name);
+            if (activeTabPane) {
+                activeTabPane.classList.add('show', 'active');
+            }
 
-        check_tab(selectedTab[0].name);
+            console.log("show tabs",$scope.tabs)
+
+            check_tab(selectedTab.name);
+        }
 
 
         apply();
@@ -2677,23 +2691,34 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
         }
     }
-    function set_tab_focus(pha_status,action_part_befor){
-        if(pha_status == 11){
-            var arr_tab = $filter('filter')($scope.tabs, function (item) { return ((item.action_part == action_part_befor)); });
-
-        $scope.changeTab_Focus(arr_tab, arr_tab.name);
-
-        } else if(pha_status == 12 || $scope.params === 'edit_action_owner' ||  $scope.params === 'edit'){
-            var arr_tab = $filter('filter')($scope.tabs, function (item) { return ((item.action_part == 5)); });
+    function set_tab_focus(pha_status, action_part_befor) {
+    
+        let arr_tab;
+    
+        if (pha_status === 11) {
+            arr_tab = $filter('filter')($scope.tabs, item => item.action_part === action_part_befor);
+            $scope.changeTab_Focus(arr_tab, arr_tab.name);
+        } 
+        else if ([12, 13, 14, 22].includes(pha_status) || 
+                 (pha_status === 12 || $scope.params === 'edit_action_owner' || $scope.params === 'edit')) {
+            arr_tab = $filter('filter')($scope.tabs, item => item.action_part === 5);
             $scope.action_part = 5;
-            console.log("arr_tab",arr_tab)
-
-        $scope.changeTab_Focus(arr_tab, arr_tab.name);
+            $scope.changeTab_Focus(arr_tab, arr_tab.name);
+        } 
+        else if ([11, 81, 91, 21].includes(pha_status) && !$scope.params) {
+            arr_tab = $filter('filter')($scope.tabs, item => item.action_part === 1);
+            $scope.action_part = 1;
+            $scope.changeTab_Focus(arr_tab, arr_tab.name);
+        } 
+        else if ($scope.params === 'edit_approver') {
+            arr_tab = $filter('filter')($scope.tabs, item => item.action_part === 7);
+            $scope.action_part = 7;
+            $scope.changeTab_Focus(arr_tab, arr_tab.name);
         }
-
-        console.log($scope.params)
-
+    
+        console.log($scope.params);
     }
+    
     function check_case_member_review() {
 
         if ($scope.data_header[0].pha_status == 12

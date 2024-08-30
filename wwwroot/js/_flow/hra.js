@@ -1245,8 +1245,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             return ((item.name == tag_name));
         });
 
-        console.log("tag_name",tag_name)
-        console.log("arr_tab",arr_tab)
         $scope.changeTab_Focus(arr_tab, tag_name);
     }
 
@@ -2041,9 +2039,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         $scope.changeTab(newTab)   
                     }
 
-                    console.log(page_load)
-                    console.log(arr.header[0].pha_status)
-                    console.log($scope.params)
 
                     if (page_load && [13,14,21, 81, 91].includes(arr.header[0].pha_status) && $scope.params === 'edit') {
                         const newTab = { name: 'approver', action_part: 8, title: 'Assessment Team Leader (QMTS)', isActive: false, isShow: false };
