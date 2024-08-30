@@ -925,25 +925,22 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         return "";
     }
 
-    /*function set_alert(header, detail) {
-        try {
-            $scope.$apply(function () {
-                $scope.Action_Msg_Header = header;
-                $scope.Action_Msg_Detail = detail;
-            });
-        } catch {
-            $scope.Action_Msg_Header = header;
-            $scope.Action_Msg_Detail = detail;
-        }
-        $('#modalMsg').modal('show');
-    }*/
-
     function set_alert(header, detail) {
         $scope.Action_Msg_Header = header;
         $scope.Action_Msg_Detail = detail;
+    
         $timeout(function() {
-            $('#modalMsg').modal('show');
-        });      
+            $('#modalMsg').modal({
+                backdrop: 'static',
+                keyboard: false 
+            }).modal('show');
+    
+            if (header === 'Success') {
+                $timeout(function() {
+                    $('#modalMsg').modal('hide');
+                }, 2000);
+            }
+        });
     }
 
     function set_alert_warning(header, detail) {
