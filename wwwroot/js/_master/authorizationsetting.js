@@ -78,15 +78,33 @@ AppMenuPage.controller("ctrlAppPage",function ($scope, $http, $filter, conFig) {
       };
 
       $scope.choosDataMenu = function (arr, field) {
-        console.log(arr)
-        console.log($scope.selectedData)
-        if (field === "choos_menu") {
-
-            arr.choos_menu = arr.choos_menu === '1' ? '1' : '0';  
-            
+        if(!$scope.selectedData) return
+        var item = $filter('filter')($scope.selectedData.menus, function (_item) {
+          return (_item.id_menu == arr.seq);
+        })[0];
+        // disable
+        if(item){
+          item.action_change = 1
+          item.choos_data = item.choos_data == 1 ? 0 : 1
+          return 
         } 
-        apply();
-        console.log('Updated item:', arr.choos_menu);
+        // active
+        var newMenuSetting = clone_arr_newrow($scope.data_menu_setting_def)[0]
+        newMenuSetting.action_type = 'insert'
+        newMenuSetting.action_change = 1
+        newMenuSetting.choos_data = 1
+        newMenuSetting.id_menu = arr.seq
+        newMenuSetting.id_role_group = $scope.selectedData.seq
+        newMenuSetting.id = Number($scope.MaxSeqDataMenuSetting)
+        newMenuSetting.seq = Number($scope.MaxSeqDataMenuSetting)
+        $scope.MaxSeqDataMenuSetting = Number($scope.MaxSeqDataMenuSetting) + 1
+        $scope.selectedData.menus.push(newMenuSetting)
+        console.log($scope.data_role_type)
+        // if (field === "choos_menu") {
+        //     arr.choos_menu = arr.choos_menu === '1' ? '1' : '0';  
+        // } 
+        // apply();
+        // console.log('Updated item:', arr.choos_menu);
       };
     }
 
@@ -375,8 +393,9 @@ AppMenuPage.controller("ctrlAppPage",function ($scope, $http, $filter, conFig) {
     if(!$scope.selectedData) return
     var item = $filter('filter')($scope.selectedData.menus, function (_item) {
       return (_item.id_menu == current_seq);
-    });
-    if(item.length > 0) 
+    })[0];
+    console.log(item)
+    if(item && item.choos_data == 1) 
       return true
     return false
   }
@@ -496,6 +515,7 @@ AppMenuPage.controller("ctrlAppPage",function ($scope, $http, $filter, conFig) {
     newInput.default_type = 0;
     newInput.action_type = "insert";
     newInput.action_change = 1;
+    newInput.menus = [];
     $scope.data_role_type.push(newInput);
     $scope.MaxSeqDataRoleType = Number($scope.MaxSeqDataRoleType) + 1;
     setDataFilter()
@@ -597,8 +617,16 @@ AppMenuPage.controller("ctrlAppPage",function ($scope, $http, $filter, conFig) {
   }
   
   function check_data_menu_setting() {
+    var arr_menu_seting = [];
     var arr_active = [];
-    angular.copy($scope.data_menu_setting, arr_active);
+
+    $scope.data_role_type.forEach(element => {
+      if (element.menus.length > 0) {
+        arr_menu_seting = arr_menu_seting.concat(element.menus);
+      }
+    });
+
+    angular.copy(arr_menu_seting, arr_active);
     var arr_json = $filter("filter")(arr_active, function (item) {
       return (
         (item.action_type == "update" && item.action_change == 1) ||
@@ -610,6 +638,19 @@ AppMenuPage.controller("ctrlAppPage",function ($scope, $http, $filter, conFig) {
       $scope.data_menu_setting_delete[i].action_type = "delete";
       arr_json.push($scope.data_menu_setting_delete[i]);
     }
+    // var arr_active = [];
+    // angular.copy($scope.data_menu_setting, arr_active);
+    // var arr_json = $filter("filter")(arr_active, function (item) {
+    //   return (
+    //     (item.action_type == "update" && item.action_change == 1) ||
+    //     item.action_type == "insert"
+    //   );
+    // });
+
+    // for (var i = 0; i < $scope.data_menu_setting_delete.length; i++) {
+    //   $scope.data_menu_setting_delete[i].action_type = "delete";
+    //   arr_json.push($scope.data_menu_setting_delete[i]);
+    // }
 
     return angular.toJson(arr_json);
   }
