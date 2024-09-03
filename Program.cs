@@ -14,7 +14,10 @@ builder.Services.AddScoped<WSSoaps, WSSoaps>();
 
 builder.Services.AddCors(p => p.AddPolicy("AllowOrigin", builder =>
 {
-    builder.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
+    builder.WithOrigins("*")
+    .AllowAnyMethod()
+    .AllowAnyHeader()
+    .AllowCredentials();
 }));
 
 // AZUE AD 
