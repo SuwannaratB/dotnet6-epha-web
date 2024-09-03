@@ -258,7 +258,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             },
             success: function (data) {
                 var arr = data;
-                console.log(arr);
+
+                // Check if the array has at least one element and the status is not 'true'
+                if (arr.length > 0 && arr[0].status && arr[0].status.toString() !== 'true') {
+
+                    console.error('Status is not true. Potential issue detected:', arr[0].remark || 'No remark provided');
+
+                    $scope.confirmCreate();
+                } 
 
                 if (page_load) { 
 
@@ -505,7 +512,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
     }
     $scope.confirmCreate = function () {
 
-        var controller_text = $scope.data_header[0].pha_sub_software;
+        var controller_text = 'whatif'; 
+
+        if ($scope.data_header && $scope.data_header.length > 0 && $scope.data_header[0].pha_sub_software) {
+            controller_text = $scope.data_header[0].pha_sub_software;
+        }
         conFig.pha_seq = null;
         conFig.pha_type_doc = 'create';
         var pha_status = '11';

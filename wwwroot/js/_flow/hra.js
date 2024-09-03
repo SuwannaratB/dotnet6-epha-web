@@ -9362,6 +9362,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 accessInfo.isTA2 = true;
                 accessInfo.canAccess = true; // TA2 should have access to their own tasks
             } else {
+
+                if(!$scope.data_approver_ta3){return;}
                 // Check if the user is a TA3 for this task
                 for (let item of $scope.data_approver_ta3) {
                     if (item.id_approver === task.id && $scope.user_name == item.user_name) {

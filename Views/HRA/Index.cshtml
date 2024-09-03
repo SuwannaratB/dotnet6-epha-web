@@ -1936,7 +1936,7 @@
                                                             ng-change="processExposure(item, ws)" 
                                                             string-to-number
                                                             ng-model="ws.exposure_band">
-                                                        ppm
+                                                        {{  ws.standard_value ? ws.standard_unit : '' }}
                                                     </div>
                                                 </div>
                                             </td>
@@ -1950,10 +1950,8 @@
                                                     ng-style="{'height':  processheightWithComments(ws)}"
                                                     style="padding-top: 14px;">
                                                     @* 'unbox': (item.worksheet[item.worksheet.length - 1].seq == ws.seq) *@
-                                                    <div 
-                                                    ng-if="display_worksheet_filter[index].worksheet[$index - 1].fk_recommendations != ws.fk_recommendations"
-                                                    >
-                                                        {{ ws.standard_value }} {{  ws.standard_value ? 'ppm' : '' }}
+                                                    <div ng-if="display_worksheet_filter[index].worksheet[$index - 1].fk_recommendations != ws.fk_recommendations">
+                                                        {{ ws.standard_value }} {{  ws.standard_value ? ws.standard_unit : '' }}
                                                     </div>
                                                 </div>
                                             </td>
