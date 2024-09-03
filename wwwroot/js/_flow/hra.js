@@ -428,218 +428,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     
         };
 
-
-        $scope.truncateFilename = function(filename, length) {
-            if (!filename) return '';
-            if (filename.length <= length) return filename;
-            
-            const ellipsis = '...';
-            const charsToShow = length - ellipsis.length;
-            const frontChars = Math.ceil(charsToShow / 2);
-            const backChars = Math.floor(charsToShow / 2);
-            
-            const start = filename.slice(0, frontChars);
-            const end = filename.slice(-backChars);
-            
-            return `${start}${ellipsis}${end}`;
-        };
-            
-        $scope.fileSelect = function (input, file_part) {
-            var file_doc = $scope.data_header[0].pha_no;
-            const fileInput = input;
-            const fileSeq = fileInput.id.split('-')[1];
-            const fileInfoSpan = document.getElementById('filename' + fileSeq);
-        
-            // Function to truncate file name
-            function truncateFilename(filename, length) {
-                if (!filename) return '';
-                if (filename.length <= length) return filename;
-                const start = filename.slice(0, Math.floor(length / 2));
-                const end = filename.slice(-Math.floor(length / 2));
-                return `${start}.......${end}`;
-            }
-        
-            if (fileInput.files.length > 0) {
-                const file = fileInput.files[0];
-                const fileName = file.name;
-                const fileSize = Math.round(file.size / 1024);
-                try {
-                    const truncatedFileName = truncateFilename(fileName, 20);
-                    if (fileInfoSpan) {
-                        fileInfoSpan.textContent = `${truncatedFileName} (${fileSize} KB)`;
-                    }
-                } catch (error) {
-                    console.error('Error updating file info:', error);
-                }
-    
-    
-                if (file) {
-                    const allowedFileTypes = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'jpg', 'png', 'gif'];
-                
-                    const fileExtension = fileName.split('.').pop().toLowerCase(); 
-                    if (allowedFileTypes.includes(fileExtension)) {
-                        var file_path = uploadFile(file, fileSeq, fileName, fileSize, file_part, file_doc);
-                    } else {
-                        $scope.goback_tab = 'approver';
-                        set_alert('Warning', "The selected file type is not supported. Please upload a PDF, Word, Excel, or Image file.");
-                    }
-                
-                } else {
-                    console.log("No file selected.");
-                    set_alert('Error', "No file selected. Please select a file to upload.");
-                }
-    
-            } else {
-                fileInfoSpan.textContent = "";
-            }
-        }
-                  
-        $scope.fileSelectApprover = function (input, file_part) {
-            var file_doc = $scope.data_header[0].pha_no;
-        
-            const fileInput = input;
-            const fileSeq = fileInput.id.split('-')[2];
-            const fileInfoSpan = document.getElementById('filename-approver-' + fileSeq);
-        
-            if (fileInput.files.length > 0) {
-                const file = fileInput.files[0];
-                const fileName = file.name;
-                const fileSizeKB = Math.round(file.size / 1024);
-
-                const maxFileSizeKB = 10240; // 10 MB in KB
-                const allowedFileTypes = ['pdf', 'eml', 'msg'];
-                            
-                if (fileSizeKB > maxFileSizeKB) {
-                    fileInfoSpan.textContent = "";
-                    $scope.goback_tab = 'approver';
-                    set_alert('Warning', 'File size exceeds 10 MB. Please select a smaller file.');
-                    return;
-                }
-                        
-                const fileExtension = fileName.split('.').pop().toLowerCase(); 
-            
-                
-                if (allowedFileTypes.includes(fileExtension)) {
-                    console.log(fileSeq)
-
-                    var file_path = uploadFile(file, fileSeq, fileName, fileSizeKB, file_part, file_doc);
-                } else {
-                    $scope.goback_tab = 'approver';
-                    set_alert('Warning', "Unsupported file type. Please upload a PDF, EML, or MSG file.");
-                }
-                
-        
-                
-            } else {
-                fileInfoSpan.textContent = "";
-            }
-        }
-        
-
-        function uploadFile(file_obj, seq, file_name, file_size, file_part, file_doc) {
-
-            var fd = new FormData();
-            //Take the first selected file
-            fd.append("file_obj", file_obj);
-            fd.append("file_seq", seq);
-            fd.append("file_name", file_name);
-            fd.append("file_doc", file_doc);
-            fd.append("file_part", file_part);//drawing, responder, approver
-            fd.append("file_doc", file_doc);
-            fd.append("sub_software", 'hra');
-
-            try {
-                $("#divLoading").show(); 
-
-                const request = new XMLHttpRequest();
-                request.open("POST", url_ws + 'Flow/uploadfile_data');
-
-                request.onreadystatechange = function () {
-                    if (request.readyState === XMLHttpRequest.DONE) {
-                        if (request.status === 200) {
-
-                            // รับค่าที่ส่งมาจาก service ที่ตอบกลับมาด้วย responseText
-                            const responseFromService = request.responseText;
-                            let parsedResponse;
-                            
-                            try {
-                                parsedResponse = JSON.parse(responseFromService);
-                            } catch (e) {
-                                console.error("Failed to parse JSON response:", e);
-                                return;
-                            }
-                                                        
-                            if (parsedResponse && parsedResponse.msg && parsedResponse.msg[0].STATUS === "true") {
-
-                                // ทำอะไรกับข้อมูลที่ได้รับเช่น แสดงผลหรือประมวลผลต่อไป
-                                const jsonArray = JSON.parse(responseFromService);
-
-                                var file_name = jsonArray.msg[0].ATTACHED_FILE_NAME;
-                                var file_path = jsonArray.msg[0].ATTACHED_FILE_PATH;
-
-                                if(file_part == 'drawing'){
-                                    
-                                    var arr = $filter('filter')($scope.data_drawing, function (item) { return (item.seq == seq); });
-                                    if (arr.length > 0) {
-                                        arr[0].document_file_name = file_name;
-                                        arr[0].document_file_size = file_size;
-                                        //'https://localhost:7098/api/' + '/AttachedFileTemp/hazop/HAZOP-2023-0000016-DRAWING-202312231716.PDF'
-                                        arr[0].document_file_path = service_file_url + file_path;// (url_ws.replace('/api/', '/')) + 'AttachedFileTemp/Hazop/' + file_name;
-                                        arr[0].document_module = 'hra';
-                                        arr[0].action_change = 1;
-                                        apply();
-
-                                    }
-                                } else if (file_part == 'approver'){
-                                    
-                                    var arr = $filter('filter')($scope.data_drawing_approver, function (item) { return (item.seq == seq); });
-                                    if (arr.length > 0) {
-                                        arr[0].document_file_name = file_name;
-                                        arr[0].document_file_size = file_size;
-                                        arr[0].document_file_path = service_file_url + file_path;// (url_ws.replace('/api/', '/')) + 'AttachedFileTemp/Hazop/' + file_name;
-                                        arr[0].document_module = 'approver';
-                                        arr[0].action_change = 1;
-                                        arr[0].action_type = arr[0].action_type === 'new' ? 'insert' : arr[0].action_type;
-                                        apply();
-        
-                                        console.log(arr)
-
-                                    }
-
-
-                                }
-
-                                $("#divLoading").hide(); 
-                                set_alert('Success', 'File attached successfully.');
-
-                            }else{
-
-                                $("#divLoading").hide(); 
-                                $scope.goback_tab = 'approver';
-                                
-                                set_alert('Warning', 'Unable to connect to the service. Please check your internet connection or try again later.');
-                            }
-
-                        } else {
-                            $("#divLoading").hide(); 
-
-                            // กรณีเกิดข้อผิดพลาดในการร้องขอไปยัง server
-                            console.error('มีข้อผิดพลาด: ' + request.status);
-                        }
-                    }
-
-                };
-
-                request.send(fd);
-
-            } catch {
-                $("#divLoading").hide(); 
-             }
-
-            return "";
-        }
-
-
         $scope.truncateFilename = function(filename, length) {
             if (!filename) return '';
             if (filename.length <= length) return filename;
@@ -647,6 +435,151 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             const end = filename.slice(-Math.floor(length / 2));
             return `${start}.......${end}`;
         };
+    
+        function validateFile(file, maxFileSizeKB, allowedFileTypes) {
+            const fileSizeKB = Math.round(file.size / 1024);
+            const fileExtension = file.name.split('.').pop().toLowerCase();
+            
+            if (fileSizeKB > maxFileSizeKB) {
+                return { valid: false, message: `File size exceeds ${maxFileSizeKB / 1024} MB. Please select a smaller file.` };
+            }
+    
+            if (!allowedFileTypes.includes(fileExtension)) {
+                const allowedTypesFormatted = allowedFileTypes.map(type => type.toUpperCase()).join(', ');
+                return { valid: false, message: `Unsupported file type. Please upload a file in one of the following formats: ${allowedTypesFormatted}.` };
+            }
+            
+            return { valid: true, fileSizeKB, fileExtension };
+        }
+            
+        $scope.fileSelectApprover = function (input, file_part) {
+            try {
+                const fileDoc = $scope.data_header[0].pha_no;
+                const fileInput = input;
+                const fileSeq = fileInput.id.split('-')[2];
+                const fileInfoSpan = document.getElementById('filename-approver-' + fileSeq);
+        
+                if (fileInput.files.length > 0) {
+                    const file = fileInput.files[0];
+                    const validation = validateFile(file, 10240, ['pdf', 'eml', 'msg']);
+        
+                    if (!validation.valid) {
+                        set_alert('Warning', validation.message);
+                        return;
+                    }
+        
+                    uploadFile(file, fileSeq, file.name, validation.fileSizeKB, file_part, fileDoc)
+                        .then(response => {
+                            // Update the scope data with the new file information
+                            const arr = $filter('filter')($scope.data_drawing_approver, function (item) { return item.seq == fileSeq; });
+                            if (arr.length > 0) {
+                                arr[0].document_file_name = response.ATTACHED_FILE_NAME;
+                                arr[0].document_file_size = validation.fileSizeKB;
+                                arr[0].document_file_path = service_file_url + response.ATTACHED_FILE_PATH;
+                                arr[0].document_module = 'approver';
+                                arr[0].action_change = 1;
+                                arr[0].action_type = arr[0].action_type === 'new' ? 'insert' : arr[0].action_type;
+                                $scope.$apply(); // Ensure the scope is updated
+                            }
+                            set_alert('Success', 'Your file has been successfully attached.');
+                        })
+                        .catch(error => {
+                            console.error('File upload error:', error);
+                        });
+                } else {
+                    fileInfoSpan.textContent = "";
+                    set_alert('Warning', "No file selected. Please select a file to upload.");
+                }
+            } catch (error) {
+                console.error('Unexpected error during file selection:', error);
+                set_alert('Error', 'An unexpected error occurred. Please try again or contact support.');
+            }
+        };
+        
+        $scope.fileSelect = function (input, file_part) {
+            try {
+                const fileDoc = $scope.data_header[0].pha_no;
+                const fileInput = input;
+                const fileSeq = fileInput.id.split('-')[1];
+                const fileInfoSpan = document.getElementById('filename' + fileSeq);
+        
+                if (fileInput.files.length > 0) {
+                    const file = fileInput.files[0];
+                    const validation = validateFile(file, 10240, ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'jpg', 'png', 'gif']);
+        
+                    if (!validation.valid) {
+                        set_alert('Warning', validation.message);
+                        return;
+                    }
+        
+        
+                    uploadFile(file, fileSeq, file.name, validation.fileSizeKB, file_part, fileDoc)
+                        .then(response => {
+                            // Update the scope data with the new file information
+                            const arr = $filter('filter')($scope.data_drawing, function (item) { return item.seq == fileSeq; });
+                            if (arr.length > 0) {
+                                arr[0].document_file_name = response.ATTACHED_FILE_NAME;
+                                arr[0].document_file_size = validation.fileSizeKB;
+                                arr[0].document_file_path = service_file_url + response.ATTACHED_FILE_PATH;
+                                arr[0].document_module = 'hra';
+                                arr[0].action_change = 1;
+                                $scope.$apply(); // Ensure the scope is updated
+                            }
+                            set_alert('Success', 'Your file has been successfully attached.');
+                        })
+                        .catch(error => {
+                            console.error('File upload error:', error);
+                        });
+                } else {
+                    fileInfoSpan.textContent = "";
+                    set_alert('Warning', "No file selected. Please select a file to upload.");
+                }
+            } catch (error) {
+                console.error('Unexpected error during file selection:', error);
+                set_alert('Error', 'An unexpected error occurred. Please try again or contact support.');
+            }
+        };
+
+        function uploadFile(file, seq, fileName, fileSizeKB, filePart, fileDoc) {
+            const fd = new FormData();
+            fd.append("file_obj", file);
+            fd.append("file_seq", seq);
+            fd.append("file_name", fileName);
+            fd.append("file_doc", fileDoc);
+            fd.append("file_part", filePart); // drawing, responder, approver
+            fd.append("sub_software", 'hra');
+        
+            return new Promise((resolve, reject) => {
+                const request = new XMLHttpRequest();
+                request.open("POST", url_ws + 'Flow/uploadfile_data');
+        
+                request.onreadystatechange = function () {
+                    if (request.readyState === XMLHttpRequest.DONE) {
+                        $("#divLoading").hide();
+                        if (request.status === 200) {
+                            try {
+                                const parsedResponse = JSON.parse(request.responseText);
+                                if (parsedResponse && parsedResponse.msg && parsedResponse.msg.length > 0 && parsedResponse.msg[0].STATUS === "true") {
+                                    resolve(parsedResponse.msg[0]);
+                                } else {
+                                    set_alert('Warning', 'The system encountered an issue processing your file. Please try again or contact support if the problem persists.');
+                                    reject('Service response indicated an issue.');
+                                }
+                            } catch (e) {
+                                set_alert('Error', 'Unexpected issue occurred while processing your request. Please try again later.');
+                                reject(e);
+                            }
+                        } else {
+                            set_alert('Error', 'We are unable to complete your request at the moment. Please check your connection or try again later.');
+                            reject('Error during server request: ' + request.status);
+                        }
+                    }
+                };
+        
+                $("#divLoading").show();
+                request.send(fd);
+            });
+        }
     }
 
     function validBeforRegister() {

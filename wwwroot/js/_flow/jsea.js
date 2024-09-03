@@ -387,18 +387,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
         }
     });
-    $scope.clearFileUploadName = function (seq) {
 
-        try {
-
-            $scope.data_general[0].file_upload_name = null;
-            $scope.data_general[0].file_upload_size = null;
-            $scope.data_general[0].file_upload_path = null;
-            $scope.data_general[0].action_change = 1;
-            apply();
-        } catch { }
-
-    };
     $scope.clearFileUploadData = function (seq) {
 
         try {
@@ -436,21 +425,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         } catch { }
 
     };
-    $scope.clearFileName = function (seq) {
 
-
-
-        var arr = $filter('filter')($scope.data_drawing, function (item) { return (item.seq == seq); });
-        if (arr.length > 0) {
-            arr[0].document_file_name = null;
-            arr[0].document_file_size = null;
-            arr[0].document_file_path = null;
-            arr[0].action_change = 1;
-            apply();
-        }
-        //<b>{{(item.document_file_size>0? item.document_file_name + '('+  item.document_file_size + 'KB)' : '')}}</b>
-
-    };
     $scope.clearFileNameRAM = function (seq) {
 
         var arr = $filter('filter')($scope.master_ram, function (item) { return (item.seq == seq); });
@@ -517,19 +492,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         check_tab(selectedTab.name);
 
-       /* if(Array.isArray){
-            selectedTab[0].isActive = true;
-            var activeTabPane = document.getElementById("tab-" + selectedTab[0].name);
-            if (activeTabPane) {
-                activeTabPane.classList.add('show', 'active');
-            }
-
-            console.log("show tabs",$scope.tabs)
-            check_tab(selectedTab[0].name);
-
-        }else{
-
-        }*/
 
 
         $scope.oldTab = selectedTab;
@@ -538,486 +500,422 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
 
 
-    $scope.fileUploadSelectTemplate = function (input) {
-        var file_doc = $scope.data_header[0].pha_no;
-        const fileInput = input;
-        const fileSeq = fileInput.id.split('-')[1];
-        const fileInfoSpan = document.getElementById('uploadfile-' + fileSeq);
-
-        if (fileInput.files.length > 0) {
-            const file = fileInput.files[0];
-            const fileName = file.name;
-            const fileSize = Math.round(file.size / 1024);
-            //fileInfoSpan.textContent = `${fileName} (${fileSize} KB)`;
-
-            let shortenedFileName = fileName.length > 20 ? fileName.substring(0, 20) + '...' : fileName;
-            fileInfoSpan.textContent = `${shortenedFileName} (${fileSize} KB)`;
 
 
-            if (fileName.toLowerCase().indexOf('.xlsx') == -1 && fileName.toLowerCase().indexOf('.xls') == -1) {
-                fileInfoSpan.textContent = "";
-                set_alert('Warning', 'Please select a Excle file.');
-                return;
-            }
-
-            var fd = new FormData();
-            //Take the first selected file
-            fd.append("file_obj", file);
-            fd.append("file_seq", fileSeq);
-            fd.append("file_name", fileName);
-            fd.append("file_doc", file_doc);
-            fd.append("sub_software", 'jsea');
+    //attached file
+    if (true) {
+        $scope.clearFileUploadName = function (seq) {
 
             try {
-                $("#divLoading").show(); 
-                const request = new XMLHttpRequest();
-                request.open("POST", url_ws + 'Flow/importfile_data_jsea');
-                //request.send(fd);
 
-                request.onreadystatechange = function () {
-                    if (request.readyState === XMLHttpRequest.DONE) {
-                        if (request.status === 200) {
-                            // รับค่าที่ส่งมาจาก service ที่ตอบกลับมาด้วย responseText
-                            const responseFromService = request.responseText;
-                            const array = JSON.parse(responseFromService);
+                $scope.data_general[0].file_upload_name = null;
+                $scope.data_general[0].file_upload_size = null;
+                $scope.data_general[0].file_upload_path = null;
+                $scope.data_general[0].action_change = 1;
+                apply();
+            } catch { }
 
-                            console.log("array",array)
-                            if (true) {
-                                var file_name = array.msg[0].ATTACHED_FILE_NAME;
-                                var file_path = array.msg[0].ATTACHED_FILE_PATH;
-                                
-                                console.log("file_name",file_name)
-                                console.log("file_path",file_path)
-                                $scope.data_general[0].file_upload_name = file_name;
-                                $scope.data_general[0].file_upload_size = fileSize;
-                                $scope.data_general[0].file_upload_path = service_file_url + file_path;
-                                $scope.data_general[0].action_change = 1;
-                                set_data_general()
-                            }
+        };
+        $scope.clearFileName = function (seq) {
 
-                            if (array.max) {
-                                var arr = $filter('filter')(array.max, function (item) { return (item.name == 'memberteam'); });
-                                var iMaxSeq = 1; if (arr.length > 0) { iMaxSeq = arr[0].values; }
-                                $scope.MaxSeqDataMemberteam = iMaxSeq;
 
-                                $scope.MaxSeqdata_approver = 0;
-                                var arr_check = $filter('filter')(array.max, function (item) { return (item.name == 'approver'); });
-                                var iMaxSeq = 1; if (arr_check.length > 0) { iMaxSeq = arr_check[0].values; }
-                                $scope.MaxSeqdata_approver = iMaxSeq;
 
-                                var arr = $filter('filter')(array.max, function (item) { return (item.name == 'tasks_worksheet'); });
-                                var iMaxSeq = 1; if (arr.length > 0) { iMaxSeq = arr[0].values; }
-                                $scope.MaxSeqdata_listworksheet = iMaxSeq;
-                            }
-
-                            if (true) {
-                                var id_session = $scope.selectdata_session;
-                                if (array.memberteam) {
-                                    $scope.data_memberteam_old = [];
-                                    angular.copy($scope.data_memberteam, $scope.data_memberteam_old);
-
-                                    array.memberteam.forEach(function (member) {
-                                        member.id_session = id_session; // newValue คือค่าที่คุณต้องการให้ id_session อัปเดตเป็น
-                                    });
-
-                                    $scope.data_memberteam = [...$scope.data_memberteam, ...array.memberteam]; 
-                                    //console.log("check array memberteam", array.memberteam, "check memberteam", $scope.data_memberteam);  
-                                }
-                                if (array.approver) {
-                                    $scope.data_approver_old = [];
-                                    angular.copy($scope.data_approver, $scope.data_approver_old);
-
-                                    array.approver.forEach(function (approver) {
-                                        approver.id_session = id_session; // newValue คือค่าที่คุณต้องการให้ id_session อัปเดตเป็น
-                                    });
-
-                                    $scope.data_approver = [...$scope.data_approver,...array.approver]; 
-                                    // Remove duplicates based on id
-                                    $scope.data_approver = $scope.data_approver.reduce((acc, current) => {
-                                        const existingItem = acc.find(item => item.id === current.id);
-                                        if (!existingItem) {
-                                            acc.push(current);
-                                        }
-                                        return acc;
-                                    }, []);
-
-                                }
-                                if (array.relatedpeople_outsider) {
-                                    //$scope.data_approver_old = [];
-                                    //angular.copy($scope.data_approver, $scope.data_approver_old);
-                                    array.relatedpeople_outsider.forEach(function (approver) {
-                                        approver.id_session = id_session; // newValue คือค่าที่คุณต้องการให้ id_session อัปเดตเป็น
-                                    });
-
-                                    $scope.data_relatedpeople_outsider = [...$scope.data_relatedpeople_outsider,...array.relatedpeople_outsider]; 
-                                    // Remove duplicates based on id
-                                    $scope.data_relatedpeople_outsider = $scope.data_relatedpeople_outsider.reduce((acc, current) => {
-                                        const existingItem = acc.find(item => item.id === current.id);
-                                        if (!existingItem) {
-                                            acc.push(current);
-                                        }
-                                        return acc;
-                                    }, []);
-                                    //console.log("check array relatedpeople", array.relatedpeople_outsider, "check relatedpeoplem",  $scope.data_relatedpeople_outsider);                                                                     
-                                }
-                                if (array.tasks_worksheet) {
-                                    //old data 
-                                    angular.copy($scope.data_listworksheet, $scope.data_listworksheet_delete);
-                                    $scope.data_listworksheet = JSON.parse(replace_hashKey_arr(array.tasks_worksheet));
-                                    $scope.data_listworksheet_def = clone_arr_newrow(array.tasks_worksheet);
-                                }
-                            } 
-                            apply();
-
-                            //set_alert('Warning', "Upload Data Success.");
-                            $('#modalMsgFile').modal('show');
-                        } else {
-                            // กรณีเกิดข้อผิดพลาดในการร้องขอไปยัง server
-                            console.error('มีข้อผิดพลาด: ' + request.status);
-                        }
-                        $("#divLoading").hide(); 
-                    }
-                };
-
-                request.send(fd);
-
-            } catch { 
-                $("#divLoading").hide(); 
+            var arr = $filter('filter')($scope.data_drawing, function (item) { return (item.seq == seq); });
+            if (arr.length > 0) {
+                arr[0].document_file_name = null;
+                arr[0].document_file_size = null;
+                arr[0].document_file_path = null;
+                arr[0].action_change = 1;
+                apply();
             }
+    
+        };
+        
 
-             updateDataSessionAccessInfo('session')
-
-        } else {
-            fileInfoSpan.textContent = "";
-        }
-    }
-    $scope.fileSelect = function (input, file_part) {
-        //drawing, responder, approver
-        var file_doc = $scope.data_header[0].pha_no;
-        const fileInput = input;
-        const fileSeq = fileInput.id.split('-')[1];
-        const fileInfoSpan = document.getElementById('filename' + fileSeq);
-
-        // Function to truncate file name
-        function truncateFilename(filename, length) {
+        $scope.truncateFilename = function(filename, length) {
             if (!filename) return '';
             if (filename.length <= length) return filename;
             const start = filename.slice(0, Math.floor(length / 2));
             const end = filename.slice(-Math.floor(length / 2));
             return `${start}.......${end}`;
-        }
+        };
+        
+        $scope.fileUploadSelectTemplate = function (input) {
+            var file_doc = $scope.data_header[0].pha_no;
+            const fileInput = input;
+            const fileSeq = fileInput.id.split('-')[1];
+            const fileInfoSpan = document.getElementById('uploadfile-' + fileSeq);
 
-        if (fileInput.files.length > 0) {
-            const file = fileInput.files[0];
-            const fileName = file.name;
-            const fileSize = Math.round(file.size / 1024);
+            if (fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                const fileName = file.name;
+                const fileSize = Math.round(file.size / 1024);
+                //fileInfoSpan.textContent = `${fileName} (${fileSize} KB)`;
+
+                let shortenedFileName = fileName.length > 20 ? fileName.substring(0, 20) + '...' : fileName;
+                fileInfoSpan.textContent = `${shortenedFileName} (${fileSize} KB)`;
+
+
+                if (fileName.toLowerCase().indexOf('.xlsx') == -1 && fileName.toLowerCase().indexOf('.xls') == -1) {
+                    fileInfoSpan.textContent = "";
+                    set_alert('Warning', 'Please select a Excle file.');
+                    return;
+                }
+
+                var fd = new FormData();
+                //Take the first selected file
+                fd.append("file_obj", file);
+                fd.append("file_seq", fileSeq);
+                fd.append("file_name", fileName);
+                fd.append("file_doc", file_doc);
+                fd.append("sub_software", 'jsea');
+
+                try {
+                    $("#divLoading").show(); 
+                    const request = new XMLHttpRequest();
+                    request.open("POST", url_ws + 'Flow/importfile_data_jsea');
+                    //request.send(fd);
+
+                    const ALERT_MESSAGES = {
+                        INVALID_RESPONSE: 'There was an issue with the response from the server. Please try again later.',
+                        ERROR_STATUS: 'The operation could not be completed due to an error. Please check the details and try again.',
+                        SUCCESS: 'The operation was completed successfully.',
+                        GENERIC_ERROR: 'An unexpected error occurred. Please contact support if the issue persists.'
+                    };
+
+                    request.onreadystatechange = function () {
+                        if (request.readyState === XMLHttpRequest.DONE) {
+                            if (request.status === 200) {
+
+                                const responseFromService = JSON.parse(request.responseText);
+
+                                // Check if the response is valid and if the STATUS is "true"
+                                if (responseFromService && responseFromService.msg && Array.isArray(responseFromService.msg) && responseFromService.msg.length > 0) {
+                                    if (responseFromService.msg[0].STATUS === "true") {
+                                        
+                                        // ทำอะไรกับข้อมูลที่ได้รับเช่น แสดงผลหรือประมวลผลต่อไป
+                                        const jsonArray = JSON.parse(responseFromService);
+            
+                                        if (true) {
+                                            var file_name = jsonArray.msg[0].ATTACHED_FILE_NAME;
+                                            var file_path = jsonArray.msg[0].ATTACHED_FILE_PATH;
+                                            
+                                            $scope.data_general[0].file_upload_name = file_name;
+                                            $scope.data_general[0].file_upload_size = fileSize;
+                                            $scope.data_general[0].file_upload_path = service_file_url + file_path;
+                                            $scope.data_general[0].action_change = 1;
+                                            set_data_general()
+                                        }
+            
+                                        if (array.max) {
+                                            var arr = $filter('filter')(array.max, function (item) { return (item.name == 'memberteam'); });
+                                            var iMaxSeq = 1; if (arr.length > 0) { iMaxSeq = arr[0].values; }
+                                            $scope.MaxSeqDataMemberteam = iMaxSeq;
+            
+                                            $scope.MaxSeqdata_approver = 0;
+                                            var arr_check = $filter('filter')(array.max, function (item) { return (item.name == 'approver'); });
+                                            var iMaxSeq = 1; if (arr_check.length > 0) { iMaxSeq = arr_check[0].values; }
+                                            $scope.MaxSeqdata_approver = iMaxSeq;
+            
+                                            var arr = $filter('filter')(array.max, function (item) { return (item.name == 'tasks_worksheet'); });
+                                            var iMaxSeq = 1; if (arr.length > 0) { iMaxSeq = arr[0].values; }
+                                            $scope.MaxSeqdata_listworksheet = iMaxSeq;
+                                        }
+            
+                                        if (true) {
+                                            var id_session = $scope.selectdata_session;
+                                            if (array.memberteam) {
+                                                $scope.data_memberteam_old = [];
+                                                angular.copy($scope.data_memberteam, $scope.data_memberteam_old);
+            
+                                                array.memberteam.forEach(function (member) {
+                                                    member.id_session = id_session; // newValue คือค่าที่คุณต้องการให้ id_session อัปเดตเป็น
+                                                });
+            
+                                                $scope.data_memberteam = [...$scope.data_memberteam, ...array.memberteam]; 
+                                                //console.log("check array memberteam", array.memberteam, "check memberteam", $scope.data_memberteam);  
+                                            }
+                                            if (array.approver) {
+                                                $scope.data_approver_old = [];
+                                                angular.copy($scope.data_approver, $scope.data_approver_old);
+            
+                                                array.approver.forEach(function (approver) {
+                                                    approver.id_session = id_session; // newValue คือค่าที่คุณต้องการให้ id_session อัปเดตเป็น
+                                                });
+            
+                                                $scope.data_approver = [...$scope.data_approver,...array.approver]; 
+                                                // Remove duplicates based on id
+                                                $scope.data_approver = $scope.data_approver.reduce((acc, current) => {
+                                                    const existingItem = acc.find(item => item.id === current.id);
+                                                    if (!existingItem) {
+                                                        acc.push(current);
+                                                    }
+                                                    return acc;
+                                                }, []);
+            
+                                            }
+                                            if (array.relatedpeople_outsider) {
+                                                //$scope.data_approver_old = [];
+                                                //angular.copy($scope.data_approver, $scope.data_approver_old);
+                                                array.relatedpeople_outsider.forEach(function (approver) {
+                                                    approver.id_session = id_session; // newValue คือค่าที่คุณต้องการให้ id_session อัปเดตเป็น
+                                                });
+            
+                                                $scope.data_relatedpeople_outsider = [...$scope.data_relatedpeople_outsider,...array.relatedpeople_outsider]; 
+                                                // Remove duplicates based on id
+                                                $scope.data_relatedpeople_outsider = $scope.data_relatedpeople_outsider.reduce((acc, current) => {
+                                                    const existingItem = acc.find(item => item.id === current.id);
+                                                    if (!existingItem) {
+                                                        acc.push(current);
+                                                    }
+                                                    return acc;
+                                                }, []);
+                                                //console.log("check array relatedpeople", array.relatedpeople_outsider, "check relatedpeoplem",  $scope.data_relatedpeople_outsider);                                                                     
+                                            }
+                                            if (array.tasks_worksheet) {
+                                                //old data 
+                                                angular.copy($scope.data_listworksheet, $scope.data_listworksheet_delete);
+                                                $scope.data_listworksheet = JSON.parse(replace_hashKey_arr(array.tasks_worksheet));
+                                                $scope.data_listworksheet_def = clone_arr_newrow(array.tasks_worksheet);
+                                            }
+                                        } 
+                                        apply();
+            
+                                        //set_alert('Warning', "Upload Data Success.");
+                                        $('#modalMsgFile').modal('show');
+                                        console.log('Status is true:', responseFromService.msg[0].STATUS);
+                                        set_alert('Success', ALERT_MESSAGES.SUCCESS);
+                                    } else {
+                                        console.error('Status is not true. Error message:', responseFromService.msg[0].IMPORT_DATA_MSG);
+                                        set_alert('Warning', ALERT_MESSAGES.ERROR_STATUS);
+                                    }
+                                } else {
+                                    console.error('Invalid response structure or no messages returned.');
+                                    set_alert('Error', ALERT_MESSAGES.INVALID_RESPONSE);
+                                }
+                            } else {
+                                // กรณีเกิดข้อผิดพลาดในการร้องขอไปยัง server
+                                console.error('มีข้อผิดพลาด: ' + request.status);
+                            }
+                            $("#divLoading").hide(); 
+                        }
+                    };
+
+                    request.send(fd);
+
+                } catch { 
+                    $("#divLoading").hide(); 
+                }
+
+                updateDataSessionAccessInfo('session')
+
+            } else {
+                fileInfoSpan.textContent = "";
+            }
+        }
+    
+        function validateFile(file, maxFileSizeKB, allowedFileTypes) {
+            const fileSizeKB = Math.round(file.size / 1024);
+            const fileExtension = file.name.split('.').pop().toLowerCase();
+            
+            if (fileSizeKB > maxFileSizeKB) {
+                return { valid: false, message: `File size exceeds ${maxFileSizeKB / 1024} MB. Please select a smaller file.` };
+            }
+    
+            if (!allowedFileTypes.includes(fileExtension)) {
+                const allowedTypesFormatted = allowedFileTypes.map(type => type.toUpperCase()).join(', ');
+                return { valid: false, message: `Unsupported file type. Please upload a file in one of the following formats: ${allowedTypesFormatted}.` };
+            }
+            
+            return { valid: true, fileSizeKB, fileExtension };
+        }
+            
+        $scope.fileSelectApprover = function (input, file_part) {
             try {
-                const truncatedFileName = truncateFilename(fileName, 20);
-                if (fileInfoSpan) {
-                    fileInfoSpan.textContent = `${truncatedFileName} (${fileSize} KB)`;
+                const fileDoc = $scope.data_header[0].pha_no;
+                const fileInput = input;
+                const fileSeq = fileInput.id.split('-')[2];
+                const fileInfoSpan = document.getElementById('filename-approver-' + fileSeq);
+        
+                if (fileInput.files.length > 0) {
+                    const file = fileInput.files[0];
+                    const validation = validateFile(file, 10240, ['pdf', 'eml', 'msg']);
+        
+                    if (!validation.valid) {
+                        set_alert('Warning', validation.message);
+                        return;
+                    }
+        
+                    uploadFile(file, fileSeq, file.name, validation.fileSizeKB, file_part, fileDoc)
+                        .then(response => {
+                            // Update the scope data with the new file information
+                            const arr = $filter('filter')($scope.data_drawing_approver, function (item) { return item.seq == fileSeq; });
+                            if (arr.length > 0) {
+                                arr[0].document_file_name = response.ATTACHED_FILE_NAME;
+                                arr[0].document_file_size = validation.fileSizeKB;
+                                arr[0].document_file_path = service_file_url + response.ATTACHED_FILE_PATH;
+                                arr[0].document_module = 'approver';
+                                arr[0].action_change = 1;
+                                arr[0].action_type = arr[0].action_type === 'new' ? 'insert' : arr[0].action_type;
+                                $scope.$apply(); // Ensure the scope is updated
+                            }
+                            set_alert('Success', 'Your file has been successfully attached.');
+                        })
+                        .catch(error => {
+                            console.error('File upload error:', error);
+                        });
+                } else {
+                    fileInfoSpan.textContent = "";
+                    set_alert('Warning', "No file selected. Please select a file to upload.");
                 }
             } catch (error) {
-                console.error('Error updating file info:', error);
+                console.error('Unexpected error during file selection:', error);
+                set_alert('Error', 'An unexpected error occurred. Please try again or contact support.');
             }
-
-            if (file) {
-                const allowedFileTypes = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'jpg', 'png', 'gif'];
-            
-                const fileExtension = fileName.split('.').pop().toLowerCase(); 
-                if (allowedFileTypes.includes(fileExtension)) {
-    
-                    var file_path = uploadFile(file, fileSeq, fileName, fileSize, file_part, file_doc);
-                } else {
-                    set_alert('Warning', "Unsupported file type. Please upload a PDF, EML, or MSG file.");
-                }
-            
-            } else {
-                console.log("No file selected.");
-                set_alert('Error', "No file selected. Please select a file to upload.");
-            }
-
-        } else {
-            fileInfoSpan.textContent = "";
-        }
-    }   
-
-    $scope.fileSelectRAM = function (input) {
-
-        const fileInput = input;
-        const fileSeq = fileInput.id.split('-')[1];
-        const fileInfoSpan = document.getElementById('filename_ram_' + fileSeq);
-
-        if (fileInput.files.length > 0) {
-            const file = fileInput.files[0];
-            const fileName = file.name;
-            const fileSize = Math.round(file.size / 1024);
-            //fileInfoSpan.textContent = `${fileName} (${fileSize} KB)`;
-
-            let shortenedFileName = fileName.length > 20 ? fileName.substring(0, 20) + '...' : fileName;
-            fileInfoSpan.textContent = `${shortenedFileName} (${fileSize} KB)`;
-
-
-            if (fileName.toLowerCase().indexOf('.pdf') == -1) {
-                fileInfoSpan.textContent = "";
-                set_alert('Warning', 'Please select a PDF file.');
-                return;
-            }
-
-            var file_path = uploadFileRAM(file, fileSeq, fileName, fileSize);
-
-        } else {
-            fileInfoSpan.textContent = "";
-        }
-    }
-
-    $scope.fileSelectApprover = function (input, file_part) {
-
-        //drawing, responder, approver
-        var file_doc = $scope.data_header[0].pha_no;
-        const fileInput = input;
-        const fileSeq = fileInput.id.split('-')[1];
-        const fileInfoSpan = document.getElementById('filename-approver-' + fileSeq);
-
-        if (fileInput.files.length > 0) {
-            const file = fileInput.files[0];
-            const fileName = file.name;
-            const fileSizeKB = Math.round(file.size / 1024);
-
-            const maxFileSizeKB = 10240; // 10 MB in KB
-            const allowedFileTypes = ['pdf', 'eml', 'msg'];
-                        
-            if (fileSizeKB > maxFileSizeKB) {
-                fileInfoSpan.textContent = "";
-                set_alert('Warning', 'File size exceeds 10 MB. Please select a smaller file.');
-                return;
-            }
-                    
-            const fileExtension = fileName.split('.').pop().toLowerCase(); 
+        };
         
-            
-            if (allowedFileTypes.includes(fileExtension)) {
-                console.log(fileSeq)
-
-                var file_path = uploadFile(file, fileSeq, fileName, fileSizeKB, file_part, file_doc);
-            } else {
-                set_alert('Warning', "Unsupported file type. Please upload a PDF, EML, or MSG file.");
-            }
-            
-    
-            
-        } else {
-            fileInfoSpan.textContent = "";
-        }
-    }
-
-    $scope.truncateFilename = function(filename, length) {
-        if (!filename) return '';
-        if (filename.length <= length) return filename;
-        const start = filename.slice(0, Math.floor(length / 2));
-        const end = filename.slice(-Math.floor(length / 2));
-        return `${start}.......${end}`;
-    };
-
-    function uploadFile(file_obj, seq, file_name, file_size, file_part, file_doc) {
-
-        var fd = new FormData();
-        //Take the first selected file
-        fd.append("file_obj", file_obj);
-        fd.append("file_seq", seq);
-        fd.append("file_name", file_name);
-        fd.append("file_doc", file_doc);
-        fd.append("file_part", file_part);//drawing, responder, approver
-        fd.append("file_doc", file_doc);
-        fd.append("sub_software", 'hra');
-
-        try {
-            $("#divLoading").show(); 
-
-            const request = new XMLHttpRequest();
-            request.open("POST", url_ws + 'Flow/uploadfile_data');
-
-            request.onreadystatechange = function () {
-                if (request.readyState === XMLHttpRequest.DONE) {
-                    if (request.status === 200) {
-
-                        // รับค่าที่ส่งมาจาก service ที่ตอบกลับมาด้วย responseText
-                        const responseFromService = request.responseText;
-                        let parsedResponse;
-                        
-                        try {
-                            parsedResponse = JSON.parse(responseFromService);
-                        } catch (e) {
-                            console.error("Failed to parse JSON response:", e);
-                            return;
-                        }
-                        
-                        console.log(parsedResponse);
-                        
-                        // Now you can safely access the properties
-                        if (parsedResponse && parsedResponse.msg && parsedResponse.msg[0].STATUS === "true") {
-
-                            // ทำอะไรกับข้อมูลที่ได้รับเช่น แสดงผลหรือประมวลผลต่อไป
-                            const jsonArray = JSON.parse(responseFromService);
-
-                            var file_name = jsonArray.msg[0].ATTACHED_FILE_NAME;
-                            var file_path = jsonArray.msg[0].ATTACHED_FILE_PATH;
-
-                            if(file_part == 'drawing'){
-                                
-                                var arr = $filter('filter')($scope.data_drawing, function (item) { return (item.seq == seq); });
-                                if (arr.length > 0) {
-                                    arr[0].document_file_name = file_name;
-                                    arr[0].document_file_size = file_size;
-                                    //'https://localhost:7098/api/' + '/AttachedFileTemp/hazop/HAZOP-2023-0000016-DRAWING-202312231716.PDF'
-                                    arr[0].document_file_path = service_file_url + file_path;// (url_ws.replace('/api/', '/')) + 'AttachedFileTemp/Hazop/' + file_name;
-                                    arr[0].document_module = 'hra';
-                                    arr[0].action_change = 1;
-                                    apply();
-
-                                }
-                            } else if (file_part == 'approver'){
-                                
-                                var arr = $filter('filter')($scope.data_drawing_approver, function (item) { return (item.seq == seq); });
-                                if (arr.length > 0) {
-                                    arr[0].document_file_name = file_name;
-                                    arr[0].document_file_size = file_size;
-                                    arr[0].document_file_path = service_file_url + file_path;// (url_ws.replace('/api/', '/')) + 'AttachedFileTemp/Hazop/' + file_name;
-                                    arr[0].document_module = 'approver';
-                                    arr[0].action_change = 1;
-                                    arr[0].action_type = arr[0].action_type === 'new' ? 'insert' : arr[0].action_type;
-                                    apply();
-    
-                                    console.log(arr)
-
-                                }
-
-
+        $scope.fileSelect = function (input, file_part) {
+            try {
+                const fileDoc = $scope.data_header[0].pha_no;
+                const fileInput = input;
+                const fileSeq = fileInput.id.split('-')[1];
+                const fileInfoSpan = document.getElementById('filename' + fileSeq);
+        
+                if (fileInput.files.length > 0) {
+                    const file = fileInput.files[0];
+                    const validation = validateFile(file, 10240, ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'jpg', 'png', 'gif']);
+        
+                    if (!validation.valid) {
+                        set_alert('Warning', validation.message);
+                        return;
+                    }
+        
+        
+                    uploadFile(file, fileSeq, file.name, validation.fileSizeKB, file_part, fileDoc)
+                        .then(response => {
+                            // Update the scope data with the new file information
+                            const arr = $filter('filter')($scope.data_drawing, function (item) { return item.seq == fileSeq; });
+                            if (arr.length > 0) {
+                                arr[0].document_file_name = response.ATTACHED_FILE_NAME;
+                                arr[0].document_file_size = validation.fileSizeKB;
+                                arr[0].document_file_path = service_file_url + response.ATTACHED_FILE_PATH;
+                                arr[0].document_module = 'hra';
+                                arr[0].action_change = 1;
+                                $scope.$apply(); // Ensure the scope is updated
                             }
-
-                            $("#divLoading").hide(); 
-                            set_alert('Success', 'File attached successfully.');
-
-                        }else{
-
-                            $("#divLoading").hide(); 
-                            set_alert('Warning', 'Unable to connect to the service. Please check your internet connection or try again later.');
-                        }
-
-                    } else {
-                        $("#divLoading").hide(); 
-
-                        // กรณีเกิดข้อผิดพลาดในการร้องขอไปยัง server
-                        console.error('มีข้อผิดพลาด: ' + request.status);
-                    }
-                }
-
-            };
-
-            request.send(fd);
-
-        } catch {
-            $("#divLoading").hide(); 
-         }
-
-        return "";
-    }
-    function uploadFileRAM(file_obj, seq, file_name, file_size) {
-        var sub_software = 'jsea';// ram เก็บไว้ที่เดียวกกัน
-        var fd = new FormData();
-        //Take the first selected file
-        fd.append("file_obj", file_obj);
-        fd.append("file_seq", seq);
-        fd.append("file_name", file_name);
-        fd.append("sub_software", sub_software);
-
-        try {
-            const request = new XMLHttpRequest();
-            request.open("POST", url_ws + 'Flow/uploadfile_data');
-            request.send(fd);
-
-            var arr = $filter('filter')($scope.master_ram, function (item) { return (item.seq == seq); });
-            if (arr.length > 0) {
-                arr[0].document_file_name = file_name;
-                arr[0].document_file_size = file_size;
-                arr[0].document_file_path = (url_ws.replace('/api/', '/')) + 'AttachedFileTemp/' + sub_software + '/' + file_name;
-                arr[0].action_change = 1;
-                apply();
-            }
-        } catch { }
-
-        return "";
-    }
-    
-
-    function uploadFileApprover(file_obj, seq, file_name, file_size, file_part, file_doc) {
-        // แสดง loading indicator
-        $("#divLoading").show();
-
-        var fd = new FormData();
-        // Take the first selected file
-        fd.append("file_obj", file_obj);
-        fd.append("file_seq", seq);
-        fd.append("file_name", file_name);
-        fd.append("file_doc", file_doc);
-        fd.append("file_part", file_part); // drawing, responder, approver
-        fd.append("file_doc", file_doc);
-        fd.append("sub_software", 'jsea');
-
-        try {
-            const request = new XMLHttpRequest();
-            request.open("POST", url_ws + 'Flow/uploadfile_data');
-    
-            request.onreadystatechange = function() {
-
-                if (request.readyState === XMLHttpRequest.DONE) {
-                
-                    if (request.status === 200) {
-
-                        // รับค่าที่ส่งมาจาก service ที่ตอบกลับมาด้วย responseText
-                        const responseFromService = request.responseText;
-                        // ทำอะไรกับข้อมูลที่ได้รับเช่น แสดงผลหรือประมวลผลต่อไป
-                        console.log("responseFromService", responseFromService);
-    
-                        const jsonArray = JSON.parse(responseFromService);
-    
-                        var file_name = jsonArray[0].ATTACHED_FILE_NAME;
-                        var file_path = jsonArray[0].ATTACHED_FILE_PATH;
-    
-                        var arr = $filter('filter')($scope.data_drawing_approver, function(item) {
-                            return (item.seq == seq);
+                            set_alert('Success', 'Your file has been successfully attached.');
+                        })
+                        .catch(error => {
+                            console.error('File upload error:', error);
                         });
-                        if (arr.length > 0) {
-                            arr[0].document_file_name = file_name;
-                            arr[0].document_file_size = file_size;
-                            arr[0].document_file_path = service_file_url + file_path;
-                            arr[0].document_module = 'approver';
-                            arr[0].action_change = 1;
-                            apply();
-                        }
-                        console.log("show arr", arr)
-                    } else {
-                        // กรณีเกิดข้อผิดพลาดในการร้องขอไปยัง server
-                        console.error('มีข้อผิดพลาด: ' + request.status);
-                    }
-
-                    // ซ่อน loading indicator
-                    $("#divLoading").hide();
+                } else {
+                    fileInfoSpan.textContent = "";
+                    set_alert('Warning', "No file selected. Please select a file to upload.");
                 }
-            };
+            } catch (error) {
+                console.error('Unexpected error during file selection:', error);
+                set_alert('Error', 'An unexpected error occurred. Please try again or contact support.');
+            }
+        };
 
-
-            request.send(fd);
-        } catch (error) {
-            $("#divLoading").hide();
-            console.error('Error:', error);
-            
+        function uploadFile(file, seq, fileName, fileSizeKB, filePart, fileDoc) {
+            const fd = new FormData();
+            fd.append("file_obj", file);
+            fd.append("file_seq", seq);
+            fd.append("file_name", fileName);
+            fd.append("file_doc", fileDoc);
+            fd.append("file_part", filePart); // drawing, responder, approver
+            fd.append("sub_software", 'hra');
+        
+            return new Promise((resolve, reject) => {
+                const request = new XMLHttpRequest();
+                request.open("POST", url_ws + 'Flow/uploadfile_data');
+        
+                request.onreadystatechange = function () {
+                    if (request.readyState === XMLHttpRequest.DONE) {
+                        $("#divLoading").hide();
+                        if (request.status === 200) {
+                            try {
+                                const parsedResponse = JSON.parse(request.responseText);
+                                if (parsedResponse && parsedResponse.msg && parsedResponse.msg.length > 0 && parsedResponse.msg[0].STATUS === "true") {
+                                    resolve(parsedResponse.msg[0]);
+                                } else {
+                                    set_alert('Warning', 'The system encountered an issue processing your file. Please try again or contact support if the problem persists.');
+                                    reject('Service response indicated an issue.');
+                                }
+                            } catch (e) {
+                                set_alert('Error', 'Unexpected issue occurred while processing your request. Please try again later.');
+                                reject(e);
+                            }
+                        } else {
+                            set_alert('Error', 'We are unable to complete your request at the moment. Please check your connection or try again later.');
+                            reject('Error during server request: ' + request.status);
+                        }
+                    }
+                };
+        
+                $("#divLoading").show();
+                request.send(fd);
+            });
         }
 
+        $scope.fileSelectRAM = function (input) {
 
+            const fileInput = input;
+            const fileSeq = fileInput.id.split('-')[1];
+            const fileInfoSpan = document.getElementById('filename_ram_' + fileSeq);
     
-        return "";
+            if (fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                const fileName = file.name;
+                const fileSize = Math.round(file.size / 1024);
+                //fileInfoSpan.textContent = `${fileName} (${fileSize} KB)`;
+    
+                let shortenedFileName = fileName.length > 20 ? fileName.substring(0, 20) + '...' : fileName;
+                fileInfoSpan.textContent = `${shortenedFileName} (${fileSize} KB)`;
+    
+    
+                if (fileName.toLowerCase().indexOf('.pdf') == -1) {
+                    fileInfoSpan.textContent = "";
+                    set_alert('Warning', 'Please select a PDF file.');
+                    return;
+                }
+    
+                var file_path = uploadFileRAM(file, fileSeq, fileName, fileSize);
+    
+            } else {
+                fileInfoSpan.textContent = "";
+            }
+        }
+    
+        function uploadFileRAM(file_obj, seq, file_name, file_size) {
+            var sub_software = 'jsea';// ram เก็บไว้ที่เดียวกกัน
+            var fd = new FormData();
+            //Take the first selected file
+            fd.append("file_obj", file_obj);
+            fd.append("file_seq", seq);
+            fd.append("file_name", file_name);
+            fd.append("sub_software", sub_software);
+    
+            try {
+                const request = new XMLHttpRequest();
+                request.open("POST", url_ws + 'Flow/uploadfile_data');
+                request.send(fd);
+    
+                var arr = $filter('filter')($scope.master_ram, function (item) { return (item.seq == seq); });
+                if (arr.length > 0) {
+                    arr[0].document_file_name = file_name;
+                    arr[0].document_file_size = file_size;
+                    arr[0].document_file_path = (url_ws.replace('/api/', '/')) + 'AttachedFileTemp/' + sub_software + '/' + file_name;
+                    arr[0].action_change = 1;
+                    apply();
+                }
+            } catch { }
+    
+            return "";
+        }
     }
-    
+
 
     //  scroll  table header freezer 
     $scope.handleScroll = function () {
@@ -1334,6 +1232,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             //{ name: 'relatedpeople', action_part: 4, title: ' Review & Approver Person', isActive: false, isShow: false },
             { name: 'report', action_part: 5, title: 'Report', isActive: false, isShow: false }
         ];
+
+        
 
     }
 
@@ -5325,6 +5225,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         return angular.toJson(arr_json);
     }
 
+    
     function set_alert(header, detail) {
         $scope.Action_Msg_Header = header;
         $scope.Action_Msg_Detail = detail;
