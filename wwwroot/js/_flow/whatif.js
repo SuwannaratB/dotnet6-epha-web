@@ -6870,7 +6870,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.selectedItemListView = _seq;
         }
 
-        updateDataSessionAccessInfo()
+        if(type_text == 'meeting_date' || type_text == 'meeting_time'){
+            updateDataSessionAccessInfo('session');
+
+        }
 
         
         $scope.unsavedChanges = true;
@@ -8136,7 +8139,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     }
 
-    $scope.accessInfoMap = {};
+    $scope.sessionAccessInfoMap = {};
+    $scope.drawingAccessInfoMap = {};
 
     $scope.getAccessInfo = function(item, index, type) {
         let accessInfo = {
@@ -8181,9 +8185,28 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 } else {
                     accessInfo.canCopy = false;
                 }
-            }
-        } else if(type === 'drawing'){
 
+            }
+
+            let meeting_data = $scope.data_session.filter(data => data.id === item.id);
+
+            if (
+                meeting_data[0].meeting_date != null || 
+                meeting_data[0].meeting_start_time != null || 
+                meeting_data[0].meeting_start_time_hh != null || 
+                meeting_data[0].meeting_start_time_mm != null || 
+                meeting_data[0].meeting_end_time != null || 
+                meeting_data[0].meeting_end_time_hh != null || 
+                meeting_data[0].meeting_end_time_mm != null
+            ) {
+                accessInfo.canCopy = true;
+                accessInfo.canRemove = true;
+            } 
+
+            $scope.sessionAccessInfoMap[item.id] = accessInfo;        
+
+        } else if(type === 'drawing'){
+    
             if(index === 0) {
                 if (item.document_name !== null || item.document_no !== null || item.descriptions !== null ||
                     item.document_file_name !== null || item.document_file_path !== null) {
@@ -8194,10 +8217,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             } else {
                 accessInfo.canRemove = true;
             }
+
+            $scope.drawingAccessInfoMap[item.id] = accessInfo;
         }
-
-
-        $scope.accessInfoMap[item.id] = accessInfo;
     };
     
     

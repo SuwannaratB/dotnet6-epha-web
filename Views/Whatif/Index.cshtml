@@ -753,7 +753,7 @@
                                                                     <label class="form-label d-none" for="meeting_date">Meeting Date</label>
 
                                                                     <input type="date" class="form-control rounded-1 datetimepicker" id="meeting_date" name="meeting_date"
-                                                                           ng-change="actionChange(item,item.seq,'')"
+                                                                           ng-change="actionChange(item,item.seq,'meeting_date')"
                                                                            ng-model="item.meeting_date" placeholder="dd/mm/yyyy">
 
                                                                 </span>
@@ -764,18 +764,18 @@
 
                                                                     <input class="form-control  d-none" id="st_meet" name="st_meet"
                                                                            style="width:20px; height: 20px"
-                                                                           ng-change="actionChange(item,item.seq,'')"
+                                                                           ng-change="actionChange(item,item.seq,'meeting_time')"
                                                                            ng-model="item.meeting_start_time" value="{{formatTo24Hour(item.meeting_start_time)}}"
                                                                            type="time" placeholder="hour : minute" />
 
                                                                     <select class="form-select rounded-1  me-1 p-1" ng-model="item.meeting_start_time_hh"
-                                                                            style="width:60px" ng-change="actionChange(item,item.seq,'')">
+                                                                            style="width:60px" ng-change="actionChange(item,item.seq,'meeting_time')">
                                                                         <option ng-repeat="item2 in master_hours" ng-value="item2.id">
                                                                             {{item2.name}}
                                                                         </option>
                                                                     </select>
                                                                     <select class="form-select rounded-1  me-1 p-1" ng-model="item.meeting_start_time_mm"
-                                                                            style="width:60px" ng-change="actionChange(item,item.seq,'')">
+                                                                            style="width:60px" ng-change="actionChange(item,item.seq,'meeting_time')">
                                                                         <option ng-repeat="item2 in master_minutes" ng-value="item2.id">
                                                                             {{item2.name}}
                                                                         </option>
@@ -789,18 +789,18 @@
                                                                     <label class="form-label d-none" for="timepicker2">End Time</label>
                                                                     <label class="form-label d-none" style="font-size: 10px;">{{formatTo24Hour(item.meeting_end_time)}}</label>
                                                                     <input class="form-control  d-none" id="et_meet" name="et_meet"
-                                                                           ng-change="actionChange(item,item.seq,'')"
+                                                                           ng-change="actionChange(item,item.seq,'meeting_time')"
                                                                            ng-model="item.meeting_end_time"
                                                                            type="time" placeholder="hour : minute" />
 
                                                                     <select class="form-select rounded-1  me-1 p-1" ng-model="item.meeting_end_time_hh"
-                                                                            style="width:60px" ng-change="actionChange(item,item.seq,'')">
+                                                                            style="width:60px" ng-change="actionChange(item,item.seq,'meeting_time')">
                                                                         <option ng-repeat="item2 in master_hours" ng-value="item2.id">
                                                                             {{item2.name}}
                                                                         </option>
                                                                     </select>
                                                                     <select class="form-select rounded-1  me-1 p-1" ng-model="item.meeting_end_time_mm"
-                                                                            style="width:60px" ng-change="actionChange(item,item.seq,'')">
+                                                                            style="width:60px" ng-change="actionChange(item,item.seq,'meeting_time')">
                                                                         <option ng-repeat="item2 in master_minutes" ng-value="item2.id">
                                                                             {{item2.name}}
                                                                         </option>

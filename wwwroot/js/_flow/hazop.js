@@ -6848,8 +6848,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.data_general[0].action_change = 1;
         }
 
-        updateDataSessionAccessInfo()
+        if(type_text == 'meeting_date' || type_text == 'meeting_time'){
+            updateDataSessionAccessInfo('session');
 
+        }
 
         apply();
     }
@@ -7900,7 +7902,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     }
 
-    $scope.accessInfoMap = {};
+    $scope.sessionAccessInfoMap = {};
+    $scope.drawingAccessInfoMap = {};
 
     $scope.getAccessInfo = function(item, index, type) {
         let accessInfo = {
@@ -7911,41 +7914,42 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         if(type == 'session'){
             let approverData = $scope.data_approver.filter(data => data.id_session === item.id);
             let memberTeamData = $scope.data_memberteam.filter(data => data.id_session === item.id);
-            //let relatedPeopleData = $scope.data_relatedpeople.filter(data => data.id_session === item.id);
-    
-            if ($scope.data_general[0].expense_type === 'CAPEX') {
-
-                if (index === 0 && 
-                    (approverData.length === 0 || approverData[0].user_name == null) &&
-                    (memberTeamData.length === 0 || memberTeamData[0].user_name == null)) {
-                    accessInfo.canRemove = false;
-                } else {
-                    accessInfo.canRemove = true;
-                }
-        
-                if ((approverData.length > 0 && approverData[0].user_name != null) ||
-                    (memberTeamData.length > 0 && memberTeamData[0].user_name != null)) {
-                    accessInfo.canCopy = true;
-                } else {
-                    accessInfo.canCopy = false;
-                }
-
+            
+            if (index === 0 && 
+                (approverData.length === 0 || approverData[0].user_name == null) &&
+                (memberTeamData.length === 0 || memberTeamData[0].user_name == null)) {
+                accessInfo.canRemove = false;
             } else {
-                if (index === 0 && 
-                    (memberTeamData.length === 0 || memberTeamData[0].user_name == null)) {
-                    accessInfo.canRemove = false;
-                } else {
-                    accessInfo.canRemove = true;
-                }
-        
-                if ((memberTeamData.length > 0 && memberTeamData[0].user_name != null)) {
-                    accessInfo.canCopy = true;
-                } else {
-                    accessInfo.canCopy = false;
-                }
+                accessInfo.canRemove = true;
             }
-        } else if(type === 'drawing'){
+    
+            if ((approverData.length > 0 && approverData[0].user_name != null) ||
+                (memberTeamData.length > 0 && memberTeamData[0].user_name != null)) {
+                accessInfo.canCopy = true;
+            } else {
+                accessInfo.canCopy = false;
+            }
 
+            let meeting_data = $scope.data_session.filter(data => data.id === item.id);
+
+            if (
+                meeting_data[0].meeting_date != null || 
+                meeting_data[0].meeting_start_time != null || 
+                meeting_data[0].meeting_start_time_hh != null || 
+                meeting_data[0].meeting_start_time_mm != null || 
+                meeting_data[0].meeting_end_time != null || 
+                meeting_data[0].meeting_end_time_hh != null || 
+                meeting_data[0].meeting_end_time_mm != null
+            ) {
+                accessInfo.canCopy = true;
+                accessInfo.canRemove = true;
+            } 
+
+            $scope.sessionAccessInfoMap[item.id] = accessInfo;
+            
+            
+        } else if(type === 'drawing'){
+    
             if(index === 0) {
                 if (item.document_name !== null || item.document_no !== null || item.descriptions !== null ||
                     item.document_file_name !== null || item.document_file_path !== null) {
@@ -7956,12 +7960,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             } else {
                 accessInfo.canRemove = true;
             }
-        }
 
-        $scope.accessInfoMap[item.id] = accessInfo;
+            $scope.drawingAccessInfoMap[item.id] = accessInfo;
+        }
+        
+        
     };
-    
-    
+
     //access each role
     $scope.Access_check = function(task) {
         let accessInfo = {
