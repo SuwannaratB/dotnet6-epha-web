@@ -1008,7 +1008,7 @@
                                                                         </span>
                                                                         <a id="deluploadfile-{{item.seq}}" class="btn btn-link text-danger p-0 ms-2"
                                                                                 ng-class="{'d-none':(!tab_general_active)}"
-                                                                                ng-click="clearFileName(item.seq)">
+                                                                                ng-click="triggerRemove(item,item.seq,'','uploadfile')">
                                                                             <span class="fa-regular fa-trash-can fa-lg"></span>
                                                                         </a>
                                                                     </div>
@@ -4029,6 +4029,7 @@
                     </div>
                     <div class="d-flex justify-content-center mt-4" ng-hide=" Action_Msg_Header == 'Success'">
                         <button class="btn text-white px-5 py-2" type="button" data-bs-dismiss="modal" aria-label="Close"
+                                ng-click="goBackToTab()"
                                 ng-class="{
                                     'bg-primary' : Action_Msg_Header == 'Success',
                                     'bg-warning' : Action_Msg_Header == 'Warning',

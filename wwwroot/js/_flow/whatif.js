@@ -606,11 +606,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                                     if (responseFromService.msg[0].STATUS === "true") {
                                         
                                         // ทำอะไรกับข้อมูลที่ได้รับเช่น แสดงผลหรือประมวลผลต่อไป
-                                        const jsonArray = JSON.parse(responseFromService);
+                                        const array = responseFromService;
             
                                         if (true) {
-                                            var file_name = jsonArray.msg[0].ATTACHED_FILE_NAME;
-                                            var file_path = jsonArray.msg[0].ATTACHED_FILE_PATH;
+                                            var file_name = array.msg[0].ATTACHED_FILE_NAME;
+                                            var file_path = array.msg[0].ATTACHED_FILE_PATH;
                                             
                                             $scope.data_general[0].file_upload_name = file_name;
                                             $scope.data_general[0].file_upload_size = fileSize;
@@ -2524,7 +2524,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
     }
     function set_tab_focus(pha_status, action_part_befor) {
-    
+        
         let arr_tab;
     
         if (pha_status === 11) {
@@ -2537,18 +2537,32 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.action_part = 5;
             $scope.changeTab_Focus(arr_tab, arr_tab.name);
         } 
-        else if ([11, 81, 91, 21].includes(pha_status) && !$scope.params) {
+        else if ([11, 81, 91].includes(pha_status) && !$scope.params) {
             arr_tab = $filter('filter')($scope.tabs, item => item.action_part === 1);
             $scope.action_part = 1;
             $scope.changeTab_Focus(arr_tab, arr_tab.name);
         } 
+        else if (pha_status === 21 && !$scope.params) {
+            arr_tab = $filter('filter')($scope.tabs, item => item.action_part === 7);
+            $scope.action_part = 7;
+            $scope.changeTab_Focus(arr_tab, arr_tab.name);
+        } 
+        else if ($scope.params === 'edit_action_owner') {
+            arr_tab = $filter('filter')($scope.tabs, item => item.action_part === 5);
+            $scope.action_part = 5;
+            $scope.changeTab_Focus(arr_tab, arr_tab.name);
+        }
         else if ($scope.params === 'edit_approver') {
             arr_tab = $filter('filter')($scope.tabs, item => item.action_part === 7);
             $scope.action_part = 7;
             $scope.changeTab_Focus(arr_tab, arr_tab.name);
         }
+        else if ($scope.params === 'edit') {
+            arr_tab = $filter('filter')($scope.tabs, item => item.action_part === 1);
+            $scope.action_part = 1;
+            $scope.changeTab_Focus(arr_tab, arr_tab.name);
+        }
     
-        console.log($scope.params);
     }
 
     function check_case_member_review() {
@@ -3149,7 +3163,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $('#removeModal').modal('hide');
         }
         
-    };      
+    };  
+        
     $scope.addDataSession = function (seq, index) {
 
         $scope.MaxSeqDataSession = Number($scope.MaxSeqDataSession) + 1;

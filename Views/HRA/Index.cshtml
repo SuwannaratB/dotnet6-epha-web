@@ -3850,6 +3850,7 @@
                     </div>
                     <div class="d-flex justify-content-center mt-4" ng-hide=" Action_Msg_Header == 'Success'">
                         <button class="btn text-white px-5 py-2" type="button" data-bs-dismiss="modal" aria-label="Close"
+                                ng-click="goBackToTab()"
                                 ng-class="{
                                     'bg-primary' : Action_Msg_Header == 'Success',
                                     'bg-warning' : Action_Msg_Header == 'Warning',

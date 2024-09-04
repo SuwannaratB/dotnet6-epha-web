@@ -473,8 +473,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         } catch (error) { }
 
 
-        console.log("selectedTab",selectedTab)
-
         // Set all tabs to inactive
         angular.forEach($scope.tabs, function (tab) {
             tab.isActive = false;
@@ -594,11 +592,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                                     if (responseFromService.msg[0].STATUS === "true") {
                                         
                                         // ทำอะไรกับข้อมูลที่ได้รับเช่น แสดงผลหรือประมวลผลต่อไป
-                                        const jsonArray = JSON.parse(responseFromService);
+                                        const array = responseFromService;
             
                                         if (true) {
-                                            var file_name = jsonArray.msg[0].ATTACHED_FILE_NAME;
-                                            var file_path = jsonArray.msg[0].ATTACHED_FILE_PATH;
+                                            var file_name = array.msg[0].ATTACHED_FILE_NAME;
+                                            var file_path = array.msg[0].ATTACHED_FILE_PATH;
                                             
                                             $scope.data_general[0].file_upload_name = file_name;
                                             $scope.data_general[0].file_upload_size = fileSize;
@@ -2455,18 +2453,39 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
     }
     function set_tab_focus(pha_status, action_part_befor) {
-        if (pha_status == 11) {
-            var arr_tab = $filter('filter')($scope.tabs, function (item) { return ((item.action_part == action_part_befor)); });
+        
+        let arr_tab;
 
-            $scope.changeTab(arr_tab[0], arr_tab[0].name);
-
-        } else if (pha_status == 12 || $scope.params === 'edit_action_owner' || $scope.params === 'edit') {
-            var arr_tab = $filter('filter')($scope.tabs, function (item) { return ((item.action_part == 3)); });
+        if (pha_status === 11) {
+            arr_tab = $filter('filter')($scope.tabs, item => item.action_part === action_part_befor);
+            $scope.changeTab_Focus(arr_tab, arr_tab.name);
+        } 
+        else if ([12, 22].includes(pha_status)) {
+            arr_tab = $filter('filter')($scope.tabs, item => item.action_part === 3);
             $scope.action_part = 3;
-            console.log("arr_tab", arr_tab[0]);
-
-            $scope.changeTab(arr_tab[0], arr_tab[0].name);
+            $scope.changeTab_Focus(arr_tab, arr_tab.name);
+        } 
+        else if ([11, 81, 91].includes(pha_status) && !$scope.params) {
+            arr_tab = $filter('filter')($scope.tabs, item => item.action_part === 1);
+            $scope.action_part = 1;
+            $scope.changeTab_Focus(arr_tab, arr_tab.name);
+        } 
+        else if (pha_status === 21 && !$scope.params) {
+            arr_tab = $filter('filter')($scope.tabs, item => item.action_part === 4);
+            $scope.action_part = 4;
+            $scope.changeTab_Focus(arr_tab, arr_tab.name);
+        } 
+        else if ($scope.params === 'edit_approver') {
+            arr_tab = $filter('filter')($scope.tabs, item => item.action_part === 4);
+            $scope.action_part = 4;
+            $scope.changeTab_Focus(arr_tab, arr_tab.name);
         }
+        else if ($scope.params === 'edit') {
+            arr_tab = $filter('filter')($scope.tabs, item => item.action_part === 3);
+            $scope.action_part = 3;
+            $scope.changeTab_Focus(arr_tab, arr_tab.name);
+        }
+    
     }
     function set_access_formaction(arr) {
         // params === admin action

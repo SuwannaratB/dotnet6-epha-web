@@ -451,7 +451,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             
             return { valid: true, fileSizeKB, fileExtension };
         }
-            
+        
+    
         $scope.fileSelectApprover = function (input, file_part) {
             try {
                 const fileDoc = $scope.data_header[0].pha_no;
