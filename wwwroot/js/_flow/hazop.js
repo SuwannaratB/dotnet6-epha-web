@@ -475,160 +475,164 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $('#modalPleaseRegister').modal('hide');
     }
 
-    $scope.changeTab = function (selectedTab) {
-        $scope.action_part = selectedTab.action_part;
 
-        try {
-
-            if ($scope.data_header[0].pha_status == 11) {
-                if (selectedTab.name == 'worksheet'
-                    || selectedTab.name == 'manage'
-                    || selectedTab.name == 'report'
-                ) {
-
-                    if ($scope.data_general[0].sub_expense_type == 'Normal') {
-                        
-                        if (!$scope.data_general[0].expense_type ||
-                            !$scope.data_general[0].sub_expense_type ||
-                            !$scope.data_general[0].id_apu
-                        ) {
+    //manage tabs
+    if(true){
+        $scope.changeTab = function (selectedTab) {
+            $scope.action_part = selectedTab.action_part;
+    
+            try {
+    
+                if ($scope.data_header[0].pha_status == 11) {
+                    if (selectedTab.name == 'worksheet'
+                        || selectedTab.name == 'manage'
+                        || selectedTab.name == 'report'
+                    ) {
+    
+                        if ($scope.data_general[0].sub_expense_type == 'Normal') {
+                            
+                            if (!$scope.data_general[0].expense_type ||
+                                !$scope.data_general[0].sub_expense_type ||
+                                !$scope.data_general[0].id_apu
+                            ) {
+                                $scope.tab_worksheet_show = true;
+                                $scope.tab_managerecom_show = true;
+                                $scope.goback_tab = 'general';
+                                
+                                angular.forEach($scope.tabs, function (tab) {
+                                    tab.isActive = false;
+                                });
+                                selectedTab.isActive = true;
+    
+                                // return set_alert('Warning', 'Please select a valid General Information');
+                            }
+    
+                        // if (!$scope.data_drawing[0].document_no ) {
+                        //     $scope.tab_worksheet_show = true;
+                        //     $scope.tab_managerecom_show = true;
+                        //     $scope.goback_tab = 'node';
+    
+                        //     angular.forEach($scope.tabs, function (tab) {
+                        //         tab.isActive = false;
+                        //     });
+                        //     selectedTab.isActive = true;
+    
+                        //     return set_alert('Warning', 'Please select a valid Drawing');
+                        // }
+    
+                        //     if (!$scope.data_node[0].node ||
+                        //         !$scope.data_nodedrawing[0].id_drawing
+                        //     ) {
+                        //         $scope.tab_worksheet_show = true;
+                        //         $scope.tab_managerecom_show = true;
+                        //         $scope.goback_tab = 'node';
+    
+                        //         angular.forEach($scope.tabs, function (tab) {
+                        //             tab.isActive = false;
+                        //         });
+                        //         selectedTab.isActive = true;
+    
+                        //         return set_alert('Warning', 'Please select a valid Node');
+                        //     }
+                            if(!validBeforRegister()) 
+                                return set_alert('Warning',$scope.validMessage)
+    
+                            apply();
+                            $('#modalPleaseRegister').modal('show');
+                            return;
+                        } else {
+    
+                            $scope.tab_worksheet_active = true;
+                            $scope.tab_managerecom_active = true;
                             $scope.tab_worksheet_show = true;
                             $scope.tab_managerecom_show = true;
-                            $scope.goback_tab = 'general';
-                            
-                            angular.forEach($scope.tabs, function (tab) {
-                                tab.isActive = false;
-                            });
-                            selectedTab.isActive = true;
-
-                            // return set_alert('Warning', 'Please select a valid General Information');
                         }
-
-                    // if (!$scope.data_drawing[0].document_no ) {
-                    //     $scope.tab_worksheet_show = true;
-                    //     $scope.tab_managerecom_show = true;
-                    //     $scope.goback_tab = 'node';
-
-                    //     angular.forEach($scope.tabs, function (tab) {
-                    //         tab.isActive = false;
-                    //     });
-                    //     selectedTab.isActive = true;
-
-                    //     return set_alert('Warning', 'Please select a valid Drawing');
-                    // }
-
-                    //     if (!$scope.data_node[0].node ||
-                    //         !$scope.data_nodedrawing[0].id_drawing
-                    //     ) {
-                    //         $scope.tab_worksheet_show = true;
-                    //         $scope.tab_managerecom_show = true;
-                    //         $scope.goback_tab = 'node';
-
-                    //         angular.forEach($scope.tabs, function (tab) {
-                    //             tab.isActive = false;
-                    //         });
-                    //         selectedTab.isActive = true;
-
-                    //         return set_alert('Warning', 'Please select a valid Node');
-                    //     }
-                        if(!validBeforRegister()) 
-                            return set_alert('Warning',$scope.validMessage)
-
-                        apply();
-                        $('#modalPleaseRegister').modal('show');
-                        return;
-                    } else {
-
-                        $scope.tab_worksheet_active = true;
-                        $scope.tab_managerecom_active = true;
-                        $scope.tab_worksheet_show = true;
-                        $scope.tab_managerecom_show = true;
                     }
                 }
-            }
-
-            //if selcte hazop
-            if (selectedTab.action_part == 5) {
-                $scope.selectedItemNodeView = $scope.data_node[0].id;
-                $scope.viewDataNodeList($scope.selectedItemNodeView);
-
-            }   
-                     
-            // default start date recommendations
-
-            if (selectedTab.action_part == 6) {
-                $scope.data_nodeworksheet.forEach(_item => {
-                    if (_item.recommendations && (_item.responder_user_displayname || _item.project_team_text) && !_item.estimated_start_date) {
-                        _item.estimated_start_date = new Date();
-                        $scope.actionChangeWorksheet(_item, _item.seq, '');
-                    }
-                });
-            }
-        } catch (error) { }
-
-
-        angular.forEach($scope.tabs, function (tab) {
-            tab.isActive = false;
-        });
-        selectedTab.isActive = true;
-
-        check_tab(selectedTab.name);
-
-
-        $scope.oldTab = selectedTab;
-        apply();
-    };
-    $scope.goBackToTab = function (){
-        var tag_name = $scope.goback_tab;
-
-        var arr_tab = $filter('filter')($scope.tabs, function (item) {
-            return ((item.name == tag_name));
-        });
-
-        $scope.changeTab_Focus(arr_tab, tag_name);
-    }
-
-    $scope.changeTab_Focus = function (selectedTab, nameTab) {
-        angular.forEach($scope.tabs, function (tab) {
-            tab.isActive = false;
-        });
-
-        // Set all tabs to inactive
-        angular.forEach($scope.tabs, function (tab) {
-            tab.isActive = false;
-            var tabPane = document.getElementById("tab-" + tab.name);
-            if (tabPane) {
-                tabPane.classList.remove('show', 'active');
-            }
-        });
-
-        if(Array.isArray){
-            selectedTab[0].isActive = true;
-            var activeTabPane = document.getElementById("tab-" + selectedTab[0].name);
-            if (activeTabPane) {
-                activeTabPane.classList.add('show', 'active');
-            }
-
-            console.log("show tabs",$scope.tabs)
-            check_tab(selectedTab[0].name);
-
-        }else{
+    
+                //if selcte hazop
+                if (selectedTab.action_part == 5) {
+                    $scope.selectedItemNodeView = $scope.data_node[0].id;
+                    $scope.viewDataNodeList($scope.selectedItemNodeView);
+    
+                }   
+                         
+                // default start date recommendations
+    
+                if (selectedTab.action_part == 6) {
+                    $scope.data_nodeworksheet.forEach(_item => {
+                        if (_item.recommendations && (_item.responder_user_displayname || _item.project_team_text) && !_item.estimated_start_date) {
+                            _item.estimated_start_date = new Date();
+                            $scope.actionChangeWorksheet(_item, _item.seq, '');
+                        }
+                    });
+                }
+            } catch (error) { }
+    
+    
+            angular.forEach($scope.tabs, function (tab) {
+                tab.isActive = false;
+            });
             selectedTab.isActive = true;
-            var activeTabPane = document.getElementById("tab-" + selectedTab.name);
-            if (activeTabPane) {
-                activeTabPane.classList.add('show', 'active');
-            }
-
-            console.log("show tabs",$scope.tabs)
-
+    
             check_tab(selectedTab.name);
+    
+    
+            $scope.oldTab = selectedTab;
+            apply();
+        };
+        $scope.goBackToTab = function (){
+            var tag_name = $scope.goback_tab;
+    
+            var arr_tab = $filter('filter')($scope.tabs, function (item) {
+                return ((item.name == tag_name));
+            });
+    
+            $scope.changeTab_Focus(arr_tab, tag_name);
         }
-
-
-        apply();
-    };
-    $scope.editWorksheet = function (tab_worksheet_active) {
-        $scope.tab_worksheet_active = !tab_worksheet_active;
+    
+        $scope.changeTab_Focus = function (selectedTab, nameTab) {
+            angular.forEach($scope.tabs, function (tab) {
+                tab.isActive = false;
+            });
+    
+            // Set all tabs to inactive
+            angular.forEach($scope.tabs, function (tab) {
+                tab.isActive = false;
+                var tabPane = document.getElementById("tab-" + tab.name);
+                if (tabPane) {
+                    tabPane.classList.remove('show', 'active');
+                }
+            });
+    
+            if(Array.isArray){
+                selectedTab[0].isActive = true;
+                var activeTabPane = document.getElementById("tab-" + selectedTab[0].name);
+                if (activeTabPane) {
+                    activeTabPane.classList.add('show', 'active');
+                }
+    
+                console.log("show tabs",$scope.tabs)
+                check_tab(selectedTab[0].name);
+    
+            }else{
+                selectedTab.isActive = true;
+                var activeTabPane = document.getElementById("tab-" + selectedTab.name);
+                if (activeTabPane) {
+                    activeTabPane.classList.add('show', 'active');
+                }
+    
+                console.log("show tabs",$scope.tabs)
+    
+                check_tab(selectedTab.name);
+            }
+    
+    
+            apply();
+        };
+        $scope.editWorksheet = function (tab_worksheet_active) {
+            $scope.tab_worksheet_active = !tab_worksheet_active;
+        }
     }
 
 
@@ -1334,7 +1338,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
 
         //file:///D:/04KUL_PROJECT_2023/e-PHA/phoenix-v1.12.0/public/apps/email/compose.html
-        console.log($scope.tabs);
+
     }
 
     function check_tab(val) {
@@ -2116,6 +2120,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     set_data_nodeguidwords();
                     set_data_nodeworksheet();
                     set_master_ram_likelihood('');
+
+
                     //get recommendations_no in node worksheet
                     if ($scope.data_nodeworksheet.length > 0) {
                         var arr_copy_def = angular.copy($scope.data_nodeworksheet, arr_copy_def);
@@ -2164,25 +2170,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 
                 $scope.selectActiveNotification = ($scope.data_header[0].active_notification == 1 ? true : false);
 
-                if (page_load) {
-                    if (arr.header[0].pha_status == 21 || arr.header[0].pha_status == 22) {
-                        $scope.tabs = [
-                            { name: 'general', action_part: 1, title: 'General Information', isActive: true, isShow: false },
-                            { name: 'session', action_part: 2, title: 'HAZOP Session', isActive: false, isShow: false },
-                            { name: 'node', action_part: 3, title: 'Node', isActive: false, isShow: false },
-                            { name: 'ram', action_part: 4, title: 'RAM', isActive: false, isShow: false },
-                            { name: 'worksheet', action_part: 5, title: 'HAZOP Worksheet', isActive: false, isShow: false },
-                            { name: 'manage', action_part: 6, title: 'Manage Recommendations', isActive: false, isShow: false },
-                            { name: 'approver', action_part: 7, title: 'Approver', isActive: false, isShow: false },
-                            { name: 'report', action_part: 8, title: 'Report', isActive: false, isShow: false }
-                        ];
-                    }
-                }
-
                 $scope.data_header = JSON.parse(replace_hashKey_arr(arr.header));
 
 
                 //ตรวจสอบเพิ่มเติม
+                //เอาไใ้ทำไรนะ
+                /*console.log("arr.user_in_pha_no[0].pha_no",arr.user_in_pha_no[0].pha_no)
                 if (arr.user_in_pha_no[0].pha_no == '' && $scope.flow_role_type != 'admin') {
                     if (arr.header[0].action_type != 'insert') {
                         $scope.tab_general_active = false;
@@ -2205,7 +2198,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         $scope.submit_review = false;
                         $scope.submit_type = false;
                     }
-                }
+                }*/
 
                 if (true) {
 
@@ -2241,16 +2234,21 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                     var pha_status = $scope.data_header[0].pha_status
 
-                    //set form
-                    if(!$scope.params){
-                        set_form_action(action_part_befor, !action_submit, page_load);
-                        set_form_access(pha_status,$scope.params,$scope.flow_role_type)   
-                    }else{
-                        set_edit_form();
-                    }
+                    
+                }
 
-                    set_tab_focus(pha_status,action_part_befor)
+                //set form 
+                if(!$scope.params){
+                    set_form_action(action_part_befor, !action_submit, page_load);
+                    set_form_access(pha_status,$scope.params,$scope.flow_role_type)   
+                }else{
+                    set_edit_form();
+                }
 
+                set_tab_focus(pha_status,action_part_befor)
+
+                if(true){
+                    //JS choice
                     $timeout(function() {
                         try {
                             if (typeof page_load !== 'undefined' && page_load === true) {
@@ -2294,12 +2292,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     }, 0);
 
                     $scope.$apply();
-                    
                 }
 
                 $scope.dataLoaded = true;
                 $scope.leavePage = false;
                 
+                //set time tracking
                 if($scope.data_header[0].pha_status === 11 || $scope.data_header[0].pha_status === 12){
                     $scope.startTimer();  
                 }
@@ -2329,22 +2327,33 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
 
     if(true){
-        function initializeTabs() {
-            const allTabs = ['tab_general', 'tab_node', 'tab_worksheet', 'tab_managerecom', 'tab_approver'];
-            allTabs.forEach(tab => {
-                $scope[`${tab}_show`] = true;
-                $scope[`${tab}_active`] = true;
-            });
+        function initializeTabs(pha_status_def) {
+            $scope.tabs = [
+                { name: 'general', action_part: 1, title: 'General Information', isActive: true, isShow: false },
+                { name: 'session', action_part: 2, title: 'HAZOP Session', isActive: false, isShow: false },
+                { name: 'node', action_part: 3, title: 'Node', isActive: false, isShow: false },
+                { name: 'ram', action_part: 4, title: 'RAM', isActive: false, isShow: false },
+                { name: 'worksheet', action_part: 5, title: 'HAZOP Worksheet', isActive: false, isShow: false },
+                { name: 'manage', action_part: 6, title: 'Manage Recommendations', isActive: false, isShow: false },
+                { name: 'report', action_part: 8, title: 'Report', isActive: false, isShow: false }
+            ];
         
+            // Check pha_status and add 'approver' tab if pha_status is 21 or 22
+            if (pha_status_def == 21 || pha_status_def == 22) {
+                $scope.tabs.splice(6, 0, { name: 'approver', action_part: 7, title: 'Approver', isActive: false, isShow: false });
+            }
+        
+            // Initialize visibility and activity for each tab
             $scope.tabs.forEach(tab => {
-                tab.isShow = true;
-                tab.isActive = false;
+                $scope[`tab_${tab.name}_show`] = true;  
+                $scope[`tab_${tab.name}_active`] = tab.isActive;  
+                tab.isShow = true; 
             });
         }
     
         function setTabsActive(tabs) {
             // Deactivate all tabs first
-            const allTabs = ['general', 'node', 'worksheet', 'managerecom', 'approver'];
+            const allTabs = ['general', 'node', 'worksheet', 'managerecom', 'approver', 'report'];
             allTabs.forEach(tab => {
                 $scope[`tab_${tab}_active`] = false;
             });
@@ -2353,7 +2362,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             tabs.forEach(tab => {
                 $scope[`tab_${tab}_active`] = true;
             });
+        
+            // Ensure the 'report' tab is always active
+            $scope.tab_report_active = true;
         }
+        
 
         function showTabs(tabs) {
             // Deactivate all tabs first
@@ -2375,11 +2388,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.tab_worksheet_active = false;
             $scope.tab_managerecom_active = false;
             $scope.tab_approver_active = false;
+
+            // Ensure the 'report' tab is always active
+            $scope.tab_report_active = true;
         }
     
         function set_form_action(action_part_befor, action_save, page_load) {
     
-            initializeTabs();
+            initializeTabs(pha_status_def);
     
     
             $scope.action_part = action_part_befor;
@@ -2409,15 +2425,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     
                 if (page_load) {
     
-                    /*var tag_name = 'general';
-                    var arr_tab = $filter('filter')($scope.tabs, function (item) {
-                        return ((item.action_part == $scope.action_part));
-                    });
-                    if (arr_tab.length > 0) {
-                        $scope.changeTab(arr_tab[0], tag_name);
-                        if (action_save == true) { $scope.action_part = arr_tab[0].action_part; }
-                    }*/
-    
                     var arr_submit = $filter('filter')($scope.data_node, function (item) {
                         return ((item.node !== '' && item.action_type !== null));
                     });
@@ -2432,14 +2439,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     
             }
             else if (pha_status_def == 12) {
-                /*var tag_name = 'worksheet';
-                var arr_tab = $filter('filter')($scope.tabs, function (item) {
-                    return ((item.name == tag_name));
-                });
-                if (arr_tab.length > 0) {
-                    $scope.changeTab(arr_tab[0], tag_name);
-                    if (action_save == true) { $scope.action_part = arr_tab[0].action_part; }
-                }*/
     
                 check_case_member_review();
 
@@ -2468,25 +2467,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 showTabs(set_tabs);
                 setAllTabsInctive();
 
-
                 $scope.selectedItemNodeView = $scope.data_node[0].seq;
-    
-                /*var tag_name = 'manage';
-    
-                var arr_tab = $filter('filter')($scope.tabs, function (item) {
-                    return ((item.name == tag_name));
-                });
-                if (arr_tab.length > 0) {
-                    $scope.changeTab(arr_tab[0], tag_name);
-                    if (action_save == true) { $scope.action_part = arr_tab[0].action_part; }
-                }*/
-
-
-                //params
-                
-                if($scope.params == 'edit_action_owner') {
-                    tag_name = 'worksheet';
-                } 
 
                 //button
                 $scope.save_type = false;
@@ -2505,20 +2486,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     $scope.save_type = true;
                     $scope.submit_type = true;
                 }
-               /* var tag_name = 'manage';
-                var arr_tab = $filter('filter')($scope.tabs, function (item) {
-                    return ((item.name == tag_name));
-                });
-                if (arr_tab.length > 0) {
-                    $scope.changeTab(arr_tab[0], tag_name);
-                    if (action_save == true) { $scope.action_part = arr_tab[0].action_part; }
-                }*/
     
-                $scope.tab_general_active = false;
-                $scope.tab_node_active = false;
-                $scope.tab_worksheet_active = false;
-                $scope.tab_managerecom_active = false;
-                $scope.tab_approver_active = $scope.tab_approver_show;
             }
             else if (pha_status_def == 21) {
     
@@ -2532,14 +2500,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 $scope.save_type = true;
                 $scope.submit_type = true;
     
-               /* var tag_name = 'approver';
-                var arr_tab = $filter('filter')($scope.tabs, function (item) {
-                    return ((item.name == tag_name));
-                });
-                if (arr_tab.length > 0) {
-                    $scope.changeTab(arr_tab[0], tag_name);
-                    if (action_save == true) { $scope.action_part = arr_tab[0].action_part; }
-                }*/
     
                 $scope.selectSendBack = ($scope.data_header[0].approve_status == 'approve' ? 'option1' : 'option2');
     
@@ -2553,15 +2513,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 showTabs(set_tabs);
                 setTabsActive(set_tabs);
 
-                /*var tag_name = 'worksheet';
-                var arr_tab = $filter('filter')($scope.tabs, function (item) {
-                    return ((item.name == tag_name));
-                });
-                if (arr_tab.length > 0) {
-                    $scope.changeTab(arr_tab[0], tag_name);
-                    if (action_save == true) { $scope.action_part = arr_tab[0].action_part; }
-                }*/
-    
                 check_case_member_review();
     
                 $scope.selectedItemNodeView = $scope.data_node[0].seq;
@@ -2582,14 +2533,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 $scope.submit_type = false;
                 $scope.submit_review = false;
 
-                /*var tag_name = 'general';
-                var arr_tab = $filter('filter')($scope.tabs, function (item) {
-                    return ((item.action_part == $scope.action_part));
-                });
-                if (arr_tab.length > 0) {
-                    $scope.changeTab(arr_tab[0], tag_name);
-                    if (action_save == true) { $scope.action_part = arr_tab[0].action_part; }
-                }*/
     
             }
             else if (pha_status_def == 91) {
@@ -2605,25 +2548,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     
                 $scope.selectedItemNodeView = $scope.data_node[0].seq;
     
-                /*var tag_name = 'manage';
-                var arr_tab = $filter('filter')($scope.tabs, function (item) {
-                    return ((item.name == tag_name));
-                });
-                if (arr_tab.length > 0) {
-                    $scope.changeTab(arr_tab[0], tag_name);
-                    if (action_save == true) { $scope.action_part = arr_tab[0].action_part; }
-                }*/
     
             }
     
     
             //review doc
             if ($scope.pha_type_doc == 'review_document') {
-                $scope.tab_general_active = false;
-                $scope.tab_node_active = false;
-                $scope.tab_worksheet_active = false;
-                $scope.tab_managerecom_active = false;
-                $scope.tab_approver_active = false;
+
+                setAllTabsInctive();
     
                 $scope.back_type = true;
                 $scope.cancle_type = false;
@@ -2633,12 +2565,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 $scope.submit_review = false;
             }
     
-            for (let i = 0; i < $scope.data_approver.length; i++) {
+            /*for (let i = 0; i < $scope.data_approver.length; i++) {
                 if ($scope.user_name === $scope.data_approver[i].user_name) {
                   $scope.tab_approver_active = true;
                   break;
                 }
-            }
+            }*/
     
             $scope.date_to_approve_moc_text = '';
             $scope.date_approve_moc_text = '';
@@ -2652,11 +2584,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 }
             }
         }
+
         function set_form_access(pha_status,params,flow_role_type){
             if(pha_status === 11 || pha_status === 12){
                 $scope.can_edit = true;
-    
             }
+
             if(params != 'edit_approver'){
                 $scope.action_owner_active = true;
             }  
@@ -2836,432 +2769,435 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         // Assuming guidWord has a 'name' property
         return _item ? _item.no : '';
     }
-    function set_data_general() {
-
-        if (($scope.data_general[0].id_ram + '') == '') {
-            $scope.data_general[0].id_ram = 5;
-        }
-
-        if ($scope.data_general[0].target_start_date !== null) {
-            const startDateParts = $scope.data_general[0].target_start_date.split('T')[0].split("-");
-            const year = parseInt(startDateParts[0]);
-            $scope.data_general[0].target_start_date = new Date(year, parseInt(startDateParts[1]) - 1, parseInt(startDateParts[2]));
-            console.log( $scope.data_general[0].target_start_date)
-        }
 
 
-        if ($scope.data_general[0].target_end_date !== null) {
-            const endDateParts = $scope.data_general[0].target_end_date.split('T')[0].split("-");
-            const year = parseInt(endDateParts[0]);
-            $scope.data_general[0].target_end_date = new Date(year, parseInt(endDateParts[1]) - 1, parseInt(endDateParts[2]));
-            console.log( $scope.data_general[0].target_end_date)
+    //set form
+    if(true){
+        function set_data_general() {
 
-        }
-        
-        if ($scope.data_general[0].actual_start_date !== null) {
-            const startDateParts = $scope.data_general[0].actual_start_date.split('T')[0].split("-");
-            const year = parseInt(startDateParts[0]);
-            $scope.data_general[0].actual_start_date = new Date(year, parseInt(startDateParts[1]) - 1, parseInt(startDateParts[2]));
-        }
-
-        if ($scope.data_general[0].actual_end_date !== null) {
-            const endDateParts = $scope.data_general[0].actual_end_date.split('T')[0].split("-");
-            const year = parseInt(endDateParts[0]);
-            $scope.data_general[0].actual_end_date = new Date(year, parseInt(endDateParts[1]) - 1, parseInt(endDateParts[2]));
-        }
-
-        for (let i = 0; i < $scope.data_session.length; i++) {
-            $scope.data_session[i].no = (i + 1);
-
-            if ($scope.data_session[i].meeting_date !== null) {
-                const x = ($scope.data_session[i].meeting_date.split('T')[0]).split("-");
-                $scope.data_session[i].meeting_date = new Date(x[0], x[1] - 1, x[2]);
+            if (($scope.data_general[0].id_ram + '') == '') {
+                $scope.data_general[0].id_ram = 5;
             }
-
-            if ($scope.data_session[i].meeting_start_time !== null) {
-                //12/31/1969 7:55:00 PM 
-                var hh = $scope.data_session[i].meeting_start_time_hh; var mm = $scope.data_session[i].meeting_start_time_mm;
-                var valtime = "1970-01-01T" + (hh).substring(hh.length - 2) + ":" + (mm).substring(mm.length - 2) + ":00.000Z";
-
-                $scope.data_session[i].meeting_start_time = new Date(valtime);
+    
+            if ($scope.data_general[0].target_start_date !== null) {
+                const startDateParts = $scope.data_general[0].target_start_date.split('T')[0].split("-");
+                const year = parseInt(startDateParts[0]);
+                $scope.data_general[0].target_start_date = new Date(year, parseInt(startDateParts[1]) - 1, parseInt(startDateParts[2]));
+                console.log( $scope.data_general[0].target_start_date)
             }
-            if ($scope.data_session[i].meeting_end_time !== null) {
-                //12/31/1969 7:55:00 PM
-                var hh = $scope.data_session[i].meeting_end_time_hh; var mm = $scope.data_session[i].meeting_end_time_mm;
-                var valtime = "1970-01-01T" + (hh).substring(hh.length - 2) + ":" + (mm).substring(mm.length - 2) + ":00.000Z";
-                $scope.data_session[i].meeting_end_time = new Date(valtime);
+    
+    
+            if ($scope.data_general[0].target_end_date !== null) {
+                const endDateParts = $scope.data_general[0].target_end_date.split('T')[0].split("-");
+                const year = parseInt(endDateParts[0]);
+                $scope.data_general[0].target_end_date = new Date(year, parseInt(endDateParts[1]) - 1, parseInt(endDateParts[2]));
+                console.log( $scope.data_general[0].target_end_date)
+    
             }
-
-        }
-
-        for (let i = 0; i < $scope.master_guidwords.length; i++) {
-
-            var seq_guide_word = Number($scope.master_guidwords[i].seq);
-            var arr = $filter('filter')($scope.data_nodeguidwords, function (item) { return (item.id_guide_word == seq_guide_word); });
-            if (arr.length > 0) {
-                if (arr[0].selected_type == 1) {
-                    //$scope.master_guidwords[i].def_selected = true;
-                    //arr[0].def_selected = true; 
-
-                    $scope.master_guidwords[i].selected = true;
-                    arr[0].selected = true;
+            
+            if ($scope.data_general[0].actual_start_date !== null) {
+                const startDateParts = $scope.data_general[0].actual_start_date.split('T')[0].split("-");
+                const year = parseInt(startDateParts[0]);
+                $scope.data_general[0].actual_start_date = new Date(year, parseInt(startDateParts[1]) - 1, parseInt(startDateParts[2]));
+            }
+    
+            if ($scope.data_general[0].actual_end_date !== null) {
+                const endDateParts = $scope.data_general[0].actual_end_date.split('T')[0].split("-");
+                const year = parseInt(endDateParts[0]);
+                $scope.data_general[0].actual_end_date = new Date(year, parseInt(endDateParts[1]) - 1, parseInt(endDateParts[2]));
+            }
+    
+            for (let i = 0; i < $scope.data_session.length; i++) {
+                $scope.data_session[i].no = (i + 1);
+    
+                if ($scope.data_session[i].meeting_date !== null) {
+                    const x = ($scope.data_session[i].meeting_date.split('T')[0]).split("-");
+                    $scope.data_session[i].meeting_date = new Date(x[0], x[1] - 1, x[2]);
+                }
+    
+                if ($scope.data_session[i].meeting_start_time !== null) {
+                    //12/31/1969 7:55:00 PM 
+                    var hh = $scope.data_session[i].meeting_start_time_hh; var mm = $scope.data_session[i].meeting_start_time_mm;
+                    var valtime = "1970-01-01T" + (hh).substring(hh.length - 2) + ":" + (mm).substring(mm.length - 2) + ":00.000Z";
+    
+                    $scope.data_session[i].meeting_start_time = new Date(valtime);
+                }
+                if ($scope.data_session[i].meeting_end_time !== null) {
+                    //12/31/1969 7:55:00 PM
+                    var hh = $scope.data_session[i].meeting_end_time_hh; var mm = $scope.data_session[i].meeting_end_time_mm;
+                    var valtime = "1970-01-01T" + (hh).substring(hh.length - 2) + ":" + (mm).substring(mm.length - 2) + ":00.000Z";
+                    $scope.data_session[i].meeting_end_time = new Date(valtime);
+                }
+    
+            }
+    
+            for (let i = 0; i < $scope.master_guidwords.length; i++) {
+    
+                var seq_guide_word = Number($scope.master_guidwords[i].seq);
+                var arr = $filter('filter')($scope.data_nodeguidwords, function (item) { return (item.id_guide_word == seq_guide_word); });
+                if (arr.length > 0) {
+                    if (arr[0].selected_type == 1) {
+                        //$scope.master_guidwords[i].def_selected = true;
+                        //arr[0].def_selected = true; 
+    
+                        $scope.master_guidwords[i].selected = true;
+                        arr[0].selected = true;
+                    } else {
+                        //$scope.master_guidwords[i].def_selected = false;
+                        //arr[0].def_selected = false;
+                        $scope.master_guidwords[i].selected = false;
+                        arr[0].selected = false;
+                    }
                 } else {
-                    //$scope.master_guidwords[i].def_selected = false;
-                    //arr[0].def_selected = false;
-                    $scope.master_guidwords[i].selected = false;
-                    arr[0].selected = false;
-                }
-            } else {
-                //if ($scope.master_guidwords[i].def_selected == 1 || $scope.master_guidwords[i].def_selected == true) {
-                //    $scope.master_guidwords[i].def_selected = true;
-                //} else {
-                //    $scope.master_guidwords[i].def_selected = false;
-                //}
-
-                if ($scope.master_guidwords[i].selected == 1 || $scope.master_guidwords[i].selected == true) {
-                    $scope.master_guidwords[i].selected = true;
-                } else {
-                    $scope.master_guidwords[i].selected = false;
-                }
-
-
-            }
-        }
-
-
-        var functional_location_audition = $scope.data_general[0].functional_location_audition;
-        var xSplitFunc = (functional_location_audition).replaceAll('"', '').replace('[', '').replace(']', '').split(",");
-        var _functoArr = [];
-        for (var i = 0; i < xSplitFunc.length; i++) {
-            _functoArr.push(xSplitFunc[i]);
-        }
-        console.log('_functoArr');
-        if (_functoArr.length > 0) {
-            $scope.data_general[0].functional_location_audition = _functoArr;
-            console.log($scope.data_general[0].functional_location_audition);
-        }
-        // set unit no
-        var name_unitno = $filter('filter')($scope.master_unit_no, function (item) { 
-            return (item.id == $scope.data_general[0].id_unit_no); 
-        })[0];
-        if(name_unitno) $scope.data_general[0].unit_no_name = name_unitno.name
-
-        return;
-    }
-    function set_data_approver() {
-        if (true) {
-            var arr_approver = $scope.data_approver;
-            if (arr_approver.length > 0) {
-
-                for (var w = 0; w < arr_approver.length; w++) {
-                    try {
-                        if (arr_approver[w].date_review !== null) {
-                            const x = (arr_approver[w].date_review.split('T')[0]).split("-");
-                            if (x[0] > 2000) {
-                                arr_approver[w].date_review = new Date(x[0], x[1] - 1, x[2]);
-                            }
-                        }
-                    } catch { }
-                    try {
-                        if (arr_approver[w].date_review_show !== null) {
-                            const x = (arr_approver[w].date_review_show.split('T')[0]).split("-");
-                            if (x[0] > 2000) {
-                                arr_approver[w].date_review_show = new Date(x[0], x[1] - 1, x[2]);
-                            }
-                        }
-                    } catch { }
-
+                    //if ($scope.master_guidwords[i].def_selected == 1 || $scope.master_guidwords[i].def_selected == true) {
+                    //    $scope.master_guidwords[i].def_selected = true;
+                    //} else {
+                    //    $scope.master_guidwords[i].def_selected = false;
+                    //}
+    
+                    if ($scope.master_guidwords[i].selected == 1 || $scope.master_guidwords[i].selected == true) {
+                        $scope.master_guidwords[i].selected = true;
+                    } else {
+                        $scope.master_guidwords[i].selected = false;
+                    }
+    
+    
                 }
             }
+    
+    
+            var functional_location_audition = $scope.data_general[0].functional_location_audition;
+            var xSplitFunc = (functional_location_audition).replaceAll('"', '').replace('[', '').replace(']', '').split(",");
+            var _functoArr = [];
+            for (var i = 0; i < xSplitFunc.length; i++) {
+                _functoArr.push(xSplitFunc[i]);
+            }
+            console.log('_functoArr');
+            if (_functoArr.length > 0) {
+                $scope.data_general[0].functional_location_audition = _functoArr;
+                console.log($scope.data_general[0].functional_location_audition);
+            }
+            // set unit no
+            var name_unitno = $filter('filter')($scope.master_unit_no, function (item) { 
+                return (item.id == $scope.data_general[0].id_unit_no); 
+            })[0];
+            if(name_unitno) $scope.data_general[0].unit_no_name = name_unitno.name
+    
+            return;
         }
-
-    }
-
-
-    function set_data_nodeguidwords() {
-
-        if ($scope.data_nodeworksheet.length > 0) {
-            if (!($scope.data_nodeworksheet[0].action_type == 'new')) {
-                //กรณีที่เคยมีข้อมุล ให้เอาตามที่เคยเลือกไป 
+        function set_data_approver() {
+            if (true) {
+                var arr_approver = $scope.data_approver;
+                if (arr_approver.length > 0) {
+    
+                    for (var w = 0; w < arr_approver.length; w++) {
+                        try {
+                            if (arr_approver[w].date_review !== null) {
+                                const x = (arr_approver[w].date_review.split('T')[0]).split("-");
+                                if (x[0] > 2000) {
+                                    arr_approver[w].date_review = new Date(x[0], x[1] - 1, x[2]);
+                                }
+                            }
+                        } catch { }
+                        try {
+                            if (arr_approver[w].date_review_show !== null) {
+                                const x = (arr_approver[w].date_review_show.split('T')[0]).split("-");
+                                if (x[0] > 2000) {
+                                    arr_approver[w].date_review_show = new Date(x[0], x[1] - 1, x[2]);
+                                }
+                            }
+                        } catch { }
+    
+                    }
+                }
+            }
+    
+        }
+        function set_data_nodeguidwords() {
+    
+            if ($scope.data_nodeworksheet.length > 0) {
+                if (!($scope.data_nodeworksheet[0].action_type == 'new')) {
+                    //กรณีที่เคยมีข้อมุล ให้เอาตามที่เคยเลือกไป 
+                    var arr = $filter('filter')($scope.master_guidwords, { def_selected: 1 });
+    
+    
+    
+                    return;
+                }
+            }
+    
+            var iNo = 1;
+            for (let n = 0; n < $scope.data_node.length; n++) {
+                var seq_node = Number($scope.data_node[n].seq);
                 var arr = $filter('filter')($scope.master_guidwords, { def_selected: 1 });
-
-
-
-                return;
-            }
-        }
-
-        var iNo = 1;
-        for (let n = 0; n < $scope.data_node.length; n++) {
-            var seq_node = Number($scope.data_node[n].seq);
-            var arr = $filter('filter')($scope.master_guidwords, { def_selected: 1 });
-
-            var arr_def = [];
-            for (let i = 0; i < arr.length; i++) {
-
-                var ar_check = $filter('filter')($scope.data_nodeguidwords,
-                    { id_node: seq_node, id_guide_word: arr[i].seq });
-
-                if (ar_check.length > 0) {
-                    for (let iold = 0; iold < ar_check.length; iold++) {
-                        ar_check[iold].no = iNo;
-                        arr_def.push(ar_check[iold]);
-                        iNo++;
+    
+                var arr_def = [];
+                for (let i = 0; i < arr.length; i++) {
+    
+                    var ar_check = $filter('filter')($scope.data_nodeguidwords,
+                        { id_node: seq_node, id_guide_word: arr[i].seq });
+    
+                    if (ar_check.length > 0) {
+                        for (let iold = 0; iold < ar_check.length; iold++) {
+                            ar_check[iold].no = iNo;
+                            arr_def.push(ar_check[iold]);
+                            iNo++;
+                        }
+                        continue;
                     }
-                    continue;
+    
+                    //add new employee
+                    var seq = Number($scope.MaxSeqDataNodeGuidWords);
+    
+                    var newInput = clone_arr_newrow($scope.data_nodeguidwords_def)[0];
+                    newInput.seq = seq;
+                    newInput.id = seq;
+                    newInput.no = iNo;
+                    newInput.id_node = Number(seq_node);
+                    newInput.seq_node = Number(seq_node);
+                    newInput.action_type = 'insert';
+                    newInput.action_change = 1;
+    
+                    newInput.id_guide_word = arr[i].seq;
+                    newInput.guidewords = arr[i].guidewords;
+                    newInput.deviations = arr[i].deviations;
+                    newInput.guidewords_no = arr[i].guidewords_no;
+    
+                    newInput.action_change = 1;
+                    newInput.action_type = 'insert'
+                    arr_def.push(newInput);
+                    iNo++;
                 }
-
-                //add new employee
-                var seq = Number($scope.MaxSeqDataNodeGuidWords);
-
-                var newInput = clone_arr_newrow($scope.data_nodeguidwords_def)[0];
-                newInput.seq = seq;
-                newInput.id = seq;
-                newInput.no = iNo;
-                newInput.id_node = Number(seq_node);
-                newInput.seq_node = Number(seq_node);
-                newInput.action_type = 'insert';
-                newInput.action_change = 1;
-
-                newInput.id_guide_word = arr[i].seq;
-                newInput.guidewords = arr[i].guidewords;
-                newInput.deviations = arr[i].deviations;
-                newInput.guidewords_no = arr[i].guidewords_no;
-
-                newInput.action_change = 1;
-                newInput.action_type = 'insert'
-                arr_def.push(newInput);
-                iNo++;
+    
+                var arr_copy_def = angular.copy($scope.data_nodeguidwords, arr_copy_def);
+                $scope.data_nodeguidwords = [];
+                $scope.data_nodeguidwords = $filter('filter')(arr_copy_def, function (item) {
+                    return (item.id_node !== seq_node);
+                });
+                for (let i = 0; i < arr_def.length; i++) {
+                    $scope.data_nodeguidwords.push(arr_def[i]);
+                }
             }
-
-            var arr_copy_def = angular.copy($scope.data_nodeguidwords, arr_copy_def);
-            $scope.data_nodeguidwords = [];
-            $scope.data_nodeguidwords = $filter('filter')(arr_copy_def, function (item) {
-                return (item.id_node !== seq_node);
-            });
-            for (let i = 0; i < arr_def.length; i++) {
-                $scope.data_nodeguidwords.push(arr_def[i]);
-            }
+    
         }
-
-    }
-    function set_data_nodeworksheet() {
-
-        var bCheckNewRows = false;
-        if ($scope.data_nodeworksheet) {
-            var arr = $filter('filter')($scope.data_nodeworksheet, function (item) {
-                return (item.action_type == 'new');
-            });
-            if (arr.length > 0) {
-                var newInput = clone_arr_newrow($scope.data_nodeworksheet_def)[0];
-                $scope.data_nodeworksheet = [];
-                $scope.data_nodeworksheet.push(newInput);
-                bCheckNewRows = true;
+        function set_data_nodeworksheet() {
+    
+            var bCheckNewRows = false;
+            if ($scope.data_nodeworksheet) {
+                var arr = $filter('filter')($scope.data_nodeworksheet, function (item) {
+                    return (item.action_type == 'new');
+                });
+                if (arr.length > 0) {
+                    var newInput = clone_arr_newrow($scope.data_nodeworksheet_def)[0];
+                    $scope.data_nodeworksheet = [];
+                    $scope.data_nodeworksheet.push(newInput);
+                    bCheckNewRows = true;
+                }
             }
-        }
-        if (true) {
-            if ($scope.data_nodeguidwords) {
-
-                var xseq_causes = Number($scope.MaxSeqdata_nodeworksheetCauses);
-                if (row_type == "consequences") { $scope.MaxSeqdata_nodeworksheetConsequences = Number($scope.MaxSeqdata_nodeworksheetConsequences) + 1; }
-                var xseq_consequences = Number($scope.MaxSeqdata_nodeworksheetConsequences);
-                if (row_type == "category") { $scope.MaxSeqdata_nodeworksheetCat = Number($scope.MaxSeqdata_nodeworksheetCat) + 1; }
-                var xseq_category = Number($scope.MaxSeqdata_nodeworksheetCat);
-
-                var row_type = "causes";
-                var arr_def = []
-                var arr_delete_def = []
-
-
-                var iNo = 1;
-
-                for (let n = 0; n < $scope.data_node.length; n++) {
-
-                    var iGuidewordsNo = 1;
-
-                    var id_node_def = Number($scope.data_node[n].seq);
-                    var node_no = Number($scope.data_node[n].no);
-
-                    //var arr_nodeguidwords = $scope.data_nodeguidwords; 
-                    var arr_nodeguidwords = $filter('filter')($scope.data_nodeguidwords, function (item) { return (item.id_node == id_node_def); });
-                    arr_nodeguidwords.sort((a, b) => a.no - b.no);
-
-                    for (let i = 0; i < arr_nodeguidwords.length; i++) {
-
-                        if (id_node_def !== arr_nodeguidwords[i].id_node) { continue; }
-
-                        var id_guide_word_def = arr_nodeguidwords[i].id_guide_word;
-
-                        var guidewords = arr_nodeguidwords[i].guidewords;
-                        var deviations = arr_nodeguidwords[i].deviations;
-                        var guidewords_no = arr_nodeguidwords[i].guidewords_no;
-                        //Kuluwat 202403227 guidewords_no ให้ใช้เป็น running ตาม node แทน
-                        guidewords_no = iGuidewordsNo; iGuidewordsNo += 1;
-
-                        var arr = $filter('filter')($scope.data_nodeworksheet, function (item) {
-                            return (item.id_node == id_node_def && item.id_guide_word == id_guide_word_def);
+            if (true) {
+                if ($scope.data_nodeguidwords) {
+    
+                    var xseq_causes = Number($scope.MaxSeqdata_nodeworksheetCauses);
+                    if (row_type == "consequences") { $scope.MaxSeqdata_nodeworksheetConsequences = Number($scope.MaxSeqdata_nodeworksheetConsequences) + 1; }
+                    var xseq_consequences = Number($scope.MaxSeqdata_nodeworksheetConsequences);
+                    if (row_type == "category") { $scope.MaxSeqdata_nodeworksheetCat = Number($scope.MaxSeqdata_nodeworksheetCat) + 1; }
+                    var xseq_category = Number($scope.MaxSeqdata_nodeworksheetCat);
+    
+                    var row_type = "causes";
+                    var arr_def = []
+                    var arr_delete_def = []
+    
+    
+                    var iNo = 1;
+    
+                    for (let n = 0; n < $scope.data_node.length; n++) {
+    
+                        var iGuidewordsNo = 1;
+    
+                        var id_node_def = Number($scope.data_node[n].seq);
+                        var node_no = Number($scope.data_node[n].no);
+    
+                        //var arr_nodeguidwords = $scope.data_nodeguidwords; 
+                        var arr_nodeguidwords = $filter('filter')($scope.data_nodeguidwords, function (item) { return (item.id_node == id_node_def); });
+                        arr_nodeguidwords.sort((a, b) => a.no - b.no);
+    
+                        for (let i = 0; i < arr_nodeguidwords.length; i++) {
+    
+                            if (id_node_def !== arr_nodeguidwords[i].id_node) { continue; }
+    
+                            var id_guide_word_def = arr_nodeguidwords[i].id_guide_word;
+    
+                            var guidewords = arr_nodeguidwords[i].guidewords;
+                            var deviations = arr_nodeguidwords[i].deviations;
+                            var guidewords_no = arr_nodeguidwords[i].guidewords_no;
+                            //Kuluwat 202403227 guidewords_no ให้ใช้เป็น running ตาม node แทน
+                            guidewords_no = iGuidewordsNo; iGuidewordsNo += 1;
+    
+                            var arr = $filter('filter')($scope.data_nodeworksheet, function (item) {
+                                return (item.id_node == id_node_def && item.id_guide_word == id_guide_word_def);
+                            });
+    
+                            if (arr.length > 0) {
+                                for (let iold = 0; iold < arr.length; iold++) {
+                                    arr[iold].no = iNo;
+                                    arr_def.push(arr[iold]);
+                                    iNo++;
+                                }
+                            } else {
+                                $scope.MaxSeqdata_nodeworksheet = Number($scope.MaxSeqdata_nodeworksheet) + 1;
+                                var xseq = Number($scope.MaxSeqdata_nodeworksheet);
+                                if (row_type == "causes") { $scope.MaxSeqdata_nodeworksheetCauses = Number($scope.MaxSeqdata_nodeworksheetCauses) + 1; }
+    
+    
+                                var newInput = []; angular.copy($scope.data_nodeworksheet, newInput)[0];
+                                newInput = newInput[0];
+    
+                                newInput.seq = xseq;
+                                newInput.id = xseq;
+                                newInput.id_node = id_node_def;
+                                newInput.seq_node = id_node_def;
+    
+                                newInput.row_type = row_type;//guideword,causes,consequences,cat
+                                newInput.id_guide_word = id_guide_word_def;
+                                newInput.seq_guide_word = id_guide_word_def;
+                                newInput.guidewords = guidewords;
+                                newInput.deviations = deviations;
+                                newInput.guidewords_no = guidewords_no;
+    
+                                newInput.seq_causes = xseq_causes;
+                                newInput.seq_consequences = xseq_consequences;
+                                newInput.seq_category = xseq_category;
+    
+                                newInput.node_no = node_no;
+    
+                                newInput.no = iNo;
+                                newInput.causes_no = 1;
+                                newInput.consequences_no = 1;
+                                newInput.recommendations_no = '';
+                                newInput.category_no = 1;
+    
+                                newInput.action_type = 'insert';
+                                newInput.action_change = 1;
+                                newInput.action_status = 'Open';
+    
+                                arr_def.push(newInput);
+                            }
+                            iNo++;
+                        }
+                    }
+    
+                    //delete 
+                    for (let i = 0; i < $scope.data_nodeworksheet.length; i++) {
+                        var item_def = $scope.data_nodeworksheet[i];
+                        var arr = $filter('filter')(arr_def, function (item) {
+                            return (item.id_node == item_def.id_node && item.id_guide_word == item_def.id_guide_word
+                                && item.seq == item_def.seq);
                         });
-
                         if (arr.length > 0) {
-                            for (let iold = 0; iold < arr.length; iold++) {
-                                arr[iold].no = iNo;
-                                arr_def.push(arr[iold]);
-                                iNo++;
-                            }
-                        } else {
-                            $scope.MaxSeqdata_nodeworksheet = Number($scope.MaxSeqdata_nodeworksheet) + 1;
-                            var xseq = Number($scope.MaxSeqdata_nodeworksheet);
-                            if (row_type == "causes") { $scope.MaxSeqdata_nodeworksheetCauses = Number($scope.MaxSeqdata_nodeworksheetCauses) + 1; }
-
-
-                            var newInput = []; angular.copy($scope.data_nodeworksheet, newInput)[0];
-                            newInput = newInput[0];
-
-                            newInput.seq = xseq;
-                            newInput.id = xseq;
-                            newInput.id_node = id_node_def;
-                            newInput.seq_node = id_node_def;
-
-                            newInput.row_type = row_type;//guideword,causes,consequences,cat
-                            newInput.id_guide_word = id_guide_word_def;
-                            newInput.seq_guide_word = id_guide_word_def;
-                            newInput.guidewords = guidewords;
-                            newInput.deviations = deviations;
-                            newInput.guidewords_no = guidewords_no;
-
-                            newInput.seq_causes = xseq_causes;
-                            newInput.seq_consequences = xseq_consequences;
-                            newInput.seq_category = xseq_category;
-
-                            newInput.node_no = node_no;
-
-                            newInput.no = iNo;
-                            newInput.causes_no = 1;
-                            newInput.consequences_no = 1;
-                            newInput.recommendations_no = '';
-                            newInput.category_no = 1;
-
-                            newInput.action_type = 'insert';
-                            newInput.action_change = 1;
-                            newInput.action_status = 'Open';
-
-                            arr_def.push(newInput);
+                            arr_delete_def.push(arr[0]);
                         }
-                        iNo++;
                     }
-                }
-
-                //delete 
-                for (let i = 0; i < $scope.data_nodeworksheet.length; i++) {
-                    var item_def = $scope.data_nodeworksheet[i];
-                    var arr = $filter('filter')(arr_def, function (item) {
-                        return (item.id_node == item_def.id_node && item.id_guide_word == item_def.id_guide_word
-                            && item.seq == item_def.seq);
-                    });
-                    if (arr.length > 0) {
-                        arr_delete_def.push(arr[0]);
+    
+                    angular.copy(arr_def, $scope.data_nodeworksheet);
+    
+                    for (let i = 0; i < $scope.data_nodeworksheet.length; i++) {
+                        $scope.data_nodeworksheet[i].index_rows = i;
                     }
-                }
-
-                angular.copy(arr_def, $scope.data_nodeworksheet);
-
-                for (let i = 0; i < $scope.data_nodeworksheet.length; i++) {
-                    $scope.data_nodeworksheet[i].index_rows = i;
-                }
-
-                running_recommendations_no();
-
-                set_data_managerecom();
-
-                for (let i = 0; i < $scope.data_nodeguidwords.length; i++) {
-                    var seq_node = $scope.data_nodeguidwords[i].seq_node;
-                    var seq_guide_word = $scope.data_nodeguidwords[i].id_guide_word;
-                    running_no_causes(seq_node, seq_guide_word);
+    
+                    running_recommendations_no();
+    
+                    set_data_managerecom();
+    
+                    for (let i = 0; i < $scope.data_nodeguidwords.length; i++) {
+                        var seq_node = $scope.data_nodeguidwords[i].seq_node;
+                        var seq_guide_word = $scope.data_nodeguidwords[i].id_guide_word;
+                        running_no_causes(seq_node, seq_guide_word);
+                    }
                 }
             }
+    
+    
         }
-
-
-    }
-    function set_master_ram_likelihood(ram_select) {
-
-
-        $scope.master_ram_likelihood = [];
-        var id_ram = $scope.data_general[0].id_ram;
-        if (ram_select != '') { id_ram = ram_select; }
-
-        var arr_items = $filter('filter')($scope.master_ram_level, function (item) { return (item.id_ram == id_ram); });
-
-        var i = 0; var columns_level = 0;
-        if (arr_items.length > 0) {
-            columns_level = Number(arr_items[0].columns_level);
-            $scope.select_rows_level = arr_items[0].rows_level;
-            $scope.select_columns_level = arr_items[0].columns_level;
+        function set_master_ram_likelihood(ram_select) {
+    
+    
+            $scope.master_ram_likelihood = [];
+            var id_ram = $scope.data_general[0].id_ram;
+            if (ram_select != '') { id_ram = ram_select; }
+    
+            var arr_items = $filter('filter')($scope.master_ram_level, function (item) { return (item.id_ram == id_ram); });
+    
+            var i = 0; var columns_level = 0;
+            if (arr_items.length > 0) {
+                columns_level = Number(arr_items[0].columns_level);
+                $scope.select_rows_level = arr_items[0].rows_level;
+                $scope.select_columns_level = arr_items[0].columns_level;
+            }
+            if (columns_level !== 5 || true) {
+                var arr = [
+                    { columns_level: columns_level, seq: 1, level: arr_items[i].likelihood1_level, text: '', desc: '', criterion: '' }
+                    , { columns_level: columns_level, seq: 2, level: arr_items[i].likelihood2_level, text: '', desc: '', criterion: '' }
+                    , { columns_level: columns_level, seq: 3, level: arr_items[i].likelihood3_level, text: '', desc: '', criterion: '' }
+                    , { columns_level: columns_level, seq: 4, level: arr_items[i].likelihood4_level, text: '', desc: '', criterion: '' }
+                    , { columns_level: columns_level, seq: 5, level: arr_items[i].likelihood5_level, text: '', desc: '', criterion: '' }
+                    , { columns_level: columns_level, seq: 6, level: arr_items[i].likelihood6_level, text: '', desc: '', criterion: '' }
+                    , { columns_level: columns_level, seq: 7, level: arr_items[i].likelihood7_level, text: '', desc: '', criterion: '' }
+                    , { columns_level: columns_level, seq: 8, level: arr_items[i].likelihood8_level, text: '', desc: '', criterion: '' }
+                    , { columns_level: columns_level, seq: 9, level: arr_items[i].likelihood9_level, text: '', desc: '', criterion: '' }
+                    , { columns_level: columns_level, seq: 10, level: arr_items[i].likelihood10_level, text: '', desc: '', criterion: '' }
+                ]
+            } else {
+                var arr = [
+                    { columns_level: columns_level, seq: 1, level: arr_items[i].likelihood1_level, text: arr_items[i].likelihood1_text, desc: arr_items[i].likelihood1_desc, criterion: arr_items[i].likelihood1_criterion }
+                    , { columns_level: columns_level, seq: 2, level: arr_items[i].likelihood2_level, text: arr_items[i].likelihood2_text, desc: arr_items[i].likelihood2_desc, criterion: arr_items[i].likelihood2_criterion }
+                    , { columns_level: columns_level, seq: 3, level: arr_items[i].likelihood3_level, text: arr_items[i].likelihood3_text, desc: arr_items[i].likelihood3_desc, criterion: arr_items[i].likelihood3_criterion }
+                    , { columns_level: columns_level, seq: 4, level: arr_items[i].likelihood4_level, text: arr_items[i].likelihood4_text, desc: arr_items[i].likelihood4_desc, criterion: arr_items[i].likelihood4_criterion }
+                    , { columns_level: columns_level, seq: 5, level: arr_items[i].likelihood5_level, text: arr_items[i].likelihood5_text, desc: arr_items[i].likelihood5_desc, criterion: arr_items[i].likelihood5_criterion }
+                ]
+            }
+            $scope.master_ram_likelihood = arr;
+    
         }
-        if (columns_level !== 5 || true) {
-            var arr = [
-                { columns_level: columns_level, seq: 1, level: arr_items[i].likelihood1_level, text: '', desc: '', criterion: '' }
-                , { columns_level: columns_level, seq: 2, level: arr_items[i].likelihood2_level, text: '', desc: '', criterion: '' }
-                , { columns_level: columns_level, seq: 3, level: arr_items[i].likelihood3_level, text: '', desc: '', criterion: '' }
-                , { columns_level: columns_level, seq: 4, level: arr_items[i].likelihood4_level, text: '', desc: '', criterion: '' }
-                , { columns_level: columns_level, seq: 5, level: arr_items[i].likelihood5_level, text: '', desc: '', criterion: '' }
-                , { columns_level: columns_level, seq: 6, level: arr_items[i].likelihood6_level, text: '', desc: '', criterion: '' }
-                , { columns_level: columns_level, seq: 7, level: arr_items[i].likelihood7_level, text: '', desc: '', criterion: '' }
-                , { columns_level: columns_level, seq: 8, level: arr_items[i].likelihood8_level, text: '', desc: '', criterion: '' }
-                , { columns_level: columns_level, seq: 9, level: arr_items[i].likelihood9_level, text: '', desc: '', criterion: '' }
-                , { columns_level: columns_level, seq: 10, level: arr_items[i].likelihood10_level, text: '', desc: '', criterion: '' }
-            ]
-        } else {
-            var arr = [
-                { columns_level: columns_level, seq: 1, level: arr_items[i].likelihood1_level, text: arr_items[i].likelihood1_text, desc: arr_items[i].likelihood1_desc, criterion: arr_items[i].likelihood1_criterion }
-                , { columns_level: columns_level, seq: 2, level: arr_items[i].likelihood2_level, text: arr_items[i].likelihood2_text, desc: arr_items[i].likelihood2_desc, criterion: arr_items[i].likelihood2_criterion }
-                , { columns_level: columns_level, seq: 3, level: arr_items[i].likelihood3_level, text: arr_items[i].likelihood3_text, desc: arr_items[i].likelihood3_desc, criterion: arr_items[i].likelihood3_criterion }
-                , { columns_level: columns_level, seq: 4, level: arr_items[i].likelihood4_level, text: arr_items[i].likelihood4_text, desc: arr_items[i].likelihood4_desc, criterion: arr_items[i].likelihood4_criterion }
-                , { columns_level: columns_level, seq: 5, level: arr_items[i].likelihood5_level, text: arr_items[i].likelihood5_text, desc: arr_items[i].likelihood5_desc, criterion: arr_items[i].likelihood5_criterion }
-            ]
-        }
-        $scope.master_ram_likelihood = arr;
-
-    }
-    function set_data_managerecom() {
-
-        if (true) {
-            var arr_worksheet = $scope.data_nodeworksheet;
-            if (arr_worksheet.length > 0) {
-
-                for (var w = 0; w < arr_worksheet.length; w++) {
-
-                    //recommendations_no
-                    arr_worksheet[w].recommendations_no = (arr_worksheet[w].recommendations_no == null ? arr_worksheet[w].consequences_no : arr_worksheet[w].recommendations_no);
-                    var arr_node = $filter('filter')($scope.data_node, function (item) {
-                        return (item.id == arr_worksheet[w].id_node);
-                    });
-                    if (arr_node.length > 0) {
-                        arr_worksheet[w].node_no = arr_node[0].no;
-                        arr_worksheet[w].node = arr_node[0].node;
+        function set_data_managerecom() {
+    
+            if (true) {
+                var arr_worksheet = $scope.data_nodeworksheet;
+                if (arr_worksheet.length > 0) {
+    
+                    for (var w = 0; w < arr_worksheet.length; w++) {
+    
+                        //recommendations_no
+                        arr_worksheet[w].recommendations_no = (arr_worksheet[w].recommendations_no == null ? arr_worksheet[w].consequences_no : arr_worksheet[w].recommendations_no);
+                        var arr_node = $filter('filter')($scope.data_node, function (item) {
+                            return (item.id == arr_worksheet[w].id_node);
+                        });
+                        if (arr_node.length > 0) {
+                            arr_worksheet[w].node_no = arr_node[0].no;
+                            arr_worksheet[w].node = arr_node[0].node;
+                        }
+                        //Estimated Date  
+                        try {
+                            if (arr_worksheet[w].estimated_start_date !== null) {
+                                const x = (arr_worksheet[w].estimated_start_date.split('T')[0]).split("-");
+                                if (x[0] > 2000) {
+                                    arr_worksheet[w].estimated_start_date = new Date(x[0], x[1] - 1, x[2]);
+                                }
+                            }
+                        } catch { }
+                        try {
+                            if (arr_worksheet[w].estimated_end_date !== null) {
+                                const x = (arr_worksheet[w].estimated_end_date.split('T')[0]).split("-");
+                                if (x[0] > 2000) {
+                                    arr_worksheet[w].estimated_end_date = new Date(x[0], x[1] - 1, x[2]);
+                                }
+                            }
+                        } catch { }
+    
                     }
-                    //Estimated Date  
-                    try {
-                        if (arr_worksheet[w].estimated_start_date !== null) {
-                            const x = (arr_worksheet[w].estimated_start_date.split('T')[0]).split("-");
-                            if (x[0] > 2000) {
-                                arr_worksheet[w].estimated_start_date = new Date(x[0], x[1] - 1, x[2]);
-                            }
-                        }
-                    } catch { }
-                    try {
-                        if (arr_worksheet[w].estimated_end_date !== null) {
-                            const x = (arr_worksheet[w].estimated_end_date.split('T')[0]).split("-");
-                            if (x[0] > 2000) {
-                                arr_worksheet[w].estimated_end_date = new Date(x[0], x[1] - 1, x[2]);
-                            }
-                        }
-                    } catch { }
-
                 }
             }
+    
         }
-
     }
 
     // <==== (Kul)Session zone function  ====>    

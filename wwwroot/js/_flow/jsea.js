@@ -441,63 +441,119 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     };
 
-    $scope.changeTab = function (selectedTab) {
 
-        try {
-            if ($scope.data_header[0].pha_status == 11) {
-                if (selectedTab.name == 'worksheet') {
-                    //$('#modalPleaseRegister').modal('show');
-                    if(!validBeforRegister()) {
-                        // remove tab
-                        selectedTab.isActive = false;
-                        var tabPane = document.getElementById("tab-" + selectedTab.name);
-                        if (tabPane) tabPane.classList.remove('show', 'active');
-                        // set tab general
-                        $scope.tabs[0].isActive = true;
-                        var activeTabPane = document.getElementById("tab-" + $scope.tabs[0].name);
-                        if (activeTabPane) {
-                            setTimeout(() => {
-                                activeTabPane.classList.add('show', 'active');
-                                $scope.action_part = 1
-                                var activeTabBtn = document.getElementById($scope.tabs[0].name + "-tab");
-                                if (activeTabBtn) activeTabBtn.classList.add('active');
-                            }, 1000);
+
+    // <!======================== manage tabs ==============================!?>
+
+    if(true){
+        $scope.changeTab = function (selectedTab) {
+
+            try {
+                if ($scope.data_header[0].pha_status == 11) {
+                    if (selectedTab.name == 'worksheet') {
+                        //$('#modalPleaseRegister').modal('show');
+                        if(!validBeforRegister()) {
+                            // remove tab
+                            selectedTab.isActive = false;
+                            var tabPane = document.getElementById("tab-" + selectedTab.name);
+                            if (tabPane) tabPane.classList.remove('show', 'active');
+                            // set tab general
+                            $scope.tabs[0].isActive = true;
+                            var activeTabPane = document.getElementById("tab-" + $scope.tabs[0].name);
+                            if (activeTabPane) {
+                                setTimeout(() => {
+                                    activeTabPane.classList.add('show', 'active');
+                                    $scope.action_part = 1
+                                    var activeTabBtn = document.getElementById($scope.tabs[0].name + "-tab");
+                                    if (activeTabBtn) activeTabBtn.classList.add('active');
+                                }, 1000);
+                            }
+                            
+                            return set_alert('Warning',$scope.validMessage)
                         }
-                        
-                        return set_alert('Warning',$scope.validMessage)
+    
+                        return $scope.confirmSave('confirm_submit_register_without')
                     }
-
-                    return $scope.confirmSave('confirm_submit_register_without')
                 }
+            } catch (error) { }
+    
+    
+            // Set all tabs to inactive
+            angular.forEach($scope.tabs, function (tab) {
+                tab.isActive = false;
+                var tabPane = document.getElementById("tab-" + tab.name);
+                if (tabPane) {
+                    tabPane.classList.remove('show', 'active');
+                }
+            });
+    
+            selectedTab.isActive = true;
+            var activeTabPane = document.getElementById("tab-" + selectedTab.name);
+            if (activeTabPane) {
+                activeTabPane.classList.add('show', 'active');
             }
-        } catch (error) { }
-
-
-        // Set all tabs to inactive
-        angular.forEach($scope.tabs, function (tab) {
-            tab.isActive = false;
-            var tabPane = document.getElementById("tab-" + tab.name);
-            if (tabPane) {
-                tabPane.classList.remove('show', 'active');
-            }
-        });
-
-        selectedTab.isActive = true;
-        var activeTabPane = document.getElementById("tab-" + selectedTab.name);
-        if (activeTabPane) {
-            activeTabPane.classList.add('show', 'active');
+    
+            check_tab(selectedTab.name);
+    
+    
+    
+            $scope.oldTab = selectedTab;
+            apply();
+        };
+    
+        $scope.goBackToTab = function (){
+            var tag_name = $scope.goback_tab;
+    
+            var arr_tab = $filter('filter')($scope.tabs, function (item) {
+                return ((item.name == tag_name));
+            });
+    
+            $scope.changeTab_Focus(arr_tab, tag_name);
         }
-
-        check_tab(selectedTab.name);
-
-
-
-        $scope.oldTab = selectedTab;
-        apply();
-    };
-
-
-
+    
+        $scope.changeTab_Focus = function (selectedTab, nameTab) {
+            angular.forEach($scope.tabs, function (tab) {
+                tab.isActive = false;
+            });
+    
+            // Set all tabs to inactive
+            angular.forEach($scope.tabs, function (tab) {
+                tab.isActive = false;
+                var tabPane = document.getElementById("tab-" + tab.name);
+                if (tabPane) {
+                    tabPane.classList.remove('show', 'active');
+                }
+            });
+    
+            if(Array.isArray){
+                selectedTab[0].isActive = true;
+                var activeTabPane = document.getElementById("tab-" + selectedTab[0].name);
+                if (activeTabPane) {
+                    activeTabPane.classList.add('show', 'active');
+                }
+    
+                console.log("show tabs",$scope.tabs)
+                check_tab(selectedTab[0].name);
+    
+            }else{
+                selectedTab.isActive = true;
+                var activeTabPane = document.getElementById("tab-" + selectedTab.name);
+                if (activeTabPane) {
+                    activeTabPane.classList.add('show', 'active');
+                }
+    
+                console.log("show tabs",$scope.tabs)
+    
+                check_tab(selectedTab.name);
+            }
+    
+    
+            apply();
+        };
+        $scope.editWorksheet = function (tab_worksheet_active) {
+            $scope.tab_worksheet_active = !tab_worksheet_active;
+        }
+    }
 
 
     //attached file
@@ -627,7 +683,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                                                 angular.copy($scope.data_memberteam, $scope.data_memberteam_old);
             
                                                 array.memberteam.forEach(function (member) {
-                                                    member.id_session = id_session; // newValue คือค่าที่คุณต้องการให้ id_session อัปเดตเป็น
+                                                    member.id_session = id_session; // newValue 
                                                 });
             
                                                 $scope.data_memberteam = [...$scope.data_memberteam, ...array.memberteam]; 
@@ -638,18 +694,29 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                                                 angular.copy($scope.data_approver, $scope.data_approver_old);
             
                                                 array.approver.forEach(function (approver) {
-                                                    approver.id_session = id_session; // newValue คือค่าที่คุณต้องการให้ id_session อัปเดตเป็น
+                                                    approver.id_session = id_session; // newValue 
                                                 });
             
                                                 $scope.data_approver = [...$scope.data_approver,...array.approver]; 
-                                                // Remove duplicates based on id
+
+                                                // Remove duplicates based on id and filter out invalid entries (where user_displayname or user_name is null or empty)
                                                 $scope.data_approver = $scope.data_approver.reduce((acc, current) => {
                                                     const existingItem = acc.find(item => item.id === current.id);
-                                                    if (!existingItem) {
+                                                    
+                                                    // Check if user_displayname or user_name is null or empty
+                                                    const isValid = current.user_displayname && current.user_displayname !== "" 
+                                                                    && current.user_name && current.user_name !== "";
+                                                    
+                                                    if (!existingItem && isValid) {
                                                         acc.push(current);
                                                     }
+                                                
                                                     return acc;
                                                 }, []);
+                                                
+                                                console.log("After removing duplicates:", $scope.data_approver);
+                                                
+
             
                                             }
                                             if (array.relatedpeople_outsider) {
@@ -660,12 +727,18 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                                                 });
             
                                                 $scope.data_relatedpeople_outsider = [...$scope.data_relatedpeople_outsider,...array.relatedpeople_outsider]; 
-                                                // Remove duplicates based on id
+
+                                                // Remove duplicates based on id and filter out invalid entries (where user_displayname or user_name is null or empty)
                                                 $scope.data_relatedpeople_outsider = $scope.data_relatedpeople_outsider.reduce((acc, current) => {
                                                     const existingItem = acc.find(item => item.id === current.id);
-                                                    if (!existingItem) {
+                                                    
+                                                    // Check if user_displayname or user_name is null or empty
+                                                    const isValid = current.user_displayname && current.user_displayname !== "" ;
+                                                    
+                                                    if (!existingItem && isValid) {
                                                         acc.push(current);
                                                     }
+                                                
                                                     return acc;
                                                 }, []);
                                                 //console.log("check array relatedpeople", array.relatedpeople_outsider, "check relatedpeoplem",  $scope.data_relatedpeople_outsider);                                                                     
