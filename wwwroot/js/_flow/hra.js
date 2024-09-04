@@ -1994,7 +1994,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                 $scope.unsavedChanges = false;
 
-                $scope.$apply();
+                apply();
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 if (jqXHR.status == 500) {
@@ -5292,29 +5292,37 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     $('#divLoading').hide();
                 },
                 success: function (data) {
-                    var arr = data;
-                
-                    if (arr && arr.msg && arr.msg.length > 0) { 
-                        console.log("have array");
-                
-                        if (arr.msg[0].STATUS === "true") { 
-                            console.log("it true");
-                            var path = (url_ws).replace('/api/', '') + arr.msg[0].ATTACHED_FILE_PATH;
-                            var name = arr.msg[0].ATTACHED_FILE_NAME;
-                            $scope.exportfile[0].DownloadPath = path;
-                            $scope.exportfile[0].Name = name;
-                
-                            $('#modalExportFile').modal('show');
-                            $("#divLoading").hide(); 
-                
+                    try {
+                        if (data && data.msg && data.msg.length > 0) {
+                            var response = data.msg[0];
+        
+                            if (response.STATUS === "true") {
+        
+                                var path = (url_ws).replace('/api/', '') + response.ATTACHED_FILE_PATH.replace(/\\/g, '/');
+                                var name = response.ATTACHED_FILE_NAME;
+    
+    
+                                $scope.exportfile[0].DownloadPath = path;
+                                $scope.exportfile[0].Name = name;
+                                                            
+                                setTimeout(function() {
+                                    $('#modalExportFile').modal('show');
+                                }, 0);
+    
+                                 apply();
+                            } else {
+                                set_alert('Warning', response.IMPORT_DATA_MSG || 'The system encountered an issue processing your file. Please try again.');
+                            }
                         } else {
-                            $("#divLoading").hide();
-                            set_alert('Warning', arr.msg[0].IMPORT_DATA_MSG); 
+                            // If data.msg is undefined or not in the expected format
+                            set_alert('Warning', 'Unexpected response from the server. Please try again or contact support.');
                         }
-                    } else {
-                        set_alert('Warning', 'Unable to connect to the service. Please check your internet connection or try again later.');
+                    } catch (e) {
+                        // Catch any JSON parsing or unexpected errors during success handling
+                        set_alert('Error', 'An unexpected error occurred while processing the response. Please try again later.');
+                        console.error('Error during success handling:', e);
                     }
-                },                
+                },        
                 error: function (jqXHR, textStatus, errorThrown) {
                     if (jqXHR.status == 500) {
                         alert('Internal error: ' + jqXHR.responseText);

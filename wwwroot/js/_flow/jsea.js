@@ -502,6 +502,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         };
     
         $scope.goBackToTab = function (){
+
+            console.log("$scope.goback_tab = 'general';",$scope.goback_tab)
             var tag_name = $scope.goback_tab;
     
             var arr_tab = $filter('filter')($scope.tabs, function (item) {
@@ -653,10 +655,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                                         if (true) {
                                             var file_name = array.msg[0].ATTACHED_FILE_NAME;
                                             var file_path = array.msg[0].ATTACHED_FILE_PATH;
+
+                                            // Replace backslashes (\) with forward slashes (/)
+                                            const correctedFilePath = file_path.replace(/\\/g, '/');
+                            
                                             
                                             $scope.data_general[0].file_upload_name = file_name;
                                             $scope.data_general[0].file_upload_size = fileSize;
-                                            $scope.data_general[0].file_upload_path = service_file_url + file_path;
+                                            $scope.data_general[0].file_upload_path = service_file_url + correctedFilePath;
                                             $scope.data_general[0].action_change = 1;
                                             set_data_general()
                                         }
@@ -749,11 +755,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                                                 $scope.data_listworksheet = JSON.parse(replace_hashKey_arr(array.tasks_worksheet));
                                                 $scope.data_listworksheet_def = clone_arr_newrow(array.tasks_worksheet);
                                             }
+
+
+                                            updateDataSessionAccessInfo('session');
                                         } 
                                         apply();
             
                                         //set_alert('Warning', "Upload Data Success.");
-                                        $('#modalMsgFile').modal('show');
                                         console.log('Status is true:', responseFromService.msg[0].STATUS);
                                         set_alert('Success', ALERT_MESSAGES.SUCCESS);
                                     } else {
@@ -822,9 +830,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                             // Update the scope data with the new file information
                             const arr = $filter('filter')($scope.data_drawing_approver, function (item) { return item.seq == fileSeq; });
                             if (arr.length > 0) {
+
+                                // Replace backslashes (\) with forward slashes (/)
+                                const correctedFilePath = response.ATTACHED_FILE_PATH.replace(/\\/g, '/');
+
+
                                 arr[0].document_file_name = response.ATTACHED_FILE_NAME;
                                 arr[0].document_file_size = validation.fileSizeKB;
-                                arr[0].document_file_path = service_file_url + response.ATTACHED_FILE_PATH;
+                                arr[0].document_file_path = service_file_url + correctedFilePath;
                                 arr[0].document_module = 'approver';
                                 arr[0].action_change = 1;
                                 arr[0].action_type = arr[0].action_type === 'new' ? 'insert' : arr[0].action_type;
@@ -863,22 +876,29 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         
         
                     uploadFile(file, fileSeq, file.name, validation.fileSizeKB, file_part, fileDoc)
-                        .then(response => {
-                            // Update the scope data with the new file information
-                            const arr = $filter('filter')($scope.data_drawing, function (item) { return item.seq == fileSeq; });
-                            if (arr.length > 0) {
-                                arr[0].document_file_name = response.ATTACHED_FILE_NAME;
-                                arr[0].document_file_size = validation.fileSizeKB;
-                                arr[0].document_file_path = service_file_url + response.ATTACHED_FILE_PATH;
-                                arr[0].document_module = 'hra';
-                                arr[0].action_change = 1;
-                                $scope.$apply(); // Ensure the scope is updated
-                            }
-                            set_alert('Success', 'Your file has been successfully attached.');
-                        })
-                        .catch(error => {
-                            console.error('File upload error:', error);
-                        });
+                    .then(response => {
+                        // Update the scope data with the new file information
+                        const arr = $filter('filter')($scope.data_drawing, function (item) { return item.seq == fileSeq; });
+                        if (arr.length > 0) {
+
+                            // Replace backslashes (\) with forward slashes (/)
+                            const correctedFilePath = response.ATTACHED_FILE_PATH.replace(/\\/g, '/');
+
+
+                            arr[0].document_file_name = response.ATTACHED_FILE_NAME;
+                            arr[0].document_file_size = validation.fileSizeKB; 
+                            arr[0].document_file_path = service_file_url + correctedFilePath;
+                            arr[0].document_module = 'hra';
+                            arr[0].action_change = 1;
+                            $scope.$apply(); // Ensure the scope is updated
+                        }
+                
+                        set_alert('Success', 'Your file has been successfully attached.');
+                    })
+                    .catch(error => {
+                        console.error('File upload error:', error);
+                    });
+                
                 } else {
                     fileInfoSpan.textContent = "";
                     set_alert('Warning', "No file selected. Please select a file to upload.");
@@ -1091,27 +1111,36 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 $('#divLoading').hide();
             },
             success: function (data) {
-                var arr = data;
-            
-                if (arr && arr.msg && arr.msg.length > 0) { 
-                    console.log("have array");
-            
-                    if (arr.msg[0].STATUS === "true") { 
-                        console.log("it true");
-                        var path = (url_ws).replace('/api/', '') + arr.msg[0].ATTACHED_FILE_PATH;
-                        var name = arr.msg[0].ATTACHED_FILE_NAME;
-                        $scope.exportfile[0].DownloadPath = path;
-                        $scope.exportfile[0].Name = name;
-            
-                        $('#modalExportFile').modal('show');
-                        $("#divLoading").hide(); 
-            
+                try {
+                    if (data && data.msg && data.msg.length > 0) {
+                        var response = data.msg[0];
+    
+                        if (response.STATUS === "true") {
+    
+                            var path = (url_ws).replace('/api/', '') + response.ATTACHED_FILE_PATH.replace(/\\/g, '/');
+                            var name = response.ATTACHED_FILE_NAME;
+
+
+                            $scope.exportfile[0].DownloadPath = path;
+                            $scope.exportfile[0].Name = name;
+                                                        
+                            setTimeout(function() {
+                                $('#modalExportFile').modal('show');
+                            }, 0);
+
+                             apply()
+                        } else {
+                            set_alert('Warning', response.IMPORT_DATA_MSG || 'The system encountered an issue processing your file. Please try again.');
+                        }
+                        
                     } else {
-                        $("#divLoading").hide();
-                        set_alert('Warning', arr.msg[0].IMPORT_DATA_MSG); 
+                        // If data.msg is undefined or not in the expected format
+                        set_alert('Warning', 'Unexpected response from the server. Please try again or contact support.');
                     }
-                } else {
-                    set_alert('Warning', 'Unable to connect to the service. Please check your internet connection or try again later.');
+                } catch (e) {
+                    // Catch any JSON parsing or unexpected errors during success handling
+                    set_alert('Error', 'An unexpected error occurred while processing the response. Please try again later.');
+                    console.error('Error during success handling:', e);
                 }
             },
             error: function (jqXHR, textStatus, errorThrown) {
@@ -5377,8 +5406,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
 
         action_type_changed(_arr, _seq);
-        updateDataSessionAccessInfo();
 
+        if(type_text == 'meeting_date' || type_text == 'meeting_time'){
+            updateDataSessionAccessInfo('session');
+
+        }
 
         if (type_text == "ChangeRAM") {
             set_master_ram_likelihood(_arr.id_ram);
@@ -6574,7 +6606,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     }
 
-    $scope.accessInfoMap = {};
+    $scope.sessionAccessInfoMap = {};
+    $scope.drawingAccessInfoMap = {};
 
     $scope.getAccessInfo = function(item, index, type) {
         let accessInfo = {
@@ -6586,7 +6619,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             let approverData = $scope.data_approver.filter(data => data.id_session === item.id);
             let memberTeamData = $scope.data_memberteam.filter(data => data.id_session === item.id);
             let relatedPeopleData = $scope.data_relatedpeople.filter(data => data.id_session === item.id);
-    
+            
             if (index === 0 && 
                 (approverData.length === 0 || approverData[0].user_name == null) &&
                 (memberTeamData.length === 0 || memberTeamData[0].user_name == null) &&
@@ -6598,15 +6631,31 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     
             if ((approverData.length > 0 && approverData[0].user_name != null) ||
                 (memberTeamData.length > 0 && memberTeamData[0].user_name != null) ||
-                (relatedPeopleData.length > 0 && relatedPeopleData[0].user_name != null)) {
+                (relatedPeopleData.length > 0 && relatedPeopleData[0].user_display_name != null)) {
                 accessInfo.canCopy = true;
             } else {
                 accessInfo.canCopy = false;
             }
-        
 
+            let meeting_data = $scope.data_session.filter(data => data.id === item.id);
+
+            if (
+                meeting_data[0].meeting_date != null || 
+                meeting_data[0].meeting_start_time != null || 
+                meeting_data[0].meeting_start_time_hh != null || 
+                meeting_data[0].meeting_start_time_mm != null || 
+                meeting_data[0].meeting_end_time != null || 
+                meeting_data[0].meeting_end_time_hh != null || 
+                meeting_data[0].meeting_end_time_mm != null
+            ) {
+                accessInfo.canCopy = true;
+                accessInfo.canRemove = true;
+            } 
+
+            $scope.sessionAccessInfoMap[item.id] = accessInfo;
+            
+            
         } else if(type === 'drawing'){
-            console.log('drawing item:', item);
     
             if(index === 0) {
                 if (item.document_name !== null || item.document_no !== null || item.descriptions !== null ||
@@ -6618,10 +6667,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             } else {
                 accessInfo.canRemove = true;
             }
+
+            $scope.drawingAccessInfoMap[item.id] = accessInfo;
         }
         
-        $scope.accessInfoMap[item.id] = accessInfo;
-    
+        
     };
 
     //access each role
@@ -6660,7 +6710,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     };
     
     function validBeforRegister() {
-        if (validGeneral() && validDrawing()) {
+        if (validGeneral() && 
+            validSessions() &&
+            validDrawing()) {
             return true
         }
 
@@ -6668,8 +6720,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
     
     function validGeneral(){
-        console.log($scope.data_general[0])
-        console.log($scope.data_drawing)
+
         if (!$scope.data_general[0].pha_request_name) {
             if(!$scope.data_general[0].pha_request_name) $scope.validMessage = 'Please select a valid Task Name'
             $scope.goback_tab = 'general';
@@ -6677,6 +6728,55 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
         $scope.validMessage = ''
         return true
+    }
+
+    function validSessions(){
+        let isValid = true;
+        for (let i = 0; i < $scope.data_session.length; i++) {
+            // MEMBER
+            if($scope.data_memberteam.length < 1 || !$scope.data_memberteam[0].user_name) {
+                $scope.goback_tab = 'general'
+                $scope.validMessage = 'Please select a valid Member Team'
+                return ;
+            }
+            // ASSESMENT  
+            if ($scope.data_approver.length < 1 || !$scope.data_approver[0].user_name) {
+                $scope.goback_tab = 'general'
+                $scope.validMessage = 'Please select a valid Safety Reviewer'
+                return ;
+            }
+        }
+        // SESSION DATE TIME
+        $scope.data_session.forEach(function(session) {
+          session.validated = true;
+    
+          if (!session.meeting_date) {
+            $scope.validMessage = 'Please select a valid Meeting Date';
+            isValid = false;
+          } else if (!session.meeting_start_time_hh) {
+            $scope.validMessage = 'Please select a valid Meeting Start Time HH';
+            isValid = false;
+          } else if (!session.meeting_start_time_mm) {
+            $scope.validMessage = 'Please select a valid Meeting Start Time MM';
+            isValid = false;
+          } else if (!session.meeting_end_time_hh) {
+            $scope.validMessage = 'Please select a valid Meeting End Time HH';
+            isValid = false;
+          } else if (!session.meeting_end_time_mm) {
+            $scope.validMessage = 'Please select a valid Meeting End Time MM';
+            isValid = false;
+          }
+    
+          if (!isValid) {
+            $scope.goback_tab = 'general';
+            return false;
+          }
+        });
+    
+        if (isValid) {
+          $scope.validMessage = '';
+          return true;
+        }
     }
 
     function validDrawing(){

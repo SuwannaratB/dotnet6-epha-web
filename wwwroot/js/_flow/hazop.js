@@ -885,9 +885,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                             // Update the scope data with the new file information
                             const arr = $filter('filter')($scope.data_drawing_approver, function (item) { return item.seq == fileSeq; });
                             if (arr.length > 0) {
+
+                                // Replace backslashes (\) with forward slashes (/)
+                                const correctedFilePath = response.ATTACHED_FILE_PATH.replace(/\\/g, '/');
+
+
                                 arr[0].document_file_name = response.ATTACHED_FILE_NAME;
                                 arr[0].document_file_size = validation.fileSizeKB;
-                                arr[0].document_file_path = service_file_url + response.ATTACHED_FILE_PATH;
+                                arr[0].document_file_path = service_file_url + correctedFilePath;
                                 arr[0].document_module = 'approver';
                                 arr[0].action_change = 1;
                                 arr[0].action_type = arr[0].action_type === 'new' ? 'insert' : arr[0].action_type;
@@ -926,22 +931,29 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         
         
                     uploadFile(file, fileSeq, file.name, validation.fileSizeKB, file_part, fileDoc)
-                        .then(response => {
-                            // Update the scope data with the new file information
-                            const arr = $filter('filter')($scope.data_drawing, function (item) { return item.seq == fileSeq; });
-                            if (arr.length > 0) {
-                                arr[0].document_file_name = response.ATTACHED_FILE_NAME;
-                                arr[0].document_file_size = validation.fileSizeKB;
-                                arr[0].document_file_path = service_file_url + response.ATTACHED_FILE_PATH;
-                                arr[0].document_module = 'hra';
-                                arr[0].action_change = 1;
-                                $scope.$apply(); // Ensure the scope is updated
-                            }
-                            set_alert('Success', 'Your file has been successfully attached.');
-                        })
-                        .catch(error => {
-                            console.error('File upload error:', error);
-                        });
+                    .then(response => {
+                        // Update the scope data with the new file information
+                        const arr = $filter('filter')($scope.data_drawing, function (item) { return item.seq == fileSeq; });
+                        if (arr.length > 0) {
+
+                            // Replace backslashes (\) with forward slashes (/)
+                            const correctedFilePath = response.ATTACHED_FILE_PATH.replace(/\\/g, '/');
+
+
+                            arr[0].document_file_name = response.ATTACHED_FILE_NAME;
+                            arr[0].document_file_size = validation.fileSizeKB; 
+                            arr[0].document_file_path = service_file_url + correctedFilePath;
+                            arr[0].document_module = 'hra';
+                            arr[0].action_change = 1;
+                            $scope.$apply(); // Ensure the scope is updated
+                        }
+                
+                        set_alert('Success', 'Your file has been successfully attached.');
+                    })
+                    .catch(error => {
+                        console.error('File upload error:', error);
+                    });
+                
                 } else {
                     fileInfoSpan.textContent = "";
                     set_alert('Warning', "No file selected. Please select a file to upload.");
@@ -1160,27 +1172,35 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 $('#divLoading').hide();
             },
             success: function (data) {
-                var arr = data;
-            
-                if (arr && arr.msg && arr.msg.length > 0) { 
-                    console.log("have array");
-            
-                    if (arr.msg[0].STATUS === "true") { 
-                        console.log("it true");
-                        var path = (url_ws).replace('/api/', '') + arr.msg[0].ATTACHED_FILE_PATH;
-                        var name = arr.msg[0].ATTACHED_FILE_NAME;
-                        $scope.exportfile[0].DownloadPath = path;
-                        $scope.exportfile[0].Name = name;
-            
-                        $('#modalExportFile').modal('show');
-                        $("#divLoading").hide(); 
-            
+                try {
+                    if (data && data.msg && data.msg.length > 0) {
+                        var response = data.msg[0];
+    
+                        if (response.STATUS === "true") {
+    
+                            var path = (url_ws).replace('/api/', '') + response.ATTACHED_FILE_PATH.replace(/\\/g, '/');
+                            var name = response.ATTACHED_FILE_NAME;
+
+
+                            $scope.exportfile[0].DownloadPath = path;
+                            $scope.exportfile[0].Name = name;
+                                                        
+                            setTimeout(function() {
+                                $('#modalExportFile').modal('show');
+                            }, 0);
+
+                             apply()
+                        } else {
+                            set_alert('Warning', response.IMPORT_DATA_MSG || 'The system encountered an issue processing your file. Please try again.');
+                        }
                     } else {
-                        $("#divLoading").hide();
-                        set_alert('Warning', arr.msg[0].IMPORT_DATA_MSG); 
+                        // If data.msg is undefined or not in the expected format
+                        set_alert('Warning', 'Unexpected response from the server. Please try again or contact support.');
                     }
-                } else {
-                    set_alert('Warning', 'Unable to connect to the service. Please check your internet connection or try again later.');
+                } catch (e) {
+                    // Catch any JSON parsing or unexpected errors during success handling
+                    set_alert('Error', 'An unexpected error occurred while processing the response. Please try again later.');
+                    console.error('Error during success handling:', e);
                 }
             },
             error: function (jqXHR, textStatus, errorThrown) {
