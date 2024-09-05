@@ -697,6 +697,19 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                                             }
                                             if (array.approver) {
                                                 $scope.data_approver_old = [];
+
+                                                $scope.data_approver.forEach(function(item) {
+                                                    // Check if user_name and user_displayname are null or empty
+                                                    if ((item.user_name === null || item.user_name === '') && 
+                                                        (item.user_displayname === null || item.user_displayname === '') &&
+                                                        item.id_session === id_session) {
+                                                        // Set seq to 0 if the condition is met
+                                                        item.seq = 0;
+                                                        item.action_change = 1;
+                                                    }
+                                                });
+
+                                                
                                                 angular.copy($scope.data_approver, $scope.data_approver_old);
             
                                                 array.approver.forEach(function (approver) {
@@ -750,6 +763,17 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                                                 //console.log("check array relatedpeople", array.relatedpeople_outsider, "check relatedpeoplem",  $scope.data_relatedpeople_outsider);                                                                     
                                             }
                                             if (array.tasks_worksheet) {
+
+                                                $scope.data_listworksheet.forEach(function(item) {
+                                                    // Check if user_name and user_displayname are null or empty
+                                                    if ((item.possiblecase === null && item.potentailhazard === null && 
+                                                        item.recommendations === null && item.row_type === 'workstep')) {
+                                                        // Set seq to 0 if the condition is met
+                                                        item.seq = 0;
+                                                        item.action_change = 1;
+                                                    }
+                                                });
+
                                                 //old data 
                                                 angular.copy($scope.data_listworksheet, $scope.data_listworksheet_delete);
                                                 $scope.data_listworksheet = JSON.parse(replace_hashKey_arr(array.tasks_worksheet));
@@ -5167,6 +5191,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     
         }
 
+        console.log("====================",copy_data_approver)
+
         return angular.toJson(copy_data_approver);
     }
     function check_data_relatedpeople() {
@@ -6695,15 +6721,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 accessInfo.isTA2 = true;
                 accessInfo.canAccess = true; // TA2 should have access to their own tasks
                 console.log("User is TA2, granting access:", accessInfo);
-            } else {
-                // Check if the user is a TA3 for this task
-                for (let item of $scope.data_approver_ta3) {
-                    if (item.id_approver === task.id && $scope.user_name == item.user_name) {
-                        accessInfo.isTA3 = true;
-                        accessInfo.canAccess = true;               
-                    }
-                }
-            }
+            } 
         }
     
         return accessInfo;
