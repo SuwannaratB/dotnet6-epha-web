@@ -442,7 +442,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         //         return set_alert('Warning', 'Please select a valid Node');
                         //     }
                             if(!validBeforRegister()) 
-                                return set_alert('Warning',$scope.validMessage)
+                                return set_alert('Warning',$scope.validMessage,$scope.goback_tab)
     
                             apply();
                             $('#modalPleaseRegister').modal('show');
@@ -589,180 +589,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             const end = filename.slice(-Math.floor(length / 2));
             return `${start}.......${end}`;
         };
-        
-        $scope.fileUploadSelectTemplate = function (input) {
-            var file_doc = $scope.data_header[0].pha_no;
-            const fileInput = input;
-            const fileSeq = fileInput.id.split('-')[1];
-            const fileInfoSpan = document.getElementById('uploadfile-' + fileSeq);
-
-            if (fileInput.files.length > 0) {
-                const file = fileInput.files[0];
-                const fileName = file.name;
-                const fileSize = Math.round(file.size / 1024);
-                //fileInfoSpan.textContent = `${fileName} (${fileSize} KB)`;
-
-                let shortenedFileName = fileName.length > 20 ? fileName.substring(0, 20) + '...' : fileName;
-                fileInfoSpan.textContent = `${shortenedFileName} (${fileSize} KB)`;
-
-
-                if (fileName.toLowerCase().indexOf('.xlsx') == -1 && fileName.toLowerCase().indexOf('.xls') == -1) {
-                    fileInfoSpan.textContent = "";
-                    set_alert('Warning', 'Please select a Excle file.');
-                    return;
-                }
-
-                var fd = new FormData();
-                //Take the first selected file
-                fd.append("file_obj", file);
-                fd.append("file_seq", fileSeq);
-                fd.append("file_name", fileName);
-                fd.append("file_doc", file_doc);
-                fd.append("sub_software", 'jsea');
-
-                try {
-                    $("#divLoading").show(); 
-                    const request = new XMLHttpRequest();
-                    request.open("POST", url_ws + 'Flow/importfile_data_jsea');
-                    //request.send(fd);
-
-                    const ALERT_MESSAGES = {
-                        INVALID_RESPONSE: 'There was an issue with the response from the server. Please try again later.',
-                        ERROR_STATUS: 'The operation could not be completed due to an error. Please check the details and try again.',
-                        SUCCESS: 'The operation was completed successfully.',
-                        GENERIC_ERROR: 'An unexpected error occurred. Please contact support if the issue persists.'
-                    };
-
-                    request.onreadystatechange = function () {
-                        if (request.readyState === XMLHttpRequest.DONE) {
-                            if (request.status === 200) {
-
-                                const responseFromService = JSON.parse(request.responseText);
-
-                                // Check if the response is valid and if the STATUS is "true"
-                                if (responseFromService && responseFromService.msg && Array.isArray(responseFromService.msg) && responseFromService.msg.length > 0) {
-                                    if (responseFromService.msg[0].STATUS === "true") {
-                                        
-                                        // ทำอะไรกับข้อมูลที่ได้รับเช่น แสดงผลหรือประมวลผลต่อไป
-                                        const array = responseFromService;
-            
-                                        if (true) {
-                                            var file_name = array.msg[0].ATTACHED_FILE_NAME;
-                                            var file_path = array.msg[0].ATTACHED_FILE_PATH;
-                                            
-                                            $scope.data_general[0].file_upload_name = file_name;
-                                            $scope.data_general[0].file_upload_size = fileSize;
-                                            $scope.data_general[0].file_upload_path = service_file_url + file_path;
-                                            $scope.data_general[0].action_change = 1;
-                                            set_data_general()
-                                        }
-            
-                                        if (array.max) {
-                                            var arr = $filter('filter')(array.max, function (item) { return (item.name == 'memberteam'); });
-                                            var iMaxSeq = 1; if (arr.length > 0) { iMaxSeq = arr[0].values; }
-                                            $scope.MaxSeqDataMemberteam = iMaxSeq;
-            
-                                            $scope.MaxSeqdata_approver = 0;
-                                            var arr_check = $filter('filter')(array.max, function (item) { return (item.name == 'approver'); });
-                                            var iMaxSeq = 1; if (arr_check.length > 0) { iMaxSeq = arr_check[0].values; }
-                                            $scope.MaxSeqdata_approver = iMaxSeq;
-            
-                                            var arr = $filter('filter')(array.max, function (item) { return (item.name == 'tasks_worksheet'); });
-                                            var iMaxSeq = 1; if (arr.length > 0) { iMaxSeq = arr[0].values; }
-                                            $scope.MaxSeqdata_listworksheet = iMaxSeq;
-                                        }
-            
-                                        if (true) {
-                                            var id_session = $scope.selectdata_session;
-                                            if (array.memberteam) {
-                                                $scope.data_memberteam_old = [];
-                                                angular.copy($scope.data_memberteam, $scope.data_memberteam_old);
-            
-                                                array.memberteam.forEach(function (member) {
-                                                    member.id_session = id_session; // newValue คือค่าที่คุณต้องการให้ id_session อัปเดตเป็น
-                                                });
-            
-                                                $scope.data_memberteam = [...$scope.data_memberteam, ...array.memberteam]; 
-                                                //console.log("check array memberteam", array.memberteam, "check memberteam", $scope.data_memberteam);  
-                                            }
-                                            if (array.approver) {
-                                                $scope.data_approver_old = [];
-                                                angular.copy($scope.data_approver, $scope.data_approver_old);
-            
-                                                array.approver.forEach(function (approver) {
-                                                    approver.id_session = id_session; // newValue คือค่าที่คุณต้องการให้ id_session อัปเดตเป็น
-                                                });
-            
-                                                $scope.data_approver = [...$scope.data_approver,...array.approver]; 
-                                                // Remove duplicates based on id
-                                                $scope.data_approver = $scope.data_approver.reduce((acc, current) => {
-                                                    const existingItem = acc.find(item => item.id === current.id);
-                                                    if (!existingItem) {
-                                                        acc.push(current);
-                                                    }
-                                                    return acc;
-                                                }, []);
-            
-                                            }
-                                            if (array.relatedpeople_outsider) {
-                                                //$scope.data_approver_old = [];
-                                                //angular.copy($scope.data_approver, $scope.data_approver_old);
-                                                array.relatedpeople_outsider.forEach(function (approver) {
-                                                    approver.id_session = id_session; // newValue คือค่าที่คุณต้องการให้ id_session อัปเดตเป็น
-                                                });
-            
-                                                $scope.data_relatedpeople_outsider = [...$scope.data_relatedpeople_outsider,...array.relatedpeople_outsider]; 
-                                                // Remove duplicates based on id
-                                                $scope.data_relatedpeople_outsider = $scope.data_relatedpeople_outsider.reduce((acc, current) => {
-                                                    const existingItem = acc.find(item => item.id === current.id);
-                                                    if (!existingItem) {
-                                                        acc.push(current);
-                                                    }
-                                                    return acc;
-                                                }, []);
-                                                //console.log("check array relatedpeople", array.relatedpeople_outsider, "check relatedpeoplem",  $scope.data_relatedpeople_outsider);                                                                     
-                                            }
-                                            if (array.tasks_worksheet) {
-                                                //old data 
-                                                angular.copy($scope.data_listworksheet, $scope.data_listworksheet_delete);
-                                                $scope.data_listworksheet = JSON.parse(replace_hashKey_arr(array.tasks_worksheet));
-                                                $scope.data_listworksheet_def = clone_arr_newrow(array.tasks_worksheet);
-                                            }
-                                        } 
-                                        apply();
-            
-                                        //set_alert('Warning', "Upload Data Success.");
-                                        $('#modalMsgFile').modal('show');
-                                        console.log('Status is true:', responseFromService.msg[0].STATUS);
-                                        set_alert('Success', ALERT_MESSAGES.SUCCESS);
-                                    } else {
-                                        console.error('Status is not true. Error message:', responseFromService.msg[0].IMPORT_DATA_MSG);
-                                        set_alert('Warning', ALERT_MESSAGES.ERROR_STATUS);
-                                    }
-                                } else {
-                                    console.error('Invalid response structure or no messages returned.');
-                                    set_alert('Error', ALERT_MESSAGES.INVALID_RESPONSE);
-                                }
-                            } else {
-                                // กรณีเกิดข้อผิดพลาดในการร้องขอไปยัง server
-                                console.error('มีข้อผิดพลาด: ' + request.status);
-                            }
-                            $("#divLoading").hide(); 
-                        }
-                    };
-
-                    request.send(fd);
-
-                } catch { 
-                    $("#divLoading").hide(); 
-                }
-
-                updateDataSessionAccessInfo('session')
-
-            } else {
-                fileInfoSpan.textContent = "";
-            }
-        }
     
         function validateFile(file, maxFileSizeKB, allowedFileTypes) {
             const fileSizeKB = Math.round(file.size / 1024);
@@ -780,107 +606,64 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             return { valid: true, fileSizeKB, fileExtension };
         }
             
-        $scope.fileSelectApprover = function (input, file_part) {
+        // Common file selection and upload logic
+        function handleFileSelection(input, file_part, allowedFileTypes, tabName, dataArray, documentModule) {
             try {
                 const fileDoc = $scope.data_header[0].pha_no;
                 const fileInput = input;
-                const fileSeq = fileInput.id.split('-')[2];
-                const fileInfoSpan = document.getElementById('filename-approver-' + fileSeq);
-        
+                const fileSeq = fileInput.id.split('-').pop();
+
+                console.log("tabName",tabName)
+                if(tabName === 'approver' ){
+                    const fileInfoSpan = document.getElementById('filename-approver-' + fileSeq);
+                }else{
+                    const fileInfoSpan = document.getElementById('filename' + fileSeq);
+
+                }
+
                 if (fileInput.files.length > 0) {
                     const file = fileInput.files[0];
-                    const validation = validateFile(file, 10240, ['pdf', 'eml', 'msg']);
-        
+                    const validation = validateFile(file, 10240, allowedFileTypes);
+
                     if (!validation.valid) {
-                        set_alert('Warning', validation.message);
+                        set_alert('Warning', validation.message,tabName);
                         return;
                     }
-        
-                    uploadFile(file, fileSeq, file.name, validation.fileSizeKB, file_part, fileDoc)
-                        .then(response => {
-                            // Update the scope data with the new file information
-                            const arr = $filter('filter')($scope.data_drawing_approver, function (item) { return item.seq == fileSeq; });
-                            if (arr.length > 0) {
 
+                    uploadFile(file, fileSeq, file.name, validation.fileSizeKB, file_part, fileDoc,tabName)
+                        .then(response => {
+                            const arr = $filter('filter')(dataArray, function (item) { return item.seq == fileSeq; });
+                            if (arr.length > 0) {
                                 // Replace backslashes (\) with forward slashes (/)
                                 const correctedFilePath = response.ATTACHED_FILE_PATH.replace(/\\/g, '/');
 
-
                                 arr[0].document_file_name = response.ATTACHED_FILE_NAME;
-                                arr[0].document_file_size = validation.fileSizeKB;
+                                arr[0].document_file_size = validation.fileSizeKB; 
                                 arr[0].document_file_path = service_file_url + correctedFilePath;
-                                arr[0].document_module = 'approver';
+                                arr[0].document_module = documentModule;
                                 arr[0].action_change = 1;
-                                arr[0].action_type = arr[0].action_type === 'new' ? 'insert' : arr[0].action_type;
                                 $scope.$apply(); // Ensure the scope is updated
                             }
-                            set_alert('Success', 'Your file has been successfully attached.');
+
+                            set_alert('Success', 'Your file has been successfully attached.',tabName);
                         })
                         .catch(error => {
                             console.error('File upload error:', error);
+                            set_alert('Error', 'Failed to upload the file. Please try again.',tabName);
                         });
                 } else {
                     fileInfoSpan.textContent = "";
-                    set_alert('Warning', "No file selected. Please select a file to upload.");
+                    $scope.goback_tab = tabName;
+                    set_alert('Warning', "No file selected. Please select a file to upload.",tabName);
                 }
             } catch (error) {
                 console.error('Unexpected error during file selection:', error);
-                set_alert('Error', 'An unexpected error occurred. Please try again or contact support.');
+                $scope.goback_tab = tabName;
+                set_alert('Error', 'An unexpected error occurred. Please try again or contact support.',tabName);
             }
-        };
-        
-        $scope.fileSelect = function (input, file_part) {
-            try {
-                const fileDoc = $scope.data_header[0].pha_no;
-                const fileInput = input;
-                const fileSeq = fileInput.id.split('-')[1];
-                const fileInfoSpan = document.getElementById('filename' + fileSeq);
-        
-                if (fileInput.files.length > 0) {
-                    const file = fileInput.files[0];
-                    const validation = validateFile(file, 10240, ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'jpg', 'png', 'gif']);
-        
-                    if (!validation.valid) {
-                        set_alert('Warning', validation.message);
-                        return;
-                    }
-        
-        
-                    uploadFile(file, fileSeq, file.name, validation.fileSizeKB, file_part, fileDoc)
-                    .then(response => {
-                        // Update the scope data with the new file information
-                        const arr = $filter('filter')($scope.data_drawing, function (item) { return item.seq == fileSeq; });
-                        if (arr.length > 0) {
+        }
 
-                            // Replace backslashes (\) with forward slashes (/)
-                            const correctedFilePath = response.ATTACHED_FILE_PATH.replace(/\\/g, '/');
-
-
-                            arr[0].document_file_name = response.ATTACHED_FILE_NAME;
-                            arr[0].document_file_size = validation.fileSizeKB; 
-                            arr[0].document_file_path = service_file_url + correctedFilePath;
-                            arr[0].document_module = 'hra';
-                            arr[0].action_change = 1;
-                            $scope.$apply(); // Ensure the scope is updated
-                        }
-                
-                        set_alert('Success', 'Your file has been successfully attached.');
-                    })
-                    .catch(error => {
-                        console.error('File upload error:', error);
-                    });
-                
-                } else {
-                    fileInfoSpan.textContent = "";
-                    set_alert('Warning', "No file selected. Please select a file to upload.");
-                }
-            } catch (error) {
-                console.error('Unexpected error during file selection:', error);
-                set_alert('Error', 'An unexpected error occurred. Please try again or contact support.');
-            }
-        };
-
-        function uploadFile(file, seq, fileName, fileSizeKB, filePart, fileDoc) {
+        function uploadFile(file, seq, fileName, fileSizeKB, filePart, fileDoc,tabName) {
             const fd = new FormData();
             fd.append("file_obj", file);
             fd.append("file_seq", seq);
@@ -902,15 +685,15 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                                 if (parsedResponse && parsedResponse.msg && parsedResponse.msg.length > 0 && parsedResponse.msg[0].STATUS === "true") {
                                     resolve(parsedResponse.msg[0]);
                                 } else {
-                                    set_alert('Warning', 'The system encountered an issue processing your file. Please try again or contact support if the problem persists.');
+                                    set_alert('Warning', 'The system encountered an issue processing your file. Please try again or contact support if the problem persists.',tabName);
                                     reject('Service response indicated an issue.');
                                 }
                             } catch (e) {
-                                set_alert('Error', 'Unexpected issue occurred while processing your request. Please try again later.');
+                                set_alert('Error', 'Unexpected issue occurred while processing your request. Please try again later.',tabName);
                                 reject(e);
                             }
                         } else {
-                            set_alert('Error', 'We are unable to complete your request at the moment. Please check your connection or try again later.');
+                            set_alert('Error', 'We are unable to complete your request at the moment. Please check your connection or try again later.',tabName);
                             reject('Error during server request: ' + request.status);
                         }
                     }
@@ -920,6 +703,17 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 request.send(fd);
             });
         }
+
+        // File select for approver
+        $scope.fileSelectApprover = function (input, file_part) {
+
+            handleFileSelection(input, file_part, ['pdf', 'eml', 'msg'], 'approver', $scope.data_drawing_approver, 'approver');
+        };
+
+        // File select for general
+        $scope.fileSelect = function (input, file_part) {
+            handleFileSelection(input, file_part, ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'jpg', 'png', 'gif'], 'general', $scope.data_drawing, 'hra');
+        };
 
         $scope.fileSelectRAM = function (input) {
 
@@ -939,7 +733,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     
                 if (fileName.toLowerCase().indexOf('.pdf') == -1) {
                     fileInfoSpan.textContent = "";
-                    set_alert('Warning', 'Please select a PDF file.');
+                    set_alert('Warning', 'Please select a PDF file.','ram');
                     return;
                 }
     
@@ -1099,7 +893,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         } else if (export_report_type == "whatif_ram") {
             action_export_report_type = "export_whatif_ram";
         } else {
-            set_alert('Warning', 'Invalid report type.');
+            set_alert('Warning', 'Invalid report type.','report');
             return;
         }
     
@@ -1140,11 +934,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                              apply()
                         } else {
-                            set_alert('Warning', response.IMPORT_DATA_MSG || 'The system encountered an issue processing your file. Please try again.');
+                            set_alert('Warning', response.IMPORT_DATA_MSG || 'The system encountered an issue processing your file. Please try again.','report');
                         }
                     } else {
                         // If data.msg is undefined or not in the expected format
-                        set_alert('Warning', 'Unexpected response from the server. Please try again or contact support.');
+                        set_alert('Warning', 'Unexpected response from the server. Please try again or contact support.','report');
                     }
                 } catch (e) {
                     // Catch any JSON parsing or unexpected errors during success handling
@@ -5927,7 +5721,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     var invalidFieldFound = false;
                     requiredFields.forEach(function (item) {
                         if (!arr_chk[0][item.field]) {
-                            set_alert('Warning', errorText);
+                            set_alert('Warning', errorText,'general');
                             //validateSelect(item.field, item.errorId);
                             invalidFieldFound = true; 
                         }
@@ -5936,7 +5730,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                     arr_chk = $scope.data_memberteam;
                     
-                    if (arr_chk.length == 0) { set_alert('Warning', 'Please provide a valid Session List'); return; }
+                    if (arr_chk.length == 0) { set_alert('Warning', 'Please provide a valid Session List','session'); return; }
                   
                 }
                 else if (pha_status == "12") {
@@ -5946,17 +5740,16 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     var bCheckValid_Worksheet = false;
                     var bCheckValid_Manage = false;
 
-                    if (arr_chk[0].expense_type == '' || arr_chk[0].expense_type == null) { set_alert('Warning', 'Please select a valid Expense Type'); return; }
-                    if (arr_chk[0].sub_expense_type == '' || arr_chk[0].sub_expense_type == null) { set_alert('Warning', 'Please select a valid Sub-Expense Type'); return; }
-                    if (arr_chk[0].id_apu == '' || arr_chk[0].id_apu == null) { set_alert('Warning', 'Please select a valid Area Process Unit'); return; }
+                    if (arr_chk[0].expense_type == '' || arr_chk[0].expense_type == null) { set_alert('Warning', 'Please select a valid Expense Type','general'); return; }
+                    if (arr_chk[0].sub_expense_type == '' || arr_chk[0].sub_expense_type == null) { set_alert('Warning', 'Please select a valid Sub-Expense Type','general'); return; }
+                    if (arr_chk[0].id_apu == '' || arr_chk[0].id_apu == null) { set_alert('Warning', 'Please select a valid Area Process Unit','general'); return; }
 
                     if (true) {
                         arr_chk = $scope.data_memberteam;
-                        if (arr_chk.length == 0) { set_alert('Warning', 'Please provide a valid Session List'); return; }
+                        if (arr_chk.length == 0) { set_alert('Warning', 'Please provide a valid Session List','session'); return; }
                         else {
                             var irows_last = arr_chk.length - 1;
-                            console.log(arr_chk,irows_last,arr_chk[irows_last].user_name)
-                            if (arr_chk[irows_last].user_name == null) { set_alert('Warning', 'Please provide a valid Session List'); return; }
+                            if (arr_chk[irows_last].user_name == null) { set_alert('Warning', 'Please provide a valid Session List','session'); return; }
                         }
 
                         if ($scope.data_header[0].request_approver > 0) {
@@ -5965,7 +5758,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                             if (arr_chk.length == 0) { set_alert('Warning', 'Please provide a valid ApproverTA2 List'); return; }
                             else {
                                 var irows_last = arr_chk.length - 1;
-                                if (arr_chk[irows_last].user_name == null) { set_alert('Warning', 'Please provide a valid ApproverTA2 List'); return; }
+                                if (arr_chk[irows_last].user_name == null) { set_alert('Warning', 'Please provide a valid ApproverTA2 List','session'); return; }
                             }
 
                         }
@@ -5974,14 +5767,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     if (true) {
 
                         arr_chk = $scope.data_drawing;
-                        if (arr_chk.length == 0) { set_alert('Warning', 'Please provide a valid Drawing List'); return; }
+                        if (arr_chk.length == 0) { set_alert('Warning', 'Please provide a valid Drawing List','task'); return; }
                         for (var i = 0; i < arr_chk.length; i++) {
                             if (set_valid_items(arr_chk[i].document_no, 'drawing-document-file-' + arr_chk[i].seq)) { bCheckValid_Node = true; }
                             if (set_valid_items(arr_chk[i].document_file_name, 'drawing-document-file-' + arr_chk[i].seq)) { bCheckValid_Node = true; }
                         }
 
                         arr_chk = $scope.data_tasklist;
-                        if (arr_chk.length == 0) { set_alert('Warning', 'Please provide a valid Tasks List'); return; }
+                        if (arr_chk.length == 0) { set_alert('Warning', 'Please provide a valid Tasks List','task'); return; }
                         for (var i = 0; i < arr_chk.length; i++) {
                             if (set_valid_items(arr_chk[i].list, 'task-task-' + arr_chk[i].seq)) { bCheckValid_Node = true; }
                         }
@@ -6169,9 +5962,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             var arr_chk = $scope.data_general;
             if (pha_status == "11") {
-                if (arr_chk[0].expense_type == '' || arr_chk[0].expense_type == null) { set_alert('Warning', 'Please select a valid Expense Type'); return; }
-                if (arr_chk[0].sub_expense_type == '' || arr_chk[0].sub_expense_type == null) { set_alert('Warning', 'Please select a valid Sub-Expense Type'); return; }
-                if (arr_chk[0].id_apu == '' || arr_chk[0].id_apu == null) { set_alert('Warning', 'Please select a valid Area Process Unit'); return; }
+                if (arr_chk[0].expense_type == '' || arr_chk[0].expense_type == null) { set_alert('Warning', 'Please select a valid Expense Type','general'); return; }
+                if (arr_chk[0].sub_expense_type == '' || arr_chk[0].sub_expense_type == null) { set_alert('Warning', 'Please select a valid Sub-Expense Type','general'); return; }
+                if (arr_chk[0].id_apu == '' || arr_chk[0].id_apu == null) { set_alert('Warning', 'Please select a valid Area Process Unit','general'); return; }
             }
         }
         else {
