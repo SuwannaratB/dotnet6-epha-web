@@ -155,7 +155,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 });
 
 
-// Global error handler for unexpected JavaScript errors
 window.onerror = function(message, source, lineno, colno, error) {
     console.error('Global JavaScript error:', { message, source, lineno, colno, error });
     
@@ -167,10 +166,13 @@ window.onerror = function(message, source, lineno, colno, error) {
         }).modal('show');
     } else {
         alert('An unexpected error occurred. Please contact support.');  
+        // Redirect to home/portal after alert is dismissed
+        window.open("home/portal", "_top");
     }
 
     return true; 
 };
+
 
 AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, $document, $interval,$rootScope,$window,$timeout,$sce) {
 

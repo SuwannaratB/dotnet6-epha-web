@@ -203,7 +203,24 @@ AppMenuPage.directive('hidePlaceholderOption', function() {
     };
 });
   
-  
+window.onerror = function(message, source, lineno, colno, error) {
+    console.error('Global JavaScript error:', { message, source, lineno, colno, error });
+    
+    // Call set_alert function to notify the user
+    if (typeof set_alert === 'function') {
+        $('#returnModal').modal({
+            backdrop: 'static',
+            keyboard: false 
+        }).modal('show');
+    } else {
+        alert('An unexpected error occurred. Please contact support.');  
+        // Redirect to home/portal after alert is dismissed
+        window.open("home/portal", "_top");
+    }
+
+    return true; 
+};
+
 
 AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, $document, $interval,$rootScope,$window,$q,$timeout) { 
 
