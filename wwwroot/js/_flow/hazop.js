@@ -6672,9 +6672,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.data_general[0].action_change = 1;
         }
 
+
         if(type_text == 'meeting_date' || type_text == 'meeting_time'){
             updateDataSessionAccessInfo('session');
 
+        }else{
+            updateDataSessionAccessInfo();
         }
 
         apply();

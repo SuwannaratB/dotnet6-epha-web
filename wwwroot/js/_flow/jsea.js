@@ -155,7 +155,22 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 });
 
 
+// Global error handler for unexpected JavaScript errors
+window.onerror = function(message, source, lineno, colno, error) {
+    console.error('Global JavaScript error:', { message, source, lineno, colno, error });
+    
+    // Call set_alert function to notify the user
+    if (typeof set_alert === 'function') {
+        $('#returnModal').modal({
+            backdrop: 'static',
+            keyboard: false 
+        }).modal('show');
+    } else {
+        alert('An unexpected error occurred. Please contact support.');  
+    }
 
+    return true; 
+};
 
 AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, $document, $interval,$rootScope,$window,$timeout,$sce) {
 
@@ -783,6 +798,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                                 const parsedResponse = JSON.parse(request.responseText);
                                 if (parsedResponse && parsedResponse.msg && parsedResponse.msg.length > 0 && parsedResponse.msg[0].STATUS === "true") {
                                     resolve(parsedResponse.msg[0]);
+                                    updateDataSessionAccessInfo();
                                 } else {
                                     set_alert('Warning', 'The system encountered an issue processing your file. Please try again or contact support if the problem persists.',tabName);
                                     reject('Service response indicated an issue.');
@@ -1034,8 +1050,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             var data_type = "template";
             var ram_type = $scope.data_general[0].id_ram;
     
-            //$scope.confirmExport('jsea_worksheet', 'excel');
-            //return;
     
             $.ajax({
                 url: url_ws + "Flow/" + action_export_report_type,
@@ -1727,6 +1741,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
     function get_data_after_save(page_load, action_submit, pha_seq) {
         var user_name = conFig.user_name();
+        
         call_api_load(false, action_submit, user_name, pha_seq);
     }
     function call_api_load(page_load, action_submit, user_name, pha_seq) {
@@ -5303,6 +5318,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         if(type_text == 'meeting_date' || type_text == 'meeting_time'){
             updateDataSessionAccessInfo('session');
 
+        }else{
+            updateDataSessionAccessInfo();
         }
 
         if (type_text == "ChangeRAM") {

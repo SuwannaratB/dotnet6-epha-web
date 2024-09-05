@@ -6448,11 +6448,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             }
 
+
             if(type_text == 'meeting_date' || type_text == 'meeting_time'){
                 updateDataSessionAccessInfo('session');
-
+    
+            }else{
+                updateDataSessionAccessInfo();
             }
-
             if (type_text == "unit_no") {
 
                 //update id_apu ด้วย 
