@@ -2078,7 +2078,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                 arr.header[0].flow_mail_to_member = (arr.header[0].flow_mail_to_member == null ? 0 : arr.header[0].flow_mail_to_member);
                 $scope.data_header = JSON.parse(replace_hashKey_arr(arr.header));
-                set_form_action(action_part_befor, !action_submit, page_load);
                 set_access_formaction(arr);
                 
                 //ตรวจสอบเพิ่มเติม
@@ -2185,8 +2184,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     } catch (ex) { alert(ex); console.clear(); }*/
                     
                     var pha_status = $scope.data_header[0].pha_status
-                    set_form_action(action_part_befor, !action_submit, page_load);
-                    set_form_access(pha_status,$scope.params,$scope.flow_role_type)
+                    //set form 
+                    if(!$scope.params){
+                        set_form_action(action_part_befor, !action_submit, page_load);
+                        set_form_access(pha_status,$scope.params,$scope.flow_role_type)   
+                    }else{
+                        set_edit_form();
+                    }
+
                     set_tab_focus(pha_status,action_part_befor)
 
                     if($scope.pha_status === 11){
@@ -2412,12 +2417,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 $scope.export_type = true;
             }
 
-            initializeTabs(pha_status_def);
+
     
     
             $scope.action_part = action_part_befor;
     
             var pha_status_def = Number($scope.data_header[0].pha_status);
+            initializeTabs(pha_status_def);
     
             $scope.submit_review = false;
     
@@ -2455,8 +2461,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 const set_tabs = ['general','ram', 'worksheet', 'approver', 'report'];
             
                 showTabs(set_tabs);
-                setTabsActive(set_tabs);
-
+                setTabsActive(['general','ram', 'worksheet', 'report']);
                 check_case_member_review();
     
                 $scope.submit_type = true;
@@ -2504,6 +2509,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 $scope.submit_type = false;
                 $scope.submit_review = false;
             }
+
+            apply();
     
         }
         function set_form_access(pha_status,params,flow_role_type){
@@ -2578,40 +2585,38 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
         }
         function set_tab_focus(pha_status, action_part_befor) {
-            
-            let arr_tab;
-    
+            console.log($scope.tabs);
+            console.log(pha_status);
+            let arr_tab = [];
+        
+            // Handle different pha_status cases
             if (pha_status === 11) {
                 arr_tab = $filter('filter')($scope.tabs, item => item.action_part === action_part_befor);
-                $scope.changeTab_Focus(arr_tab, arr_tab.name);
-            } 
-            else if ([12, 22].includes(pha_status)) {
+            } else if ([12, 22].includes(pha_status)) {
                 arr_tab = $filter('filter')($scope.tabs, item => item.action_part === 3);
                 $scope.action_part = 3;
-                $scope.changeTab_Focus(arr_tab, arr_tab.name);
-            } 
-            else if ([11, 81, 91].includes(pha_status) && !$scope.params) {
+            } else if ([11, 81, 91].includes(pha_status) && !$scope.params) {
                 arr_tab = $filter('filter')($scope.tabs, item => item.action_part === 1);
                 $scope.action_part = 1;
-                $scope.changeTab_Focus(arr_tab, arr_tab.name);
-            } 
-            else if (pha_status === 21 && !$scope.params) {
+            } else if (pha_status === 21 && !$scope.params) {
                 arr_tab = $filter('filter')($scope.tabs, item => item.action_part === 4);
                 $scope.action_part = 4;
-                $scope.changeTab_Focus(arr_tab, arr_tab.name);
-            } 
-            else if ($scope.params === 'edit_approver') {
+            } else if ($scope.params === 'edit_approver') {
                 arr_tab = $filter('filter')($scope.tabs, item => item.action_part === 4);
                 $scope.action_part = 4;
-                $scope.changeTab_Focus(arr_tab, arr_tab.name);
-            }
-            else if ($scope.params === 'edit') {
+            } else if ($scope.params === 'edit') {
                 arr_tab = $filter('filter')($scope.tabs, item => item.action_part === 3);
                 $scope.action_part = 3;
-                $scope.changeTab_Focus(arr_tab, arr_tab.name);
             }
         
+            // Check if arr_tab is found and call changeTab_Focus only when a valid tab is selected
+            if (arr_tab && arr_tab.length > 0) {
+                $scope.changeTab_Focus(arr_tab, arr_tab[0].name);
+            } else {
+                console.error("Error: No valid tab found for the current pha_status and action_part_befor.");
+            }
         }
+        
         function set_access_formaction(arr) {
             // params === admin action
         

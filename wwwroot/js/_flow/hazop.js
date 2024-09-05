@@ -2229,12 +2229,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     
         function set_form_action(action_part_befor, action_save, page_load) {
     
-            initializeTabs(pha_status_def);
     
     
             $scope.action_part = action_part_befor;
     
             var pha_status_def = Number($scope.data_header[0].pha_status);
+            initializeTabs(pha_status_def);
+
     
             $scope.submit_review = false;
     
@@ -2345,7 +2346,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 const set_tabs = ['general', 'node', 'worksheet', 'managerecom','approver'];
             
                 showTabs(set_tabs);
-                setTabsActive(set_tabs);
+                setTabsActive(['general', 'node', 'worksheet', 'managerecom']);
 
                 check_case_member_review();
     
