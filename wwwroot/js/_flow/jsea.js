@@ -656,25 +656,153 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         if (request.readyState === XMLHttpRequest.DONE) {
                             $("#divLoading").hide(); 
                             if (request.status === 200) {
+
                                 const responseFromService = JSON.parse(request.responseText);
-        
+
+                                // Check if the response is valid and if the STATUS is "true"
+
                                 if (responseFromService && responseFromService.msg && Array.isArray(responseFromService.msg) && responseFromService.msg.length > 0) {
                                     if (responseFromService.msg[0].STATUS === "true") {
+
+                                        // ทำอะไรกับข้อมูลที่ได้รับเช่น แสดงผลหรือประมวลผลต่อไป
                                         // Process the success data
                                         const array = responseFromService;
-                                        var file_name = array.msg[0].ATTACHED_FILE_NAME;
-                                        var file_path = array.msg[0].ATTACHED_FILE_PATH;
-        
-                                        // Replace backslashes with forward slashes
-                                        const correctedFilePath = file_path.replace(/\\/g, '/');
-        
-                                        $scope.data_general[0].file_upload_name = file_name;
-                                        $scope.data_general[0].file_upload_size = fileSize;
-                                        $scope.data_general[0].file_upload_path = service_file_url + correctedFilePath;
-                                        $scope.data_general[0].action_change = 1;
-                                        set_data_general();
-        
-                                        updateDataSessionAccessInfo('session');
+
+                                        if (true) {
+                                            var file_name = array.msg[0].ATTACHED_FILE_NAME;
+                                            var file_path = array.msg[0].ATTACHED_FILE_PATH;
+
+                                            // Replace backslashes (\) with forward slashes (/)
+                                            const correctedFilePath = file_path.replace(/\\/g, '/');
+
+
+                                            $scope.data_general[0].file_upload_name = file_name;
+                                            $scope.data_general[0].file_upload_size = fileSize;
+                                            $scope.data_general[0].file_upload_path = service_file_url + correctedFilePath;
+                                            $scope.data_general[0].action_change = 1;
+                                            set_data_general()
+                                        }
+
+                                        if (array.max) {
+                                            var arr = $filter('filter')(array.max, function (item) { return (item.name == 'memberteam'); });
+                                            var iMaxSeq = 1; if (arr.length > 0) { iMaxSeq = arr[0].values; }
+                                            $scope.MaxSeqDataMemberteam = iMaxSeq;
+
+                                            $scope.MaxSeqdata_approver = 0;
+                                            var arr_check = $filter('filter')(array.max, function (item) { return (item.name == 'approver'); });
+                                            var iMaxSeq = 1; if (arr_check.length > 0) { iMaxSeq = arr_check[0].values; }
+                                            $scope.MaxSeqdata_approver = iMaxSeq;
+
+                                            var arr = $filter('filter')(array.max, function (item) { return (item.name == 'tasks_worksheet'); });
+                                            var iMaxSeq = 1; if (arr.length > 0) { iMaxSeq = arr[0].values; }
+                                            $scope.MaxSeqdata_listworksheet = iMaxSeq;
+                                        }
+
+                                        if (true) {
+                                            var id_session = $scope.selectdata_session;
+                                            if (array.memberteam) {
+                                                $scope.data_memberteam_old = [];
+                                                angular.copy($scope.data_memberteam, $scope.data_memberteam_old);
+
+                                                array.memberteam.forEach(function (member) {
+                                                    member.id_session = id_session; // newValue 
+                                                });
+
+                                                $scope.data_memberteam = [...$scope.data_memberteam, ...array.memberteam]; 
+                                                //console.log("check array memberteam", array.memberteam, "check memberteam", $scope.data_memberteam);  
+                                            }
+                                            if (array.approver) {
+                                                $scope.data_approver_old = [];
+
+                                                $scope.data_approver.forEach(function(item) {
+                                                    // Check if user_name and user_displayname are null or empty
+                                                    if ((item.user_name === null || item.user_name === '') && 
+                                                        (item.user_displayname === null || item.user_displayname === '') &&
+                                                        item.id_session === id_session) {
+                                                        // Set seq to 0 if the condition is met
+                                                        item.seq = 0;
+                                                        item.action_change = 1;
+                                                    }
+                                                });
+
+
+                                                angular.copy($scope.data_approver, $scope.data_approver_old);
+
+                                                array.approver.forEach(function (approver) {
+                                                    approver.id_session = id_session; // newValue 
+                                                });
+
+                                                $scope.data_approver = [...$scope.data_approver,...array.approver]; 
+
+                                                // Remove duplicates based on id and filter out invalid entries (where user_displayname or user_name is null or empty)
+                                                $scope.data_approver = $scope.data_approver.reduce((acc, current) => {
+                                                    const existingItem = acc.find(item => item.id === current.id);
+
+                                                    // Check if user_displayname or user_name is null or empty
+                                                    const isValid = current.user_displayname && current.user_displayname !== "" 
+                                                                    && current.user_name && current.user_name !== "";
+
+                                                    if (!existingItem && isValid) {
+                                                        acc.push(current);
+                                                    }
+
+                                                    return acc;
+                                                }, []);
+
+                                                console.log("After removing duplicates:", $scope.data_approver);
+
+
+
+                                            }
+                                            if (array.relatedpeople_outsider) {
+                                                //$scope.data_approver_old = [];
+                                                //angular.copy($scope.data_approver, $scope.data_approver_old);
+                                                array.relatedpeople_outsider.forEach(function (approver) {
+                                                    approver.id_session = id_session; // newValue คือค่าที่คุณต้องการให้ id_session อัปเดตเป็น
+                                                });
+
+                                                $scope.data_relatedpeople_outsider = [...$scope.data_relatedpeople_outsider,...array.relatedpeople_outsider]; 
+
+                                                // Remove duplicates based on id and filter out invalid entries (where user_displayname or user_name is null or empty)
+                                                $scope.data_relatedpeople_outsider = $scope.data_relatedpeople_outsider.reduce((acc, current) => {
+                                                    const existingItem = acc.find(item => item.id === current.id);
+
+                                                    // Check if user_displayname or user_name is null or empty
+                                                    const isValid = current.user_displayname && current.user_displayname !== "" ;
+
+                                                    if (!existingItem && isValid) {
+                                                        acc.push(current);
+                                                    }
+
+                                                    return acc;
+                                                }, []);
+                                                //console.log("check array relatedpeople", array.relatedpeople_outsider, "check relatedpeoplem",  $scope.data_relatedpeople_outsider);                                                                     
+                                            }
+                                            if (array.tasks_worksheet) {
+
+                                                $scope.data_listworksheet.forEach(function(item) {
+                                                    // Check if user_name and user_displayname are null or empty
+                                                    if ((item.possiblecase === null && item.potentailhazard === null && 
+                                                        item.recommendations === null && item.row_type === 'workstep')) {
+                                                        // Set seq to 0 if the condition is met
+                                                        item.seq = 0;
+                                                        item.action_change = 1;
+                                                    }
+                                                });
+
+                                                //old data 
+                                                angular.copy($scope.data_listworksheet, $scope.data_listworksheet_delete);
+                                                $scope.data_listworksheet = JSON.parse(replace_hashKey_arr(array.tasks_worksheet));
+                                                $scope.data_listworksheet_def = clone_arr_newrow(array.tasks_worksheet);
+                                            }
+
+
+                                            updateDataSessionAccessInfo('session');
+                                        } 
+                                        apply();
+
+                                        //set_alert('Warning', "Upload Data Success.");
+                                        console.log('Status is true:', responseFromService.msg[0].STATUS);
         
                                         set_alert('Success', ALERT_MESSAGES.SUCCESS,'general');
                                     } else {
