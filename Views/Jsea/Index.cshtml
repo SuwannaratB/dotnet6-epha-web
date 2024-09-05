@@ -432,8 +432,7 @@
 
                                 </div>
                                 <!-- Tag ID Audition-->
-                                <div class="mx-2 row g-3 align-items-center" ng-repeat="item in data_general"
-                                     ng-class="{'disabled-link':(!tab_general_active)}">
+                                <div class="mx-2 row g-3 align-items-center" ng-repeat="item in data_general">
 
                                     <!-- department -->
                                     <div class="col-1 p-1 d-none ">
@@ -444,6 +443,7 @@
                                         <select class="form-control js-choice-tagid"
                                                 data-choices="data-choices-department"
                                                 data-options='{"removeItemButton":true,"placeholder":true}'
+                                                ng-class="{'disabled-link':(!tab_general_active)}"
                                                 ng-change="actionChange(item,item.seq,'')" 
                                                 ng-model="item.id_department">
                                             <option value="" disabled selected hidden>Please select</option>
@@ -457,7 +457,7 @@
                                     </div>
 
                                     <!-- Task Type -->
-                                    <div class="d-flex flex-column col-1 p-1">
+                                    <div class="d-flex flex-column col-1 p-1" ng-class="{'disabled-link':(!tab_general_active)}">
                                         <label class="form-label ps-0" style="margin-top: 4px;" for="unit">
                                             <b class="text-danger d-none"> * </b>
                                             Task Type
@@ -529,7 +529,7 @@
                                         </ul>
                                     </div>
                                     <!-- Input Type -->
-                                    <div class="col-auto p-1">
+                                    <div class="col-auto p-1" ng-class="{'disabled-link':(!tab_general_active)}">
 
                                         <div class="row g-0 align-items-center">
                                             <div class="col-md-12 p-1">
@@ -588,9 +588,11 @@
                                                         </button>
                                                         <button class="Upload-button btn ps-3" style="height:36px;" ng-if="item.file_upload_size > 0">
                                                             <div class="d-flex align-items-center">
-                                                                <span class="mr-3 nametext" id="filename-template-{{item.seq}}"
-                                                                    ng-click="downloadFile(item)">
-                                                                    <b>{{(item.file_upload_size>0? item.file_upload_name + '('+  item.file_upload_size + 'KB)' : '')}}</b>
+                                                                <span class="mr-3 nametext" id="filename-template-{{item.seq}}" 
+                                                                    ng-click="downloadFile(item);$event.stopPropagation();">
+                                                                    
+                                                                    @*<b>{{(item.file_upload_size>0? item.file_upload_name + '('+  item.file_upload_size + 'KB)' : '')}}</b>*@
+                                                                    <b>{{truncateFilename(item.file_upload_name, 20)}} ({{item.file_upload_size}} KB)</b>
                                                                 </span>
                                                                 <a id="deluploadfile-{{item.seq}}" class="btn btn-link text-danger p-0"
                                                                     ng-class="{'d-none':(!tab_general_active)}"
@@ -1848,8 +1850,6 @@
                                         </thead>
                                         <tbody class="">
                                             <tr class="rowwork border border-dashed border-top-0 border-bottom-0"
-
-                                                @* ng-class="{ 'border-active': (data_listworksheet.length - 1 == $index ) }" *@
                                                 ng-repeat="item in data_listworksheet | orderBy:'no'">
 
                                                 @* workstep *@
@@ -1902,7 +1902,7 @@
                                                                       name="workstep_worksheet_{{item.seq}}"
                                                                       placeholder="Work Step" 
                                                                       ng-model="item.workstep"
-                                                                      ng-readonly="(data_header[0].pha_status === 21 && params !== 'edit' && !isMainApprover? true : false)"
+                                                                      ng-readonly="(data_header[0].pha_status === 21 || data_header[0].pha_status === 81 || data_header[0].pha_status === 91) && params !== 'edit' && !isMainApprover"
                                                                       ng-keyup="filterResultHistory(item.workstep, 'workstep', 'workstep_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'');
                                                                                 (contentModified && item.workstep.trim() !== '') ? updateWorksheetChanges(item, item.seq, '') : null"
                                                                       ng-mouseenter="showTooltip = true" 
@@ -1973,7 +1973,7 @@
                                                                       name="taskdesc_worksheet_{{item.seq}}"
                                                                       placeholder="taskdesc" 
                                                                       rows="3"
-                                                                      ng-readonly="(data_header[0].pha_status === 21 && params !== 'edit' && !isMainApprover? true : false)"
+                                                                      ng-readonly="(data_header[0].pha_status === 21 || data_header[0].pha_status === 81 || data_header[0].pha_status === 91) && params !== 'edit' && !isMainApprover"
                                                                       ng-style="{'min-height': (34 * (data_listworksheet | filter:{workstep_no: item.workstep_no, taskdesc_no: item.taskdesc_no}).length) + 'px'}"
                                                                       ng-model="item.taskdesc"
                                                                       ng-keyup="filterResultHistory(item.taskdesc, 'taskdesc', 'taskdesc_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')">
@@ -2042,7 +2042,7 @@
                                                                       placeholder="potentailhazard" 
                                                                       rows="3"
                                                                       ng-model="item.potentailhazard"
-                                                                      ng-readonly="(data_header[0].pha_status === 21 && params !== 'edit' && !isMainApprover? true : false)"
+                                                                      ng-readonly="(data_header[0].pha_status === 21 || data_header[0].pha_status === 81 || data_header[0].pha_status === 91) && params !== 'edit' && !isMainApprover"
                                                                       ng-keyup="filterResultHistory(item.potentailhazard, 'potentailhazard', 'potentailhazard_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')">
                                                             </textarea>
                                                             <div class="autocomplete-dropdown" style="position: absolute;"
@@ -2108,7 +2108,7 @@
                                                                       name="possiblecase_worksheet_{{item.seq}}"
                                                                       placeholder="possiblecase" 
                                                                       rows="3"
-                                                                      ng-readonly="(data_header[0].pha_status === 21 && params !== 'edit' && !isMainApprover? true : false)"
+                                                                      ng-readonly="(data_header[0].pha_status === 21 || data_header[0].pha_status === 81 || data_header[0].pha_status === 91) && params !== 'edit' && !isMainApprover"
                                                                       ng-model="item.possiblecase"
                                                                       ng-keyup="filterResultHistory(item.possiblecase, 'possiblecase', 'possiblecase_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')">
                                                             </textarea>
@@ -2215,7 +2215,7 @@
                                                                 <h6 class="me-1 text-center" style=" width: 20px;">{{item.ram_befor_risk}}</h6>
                                                                 @*staus 11 12 ,admin edit ,Approver*@
                                                                 <span ng-class="{'disabled-link': !tab_worksheet_active && !tab_general && !isMainApprover}"
-                                                                    ng-hide="data_header[0].pha_status === 21 && !isMainApprover"
+                                                                    ng-hide="(data_header[0].pha_status === 21 || data_header[0].pha_status === 81 || data_header[0].pha_status === 91) && params !== 'edit' && !isMainApprover"
                                                                     class="fas fa-pencil-alt fa-sm" style="width: 8px;"></span>
 
                                                             </div>
@@ -2244,7 +2244,7 @@
                                                                       id="recommendations_worksheet_{{item.seq}}" name="recommendations_worksheet_{{item.seq}}"
                                                                       placeholder="Recommendations" rows="3"
                                                                       ng-model="item.recommendations"
-                                                                      ng-readonly="(data_header[0].pha_status === 21 && params !== 'edit' && !isMainApprover? true : false)"
+                                                                      ng-readonly="(data_header[0].pha_status === 21 || data_header[0].pha_status === 81 || data_header[0].pha_status === 91) && params !== 'edit' && !isMainApprover"
                                                                       ng-keyup="filterResultHistory(item.recommendations, 'recommendations', 'recommendations_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')"></textarea>
 
                                                             <div class="autocomplete-dropdown col-auto" style="position: absolute;"
@@ -2279,7 +2279,7 @@
                                                                       id="responder_action_by_worksheet_{{item.seq}}" name="responder_action_by_worksheet_{{item.seq}}"
                                                                       placeholder="Action by" rows="3"
                                                                       ng-model="item.responder_action_by"
-                                                                      ng-readonly="(data_header[0].pha_status === 21 && params !== 'edit' && !isMainApprover? true : false)"
+                                                                      ng-readonly="(data_header[0].pha_status === 21 || data_header[0].pha_status === 81 || data_header[0].pha_status === 91) && params !== 'edit' && !isMainApprover"
                                                                       ng-keyup="filterResultHistory(item.responder_action_by, 'responder_action_by', 'responder_action_by_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')"></textarea>
 
                                                             <div class="autocomplete-dropdown col-auto" style="position: absolute;"
@@ -2338,9 +2338,8 @@
                                                             <div class="d-flex text-center" style=" width: 25px;">
                                                                 <h6 class="me-1 text-center" style=" width: 30px;">{{item.ram_after_risk}}</h6>
                                                                 <span ng-class="{'disabled-link': !tab_worksheet_active && !tab_general && !isMainApprover}"
-                                                                    ng-hide="data_header[0].pha_status === 21 && params !== 'edit' ? !isMainApprover : false"
-
-                                                                class="fas fa-pencil-alt fa-sm " style=" width: 8px;"></span>
+                                                                    ng-hide="(data_header[0].pha_status === 21 || data_header[0].pha_status === 81 || data_header[0].pha_status === 91) && params !== 'edit' && !isMainApprover"
+                                                                    class="fas fa-pencil-alt fa-sm " style=" width: 8px;"></span>
                                                             </div>
                                                         </button>
                                                     </div>
@@ -2418,30 +2417,27 @@
                                                             </label>
                                                         </div>
                                                 </td>
+
                                                 <td class="align-top white-space-nowrap border-bottom text-start" ng-class="{'disabled-link':(!tab_approver_active)}">
-                                                    <div class="col-md-12 p-1 ps-3 text-start" 
-                                                        ng-if="(accessInfo.canAccess || accessInfo.isTA2) && item.approver_action_type != 2">
+                                                    <!-- Form when the user can access (for approval/rejection) -->
+                                                    <div class="col-md-12 p-1 ps-3 text-start" ng-if="(accessInfo.canAccess || accessInfo.isTA2) && !accessInfo.isSubmit">
                                                         <div class="form-check form-check-inline cursor-pointer p-0">
                                                             <span class="fa-solid far fa-file-excel text-success" style="font-size:15px;"
-                                                                  ng-click="confirmExport('jsea_worksheet','excel')"></span>
-                                                            <b>
-                                                                JOB SAFETY ENVIRONMENTAL ANALYSIS (JSEA) WORKSHEET
-                                                            </b>
+                                                                ng-click="confirmExport('jsea_worksheet','excel')"></span>
+                                                            <b>JOB SAFETY ENVIRONMENTAL ANALYSIS (JSEA) WORKSHEET</b>
                                                         </div><br />
-                                                        <div class="form-check form-check-inline" 
-                                                            ng-if="accessInfo.canAccess || accessInfo.isTA2" >
+                                                        <div class="form-check form-check-inline" ng-if="accessInfo.canAccess || accessInfo.isTA2">
                                                             <input class="form-check-input" id="inlineRadio-{{item.seq}}" type="radio"
-                                                                   name="inlineRadioOptions-{{item.seq}}"
-                                                                   ng-disabled="!(accessInfo.canAccess || accessInfo.isTA2)"
-                                                                   value="approve" checked ng-model="item.action_status" />
+                                                                name="inlineRadioOptions-{{item.seq}}"
+                                                                ng-disabled="!(accessInfo.canAccess || accessInfo.isTA2)"
+                                                                value="approve" checked ng-model="item.action_status" />
                                                             <label class="form-check-label" for="inlineRadioApprove-{{item.seq}}"> Approve</label>
                                                         </div>
-                                                        <div class="form-check form-check-inline"
-                                                             ng-if="accessInfo.canAccess || accessInfo.isTA2">
+                                                        <div class="form-check form-check-inline" ng-if="accessInfo.canAccess || accessInfo.isTA2">
                                                             <input class="form-check-input" id="inlineRadioOptions-{{item.seq}}" type="radio"
-                                                                   name="inlineRadioOptions-{{item.seq}}"
-                                                                   ng-disabled="!(accessInfo.canAccess || accessInfo.isTA2)"
-                                                                   value="reject" ng-model="item.action_status" />
+                                                                name="inlineRadioOptions-{{item.seq}}"
+                                                                ng-disabled="!(accessInfo.canAccess || accessInfo.isTA2)"
+                                                                value="reject" ng-model="item.action_status" />
                                                             <label class="form-check-label" for="inlineRadioReject-{{item.seq}}"> Send back with Comment</label>
                                                         </div>
                                                         <div id="valid-approver-status-{{item.seq}}" class="invalid-feedback text-danger">
@@ -2449,21 +2445,22 @@
                                                         </div>
                                                     </div>
 
-                                                    <div class="col-md-12 p-1 text-start" ng-if="(item.approver_action_type == 2 || data_header[0].pha_status != 21)">
+                                                    <!-- Text when the user has already submitted or can't access -->
+                                                    <div class="col-md-12 p-1 text-start" ng-if="accessInfo.isSubmit || !(accessInfo.canAccess || accessInfo.isTA2)">
                                                         <div class="form-check form-check-inline cursor-pointer p-0">
                                                             <span class="fa-solid far fa-file-excel text-success" style="font-size:15px;"
-                                                                  ng-click="confirmExport('jsea_worksheet','excel')"></span>
-                                                            <b>
-                                                                JOB SAFETY ENVIRONMENTAL ANALYSIS (JSEA) WORKSHEET
-                                                            </b>
+                                                                ng-click="confirmExport('jsea_worksheet','excel')"></span>
+                                                            <b>JOB SAFETY ENVIRONMENTAL ANALYSIS (JSEA) WORKSHEET</b>
                                                         </div><br />
-                                                        <p>{{item.action_status =='approve' ? 'Approve' : 'Send back with Comment' }}</p>
+                                                        <!-- Display the submission status text (approve/reject) -->
+                                                        <p>{{item.action_status == 'approve' ? 'Approve' : 'Send back with Comment'}}</p>
                                                     </div>
                                                 </td>
 
+
                                                 <td class="align-top white-space-nowrap border-bottom text-start" ng-class="{'disabled-link':(!tab_approver_active)}">
-                                                    <div class="col-md-12 p-1 ps-3" 
-                                                        ng-if="!(item.approver_action_type == 2 || data_header[0].pha_status != 21)">
+                                                    <div class="col-md-12 p-1 ps-3" ng-if="(accessInfo.canAccess || accessInfo.isTA2) && !accessInfo.isSubmit">
+                                                        @*ng-if="!((item.approver_action_type == 2  && item.action_status) || data_header[0].pha_status != 21)"*@
                                                             <textarea class="form-control rounded-1" 
                                                                     id="floatingTextarea2" 
                                                                     placeholder="{{ accessInfo.canAccess ? 'Enter your comment' : '' }}"
@@ -2474,7 +2471,8 @@
                                                             Please select a valid comment.
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-12 p-1 ps-3 text-start" ng-if="(item.approver_action_type == 2 || data_header[0].pha_status != 21)">
+                                                    <div class="col-md-12 p-1 ps-3 text-start" ng-if="accessInfo.isSubmit || !(accessInfo.canAccess || accessInfo.isTA2)">
+                                                        @*ng-if="((item.approver_action_type == 2  && item.action_status) || data_header[0].pha_status != 21)"*@
                                                         <label class="text-1100 fw-bold ">
                                                             {{item.comment}}
                                                         </label>
@@ -2490,11 +2488,11 @@
                                                          ng-class="{ 'no-drop': !canAccess, 'cursor-pointer': canAccess }"
                                                          ng-repeat="item_x in data_drawing_approver  | toArray | filter:{id_approver : item.seq}  ">
 
-                                                        <div class="d-flex flex-nowrap" ng-if="!(item.approver_action_type == 2 || data_header[0].pha_status != 21)">
+                                                        <div class="d-flex flex-nowrap" ng-if="(accessInfo.canAccess || accessInfo.isTA2)">
                                                             <div class="font-sans-serif btn-reveal-trigger position-static me-1" 
-                                                                ng-if="(accessInfo.canAccess || accessInfo.isTA2) && (item.approver_action_type != 2)">
+                                                                ng-show="(accessInfo.canAccess || accessInfo.isTA2) && !accessInfo.isSubmit && !item_x.document_file_size">
                                                                 <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 p-1"
-                                                                        ng-if="(accessInfo.canAccess || accessInfo.isTA2)"
+                                                                        ng-if="(accessInfo.canAccess || accessInfo.isTA2) "
                                                                         type="button" data-bs-toggle="dropdown" data-boundary="window"
                                                                         aria-haspopup="true" aria-expanded="false" data-bs-reference="parent">
                                                                     <span class="fas fa-cog text-info"></span>
@@ -2514,32 +2512,39 @@
                                                                 </div>
                                                             </div>
                                                             <div class="btn-group my-2" >
-                                                                <div class="icon-button border p-3" style="border-color: #0d6efd; background-color: #0d6efd;"
-                                                                    ng-hide="!(accessInfo.canAccess || accessInfo.isTA2 ) && !item_x.document_file_size">
-                                                                        <span ng-if="!item_x.document_file_size" class="fa-solid fa-arrow-up-from-bracket fa-lg" style="color: #ffffff;"></span>
-                                                                        <span ng-if="item_x.document_file_size" class="fa-solid fa-file-pdf fa-lg" style="color: #ffffff;"></span>                                                                  </div>
+                                                                <!-- Icon button: Hidden if isSubmit is true and document_file_size > 0, or if the user has no access -->
+                                                                <div class="icon-button border p-3" style="border-color: #0d6efd; background-color: #0d6efd;" 
+                                                                    ng-show="(item_x.document_file_size > 0 && accessInfo.isSubmit) || ((accessInfo.canAccess || accessInfo.isTA2) && !accessInfo.isSubmit && !item_x.document_file_size)">
+                                                                    <span ng-if="!item_x.document_file_size" class="fa-solid fa-arrow-up-from-bracket fa-lg" style="color: #ffffff;"></span>
+                                                                    <span ng-if="item_x.document_file_size" class="fa-solid fa-file-pdf fa-lg" style="color: #ffffff;"></span>
+                                                                </div>
+
+
+                                                                <!-- Upload button: Only shows if the user can access, isn't TA2, hasn't submitted, and no file has been uploaded -->
                                                                 <button class="Upload-button btn ps-3" 
-                                                                        ng-show="(accessInfo.canAccess || accessInfo.isTA2 ) && !item_x.document_file_size">
+                                                                        ng-show="(accessInfo.canAccess || accessInfo.isTA2) && !accessInfo.isSubmit && !item_x.document_file_size">
                                                                     <span class="nametext ms-3 filename-text me-2 d-none" id="filename-approver-{{item_x.seq}}">
-                                                                        {{(item_x.document_file_size>0? item_x.document_file_name + '('+  item_x.document_file_size + 'KB)' : '')}}
+                                                                        {{(item_x.document_file_size > 0 ? item_x.document_file_name + '(' + item_x.document_file_size + 'KB)' : '')}}
                                                                     </span>
-                                                                    <label class="dz-message-text fw-bold p-1 " for="attfile-approver-{{item_x.seq}}">
-                                                                        Upload File (Max size 10mb)
+                                                                    <label class="dz-message-text fw-bold p-1" for="attfile-approver-{{item_x.seq}}">
+                                                                        Upload File (Max size 10MB)
                                                                     </label>
                                                                     <input type="file" id="attfile-approver-{{item_x.seq}}"
                                                                         name="file_approver_{{item_x.seq}}"
                                                                         onchange="angular.element(this).scope().fileSelectApprover(this, 'approver')"
                                                                         style="display:none" />
-
                                                                 </button>
-                                                                <button class="Upload-button btn cursor-pointer" style="width:250px;" ng-if="item_x.document_file_size > 0">
+
+                                                                <!-- Download button: Shows if file size is greater than 0 and the user has submitted -->
+                                                                <button class="Upload-button btn cursor-pointer" style="width:250px;" ng-if="item_x.document_file_size > 0 && accessInfo.isSubmit">
                                                                     <div class="d-flex align-items-center">
                                                                         <span class="nametext filename-text me-2 cursor-pointer" ng-click="downloadFile(item_x)">
                                                                             {{truncateFilename(item_x.document_file_name, 20)}} ({{item_x.document_file_size}} KB)
                                                                         </span>
                                                                     </div>
                                                                 </button>
-                                                            </div>    
+                                                            </div>
+ 
                                                         </div>
 
                                                     </div>
@@ -2570,14 +2575,14 @@
                                                         <button class="btn btn-outline text-primary p-1 m-2 me-0"
                                                                 style="background-color: #f1f2f4; width:50px;"
                                                                 ng-click="confirmDialogApprover(item, 'save')"
-                                                                ng-show="(accessInfo.canAccess || accessInfo.isTA2) && item.approver_action_type != 2">
+                                                                ng-show="(accessInfo.canAccess || accessInfo.isTA2) && !accessInfo.isSubmit">
                                                             <span class="fa fa-save text-primary fa-lg"></span><br />
                                                             <span style="font-size:8px">Save</span>
                                                         </button>
                                                         <button class="btn btn-outline text-success p-1 m-2 ms-1"
                                                                 style="background-color: #f1f2f4; width:80px;"
                                                                 ng-click="confirmDialogApprover(item, 'submit')"
-                                                                ng-show="(accessInfo.canAccess || accessInfo.isTA2) && item.approver_action_type != 2"
+                                                                ng-show="(accessInfo.canAccess || accessInfo.isTA2) && !accessInfo.isSubmit"
                                                                 ng-disabled="!accessInfo.canAccess">
                                                             <span class="fa fa-save text-success fa-lg"></span><br />
                                                             <span style="font-size:8px">Submit</span>
@@ -3169,6 +3174,7 @@
                                            id="likelihood"
                                            name="likelihood"
                                            ng-hide="data_header[0].pha_status === 21 && params !== 'edit' ? !isMainApprover : false"
+                                           ng-disabled="(data_header[0].pha_status === 21 || data_header[0].pha_status === 81 || data_header[0].pha_status === 91) && params !== 'edit' && !isMainApprover"
                                            ng-checked="cal_ram_action_likelihood == item_ram.likelihood_level"
                                            ng-click="selectDataRAM('l',item_ram.likelihood_level)"
                                            style="cursor: pointer; width:25px; height:25px;">
@@ -3183,6 +3189,7 @@
                                 <input type="radio"
                                        id="security_level"
                                        name="security_level"
+                                       ng-disabled="(data_header[0].pha_status === 21 || data_header[0].pha_status === 81 || data_header[0].pha_status === 91) && params !== 'edit' && !isMainApprover"
                                        ng-hide="data_header[0].pha_status === 21 && params !== 'edit' ? !isMainApprover : false"
                                        ng-checked="cal_ram_action_security == item_ram.security_level"
                                        ng-click="selectDataRAM('s',item_ram.security_level)"
@@ -3206,6 +3213,8 @@
                                     <input type="radio"
                                            id="likelihood" 
                                            name="likelihood"
+                                           ng-hide="data_header[0].pha_status === 21 && params !== 'edit' ? !isMainApprover : false"
+                                           ng-disabled="(data_header[0].pha_status === 21 || data_header[0].pha_status === 81 || data_header[0].pha_status === 91) && params !== 'edit' && !isMainApprover"
                                            ng-checked="cal_ram_action_likelihood == item_ram.likelihood_level"
                                            ng-click="selectDataRAM('l',item_ram.likelihood_level)"
                                            style="cursor: pointer;width:30px; height:30px;">
@@ -3218,6 +3227,7 @@
                                 <label for="security_level"><b>{{item_ram.security_level}}</b></label>
                                 <input type="radio"
                                        id="security_level" 
+                                       ng-disabled="(data_header[0].pha_status === 21 || data_header[0].pha_status === 81 || data_header[0].pha_status === 91) && params !== 'edit' && !isMainApprover"
                                        ng-checked="cal_ram_action_security == item_ram.security_level"
                                        name="security_level"
                                        ng-click="selectDataRAM('s',item_ram.security_level)"
