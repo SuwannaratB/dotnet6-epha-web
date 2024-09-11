@@ -27,6 +27,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             url: url_ws + "masterdata/get_master_toc",
             data: '{"user_name":"' + user_name + '"}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+            headers: {
+                'Authorization': $scope.token 
+            },
             beforeSend: function () {
                 $("#divLoading").show();
             },
@@ -72,6 +75,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                 + ',"json_data": ' + JSON.stringify(json_data)
                 + '}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+            headers: {
+                'Authorization': $scope.token 
+            },
             beforeSend: function () {
                 $("#divLoading").show();
 
@@ -268,8 +274,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
     }
     
     function arr_def() {
-        $scope.user_name = conFig.user_name();
-        $scope.flow_role_type = conFig.role_type();//admin,request,responder,approver
+        $scope.user = JSON.parse(localStorage.getItem('user'));
+        $scope.token = JSON.parse(localStorage.getItem('token'))
+        $scope.user_name = $scope.user['user_name'];
+        $scope.flow_role_type = $scope.user['role_type'];
+        // $scope.user_name = conFig.user_name();
+        // $scope.flow_role_type = conFig.role_type();//admin,request,responder,approver
         $scope.data_all = [];
         $scope.data = [];
         $scope.data_delete = [];
