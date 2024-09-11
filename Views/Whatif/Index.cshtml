@@ -3775,9 +3775,11 @@
                                         </tr>
                                     </thead>
                                     <tbody class=" list">
-                                            <tr class="hover-actions-trigger btn-reveal-trigger position-static text-center"
-                                                ng-class="{'row-faded': clickedStates[item.employee_name] || (selectDatFormType === 'approver_ta3' && data_approver_ta3[0].user_name === item.employee_name)}"
-                                                ng-repeat="item in employeelist_show">
+                                        <tr class="hover-actions-trigger btn-reveal-trigger position-static text-center cursor-pointer modal-employee"
+                                            ng-class="{'selected-row': clickedStates[item.employee_name]}"
+                                            style="margin: 10px 0; padding: 20px; border-radius: 15px; transition: background-color 0.3s ease, box-shadow 0.3s ease; box-shadow: 0 4px 10px rgba(0,0,0,0.1); background: white;"
+                                            ng-repeat="item in employeelist_show"
+                                            ng-click="choosDataEmployee(item)">
                                                 
                                                 <!-----------ng-if="employeelist_show.length > 0 && employeelist_show[0].employee_displayname !== null" ------->
                                                 <td class="">

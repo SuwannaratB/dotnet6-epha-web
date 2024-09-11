@@ -694,7 +694,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             return new Promise((resolve, reject) => {
                 const request = new XMLHttpRequest();
                 request.open("POST", url_ws + 'Flow/uploadfile_data');
-        
+
+                // Set the Authorization header with the token
+                request.setRequestHeader('Authorization', $scope.token);
+                        
                 request.onreadystatechange = function () {
                     if (request.readyState === XMLHttpRequest.DONE) {
                         $("#divLoading").hide();

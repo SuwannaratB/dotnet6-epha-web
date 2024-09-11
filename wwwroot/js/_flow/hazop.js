@@ -717,7 +717,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 const fileInput = input;
                 const fileSeq = fileInput.id.split('-').pop();
 
-                console.log("tabName",tabName)
                 if(tabName === 'approver' ){
                     const fileInfoSpan = document.getElementById('filename-approver-' + fileSeq);
                 }else{
@@ -775,11 +774,15 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             fd.append("file_doc", fileDoc);
             fd.append("file_part", filePart); // drawing, responder, approver
             fd.append("sub_software", 'hra');
+
         
             return new Promise((resolve, reject) => {
                 const request = new XMLHttpRequest();
                 request.open("POST", url_ws + 'Flow/uploadfile_data');
-        
+
+                // Set the Authorization header with the token
+                request.setRequestHeader('Authorization', $scope.token);
+
                 request.onreadystatechange = function () {
                     if (request.readyState === XMLHttpRequest.DONE) {
                         $("#divLoading").hide();
@@ -5430,7 +5433,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             return;
         } else {
 
-            console.log($scope.unsavedChanges,"$scope.unsavedChanges")
             if(!$scope.unsavedChanges){
                 window.open("home/portal", "_top");
             }else{
