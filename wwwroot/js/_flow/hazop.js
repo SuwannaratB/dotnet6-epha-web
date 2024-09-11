@@ -864,6 +864,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 const request = new XMLHttpRequest();
                 request.open("POST", url_ws + 'Flow/uploadfile_data');
                 request.send(fd);
+
+                // Set the Authorization header with the token
+                request.setRequestHeader('Authorization', $scope.token);
     
                 var arr = $filter('filter')($scope.master_ram, function (item) { return (item.seq == seq); });
                 if (arr.length > 0) {

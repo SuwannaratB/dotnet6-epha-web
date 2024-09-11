@@ -643,7 +643,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     $("#divLoading").show(); 
                     const request = new XMLHttpRequest();
                     request.open("POST", url_ws + 'Flow/importfile_data_jsea');
-        
+                    
+                    // Set the Authorization header with the token
+                    request.setRequestHeader('Authorization', $scope.token);       
+
                     const ALERT_MESSAGES = {
                         INVALID_RESPONSE: 'There was an issue with the response from the server. Please try again later.',
                         ERROR_STATUS: 'The operation could not be completed due to an error. Please check the details and try again.',
@@ -999,6 +1002,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 const request = new XMLHttpRequest();
                 request.open("POST", url_ws + 'Flow/uploadfile_data');
                 request.send(fd);
+                // Set the Authorization header with the token
+                request.setRequestHeader('Authorization', $scope.token);                
     
                 var arr = $filter('filter')($scope.master_ram, function (item) { return (item.seq == seq); });
                 if (arr.length > 0) {
