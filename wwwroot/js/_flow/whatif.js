@@ -6398,6 +6398,26 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     
         }
 
+        // in case approver rej
+        if($scope.pha_status === 22){
+            var hasInsert = false;
+
+                // First loop to check if any action_type is 'insert' //เพิ่ม? ไม่เพิ่ม? 
+            for (var i = 0; i < copy_data_approver.length; i++) {
+                if (copy_data_approver[i].action_type === 'insert') {
+                    hasInsert = true;
+                    break;
+                }
+            }
+                
+            // If any 'insert' is found, set action_review to null for all objects
+            if (!hasInsert) {
+                for (var j = 0; j < copy_data_approver.length; j++) {
+                    copy_data_approver[j].action_review = null;
+                }                }
+                
+        }
+        
         return angular.toJson(copy_data_approver);
     }
     function check_data_approver_ta3() {

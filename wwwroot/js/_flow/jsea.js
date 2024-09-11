@@ -551,7 +551,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     activeTabPane.classList.add('show', 'active');
                 }
     
-                console.log("show tabs",$scope.tabs)
                 check_tab(selectedTab[0].name);
     
             }else{
@@ -664,8 +663,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                                 if (responseFromService && responseFromService.msg && Array.isArray(responseFromService.msg) && responseFromService.msg.length > 0) {
                                     if (responseFromService.msg[0].STATUS === "true") {
 
-                                        // ทำอะไรกับข้อมูลที่ได้รับเช่น แสดงผลหรือประมวลผลต่อไป
-                                        // Process the success data
                                         const array = responseFromService;
 
                                         if (true) {
@@ -749,9 +746,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                                                     return acc;
                                                 }, []);
 
-                                                console.log("After removing duplicates:", $scope.data_approver);
-
-
 
                                             }
                                             if (array.relatedpeople_outsider) {
@@ -776,7 +770,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                                                     return acc;
                                                 }, []);
-                                                //console.log("check array relatedpeople", array.relatedpeople_outsider, "check relatedpeoplem",  $scope.data_relatedpeople_outsider);                                                                     
                                             }
                                             if (array.tasks_worksheet) {
 
@@ -2949,8 +2942,31 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 } catch {} 
         
             }
-    
+
+            // in case approver rej
+            if($scope.pha_status === 22){
+                var hasInsert = false;
+
+                // First loop to check if any action_type is 'insert' //เพิ่ม? ไม่เพิ่ม? 
+                for (var i = 0; i < copy_data_approver.length; i++) {
+                    if (copy_data_approver[i].action_type === 'insert') {
+                        hasInsert = true;
+                        break;
+                    }
+                }
+                
+                // If any 'insert' is found, set action_review to null for all objects
+                if (!hasInsert) {
+                    for (var j = 0; j < copy_data_approver.length; j++) {
+                        copy_data_approver[j].action_review = null;
+                    }
+                }
+                
+            }
+
+
             console.log("====================",copy_data_approver)
+            
     
             return angular.toJson(copy_data_approver);
         }
@@ -5103,25 +5119,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                 var bCheckValid = false;
                 var arr_chk = $scope.data_general;
-                if (pha_status == "11" && false) {
 
-                    if (arr_chk[0].id_company == '' || arr_chk[0].id_company == null) { set_alert('Warning', 'Please select a valid Company'); return; }
-                    if (arr_chk[0].id_apu == '' || arr_chk[0].id_apu == null) { set_alert('Warning', 'Please select a valid Area Process Unit'); return; }
-                    if (arr_chk[0].id_toc == '' || arr_chk[0].id_toc == null) { set_alert('Warning', 'Please select a valid Thaioil Complex'); return; }
-                    if ((arr_chk[0].id_unit_no == '' || arr_chk[0].id_unit_no == null) && (arr_chk[0].id_tagid == '' || arr_chk[0].id_tagid == null)) {
-                        set_alert('Warning', 'Please select a valid Unit No or Tag ID');
-                        return;
-                    }
-                    if (arr_chk[0].pha_request_name == '' || arr_chk[0].id_company == null) { set_alert('Warning', 'Please select a valid Company'); return; }
-
-                }
-                else if (pha_status == "12") {
-
-                    if (false) {
-                        if (arr_chk[0].id_company == '' || arr_chk[0].id_company == null) { set_alert('Warning', 'Please select a valid Company'); return; }
-                        if (arr_chk[0].id_apu == '' || arr_chk[0].id_apu == null) { set_alert('Warning', 'Please select a valid Area Process Unit'); return; }
-                        if (arr_chk[0].id_toc == '' || arr_chk[0].id_toc == null) { set_alert('Warning', 'Please select a valid Thaioil Complex'); return; }
-                    }
+                if (pha_status == "12") {
 
                     if (true) {
                         arr_chk = $scope.data_memberteam;

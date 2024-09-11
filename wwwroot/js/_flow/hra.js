@@ -5394,19 +5394,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                     var bCheckValid = false;
                     var arr_chk = $scope.data_general;
-                    if (pha_status == "11" && false) {
 
-                        if (arr_chk[0].id_company == '' || arr_chk[0].id_company == null) { $scope.goback_tab = 'general';set_alert('Warning', 'Please select a valid Company'); return; }
-                        if (arr_chk[0].id_apu == '' || arr_chk[0].id_apu == null) { $scope.goback_tab = 'general';set_alert('Warning', 'Please select a valid Area Process Unit'); return; }
-                        if (arr_chk[0].pha_request_name == '' || arr_chk[0].id_company == null) { $scope.goback_tab = 'general';set_alert('Warning', 'Please select a valid Company'); return; }
-
-                    }
-                    else if (pha_status == "12") {
-
-                        if (false) {
-                            if (arr_chk[0].id_company == '' || arr_chk[0].id_company == null) { $scope.goback_tab = 'general';set_alert('Warning', 'Please select a valid Company'); return; }
-                            if (arr_chk[0].id_apu == '' || arr_chk[0].id_apu == null) { $scope.goback_tab = 'general';set_alert('Warning', 'Please select a valid Area Process Unit'); return; }
-                        }
+                     if (pha_status == "12") {
 
                         if (true) {
                             arr_chk = $scope.data_memberteam;
@@ -5906,6 +5895,26 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     
         }
 
+        // in case approver rej
+        if($scope.pha_status === 22){
+            var hasInsert = false;
+
+                // First loop to check if any action_type is 'insert' //เพิ่ม? ไม่เพิ่ม? 
+            for (var i = 0; i < copy_data_approver.length; i++) {
+                if (copy_data_approver[i].action_type === 'insert') {
+                    hasInsert = true;
+                    break;
+                }
+            }
+                
+            // If any 'insert' is found, set action_review to null for all objects
+            if (!hasInsert) {
+                for (var j = 0; j < copy_data_approver.length; j++) {
+                    copy_data_approver[j].action_review = null;
+                }                }
+                
+        }
+        
         return angular.toJson(copy_data_approver);
     }
         function check_data_relatedpeople_outsider() {
