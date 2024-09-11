@@ -155,6 +155,9 @@ AppMenuPage.controller("ctrlAppPage",function ($scope, $http, $filter, conFig) {
           type: "POST",
           contentType: "application/json; charset=utf-8",
           dataType: "json",
+          headers: {
+            'Authorization': $scope.token 
+        },
           beforeSend: function () {
             //$("#divLoading").show();
           },
@@ -296,6 +299,9 @@ AppMenuPage.controller("ctrlAppPage",function ($scope, $http, $filter, conFig) {
       type: "POST",
       contentType: "application/json; charset=utf-8",
       dataType: "json",
+      headers: {
+        'Authorization': $scope.token 
+    },
       beforeSend: function () {
         $("#divLoading").show();
       },
@@ -358,6 +364,9 @@ AppMenuPage.controller("ctrlAppPage",function ($scope, $http, $filter, conFig) {
       type: "POST",
       contentType: "application/json; charset=utf-8",
       dataType: "json",
+      headers: {
+        'Authorization': $scope.token 
+    },
       beforeSend: function () {
         $("#divLoading").show();
       },
@@ -469,6 +478,13 @@ AppMenuPage.controller("ctrlAppPage",function ($scope, $http, $filter, conFig) {
   }
 
   function arr_def() {
+    $scope.user = JSON.parse(localStorage.getItem('user'));
+    $scope.token = JSON.parse(localStorage.getItem('token'))
+    $scope.user_name = $scope.user['user_name'];
+    $scope.flow_role_type = $scope.user['role_type'];
+    // $scope.user_name = conFig.user_name();
+    // $scope.flow_role_type = conFig.role_type(); //admin,request,responder,approver
+
     $scope.data = [];
 
     $scope.data_all = [];
@@ -482,8 +498,6 @@ AppMenuPage.controller("ctrlAppPage",function ($scope, $http, $filter, conFig) {
     $scope.data_menu_setting_delete = [];
     $scope.data_role_setting_delete = [];
 
-    $scope.user_name = conFig.user_name();
-    $scope.flow_role_type = conFig.role_type(); //admin,request,responder,approver
 
     $scope.employeelist = [];
     $scope.employeelist_def = [];

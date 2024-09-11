@@ -106,17 +106,19 @@ AppMenuPage.controller(
       get_data(true);
 
       function arr_def() {
+        $scope.user = JSON.parse(localStorage.getItem('user'));
+        $scope.token = JSON.parse(localStorage.getItem('token'))
+        $scope.user_name = $scope.user['user_name'];
+        $scope.flow_role_type = $scope.user['role_type'];
+        // $scope.user_name = conFig.user_name();
+        // $scope.flow_role_type = conFig.role_type(); //admin,request,responder,approver
         $scope.data_all = [];
-
         $scope.data_company = [];
         $scope.data_sections = [];
         // $scope.functions = 'functions'
-
         //ไม่แน่ใจว่า list เก็บ model เป็น value หรือ text นะ
         $scope.data_filter = [{ id_key1: 0, id_key2: 0 }];
 
-        $scope.user_name = conFig.user_name();
-        $scope.flow_role_type = conFig.role_type(); //admin,request,responder,approver
       }
 
       function get_data(page_load) {
@@ -135,6 +137,9 @@ AppMenuPage.controller(
           type: "POST",
           contentType: "application/json; charset=utf-8",
           dataType: "json",
+          headers: {
+            'Authorization': $scope.token 
+        },
           beforeSend: function () {
             $("#divLoading").show();
           },

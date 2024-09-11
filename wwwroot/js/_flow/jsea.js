@@ -1458,14 +1458,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     
 
     function page_load() {
-
         arr_def();
-
-        if ($scope.user_name == null) {
-            window.open('login/index', "_top");
-            return;
-        }
-
         get_data(true, false);
     }
 
