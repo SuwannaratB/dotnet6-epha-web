@@ -5987,7 +5987,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                 //add new employee 
                 var seq = $scope.MaxSeqDataMemberteam;
-                //console.log('MaxSeqDataMemberteam ', $scope.MaxSeqDataMemberteam)
                 var newInput = clone_arr_newrow($scope.data_memberteam_def)[0];
                 newInput.seq = seq;
                 newInput.id = seq;
@@ -6002,12 +6001,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 newInput.user_img = employee_img;
                 
                 $scope.data_memberteam.push(newInput);
-                running_no_level1($scope.data_memberteam,null);
+                //running_no_level1($scope.data_memberteam,null);
 
                 $scope.MaxSeqDataMemberteam = Number($scope.MaxSeqDataMemberteam) + 1
             }
 
-            console.log("$scope.data_memberteam$scope.data_memberteam$scope.data_memberteam$scope.data_memberteam",$scope.data_memberteam)
 
         }
         else if (xformtype == "approver") {
@@ -6041,7 +6039,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 newInput.user_img = employee_img;
 
                 $scope.data_approver.push(newInput);
-                running_no_level1($scope.data_approver,null);
+                //running_no_level1($scope.data_approver,null);
 
                 $scope.MaxSeqdata_approver = Number($scope.MaxSeqdata_approver) + 1
 
@@ -6052,7 +6050,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
         else if (xformtype == 'edit_approver') {
 
-            console.log("xformtype",xformtype)
             // ขั้นแรก เรียงข้อมูลตามฟิลด์ 'no'
             var sortedData = $filter('orderBy')($scope.data_approver, 'no');
             // จากนั้น กรองข้อมูลตามเงื่อนไขที่ต้องการ
@@ -6097,7 +6094,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 newInput.user_img = employee_img;
 
                 $scope.data_relatedpeople.push(newInput);
-                running_no_level1($scope.data_relatedpeople,null);
+                //running_no_level1($scope.data_relatedpeople,null);
 
                 $scope.MaxSeqdata_relatedpeople = Number($scope.MaxSeqdata_relatedpeople) + 1
 
