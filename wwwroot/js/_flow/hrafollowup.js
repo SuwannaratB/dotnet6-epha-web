@@ -160,30 +160,23 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         $scope.user = JSON.parse(localStorage.getItem('user'));
         $scope.token = JSON.parse(localStorage.getItem('token'))
         $scope.user_name = $scope.user['user_name'];
+        $scope.flow_role_type = $scope.user['role_type'];
         // $scope.user_name = conFig.user_name();
-
+        // $scope.flow_role_type = conFig.role_type();//admin,request,responder,approver
         $scope.selectViewTypeFollowup = true;
         $scope.action_part = 1;
-
         $scope.data_all = [];
-
         $scope.master_apu = [];
         $scope.master_bussiness_unit = [];
         $scope.master_unit_no = [];
         $scope.master_functional = [];
-
-
         $scope.data_header = [];
         $scope.data_header_all = [];
         $scope.data_general = [];
         $scope.data_approver = [];
-
         $scope.select_history_tracking_record = false;
         $scope.selectedDataRamType = null;
-
-
         $scope.employeelist = [];
-
         // ล้างช่องข้อมูลหลังจากเพิ่มข้อความ
         $scope.employee_id = '';
         $scope.employee_name = '';
@@ -191,16 +184,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         $scope.employee_email = '';
         $scope.employee_type = 'Contract';
         $scope.employee_img = 'assets/img/team/avatar.webp'
-
         $scope.searchdata = '';
         $scope.searchEmployee = '';
-
         $scope.tabChange = 'worksheet';
         $scope.tabUpdateFollowUp = false;
-
-        $scope.flow_role_type = conFig.role_type();//admin,request,responder,approver
         $scope.flow_status = 0;
-
         //alert($scope.flow_role_type);
     }
     function page_load() {

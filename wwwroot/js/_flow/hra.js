@@ -809,6 +809,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.user = JSON.parse(localStorage.getItem('user'));
         $scope.token = JSON.parse(localStorage.getItem('token'))
         $scope.user_name = $scope.user['user_name'];
+        $scope.flow_role_type = $scope.user['role_type'];
         // $scope.user_name = conFig.user_name();
         $scope.pha_seq = conFig.pha_seq();
         $scope.pha_type_doc = conFig.pha_type_doc();
@@ -1320,14 +1321,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
 
     function page_load() {
-
         arr_def();
-
-        if ($scope.user_name == null) {
-            window.open('login/index', "_top");
-            return;
-        }
-
         get_data(true, false);
     }
 
@@ -1652,7 +1646,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
 
     function get_data(page_load, action_submit) {
-        var user_name = conFig.user_name();
+        var user_name = $scope.user_name;
         var pha_seq = conFig.pha_seq();
         if (page_load == true) {
             $scope.pha_seq = pha_seq;
@@ -1670,7 +1664,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
 
     function get_data_after_save(page_load, action_submit, pha_seq) {
-        var user_name = conFig.user_name();
+        var user_name = $scope.user_name;
         call_api_load(false, action_submit, user_name, pha_seq);
     }
 
@@ -1897,7 +1891,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                 //default data page
                 if (true) {
-                    $scope.flow_role_type = conFig.role_type(); //admin,request,responder,approver
                     $scope.flow_status = 0;
 
                     //แสดงปุ่ม

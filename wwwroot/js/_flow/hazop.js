@@ -1796,7 +1796,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     function get_data(page_load, action_submit) {
 
-        var user_name = conFig.user_name();
+        var user_name = $scope.user_name;
         var pha_seq = conFig.pha_seq();
 
         if (page_load == true) {
@@ -1808,7 +1808,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
 
     function get_data_after_save(page_load, action_submit, pha_seq) {
-        var user_name = conFig.user_name();
+        var user_name = $scope.user_name;
         call_api_load(false, action_submit, user_name, pha_seq);
     }
 
@@ -2011,7 +2011,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 $scope.data_nodeguidwords_delete = [];
                 $scope.data_nodeworksheet_delete = [];
                 try {
-                    $scope.flow_role_type = conFig.role_type();// "admin";//admin,request,responder,approver
+                    $scope.flow_role_type = $scope.flow_role_type;// "admin";//admin,request,responder,approver
                     if (arr.header[0].pha_request_by.toLowerCase() == $scope.user_name.toLowerCase()) {
                         $scope.flow_role_type = 'admin';
                         conFig.role_type = 'admin';
