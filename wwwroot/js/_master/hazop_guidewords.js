@@ -287,6 +287,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                 + ',"json_drawing": ' + JSON.stringify(json_drawing)
                 + '}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+            headers: {
+                'Authorization': $scope.token 
+            },
             beforeSend: function () {
                 $("#divLoading").show();
 
@@ -327,6 +330,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             url: url_ws + "masterdata/get_master_guidewords",
             data: '{"user_name":"' + user_name + '"}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+            headers: {
+                'Authorization': $scope.token 
+            },
             beforeSend: function () {
                 $("#divLoading").show();
             },
@@ -501,6 +507,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
     }
 
     function arr_def() {
+        $scope.user = JSON.parse(localStorage.getItem('user'));
+        $scope.token = JSON.parse(localStorage.getItem('token'))
+        $scope.user_name = $scope.user['user_name'];
+        $scope.flow_role_type = $scope.user['role_type'];
+        // $scope.user_name = conFig.user_name();
+        // $scope.flow_role_type = conFig.role_type();//admin,request,responder,approver
         $scope.data_all = [];
         $scope.data = [];
         //ไม่แน่ใจว่า list เก็บ model เป็น value หรือ text นะ 
@@ -512,8 +524,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             application: '',
             parameter: ''
         }
-        $scope.user_name = conFig.user_name();
-        $scope.flow_role_type = conFig.role_type();//admin,request,responder,approver
     }
 
     function get_data(page_load) {
