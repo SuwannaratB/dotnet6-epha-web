@@ -122,7 +122,7 @@
 @section scripts {
     <script>
         const app = angular.module("app", []);
-        app.controller("ctrlApp", function ($scope, $http) {
+        app.controller("ctrlApp", function ($scope) {
 
             $('#divLoading').hide();
             console.log(`@ViewBag.endpoint`)
@@ -138,16 +138,15 @@
                 pass_word: "1",
             }
             $scope.handleSubmit = function (ev) {
-
-                console.log(ev)
                 const { user_name, pass_word } = $scope.form
-
-                if (!user_name || !pass_word) { return; }
+                if (!user_name || !pass_word) return console.log('username or password not found!')
 
                 $.ajax({
-                    url: "Login/Authentication", 
-                    data: '{"user_name":"' + user_name + '","pass_word":"' + pass_word + '"}',
-                    type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+                    url: "https://qas-epha.thaioilgroup.com/service/api/Login/GetAntiForgeryToken", 
+                    data: '{"userId":"' + user_name + '","userPassword":"' +  pass_word +'"}',
+                    type: "POST", 
+                    contentType: "application/json; charset=utf-8", 
+                    dataType: "json",
                     beforeSend: function () {
                         $("#divLoading").show();
                     },
@@ -155,15 +154,72 @@
                         $("#divLoading").hide();
                     },
                     success: function (data) {
-                        var arr = data;
-                        console.log(arr);
-                        try {
-                            if (data.role_type == '') {
-                                alert('Unauthorized access to the system.'); return;
-                            };
-                        } catch { alert('Unauthorized access to the system.'); return; }
+                        const token = data.token
+                        if(!token) return console.log('token not found!')
 
-                        window.open(data.page, "_top");
+                        $.ajax({
+                            url: "https://qas-epha.thaioilgroup.com/service/api/Login/check_authorization", 
+                            data: '{"emp_id":"' + '' + '","user_name":"' + user_name + '","pass_word":"' + pass_word + '"}',
+                            type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+                            headers: {
+                                'Authorization': token 
+                            },
+                            beforeSend: function () {
+                                $("#divLoading").show();
+                            },
+                            complete: function () {
+                                $("#divLoading").hide();
+                            },
+                            success: function (data) {
+                                var arr = data;
+                                if(arr){
+                                    localStorage.setItem('user', JSON.stringify(arr[0]))
+                                    localStorage.setItem('token', JSON.stringify(token))
+                                    window.location.href = "Home/Portal";
+                                }
+
+                                @* $.ajax({
+                                    url: "Login/Authentication", 
+                                    data: '{"user_name":"' + user_name + '","pass_word":"' + pass_word + '"}',
+                                    type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+                                    headers: {
+                                        'Authorization': token 
+                                    },
+                                    beforeSend: function () {
+                                        $("#divLoading").show();
+                                    },
+                                    complete: function () {
+                                        $("#divLoading").hide();
+                                    },
+                                    success: function (data) {
+                                        var arr = data;
+                                        console.log(arr);
+                                        try {
+                                            if (data.role_type == '') {
+                                                alert('Unauthorized access to the system.'); return;
+                                            };
+                                        } catch { alert('Unauthorized access to the system.'); return; }
+
+                                        window.open(data.page, "_top");
+                                    },
+                                    error: function (jqXHR, textStatus, errorThrown) {
+                                        if (jqXHR.status == 500) {
+                                            alert('Internal error: ' + jqXHR.responseText);
+                                        } else {
+                                            alert('Unexpected ' + textStatus);
+                                        }
+                                    }
+                                }); *@
+                            },
+                            error: function (jqXHR, textStatus, errorThrown) {
+                                if (jqXHR.status == 500) {
+                                    alert('Internal error: ' + jqXHR.responseText);
+                                } else {
+                                    alert('Unexpected ' + textStatus);
+                                }
+                            }
+
+                        });
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
                         if (jqXHR.status == 500) {
@@ -172,15 +228,8 @@
                             alert('Unexpected ' + textStatus);
                         }
                     }
-
                 });
-
             }
-
-
         });
-
-
-
     </script>
 }

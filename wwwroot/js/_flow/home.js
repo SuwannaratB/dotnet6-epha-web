@@ -8,10 +8,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, conFig) {
     role_menu();
 
     function role_menu() {
-
-        $scope.role_type = conFig.role_type();
-        $scope.user_name = conFig.user_name();
-
+        $scope.user = JSON.parse(localStorage.getItem('user'))
+        $scope.token = JSON.parse(localStorage.getItem('token'))
+        $scope.user_name = $scope.user['user_name'];
+        $scope.role_type = $scope.user['role_type'];
+        // $scope.role_type = conFig.role_type();
+        // $scope.user_name = conFig.user_name();
         $scope.menu_hometasks = true;
         $scope.menu_search = true;
         $scope.menu_hazop = false;
@@ -27,13 +29,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, conFig) {
             $scope.menu_report = false;
         }
 
-        //call api
-        var user_name = $scope.user_name;
-
         $.ajax({
-            url: url_ws + "Login/check_authorization_page_fix",
-            data: '{"user_name":"' + user_name + '"}',
+            url: url_ws + "https://qas-epha.thaioilgroup.com/service/api/Login/check_authorization_page",
+            // url: url_ws + "Login/check_authorization_page_fix",
+            data: '{"user_name":"' + $scope.user_name + '","page_controller":"' + '' + '"}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+            headers: {
+                'Authorization': $scope.token 
+            },
             beforeSend: function () {
                 $('#divLoading').show();
             },
