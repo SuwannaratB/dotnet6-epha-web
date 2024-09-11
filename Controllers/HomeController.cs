@@ -76,10 +76,10 @@ namespace dotnet6_epha_web.Controllers
 
         public async Task<IActionResult> HomeTasks()
         {
-            if (_sessionAuthen.role_type == "" || _sessionAuthen.role_type == null)
-            {
-                return RedirectToAction("Index", "Login");
-            }
+            // if (_sessionAuthen.role_type == "" || _sessionAuthen.role_type == null)
+            // {
+            //     return RedirectToAction("Index", "Login");
+            // }
             ViewData["user_display"] = _sessionAuthen.user_display;
             ViewData["user_name"] = _sessionAuthen.user_name;
             ViewData["role_type"] = _sessionAuthen.role_type;
