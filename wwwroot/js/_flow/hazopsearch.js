@@ -34,12 +34,17 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
     };
     function arr_def() {
         //AutoComplete
+        $scope.user = JSON.parse(localStorage.getItem('user'));
+        $scope.token = JSON.parse(localStorage.getItem('token'))
+        $scope.user_name = $scope.user['user_name'];
+        $scope.flow_role_type = $scope.user['role_type'];
+        // $scope.user_name = conFig.user_name();
+        // $scope.flow_role_type = conFig.role_type();//admin,request,responder,approver
         $scope.autoText = {};
         $scope.filteredItems = {};
 
         $scope.selectViewTypeFollowup = true;
         $scope.action_part = 1;
-        $scope.user_name = conFig.user_name();
 
         $scope.data_all = [];
 
@@ -52,7 +57,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         $scope.data_results = [];
         $scope.data_conditions = [];
 
-        $scope.flow_role_type = conFig.role_type();//admin,request,responder,approver
         $scope.flow_status = 0;
 
         $scope.exportfile = [{ DownloadPath: '', Name: '' }];
@@ -91,6 +95,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             url: url_ws + "Flow/load_page_search_details",
             data: '{"sub_software":"' + (sub_software == 'WHAT\'S IF' ? 'WHATIF' : sub_software) + '","user_name":"' + user_name + '","token_doc":"' + token_doc + '","type_doc":"' + type_doc + '"}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+            headers: {
+                'Authorization': $scope.token 
+            },
             beforeSend: function () {
                 if (page_load == false) {
                     //$('#divLoading').hide(); 
@@ -453,6 +460,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             data: '{"pha_seq":"' + conFig.pha_seq + '","pha_seq":"' + conFig.pha_seq + '","pha_type_doc":"' + conFig.pha_type_doc + '"'
                 + ',"pha_sub_software":"' + controller_text + '","pha_status":"' + pha_status + '"}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+            headers: {
+                'Authorization': $scope.token 
+            },
             beforeSend: function () {
                 //$('#divLoading').show(); 
                 $('#divLoading').show();
@@ -533,6 +543,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             url: url_ws + "Flow/export_" + sub_software + "_report",
             data: '{"sub_software":"' + sub_software + '","user_name":"' + user_name + '","seq":"' + seq + '","export_type":"' + data_type + '"}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+            headers: {
+                'Authorization': $scope.token 
+            },
             beforeSend: function () {
                 //$('#divLoading').show();
 
@@ -604,6 +617,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                 data: '{"user_name":"' + user_name + '","sub_software":"' + sub_software + '"' +
                     ',"pha_no":"' + pha_no + '","pha_seq":"' + pha_seq + '"}',
                 type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+                headers: {
+                    'Authorization': $scope.token 
+                },
                 beforeSend: function () {
                     $('#divLoading').show();
                 },
@@ -646,6 +662,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                     data: '{"user_name":"' + user_name + '","sub_software":"' + sub_software + '"' + ',"pha_status_comment":"' + pha_status_comment + '"' +
                         ',"pha_no":"' + pha_no + '","pha_seq":"' + pha_seq + '"}',
                     type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+                    headers: {
+                        'Authorization': $scope.token 
+                    },
                     beforeSend: function () {
                         $('#divLoading').show();
                     },

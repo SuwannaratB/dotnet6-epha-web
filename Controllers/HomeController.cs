@@ -51,25 +51,25 @@ namespace dotnet6_epha_web.Controllers
 
         public async Task<IActionResult> Portal()
         {
-            _sessionAuthen.pha_seq = "";
-            _sessionAuthen.pha_no = "";
-            _sessionAuthen.pha_status = "";
-            _sessionAuthen.pha_type_doc = "";
-            _sessionAuthen.controller_action_befor = "";
+            // _sessionAuthen.pha_seq = "";
+            // _sessionAuthen.pha_no = "";
+            // _sessionAuthen.pha_status = "";
+            // _sessionAuthen.pha_type_doc = "";
+            // _sessionAuthen.controller_action_befor = "";
 
 
-            if (_sessionAuthen.role_type == "" || _sessionAuthen.role_type == null)
-            {
-                return RedirectToAction("Index", "Login");
-            }
+            // if (_sessionAuthen.role_type == "" || _sessionAuthen.role_type == null)
+            // {
+            //     return RedirectToAction("Index", "Login");
+            // }
 
-            ViewData["user_display"] = _sessionAuthen.user_display;
-            ViewData["user_name"] = _sessionAuthen.user_name;
-            ViewData["role_type"] = _sessionAuthen.role_type;
-            ViewData["pha_no"] = _sessionAuthen.pha_no;
-            ViewData["pha_status"] = _sessionAuthen.pha_status;
-            ViewData["controller_action_befor"] = "home/portal";
-            ViewData["service_api_url"] = _sessionAuthen.service_api_url;
+            // ViewData["user_display"] = _sessionAuthen.user_display;
+            // ViewData["user_name"] = _sessionAuthen.user_name;
+            // ViewData["role_type"] = _sessionAuthen.role_type;
+            // ViewData["pha_no"] = _sessionAuthen.pha_no;
+            // ViewData["pha_status"] = _sessionAuthen.pha_status;
+            // ViewData["controller_action_befor"] = "home/portal";
+            // ViewData["service_api_url"] = _sessionAuthen.service_api_url;
 
             return View();
         }

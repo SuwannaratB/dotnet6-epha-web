@@ -215,10 +215,10 @@ namespace dotnet6_epha_web.Controllers
         {
             Check_QueryString();
 
-            if (_sessionAuthen.role_type == "" || _sessionAuthen.role_type == null)
-            {
-                return RedirectToAction("Index", "Login");
-            }
+            // if (_sessionAuthen.role_type == "" || _sessionAuthen.role_type == null)
+            // {
+            //     return RedirectToAction("Index", "Login");
+            // }
 
             _sessionAuthen.service_api_url = _IConfiguration["EndPoint:service_api_url"];
             ViewBag.service_file_url = _IConfiguration["EndPoint:service_file_url"];
@@ -295,10 +295,10 @@ namespace dotnet6_epha_web.Controllers
 
         public IActionResult Followup()
         {
-            if (_sessionAuthen.role_type == "" || _sessionAuthen.role_type == null)
-            {
-                return RedirectToAction("Index", "Login");
-            }
+            // if (_sessionAuthen.role_type == "" || _sessionAuthen.role_type == null)
+            // {
+            //     return RedirectToAction("Index", "Login");
+            // }
 
             _sessionAuthen.service_api_url = _IConfiguration["EndPoint:service_api_url"];
             if ((_sessionAuthen.controller_action_befor + "").ToString() == null)
@@ -320,10 +320,10 @@ namespace dotnet6_epha_web.Controllers
         public IActionResult FollowupUpdate()
         {
             //pha_seq,  pha_no ส่งมาจาก next_page ที่กดมาจากหน้า followup
-            if (_sessionAuthen.role_type == "" || _sessionAuthen.role_type == null)
-            {
-                return RedirectToAction("Index", "Login");
-            }
+            // if (_sessionAuthen.role_type == "" || _sessionAuthen.role_type == null)
+            // {
+            //     return RedirectToAction("Index", "Login");
+            // }
 
             _sessionAuthen.service_api_url = _IConfiguration["EndPoint:service_api_url"];
             ViewBag.service_file_url = _IConfiguration["EndPoint:service_file_url"];
@@ -351,10 +351,10 @@ namespace dotnet6_epha_web.Controllers
 
         public IActionResult Search()
         {
-            if (_sessionAuthen.role_type == "" || _sessionAuthen.role_type == null)
-            {
-                return RedirectToAction("Index", "Login");
-            }
+            // if (_sessionAuthen.role_type == "" || _sessionAuthen.role_type == null)
+            // {
+            //     return RedirectToAction("Index", "Login");
+            // }
 
             _sessionAuthen.service_api_url = _IConfiguration["EndPoint:service_api_url"];
             _sessionAuthen.controller_action_befor = "Home/Portal";
@@ -372,10 +372,10 @@ namespace dotnet6_epha_web.Controllers
 
         public IActionResult Approve()
         {
-            if (_sessionAuthen.role_type == "" || _sessionAuthen.role_type == null)
-            {
-                return RedirectToAction("Index", "Login");
-            }
+            // if (_sessionAuthen.role_type == "" || _sessionAuthen.role_type == null)
+            // {
+            //     return RedirectToAction("Index", "Login");
+            // }
 
             _sessionAuthen.service_api_url = _IConfiguration["EndPoint:service_api_url"];
             _sessionAuthen.controller_action_befor = "Home/Portal";
@@ -395,10 +395,10 @@ namespace dotnet6_epha_web.Controllers
 
         public IActionResult Notification()
         {
-            if (_sessionAuthen.role_type == "" || _sessionAuthen.role_type == null)
-            {
-                return RedirectToAction("Index", "Login");
-            }
+            // if (_sessionAuthen.role_type == "" || _sessionAuthen.role_type == null)
+            // {
+            //     return RedirectToAction("Index", "Login");
+            // }
 
             _sessionAuthen.service_api_url = _IConfiguration["EndPoint:service_api_url"];
             _sessionAuthen.controller_action_befor = "Home/Portal";
