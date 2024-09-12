@@ -374,12 +374,13 @@
 
             // check Auth
             $scope.token = JSON.parse(localStorage.getItem('token'))
+            $scope.user = JSON.parse(localStorage.getItem('user'))
 
-            if(!$scope.token) return window.location.href = "Login";
+            if(!$scope.token || !$scope.user['role_type']) return window.location.href = "Login";
 
             $scope.user = JSON.parse(localStorage.getItem('user'));
             
-            $scope.user_display = $scope.user['user_name'];
+            $scope.user_display = $scope.user['user_displayname'];
             $scope.role_type = $scope.user['role_type'];
             $scope.controller_action_befor = conFig.controller_action_befor();
             // $scope.role_type = conFig.role_type();

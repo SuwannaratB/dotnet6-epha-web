@@ -30,7 +30,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, conFig) {
         }
 
         $.ajax({
-            url: url_ws + "https://qas-epha.thaioilgroup.com/service/api/Login/check_authorization_page",
+            url: url_ws + `Login/check_authorization_page`,
             // url: url_ws + "Login/check_authorization_page_fix",
             data: '{"user_name":"' + $scope.user_name + '","page_controller":"' + '' + '"}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
