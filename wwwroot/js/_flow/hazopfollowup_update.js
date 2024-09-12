@@ -150,6 +150,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                 const request = new XMLHttpRequest();
                 request.open("POST", url_ws + 'Flow/uploadfile_data_followup');
 
+                request.setRequestHeader('Authorization', $scope.token);
+                request.setRequestHeader('Content-Type', 'application/json');
+                
+                const requestBody = JSON.stringify({ user_name: $scope.user_name });
+    
+                request.send(requestBody);  
+
                 request.onreadystatechange = function () {
                     if (request.readyState === XMLHttpRequest.DONE) {
                         if (request.status === 200) {

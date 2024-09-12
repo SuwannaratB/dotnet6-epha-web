@@ -571,11 +571,16 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             fd.append("sub_software", 'hra');
         
             return new Promise((resolve, reject) => {
-                const request = new XMLHttpRequest();
+                var request = new XMLHttpRequest();
                 request.open("POST", url_ws + 'Flow/uploadfile_data');
-                // Set the Authorization header with the token
-                request.setRequestHeader('Authorization', $scope.token);                
-        
+                
+                request.setRequestHeader('Authorization', $scope.token);
+                request.setRequestHeader('Content-Type', 'application/json');
+                
+                const requestBody = JSON.stringify({ user_name: $scope.user_name });
+                
+                request.send(requestBody);
+                             
                 request.onreadystatechange = function () {
                     if (request.readyState === XMLHttpRequest.DONE) {
                         $("#divLoading").hide();
@@ -7088,9 +7093,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         function getEmployees( indicator, callback){
             $.ajax({
                 url: url_ws + "Flow/employees_search",
-                data: '{"user_indicator":"' + indicator + '"'
-                    + ',"max_rows":"50"'
-                    + '}',
+                data: '{"user_indicator":"' + indicator + '",'
+                + '"user_name":"' + user_name + '",'
+                + '"max_rows":"50"}',           
                 type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
                 headers: {
                     'Authorization': $scope.token 

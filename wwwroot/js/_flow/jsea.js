@@ -637,6 +637,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 fd.append("file_seq", fileSeq);
                 fd.append("file_name", fileName);
                 fd.append("file_doc", file_doc);
+                
                 fd.append("sub_software", 'jsea');
         
                 try {
@@ -644,8 +645,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     const request = new XMLHttpRequest();
                     request.open("POST", url_ws + 'Flow/importfile_data_jsea');
                     
-                    // Set the Authorization header with the token
-                    request.setRequestHeader('Authorization', $scope.token);       
+                    request.setRequestHeader('Authorization', $scope.token);
+                    request.setRequestHeader('Content-Type', 'application/json');
+                    
+                    const requestBody = JSON.stringify({ user_name: $scope.user_name });
+        
+                    request.send(requestBody);   
 
                     const ALERT_MESSAGES = {
                         INVALID_RESPONSE: 'There was an issue with the response from the server. Please try again later.',
@@ -916,8 +921,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 const request = new XMLHttpRequest();
                 request.open("POST", url_ws + 'Flow/uploadfile_data');
 
-                // Set the Authorization header with the token
                 request.setRequestHeader('Authorization', $scope.token);
+                request.setRequestHeader('Content-Type', 'application/json');
+                
+                const requestBody = JSON.stringify({ user_name: $scope.user_name });
+    
+                request.send(requestBody);
 
                 request.onreadystatechange = function () {
                     if (request.readyState === XMLHttpRequest.DONE) {
@@ -1001,9 +1010,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             try {
                 const request = new XMLHttpRequest();
                 request.open("POST", url_ws + 'Flow/uploadfile_data');
+                request.setRequestHeader('Authorization', $scope.token);
+                request.setRequestHeader('Content-Type', 'application/json');
+                
+                const requestBody = JSON.stringify({ user_name: $scope.user_name });
+    
+                request.send(requestBody);  
                 request.send(fd);
-                // Set the Authorization header with the token
-                request.setRequestHeader('Authorization', $scope.token);                
     
                 var arr = $filter('filter')($scope.master_ram, function (item) { return (item.seq == seq); });
                 if (arr.length > 0) {
@@ -1901,6 +1914,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         var type_doc = $scope.pha_type_doc;//review_document
 
         $scope.params = get_params();
+        
 
         $.ajax({
             url: url_ws + "Flow/get_jsea_details",
@@ -4947,12 +4961,15 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         var page_start_second = _item.page_start_second;
         var page_end_first = _item.page_end_first;
         var page_end_second = _item.page_end_second;
+        var user_name = $scope.user_name;
+
 
         $.ajax({
             url: url_ws + "Flow/copy_pdf_file",
             data: '{"file_name":"' + file_name + '","file_path":"' + file_path + '"'
                 + ',"page_start_first":"' + page_start_first + '","page_start_second":"' + page_start_second + '"'
                 + ',"page_end_first":"' + page_end_first + '","page_end_second":"' + page_end_second + '"'
+                + ',"user_name":"' + user_name + '"'
                 + '}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
             headers: {
@@ -5896,10 +5913,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     };
 
     function getEmployees( indicator, callback){
+        var user_name = $scope.user_name;
+
         $.ajax({
             url: url_ws + "Flow/employees_search",
             data: '{"user_indicator":"' + indicator + '"'
                 + ',"max_rows":"50"'
+                + ',"user_name":"' + user_name + '"'
                 + '}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
             headers: {
