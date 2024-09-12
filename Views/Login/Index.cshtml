@@ -119,8 +119,10 @@
     </div>
 </div>
 
+
 @section scripts {
-    <script>
+    <script src="~/js/_flow/login.js"></script>
+    @* <script>
         const app = angular.module("app", []);
         app.controller("ctrlApp", function ($scope) {
 
@@ -177,39 +179,6 @@
                                     localStorage.setItem('token', JSON.stringify(token))
                                     window.location.href = "Home/Portal";
                                 }
-
-                                @* $.ajax({
-                                    url: "Login/Authentication", 
-                                    data: '{"user_name":"' + user_name + '","pass_word":"' + pass_word + '"}',
-                                    type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
-                                    headers: {
-                                        'Authorization': token 
-                                    },
-                                    beforeSend: function () {
-                                        $("#divLoading").show();
-                                    },
-                                    complete: function () {
-                                        $("#divLoading").hide();
-                                    },
-                                    success: function (data) {
-                                        var arr = data;
-                                        console.log(arr);
-                                        try {
-                                            if (data.role_type == '') {
-                                                alert('Unauthorized access to the system.'); return;
-                                            };
-                                        } catch { alert('Unauthorized access to the system.'); return; }
-
-                                        window.open(data.page, "_top");
-                                    },
-                                    error: function (jqXHR, textStatus, errorThrown) {
-                                        if (jqXHR.status == 500) {
-                                            alert('Internal error: ' + jqXHR.responseText);
-                                        } else {
-                                            alert('Unexpected ' + textStatus);
-                                        }
-                                    }
-                                }); *@
                             },
                             error: function (jqXHR, textStatus, errorThrown) {
                                 if (jqXHR.status == 500) {
@@ -231,5 +200,5 @@
                 });
             }
         });
-    </script>
+    </script> *@
 }

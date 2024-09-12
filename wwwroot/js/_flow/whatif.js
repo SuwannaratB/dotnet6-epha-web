@@ -117,6 +117,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 });
 
 
+<<<<<<< HEAD
 /*window.onerror = function(message, source, lineno, colno, error) {
     console.error('Global JavaScript error:', { message, source, lineno, colno, error });
     
@@ -134,6 +135,25 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
     return true; 
 };*/
+=======
+// window.onerror = function(message, source, lineno, colno, error) {
+//     console.error('Global JavaScript error:', { message, source, lineno, colno, error });
+    
+//     // Call set_alert function to notify the user
+//     if (typeof set_alert === 'function') {
+//         $('#returnModal').modal({
+//             backdrop: 'static',
+//             keyboard: false 
+//         }).modal('show');
+//     } else {
+//         alert('An unexpected error occurred. Please contact support.');  
+//         // Redirect to home/portal after alert is dismissed
+//         window.open("home/portal", "_top");
+//     }
+
+//     return true; 
+// };
+>>>>>>> 2500767bd7cb7b6a7268f5e14bf5a4fe52fd6fc8
 
 
 AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, $document, $interval, $rootScope, $window,$q,$timeout) {
