@@ -804,6 +804,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         return true
     }
 
+    function validActionOwner(){
+        console.log('----------------------------------')
+        console.log($scope.data_worksheet_list)
+        console.log('----------------------------------')
+        $scope.validMessage = ''
+        return true
+    }
+
 
     function arr_def() {
         $scope.user = JSON.parse(localStorage.getItem('user'));
@@ -1401,6 +1409,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             },
             success: function (data) {
                 var arr = data;
+                var user_name = $scope.user_name;
 
                 if (arr[0].status == 'true') {
 
@@ -1418,7 +1427,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                         $.ajax({
                             url: controller_text + "/set_session_doc",
-                            data: '{"controller_action_befor":"' + controller_action_befor + '","pha_seq":"' + pha_seq + '"'
+                            data: '{"controller_action_befor":"' + controller_action_befor + '","pha_seq":"' + pha_seq + '","user_name":"' + user_name + '"'
                                 + ',"pha_no":"' + pha_no + '","pha_status":"' + pha_status + '","pha_type_doc":"' + pha_type_doc + '"}',
                             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
                             headers: {
@@ -1466,7 +1475,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                         $.ajax({
                             url: controller_text + "/set_session_doc",
-                            data: '{"controller_action_befor":"' + controller_action_befor + '","pha_seq":"' + pha_seq + '"'
+                            data: '{"controller_action_befor":"' + controller_action_befor + '","pha_seq":"' + pha_seq + '","user_name":"' + user_name + '"'
                                 + ',"pha_no":"' + pha_no + '","pha_status":"' + pha_status + '","pha_type_doc":"' + pha_type_doc + '"}',
                             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
                             headers: {
@@ -5443,6 +5452,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                             if (!isRecom) return set_alert('Warning','Please provide a valid Manage Recommendations')
                             
                             // validation
+                            // validActionOwner()
                             if(!validRecommendations()) {
                                 return set_alert('Warning',$scope.validMessage)
                             }
@@ -7084,9 +7094,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         };
     
         function getEmployees( indicator, callback){
+            var user_name = $scope.user_name;
+            
             $.ajax({
                 url: url_ws + "Flow/employees_search",
-                data: '{"user_indicator":"' + indicator + '"'
+                data: '{"user_indicator":"' + indicator + '","user_name":"' + user_name + '"'
                     + ',"max_rows":"50"'
                     + '}',
                 type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",

@@ -148,10 +148,12 @@ AppMenuPage.controller("ctrlAppPage",function ($scope, $http, $filter, conFig) {
         });
       };
       function getEmployees(keywords, callback) {
+        var user_name = $scope.user_name;
+        
         $.ajax({
           url: url_ws + "Flow/employees_search",
           data:
-            '{"user_filter_text":"' + keywords + '"' + ',"max_rows":"10"' + "}",
+            '{"user_filter_text":"' + keywords + '","user_name":"' + user_name + '"' + ',"max_rows":"10"' + "}",
           type: "POST",
           contentType: "application/json; charset=utf-8",
           dataType: "json",

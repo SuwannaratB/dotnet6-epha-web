@@ -357,6 +357,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         var pha_seq = arr.pha_seq;
         var pha_status = arr.pha_status;
         var responder_user_name = '';
+        var user_name = $scope.user_name;
 
 
         //a.pha_sub_software, a.seq as pha_seq,a.pha_no, g.pha_request_name, a.pha_status, vw.user_displayname as responder_user_displayname
@@ -381,7 +382,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         $.ajax({
             url: controller_text + "/next_page",
             data: '{"pha_sub_software":"' + pha_sub_software + '","pha_seq":"' + pha_seq + '","pha_no":"' + pha_no + '","pha_type_doc":"' + pha_type_doc + '","responder_user_name":"' + responder_user_name + '"'
-                + ',"controller_page":"' + controller_text + '","pha_status":"' + pha_status + '"'
+                + ',"controller_page":"' + controller_text + '","pha_status":"' + pha_status + '","user_name":"' + user_name + '"'
                 + ',"controller_action_befor":"hazop/followup"'
                 + '}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
@@ -412,11 +413,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
     function next_page(controller_text, pha_status) {
         controller_text = controller_text.toLowerCase();
+        var user_name = $scope.user_name;
 
         $.ajax({
             url: controller_text + "/next_page",
             data: '{"pha_seq":"' + conFig.pha_seq + '","pha_no":"' + conFig.pha_no + '","pha_type_doc":"' + conFig.pha_type_doc + '"'
-                + ',"pha_sub_software":"' + controller_text + '","pha_status":"' + pha_status + '"}',
+                + ',"pha_sub_software":"' + controller_text + '","pha_status":"' + pha_status + '","user_name":"' + user_name +'"}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
             headers: {
                 'Authorization': $scope.token 
@@ -459,12 +461,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         conFig.pha_seq = null;
         conFig.pha_type_doc = 'create';
         var pha_status = '11';
+        var user_name = $scope.user_name;
 
         //window.open("hazop/index", "_top")
         $.ajax({
             url: controller_text + "/next_page",
             data: '{"pha_seq":"' + conFig.pha_seq + '","pha_type_doc":"' + conFig.pha_type_doc + '"'
-                + ',"pha_sub_software":"' + controller_text + '","pha_status":"' + pha_status + '"}',
+                + ',"pha_sub_software":"' + controller_text + '","pha_status":"' + pha_status + '","user_name":"' + user_name + '"}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
             headers: {
                 'Authorization': $scope.token 
