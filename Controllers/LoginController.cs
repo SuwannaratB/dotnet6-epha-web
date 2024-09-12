@@ -120,6 +120,7 @@ public class LoginController : Controller
 
         try
         {
+            ViewData["service_api_url"] = service_api_url;
             ViewBag.endpoint = service_api_url;
             ViewBag.apiLog = apiLog;
             //LoginFromBodyModel LoginFromBodyModels = null;
