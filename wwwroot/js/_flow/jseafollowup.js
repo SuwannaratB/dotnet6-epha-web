@@ -416,11 +416,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
     }
     function next_page(controller_text, pha_status) {
         controller_text = controller_text.toLowerCase();
+        var user_name = $scope.user_name;
 
         $.ajax({
             url: controller_text + "/next_page",
             data: '{"pha_seq":"' + conFig.pha_seq + '","pha_type_doc":"' + conFig.pha_type_doc + '"'
-                + ',"pha_sub_software":"' + controller_text + '","pha_status":"' + pha_status + '"}',
+                + ',"pha_sub_software":"' + controller_text + '","pha_status":"' + pha_status + '","user_name":"' + user_name +'"}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
             headers: {
                 'Authorization': $scope.token 
@@ -492,11 +493,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
     }
 
     $scope.confirmFollowBackSearch = function () {
-
         var controller_text = $scope.data_header[0].pha_sub_software;
+        var user_name = $scope.user_name;
+
         $.ajax({
             url: controller_text + "/follow_back_search",
-            data: '{"pha_seq":"","pha_type_doc":"search","pha_sub_software":"' + controller_text + '","pha_status":""}',
+            data: '{"pha_seq":"","pha_type_doc":"search","pha_sub_software":"' + controller_text + '","pha_status":""' +'","user_name":"' + user_name + '"}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
             headers: {
                 'Authorization': $scope.token 
@@ -535,11 +537,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         conFig.pha_seq = null;
         conFig.pha_type_doc = 'create';
         var pha_status = '11'; 
+        var user_name = $scope.user_name;
 
         $.ajax({
             url: controller_text + "/next_page",
             data: '{"pha_seq":"' + conFig.pha_seq + '","pha_type_doc":"' + conFig.pha_type_doc + '"'
-                + ',"pha_sub_software":"' + controller_text + '","pha_status":"' + pha_status + '"}',
+                + ',"pha_sub_software":"' + controller_text + '","pha_status":"' + pha_status + '","user_name":"' + user_name + '"}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
             headers: {
                 'Authorization': $scope.token 

@@ -1329,6 +1329,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             },
             success: function (data) {
                 var arr = data;
+                var user_name = $scope.user_name;
                 console.log("arr,arr");
 
                 //after save set to true and false 
@@ -1356,7 +1357,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                         $.ajax({
                             url: controller_text + "/set_session_doc",
-                            data: '{"controller_action_befor":"' + controller_action_befor + '","pha_seq":"' + pha_seq + '"'
+                            data: '{"controller_action_befor":"' + controller_action_befor + '","pha_seq":"' + pha_seq + '","user_name":"' + user_name +'"'
                                 + ',"pha_no":"' + pha_no + '","pha_status":"' + pha_status + '","pha_type_doc":"' + pha_type_doc + '"}',
                             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
                             headers: {
@@ -1415,7 +1416,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                         $.ajax({
                             url: controller_text + "/set_session_doc",
-                            data: '{"controller_action_befor":"' + controller_action_befor + '","pha_seq":"' + pha_seq + '"'
+                            data: '{"controller_action_befor":"' + controller_action_befor + '","pha_seq":"' + pha_seq + '","user_name":"' + user_name + '"'
                                 + ',"pha_no":"' + pha_no + '","pha_status":"' + pha_status + '","pha_type_doc":"' + pha_type_doc + '"}',
                             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
                             headers: {
@@ -5551,12 +5552,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         var page_start_second = _item.page_start_second;
         var page_end_first = _item.page_end_first;
         var page_end_second = _item.page_end_second;
+        var user_name = $scope.user_name;
 
         $.ajax({
             url: url_ws + "Flow/copy_pdf_file",
             data: '{"sub_software":"whatif","file_name":"' + file_name + '","file_path":"' + file_path + '"'
                 + ',"page_start_first":"' + page_start_first + '","page_start_second":"' + page_start_second + '"'
-                + ',"page_end_first":"' + page_end_first + '","page_end_second":"' + page_end_second + '"'
+                + ',"page_end_first":"' + page_end_first + '","page_end_second":"' + page_end_second + '","user_name":"' + user_name +'"'
                 + '}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
             headers: {
@@ -5610,12 +5612,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             var page = conFig.controller_action_befor();
             var controller_text = "hazop";
+            var user_name = $scope.user_name;
             //conFig.pha_seq = null;
             conFig.pha_type_doc = pha_type_doc;
 
             $.ajax({
                 url: controller_text + "/next_page",
-                data: '{"controller_action_befor":"' + page + '","pha_type_doc":"' + pha_type_doc + '"}',
+                data: '{"controller_action_befor":"' + page + '","pha_type_doc":"' + pha_type_doc + '","user_name":"' + user_name +'"}',
                 type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
                 headers: {
                     'Authorization': $scope.token 
@@ -7300,9 +7303,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
 
     function getEmployees( indicator, callback){
+        var user_name = $scope.user_name;
+        
         $.ajax({
             url: url_ws + "Flow/employees_search",
-            data: '{"user_indicator":"' + indicator + '"'
+            data: '{"user_indicator":"' + indicator + '","user_name":"' + user_name +'"'
                 + ',"max_rows":"50"'
                 + '}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",

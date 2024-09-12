@@ -288,13 +288,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
         //controller_text = controller_text.toLowerCase();
         var pha_seq = $scope.pha_seq;
         var pha_type_doc = $scope.pha_type_doc;
-
+        var user_name = $scope.user_name;
 
         $.ajax({
             url: "home/next_page",
             data: '{"pha_seq":"' + pha_seq + '","pha_type_doc":"' + pha_type_doc + '"'
                 + ',"pha_sub_software":"' + sub_software + '","pha_status":"' + pha_status + '"'
-                + ',"responder_user_name":"' + responder_user_name + '"'
+                + ',"responder_user_name":"' + responder_user_name + '","user_name":"' + user_name + '"'
                 + ',"controller_action_befor":"home/hometasks"'
                 + '}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",

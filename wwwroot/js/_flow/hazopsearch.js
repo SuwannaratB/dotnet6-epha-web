@@ -454,11 +454,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
     }
     function next_page(controller_text, pha_status, editPage) {
         controller_text = controller_text.toLowerCase();
+        var user_name = $scope.user_name;
 
         $.ajax({
             url: controller_text + "/next_page",
             data: '{"pha_seq":"' + conFig.pha_seq + '","pha_seq":"' + conFig.pha_seq + '","pha_type_doc":"' + conFig.pha_type_doc + '"'
-                + ',"pha_sub_software":"' + controller_text + '","pha_status":"' + pha_status + '"}',
+                + ',"pha_sub_software":"' + controller_text + '","pha_status":"' + pha_status + '","user_name":"' + user_name + '"}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
             headers: {
                 'Authorization': $scope.token 
@@ -535,7 +536,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
     };
     $scope.confirmExport = function (_item, data_type) {
 
-        var user_name = ($scope.user_name + '');
+        var user_name = $scope.user_name;
         var seq = _item.seq;
         var sub_software = _item.pha_sub_software;
 

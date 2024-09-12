@@ -89,11 +89,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, conFig) {
         var controller_action_befor = 'Home/Portal'; 
         var controller_text = "home";
         var pha_type_doc = 'create'; 
-        var pha_sub_software = page.toUpperCase();  
+        var pha_sub_software = page.toUpperCase(); 
+        var user_name = $scope.user_name; 
 
         $.ajax({
             url: controller_text + "/next_page",
-            data: '{"controller_action_befor":"' + controller_action_befor + '","pha_type_doc":"' + pha_type_doc + '","pha_sub_software":"' + pha_sub_software + '"}',
+            data: '{"controller_action_befor":"' + controller_action_befor + '","user_name":"' + user_name + '","pha_type_doc":"' + pha_type_doc + '","pha_sub_software":"' + pha_sub_software + '"}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
             beforeSend: function () {
                 //$("#divLoading").show();
