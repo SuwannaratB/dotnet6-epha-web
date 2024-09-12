@@ -1969,8 +1969,7 @@
                     </div>
                     <!-- RAM end-->
                     <!-- What's Worksheet -->
-                    <div class="tab-pane fade" ng-class="{'show active': action_part == 5 || tabs[4].isActive}"
-                         id="tab-worksheet" role="tabpanel" aria-labelledby="worksheet-tab">
+                    <div class="tab-pane fade" id="tab-worksheet" role="tabpanel" aria-labelledby="worksheet-tab">
 
                         <div style="background-color: #ffffff;"
                              ng-if=" ( data_header[0].pha_status == 11 && tab_worksheet_active==true) || (data_header[0].pha_status >  11) ||
@@ -2995,8 +2994,7 @@
 
                     <!-- What's Worksheet -->
                     <!-- manage recment -->
-                    <div class="tab-pane fade" ng-class="{'show active': action_part == 6 || tabs[5].isActive}"
-                         id="tab-manage" role="tabpanel" aria-labelledby="manage-tab">
+                    <div class="tab-pane fade" id="tab-manage" role="tabpanel" aria-labelledby="manage-tab">
 
                         <div class=" border-bottom border-200 my-0" id="NodeTable">
                             <div class="table-responsive scrollbar">
@@ -3264,8 +3262,7 @@
                     </div>
                     <!-- manage recment -->
                     <!-- ta2 approver -->
-                    <div class="tab-pane fade"  ng-class="{'show active': action_part == 7 || tabs[6].isActive}"
-                         id="tab-approver" role="tabpanel" aria-labelledby="approver-tab">
+                    <div class="tab-pane fade"id="tab-approver" role="tabpanel" aria-labelledby="approver-tab">
 
                         <div class="m-3 row  gx-0 align-items-center">
 
@@ -3553,9 +3550,8 @@
                     </div>
                     <!-- ta2 approver -->
 
-                    <!-- report start-->
-                    <div class="tab-pane fade"  ng-class="{'show active': action_part == 8}"
-                         id="tab-report" role="tabpanel" aria-labelledby="report-tab" ng-if="export_type==true">
+                    <!-- report start ng-if="export_type==true"-->
+                    <div class="tab-pane fade"  id="tab-report" role="tabpanel" aria-labelledby="report-tab" >
 
                         <div class="m-3 row  gx-0 align-items-center">
                             <div class="bg-white position-relative top-1">

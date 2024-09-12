@@ -1,4 +1,4 @@
-﻿@{
+@{
     ViewData["Title"] = "HAZOP Sub-Sofware";
 
     Layout = "~/Views/Shared/_LayoutWeb.cshtml";
@@ -3415,8 +3415,7 @@
                     </div>
                     <!-- manage recment -->
                     <!-- ta2 approver -->
-                    <div class="tab-pane fade"
-                         id="tab-approver" role="tabpanel" aria-labelledby="approver-tab">
+                    <div class="tab-pane fade" id="tab-approver" role="tabpanel" aria-labelledby="approver-tab">
                          <!---ng-class="{'show active': action_part == 7 || tabs[6].isActive}"---->
 
                         <div class="m-3 row  gx-0 align-items-center">
@@ -3666,24 +3665,20 @@
 
                     </div>
                     <!-- ta2 approver -->
-                    <!-- report start-->
-                    <div class="tab-pane fade"
-                        ng-class="{'show active': action_part == 8 || tabs[7].isActive}"
-                         id="tab-report" role="tabpanel" aria-labelledby="report-tab" ng-if="export_type==true">
 
-                        <div class="m-3 row  gx-0 align-items-center">
+                    <!-- report  ng-if="export_type==true"-->
+                    <div class="tab-pane fade" id="tab-report" role="tabpanel" aria-labelledby="report-tab" >
+                        <div class="m-3 row gx-0 align-items-center">
                             <div class="bg-white position-relative top-1">
                                 <div class="table-responsive scrollbar-overlay mx-n1 px-1">
                                     <table class="table table-sm fs--1 mb-0">
-                                        <thead class=" text-uppercase">
+                                        <thead class="text-uppercase">
                                             <tr>
                                                 <th class="white-space-nowrap fs--1 align-middle ps-0" style="width:5%;"></th>
-                                                <th class=" align-middle pe-5" scope="col" data-sort="email" style="width:70%">
-                                                    Report
-                                                </th>
+                                                <th class="align-middle pe-5" scope="col" data-sort="email" style="width:70%">Report</th>
                                             </tr>
                                         </thead>
-                                        <tbody class=" list text-uppercase" id="customers-table-body">
+                                        <tbody class="list text-uppercase" id="customers-table-body">
                                             <tr class="hover-actions-trigger btn-reveal-trigger position-static">
                                                 <td class="fs--1 align-middle ps-0 py-3">
                                                     <div class="cursor-pointer">
@@ -3692,9 +3687,7 @@
                                                         <span class="fa-solid far fa-file-word text-secondary p-2 d-none" ng-click="confirmExport('hazop_report','none-word')"></span>
                                                     </div>
                                                 </td>
-                                                <td class="email align-middle white-space-nowrap text-1000 pe-5">
-                                                    FULL HAZOP REPORT
-                                                </td>
+                                                <td class="email align-middle white-space-nowrap text-1000 pe-5">FULL HAZOP REPORT</td>
                                             </tr>
                                             <tr class="hover-actions-trigger btn-reveal-trigger position-static">
                                                 <td class="fs--1 align-middle ps-0 py-3">
@@ -3704,10 +3697,7 @@
                                                         <span class="fa-solid far fa-file-word text-secondary p-2 d-none" ng-click="confirmExport('hazop_worksheet','word')"></span>
                                                     </div>
                                                 </td>
-                                                <td class="email align-middle white-space-nowrap text-1000 pe-5">
-                                                    HAZOP WORKSHEET &
-                                                    RECOMMENDATION RESPONSE SHEET
-                                                </td>
+                                                <td class="email align-middle white-space-nowrap text-1000 pe-5">HAZOP WORKSHEET & RECOMMENDATION RESPONSE SHEET</td>
                                             </tr>
                                             <tr class="hover-actions-trigger btn-reveal-trigger position-static">
                                                 <td class="fs--1 align-middle ps-0 py-3">
@@ -3717,27 +3707,20 @@
                                                         <span class="fa-solid far fa-file-word text-secondary p-2 d-none" ng-click="confirmExport('hazop_recommendation','word')"></span>
                                                     </div>
                                                 </td>
-                                                <td class="email align-middle white-space-nowrap text-1000 pe-5">
-                                                    HAZOP RECOMMENDATION
-                                                    RESPONSE SHEET & RECCOMENDATION STATUS TRACKING TABLE
-                                                </td>
+                                                <td class="email align-middle white-space-nowrap text-1000 pe-5">HAZOP RECOMMENDATION RESPONSE SHEET & RECOMMENDATION STATUS TRACKING TABLE</td>
                                             </tr>
                                             <tr class="hover-actions-trigger btn-reveal-trigger position-static">
                                                 <td class="fs--1 align-middle ps-0 py-3">
-
                                                     <div class="cursor-pointer">
                                                         <span class="fa-solid far fa-file-excel text-success p-2" ng-click="confirmExport('hazop_ram','excel')"></span>
                                                         <span class="fa-solid far fa-file-pdf text-danger p-2" ng-click="confirmExport('hazop_ram','pdf')"></span>
                                                         <span class="fa-solid far fa-file-word text-secondary p-2 d-none" ng-click="confirmExport('hazop_ram','word')"></span>
                                                     </div>
                                                 </td>
-                                                <td class="email align-middle white-space-nowrap text-1000 pe-5">
-                                                    Risk Assessment Matrix (RAM)
-                                                </td>
+                                                <td class="email align-middle white-space-nowrap text-1000 pe-5">Risk Assessment Matrix (RAM)</td>
                                             </tr>
                                             <tr class="hover-actions-trigger btn-reveal-trigger position-static">
                                                 <td class="fs--1 align-middle ps-0 py-3">
-
                                                     <div class="cursor-pointer">
                                                         <span class="fa-solid far fa-file-excel text-success p-2" ng-click="confirmExport('hazop_guidewords','excel')"></span>
                                                         <span class="fa-solid far fa-file-pdf text-danger p-2" ng-click="confirmExport('hazop_guidewords','pdf')"></span>
@@ -3746,26 +3729,19 @@
                                                 </td>
                                                 <td class="email align-middle white-space-nowrap text-1000 pe-5">HAZOP Guide Words</td>
                                             </tr>
-
                                         </tbody>
                                     </table>
                                 </div>
-
                             </div>
-
-                            <div class="bg-white position-relative top-1 d-none" ng-repeat="item_doc in exportfile "
-                                 ng-if="(item_doc.DownloadPath !='' || item_doc.DownloadPath != null)">
-                                <h5 class="modal-title" id="modalExportFileLabel">Download File</h5>
-                                <a href="{{item_doc.DownloadPath}}" id="exportfile" name="exportfile" target="_blank">
-                                    {{item_doc.DownloadPath}}-{{item_doc.Name}}
-                                </a>
-                            </div>
-
-
                         </div>
 
+                        <div class="bg-white position-relative top-1 d-none" ng-repeat="item_doc in exportfile" ng-if="(item_doc.DownloadPath != '' || item_doc.DownloadPath != null)">
+                            <h5 class="modal-title" id="modalExportFileLabel">Download File</h5>
+                            <a href="{{item_doc.DownloadPath}}" id="exportfile" name="exportfile" target="_blank">{{item_doc.DownloadPath}}-{{item_doc.Name}}</a>
+                        </div>
                     </div>
-                    <!-- report end-->
+                    <!-- report end -->
+
 
                 </div>
 
@@ -5493,7 +5469,7 @@
 
                 </div>
                 <div class="modal-body">
-                    <p>Are you sure you want to invite <span class="fw-bold">{{selected_TA3.employee_displayname}}</span> to join and assist with tasks? Please confirm.</p>
+                      <p>Are you sure you want to invite <span class="fw-bold">{{selected_TA3.employee_displayname}}</span> to join and assist with tasks? Please confirm.</p>
                     <div class="col-auto" style="float:right">
                         <button style="width:100px;" class="btn btn-primary me-1 mb-1" type="button" ng-click="confirm()">Yes</button>
                         <button style="width:100px;" class="btn btn-outline-secondary me-1 mb-1" type="button" data-bs-dismiss="modal" aria-label="Close">

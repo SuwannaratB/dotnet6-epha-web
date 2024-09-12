@@ -117,7 +117,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 });
 
 
-window.onerror = function(message, source, lineno, colno, error) {
+/*window.onerror = function(message, source, lineno, colno, error) {
     console.error('Global JavaScript error:', { message, source, lineno, colno, error });
     
     // Call set_alert function to notify the user
@@ -129,11 +129,11 @@ window.onerror = function(message, source, lineno, colno, error) {
     } else {
         alert('An unexpected error occurred. Please contact support.');  
         // Redirect to home/portal after alert is dismissed
-        window.open("home/portal", "_top");
+        //window.open("home/portal", "_top");
     }
 
     return true; 
-};
+};*/
 
 
 AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, $document, $interval, $rootScope, $window,$q,$timeout) {
@@ -695,9 +695,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 const request = new XMLHttpRequest();
                 request.open("POST", url_ws + 'Flow/uploadfile_data');
 
-                // Set the Authorization header with the token
                 request.setRequestHeader('Authorization', $scope.token);
-                        
+                request.setRequestHeader('Content-Type', 'application/json');
+                
+                const requestBody = JSON.stringify({ user_name: $scope.user_name });
+                
+                request.send(requestBody);
+
                 request.onreadystatechange = function () {
                     if (request.readyState === XMLHttpRequest.DONE) {
                         $("#divLoading").hide();
@@ -779,6 +783,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 const request = new XMLHttpRequest();
                 request.open("POST", url_ws + 'Flow/uploadfile_data');
                 request.send(fd);
+
+                request.setRequestHeader('Authorization', $scope.token);
+                request.setRequestHeader('Content-Type', 'application/json');
+                
+                const requestBody = JSON.stringify({ user_name: $scope.user_name });
+                
+                request.send(requestBody);
     
                 var arr = $filter('filter')($scope.master_ram, function (item) { return (item.seq == seq); });
                 if (arr.length > 0) {
@@ -2146,7 +2157,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                     if ($scope.selectedItemListView == 0) {
                         if ($scope.data_node.length > 0) {
-                            $scope.selectedItemListView = $scope.data_node[0].seq;
+                            $scope.selectedItemListView = $scope.data_tasklist[0].seq;
                         }
                     }
                 } else {
@@ -2179,13 +2190,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 showTabs(set_tabs);
                 setTabsActive(['worksheet', 'managerecom']);
 
-                if ($scope.data_nodeworksheet.length == 0) {
+                if ($scope.data_listworksheet.length == 0) {
                     $scope.tab_managerecom_show = false;
                     $scope.tab_approver_show = false;
                 }
 
     
-                $scope.selectedItemListView = $scope.data_node[0].seq;
+                $scope.selectedItemListView = $scope.data_tasklist[0].seq;
     
                 $scope.submit_type = true;
     
@@ -2198,7 +2209,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 showTabs(set_tabs);
                 setAllTabsInctive();
 
-                $scope.selectedItemListView = $scope.data_node[0].seq;
+                $scope.selectedItemListView = $scope.data_tasklist[0].seq;
 
                 //button
                 $scope.save_type = false;
@@ -2211,7 +2222,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 showTabs(set_tabs);
                 setAllTabsInctive();
     
-                $scope.selectedItemListView = $scope.data_node[0].seq;
+                $scope.selectedItemListView = $scope.data_tasklist[0].seq;
     
                 if ($scope.flow_role_type == "admin") {
                     $scope.save_type = true;
@@ -2226,7 +2237,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 showTabs(set_tabs);
                 setTabsActive(['approver']);
     
-                $scope.selectedItemListView = $scope.data_node[0].seq;
+                $scope.selectedItemListView = $scope.data_tasklist[0].seq;
     
                 $scope.save_type = true;
                 $scope.submit_type = true;
@@ -2246,7 +2257,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                 check_case_member_review();
     
-                $scope.selectedItemListView = $scope.data_node[0].seq;
+                $scope.selectedItemListView = $scope.data_tasklist[0].seq;
     
                 $scope.submit_type = true;
 
@@ -2277,7 +2288,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 $scope.submit_type = false;
                 $scope.export_type = true;
     
-                $scope.selectedItemListView = $scope.data_node[0].seq;
+                $scope.selectedItemListView = $scope.data_tasklist[0].seq;
     
     
             }
