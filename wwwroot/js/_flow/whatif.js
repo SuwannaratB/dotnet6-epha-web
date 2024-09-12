@@ -4396,6 +4396,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
 
     $scope.adddata_listworksheet = function (row_type, item, index){
+
+        console.log("adddddddddddddddddddddddddddd")
         if (true) {
 
             if (item.seq_list_system == null) {
@@ -4668,7 +4670,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     }
 
-    function ensureUnique(dataList,type) {
+    function ensureUnique(dataList,targetIdList,type) {
     
         if(type === 'recom'){
             let count = 1;
@@ -4681,40 +4683,60 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 }
             });
         }else{
+            console.log("============================================================",dataList)
+            console.log("============================================================",targetIdList)
             let previous = {};
             dataList.forEach((item, index) => {
-    
-                if (previous.list_system_no === item.list_system_no && type !== 'recom') {
-                    if (previous.list_system_no >= item.list_system_no && item.row_type === 'list_system'){
-                        item.list_system_no = previous.list_system_no + 1;
-                    }
-    
-                    if (previous.list_sub_system_no >= item.list_sub_system_no && item.row_type === 'list_sub_system') {
-                        item.list_sub_system_no = previous.list_sub_system_no + 1;
-                    }
-                    if (previous.list_sub_system_no === item.list_sub_system_no && previous.causes_no >= item.causes_no && (item.row_type === 'causes'||item.row_type === 'list_sub_system')) {
-                        if(previous.seq_causes === item.seq_causes){
-                            item.causes_no = previous.causes_no
-                        }else{
-                            item.causes_no = previous.causes_no + 1;
+                
+                if(item.id_list === targetIdList) {
+            
+                    if (previous.list_system_no === item.list_system_no && type !== 'recom') {
+            
+                        if (previous.list_system_no >= item.list_system_no && item.row_type === 'list_system') {
+                            item.list_system_no = previous.list_system_no + 1;
                         }
-                        
+            
+                        if (previous.list_sub_system_no >= item.list_sub_system_no && item.row_type === 'list_sub_system') {
+                            item.list_sub_system_no = previous.list_sub_system_no + 1;
+                        }
+            
+                        if (previous.list_sub_system_no === item.list_sub_system_no && previous.causes_no >= item.causes_no && 
+                            (item.row_type === 'causes' || item.row_type === 'list_sub_system')) {
+            
+                            if (previous.seq_causes === item.seq_causes) {
+                                item.causes_no = previous.causes_no;
+                            } else {
+                                item.causes_no = previous.causes_no + 1;
+                            }
+                        }
+            
+                        if (previous.list_sub_system_no === item.list_sub_system_no && previous.causes_no === item.causes_no && 
+                            previous.consequences_no >= item.consequences_no && 
+                            (item.row_type === 'causes' || item.row_type === 'list_sub_system' || item.row_type === 'consequences')) {
+                            item.consequences_no = previous.consequences_no + 1;
+                        }
+            
+                        if (previous.list_sub_system_no === item.list_sub_system_no && previous.causes_no === item.causes_no && 
+                            previous.consequences_no === item.consequences_no && previous.category_no >= item.category_no && 
+                            (item.row_type === 'causes' || item.row_type === 'list_sub_system' || item.row_type === 'consequences' || item.row_type === 'category')) {
+                            item.category_no = previous.category_no + 1;
+                        }
+            
+                        if (previous.list_sub_system_no === item.list_sub_system_no && previous.causes_no === item.causes_no && 
+                            previous.consequences_no >= item.consequences_no && previous.category_no === item.category_no && 
+                            previous.recommendations_no >= item.recommendations_no && 
+                            (item.row_type === 'causes' || item.row_type === 'list_sub_system' || item.row_type === 'consequences' || item.row_type === 'category' || item.row_type === 'recommendations')) {
+                            item.recommendations_no = '';
+                        }
                     }
-                    if (previous.list_sub_system_no === item.list_sub_system_no && previous.causes_no === item.causes_no && previous.consequences_no >= item.consequences_no 
-                        && (item.row_type === 'causes'||item.row_type === 'list_sub_system' || item.row_type === 'consequences')) {
-                        item.consequences_no = previous.consequences_no + 1;
-                    }
-                    if (previous.list_sub_system_no === item.list_sub_system_no && previous.causes_no === item.causes_no && previous.consequences_no === item.consequences_no && previous.category_no >= item.category_no 
-                        && (item.row_type === 'causes'||item.row_type === 'list_sub_system' || item.row_type === 'consequences' || item.row_type === 'category')) {
-                        item.category_no = previous.category_no + 1;
-                    }
-                    if (previous.list_sub_system_no === item.list_sub_system_no && previous.causes_no === item.causes_no && previous.consequences_no >= item.consequences_no && previous.category_no === item.category_no && previous.recommendations_no >= item.recommendations_no 
-                        && (item.row_type === 'causes'||item.row_type === 'list_sub_system' || item.row_type === 'consequences' || item.row_type === 'category' || item.row_type === 'recommendations')) {
-                        item.recommendations_no = '';
-                    }
+                    
+                    previous = { ...item };
+            
+                } else {
+                    previous = {};
                 }
-                previous = { ...item };
             });
+            
         }
 
 
@@ -4794,7 +4816,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     data.consequences_no === item.consequences_no
                 );
 
-                console.log("settttttttttttttttttttttttttttttt",set_consequences)
                 for (let j = 0; j < set_consequences.length; j++) {
                     if (set_consequences[j].recommendation_no) {
                         index = i + j + 1;
@@ -4856,7 +4877,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             
         $scope.data_listworksheet.splice(index, 0, newData);
             
-        ensureUnique($scope.data_listworksheet);
+        ensureUnique($scope.data_listworksheet,newData.id_list);
             
     }
     $scope.compareItems = function(a, b) {
@@ -6966,7 +6987,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         if(type_text == 'recom' && (_arr.recommendations !== null || _arr.recommendations !== '')){
             if($scope.data_header[0].pha_status === 12) {
-                ensureUnique($scope.data_listworksheet,type_text);
+                ensureUnique($scope.data_listworksheet,null,type_text);
             }else{
                 /*let maxNo = 0;
 
