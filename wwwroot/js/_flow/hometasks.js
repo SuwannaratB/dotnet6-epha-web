@@ -102,7 +102,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
 
         var user_name = $scope.user_name;
         var token_doc = '';
-        var sub_software = '';
+        var sub_software = 'hazop';
         var type_doc = 'search';
 
         $.ajax({
@@ -215,6 +215,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
         var controller_text = item.pha_type;
 
         $scope.pha_seq = item.id_pha;
+        $scope.pha_no = item.document_number;
         $scope.pha_type_doc = 'review_followup';
 
         next_page(controller_text, '');
@@ -287,12 +288,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
 
         //controller_text = controller_text.toLowerCase();
         var pha_seq = $scope.pha_seq;
+        var pha_no = $scope.pha_no;
         var pha_type_doc = $scope.pha_type_doc;
         var user_name = $scope.user_name;
 
         $.ajax({
             url: "home/next_page",
-            data: '{"pha_seq":"' + pha_seq + '","pha_type_doc":"' + pha_type_doc + '"'
+            data: '{"pha_seq":"' + pha_seq + '","pha_no":"' + pha_no + '","pha_type_doc":"' + pha_type_doc +'"'
                 + ',"pha_sub_software":"' + sub_software + '","pha_status":"' + pha_status + '"'
                 + ',"responder_user_name":"' + responder_user_name + '","user_name":"' + user_name + '"'
                 + ',"controller_action_befor":"home/hometasks"'

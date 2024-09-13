@@ -83,8 +83,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         var user_name = $scope.user_name;
         var token_doc = '';
 
-        var sub_software = 'HAZOP';
-        var type_doc = 'create';
+        var sub_software = 'hazop';
+        var type_doc = 'search';
         try {
             if (page_load == false) {
                 sub_software = $scope.data_conditions[0].pha_sub_software;

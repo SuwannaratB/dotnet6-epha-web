@@ -31,32 +31,28 @@ namespace dotnet6_epha_web.Controllers
 
         public async Task<IActionResult> Index(string keyToken = "")
         {
-            if (_sessionAuthen.role_type == "" || _sessionAuthen.role_type == null)
-            {
-                return RedirectToAction("Index", "Login");
-            }
-
+            // if (_sessionAuthen.role_type == "" || _sessionAuthen.role_type == null)
+            // {
+            //     return RedirectToAction("Index", "Login");
+            // }
             _sessionAuthen.pha_seq = "";
             _sessionAuthen.pha_no = "";
             _sessionAuthen.pha_status = "";
             _sessionAuthen.pha_type_doc = "";
             _sessionAuthen.controller_action_befor = "";
-
-            ViewData["user_display"] = _sessionAuthen.user_display;
-            ViewData["user_name"] = _sessionAuthen.user_name;
-            ViewData["role_type"] = _sessionAuthen.role_type;
-
+            // ViewData["user_display"] = _sessionAuthen.user_display;
+            // ViewData["user_name"] = _sessionAuthen.user_name;
+            // ViewData["role_type"] = _sessionAuthen.role_type;
             return View();
         }
 
         public async Task<IActionResult> Portal()
         {
-            // _sessionAuthen.pha_seq = "";
-            // _sessionAuthen.pha_no = "";
-            // _sessionAuthen.pha_status = "";
-            // _sessionAuthen.pha_type_doc = "";
-            // _sessionAuthen.controller_action_befor = "";
-
+            _sessionAuthen.pha_seq = "";
+            _sessionAuthen.pha_no = "";
+            _sessionAuthen.pha_status = "";
+            _sessionAuthen.pha_type_doc = "";
+            _sessionAuthen.controller_action_befor = "";
 
             // if (_sessionAuthen.role_type == "" || _sessionAuthen.role_type == null)
             // {
@@ -66,10 +62,10 @@ namespace dotnet6_epha_web.Controllers
             // ViewData["user_display"] = _sessionAuthen.user_display;
             // ViewData["user_name"] = _sessionAuthen.user_name;
             // ViewData["role_type"] = _sessionAuthen.role_type;
-            // ViewData["pha_no"] = _sessionAuthen.pha_no;
-            // ViewData["pha_status"] = _sessionAuthen.pha_status;
-            // ViewData["controller_action_befor"] = "home/portal";
-            // ViewData["service_api_url"] = _sessionAuthen.service_api_url;
+            ViewData["pha_no"] = _sessionAuthen.pha_no;
+            ViewData["pha_status"] = _sessionAuthen.pha_status;
+            ViewData["controller_action_befor"] = "home/portal";
+            ViewData["service_api_url"] = _sessionAuthen.service_api_url;
 
             return View();
         }
@@ -80,10 +76,9 @@ namespace dotnet6_epha_web.Controllers
             // {
             //     return RedirectToAction("Index", "Login");
             // }
-            ViewData["user_display"] = _sessionAuthen.user_display;
-            ViewData["user_name"] = _sessionAuthen.user_name;
-            ViewData["role_type"] = _sessionAuthen.role_type;
-
+            // ViewData["user_display"] = _sessionAuthen.user_display;
+            // ViewData["user_name"] = _sessionAuthen.user_name;
+            // ViewData["role_type"] = _sessionAuthen.role_type;
             ViewData["pha_seq"] = null;
             ViewData["pha_no"] = null;
             ViewData["pha_status"] = null;
@@ -103,7 +98,7 @@ namespace dotnet6_epha_web.Controllers
             }
 
             _sessionAuthen.pha_type_doc = (model.pha_type_doc + "");
-            _sessionAuthen.role_type = _sessionAuthen.role_type;
+            // _sessionAuthen.role_type = _sessionAuthen.role_type;
 
             LoginViewModel res_page = new LoginViewModel();
             if (_sessionAuthen.pha_type_doc == "back")
@@ -116,6 +111,7 @@ namespace dotnet6_epha_web.Controllers
                 _sessionAuthen.controller_action_befor = (model.pha_sub_software + "");
                 _sessionAuthen.controller_action_befor = (model.controller_action_befor + "");
                 _sessionAuthen.pha_seq = (model.pha_seq + "");
+                _sessionAuthen.pha_no = model.pha_no;
 
                 _sessionAuthen.responder_user_name = (model.responder_user_name + "");
 
