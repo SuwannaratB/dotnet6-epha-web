@@ -689,7 +689,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             fd.append("file_name", fileName);
             fd.append("file_doc", fileDoc);
             fd.append("file_part", filePart); // drawing, responder, approver
-            fd.append("sub_software", 'hra');
+            fd.append("sub_software", 'whatif');
             fd.append("user_name", $scope.user_name);
         
             return new Promise((resolve, reject) => {
@@ -734,7 +734,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         // File select for general
         $scope.fileSelect = function (input, file_part) {
-            handleFileSelection(input, file_part, ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'jpg', 'png', 'gif'], 'general', $scope.data_drawing, 'hra');
+            handleFileSelection(input, file_part, ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'jpg', 'png', 'gif'], 'general', $scope.data_drawing, 'whatif');
         };
 
         $scope.fileSelectRAM = function (input) {
@@ -2711,8 +2711,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     // <==== set ====>    
     function validBeforRegister() {
         if (validGeneral() &&
-            validSessions() &&
-            validDrawing() /*&&
+            validSessions() /*&&
+            validDrawing() &&
             validNode()*/
         ) {
             return true
@@ -5599,20 +5599,24 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             success: function (data) {
                 var arr = data;
                 //console.log(arr);
-                if (arr.length > 0) {
-                    if (arr[0].ATTACHED_FILE_NAME != '') {
-                        var path = (url_ws).replace('/api/', '') + arr[0].ATTACHED_FILE_PATH;
-                        var name = arr[0].ATTACHED_FILE_NAME;
-                        $scope.exportfile[0].DownloadPath = path;
-                        $scope.exportfile[0].Name = name;
-
-                        $('#modalExportFile').modal('show');
-                        //$('#modalLoadding').modal('hide'); 
-                        $('#divLoading').hide();
-                        apply();
+                if(arr && arr[0].status == 'true'){
+                    if (arr.length > 0) {
+                        if (arr[0].ATTACHED_FILE_NAME != '') {
+                            var path = (url_ws).replace('/api/', '') + arr[0].ATTACHED_FILE_PATH;
+                            var name = arr[0].ATTACHED_FILE_NAME;
+                            $scope.exportfile[0].DownloadPath = path;
+                            $scope.exportfile[0].Name = name;
+    
+                            $('#modalExportFile').modal('show');
+                            //$('#modalLoadding').modal('hide'); 
+                            $('#divLoading').hide();
+                            apply();
+                        }
+                    } else {
+                        set_alert('Error', arr[0].IMPORT_DATA_MSG);
                     }
-                } else {
-                    set_alert('Error', arr[0].IMPORT_DATA_MSG);
+                }else{
+                    set_alert('Warning', 'Unexpected issue occurred while processing your request. Please try again later.','node');
                 }
             },
             error: function (jqXHR, textStatus, errorThrown) {
@@ -8234,11 +8238,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         return accessInfo;
     };
     
-
+//validDrawing() &&
     function validBeforRegister() {
         if (validGeneral() &&
             validSessions() &&
-            validDrawing() &&
             validTasks()
         ) {
             return true

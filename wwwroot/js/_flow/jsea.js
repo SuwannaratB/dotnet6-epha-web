@@ -911,7 +911,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             fd.append("file_name", fileName);
             fd.append("file_doc", fileDoc);
             fd.append("file_part", filePart); // drawing, responder, approver
-            fd.append("sub_software", 'hra');
+            fd.append("sub_software", 'jsea');
             fd.append("user_name", $scope.user_name);
         
             return new Promise((resolve, reject) => {
@@ -958,7 +958,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         // File select for general
         $scope.fileSelect = function (input, file_part) {
-            handleFileSelection(input, file_part, ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'jpg', 'png', 'gif'], 'general', $scope.data_drawing, 'hra');
+            handleFileSelection(input, file_part, ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'jpg', 'png', 'gif'], 'general', $scope.data_drawing, 'jsea');
         };
 
 
@@ -4955,21 +4955,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         var page_end_first = _item.page_end_first;
         var page_end_second = _item.page_end_second;
         var user_name = $scope.user_name;
-<<<<<<< HEAD
-=======
-
->>>>>>> Fern
 
         $.ajax({
             url: url_ws + "Flow/copy_pdf_file",
             data: '{"file_name":"' + file_name + '","file_path":"' + file_path + '"'
                 + ',"page_start_first":"' + page_start_first + '","page_start_second":"' + page_start_second + '"'
-<<<<<<< HEAD
                 + ',"page_end_first":"' + page_end_first + '","page_end_second":"' + page_end_second + '","user_name":"' + user_name +'"'
-=======
-                + ',"page_end_first":"' + page_end_first + '","page_end_second":"' + page_end_second + '"'
-                + ',"user_name":"' + user_name + '"'
->>>>>>> Fern
                 + '}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
             headers: {
@@ -4986,20 +4977,24 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             success: function (data) {
                 var arr = data;
 
-                if (arr.length > 0) {
-                    if (arr[0].ATTACHED_FILE_NAME != '') {
-                        var path = (url_ws).replace('/api/', '') + arr[0].ATTACHED_FILE_PATH;
-                        var name = arr[0].ATTACHED_FILE_NAME;
-                        $scope.exportfile[0].DownloadPath = path;
-                        $scope.exportfile[0].Name = name;
-
-                        $('#modalExportFile').modal('show');
-                        //$('#modalLoadding').modal('hide'); 
-                        $('#divLoading').hide();
-                        apply();
+                if(arr && arr[0].status == 'true'){
+                    if (arr.length > 0) {
+                        if (arr[0].ATTACHED_FILE_NAME != '') {
+                            var path = (url_ws).replace('/api/', '') + arr[0].ATTACHED_FILE_PATH;
+                            var name = arr[0].ATTACHED_FILE_NAME;
+                            $scope.exportfile[0].DownloadPath = path;
+                            $scope.exportfile[0].Name = name;
+    
+                            $('#modalExportFile').modal('show');
+                            //$('#modalLoadding').modal('hide'); 
+                            $('#divLoading').hide();
+                            apply();
+                        }
+                    } else {
+                        set_alert('Error', arr[0].IMPORT_DATA_MSG);
                     }
-                } else {
-                    set_alert('Error', arr[0].IMPORT_DATA_MSG);
+                }else{
+                    set_alert('Warning', 'Unexpected issue occurred while processing your request. Please try again later.','node');
                 }
             },
             error: function (jqXHR, textStatus, errorThrown) {
@@ -5913,13 +5908,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     };
 
     function getEmployees( indicator, callback){
-<<<<<<< HEAD
-        var user_name = $scope.user_name
-        
-=======
         var user_name = $scope.user_name;
-
->>>>>>> Fern
+        
         $.ajax({
             url: url_ws + "Flow/employees_search",
             data: '{"user_indicator":"' + indicator + '","user_name":"' + user_name +'"'

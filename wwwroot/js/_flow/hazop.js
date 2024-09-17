@@ -747,7 +747,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             fd.append("file_name", fileName);
             fd.append("file_doc", fileDoc);
             fd.append("file_part", filePart); // drawing, responder, approver
-            fd.append("sub_software", 'hra');
+            fd.append("sub_software", 'hazop');
 
         
             return new Promise((resolve, reject) => {
@@ -791,7 +791,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         // File select for general
         $scope.fileSelect = function (input, file_part) {
-            handleFileSelection(input, file_part, ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'jpg', 'png', 'gif'], 'general', $scope.data_drawing, 'hra');
+            //handleFileSelection(input, file_part, ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'jpg', 'png', 'gif'], 'general', $scope.data_drawing, 'hazop');
+            handleFileSelection(input, file_part, ['pdf'], 'node', $scope.data_drawing, 'hazop');
         };
 
         $scope.fileSelectRAM = function (input) {
@@ -5334,22 +5335,26 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             },
             success: function (data) {
                 var arr = data;
-                console.log(arr);
-                if (arr.length > 0) {
-                    if (arr[0].ATTACHED_FILE_NAME != '') {
-                        var path = (url_ws).replace('/api/', '') + arr[0].ATTACHED_FILE_PATH;
-                        var name = arr[0].ATTACHED_FILE_NAME;
-                        $scope.exportfile[0].DownloadPath = path;
-                        $scope.exportfile[0].Name = name;
-
-                        $('#modalExportFile').modal('show');
-                        //$('#modalLoadding').modal('hide'); 
-                        $('#divLoading').hide();
-                        apply();
+                if(arr && arr[0].status == 'true'){
+                    if (arr.length > 0) {
+                        if (arr[0].ATTACHED_FILE_NAME != '') {
+                            var path = (url_ws).replace('/api/', '') + arr[0].ATTACHED_FILE_PATH;
+                            var name = arr[0].ATTACHED_FILE_NAME;
+                            $scope.exportfile[0].DownloadPath = path;
+                            $scope.exportfile[0].Name = name;
+    
+                            $('#modalExportFile').modal('show');
+                            //$('#modalLoadding').modal('hide'); 
+                            $('#divLoading').hide();
+                            apply();
+                        }
+                    } else {
+                        set_alert('Error', arr[0].IMPORT_DATA_MSG);
                     }
-                } else {
-                    set_alert('Error', arr[0].IMPORT_DATA_MSG);
+                }else{
+                    set_alert('Warning', 'Unexpected issue occurred while processing your request. Please try again later.','node');
                 }
+
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 if (jqXHR.status == 500) {
@@ -7292,7 +7297,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 //add new employee 
                 var seq = $scope.MaxSeqDataMemberteam;
 
-                var newInput = clone_arr_newrow($scope.data_memberteam_def)[0];
+                var newInput = clone_arr_newrow($scope.data_approver_def)[0];
                 newInput.seq = seq;
                 newInput.id = seq;
                 newInput.no = (0);
@@ -7438,7 +7443,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
 
         if(xformtype == 'member' || xformtype == 'approver' || xformtype == 'specialist'){
-            console.log("now we will call")
             updateDataSessionAccessInfo('session');
         }
 

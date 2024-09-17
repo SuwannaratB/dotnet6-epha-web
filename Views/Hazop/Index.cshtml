@@ -868,7 +868,7 @@
                                                                             data-toggle="tooltip" 
                                                                             data-placement="top" 
                                                                             title="Remove"
-                                                                            ng-disabled="!accessInfoMap[item.id].canRemove"
+                                                                            ng-disabled="!sessionAccessInfoMap[item.id].canRemove"
                                                                             ng-click="triggerRemove(item,item.seq,$index,'session')">
                                                                         <span class="fa-regular fa-trash-can fa-lg"></span>
                                                                     </button>
@@ -877,7 +877,7 @@
                                                                     <button class="btn btn-outline-secondary p-2" 
                                                                             style="color: #2445fc; background-color: #f1f2f4; border-color: #2445fc;"
                                                                             ng-click=copyDataSession(item.seq,$index)
-                                                                            ng-disabled="!accessInfoMap[item.id].canCopy"                                                                             
+                                                                            ng-disabled="!sessionAccessInfoMap[item.id].canCopy"                                                                             
                                                                             data-toggle="tooltip" 
                                                                             data-placement="top" 
                                                                             title="Copy">
@@ -1065,6 +1065,7 @@
                                                                     <button class="btn btn-outline-secondary p-2" 
                                                                         style="color: #ff2828; background-color: #f1f2f4; border-color: #ff2828;"
                                                                         ng-click="triggerRemove(item,item.seq,$index-1,'DrawingDoc')"
+                                                                        ng-disabled="!drawingAccessInfoMap[item.id].canRemove"  
                                                                         data-toggle="tooltip" 
                                                                         data-placement="top" 
                                                                         title="Remove">
@@ -1368,14 +1369,16 @@
                                                                                     style="height: 14px; width: 30px; font-size: 10px; border-color: #f1f2f4;"
                                                                                     placeholder="Start" 
                                                                                     ng-class="{'disabled-link':(!tab_node_active)}"
-                                                                                    ng-model="item2.page_start_first" />
+                                                                                    ng-model="item2.page_start_first" 
+                                                                                    ng-change="actionChangeNodeDrawing(item,item.seq,'')"/>
                                                                         </div>
                                                                         <div class="p-0 m-0 align-top">
                                                                             <input class=" m-0 border" 
                                                                                     style="height: 14px; width: 30px; font-size: 10px; border-color: #f1f2f4;"
                                                                                     placeholder="End" 
                                                                                     ng-class="{'disabled-link':(!tab_node_active)}"
-                                                                                    ng-model="item2.page_end_first" />
+                                                                                    ng-model="item2.page_end_first" 
+                                                                                    ng-change="actionChangeNodeDrawing(item,item.seq,'')"/>
                                                                         </div>
                                                                     </div>
                                                                 </div>
