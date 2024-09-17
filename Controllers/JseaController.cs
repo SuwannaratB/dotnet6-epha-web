@@ -13,35 +13,103 @@ namespace dotnet6_epha_web.Controllers
     public class JseaController : Controller
     {
         #region config
-        private static string DecryptDataWithAes(
-            string cipherText,
-            string keyBase64,
-            string vectorBase64
-        )
+        // private static string DecryptDataWithAes(
+        //     string cipherText,
+        //     string keyBase64,
+        //     string vectorBase64
+        // )
+        // {
+        //     using (Aes aesAlgorithm = Aes.Create())
+        //     {
+        //         aesAlgorithm.Key = Convert.FromBase64String(keyBase64);
+        //         aesAlgorithm.IV = Convert.FromBase64String(vectorBase64);
+
+        //         Console.WriteLine($"Aes Cipher Mode : {aesAlgorithm.Mode}");
+        //         Console.WriteLine($"Aes Padding Mode: {aesAlgorithm.Padding}");
+        //         Console.WriteLine($"Aes Key Size : {aesAlgorithm.KeySize}");
+        //         Console.WriteLine($"Aes Block Size : {aesAlgorithm.BlockSize}");
+
+        //         // Create decryptor object
+        //         ICryptoTransform decryptor = aesAlgorithm.CreateDecryptor();
+
+        //         byte[] cipher = Convert.FromBase64String(cipherText);
+
+        //         //Decryption will be done in a memory stream through a CryptoStream object
+        //         using (MemoryStream ms = new MemoryStream(cipher))
+        //         {
+        //             using (CryptoStream cs = new CryptoStream(ms, decryptor, CryptoStreamMode.Read))
+        //             {
+        //                 using (StreamReader sr = new StreamReader(cs))
+        //                 {
+        //                     return sr.ReadToEnd();
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
+
+        private readonly IConfiguration _configuration;
+        private byte[] GetKey()
         {
+            string keyBase64 = _configuration["AesKey"];
+            if (string.IsNullOrEmpty(keyBase64))
+            {
+                throw new InvalidOperationException("The AES key is missing in the configuration.");
+            }
+            return Convert.FromBase64String(keyBase64);
+        }
+        private byte[] GetIV()
+        {
+            string ivBase64 = _configuration["AesIV"];
+            if (string.IsNullOrEmpty(ivBase64))
+            {
+                throw new InvalidOperationException("The AES IV is missing in the configuration.");
+            }
+            return Convert.FromBase64String(ivBase64);
+        }
+        public string DecryptString(string cipherText)
+        {
+            if (string.IsNullOrEmpty(cipherText))
+            {
+                throw new ArgumentException("cipherText cannot be null or empty", nameof(cipherText));
+            }
+
+            byte[] key = GetKey();
+            byte[] iv = GetIV();
+
+            return DecryptDataWithAes(cipherText, key, iv);
+        }
+
+        private string DecryptDataWithAes(string cipherText, byte[] key, byte[] iv)
+        {
+            if (cipherText == null) throw new ArgumentNullException(nameof(cipherText));
+            if (key == null) throw new ArgumentNullException(nameof(key));
+            if (iv == null) throw new ArgumentNullException(nameof(iv));
+
+            // Convert the encrypted string back to bytes
+            byte[] cipherTextBytes = Convert.FromBase64String(cipherText);
+
             using (Aes aesAlgorithm = Aes.Create())
             {
-                aesAlgorithm.Key = Convert.FromBase64String(keyBase64);
-                aesAlgorithm.IV = Convert.FromBase64String(vectorBase64);
-
-                Console.WriteLine($"Aes Cipher Mode : {aesAlgorithm.Mode}");
-                Console.WriteLine($"Aes Padding Mode: {aesAlgorithm.Padding}");
-                Console.WriteLine($"Aes Key Size : {aesAlgorithm.KeySize}");
-                Console.WriteLine($"Aes Block Size : {aesAlgorithm.BlockSize}");
-
-                // Create decryptor object
-                ICryptoTransform decryptor = aesAlgorithm.CreateDecryptor();
-
-                byte[] cipher = Convert.FromBase64String(cipherText);
-
-                //Decryption will be done in a memory stream through a CryptoStream object
-                using (MemoryStream ms = new MemoryStream(cipher))
+                if (aesAlgorithm == null)
                 {
-                    using (CryptoStream cs = new CryptoStream(ms, decryptor, CryptoStreamMode.Read))
+                    throw new InvalidOperationException("Failed to create AES algorithm instance.");
+                }
+
+                aesAlgorithm.Key = key;
+                aesAlgorithm.IV = iv;
+
+                // Create decryptor
+                ICryptoTransform decryptor = aesAlgorithm.CreateDecryptor(aesAlgorithm.Key, aesAlgorithm.IV);
+
+                using (MemoryStream msDecrypt = new MemoryStream(cipherTextBytes))
+                {
+                    using (CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
                     {
-                        using (StreamReader sr = new StreamReader(cs))
+                        using (StreamReader srDecrypt = new StreamReader(csDecrypt))
                         {
-                            return sr.ReadToEnd();
+                            // Read the decrypted bytes from the decrypting stream and return as string
+                            return srDecrypt.ReadToEnd();
                         }
                     }
                 }
@@ -97,7 +165,8 @@ namespace dotnet6_epha_web.Controllers
                                 vectorBase64 = xSplit[2];
                             }
 
-                            string token = DecryptDataWithAes(cipherText, keyBase64, vectorBase64);
+                            // string token = DecryptDataWithAes(cipherText, keyBase64, vectorBase64);
+                            string token = DecryptString(cipherText);
                             if (token != "")
                             {
                                 try
