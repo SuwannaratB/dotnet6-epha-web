@@ -7105,15 +7105,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             
             $.ajax({
                 url: url_ws + "Flow/employees_search",
-<<<<<<< HEAD
-                data: '{"user_indicator":"' + indicator + '","user_name":"' + user_name + '"'
-                    + ',"max_rows":"50"'
-                    + '}',
-=======
                 data: '{"user_indicator":"' + indicator + '",'
                 + '"user_name":"' + user_name + '",'
                 + '"max_rows":"50"}',           
->>>>>>> Fern
                 type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
                 headers: {
                     'Authorization': $scope.token 

@@ -16,7 +16,7 @@ app.controller("ctrlApp", function ($scope, conFig) {
       $.ajax({
           url: url_ws + "Login/GetAntiForgeryToken",
           data: '{"userId":"' + user_name + '","userPassword":"' + pass_word + '"}',
-          type: "POST",
+          type: "GET",
           contentType: "application/json; charset=utf-8",
           dataType: "json",
           beforeSend: function () {
@@ -26,7 +26,7 @@ app.controller("ctrlApp", function ($scope, conFig) {
               $("#divLoading").hide();
           },
           success: function (data) {
-              const token = data.token
+              const token = data.csrfToken
               if (!token) return console.log('token not found!')
 
               $.ajax({

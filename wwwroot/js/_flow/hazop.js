@@ -1382,6 +1382,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             success: function (data) {
 
                 var arr = data;
+    
                 var user_name = $scope.user_name
                 //after save set to true and false 
                 $scope.data_nodeworksheet = data.data_nodeworksheet;
