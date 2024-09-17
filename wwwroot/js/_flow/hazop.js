@@ -524,33 +524,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                                 // return set_alert('Warning', 'Please select a valid General Information');
                             }
     
-                        // if (!$scope.data_drawing[0].document_no ) {
-                        //     $scope.tab_worksheet_show = true;
-                        //     $scope.tab_managerecom_show = true;
-                        //     $scope.goback_tab = 'node';
-    
-                        //     angular.forEach($scope.tabs, function (tab) {
-                        //         tab.isActive = false;
-                        //     });
-                        //     selectedTab.isActive = true;
-    
-                        //     return set_alert('Warning', 'Please select a valid Drawing');
-                        // }
-    
-                        //     if (!$scope.data_node[0].node ||
-                        //         !$scope.data_nodedrawing[0].id_drawing
-                        //     ) {
-                        //         $scope.tab_worksheet_show = true;
-                        //         $scope.tab_managerecom_show = true;
-                        //         $scope.goback_tab = 'node';
-    
-                        //         angular.forEach($scope.tabs, function (tab) {
-                        //             tab.isActive = false;
-                        //         });
-                        //         selectedTab.isActive = true;
-    
-                        //         return set_alert('Warning', 'Please select a valid Node');
-                        //     }
+
                             if(!validBeforRegister()) 
                                 return set_alert('Warning',$scope.validMessage,$scope.goback_tab)
     
@@ -780,11 +754,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 const request = new XMLHttpRequest();
                 request.open("POST", url_ws + 'Flow/uploadfile_data');
                 request.setRequestHeader('Authorization', $scope.token);
-                request.setRequestHeader('Content-Type', 'application/json');
-                
-                const requestBody = JSON.stringify({ user_name: $scope.user_name });
-                
-                request.send(requestBody);
 
                 request.onreadystatechange = function () {
                     if (request.readyState === XMLHttpRequest.DONE) {
@@ -862,17 +831,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             fd.append("file_seq", seq);
             fd.append("file_name", file_name);
             fd.append("sub_software", sub_software);
+            fd.append("user_name", $scope.user_name);
+            fd.append("user_name", $scope.user_name);
     
             try {
                 const request = new XMLHttpRequest();
                 request.open("POST", url_ws + 'Flow/uploadfile_data');
                 request.send(fd);
                 request.setRequestHeader('Authorization', $scope.token);
-                request.setRequestHeader('Content-Type', 'application/json');
-                
-                const requestBody = JSON.stringify({ user_name: $scope.user_name });
-                
-                request.send(requestBody);
     
                 var arr = $filter('filter')($scope.master_ram, function (item) { return (item.seq == seq); });
                 if (arr.length > 0) {
@@ -7313,6 +7279,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
         else if (xformtype == "approver") {
 
+            var arr_items_all = $filter('filter')($scope.data_approver, function (item) {
+                return (item.id_session == seq_session && item.user_displayname != null);
+            });
+
             var arr_items = $filter('filter')($scope.data_approver, function (item) {
                 return (item.id_session == seq_session && item.user_name == employee_name);
             });
@@ -7335,10 +7305,20 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 newInput.user_img = employee_img;
                 newInput.user_title = employee_position;
 
+                //approver or safety
+                newInput.approver_type = (arr_items_all.length == 0 ? 'approver' : 'safety');
+
+
                 $scope.data_approver.push(newInput);
                 running_no_level1($scope.data_approver, null, null);
 
-                $scope.MaxSeqDataMemberteam = Number($scope.MaxSeqDataMemberteam) + 1
+                $scope.MaxSeqDataMemberteam = Number($scope.MaxSeqDataMemberteam) + 1;
+
+                $scope.data_approver.sort(function(a, b) {
+                    if (a.approver_type === "approver") return -1;
+                    if (b.approver_type === "approver") return 1;
+                    return 0;
+                });
 
             }
 
@@ -7411,7 +7391,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 }
             });
 
-            console.log("$scope.data_approver_ta3",$scope.data_approver_ta3)
             
 
             var arr_data = $filter('filter')($scope.data_approver_ta3, function (item) {

@@ -223,6 +223,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 interval = undefined; 
             }
         };
+
         $scope.compareValues = function(newValues, oldValues, data) {
             if (Array.isArray(newValues) && Array.isArray(oldValues)) {
                  if (!isEqual(newValues, oldValues, data)) {
@@ -465,7 +466,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     
                             apply();
                             $('#modalPleaseRegister').modal('show');
-                            return;
                         } else {
     
                             $scope.tab_worksheet_active = true;
@@ -690,17 +690,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             fd.append("file_doc", fileDoc);
             fd.append("file_part", filePart); // drawing, responder, approver
             fd.append("sub_software", 'hra');
+            fd.append("user_name", $scope.user_name);
         
             return new Promise((resolve, reject) => {
                 const request = new XMLHttpRequest();
                 request.open("POST", url_ws + 'Flow/uploadfile_data');
 
                 request.setRequestHeader('Authorization', $scope.token);
-                request.setRequestHeader('Content-Type', 'application/json');
-                
-                const requestBody = JSON.stringify({ user_name: $scope.user_name });
-                
-                request.send(requestBody);
 
                 request.onreadystatechange = function () {
                     if (request.readyState === XMLHttpRequest.DONE) {
@@ -778,6 +774,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             fd.append("file_seq", seq);
             fd.append("file_name", file_name);
             fd.append("sub_software", sub_software);
+            fd.append("user_name", $scope.user_name);
     
             try {
                 const request = new XMLHttpRequest();
@@ -785,11 +782,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 request.send(fd);
 
                 request.setRequestHeader('Authorization', $scope.token);
-                request.setRequestHeader('Content-Type', 'application/json');
-                
-                const requestBody = JSON.stringify({ user_name: $scope.user_name });
-                
-                request.send(requestBody);
     
                 var arr = $filter('filter')($scope.master_ram, function (item) { return (item.seq == seq); });
                 if (arr.length > 0) {
@@ -7519,11 +7511,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             }
 
-            console.log("$scope.data_memberteam",$scope.data_memberteam)
-
 
         }
         else if (xformtype == "approver") {
+
+            var arr_items_all = $filter('filter')($scope.data_approver, function (item) {
+                return (item.id_session == seq_session && item.user_displayname != null);
+            });
 
             var arr_items = $filter('filter')($scope.data_approver, function (item) {
                 return (item.id_session == seq_session && item.user_name == employee_name);
@@ -7547,10 +7541,19 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 newInput.user_img = employee_img;
                 newInput.user_title = employee_position;
 
+                //approver or safety
+                newInput.approver_type = (arr_items_all.length == 0 ? 'approver' : 'safety');
+
                 $scope.data_approver.push(newInput);
                 running_no_level1($scope.data_approver, null, null);
+                $scope.MaxSeqdata_approver = Number($scope.MaxSeqdata_approver) + 1;
 
-                $scope.MaxSeqdata_approver = Number($scope.MaxSeqdata_approver) + 1
+                $scope.data_approver.sort(function(a, b) {
+                    if (a.approver_type === "approver") return -1;
+                    if (b.approver_type === "approver") return 1;
+                    return 0;
+                });
+
 
             }
 
@@ -7717,6 +7720,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         //clear_valid_items($scope.recomment_clear_valid);
         $scope.recomment_clear_valid = '';
+
+        //show fade item if selected
+        $scope.clickedStates[item.employee_name] = true;
 
         $scope.formData = $scope.getFormData();
 
