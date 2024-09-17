@@ -466,7 +466,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     
                             apply();
                             $('#modalPleaseRegister').modal('show');
-                            return;
                         } else {
     
                             $scope.tab_worksheet_active = true;
@@ -7511,6 +7510,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
         else if (xformtype == "approver") {
 
+            var arr_items_all = $filter('filter')($scope.data_approver, function (item) {
+                return (item.id_session == seq_session && item.user_displayname != null);
+            });
+
             var arr_items = $filter('filter')($scope.data_approver, function (item) {
                 return (item.id_session == seq_session && item.user_name == employee_name);
             });
@@ -7533,10 +7536,19 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 newInput.user_img = employee_img;
                 newInput.user_title = employee_position;
 
+                //approver or safety
+                newInput.approver_type = (arr_items_all.length == 0 ? 'approver' : 'safety');
+
                 $scope.data_approver.push(newInput);
                 running_no_level1($scope.data_approver, null, null);
+                $scope.MaxSeqdata_approver = Number($scope.MaxSeqdata_approver) + 1;
 
-                $scope.MaxSeqdata_approver = Number($scope.MaxSeqdata_approver) + 1
+                $scope.data_approver.sort(function(a, b) {
+                    if (a.approver_type === "approver") return -1;
+                    if (b.approver_type === "approver") return 1;
+                    return 0;
+                });
+
 
             }
 
