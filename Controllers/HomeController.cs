@@ -131,9 +131,6 @@ namespace dotnet6_epha_web.Controllers
             return Ok(res_page);
         }
 
-
-
-
         public IActionResult Privacy()
         {
             return View();
