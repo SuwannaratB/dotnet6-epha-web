@@ -102,7 +102,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
 
         var user_name = $scope.user_name;
         var token_doc = '';
-        var sub_software = '';
+        var sub_software = 'hazop';
         var type_doc = 'search';
 
         $.ajax({

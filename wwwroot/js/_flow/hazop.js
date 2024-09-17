@@ -780,11 +780,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 const request = new XMLHttpRequest();
                 request.open("POST", url_ws + 'Flow/uploadfile_data');
                 request.setRequestHeader('Authorization', $scope.token);
-                request.setRequestHeader('Content-Type', 'application/json');
-                
-                const requestBody = JSON.stringify({ user_name: $scope.user_name });
-                
-                request.send(requestBody);
 
                 request.onreadystatechange = function () {
                     if (request.readyState === XMLHttpRequest.DONE) {
@@ -862,17 +857,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             fd.append("file_seq", seq);
             fd.append("file_name", file_name);
             fd.append("sub_software", sub_software);
+            fd.append("user_name", $scope.user_name);
+            fd.append("user_name", $scope.user_name);
     
             try {
                 const request = new XMLHttpRequest();
                 request.open("POST", url_ws + 'Flow/uploadfile_data');
                 request.send(fd);
                 request.setRequestHeader('Authorization', $scope.token);
-                request.setRequestHeader('Content-Type', 'application/json');
-                
-                const requestBody = JSON.stringify({ user_name: $scope.user_name });
-                
-                request.send(requestBody);
     
                 var arr = $filter('filter')($scope.master_ram, function (item) { return (item.seq == seq); });
                 if (arr.length > 0) {

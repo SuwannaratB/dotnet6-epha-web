@@ -127,6 +127,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
 
         fd.append("file_doc", file_doc);
         fd.append("file_part", file_part);//drawing, responder, approver
+        fd.append("user_name", $scope.user_name);
 
         // JavaScript file-like object 
         try {
@@ -151,11 +152,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                 request.open("POST", url_ws + 'Flow/uploadfile_data_followup');
 
                 request.setRequestHeader('Authorization', $scope.token);
-                request.setRequestHeader('Content-Type', 'application/json');
-                
-                const requestBody = JSON.stringify({ user_name: $scope.user_name });
-    
-                request.send(requestBody);  
 
                 request.onreadystatechange = function () {
                     if (request.readyState === XMLHttpRequest.DONE) {

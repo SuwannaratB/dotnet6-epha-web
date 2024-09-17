@@ -3781,12 +3781,13 @@
                                                 <td class="">
                                                     <span class="mx-1">
                                                         <button class="btn btn-outline-secondary p-1 cursor-pointer"
-                                                                ng-class="{'btn-clicked': clickedStates[item.employee_name],'skeleton': loadingData}" 
+                                                                ng-class="{'btn-outline-primary': !clickedStates[item.employee_name], 'btn-clicked': clickedStates[item.employee_name]}"                                                             
                                                                 style="color: #2445fc; background-color: #f1f2f4; border-color: #2445fc;"
                                                                 data-toggle="tooltip" 
                                                                 data-placement="top" 
-                                                                title="choose Employee"
-                                                                ng-click="choosDataEmployee(item)">
+                                                                title="{{selectDatFormType === 'approver_ta3' && data_approver_ta3[0].user_name === item.employee_name ? 'This person is already invited' : 'Choose Employee'}}"
+                                                                ng-click="choosDataEmployee(item)"
+                                                                ng-disabled="selectDatFormType === 'approver_ta3' && data_approver_ta3[0].user_name === item.employee_name">
                                                             <span class="fa-solid fa-user-plus" ng-if="selectDatFormType !== 'owner' && selectDatFormType !== 'approver_ta3' && params !== 'edit_approver'">Add</span>
                                                             <span class="fa-solid fa-user-check" ng-if="selectDatFormType === 'owner' || params === 'edit_approver'">Select</span>
                                                             <span class="fa-solid fa-paper-plane" ng-if="selectDatFormType === 'approver_ta3'">Select</span>
