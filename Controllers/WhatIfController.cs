@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Cors;
 using System.Security.Principal;
 using ServicesAuthen;
-using Newtonsoft.Json;
 using Models;
 using Helperselpers;
 using System.Security.Cryptography;
@@ -13,40 +12,6 @@ namespace dotnet6_epha_web.Controllers
     public class WhatIfController : Controller
     {
         #region config
-        // private static string DecryptDataWithAes(
-        //     string cipherText,
-        //     string keyBase64,
-        //     string vectorBase64
-        // )
-        // {
-        //     using (Aes aesAlgorithm = Aes.Create())
-        //     {
-        //         aesAlgorithm.Key = Convert.FromBase64String(keyBase64);
-        //         aesAlgorithm.IV = Convert.FromBase64String(vectorBase64);
-
-        //         Console.WriteLine($"Aes Cipher Mode : {aesAlgorithm.Mode}");
-        //         Console.WriteLine($"Aes Padding Mode: {aesAlgorithm.Padding}");
-        //         Console.WriteLine($"Aes Key Size : {aesAlgorithm.KeySize}");
-        //         Console.WriteLine($"Aes Block Size : {aesAlgorithm.BlockSize}");
-
-        //         // Create decryptor object
-        //         ICryptoTransform decryptor = aesAlgorithm.CreateDecryptor();
-
-        //         byte[] cipher = Convert.FromBase64String(cipherText);
-
-        //         //Decryption will be done in a memory stream through a CryptoStream object
-        //         using (MemoryStream ms = new MemoryStream(cipher))
-        //         {
-        //             using (CryptoStream cs = new CryptoStream(ms, decryptor, CryptoStreamMode.Read))
-        //             {
-        //                 using (StreamReader sr = new StreamReader(cs))
-        //                 {
-        //                     return sr.ReadToEnd();
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
         private readonly IConfiguration _configuration;
         private byte[] GetKey()
         {
@@ -115,15 +80,8 @@ namespace dotnet6_epha_web.Controllers
             }
         }
 
-
         private void Check_QueryString()
         {
-            //if (_sessionAuthen.role_type == null)
-            //{
-            //    _sessionAuthen.user_name = "zkuluwat";
-            //    _sessionAuthen.role_type = "admin";
-            //}
-
             try
             {
                 using (Aes aesAlgorithm = Aes.Create())
@@ -218,11 +176,6 @@ namespace dotnet6_epha_web.Controllers
         public IActionResult Index()
         {
             Check_QueryString();
-
-            // if (_sessionAuthen.role_type == "" || _sessionAuthen.role_type == null)
-            // {
-            //     return RedirectToAction("Index", "Login");
-            // }
 
             _sessionAuthen.service_api_url = _IConfiguration["EndPoint:service_api_url"];
             ViewBag.service_file_url = _IConfiguration["EndPoint:service_file_url"];
@@ -345,11 +298,6 @@ namespace dotnet6_epha_web.Controllers
 
         public IActionResult Search()
         {
-            // if (_sessionAuthen.role_type == "" || _sessionAuthen.role_type == null)
-            // {
-            //     return RedirectToAction("Index", "Login");
-            // }
-
             _sessionAuthen.service_api_url = _IConfiguration["EndPoint:service_api_url"];
             _sessionAuthen.controller_action_befor = "Home/Portal";
 
@@ -366,77 +314,55 @@ namespace dotnet6_epha_web.Controllers
 
         public IActionResult Approve()
         {
-            // if (_sessionAuthen.role_type == "" || _sessionAuthen.role_type == null)
-            // {
-            //     return RedirectToAction("Index", "Login");
-            // }
-
             _sessionAuthen.service_api_url = _IConfiguration["EndPoint:service_api_url"];
             _sessionAuthen.controller_action_befor = "Home/Portal";
-
             ViewData["user_display"] = _sessionAuthen.user_display;
             ViewData["user_name"] = _sessionAuthen.user_name;
             ViewData["role_type"] = _sessionAuthen.role_type;
             ViewData["controller_action_befor"] = _sessionAuthen.controller_action_befor;
             ViewData["service_api_url"] = _sessionAuthen.service_api_url;
-
             ViewData["pha_seq"] = _sessionAuthen.pha_seq;
             ViewData["pha_type_doc"] = _sessionAuthen.pha_type_doc;
-
             return View();
         }
 
 
         public IActionResult Notification()
         {
-            // if (_sessionAuthen.role_type == "" || _sessionAuthen.role_type == null)
-            // {
-            //     return RedirectToAction("Index", "Login");
-            // }
-
             _sessionAuthen.service_api_url = _IConfiguration["EndPoint:service_api_url"];
             _sessionAuthen.controller_action_befor = "Home/Portal";
-
             ViewData["user_display"] = _sessionAuthen.user_display;
             ViewData["user_name"] = _sessionAuthen.user_name;
             ViewData["role_type"] = _sessionAuthen.role_type;
             ViewData["controller_action_befor"] = _sessionAuthen.controller_action_befor;
             ViewData["service_api_url"] = _sessionAuthen.service_api_url;
-
             ViewData["pha_seq"] = "";
             ViewData["pha_type_doc"] = "";
-
             return View();
         }
 
         [HttpPost]
         public async Task<IActionResult> set_session_doc([FromBody] LoadSessionDataViewModel model)
         {
-
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
-
             _sessionAuthen.service_api_url = _IConfiguration["EndPoint:service_api_url"];
             _sessionAuthen.controller_action_befor = model.controller_action_befor;// "Home/Portal"; 
             _sessionAuthen.pha_seq = model.pha_seq;
             _sessionAuthen.pha_no = model.pha_no;
             _sessionAuthen.pha_status = model.pha_status;
             _sessionAuthen.pha_type_doc = model.pha_type_doc;
-
-
             ViewData["user_display"] = _sessionAuthen.user_display;
             ViewData["user_name"] = _sessionAuthen.user_name;
             ViewData["role_type"] = _sessionAuthen.role_type;
-
             ViewData["pha_seq"] = _sessionAuthen.pha_seq;
             ViewData["pha_no"] = _sessionAuthen.pha_no;
             ViewData["pha_status"] = _sessionAuthen.pha_status;
             ViewData["pha_type_doc"] = _sessionAuthen.pha_type_doc;
             ViewData["controller_action_befor"] = _sessionAuthen.controller_action_befor;
             ViewData["service_api_url"] = _sessionAuthen.service_api_url;
-
             LoginViewModel res_page = new LoginViewModel();
             res_page.msg = "";
             return Ok(res_page);
@@ -446,53 +372,42 @@ namespace dotnet6_epha_web.Controllers
         [HttpPost]
         public async Task<IActionResult> follow_back_search(LoadSessionDataViewModel model)
         {
-
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
-
             _sessionAuthen.pha_seq = "";
             _sessionAuthen.pha_type_doc = "search";
             _sessionAuthen.role_type = _sessionAuthen.role_type;
-
             LoginViewModel res_page = new LoginViewModel();
             res_page.seq = _sessionAuthen.pha_seq;
-
             return Ok(res_page);
         }
 
         [HttpPost]
         public async Task<IActionResult> case_new_document([FromBody] LoadSessionDataViewModel model)
         {
-
             if (!ModelState.IsValid)
             {
                 return View(model);
-            }
-                        
+            } 
             _sessionAuthen.pha_seq = model.pha_seq;
             _sessionAuthen.pha_type_doc = model.pha_type_doc;
             _sessionAuthen.role_type = _sessionAuthen.role_type;
-
             LoginViewModel res_page = new LoginViewModel();
             res_page.seq = _sessionAuthen.pha_seq;
-
             return Ok(res_page);
         }
 
         [HttpPost]
         public async Task<IActionResult> next_page([FromBody] LoadSessionDataViewModel model)
         {
-
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
-
             _sessionAuthen.pha_type_doc = (model.pha_type_doc + "");
             _sessionAuthen.role_type = _sessionAuthen.role_type;
-
             LoginViewModel res_page = new LoginViewModel();
             if (_sessionAuthen.pha_type_doc == "back")
             {
@@ -504,7 +419,6 @@ namespace dotnet6_epha_web.Controllers
                 _sessionAuthen.pha_no = "";
                 _sessionAuthen.pha_status = "11";
                 _sessionAuthen.controller_action_befor = (model.pha_sub_software + "");
-
                 res_page.page = model.pha_sub_software + "/Index";
             }
             else if (_sessionAuthen.pha_type_doc == "followupupdate")
@@ -515,14 +429,12 @@ namespace dotnet6_epha_web.Controllers
                 _sessionAuthen.pha_no = (model.pha_no + "");
                 _sessionAuthen.pha_status = (model.pha_status + "");
                 _sessionAuthen.responder_user_name = (model.responder_user_name + "");
-
                 res_page.page = model.pha_sub_software + "/FollowupUpdate";
             }
             else if (_sessionAuthen.pha_type_doc == "edit")
             { 
                 _sessionAuthen.controller_action_befor = ("whatif");
                 _sessionAuthen.pha_seq = (model.pha_seq + "");
-
                 res_page.page = model.pha_sub_software + "/Index";
                 //}
             }

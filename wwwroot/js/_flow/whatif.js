@@ -462,7 +462,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         //         return set_alert('Warning', 'Please select a valid Node');
                         //     }
                             if(!validBeforRegister()) 
-                                return set_alert('Warning',$scope.validMessage,$scope.goback_tab)
+                                return set_alert('Warning',$scope.validMessage)
     
                             apply();
                             $('#modalPleaseRegister').modal('show');
@@ -645,7 +645,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     const validation = validateFile(file, 10240, allowedFileTypes);
 
                     if (!validation.valid) {
-                        set_alert('Warning', validation.message,tabName);
+                        set_alert('Warning', validation.message);
                         return;
                     }
 
@@ -664,21 +664,21 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                                 $scope.$apply(); // Ensure the scope is updated
                             }
 
-                            set_alert('Success', 'Your file has been successfully attached.',tabName);
+                            set_alert('Success', 'Your file has been successfully attached.');
                         })
                         .catch(error => {
                             console.error('File upload error:', error);
-                            set_alert('Error', 'Failed to upload the file. Please try again.',tabName);
+                            set_alert('Error', 'Failed to upload the file. Please try again.');
                         });
                 } else {
                     fileInfoSpan.textContent = "";
                     $scope.goback_tab = tabName;
-                    set_alert('Warning', "No file selected. Please select a file to upload.",tabName);
+                    set_alert('Warning', "No file selected. Please select a file to upload.");
                 }
             } catch (error) {
                 console.error('Unexpected error during file selection:', error);
                 $scope.goback_tab = tabName;
-                set_alert('Error', 'An unexpected error occurred. Please try again or contact support.',tabName);
+                set_alert('Error', 'An unexpected error occurred. Please try again or contact support.');
             }
         }
 
@@ -707,15 +707,15 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                                 if (parsedResponse && parsedResponse.msg && parsedResponse.msg.length > 0 && parsedResponse.msg[0].STATUS === "true") {
                                     resolve(parsedResponse.msg[0]);
                                 } else {
-                                    set_alert('Warning', 'The system encountered an issue processing your file. Please try again or contact support if the problem persists.',tabName);
+                                    set_alert('Warning', 'The system encountered an issue processing your file. Please try again or contact support if the problem persists.');
                                     reject('Service response indicated an issue.');
                                 }
                             } catch (e) {
-                                set_alert('Error', 'Unexpected issue occurred while processing your request. Please try again later.',tabName);
+                                set_alert('Error', 'Unexpected issue occurred while processing your request. Please try again later.');
                                 reject(e);
                             }
                         } else {
-                            set_alert('Error', 'We are unable to complete your request at the moment. Please check your connection or try again later.',tabName);
+                            set_alert('Error', 'We are unable to complete your request at the moment. Please check your connection or try again later.');
                             reject('Error during server request: ' + request.status);
                         }
                     }
@@ -755,7 +755,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     
                 if (fileName.toLowerCase().indexOf('.pdf') == -1) {
                     fileInfoSpan.textContent = "";
-                    set_alert('Warning', 'Please select a PDF file.','ram');
+                    set_alert('Warning', 'Please select a PDF file.');
                     return;
                 }
     
@@ -918,7 +918,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         } else if (export_report_type == "whatif_ram") {
             action_export_report_type = "export_whatif_ram";
         } else {
-            set_alert('Warning', 'Invalid report type.','report');
+            set_alert('Warning', 'Invalid report type.');
             return;
         }
     
@@ -962,11 +962,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                              apply()
                         } else {
-                            set_alert('Warning', response.IMPORT_DATA_MSG || 'The system encountered an issue processing your file. Please try again.','report');
+                            set_alert('Warning', response.IMPORT_DATA_MSG || 'The system encountered an issue processing your file. Please try again.');
                         }
                     } else {
                         // If data.msg is undefined or not in the expected format
-                        set_alert('Warning', 'Unexpected response from the server. Please try again or contact support.','report');
+                        set_alert('Warning', 'Unexpected response from the server. Please try again or contact support.');
                     }
                 } catch (e) {
                     // Catch any JSON parsing or unexpected errors during success handling
@@ -5616,7 +5616,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         set_alert('Error', arr[0].IMPORT_DATA_MSG);
                     }
                 }else{
-                    set_alert('Warning', 'Unexpected issue occurred while processing your request. Please try again later.','node');
+                    set_alert('Warning', 'Unexpected issue occurred while processing your request. Please try again later.');
                 }
             },
             error: function (jqXHR, textStatus, errorThrown) {
@@ -5803,7 +5803,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     var invalidFieldFound = false;
                     requiredFields.forEach(function (item) {
                         if (!arr_chk[0][item.field]) {
-                            set_alert('Warning', errorText,'general');
+                            set_alert('Warning', errorText);
                             //validateSelect(item.field, item.errorId);
                             invalidFieldFound = true; 
                         }
@@ -5812,7 +5812,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                     arr_chk = $scope.data_memberteam;
                     
-                    if (arr_chk.length == 0) { set_alert('Warning', 'Please provide a valid Session List','session'); return; }
+                    if (arr_chk.length == 0) { set_alert('Warning', 'Please provide a valid Session List'); return; }
                   
                 }
                 else if (pha_status == "12") {
@@ -5822,16 +5822,16 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     var bCheckValid_Worksheet = false;
                     var bCheckValid_Manage = false;
 
-                    if (arr_chk[0].expense_type == '' || arr_chk[0].expense_type == null) { set_alert('Warning', 'Please select a valid Expense Type','general'); return; }
-                    if (arr_chk[0].sub_expense_type == '' || arr_chk[0].sub_expense_type == null) { set_alert('Warning', 'Please select a valid Sub-Expense Type','general'); return; }
-                    if (arr_chk[0].id_apu == '' || arr_chk[0].id_apu == null) { set_alert('Warning', 'Please select a valid Area Process Unit','general'); return; }
+                    if (arr_chk[0].expense_type == '' || arr_chk[0].expense_type == null) { set_alert('Warning', 'Please select a valid Expense Type'); return; }
+                    if (arr_chk[0].sub_expense_type == '' || arr_chk[0].sub_expense_type == null) { set_alert('Warning', 'Please select a valid Sub-Expense Type'); return; }
+                    if (arr_chk[0].id_apu == '' || arr_chk[0].id_apu == null) { set_alert('Warning', 'Please select a valid Area Process Unit'); return; }
 
                     if (true) {
                         arr_chk = $scope.data_memberteam;
-                        if (arr_chk.length == 0) { set_alert('Warning', 'Please provide a valid Session List','session'); return; }
+                        if (arr_chk.length == 0) { set_alert('Warning', 'Please provide a valid Session List'); return; }
                         else {
                             var irows_last = arr_chk.length - 1;
-                            if (arr_chk[irows_last].user_name == null) { set_alert('Warning', 'Please provide a valid Session List','session'); return; }
+                            if (arr_chk[irows_last].user_name == null) { set_alert('Warning', 'Please provide a valid Session List'); return; }
                         }
 
                         if ($scope.data_header[0].request_approver > 0) {
@@ -5840,7 +5840,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                             if (arr_chk.length == 0) { set_alert('Warning', 'Please provide a valid ApproverTA2 List'); return; }
                             else {
                                 var irows_last = arr_chk.length - 1;
-                                if (arr_chk[irows_last].user_name == null) { set_alert('Warning', 'Please provide a valid ApproverTA2 List','session'); return; }
+                                if (arr_chk[irows_last].user_name == null) { set_alert('Warning', 'Please provide a valid ApproverTA2 List'); return; }
                             }
 
                         }
@@ -5849,14 +5849,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     if (true) {
 
                         arr_chk = $scope.data_drawing;
-                        if (arr_chk.length == 0) { set_alert('Warning', 'Please provide a valid Drawing List','task'); return; }
+                        if (arr_chk.length == 0) { set_alert('Warning', 'Please provide a valid Drawing List'); return; }
                         for (var i = 0; i < arr_chk.length; i++) {
                             if (set_valid_items(arr_chk[i].document_no, 'drawing-document-file-' + arr_chk[i].seq)) { bCheckValid_Node = true; }
                             if (set_valid_items(arr_chk[i].document_file_name, 'drawing-document-file-' + arr_chk[i].seq)) { bCheckValid_Node = true; }
                         }
 
                         arr_chk = $scope.data_tasklist;
-                        if (arr_chk.length == 0) { set_alert('Warning', 'Please provide a valid Tasks List','task'); return; }
+                        if (arr_chk.length == 0) { set_alert('Warning', 'Please provide a valid Tasks List'); return; }
                         for (var i = 0; i < arr_chk.length; i++) {
                             if (set_valid_items(arr_chk[i].list, 'task-task-' + arr_chk[i].seq)) { bCheckValid_Node = true; }
                         }
@@ -6044,9 +6044,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             var arr_chk = $scope.data_general;
             if (pha_status == "11") {
-                if (arr_chk[0].expense_type == '' || arr_chk[0].expense_type == null) { set_alert('Warning', 'Please select a valid Expense Type','general'); return; }
-                if (arr_chk[0].sub_expense_type == '' || arr_chk[0].sub_expense_type == null) { set_alert('Warning', 'Please select a valid Sub-Expense Type','general'); return; }
-                if (arr_chk[0].id_apu == '' || arr_chk[0].id_apu == null) { set_alert('Warning', 'Please select a valid Area Process Unit','general'); return; }
+                if (arr_chk[0].expense_type == '' || arr_chk[0].expense_type == null) { set_alert('Warning', 'Please select a valid Expense Type'); return; }
+                if (arr_chk[0].sub_expense_type == '' || arr_chk[0].sub_expense_type == null) { set_alert('Warning', 'Please select a valid Sub-Expense Type'); return; }
+                if (arr_chk[0].id_apu == '' || arr_chk[0].id_apu == null) { set_alert('Warning', 'Please select a valid Area Process Unit'); return; }
             }
         }
         else {

@@ -377,7 +377,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
     }
     function page_load() {
         arr_def();
-        get_detail(true);
+        get_detail();
     }
 
     $scope.actionChangedData = function (item) {
@@ -1088,7 +1088,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                             });
 
                             if(arr.length > 0){
-                                get_detail(true);
+                                get_detail();
                             }else if ($scope.flow_role_type === 'admin') {
                                 window.open("Home/Portal", "_top");
                             }
@@ -1105,7 +1105,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                                 });
                     
                                 if (userExists) {
-                                    get_detail(true);
+                                    get_detail();
                                 } else {
                                     window.open("Home/Portal", "_top");
                                 }
