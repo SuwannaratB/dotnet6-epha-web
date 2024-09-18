@@ -21,8 +21,7 @@ builder.Services.AddCors(options =>
             "https://qas-epha.thaioilgroup.com"
         )
         .AllowAnyHeader()
-        .AllowAnyMethod()
-        .AllowCredentials();
+        .AllowAnyMethod();
     });
 });
 
