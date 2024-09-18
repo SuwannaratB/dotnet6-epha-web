@@ -1972,8 +1972,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                                 }
                             }
                         }*/
-
-
                         //get_rowspam
                         $scope.rowspanMap = {};
                         computeRowspan();
@@ -3054,31 +3052,47 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         function computeRowspan() {
             $scope.rowspanMap = {};
             $scope.data_nodeworksheet.forEach(function(item) {
-              if (item.row_type === 'causes') {
-                var key = item.id_node + '-' + item.deviations_no + '-' + item.causes_no;
-                $scope.rowspanMap[key] = $scope.data_nodeworksheet.filter(function(entry) {
-                  return entry.id_node === $scope.selectedItemNodeView &&
-                         entry.deviations_no === item.deviations_no &&
-                         entry.causes_no === item.causes_no;
-                }).length;
-              }else if(item.row_type === 'consequences'){
-                var key = item.id_node + '-' + item.deviations_no + '-' + item.causes_no;
-                $scope.rowspanMap[key] = $scope.data_nodeworksheet.filter(function(entry) {
-                  return entry.id_node === $scope.selectedItemNodeView &&
-                         entry.deviations_no === item.deviations_no &&
-                         entry.causes_no === item.causes_no &&
-                         entry.consequences_no === item.consequences_no
-                }).length;
-              }else if(item.role_type === 'category'){
-                var key = item.id_node + '-' + item.deviations_no + '-' + item.causes_no;
-                $scope.rowspanMap[key] = $scope.data_nodeworksheet.filter(function(entry) {
-                  return entry.id_node === $scope.selectedItemNodeView &&
-                         entry.deviations_no === item.deviations_no &&
-                         entry.causes_no === item.causes_no &&
-                         entry.consequences_no === item.consequences_no &&
-                         entry.category_no === item.category_no
-                }).length;
-              }
+
+              var key = 'causes' + item.id_node + '-' + item.deviations_no + '-' + item.causes_no;
+              $scope.rowspanMap[key] = $scope.data_nodeworksheet.filter(function(entry) {
+                return entry.id_node === $scope.selectedItemNodeView &&
+                       entry.deviations_no === item.deviations_no &&
+                       entry.causes_no === item.causes_no 
+              }).length;
+
+              var key = 'consequences' + item.id_node + '-' + item.deviations_no + '-' + item.causes_no + '-' + item.consequences_no;
+              $scope.rowspanMap[key] = $scope.data_nodeworksheet.filter(function(entry) {
+                return entry.id_node === $scope.selectedItemNodeView &&
+                       entry.deviations_no === item.deviations_no &&
+                       entry.causes_no === item.causes_no &&
+                       entry.consequences_no === item.consequences_no
+              }).length;
+
+              var key = item.id_node + '-' + item.deviations_no + '-' + item.causes_no + '-' + item.consequences_no + '-' + item.category_no;
+              $scope.rowspanMap[key] = $scope.data_nodeworksheet.filter(function(entry) {
+                return entry.id_node === $scope.selectedItemNodeView &&
+                       entry.deviations_no === item.deviations_no &&
+                       entry.causes_no === item.causes_no &&
+                       entry.consequences_no === item.consequences_no &&
+                       entry.category_no === item.category_no
+              }).length;
+
+              var key = 'category' + item.id_node + '-' + item.deviations_no + '-' + item.causes_no + '-' + item.consequences_no + '-' + item.category_no;
+              $scope.rowspanMap[key] = $scope.data_nodeworksheet.filter(function(entry) {
+                return entry.id_node === $scope.selectedItemNodeView &&
+                       entry.deviations_no === item.deviations_no &&
+                       entry.causes_no === item.causes_no &&
+                       entry.consequences_no === item.consequences_no &&
+                       entry.category_no === item.category_no
+              }).length;
+
+              var key = 'deviations' + item.id_node + '-' + item.deviations_no ;
+              $scope.rowspanMap[key] = $scope.data_nodeworksheet.filter(function(entry) {
+                return entry.id_node === $scope.selectedItemNodeView &&
+                       entry.deviations_no === item.deviations_no
+              }).length;
+
+
             });
           }
         
@@ -4412,21 +4426,42 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         
         //copy detail row befor
         if (row_type == "causes") {
+            
+            newInput.deviations_no = item.deviations_no;
         }
         else if (row_type == "consequences") {
             var data = $scope.data_nodeworksheet.filter(function(item) {
                 return item.causes_no == causes_no 
             });
-            newInput.causes = data[0].causes;
+            newInput.deviations_no = item.deviations_no;
+            newInput.causes_no = item.causes_no;
+
+            newInput.deviations = item.deviations;
+            newInput.causes = item.causes;
 
         }
         else if (row_type == 'category') {
             var data = $scope.data_nodeworksheet.filter(function(item) {
                 return item.causes_no == causes_no && item.consequences_no == consequences_no ;
             });
+            newInput.deviations_no = item.deviations_no;
+            newInput.causes_no = item.causes_no;
 
-            newInput.causes = data[0].causes;
-            newInput.consequences = data[0].consequences;
+            newInput.deviations = item.deviations;
+            newInput.causes = item.causes;
+            newInput.consequences = item.consequences;
+        }
+        else if(row_type == 'recommendations'){
+            newInput.deviations_no = item.deviations_no;
+            newInput.causes_no = item.causes_no;
+            newInput.consequences_no = item.consequences_no;
+            newInput.category_no = item.category_no;
+
+            newInput.deviations = item.deviations;
+            newInput.causes = item.causes;
+            newInput.consequences = item.consequences;
+            newInput.category = item.category;
+
         }
 
 
@@ -4459,6 +4494,15 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
               return a.category_no - b.category_no;
             }
         });
+
+
+        //updaterow span
+        $scope.$evalAsync(function() {
+            computeRowspan();  // Safely schedule this to update the UI
+        });
+        
+        
+
         apply();
     }
 
