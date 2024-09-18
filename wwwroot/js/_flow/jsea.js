@@ -3900,7 +3900,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
 
 
-        running_no_format_1($scope.data_memberteam,null);
+        running_no_format_1($scope.data_memberteam, null ,null);
         mergeData('memberteam', $scope.data_memberteam)
 
         apply();
@@ -3952,7 +3952,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             newInput.document_file = arr[i].document_file;
             newInput.comment = arr[i].comment;
         };
-        running_no_format_1($scope.data_drawing, iNo, index, newInput);
+        running_no_format_1($scope.data_drawing, index, newInput);
 
         $scope.selectDrawingDoc = xValues;
         apply();
