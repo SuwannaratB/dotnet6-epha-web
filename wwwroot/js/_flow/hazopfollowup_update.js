@@ -1607,15 +1607,16 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
         //access each role
         $scope.Access_check = function(task) {
             let accessInfo = {
-                canAccess: false,
                 isAdmin: false,
                 isEmployee: false,
                 isOwner:false
             };
+
+            console.log(task)
+            console.log($scope.user_name)
         
             // If user is an admin, allow access
             if ($scope.flow_role_type === 'admin') {
-                accessInfo.canAccess = true;
                 accessInfo.isAdmin = true;
                                 
                 return accessInfo;
@@ -1624,14 +1625,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
             // If user is an employee
             if ($scope.flow_role_type === 'employee') {
                 // Check if the task belongs to the user (TA2)
-                if ($scope.user_name === task.user_name) {
+                if ($scope.user_name === task.responder_user_name) {
 
                     accessInfo.isOwner = true;
-                    accessInfo.canAccess = true; 
                 } else {
 
                     accessInfo.isEmployee = true;
-                    accessInfo.canAccess = false; 
                 }
             }
         

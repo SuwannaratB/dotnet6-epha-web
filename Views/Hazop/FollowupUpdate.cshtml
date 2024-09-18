@@ -269,7 +269,7 @@
 
                                             <tbody class="list" id="customer-rating-table-body text-1100 ">
                                                 <tr ng-repeat="item_d in data_details | filter: hasResponderUserDisplayName"
-                                                    ng-init="accessInfo = Access_check(item)"
+                                                    ng-init="accessInfo = Access_check(item_d)"
                                                     class="hover-actions-trigger btn-reveal-trigger position-static px-0 text-center">
                                                     <td class="align-top  px-1">
                                                         <div class="text-center">
@@ -417,10 +417,10 @@
                                                                       placeholder="Comment"
                                                                       rows="1"
                                                                       ng-model="item_d.reviewer_comment"
-                                                                      ng-if="!((flow_status == 14 ? item_d.reviewer_action_type : item_d.responder_action_type) == 2)">
+                                                                      ng-if="!((flow_status == 14 ? item_d.reviewer_action_type : item_d.responder_action_type) == 2) && item_d.action_status != 'Closed' ">
                                                             </textarea>
 
-                                                            <div class="row" ng-if="((flow_status == 14 ? item_d.reviewer_action_type : item_d.responder_action_type) == 2)">
+                                                            <div class="row" ng-if="((flow_status == 14 ? item_d.reviewer_action_type : item_d.responder_action_type) == 2) &&  item_d.action_status != 'Closed'">
                                                                 <h6><b>{{item_d.action_status}}</b></h6>
                                                                 <p>Comment: {{item_d.reviewer_comment}}</p>
                                                             </div>
@@ -550,10 +550,12 @@
                                                     @* Implement 13 *@
                                                     <td class="align-top px-0" ng-if="flow_status != 14">
                                                         <div class="d-flex justify-content-center align-items-center h-100 w-100 p-2">
-                                                            <div class="m-auto" ng-class="{ 'no-drop': !accessInfo.canAccess, 'cursor-pointer': accessInfo.canAccess }">
+                                                            {{"accessInfo.isOwner          " + accessInfo.isOwner}}
+                                                            {{"accessInfo.isAdmin          " + accessInfo.isAdmin}}
+                                                            <div class="m-auto" ng-class="{ 'no-drop': !(accessInfo.isOwner || accessInfo.isAdmin), 'cursor-pointer': (accessInfo.isOwner || accessInfo.isAdmin) }">
                                                                 <input type="checkbox" ng-model="item_d.implement"
                                                                        class="round-3"
-                                                                       ng-class="{ 'cant-Access': !accessInfo.canAccess}"
+                                                                       ng-class="{ 'cant-Access': !(accessInfo.isOwner || accessInfo.isAdmin) }"
                                                                        ng-click="actionImplement(item_d)"
                                                                        style="cursor: pointer; width: 20px; height: 20px;">
                                                             </div>
@@ -563,7 +565,7 @@
                                                     <td class="align-middle">
                                                         <div class="p-2" 
                                                             style="width: 200px;"
-                                                            ng-hide="!(accessInfo.isOwner || accessInfo.isAdmin) && item_d.responder_action_type != 2">
+                                                            ng-disabled="!(accessInfo.isOwner || accessInfo.isAdmin) && item_d.responder_action_type != 2">
                                                                 <textarea class="form-control form-control-sm rounded-1 p-0 mt-1 w-100 border border-end-0 border-top-0"
                                                                     style="width: 100vh; font-size: 10px;"
                                                                     ng-attr-placeholder="{{ item_d.responder_action_type === 2 ? '' : 'Remark' }}"
@@ -582,19 +584,19 @@
                                                     @* Hazop recommendations responded sheet 13 *@
                                                     <td class="align-top px-1" style="min-width:200px;" ng-if="flow_status != 14">
                                                         <div class=" p-0 cursor-pointer "
-                                                            ng-hide="!(accessInfo.isOwner || accessInfo.isAdmin)  && item_d.responder_action_type != 2"
+                                                            ng-disabled ="!(accessInfo.isOwner || accessInfo.isAdmin)  && item_d.responder_action_type != 2"
                                                             ng-repeat="item_x in data_drawingworksheet | filter:{id_worksheet:item_d.seq, action_type : '!delete'}">
                                                             <div class="d-flex align-items-center flex-nowrap"
-                                                                 ng-class="{ 'no-drop': !accessInfo.canAccess && !accessInfo.isAdmin, 'cursor-pointer': accessInfo.canAccess }">
+                                                                 ng-class="{ 'no-drop': !accessInfo.isOwner && !accessInfo.isAdmin, 'cursor-pointer': accessInfo.isOwner }">
                                                                 <div class="font-sans-serif btn-reveal-trigger position-static me-1">
                                                                     <button class="btn p-1 text-danger"
                                                                             ng-click="openModalTempletes('pdf','item',item_d.seq)"
-                                                                            ng-if="(accessInfo.canAccess || accessInfo.isAdmin) && $first"
+                                                                            ng-if="(accessInfo.isOwner || accessInfo.isAdmin) && $first"
                                                                             type="button" >
                                                                         <span class="fa-solid fa-file-lines"></span>
                                                                     </button>
                                                                     <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 p-1"
-                                                                            ng-if="accessInfo.canAccess || accessInfo.isAdmin"
+                                                                            ng-if="accessInfo.isOwner || accessInfo.isAdmin"
                                                                             type="button" data-bs-toggle="dropdown" data-boundary="window"
                                                                             aria-haspopup="true" aria-expanded="false" data-bs-reference="parent">
                                                                         <span class="fas fa-cog text-info"></span>
@@ -613,16 +615,21 @@
                                                                     </div>
                                                                 </div>
                                                                 
-                                                                <div class="align-items-center" style="width: 280px">
+                                                                <div class="align-items-center" style="width: 280px"
+                                                                    ng-disabled ="!(accessInfo.isOwner || .isAdmin)  && item_d.responder_action_type != 2">
                                                                     <div class="btn-group mb-2 w-100" style="height:60px;">
-                                                                        <div ng-if="!item_x.document_file_size" class="icon-button border p-3" style="border-color: #0d6efd; background-color: #0d6efd;">
+                                                                        <div ng-if="!item_x.document_file_size" class="icon-button border p-3" 
+                                                                             ng-hide ="accessInfo.isEmployee && item_d.responder_action_type != 2"
+                                                                             style="border-color: #0d6efd; background-color: #0d6efd;">
                                                                             <span  class="fa-solid fa-arrow-up-from-bracket fa-lg" style="color: #ffffff;"></span>
                                                                         </div>
-                                                                        <div ng-if="item_x.document_file_size" class="icon-button border p-3" style="border-color: #0d6efd; background-color: #0d6efd;">
+                                                                        <div ng-if="item_x.document_file_size" class="icon-button border p-3" 
+                                                                             ng-hide ="!(accessInfo.isOwner || accessInfo.isAdmin)"
+                                                                             style="border-color: #0d6efd; background-color: #0d6efd;">
                                                                             <span  class="fa-solid fa-file-pdf fa-lg" style="color: #ffffff;"></span>
                                                                         </div>
 
-                                                                        <button class="Upload-button btn ps-3" ng-if="!item_x.document_file_size">
+                                                                        <button class="Upload-button btn ps-3" ng-if="!item_x.document_file_size" ng-hide ="!(accessInfo.isOwner || accessInfo.isAdmin)">
                                                                             <label class="dz-message-text fw-bold cursor-pointer" 
                                                                                 for="attfile-{{item_x.seq}}" 
                                                                                 style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; max-width: 150px;">
@@ -660,13 +667,6 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            @* <div class="text-start p-0 cursor-pointer d-flex flex-nowrap" ng-if="item_d.responder_action_type === 2">
-                                                                <div ng-repeat="responder in data_drawingworksheet_responder">
-                                                                    <a class="nametext ms-3 filename-text me-2" ng-if="flow_status == 13 && item_x.document_file_size > 0 && item_d.id === responder.id_worksheet" ng-click="downloadFile(item_x)">
-                                                                        <i class="far fa-file-pdf text-danger"></i> {{ item_x.document_file_name }} ({{ item_x.document_file_size }}KB)
-                                                                    </a>
-                                                                </div>
-                                                            </div> *@
                                                         </div>
                                                         <div id="valid-upload_file-{{item_d.seq}}" class="invalid-feedback text-danger text-start">
                                                             Please provide a valid Document file.
@@ -702,9 +702,7 @@
 
                                                     <td class="align-top px-0 pt-0 ">
                                                         <div class="d-flex" 
-                                                            ng-hide="!(accessInfo.isOwner || accessInfo.isAdmin)  && data_general[0].pha_status == 13"
-                                                            ng-class="{ 
-                                                                'no-drop': !accessInfo.canAccess && !accessInfo.isAdmin, 'cursor-pointer': accessInfo.canAccess}">
+                                                            ng-hide="!(accessInfo.isOwner || accessInfo.isAdmin)">
                                                             <button class="btn btn-outline text-primary p-1 m-2 me-0"
                                                                     ng-class="{ 'cant-Access': !(accessInfo.isOwner || accessInfo.isAdmin) }"
                                                                     style="background-color: #f1f2f4; width: 50px;"
@@ -821,7 +819,7 @@
 
                                             <tbody class="list" id="customer-rating-table-body text-1100 ">
                                                 <tr ng-repeat="item_d in data_details"
-                                                    ng-init="accessInfo.canAccess = Access_check(item_d)"
+                                                    ng-init="accessInfo = Access_check(item_d)"
                                                     class="hover-actions-trigger btn-reveal-trigger position-static px-0 text-center">
                                                     <td class="align-top  px-1">
                                                         <div class="text-center"  style="width: 70px !important;">
