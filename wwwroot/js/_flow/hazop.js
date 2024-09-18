@@ -1963,15 +1963,17 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     if ($scope.data_nodeworksheet.length > 0) {
                         var arr_copy_def = angular.copy($scope.data_nodeworksheet, arr_copy_def);
                         arr_copy_def.sort((a, b) => Number(b.recommendations_no) - Number(a.recommendations_no));
-                        /*var recommendations_no = Number(Number(arr_copy_def[0].recommendations_no) + 1);
-                        for (let i = 0; i < $scope.data_nodeworksheet; i++) {
-                            if ($scope.data_nodeworksheet[i].recommendations == null || $scope.data_nodeworksheet[i].recommendations == '') {
-                                if ($scope.data_nodeworksheet[i].recommendations_no == null || $scope.data_nodeworksheet[i].recommendations_no == '') {
-                                    $scope.data_nodeworksheet[i].recommendations_no = recommendations_no;
-                                    recommendations_no += 1;
-                                }
+
+                        if($scope.pha_status == '13'){
+                            for (let i = 0; i < $scope.data_nodeworksheet.length; i++) {
+                                if ($scope.data_nodeworksheet[i].recommendations_no == '0') {
+                                    // If recommendations is '0', set it to null
+                                    $scope.data_nodeworksheet[i].recommendations_no = null;
+                                } 
                             }
-                        }*/
+                        }
+
+
                         //get_rowspam
                         $scope.rowspanMap = {};
                         computeRowspan();
@@ -4637,8 +4639,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             });
         }
 
+        
+        
+
         console.log("===============",arrCheck)
 
+        //กรณีมี 1 Row clear ค่า
         if (arrCheck.length == 1) {
             //กรณีที่เหลือ row เดียว  
             arrCheck[0].action_type = 'update';
@@ -4680,7 +4686,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
 
 
-
+        //กรณี > 1 row splice all child and clear value for 1st row
         // Handle the removal and update logic
         if (arrCheck.length > 1) {
             arrCheck.forEach(function (checkedItem) {
@@ -4703,9 +4709,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             // Reset fields if only one row remains in arrCheck
             if (update_arrCheck.length === 1) {
-                var causeItem = update_arrCheck[0];  // This should be the single remaining item
+                var causeItem = update_arrCheck[0]; 
 
-                // Update causeItem with default values
                 causeItem.action_type = 'update';
                 causeItem.action_change = 1;
                 causeItem.action_status = 'Open';
@@ -6934,6 +6939,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             if($scope.data_header[0].pha_status === 12) {
                 ensureUnique($scope.data_nodeworksheet,type_text);
             }else{
+                
+                let maxRecommendationsNo = Math.max(...$scope.data_nodeworksheet.map(item => Number(item.recommendations_no) || 0));
+
+                _arr.no = maxRecommendationsNo;
                 /*let maxNo = 0;
 
                 $scope.data_listworksheet.forEach(item => {
