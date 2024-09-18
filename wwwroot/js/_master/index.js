@@ -13,8 +13,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, conFig) {
     role_menu();
 
     function role_menu() {
-        $scope.role_type = conFig.role_type();
-        $scope.user_name = conFig.user_name();
+        $scope.user = JSON.parse(localStorage.getItem('user'))
+        $scope.token = JSON.parse(localStorage.getItem('token'))
+        $scope.user_name = $scope.user['user_name'];
+        $scope.role_type = $scope.user['role_type'];
+        // $scope.role_type = conFig.role_type();
+        // $scope.user_name = conFig.user_name();
         $scope.menu_hometasks = true;
         $scope.menu_search = true;
         $scope.menu_hazop = false;
@@ -36,6 +40,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, conFig) {
             url: url_ws + "Login/check_authorization_page",
             data: '{"user_name":"' + user_name + '"}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+            headers: {
+                'X-CSRF-TOKEN': $scope.token
+            },
+            xhrFields: {
+                withCredentials: true // เปิดการส่ง Cookie ไปพร้อมกับคำขอ
+            },
             beforeSend: function () {
                 $('#divLoading').show();
             },

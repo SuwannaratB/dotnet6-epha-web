@@ -17,7 +17,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
     var url_ws = conFig.service_api_url();
 
-    get_data(true);
+    get_data();
 
     //call ws get data
     if (true) {
@@ -122,7 +122,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                 + '}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
             headers: {
-                'Authorization': $scope.token 
+                'X-CSRF-TOKEN': $scope.token
+            },
+            xhrFields: {
+                withCredentials: true // เปิดการส่ง Cookie ไปพร้อมกับคำขอ
             },
             beforeSend: function () {
                 $("#divLoading").show();
@@ -140,7 +143,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                 }
                 $scope.pha_type_doc = 'update';
                 showAlert('Success', 'Data has been successfully saved.', 'success', function() {
-                    get_data_after_save(false);
+                    get_data_after_save();
                     apply();
                 });
             },
@@ -155,7 +158,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         });
     }
 
-    function call_api_load(page_load) {
+    function call_api_load() {
         var user_name = $scope.user_name;
 
         $.ajax({
@@ -163,7 +166,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             data: '{"user_name":"' + user_name + '"}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
             headers: {
-                'Authorization': $scope.token 
+                'X-CSRF-TOKEN': $scope.token
+            },
+            xhrFields: {
+                withCredentials: true // เปิดการส่ง Cookie ไปพร้อมกับคำขอ
             },
             beforeSend: function () {
                 $("#divLoading").show();
@@ -407,15 +413,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         $scope.data_delete = [];
     }
 
-    function get_data(page_load) {
+    function get_data() {
         arr_def();
-        var user_name = conFig.user_name();
-        call_api_load(page_load, user_name);
+        call_api_load();
     }
 
-    function get_data_after_save(page_load) {
-        var user_name = conFig.user_name();
-        call_api_load(false, user_name);
+    function get_data_after_save() {
+        call_api_load();
     }
 
     ///////////////////////////  Pagination  ///////////////////////////

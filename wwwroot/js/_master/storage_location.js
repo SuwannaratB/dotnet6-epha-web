@@ -103,7 +103,7 @@ AppMenuPage.controller(
 
     //call ws get data
     if (true) {
-      get_data(true);
+      get_data();
 
       function arr_def() {
         $scope.user = JSON.parse(localStorage.getItem('user'));
@@ -121,14 +121,12 @@ AppMenuPage.controller(
 
       }
 
-      function get_data(page_load) {
+      function get_data() {
         arr_def();
-
-        var user_name = conFig.user_name();
-        call_api_load(page_load, user_name);
+        call_api_load();
       }
 
-      function call_api_load(page_load) {
+      function call_api_load() {
         var user_name = $scope.user_name;
 
         $.ajax({
@@ -138,8 +136,11 @@ AppMenuPage.controller(
           contentType: "application/json; charset=utf-8",
           dataType: "json",
           headers: {
-            'Authorization': $scope.token 
-        },
+            'X-CSRF-TOKEN': $scope.token
+          },
+          xhrFields: {
+              withCredentials: true // เปิดการส่ง Cookie ไปพร้อมกับคำขอ
+          },
           beforeSend: function () {
             $("#divLoading").show();
           },

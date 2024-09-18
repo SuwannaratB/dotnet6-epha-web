@@ -99,7 +99,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
     //call ws get data
     if (true) {
-        get_data(true);
+        get_data();
 
         $scope.showFileName = function (inputId) {
             var fileUpload = document.getElementById('file-upload-' + inputId);
@@ -288,7 +288,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                 + '}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
             headers: {
-                'Authorization': $scope.token 
+                'X-CSRF-TOKEN': $scope.token
+            },
+            xhrFields: {
+                withCredentials: true // เปิดการส่ง Cookie ไปพร้อมกับคำขอ
             },
             beforeSend: function () {
                 $("#divLoading").show();
@@ -307,7 +310,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                 }
                 $scope.pha_type_doc = 'update';
                 showAlert('Success', 'Data has been successfully saved.', 'success', function() {
-                    get_data_after_save(false);
+                    get_data_after_save();
                     apply();
                 });
             },
@@ -323,7 +326,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
     }
 
-    function call_api_load(page_load) {
+    function call_api_load() {
         var user_name = $scope.user_name;
 
         $.ajax({
@@ -331,7 +334,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             data: '{"user_name":"' + user_name + '"}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
             headers: {
-                'Authorization': $scope.token 
+                'X-CSRF-TOKEN': $scope.token
+            },
+            xhrFields: {
+                withCredentials: true // เปิดการส่ง Cookie ไปพร้อมกับคำขอ
             },
             beforeSend: function () {
                 $("#divLoading").show();
@@ -427,7 +433,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         apply();
     }
 
-    $scope.removeData = function(seq, index) {
+    $scope.removeData = function(item) {
         // Show the confirmation dialog
         Swal.fire({
             title: "Are you sure?",
@@ -440,32 +446,22 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         }).then((result) => {
             if (result.isConfirmed) {
                 // Perform the deletion if confirmed
-                var arrdelete = $filter('filter')($scope.data, function(item) {
-                    return item.seq == seq;
-                });
+                var delItem = $filter('filter')($scope.data, function(_item) {
+                    return _item.seq == item.seq;
+                })[0];
 
-                if (arrdelete.length > 0) {
-                    $scope.data_delete.push(arrdelete[0]);
-                }
+                if (!delItem) return console.log('item delete not found!')
+                
+                $scope.data_delete.push(delItem);
 
                 $scope.data = $filter('filter')($scope.data, function(item) {
-                    return item.seq != arrdelete[0].seq;
+                    return item.seq != delItem.seq;
                 });
-
-                if ($scope.data.length == 0) {
-                    $scope.addData();
-                    return;
-                }
                 
-                $scope.$apply(); 
-                
-                // Show success message
-                Swal.fire({
-                    title: "Deleted!",
-                    text: "Your file has been deleted.",
-                    icon: "success",
-                    timer: 1000,
-                    showConfirmButton: false
+                showAlert('Success', 'Data has been successfully Deleted.', 'success', function() {
+                    setDataFilter()
+                    setPagination()
+                    apply();
                 });
             }
         });
@@ -526,15 +522,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         }
     }
 
-    function get_data(page_load) {
+    function get_data() {
         arr_def();
-        var user_name = conFig.user_name();
-        call_api_load(page_load, user_name);
+        call_api_load();
     }
 
-    function get_data_after_save(page_load) {
-        var user_name = conFig.user_name();
-        call_api_load(false, user_name);
+    function get_data_after_save() {
+        call_api_load();
     }
 
     function check_data() {

@@ -377,7 +377,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
     }
     function page_load() {
         arr_def();
-        get_detail(true);
+        get_detail();
     }
 
     $scope.actionChangedData = function (item) {
@@ -412,7 +412,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                 + ',"pha_sub_software":"' + pha_sub_software + '","pha_status":"' + pha_status + '","user_name":"' + user_name + '"}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
             headers: {
-                'Authorization': $scope.token 
+                'X-CSRF-TOKEN': $scope.token
+            },
+            xhrFields: {
+                withCredentials: true // เปิดการส่ง Cookie ไปพร้อมกับคำขอ
             },
             beforeSend: function () {
                 $("#divLoading").show();
@@ -542,7 +545,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                 + ',"pha_sub_software":"' + controller_text + '","pha_status":"' + pha_status + '","user_name":"' + user_name + '"}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
             headers: {
-                'Authorization': $scope.token 
+                'X-CSRF-TOKEN': $scope.token
+            },
+            xhrFields: {
+                withCredentials: true // เปิดการส่ง Cookie ไปพร้อมกับคำขอ
             },
             beforeSend: function () {
                 $("#divLoading").show();
@@ -592,7 +598,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                 + ',"pha_no":"' + pha_no + '","responder_user_name":"' + responder_user_name + '"}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
             headers: {
-                'Authorization': $scope.token 
+                'X-CSRF-TOKEN': $scope.token
+            },
+            xhrFields: {
+                withCredentials: true // เปิดการส่ง Cookie ไปพร้อมกับคำขอ
             },
             beforeSend: function () {
                 $("#divLoading").show();
@@ -1036,7 +1045,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                 + '}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
             headers: {
-                'Authorization': $scope.token 
+                'X-CSRF-TOKEN': $scope.token
+            },
+            xhrFields: {
+                withCredentials: true // เปิดการส่ง Cookie ไปพร้อมกับคำขอ
             },
             beforeSend: function () {
                 //$("#divLoading").show(); 
@@ -1088,7 +1100,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                             });
 
                             if(arr.length > 0){
-                                get_detail(true);
+                                get_detail();
                             }else if ($scope.flow_role_type === 'admin') {
                                 window.open("Home/Portal", "_top");
                             }
@@ -1105,7 +1117,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                                 });
                     
                                 if (userExists) {
-                                    get_detail(true);
+                                    get_detail();
                                 } else {
                                     window.open("Home/Portal", "_top");
                                 }
@@ -1191,7 +1203,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                 + '}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
             headers: {
-                'Authorization': $scope.token 
+                'X-CSRF-TOKEN': $scope.token
+            },
+            xhrFields: {
+                withCredentials: true // เปิดการส่ง Cookie ไปพร้อมกับคำขอ
             },
             beforeSend: function () {
                 $("#divLoading").show();
@@ -1534,7 +1549,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
             data: data,
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
             headers: {
-                'Authorization': $scope.token 
+                'X-CSRF-TOKEN': $scope.token
+            },
+            xhrFields: {
+                withCredentials: true // เปิดการส่ง Cookie ไปพร้อมกับคำขอ
             },
             beforeSend: function () {
                 $('#modalExportFile').modal('hide');
