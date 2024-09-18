@@ -2285,17 +2285,28 @@
 
 
                                         <tbody class="">
+                                            
                                             <tr class="rowwork border border-dashed" 
                                                 ng-if="( data_node.length == 1 ? (data_node[0].node == null ? false : true) : true) "
-                                                ng-repeat="item in data_nodeworksheet | toArray | filter:{id_node : selectedItemNodeView} | sortNodeworksheet"> 
+                                                ng-repeat="item in data_nodeworksheet | toArray | filter:{id_node : selectedItemNodeView} | sortNodeworksheet"
+                                                ng-init="accessInfo = Access_check(item)"> 
+
                                                 <!-----no---->
                                                 <td class="align-top border border-light border-active " style="padding: 0 !important; width: 80px;"
                                                     ng-if="( item.causes_no == 1 && item.consequences_no == 1) && item.row_type == 'causes' "
-                                                    rowspan="{{ (data_nodeworksheet | filter:{id_node : selectedItemNodeView,deviations: item.deviations}).length }}">
+                                                    rowspan="{{ rowspanMap[item.id_node + '-' + item.deviations_no] || 1 }}">
                                                     
-                                                    @*<p class=" mx-1 ms-0  text-1100 fw-bold max-w-100 " ng-if="( item.causes_no == 1 && item.consequences_no == 1) && item.row_type == 'causes' ">{{item.guidewords_no +'.'+  (item.deviations == null? item.guidewords : item.deviations +' '+ item.guidewords  )   }}  </p>*@
+                                                    @*rowspan="{{ (data_nodeworksheet | filter:{id_node : selectedItemNodeView,deviations: item.deviations}).length }}"
+                                                    <p class=" mx-1 ms-0  text-1100 fw-bold max-w-100 " ng-if="( item.causes_no == 1 && item.consequences_no == 1) && item.row_type == 'causes' ">{{item.guidewords_no +'.'+  (item.deviations == null? item.guidewords : item.deviations +' '+ item.guidewords  )   }}  </p>*@
                                                     <p class=" mx-1 ms-0  text-1100 fw-bold max-w-100 " >
+
                                                         {{$index + 1}} {{ item.deviations }}
+                                                        @*{{'id_node  ' + item.id_node}}
+                                                        {{'selectedItemNodeView ' +selectedItemNodeView}}
+                                                        {{'deviations ' + item.deviations}}
+                                                        {{'deviations_no ' + item.deviations_no}}
+                                                        {{'causes_no ' + item.causes_no}}
+                                                        {{'consequences_no ' + item.consequences_no}}*@
                                                     </p>
                                                 </td>
 
@@ -2306,7 +2317,8 @@
                                                 @* causes *@
                                                 <td class="align-top border border-light border-active " style="padding: 0 !important;"
                                                     ng-if="item.row_type === 'causes'" 
-                                                    rowspan="{{ (data_nodeworksheet | filter:{id_node : selectedItemNodeView,deviations: item.deviations,causes_no: item.causes_no}).length }}">
+                                                    rowspan="{{ rowspanMap[item.id_node + '-' + item.deviations_no + '-' + item.causes_no] || 1 }}">
+                                                    @*rowspan="{{ (data_nodeworksheet | filter:{id_node : selectedItemNodeView,deviations: item.deviations,causes_no: item.causes_no}).length }}"*@
                                                     <div class="d-flex align-items-top w-100">
                                                         <div>
                                                             <p class="p-0 m-0 me-1 text-end">{{item.guidewords_no +'.' + item.causes_no +'.'}}</p>
@@ -2338,9 +2350,8 @@
                                                                         <span class="fas fa-copy"></span>
                                                                         Paste
                                                                     </a>
-                                                                    <div class="dropdown-divider " ng-if="!(item.causes_no == 1)"></div>
+                                                                    <div class="dropdown-divider "></div>
                                                                     <a class="dropdown-item text-danger"
-                                                                       ng-if="!(item.causes_no == 1)"
                                                                        ng-click="removeDataNodeWorksheet('causes',item,$index)">
                                                                         <span class="fas fa-times-circle"></span> 
                                                                         Remove
@@ -2385,7 +2396,8 @@
                                                 @* consequences *@
                                                 <td class="align-top border border-light border-active " style="padding: 0 !important;"
                                                     ng-if="item.row_type === 'causes' || item.row_type =='consequences' " 
-                                                    rowspan="{{ (data_nodeworksheet | filter:{id_node : selectedItemNodeView,deviations: item.deviations,causes_no: item.causes_no,consequences_no: item.consequences_no}).length }}">
+                                                    rowspan="{{ rowspanMap[item.id_node + '-' + item.deviations_no + '-' + item.causes_no + '-' + item.consequences_no] || 1 }}">
+                                                    @*rowspan="{{ (data_nodeworksheet | filter:{id_node : selectedItemNodeView,deviations: item.deviations,causes_no: item.causes_no,consequences_no: item.consequences_no}).length }}"*@
                                                     <div class="d-flex align-items-top w-100" >
                                                         <div>
                                                             <p class="p-0 m-0 me-1 text-end">{{item.guidewords_no +'.' + item.causes_no +'.'+item.consequences_no +'.'}}</p>
@@ -2420,9 +2432,8 @@
                                                                         <span class="fas fa-copy"></span>
                                                                         Paste
                                                                     </a>
-                                                                    <div class="dropdown-divider" ng-if="item.consequences_no  > 1"></div> 
+                                                                    <div class="dropdown-divider"></div> 
                                                                     <a class="dropdown-item text-danger"
-                                                                        ng-if="!(item.consequences_no == 1)"
                                                                         ng-click="removeDataNodeWorksheet('consequences',item,$index)">
                                                                         <span class="fas fa-times-circle"></span> 
                                                                         Remove
@@ -2467,7 +2478,8 @@
                                                 <td class="align-top border border-light border-active "
                                                     style="padding: 0 !important; width: 70px;"
                                                     ng-if="item.row_type === 'causes' || item.row_type =='consequences' || item.row_type == 'category'" 
-                                                    rowspan="{{ (data_nodeworksheet | filter:{id_node : selectedItemNodeView,deviations: item.deviations,causes_no: item.causes_no,consequences_no: item.consequences_no,category_no: item.category_no}).length }}">
+                                                    rowspan="{{ rowspanMap[item.id_node + '-' + item.deviations_no + '-' + item.causes_no + '-' + item.consequences_no + '-' + item.category_no] || 1 }}">
+                                                    @*rowspan="{{ (data_nodeworksheet | filter:{id_node : selectedItemNodeView,deviations: item.deviations,causes_no: item.causes_no,consequences_no: item.consequences_no,category_no: item.category_no}).length }}"*@
                                                     <div class="d-flex align-items-top px-0" style="width: 70px;">
                                                         <div class="align-top font-sans-serif btn-reveal-trigger position-static pt-1 mx-0 px-0" style="width: 20px;">
                                                             <p class="p-0 m-0 me-1 text-end d-none">
@@ -2488,9 +2500,8 @@
                                                                         <span class="fas fa-copy"></span>
                                                                         Add
                                                                     </a>
-                                                                    <div class="dropdown-divider " ng-if="!(item.category_no == 1)"></div>
+                                                                    <div class="dropdown-divider "></div>
                                                                     <a class="dropdown-item text-danger"
-                                                                       ng-if="!(item.category_no == 1)"
                                                                        ng-click="removeDataNodeWorksheet('category',item,$index)">
                                                                        <span class="fas fa-times-circle"></span> 
                                                                        Remove
@@ -2518,7 +2529,8 @@
                                                 <td class="align-top border border-light border-end-0 border-top-0 "
                                                     style="padding: 0 !important; width: 20px;"
                                                     ng-if="item.row_type === 'causes' || item.row_type =='consequences' || item.row_type == 'category' " 
-                                                    rowspan="{{ (data_nodeworksheet | filter:{id_node : selectedItemNodeView,deviations: item.deviations,causes_no: item.causes_no,consequences_no: item.consequences_no,category_no: item.category_no}).length }}">
+                                                    rowspan="{{ rowspanMap[item.id_node + '-' + item.deviations_no + '-' + item.causes_no + '-' + item.consequences_no + '-' + item.category_no] || 1 }}">
+                                                    @*rowspan="{{ (data_nodeworksheet | filter:{id_node : selectedItemNodeView,deviations: item.deviations,causes_no: item.causes_no,consequences_no: item.consequences_no,category_no: item.category_no}).length }}"*@
                                                     <div class="align-items-center text-end mt-1" style=" width: 20px;"
                                                          ng-class="{'disabled-link':(!tab_worksheet_active)}">
                                                         <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end"
@@ -2531,7 +2543,8 @@
                                                 <td class="align-top border border-light border-end-0 border-top-0"
                                                     style="padding: 0 !important; width: 20px;"
                                                     ng-if="item.row_type === 'causes' || item.row_type =='consequences' || item.row_type == 'category' " 
-                                                    rowspan="{{ (data_nodeworksheet | filter:{id_node : selectedItemNodeView,deviations: item.deviations,causes_no: item.causes_no,consequences_no: item.consequences_no,category_no: item.category_no}).length }}">
+                                                    rowspan="{{ rowspanMap[item.id_node + '-' + item.deviations_no + '-' + item.causes_no + '-' + item.consequences_no + '-' + item.category_no] || 1 }}">
+                                                    @*rowspan="{{ (data_nodeworksheet | filter:{id_node : selectedItemNodeView,deviations: item.deviations,causes_no: item.causes_no,consequences_no: item.consequences_no,category_no: item.category_no}).length }}"*@
                                                     <div class="align-items-center text-end mt-1" style=" width: 20px;"
                                                          ng-class="{'disabled-link':(!tab_worksheet_active)}">
                                                         <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end"
@@ -2548,7 +2561,8 @@
                                                 <td class="align-top border border-light border-active "
                                                     style="padding: 0 !important; width: 30px; height:30;"
                                                     ng-if="item.row_type === 'causes' || item.row_type =='consequences' || item.row_type == 'category' " 
-                                                    rowspan="{{ (data_nodeworksheet | filter:{id_node : selectedItemNodeView,deviations: item.deviations,causes_no: item.causes_no,consequences_no: item.consequences_no,category_no: item.category_no}).length }}">
+                                                    rowspan="{{ rowspanMap[item.id_node + '-' + item.deviations_no + '-' + item.causes_no + '-' + item.consequences_no + '-' + item.category_no] || 1 }}">
+                                                    @*rowspan="{{ (data_nodeworksheet | filter:{id_node : selectedItemNodeView,deviations: item.deviations,causes_no: item.causes_no,consequences_no: item.consequences_no,category_no: item.category_no}).length }}"*@
                                                     <div class="align-items-center text-end mt-1" style=" width: 30px;">
                                                         <button ng-style=" { 'background-color' : ((item.ram_befor_risk == 'H') ? 'red' : ((item.ram_befor_risk == 'M') ? 'yellow' : ((item.ram_befor_risk == 'L') ? 'green' : '#D3D3D3')) ) }"
                                                                 class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end h-100"
@@ -2566,7 +2580,8 @@
 
                                                 <td class="align-top border border-lightborder-active" style="padding: 0 !important; width: 40px;"
                                                     ng-if="item.row_type === 'causes' || item.row_type =='consequences' || item.row_type == 'category' " 
-                                                    rowspan="{{ (data_nodeworksheet | filter:{id_node : selectedItemNodeView,deviations: item.deviations,causes_no: item.causes_no,consequences_no: item.consequences_no,category_no: item.category_no}).length }}">
+                                                    rowspan="{{ rowspanMap[item.id_node + '-' + item.deviations_no + '-' + item.causes_no + '-' + item.consequences_no + '-' + item.category_no] || 1 }}">
+                                                    @*rowspan="{{ (data_nodeworksheet | filter:{id_node : selectedItemNodeView,deviations: item.deviations,causes_no: item.causes_no,consequences_no: item.consequences_no,category_no: item.category_no}).length }}"*@
                                                     <div class="d-flex align-items-center text-end mt-1"
                                                          ng-class="{'disabled-link':(!tab_worksheet_active)}">
                                                         <select class="form-select rounded-1 mx-1 p-1  border-start-0  border-end-0 border-top-0 " 
@@ -2602,7 +2617,8 @@
 
                                                 <td id="td_existing_safeguards" class="align-top border border-light border-active" style="padding: 0 !important;"
                                                     ng-if="item.row_type === 'causes' || item.row_type =='consequences' || item.row_type == 'category' " 
-                                                    rowspan="{{ (data_nodeworksheet | filter:{id_node : selectedItemNodeView,deviations: item.deviations,causes_no: item.causes_no,consequences_no: item.consequences_no,category_no: item.category_no}).length }}">
+                                                    rowspan="{{ rowspanMap[item.id_node + '-' + item.deviations_no + '-' + item.causes_no + '-' + item.consequences_no + '-' + item.category_no] || 1 }}">
+                                                    @*rowspan="{{ (data_nodeworksheet | filter:{id_node : selectedItemNodeView,deviations: item.deviations,causes_no: item.causes_no,consequences_no: item.consequences_no,category_no: item.category_no}).length }}"*@
                                                     <div class="d-flex align-items-center w-100">
                                                         <div class="autocomplete-container" style=" width: 100%; " ng-class="{'disabled-link':(!tab_worksheet_active)}">
                                                             <!--Modal RAM Start-->         
@@ -2638,7 +2654,8 @@
                                                 <td class="align-top border border-light border-right-0 "
                                                     style="padding: 0 !important; width: 20px;"
                                                     ng-if="item.row_type === 'causes' || item.row_type =='consequences' || item.row_type == 'category' " 
-                                                    rowspan="{{ (data_nodeworksheet | filter:{id_node : selectedItemNodeView,deviations: item.deviations,causes_no: item.causes_no,consequences_no: item.consequences_no,category_no: item.category_no}).length }}">
+                                                    rowspan="{{ rowspanMap[item.id_node + '-' + item.deviations_no + '-' + item.causes_no + '-' + item.consequences_no + '-' + item.category_no] || 1 }}">
+                                                    @*rowspan="{{ (data_nodeworksheet | filter:{id_node : selectedItemNodeView,deviations: item.deviations,causes_no: item.causes_no,consequences_no: item.consequences_no,category_no: item.category_no}).length }}"*@
                                                     <div class="align-items-center text-end mt-1" style=" width: 20px;" ng-class="{'disabled-link':(!tab_worksheet_active)}">
                                                         <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end"
                                                                 type="button" 
@@ -2654,7 +2671,7 @@
                                                 <td class="align-top border border-light border-right-0"
                                                     style="padding: 0 !important; width: 20px;"
                                                     ng-if="item.row_type === 'causes' || item.row_type =='consequences' || item.row_type == 'category' " 
-                                                    rowspan="{{ (data_nodeworksheet | filter:{id_node : selectedItemNodeView,deviations: item.deviations,causes_no: item.causes_no,consequences_no: item.consequences_no,category_no: item.category_no}).length }}">
+                                                    rowspan="{{ rowspanMap[item.id_node + '-' + item.deviations_no + '-' + item.causes_no + '-' + item.consequences_no + '-' + item.category_no] || 1 }}">
                                                     <div class="align-items-center text-end mt-1" style=" width: 20px;" ng-class="{'disabled-link':(!tab_worksheet_active)}">
                                                         <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end"
                                                                 type="button" 
@@ -2670,7 +2687,7 @@
                                                 <td class="align-top border border-light border-active "
                                                     style="padding: 0 !important; width: 30px; heigh:30px"
                                                     ng-if="item.row_type === 'causes' || item.row_type =='consequences' || item.row_type == 'category' " 
-                                                    rowspan="{{ (data_nodeworksheet | filter:{id_node : selectedItemNodeView,deviations: item.deviations,causes_no: item.causes_no,consequences_no: item.consequences_no,category_no: item.category_no}).length }}">
+                                                    rowspan="{{ rowspanMap[item.id_node + '-' + item.deviations_no + '-' + item.causes_no + '-' + item.consequences_no + '-' + item.category_no] || 1 }}">
                                                     <div class="align-items-center text-end mt-1" style=" width: 30px;">
                                                         <button ng-style=" { 'background-color' : ((item.ram_after_risk == 'H') ? 'red' : ((item.ram_after_risk == 'M') ? 'yellow' : ((item.ram_after_risk == 'L') ? 'green' : '#D3D3D3')) ) }"
                                                                 class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end"
@@ -2708,7 +2725,7 @@
                                                                     Add
                                                                 </a>
                                                                 <div class="dropdown-divider "></div>
-                                                                <a class="dropdown-item text-danger" ng-click="remove_listworksheet('category',item,$index)"><span class="fas fa-times-circle"></span> Remove</a>
+                                                                <a class="dropdown-item text-danger" ng-click="removeDataNodeWorksheet('category',item,$index)"><span class="fas fa-times-circle"></span> Remove</a>
                                                             </div>
                                                         </div>                                                          
                                                         <div class="autocomplete-container" 

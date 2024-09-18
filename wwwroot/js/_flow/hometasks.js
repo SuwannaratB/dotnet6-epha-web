@@ -188,6 +188,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
         var controller_text = item.pha_type;
 
         $scope.pha_seq = item.id_pha;
+        $scope.pha_no = item.document_number;
         $scope.pha_type_doc = 'review_document';
 
         next_page(controller_text, '');
@@ -197,6 +198,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
         var controller_text = item.pha_type;
 
         $scope.pha_seq = item.id_pha;
+        $scope.pha_no = item.document_number;
         $scope.pha_type_doc = 'review_document';
 
         next_page(controller_text, '', item.user_name);
@@ -206,8 +208,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
         var controller_text = item.pha_type;
 
         $scope.pha_seq = item.id_pha;
+        $scope.pha_no = item.document_number;
         $scope.pha_type_doc = 'followup';
 
+        alert($scope.pha_no)
         next_page(controller_text, '', item.user_name);
     }
     $scope.editActionReviewFollowup = function (item) {

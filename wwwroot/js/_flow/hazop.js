@@ -825,7 +825,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
     
         function uploadFileRAM(file_obj, seq, file_name, file_size) {
-            var sub_software = 'jsea';// ram เก็บไว้ที่เดียวกกัน
+            var sub_software = 'hazop';// ram เก็บไว้ที่เดียวกกัน
             var fd = new FormData();
             //Take the first selected file
             fd.append("file_obj", file_obj);
@@ -1731,7 +1731,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         $.ajax({
             url: url_ws + "flow/edit_worksheet",
-            data: '{"sub_software":"jsea","user_name":"' + user_name + '","role_type":"' + flow_role_type + '","action":"' + flow_action + '","token_doc":"' + pha_seq + '","pha_status":"' + pha_status + '"'
+            data: '{"sub_software":"hazop","user_name":"' + user_name + '","role_type":"' + flow_role_type + '","action":"' + flow_action + '","token_doc":"' + pha_seq + '","pha_status":"' + pha_status + '"'
                 + ', "json_worksheet": ' + JSON.stringify(json_worksheet)
                 + '}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
@@ -1815,6 +1815,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 var arr = data;
                 if (true) {
                     
+                    console.log(arr.nodeworksheet)
                     $scope.data_all = arr;
                     $scope.master_apu = arr.apu;
                     $scope.master_business_unit_def = arr.business_unit;
@@ -1971,6 +1972,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                                 }
                             }
                         }*/
+
+
+                        //get_rowspam
+                        $scope.rowspanMap = {};
+                        computeRowspan();
 
                         $scope.selectedItemNodeView = $scope.data_nodeworksheet[0].id_node;
                     }
@@ -2141,6 +2147,15 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 $scope.unsavedChanges= false;
                 
                 $('#divPage').removeClass('d-none');
+
+                /*$scope.data_nodeworksheet = $scope.data_nodeworksheet.filter(function (item) {
+                    return (
+                        item.deviations.toLowerCase().includes('test')
+                    );
+                });
+
+
+                console.log( "=========================================",$scope.data_nodeworksheet)*/
 
 
             },
@@ -3035,7 +3050,40 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
     
         }
+
+        function computeRowspan() {
+            $scope.rowspanMap = {};
+            $scope.data_nodeworksheet.forEach(function(item) {
+              if (item.row_type === 'causes') {
+                var key = item.id_node + '-' + item.deviations_no + '-' + item.causes_no;
+                $scope.rowspanMap[key] = $scope.data_nodeworksheet.filter(function(entry) {
+                  return entry.id_node === $scope.selectedItemNodeView &&
+                         entry.deviations_no === item.deviations_no &&
+                         entry.causes_no === item.causes_no;
+                }).length;
+              }else if(item.row_type === 'consequences'){
+                var key = item.id_node + '-' + item.deviations_no + '-' + item.causes_no;
+                $scope.rowspanMap[key] = $scope.data_nodeworksheet.filter(function(entry) {
+                  return entry.id_node === $scope.selectedItemNodeView &&
+                         entry.deviations_no === item.deviations_no &&
+                         entry.causes_no === item.causes_no &&
+                         entry.consequences_no === item.consequences_no
+                }).length;
+              }else if(item.role_type === 'category'){
+                var key = item.id_node + '-' + item.deviations_no + '-' + item.causes_no;
+                $scope.rowspanMap[key] = $scope.data_nodeworksheet.filter(function(entry) {
+                  return entry.id_node === $scope.selectedItemNodeView &&
+                         entry.deviations_no === item.deviations_no &&
+                         entry.causes_no === item.causes_no &&
+                         entry.consequences_no === item.consequences_no &&
+                         entry.category_no === item.category_no
+                }).length;
+              }
+            });
+          }
+        
     }
+    
 
     // <==== (Kul)Session zone function  ====>    
     function clone_arr_newrow(arr_items) {
@@ -3600,7 +3648,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         //add NodeDrawing  
         $scope.AddDataGuideWords(false);
 
-        console.log("Will show all node ids:");
 
         $scope.data_nodeworksheet.forEach(node => {
             console.log(node.nid_node);
@@ -4010,6 +4057,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                             newInput.guidewords = arr[i].guidewords;
                             newInput.deviations = arr[i].deviations;
                             newInput.guidewords_no = arr[i].guidewords_no;
+                            newInput.recommendations_no = null;
 
                             arr_def.push(newInput);
                         }
@@ -4361,22 +4409,32 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         newInput.action_change = 1;
         newInput.action_status = 'Open';
 
+        
         //copy detail row befor
-        if (row_type == "causes") {}
-        else if (row_type == "consequences") {
-            newInput.causes = item.causes;
-
-        } else if (row_type == "category") {
-            newInput.causes = item.causes;
-            newInput.consequences = item.consequences;
+        if (row_type == "causes") {
         }
+        else if (row_type == "consequences") {
+            var data = $scope.data_nodeworksheet.filter(function(item) {
+                return item.causes_no == causes_no 
+            });
+            newInput.causes = data[0].causes;
+
+        }
+        else if (row_type == 'category') {
+            var data = $scope.data_nodeworksheet.filter(function(item) {
+                return item.causes_no == causes_no && item.consequences_no == consequences_no ;
+            });
+
+            newInput.causes = data[0].causes;
+            newInput.consequences = data[0].consequences;
+        }
+
 
 
         $scope.selectdata_nodeworksheet = xseq;
         running_index_worksheet(seq);
         index = index_rows;
 
-        console.log("seq_node",seq_node)
         // console.clear();
         running_index_level1_lv1($scope.data_nodeworksheet, iNo, index, newInput);
 
@@ -4524,24 +4582,19 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         //กรณีที่เป็นรายการเดียวไม่ต้องลบ ให้ cleare field 
         var arrCheck = [];
         if (true) {
-            if (row_type == "causes") {
-                var arrCheck = $filter('filter')($scope.data_nodeworksheet, function (_item) {
-                    return (_item.id_node == seq_node && _item.seq_guide_word == seq_guide_word);
-                });
-            } else if (row_type == "consequences") {
-                var arrCheck = $filter('filter')($scope.data_nodeworksheet, function (_item) {
-                    return (_item.id_node == seq_node && _item.seq_guide_word == seq_guide_word
-                        && _item.seq_causes == seq_causes);
-                });
-            } else if (row_type == "category") {
-                var arrCheck = $filter('filter')($scope.data_nodeworksheet, function (_item) {
-                    return (_item.id_node == seq_node
-                        && _item.seq_guide_word == seq_guide_word
-                        && _item.seq_causes == seq_causes
-                        && _item.seq_consequences == seq_consequences);
-                });
-            }
+            var arrCheck = $filter('filter')($scope.data_nodeworksheet, function (_item) {
+                if (row_type === "causes") {
+                    return _item.id_node == seq_node && _item.seq_guide_word == seq_guide_word;
+                } else if (row_type === "consequences") {
+                    return _item.id_node == seq_node && _item.seq_guide_word == seq_guide_word && _item.seq_causes == seq_causes;
+                } else if (row_type === "category") {
+                    return _item.id_node == seq_node && _item.seq_guide_word == seq_guide_word && _item.seq_causes == seq_causes && _item.seq_consequences == seq_consequences;
+                }
+            });
         }
+
+        console.log("===============",arrCheck)
+
         if (arrCheck.length == 1) {
             //กรณีที่เหลือ row เดียว  
             arrCheck[0].action_type = 'update';
@@ -4582,6 +4635,69 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             return;
         }
 
+
+
+        // Handle the removal and update logic
+        if (arrCheck.length > 1) {
+            arrCheck.forEach(function (checkedItem) {
+
+                console.log("checkedItem",checkedItem)
+                // Splice the data if row_type is not "causes"
+                if (checkedItem.row_type !== item.row_type && checkedItem.row_type !== 'causes') {
+                    console.log("this data will user for upfate",checkedItem)
+                    var itemIndex = $scope.data_nodeworksheet.indexOf(checkedItem);
+                    if (itemIndex !== -1) {
+                        $scope.data_nodeworksheet.splice(itemIndex, 1);
+                    }
+                }
+            });
+
+            // Re-filter the data to get the updated arrCheck
+            var update_arrCheck = $filter('filter')($scope.data_nodeworksheet, function (_item) {
+                return (_item.id_node == seq_node && _item.seq_guide_word == seq_guide_word);
+            });
+
+            // Reset fields if only one row remains in arrCheck
+            if (update_arrCheck.length === 1) {
+                var causeItem = update_arrCheck[0];  // This should be the single remaining item
+
+                // Update causeItem with default values
+                causeItem.action_type = 'update';
+                causeItem.action_change = 1;
+                causeItem.action_status = 'Open';
+                causeItem.index_rows = 0;
+                causeItem.no = 1;
+                causeItem.seq_causes = 1;
+                causeItem.seq_consequences = 1;
+                causeItem.seq_category = 1;
+
+                // Clear specific fields based on the row_type
+                causeItem.causes = null;
+                causeItem.consequences = null;
+                causeItem.category = null;
+                causeItem.category_type = null;
+                causeItem.ram_befor_security = null;
+                causeItem.ram_befor_likelihood = null;
+                causeItem.ram_befor_risk = null;
+                causeItem.major_accident_event = null;
+                causeItem.safety_critical_equipment = null;
+                causeItem.existing_safeguards = null;
+                causeItem.ram_after_security = null;
+                causeItem.ram_after_likelihood = null;
+                causeItem.ram_after_risk = null;
+                causeItem.recommendations = null;
+                causeItem.responder_user_id = null;
+                causeItem.responder_user_name = null;
+                causeItem.responder_user_email = null;
+                causeItem.responder_user_displayname = null;
+                causeItem.responder_user_img = null;
+
+                return;
+            }
+        }
+
+ 
+        return;
         //Delete row select and upper row
         if (true) {
             if (row_type == "causes") {
