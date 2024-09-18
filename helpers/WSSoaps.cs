@@ -9,7 +9,7 @@ public class WSSoaps
     {
         HttpClientHandler clientHandler = new HttpClientHandler();
 
-        clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; };
+        clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true;
         _HttpClient = new HttpClient(clientHandler);
         _IConfiguration = IConfiguration;
     }

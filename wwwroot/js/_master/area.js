@@ -16,13 +16,13 @@ AppMenuPage.filter('MultiFieldFilter', function () {
 });
 AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) {
 
-    var url_ws = conFig.service_api_url();
+    let url_ws = conFig.service_api_url();
     
     get_data();
 
     ///////////////////////////  API Function  ///////////////////////////
     function call_api_load() {
-        var user_name = $scope.user_name;
+        let user_name = $scope.user_name;
         $.ajax({
             url: url_ws + "masterdata/get_master_area",
             data: '{"user_name":"' + user_name + '"}',
@@ -37,7 +37,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                 $("#divLoading").hide();
             },
             success: function (data) {
-                var arr = data;
+                let arr = data;
                 $scope.data_all = arr;
                 $scope.data = arr.area;
                 $scope.data_def = clone_arr_newrow(arr.area);
@@ -57,11 +57,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
     }
 
     function save_data(action) {
-        var user_name = $scope.user_name;
-        var flow_role_type = $scope.flow_role_type;
+        let user_name = $scope.user_name;
+        let flow_role_type = $scope.flow_role_type;
         //save 
-        var flow_action = action || 'save';
-        var json_data = check_data();
+        let flow_action = action || 'save';
+        let json_data = check_data();
         $.ajax({
             url: url_ws + "masterdata/set_master_area",
             data: '{"user_name":"' + user_name + '"'
@@ -81,7 +81,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                 $("#divLoading").hide();
             },
             success: function (data) {
-                var arr = data;
+                let arr = data;
                 if(arr[0].status == 'false') {
                     showAlert('Error', arr[0].status, 'error', function() {
                         apply()
@@ -114,10 +114,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
     }
 
     function get_max_id() {
-        var arr = $filter('filter')($scope.data_all.max, function (item) {
+        let arr = $filter('filter')($scope.data_all.max, function (item) {
             return (item.name == 'seq');
         });
-        var iMaxSeq = 1; if (arr.length > 0) { iMaxSeq = arr[0].values; }
+        let iMaxSeq = 1; if (arr.length > 0) { iMaxSeq = arr[0].values; }
         $scope.MaxSeqData = iMaxSeq;
 
 
@@ -163,8 +163,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
     }
 
     $scope.newData = function (item) {
-        var seq = Number($scope.MaxSeqData);
-        var newInput = clone_arr_newrow($scope.data_def)[0];
+        let seq = Number($scope.MaxSeqData);
+        let newInput = clone_arr_newrow($scope.data_def)[0];
         newInput.seq = seq;
         newInput.id = 0;
         newInput.active_type = 1;
@@ -191,7 +191,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             function() {
                 if(!item) return showAlert('Error', 'Data remove not Found!', 'error');
 
-                var del_item = $filter('filter')($scope.data, function (_item) {
+                let del_item = $filter('filter')($scope.data, function (_item) {
                     return (_item.seq == item.seq);
                 })[0];
         
@@ -227,13 +227,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
     }
 
     function check_data() {
-        var arr_active = [];
+        let arr_active = [];
         angular.copy($scope.data, arr_active);
-        var arr_json = $filter('filter')(arr_active, function (item) {
+        let arr_json = $filter('filter')(arr_active, function (item) {
             return ((item.action_type == 'update' && item.action_change == 1) || item.action_type == 'insert');
         });
 
-        for (var i = 0; i < $scope.data_delete.length; i++) {
+        for (let i = 0; i < $scope.data_delete.length; i++) {
             $scope.data_delete[i].action_type = 'delete';
             arr_json.push($scope.data_delete[i]);
         }
@@ -250,14 +250,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
     };
 
     function clone_arr_newrow(arr_items) {
-        var arr_clone = []; var arr_clone_def = [];
+        let arr_clone = []; let arr_clone_def = [];
         try {
             angular.copy(arr_items, arr_clone_def);
 
             if (arr_clone_def.length > 0) {
                 arr_clone_def = arr_clone_def.map(function (item) {
-                    var newObj = {};
-                    for (var key in item) {
+                    let newObj = {};
+                    for (let key in item) {
                         newObj[key] = null;
                     }
                     return newObj;
@@ -312,7 +312,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
     //////////////////////////  Future ///////////////////////////
     function validation(){
-        var list = $filter('filter')($scope.data, function (_item) {
+        let list = $filter('filter')($scope.data, function (_item) {
             return (!_item.name);
         });
         if(list.length > 0) return false
@@ -327,7 +327,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
     function newTag(id_elemet){
         setTimeout(() => {
-            var element = document.getElementById(id_elemet);
+            let element = document.getElementById(id_elemet);
             element.classList.remove("hidden");
         }, 10);
     }
