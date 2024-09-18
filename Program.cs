@@ -12,12 +12,19 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<sessionAuthen, sessionAuthen>();
 builder.Services.AddScoped<WSSoaps, WSSoaps>();
 
-builder.Services.AddCors(p => p.AddPolicy("AllowOrigin", builder =>
+var MyAllowSpecificOrigins = "AllowOrigin";
+builder.Services.AddCors(options =>
 {
-    builder.AllowAnyOrigin()
-            .AllowAnyMethod()
-            .AllowAnyHeader();
-}));
+    options.AddPolicy(MyAllowSpecificOrigins, policy =>
+    {
+        policy.WithOrigins(
+            "https://qas-epha.thaioilgroup.com"
+        )
+        .AllowAnyHeader()
+        .AllowAnyMethod()
+        .AllowCredentials();
+    });
+});
 
 // AZUE AD 
 var initialScopes = builder.Configuration.GetValue<string>("DownstreamApi:Scopes")?.Split(' ');

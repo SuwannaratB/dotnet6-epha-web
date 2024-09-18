@@ -124,33 +124,6 @@ public class LoginController : Controller
                     {
                         ViewBag.email = await _WSSoaps.decode(keyToken);
                         _sessionAuthen.Email = ViewBag.email;
-                        // LoginFromBodyModel LoginFromBodyModels = new LoginFromBodyModel()
-                        // {
-                        //     user_name = _sessionAuthen.Email.Split("@")[0],
-                        //     pass_word = "pass"
-                        // };
-
-                        // //check email @thaioilgroup.com --> ViewBag.email
-                        // string _email = (ViewBag.email ?? "");
-                        // if (!_email.ToLower().Contains("@thaioilgroup.com")) { return View(); }
-
-                        // var result = (IActionResult?)null;
-                        // try
-                        // {
-                        //     var resulT = Authentication(LoginFromBodyModels).Result;
-                        //     result = resulT;
-
-                        //     if (result != null)
-                        //     {
-                        //         string path = "Home/Portal";
-                        //         return Redirect($"{BaseURL}{path}");
-                        //     }
-                        // }
-                        // catch
-                        // {
-                        //     string path = "Login/Index";
-                        //     return Redirect($"{BaseURL}{path}");
-                        // }
                     }
                     if (keyToken == "")
                     {

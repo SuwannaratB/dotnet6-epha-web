@@ -957,7 +957,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             data: '{"sub_software":"hazop","user_name":"' + user_name + '","seq":"' + seq + '","export_type":"' + data_type + '"}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
             headers: {
-                'Authorization': $scope.token 
+                'X-CSRF-TOKEN': $scope.token
+            },
+            xhrFields: {
+                withCredentials: true // เปิดการส่ง Cookie ไปพร้อมกับคำขอ
             },
             beforeSend: function () {
                 //$('#modalLoadding').modal('show');
@@ -1333,7 +1336,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 + '}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
             headers: {
-                'Authorization': $scope.token 
+                'X-CSRF-TOKEN': $scope.token
+            },
+            xhrFields: {
+                withCredentials: true // เปิดการส่ง Cookie ไปพร้อมกับคำขอ
             },
             beforeSend: function () {
                 //$('#modalLoadding').modal('show');
@@ -1381,7 +1387,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                                 + ',"pha_no":"' + pha_no + '","pha_status":"' + pha_status + '","pha_type_doc":"' + pha_type_doc + '"}',
                             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
                             headers: {
-                                'Authorization': $scope.token 
+                                'X-CSRF-TOKEN': $scope.token
+                            },
+                            xhrFields: {
+                                withCredentials: true // เปิดการส่ง Cookie ไปพร้อมกับคำขอ
                             },
                             beforeSend: function () {
                                 $("#divLoading").show();
@@ -1441,7 +1450,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                                 + ',"pha_no":"' + pha_no + '","pha_status":"' + pha_status + '","pha_type_doc":"' + pha_type_doc + '"}',
                             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
                             headers: {
-                                'Authorization': $scope.token 
+                                'X-CSRF-TOKEN': $scope.token
+                            },
+                            xhrFields: {
+                                withCredentials: true // เปิดการส่ง Cookie ไปพร้อมกับคำขอ
                             },
                             beforeSend: function () {
                                 $("#divLoading").show();
@@ -1545,7 +1557,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 + '}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
             headers: {
-                'Authorization': $scope.token 
+                'X-CSRF-TOKEN': $scope.token
+            },
+            xhrFields: {
+                withCredentials: true // เปิดการส่ง Cookie ไปพร้อมกับคำขอ
             },
             beforeSend: function () {
                 $("#divLoading").show();
@@ -1674,7 +1689,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             headers: {
-                'Authorization': $scope.token 
+                'X-CSRF-TOKEN': $scope.token
+            },
+            xhrFields: {
+                withCredentials: true // เปิดการส่ง Cookie ไปพร้อมกับคำขอ
             },
             beforeSend: function() {
                 $("#divLoading").show();
@@ -1736,7 +1754,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 + '}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
             headers: {
-                'Authorization': $scope.token 
+                'X-CSRF-TOKEN': $scope.token
+            },
+            xhrFields: {
+                withCredentials: true // เปิดการส่ง Cookie ไปพร้อมกับคำขอ
             },
             beforeSend: function () {
                 $("#divLoading").show();
@@ -1797,7 +1818,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             data: '{"sub_software":"hazop","user_name":"' + user_name + '","token_doc":"' + pha_seq + '","type_doc":"' + type_doc + '"}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
             headers: {
-                'Authorization': $scope.token 
+                'X-CSRF-TOKEN': $scope.token
+            },
+            xhrFields: {
+                withCredentials: true // เปิดการส่ง Cookie ไปพร้อมกับคำขอ
             },
             beforeSend: function () {
                 $('#divLoading').show();
@@ -4198,7 +4222,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 + '}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
             headers: {
-                'Authorization': $scope.token 
+                'X-CSRF-TOKEN': $scope.token
+            },
+            xhrFields: {
+                withCredentials: true // เปิดการส่ง Cookie ไปพร้อมกับคำขอ
             },
             beforeSend: function () {
                 $("#divLoading").show();
@@ -5483,7 +5510,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 + '}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
             headers: {
-                'Authorization': $scope.token 
+                'X-CSRF-TOKEN': $scope.token
+            },
+            xhrFields: {
+                withCredentials: true // เปิดการส่ง Cookie ไปพร้อมกับคำขอ
             },
             beforeSend: function () {
                 //$('#modalLoadding').modal('show');
@@ -5546,7 +5576,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 data: '{"controller_action_befor":"' + page + '","pha_type_doc":"' + pha_type_doc + '","user_name":"' + user_name + '"}',
                 type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
                 headers: {
-                    'Authorization': $scope.token 
+                    'X-CSRF-TOKEN': $scope.token
+                },
+                xhrFields: {
+                    withCredentials: true // เปิดการส่ง Cookie ไปพร้อมกับคำขอ
                 },
                 beforeSend: function () {
                     $("#divLoading").show();
@@ -5624,7 +5657,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 data: '{"sub_software":"hazop","user_name":"' + user_name + '","pha_seq":"' + token_doc + '"}',
                 type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
                 headers: {
-                    'Authorization': $scope.token 
+                    'X-CSRF-TOKEN': $scope.token
+                },
+                xhrFields: {
+                    withCredentials: true // เปิดการส่ง Cookie ไปพร้อมกับคำขอ
                 },
                 beforeSend: function () {
                     $("#divLoading").show();
@@ -7301,7 +7337,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 + '}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
             headers: {
-                'Authorization': $scope.token 
+                'X-CSRF-TOKEN': $scope.token
+            },
+            xhrFields: {
+                withCredentials: true // เปิดการส่ง Cookie ไปพร้อมกับคำขอ
             },
             beforeSend: function () {
                 $("#divLoading").show();

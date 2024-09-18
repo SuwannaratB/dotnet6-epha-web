@@ -135,6 +135,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                 url: url_ws + "masterdata/get_master_sub_area_equipmet",
                 data: '{"user_name":"' + user_name + '"}',
                 type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+                headers: {
+                    'X-CSRF-TOKEN': $scope.token
+                },
+                xhrFields: {
+                    withCredentials: true // เปิดการส่ง Cookie ไปพร้อมกับคำขอ
+                },
                 beforeSend: function () {
                     $("#divLoading").show();
                 },
@@ -322,6 +328,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                     + ',"json_data": ' + JSON.stringify(json_data)
                     + '}',
                 type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+                headers: {
+                    'X-CSRF-TOKEN': $scope.token
+                },
+                xhrFields: {
+                    withCredentials: true // เปิดการส่ง Cookie ไปพร้อมกับคำขอ
+                },
                 beforeSend: function () {
                     $("#divLoading").show();
 

@@ -35,7 +35,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, conFig) {
             data: '{"user_name":"' + $scope.user_name + '","page_controller":"' + '' + '"}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
             headers: {
-                'Authorization': $scope.token 
+                'X-CSRF-TOKEN': $scope.token
+            },
+            xhrFields: {
+                withCredentials: true // เปิดการส่ง Cookie ไปพร้อมกับคำขอ
             },
             beforeSend: function () {
                 $('#divLoading').show();
@@ -96,6 +99,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, conFig) {
             url: controller_text + "/next_page",
             data: '{"controller_action_befor":"' + controller_action_befor + '","user_name":"' + user_name + '","pha_type_doc":"' + pha_type_doc + '","pha_sub_software":"' + pha_sub_software + '"}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+            headers: {
+                'X-CSRF-TOKEN': $scope.token
+            },
+            xhrFields: {
+                withCredentials: true // เปิดการส่ง Cookie ไปพร้อมกับคำขอ
+            },
             beforeSend: function () {
                 //$("#divLoading").show();
             },
