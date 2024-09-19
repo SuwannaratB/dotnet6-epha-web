@@ -3,11 +3,128 @@
 
     Layout = "~/Views/Shared/_LayoutWeb.cshtml";
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.3/angular.min.js"></script>
+    <link rel="stylesheet" href="~/css/masterStyles/main_style.css">
 
 }
 
-<div class="row flex-center position-relative sg-0" style="max-height:100vh; max-width: 100%;" id="divPage" ng-controller="ctrlAppPage">
+<div class="px-10" id="divPage" ng-controller="ctrlAppPage">
+    <div class="d-flex mt-12" style="min-height: 90vh; box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;">
+        @* sidebar *@
+        <div class="sidebar bg-secondary">
+            <section class="sidebar-start">
+                <div class="sidebar-menu" 
+                    ng-class="{'active': item.active}"
+                    ng-repeat="item in menu_List"
+                    ng-click="changeTabSidebar(item)">
+                    <i class="{{ item.icon }}"></i>
+                    <span>{{ item.title }}</span>
+                </div>
+            </section>
+            <section class="sidebar-end">
+                <div class="sidebar-menu end" 
+                    ng-class="{'active': item.active}"
+                    ng-click="reverse()">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    <span>To Portal</span>
+                </div>
+            </section>
+        </div>
+        <div class="sidebar-content flex-grow-1" ng-if="menu_List[0].active">
+             <div class="d-flex flex-column gap-2">
+               <div class="content-menu" 
+                    ng-repeat="item in menu_List[0].sub_menu"
+                    ng-click="onClickMenu(item)">
+                    <div class="d-flex align-items-center justify-content-between w-100">
+                        <div class="d-flex d-flex align-items-center gap-4">
+                            <div style="color: #707070">
+                                {{ $index + 1 }}
+                            </div>
+                            <span style="color: #e3e6ed;">|</span>
+                            <div class="p">
+                                {{ item.title }}
+                            </div>
+                        </div>
+                        <div class="bard-setting">
+                            <i class="fa-solid fa-wrench"></i>
+                            Setting
+                        </div>
+                    </div>
+               </div>
+            </div>
+        </div>
+        <div class="sidebar-content flex-grow-1" ng-if="menu_List[1].active">
+            <div class="d-flex flex-column gap-2">
+               <div class="content-menu" 
+                    ng-repeat="item in menu_List[1].sub_menu"
+                    ng-click="onClickMenu(item)">
+                    <div class="d-flex align-items-center justify-content-between w-100">
+                        <div class="d-flex align-items-center gap-4">
+                            <div style="color: #707070">
+                                {{ $index + 1 }}
+                            </div>
+                            <span style="color: #e3e6ed">|</span>
+                            <div class="p">
+                                {{ item.title }}
+                            </div>
+                        </div>
+                        <div class="bard-setting">
+                            <i class="fa-solid fa-wrench"></i>
+                            Setting
+                        </div>
+                    </div>
+               </div>
+            </div>
+        </div>
+        <div class="sidebar-content flex-grow-1" ng-if="menu_List[2].active">
+            <div class="d-flex flex-column gap-2">
+               <div class="content-menu" 
+                    ng-repeat="item in menu_List[2].sub_menu"
+                    ng-click="onClickMenu(item)">
+                    <div class="d-flex align-items-center justify-content-between w-100">
+                        <div class="d-flex align-items-center gap-4">
+                            <div style="color: #707070">
+                                {{ $index + 1 }}
+                            </div>
+                            <span style="color: #e3e6ed;">|</span>
+                            <div class="p">
+                                {{ item.title }}
+                            </div>
+                        </div>
+                        <div class="bard-setting">
+                            <i class="fa-solid fa-wrench"></i>
+                            Setting
+                        </div>
+                    </div>
+               </div>
+            </div>
+        </div>
+        <div class="sidebar-content flex-grow-1" ng-if="menu_List[3].active">
+            <div class="d-flex flex-column gap-2">
+               <div class="content-menu" 
+                    ng-repeat="item in menu_List[3].sub_menu"
+                    ng-click="onClickMenu(item)">
+                    <div class="d-flex align-items-center justify-content-between w-100">
+                        <div class="d-flex align-items-center gap-4">
+                            <div style="color: #707070">
+                                {{ $index + 1 }}
+                            </div>
+                            <span style="color: #e3e6ed;">|</span>
+                            <div class="p">
+                                {{ item.title }}
+                            </div>
+                        </div>
+                        <div class="bard-setting">
+                            <i class="fa-solid fa-wrench"></i>
+                            Setting
+                        </div>
+                    </div>
+               </div>
+            </div>
+        </div>
+    </div>
+</div>
 
+@* <div class="row flex-center position-relative sg-0" style="max-height:100vh; max-width: 100%;" id="divPage" ng-controller="ctrlAppPage">
     <div class="content" style="max-height:100vh; max-width: 100%;">
         <div class="card shadow-none border border-300 " data-component-card="data-component-card">
 
@@ -137,10 +254,8 @@
 
             </div>
         </div>
-
     </div>
-
-</div>
+</div> *@
 
 @section scripts {
     <script src="~/js/_master/index.js"></script>
