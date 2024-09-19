@@ -202,7 +202,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
 
         $scope.pha_seq = item.id_pha;
         $scope.pha_no = item.document_number;
-        $scope.pha_type_doc = 'review_document';
+        $scope.pha_type_doc = 'edit';
 
         next_page(controller_text, '', item.user_name);
     }
@@ -212,7 +212,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
 
         $scope.pha_seq = item.id_pha;
         $scope.pha_no = item.document_number;
-        $scope.pha_type_doc = 'followup';
+        $scope.pha_type_doc = 'edit';
 
         alert($scope.pha_no)
         next_page(controller_text, '', item.user_name);
@@ -223,10 +223,20 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
 
         $scope.pha_seq = item.id_pha;
         $scope.pha_no = item.document_number;
-        $scope.pha_type_doc = 'review_followup';
+        $scope.pha_type_doc = 'edit';
 
         next_page(controller_text, '');
     }
+    $scope.editActionApprover = function (item) {
+        //open document 
+        var controller_text = item.pha_type;
+
+        $scope.pha_seq = item.id_pha;
+        $scope.pha_no = item.document_number;
+        $scope.pha_type_doc = 'edit';
+
+        next_page(controller_text, '');
+    }    
     $scope.confirmApprove = function (item, action) {
 
         $scope.approve_type = 'approve';

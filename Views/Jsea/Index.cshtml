@@ -1,4 +1,4 @@
-﻿@{
+@{
     ViewData["Title"] = "JSEA Sub-Sofware";
 
     Layout = "~/Views/Shared/_LayoutWeb.cshtml";
@@ -2379,7 +2379,7 @@
                                         </thead>
 
                                         <tbody class="list" id="customer-rating-table-body">
-                                            <tr ng-repeat="item in data_approver | filter: { id_session: data_drawing_approver[0].id_session }""
+                                            <tr ng-repeat="item in data_approver | filter: { id_session: data_drawing_approver[0].id_session }"
                                                 ng-init="accessInfo = Access_check(item)"
                                                 ng-style="{ 'background-color': accessInfo.canAccess ? '' : '#f9fbff' }"
                                                 ng-class="{ 'task-highlight':  accessInfo.canAccess}"       
