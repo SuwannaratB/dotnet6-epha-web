@@ -28,6 +28,138 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, conFig) {
         $scope.menu_bowtie = false;
         $scope.menu_master = false;
 
+        $scope.select_menu = null;
+        $scope.menu_List = [
+            {
+                id: 1,
+                title: 'Manage User',
+                icon: 'fa-solid fa-user-gear',
+                active: false,
+                sub_menu: [
+                    {
+                        id: 11,
+                        title: 'Manage User (Employee and Contracter)',
+                        path: 'Master/ManageUser',
+                        active: false,
+                    },
+                    {
+                        id: 12,
+                        title: 'Authorization Setting',
+                        path: 'Master/AuthorizationSetting',
+                        active: false,
+                    },
+                ]
+            },
+            {
+                id: 2,
+                title: 'Systemwide Master Data',
+                active: true,
+                icon: 'fa-solid fa-sliders',
+                sub_menu: [
+                    {
+                        id: 21,
+                        title: 'Company, Department and Sections',
+                        path: 'Master/StorageLocation',
+                        active: false,
+                    },
+                    {
+                        id: 22,
+                        title: 'Area Process Unit',
+                        path: 'Master/Area',
+                        active: false,
+                    },
+                    {
+                        id: 23,
+                        title: 'Complex',
+                        path: 'Master/Toc',
+                        active: false,
+                    },
+                    {
+                        id: 24,
+                        title: 'Unit No/Name of Sub Area',
+                        path: 'Master/BusinessUnit',
+                        active: false,
+                    },
+                    // {
+                    //     id: 25,
+                    //     title: 'Manage Risk Assessment Matrix (RAM)',
+                    //     path: 'Master/Systemwide/RiskAssessmentMatrix',
+                    //     active: false,
+                    // },
+                ]
+            },
+            {
+                id: 3,
+                title: 'HAZOP Module',
+                active: false,
+                icon: 'fa-solid fa-folder',
+                sub_menu: [
+                    {
+                        id: 31,
+                        title: 'Functional Location',
+                        path: 'Master/FunctionalLocation',
+                        active: false,
+                    },
+                    {
+                        id: 32,
+                        title: 'Guide Words',
+                        path: 'Master/GuideWords',
+                        active: false,
+                    },
+                ]
+            },
+            {
+                id: 4,
+                title: 'HRA Module',
+                active: false,
+                icon: 'fa-solid fa-folder',
+                sub_menu: [
+                    {
+                        id: 41,
+                        title: 'Type of Hazard',
+                        path: 'Master/HazardType',
+                        active: false,
+                    },
+                    {
+                        id: 42,
+                        title: 'Health Hazard of Risk Factor',
+                        path: 'Master/HazardRiskFactors',
+                        active: false,
+                    },
+                    {
+                        id: 43,
+                        title: 'Worker Group',
+                        path: 'Master/WorkerGroupList',
+                        active: false,
+                    },
+                    {
+                        id: 44,
+                        title: 'Set Worker Group',
+                        path: 'Master/WorkerGroup',
+                        active: false,
+                    },
+                    {
+                        id: 45,
+                        title: 'Frequency Level',
+                        path: 'Master/FrequencyLevel',
+                        active: false,
+                    },
+                    {
+                        id: 46,
+                        title: 'Exposure Rating',
+                        path: 'Master/CompareExposureRating',
+                        active: false,
+                    },
+                    {
+                        id: 47,
+                        title: 'Initial Risk Rating',
+                        path: 'Master/CompareInitialRiskRating',
+                        active: false,
+                    },
+                ]
+            },
+        ]
+
         if ($scope.role_type == 'admin') {
             $scope.menu_report = true;
 
@@ -118,5 +250,18 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, conFig) {
         $scope.menu_frequencylevel = action_menu_def;
         $scope.menu_compareexposurerating = action_menu_def;
         $scope.menu_compareinitialriskrating = action_menu_def; 
+    }
+
+    $scope.changeTabSidebar = function(item){
+        $scope.menu_List.forEach(element => {
+            if (element.active) {
+                element.active = false;
+            }
+        });
+        item.active = true;
+    }
+
+    $scope.onClickMenu = function(item){
+        window.location.href = item.path
     }
 });
