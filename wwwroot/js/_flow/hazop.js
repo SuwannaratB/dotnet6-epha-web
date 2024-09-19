@@ -1998,9 +1998,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         }
 
 
+                        console.log("will count row ")
                         //get_rowspam
                         $scope.rowspanMap = {};
-                        computeRowspan();
+                        $scope.$evalAsync(function() {
+                            computeRowspan();  // Safely schedule this to update the UI
+                        });
 
                         $scope.selectedItemNodeView = $scope.data_nodeworksheet[0].id_node;
                     }
@@ -2318,7 +2321,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     
                 check_case_member_review();
 
-    
                 const set_tabs = ['general', 'node', 'worksheet', 'managerecom'];
             
                 showTabs(set_tabs);

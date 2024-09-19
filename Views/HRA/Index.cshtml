@@ -91,7 +91,7 @@
                         SAVE
                     </button>
                 </span>
-                <span class="mx-2" ng-if="data_header[0].pha_status == 21 && can_edit">
+                <span class="mx-2" ng-if="params == 'edit'">
                     <button class="btn btn-primary btn-sm" 
                         ng-click="confirmSave('save')">
                         Edit Worksheet
@@ -2715,7 +2715,7 @@
                                             </tr>
                                         </thead>
                                         <tbody class="list" id="customer-rating-table-body">
-                                            <tr ng-repeat="item in data_approver " 
+                                            <tr ng-repeat="item in data_approver | filter: { id_session: data_drawing_approver[0].id_session }"
                                                 ng-init="accessInfo = Access_check(item)"
                                                 ng-style="{ 'background-color': accessInfo.canAccess ? '' : '#f9fbff' }"
                                                 ng-class="{ 'task-highlight':  accessInfo.canAccess}"                                            
@@ -2791,7 +2791,7 @@
 
                                                 </td>
                                                 <td class="align-top white-space-nowrap text-start" ng-class="{'disabled-link':(!tab_approver_active)}">
-                                                    <div class="col-md-12 p-1 ps-3" ng-if="!(item.approver_action_type == 2 || data_header[0].pha_status != 21 || params != 'edit')" >
+                                                    <div class="col-md-12 p-1 ps-3" ng-if="(accessInfo.canAccess || accessInfo.isTA2) && item.approver_action_type != 2" >
                                                             <textarea class="form-control rounded-1" 
                                                                     id="floatingTextarea2" 
                                                                     placeholder="{{ accessInfo.canAccess ? 'Enter your comment' : '' }}"
@@ -2801,7 +2801,7 @@
                                                             Please select a valid comment.
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-12 p-1 ps-3" ng-if="(item.approver_action_type == 2 || data_header[0].pha_status != 21 || params != 'edit' )">
+                                                    <div class="col-md-12 p-1 ps-3" ng-if="(item.approver_action_type == 2 || data_header[0].pha_status != 21)">
 
                                                         <p class="fw-bold" ng-if="item.comment"
                                                            ng-class="{'disabled-link': !tab_approver_active || !canAccess}" >
@@ -2809,7 +2809,7 @@
                                                         </p>
                                                     </div>
                                                 </td>
-                                                <td class="align-top px-1" style="min-width:200px;">
+                                                <td class="align-top justify-content-center px-1" style="min-width:200px;">
                                                     @* {{item.seq}} *@
                                                     <div class=" p-0 cursor-pointer " 
                                                          ng-repeat="item_x in data_drawing_approver  | toArray | filter:{id_approver : item.seq}  ">
@@ -4704,13 +4704,18 @@
                     </button>
 
                 </div>
-                <div class="modal-body">
-                    <p id="confirmationText">Would you like to proceed with this recommendation for <span class="fw-bold">{{selectedEmployee.employee_displayname}}</span> or review other areas with the same recommendation?</p>
-                    <div class="col-auto" style="float:right">
-                        <button id="proceedButton" style="width:100px;" class="btn btn-primary me-1 mb-1" type="button" ng-click="applyRecommendation(selectedEmployee, false)">Proceed</button>
-                        <button id="checkAreasButton" style="width:100px;" class="btn btn-outline-secondary me-1 mb-1 w-auto" type="button" ng-click="checkOtherAreas(selectedEmployee)">Check Other Areas</button>
+                    <div class="modal-body">
+                        <p id="confirmationText" class="text-center">Would you like to apply the same recommendation for another item?</p>
+                        <div class="d-flex justify-content-center mt-3">
+                            <button id="proceedButton" class="btn btn-primary me-2" type="button" ng-click="applyRecommendation(selectedEmployee, false)">
+                                No, apply only this recommendation
+                            </button>
+                            <button id="checkAreasButton" class="btn btn-outline-secondary" type="button" ng-click="checkOtherAreas(selectedEmployee)">
+                                Apply for another item
+                            </button>
+                        </div>
                     </div>
-                </div>
+
             </div>
         </div>
     </div>    
