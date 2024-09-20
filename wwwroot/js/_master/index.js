@@ -51,7 +51,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, conFig) {
             {
                 id: 2,
                 title: 'Systemwide Master Data',
-                active: false,
+                active: true,
                 icon: 'fa-solid fa-sliders',
                 sub_menu: [
                     {
@@ -83,7 +83,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, conFig) {
             {
                 id: 3,
                 title: 'HAZOP Module',
-                active: true,
+                active: false,
                 icon: 'fa-solid fa-folder',
                 sub_menu: [
                     {
