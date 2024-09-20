@@ -78,6 +78,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
     //call ws get data
     if (true) {
+        return
         get_data();
         function get_max_id() {
             var arr = $filter('filter')($scope.data_all.max, function (item) { return (item.name == 'seq'); });
@@ -200,6 +201,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
                         if (action == 'save') {
                             get_data_after_save();
+
                             set_alert('Success', 'Data has been successfully saved.');
                             apply();
                         }

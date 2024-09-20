@@ -22,10 +22,17 @@
     <script src="~/assets/js/config.js"></script>
 
     <script src="~/assets/js/all.min.js"></script>
-
+    <link rel="stylesheet" href="~/css/masterStyles/main_style.css">
 }
 
 <div class="content mt-1" style="font-size: 12px; min-height: auto!important;" id="divPage" ng-controller="ctrlAppPage">
+    <div class="page-not-found">
+        <h1 class="p">Tag ID</h1>
+        <a href="/master" class="btn btn-primary">back</a>
+    </div>
+</div>
+
+@* <div class="content mt-1" style="font-size: 12px; min-height: auto!important;" id="divPage" ng-controller="ctrlAppPage">
 
     <div class="row g-0">
 
@@ -68,7 +75,7 @@
                                                     <td style='padding: 15px;'></td>
                                                     <td style='padding: 15px;'>No</td>
                                                     <td style='padding: 15px;'>Tag ID/Equipment</td>
-                                                    @* <td style='padding: 15px;'>Descriptions</td> *@
+                                      
                                                     <td style='padding: 15px;'>Active</td>
                                                 </tr>
                                             </thead>
@@ -109,11 +116,7 @@
                                                             <h6 class="fw-semi-bold">{{item.name}}</h6>
                                                         </div>
                                                     </td>
-                                                  @*   <td class="align-top text-center">
-                                                        <div class="p-1 ">
-                                                            <h6 class="fw-semi-bold">{{item.descriptions}}</h6>
-                                                        </div>
-                                                    </td> *@
+                                    
                                                     <td class="align-top text-center">
                                                         <div class="p-1 ">
                                                             <div class="form-check form-check-inline cursor-pointer p-0">
@@ -144,7 +147,7 @@
     </div>
 
 
-</div>
+</div> *@
 @section Scripts {
 
     <script src="~/assets/js/angular.min.js"></script>
@@ -153,6 +156,6 @@
     <script src="~/assets/js/choices.min.js"></script>
     <script src="~/assets/js/fakedata.js"></script>
 
-    <script src="~/js/_master/jsea_tagid.js"></script>
+    <script src="~/js/_master/jsea/tagid.js"></script>
 
 }

@@ -23,7 +23,7 @@
             <section class="sidebar-end">
                 <div class="sidebar-menu end" 
                     ng-class="{'active': item.active}"
-                    ng-click="reverse()">
+                    ng-click="onReverse()">
                     <i class="fa-solid fa-right-from-bracket"></i>
                     <span>To Portal</span>
                 </div>
@@ -102,6 +102,29 @@
             <div class="d-flex flex-column gap-2">
                <div class="content-menu" 
                     ng-repeat="item in menu_List[3].sub_menu"
+                    ng-click="onClickMenu(item)">
+                    <div class="d-flex align-items-center justify-content-between w-100">
+                        <div class="d-flex align-items-center gap-4">
+                            <div style="color: #707070">
+                                {{ $index + 1 }}
+                            </div>
+                            <span style="color: #e3e6ed;">|</span>
+                            <div class="p">
+                                {{ item.title }}
+                            </div>
+                        </div>
+                        <div class="bard-setting">
+                            <i class="fa-solid fa-wrench"></i>
+                            Setting
+                        </div>
+                    </div>
+               </div>
+            </div>
+        </div>
+        <div class="sidebar-content flex-grow-1" ng-if="menu_List[4].active">
+            <div class="d-flex flex-column gap-2">
+               <div class="content-menu" 
+                    ng-repeat="item in menu_List[4].sub_menu"
                     ng-click="onClickMenu(item)">
                     <div class="d-flex align-items-center justify-content-between w-100">
                         <div class="d-flex align-items-center gap-4">

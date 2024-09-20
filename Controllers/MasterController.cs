@@ -134,7 +134,36 @@ namespace dotnet6_epha_web.Controllers
             _PageDef();
             return View();
         }
+        public IActionResult Departments()
+        {
+            _PageDef();
+            return View();
+        }
+        public IActionResult Sections()
+        {
+            _PageDef();
+            return View();
+        }
         #endregion HRA
+
+        #region JSEA
+        public IActionResult Mandatorynote()
+        {
+            _PageDef();
+            return View();
+        }
+        public IActionResult TaskType()
+        {
+            _PageDef();
+            return View();
+        }
+        public IActionResult TagID()
+        {
+            _PageDef();
+            return View();
+        }
+
+        #endregion JSEA
 
         public IActionResult Privacy()
         {

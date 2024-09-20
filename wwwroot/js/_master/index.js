@@ -27,8 +27,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, conFig) {
         $scope.menu_hra = false;
         $scope.menu_bowtie = false;
         $scope.menu_master = false;
-
-        $scope.select_menu = null;
         $scope.menu_List = [
             {
                 id: 1,
@@ -53,7 +51,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, conFig) {
             {
                 id: 2,
                 title: 'Systemwide Master Data',
-                active: true,
+                active: false,
                 icon: 'fa-solid fa-sliders',
                 sub_menu: [
                     {
@@ -80,24 +78,18 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, conFig) {
                         path: 'Master/BusinessUnit',
                         active: false,
                     },
-                    // {
-                    //     id: 25,
-                    //     title: 'Manage Risk Assessment Matrix (RAM)',
-                    //     path: 'Master/Systemwide/RiskAssessmentMatrix',
-                    //     active: false,
-                    // },
                 ]
             },
             {
                 id: 3,
                 title: 'HAZOP Module',
-                active: false,
+                active: true,
                 icon: 'fa-solid fa-folder',
                 sub_menu: [
                     {
                         id: 31,
                         title: 'Functional Location',
-                        path: 'Master/FunctionalLocation',
+                        path: 'Master/hazop/FunctionalLocation',
                         active: false,
                     },
                     {
@@ -154,6 +146,50 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, conFig) {
                         id: 47,
                         title: 'Initial Risk Rating',
                         path: 'Master/CompareInitialRiskRating',
+                        active: false,
+                    },
+                    {
+                        id: 47,
+                        title: 'Initial Risk Rating',
+                        path: 'Master/CompareInitialRiskRating',
+                        active: false,
+                    },
+                    {
+                        id: 48,
+                        title: 'Departments',
+                        path: 'Master/Departments',
+                        active: false,
+                    },
+                    {
+                        id: 49,
+                        title: 'Sections',
+                        path: 'Master/Sections',
+                        active: false,
+                    },
+                ]
+            },
+            {
+                id: 5,
+                title: 'JSEA Module',
+                active: false,
+                icon: 'fa-solid fa-folder',
+                sub_menu: [
+                    {
+                        id: 51,
+                        title: 'Mandatory Note',
+                        path: 'Master/Mandatorynote',
+                        active: false,
+                    },
+                    {
+                        id: 52,
+                        title: 'Task Type',
+                        path: 'Master/TaskType',
+                        active: false,
+                    },
+                    {
+                        id: 52,
+                        title: 'Tag ID',
+                        path: 'Master/TagID',
                         active: false,
                     },
                 ]
@@ -263,5 +299,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, conFig) {
 
     $scope.onClickMenu = function(item){
         window.location.href = item.path
+    }
+
+    $scope.onReverse = function(item){
+        window.location.href = '/home/portal'
     }
 });

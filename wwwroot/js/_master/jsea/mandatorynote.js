@@ -78,24 +78,25 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
     //call ws get data
     if (true) {
+        return
         get_data();
         function get_max_id() {
             var arr = $filter('filter')($scope.data_all.max, function (item) { return (item.name == 'seq'); });
             var iMaxSeq = 1; if (arr.length > 0) { iMaxSeq = arr[0].values; }
             $scope.MaxSeqDataSeq = iMaxSeq;
-
+             
         }
         function arr_def() {
-
-            $scope.data_all = [];
-
-            $scope.data = [];
-
-            $scope.data_delete = [];
-
-            $scope.user_name = conFig.user_name();
-            $scope.flow_role_type = conFig.role_type();//admin,request,responder,approver
-
+            $scope.user = JSON.parse(localStorage.getItem('user'));
+            $scope.token = JSON.parse(localStorage.getItem('token'))
+            $scope.user_name = $scope.user['user_name'];
+            $scope.flow_role_type = $scope.user['role_type'];
+            // $scope.user_name = conFig.user_name();
+            // $scope.flow_role_type = conFig.role_type();//admin,request,responder,approver
+            $scope.data_all = []; 
+            $scope.data = []; 
+            $scope.data_delete = []; 
+ 
         }
         function get_data() {
             arr_def();
@@ -109,7 +110,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             var user_name = $scope.user_name;
 
             $.ajax({
-                url: url_ws + "masterdata/get_tasktype",
+                url: url_ws + "masterdata/get_mandatorynote",
                 data: '{"user_name":"' + user_name + '"}',
                 type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
                 headers: {
@@ -129,7 +130,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
                     $scope.data_all = arr;
                     $scope.data = arr.data;
-
+                     
                     get_max_id();
 
                     apply();
@@ -169,13 +170,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             //save 
             var flow_action = action || 'save';
 
-            var json_data = check_data();
-
+            var json_data = check_data(); 
+             
             $.ajax({
-                url: url_ws + "masterdata/set_tasktype",
+                url: url_ws + "masterdata/set_mandatorynote",
                 data: '{"user_name":"' + user_name + '"'
                     + ',"role_type":"' + flow_role_type + '"'
-                    + ',"json_data": ' + JSON.stringify(json_data)
+                    + ',"json_data": ' + JSON.stringify(json_data) 
                     + '}',
                 type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
                 headers: {
@@ -235,8 +236,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                 arr_json.push($scope.data_delete[i]);
             }
             return angular.toJson(arr_json);
-        }
+        } 
     }
-
+     
 
 });
