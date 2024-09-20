@@ -1805,7 +1805,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                         $scope.data_session_last = arr.session_last
 
-
                         $scope.data_memberteam = arr.memberteam;
                         $scope.data_memberteam_def = clone_arr_newrow(arr.memberteam);
                         $scope.data_memberteam_old = (arr.memberteam);
@@ -1894,8 +1893,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         $scope.data_drawing_approver_old = (arr.drawing_approver);
 
                         set_data_approver()
-
-                        $scope.flow_role_type = 'admin'
 
                     }
 
@@ -2884,14 +2881,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 }
             }
             
-
-
-            
-
-            console.log("$scope.user_name",$scope.user_name)
-            console.log("$scope.data_header[0].pha_request_by",$scope.data_header[0].pha_request_by)
-            console.log("$scope.pha_status",$scope.pha_status)
-            console.log("$scope.flow_role_type",$scope.flow_role_type)
         }
 
 
@@ -6017,6 +6006,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }   
             
             
+            if($scope.pha_status == '22' ){
+                check_case_approver();
+            }
+
+            console.log($scope.flow_role_type)
+            console.log($scope.flow_role_type)
             if($scope.pha_status == '22' ){
                 check_case_approver();
             }
@@ -9812,9 +9807,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
 
             }
-
-
-            
 
 
             $scope.sessionAccessInfoMap[item.id] = accessInfo;

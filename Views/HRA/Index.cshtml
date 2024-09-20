@@ -667,7 +667,7 @@
                                                                     <label class="form-label d-none" for="meeting_date">Meeting Date</label>
                                                                     <input type="date" 
                                                                         class="form-control rounded-1 datetimepicker" 
-                                                                        ng-class="{'disabled-link': isDisableStatus, 'input-invalid': !item.meeting_date && item.validated}"
+                                                                        ng-class="{'disabled-link':  (isDisableStatus && flow_role_type != 'admin'), 'input-invalid': !item.meeting_date && item.validated}"
                                                                         id="meeting_date" 
                                                                         name="meeting_date"
                                                                         ng-change="actionChange(item, item.seq, 'meeting_date')"
@@ -946,7 +946,7 @@
 
                                                                 <span class="mx-1 d-none">
                                                                     <button class="btn btn-outline-secondary p-2" 
-                                                                            ng-class="{'disabled-link': isDisableStatus}"
+                                                                            ng-class="{'disabled-link': ('disabled-link': isDisableStatus  && flow_role_type != 'admin')}"
                                                                             style="color: #1336fc; background-color: #f1f2f4; border-color: #a8a8a8;"
                                                                             ng-click=copyDrawingDoc(item.seq,$index)
                                                                             data-toggle="tooltip" 
@@ -1067,7 +1067,7 @@
                                                 <td class="align-top px-1 text-center">
                                                     <div class="py-2">
                                                         <select class="form-control"
-                                                            ng-class="{'disabled-link': isDisableStatus }"
+                                                            ng-class="{'disabled-link': isDisableStatus && flow_role_type != 'admin'}"
                                                             ng-change="actionChangeTabArea('sub_area', item)"
                                                             ng-model="item.sub_area"
                                                             ng-if="tab_general_active">
@@ -1081,7 +1081,7 @@
                                                     <textarea class="form-control rounded-1" 
                                                         ng-if="item.sub_area"
                                                         ng-class="{
-                                                        'disabled-link': isDisableStatus }"
+                                                        'disabled-link': isDisableStatus && flow_role_type != 'admin'}"
                                                         id="description_general" 
                                                         name="description_general"
                                                         placeholder="Sub Area" 
@@ -1147,7 +1147,7 @@
                                                             class="form-control mx-2"
                                                             style="width: 28%;"
                                                             ng-class="{
-                                                                'disabled-link': isDisableStatus,
+                                                                'disabled-link': (isDisableStatus && flow_role_type != 'admin'),
                                                                 'd-none': (item_list.no_type_hazard == item.hazard[$index - 1].no_type_hazard)}"
                                                             ng-change="actionChangeTabArea('type_hazard', item, item_list)"
                                                             ng-click="actionChangeTabArea('disabled_type_hazard', item, item_list)"
@@ -1203,7 +1203,7 @@
                                                         @* master_hazard_riskfactors *@
                                                         <div class="mx-2"  style="width: 28%;">
                                                             <button ng-if="!item_list.health_hazard" 
-                                                                ng-class="{'disabled-link': isDisableStatus }"
+                                                                ng-class="{'disabled-link': isDisableStatus && flow_role_type != 'admin'}"
                                                                 ng-disabled="!item_list.id_type_hazard"
                                                                 class="btn btn-outline-secondary btn-sm w-100 h-100" 
                                                                 style="border: 1px solid #cbd0dd " 
@@ -1211,7 +1211,7 @@
                                                                 Please select
                                                             </button>
                                                             <button ng-if="item_list.health_hazard" 
-                                                                ng-class="{'disabled-link': isDisableStatus }"
+                                                                ng-class="{'disabled-link': isDisableStatus && flow_role_type != 'admin'}"
                                                                 ng-disabled="!item_list.id_type_hazard"
                                                                 class="btn btn-outline-secondary btn-sm w-100 h-100" 
                                                                 style="border: 1px solid #cbd0dd " 
@@ -1222,7 +1222,7 @@
 
                                                         @* health_effect_rating *@
                                                         <div class="d-flex align-items-center justify-content-center gap-2"  
-                                                            ng-class="{'disabled-link': isDisableStatus }"
+                                                            ng-class="{'disabled-link': isDisableStatus && flow_role_type != 'admin'}"
                                                             style="width: 13%;">
                                                             @* rating *@
                                                             <div class="effect-rating" 
@@ -1472,7 +1472,7 @@
                                                             </div>
                                                         </div>
                                                         <input class="form-control rounded-1" 
-                                                            ng-class="{'disabled-link': isDisableStatus}" 
+                                                            ng-class="{'disabled-link': ('disabled-link': isDisableStatus  && flow_role_type != 'admin')}" 
                                                             type="text" 
                                                             placeholder="Work or Task" 
                                                             ng-model="item_d.descriptions"
@@ -1488,7 +1488,7 @@
                                                             data-toggle="tooltip" 
                                                             data-placement="top" 
                                                             title="Copy Description of Work or Tasks"
-                                                            ng-disabled="isDisableStatus"
+                                                            ng-disabled="isDisableStatus && flow_role_type != 'admin'"
                                                             @* disabled *@
                                                             ng-click=copyDescription(item)>
                                                             <span class="fas fa-copy fa-lg"></span>
@@ -2069,7 +2069,7 @@
                                                     @* 'unbox': (item.worksheet[item.worksheet.length - 1].seq == ws.seq) *@
                                                     <div class=""
                                                         ng-if="display_worksheet_filter[index].worksheet[$index - 1].fk_recommendations != ws.fk_recommendations"
-                                                        ng-class="{'disabled-link': isDisableStatus && !isApproveReject && !isEditWorksheet}">
+                                                        ng-class="{'disabled-link': isDisableStatus && flow_role_type != 'admin'&& !isApproveReject && !isEditWorksheet}">
                                                         <div class="d-flex gap-2 mb-2" style="min-width: max-content;">
                                                             <input type="radio" 
                                                                 name="ef-{{index}}-{{idx}}" 
@@ -2138,7 +2138,7 @@
                                                     ng-style="{'height':  processheightWithComments(ws)}">
                                                     @* 'unbox': (item.worksheet[item.worksheet.length - 1].seq == ws.seq) *@
                                                     <div class="d-flex gap-2" 
-                                                        ng-class="{ 'disabled-link': isDisableStatus && !isApproveReject && !isEditWorksheet}"
+                                                        ng-class="{ 'disabled-link': isDisableStatus && flow_role_type != 'admin'&& !isApproveReject && !isEditWorksheet}"
                                                         @* ng-repeat="recom in ws.recommendations" *@
                                                         >
                                                         <div class="d-flex flex-column justify-content-center align-items-center font-sans-serif btn-reveal-trigger position-static"
