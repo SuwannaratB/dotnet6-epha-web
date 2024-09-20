@@ -1803,6 +1803,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         $scope.data_session_def = clone_arr_newrow(arr.session);
                         setDefaultMettingDate($scope.data_session[0]);
 
+                        $scope.data_session_last = arr.session_last
+
                         $scope.data_memberteam = arr.memberteam;
                         $scope.data_memberteam_def = clone_arr_newrow(arr.memberteam);
                         $scope.data_memberteam_old = (arr.memberteam);
@@ -2695,6 +2697,15 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 // set isApproveReject
                 $scope.isApproveReject =true;
 
+                //active session === lastest session
+                const maxSeq = $scope.data_session.reduce((max, item) => {
+                    return item.seq > max ? item.seq : max;
+                }, 0); // กำหนดค่าเริ่มต้นเป็น 0
+
+                $scope.active_session = maxSeq;
+                console.log('Max seq:', maxSeq);
+
+
                 $scope.submit_type = true;
 
             }
@@ -2825,6 +2836,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     $scope.can_edit = false; 
                 }
     
+            }
+            
+            if(pha_status === 22){
+                if($scope.data_header[0].pha_request_by === $scope.user_name){
+                    $scope.flow_role_type = 'admin'
+                }
             }
         }
 
@@ -5767,6 +5784,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
         $scope.confirmSave = function (action) {
 
+
             //check required field 
             var pha_status = $scope.data_header[0].pha_status;
             // reset data_copy_hazard
@@ -5949,6 +5967,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 return $('#modalEditConfirm').modal('show');
             }   
 
+            console.log($scope.flow_role_type)
+            console.log($scope.flow_role_type)
+            if($scope.pha_status == '22' ){
+                check_case_approver();
+            }
+
             save_data_create(action);
 
         }
@@ -6014,19 +6038,17 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
 
 
-            if(action == 'submit'){
-                //will check data approver befor submit to approver
-                //check_data_approver()
-                check_case_approver();
-            }
+
 
             save_data_approver(action);
         }
 
         function check_case_approver(){
+
             //new session??
 
             console.log($scope.data_session)
+            console.log($scope.data_approver)
 
 
 
@@ -9674,35 +9696,57 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             let approverData = $scope.data_approver.filter(data => data.id_session === item.id);
             let memberTeamData = $scope.data_memberteam.filter(data => data.id_session === item.id);
             
-            if (index === 0 && 
-                (approverData.length === 0 || approverData[0].user_name == null) &&
-                (memberTeamData.length === 0 || memberTeamData[0].user_name == null)) {
-                accessInfo.canRemove = false;
-            } else {
-                accessInfo.canRemove = true;
-            }
+            
+            if(!$scope.isApproveReject){
+                //normal flow 
+
+                if (index === 0 && 
+                    (approverData.length === 0 || approverData[0].user_name == null) &&
+                    (memberTeamData.length === 0 || memberTeamData[0].user_name == null)) {
+                    accessInfo.canRemove = false;
+                } else {
+                    accessInfo.canRemove = true;
+                }
+        
+                if ((approverData.length > 0 && approverData[0].user_name != null) ||
+                    (memberTeamData.length > 0 && memberTeamData[0].user_name != null)) {
+                    accessInfo.canCopy = true;
+                } else {
+                    accessInfo.canCopy = false;
+                }
     
-            if ((approverData.length > 0 && approverData[0].user_name != null) ||
-                (memberTeamData.length > 0 && memberTeamData[0].user_name != null)) {
-                accessInfo.canCopy = true;
-            } else {
-                accessInfo.canCopy = false;
+                let meeting_data = $scope.data_session.filter(data => data.id === item.id);
+    
+                if (
+                    meeting_data[0].meeting_date != null || 
+                    meeting_data[0].meeting_start_time != null || 
+                    meeting_data[0].meeting_start_time_hh != null || 
+                    meeting_data[0].meeting_start_time_mm != null || 
+                    meeting_data[0].meeting_end_time != null || 
+                    meeting_data[0].meeting_end_time_hh != null || 
+                    meeting_data[0].meeting_end_time_mm != null
+                ) {
+                    accessInfo.canCopy = true;
+                    accessInfo.canRemove = true;
+                } 
+            }else{
+                //approver rej flow
+                //1.check session 'inset'?? 
+                $scope.active_session = $scope.data_session_last.id_session;
+                
+                if($scope.active_session === item.id && item.action_type === 'update'){
+                    accessInfo.canCopy = true;
+                    accessInfo.canRemove = false;
+                }else if($scope.active_session === item.id && item.action_type === 'update'){
+
+                }
+
+
             }
 
-            let meeting_data = $scope.data_session.filter(data => data.id === item.id);
 
-            if (
-                meeting_data[0].meeting_date != null || 
-                meeting_data[0].meeting_start_time != null || 
-                meeting_data[0].meeting_start_time_hh != null || 
-                meeting_data[0].meeting_start_time_mm != null || 
-                meeting_data[0].meeting_end_time != null || 
-                meeting_data[0].meeting_end_time_hh != null || 
-                meeting_data[0].meeting_end_time_mm != null
-            ) {
-                accessInfo.canCopy = true;
-                accessInfo.canRemove = true;
-            } 
+            
+
 
             $scope.sessionAccessInfoMap[item.id] = accessInfo;
             
