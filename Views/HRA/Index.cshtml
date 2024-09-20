@@ -761,14 +761,15 @@
                                                     @* Buton Action *@
                                                     <td class="align-top " 
                                                         style="width: 158px;" 
-                                                        ng-disable="tab_general_active || (data_header[0].pha_status === 22 && flow_role_type === 'admin')">
+                                                        ng-disable="tab_general_active || (data_header[0].pha_status === 22 && flow_role_type !== 'admin')">
                                                         <div class="col-12" style="width: 158px;">
+                                                            {{isDisableStatus }}
+                                                            {{flow_role_type}}
                                                             <div class="float-end">
                                                                 <span class="mx-1">
                                                                     <button class="btn btn-outline-secondary p-2" 
-                                                                        ng-class="{'disabled-link': isDisableStatus}"
+                                                                        ng-disabled="!sessionAccessInfoMap[item.id].canRemove || (isDisableStatus && flow_role_type !== 'admin')"
                                                                         style="color: #ff2828; background-color: #f1f2f4; border-color: #ff2828;"
-                                                                        ng-disabled="!sessionAccessInfoMap[item.id].canRemove"
                                                                         ng-click="triggerRemove(item,item.seq,$index,'session')">
                                                                         <span class="fa-regular fa-trash-can fa-lg"></span>
                                                                     </button>
@@ -776,8 +777,7 @@
 
                                                                 <span class="mx-1">
                                                                     <button class="btn btn-outline-secondary p-2" 
-                                                                        ng-class="{'disabled-link': isDisableStatus}"
-                                                                        ng-disabled="!sessionAccessInfoMap[item.id].canCopy"  
+                                                                        ng-disabled="!sessionAccessInfoMap[item.id].canCopy || (isDisableStatus && flow_role_type !== 'admin')"  
                                                                         style="color: #2445fc; background-color: #f1f2f4; border-color: #2445fc;"
                                                                         ng-click=copyDataSession(item.seq,$index)>
                                                                         <span class="fas fa-copy fa-lg"></span>
@@ -786,7 +786,7 @@
 
                                                                 <span class="mx-1 d-none">
                                                                     <button class="btn btn-outline-secondary p-2" 
-                                                                        ng-class="{'disabled-link': isDisableStatus}"
+                                                                        ng-class="{'disabled-link': isDisableStatus && flow_role_type !== 'admin'}"
                                                                         style="color: #1336fc; background-color: #f1f2f4; border-color: #a8a8a8;"
                                                                         ng-click=copyDataSession(item.seq,$index)>
                                                                         <span class="fas fa-copy fa-lg"></span>
@@ -795,7 +795,7 @@
 
                                                                 <span class="mx-1">
                                                                     <button class="btn btn-outline-secondary p-2" 
-                                                                        ng-class="{'disabled-link': isDisableStatus}"
+                                                                        ng-disabled="(isDisableStatus && flow_role_type !== 'admin')"                                                                        
                                                                         style="color: #0abe0a; background-color: #f1f2f4; border-color: #0abe0a;"
                                                                         ng-click=addDataSession(item.seq,$index)>
                                                                         <span class="fas fa-square-plus fa-lg"></span>
@@ -933,7 +933,7 @@
                                                             <div class="float-end ">
                                                                 <span class="mx-1">
                                                                     <button class="btn btn-outline-secondary p-2" 
-                                                                        ng-class="{'disabled-link': isDisableStatus}"
+                                                                        ng-class="{'disabled-link': isDisableStatus  && flow_role_type != 'admin'}"
                                                                         style="color: #ff2828; background-color: #f1f2f4; border-color: #ff2828;"
                                                                         ng-click="triggerRemove(item,item.seq,$index,'DrawingDoc')"
                                                                         ng-disabled="!drawingAccessInfoMap[item.id].canRemove"   
@@ -958,7 +958,7 @@
 
                                                                 <span class="mx-1">
                                                                     <button class="btn btn-outline-secondary p-2" 
-                                                                            ng-class="{'disabled-link': isDisableStatus}"
+                                                                            ng-class="{'disabled-link': isDisableStatus && flow_role_type  !== 'admin'}"
                                                                             style="color: #0abe0a; background-color: #f1f2f4; border-color: #0abe0a;"
                                                                             ng-click=addDrawingDoc(item.seq,$index)
                                                                             data-toggle="tooltip" 
@@ -1035,7 +1035,7 @@
 
                                                         <div class="d-flex justify-content-center font-sans-serif btn-reveal-trigger position-static" 
                                                             ng-class="{
-                                                            'disabled-link': isDisableStatus,
+                                                            'disabled-link': isDisableStatus && flow_role_type != 'admin',
                                                             'd-none': !(tab_general_active)}">
                                                             <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 p-1"
                                                                 type="button" 
@@ -1111,7 +1111,7 @@
                                                             </div>
                                                             <div class="d-flex justify-content-center font-sans-serif btn-reveal-trigger position-static" 
                                                                 ng-class="{
-                                                                'disabled-link': isDisableStatus,
+                                                                'disabled-link': isDisableStatus && flow_role_type != 'admin',
                                                                 'd-none': !(tab_general_active),
                                                                 'd-none': (item_list.no_type_hazard == item.hazard[$index - 1].no_type_hazard)}">
                                                                 <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 p-1"
@@ -1173,7 +1173,7 @@
                                                             </div>
                                                             <div class="d-flex justify-content-center font-sans-serif btn-reveal-trigger position-static" ng-class="{'d-none': !(tab_general_active)}">
                                                                 <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 p-1"
-                                                                        ng-class="{'disabled-link': isDisableStatus }"
+                                                                        ng-class="{'disabled-link': isDisableStatus && flow_role_type != 'admin' }"
                                                                         type="button" 
                                                                         data-bs-toggle="dropdown" 
                                                                         data-boundary="window" 
@@ -1373,7 +1373,7 @@
                                                                  ng-class="{'d-none': !(tab_general_active)}"
                                                                  ng-if="item.tasks_type_other == 0">
                                                                 <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 p-1"
-                                                                        ng-class="{'disabled-link': isDisableStatus }"
+                                                                        ng-class="{'disabled-link': isDisableStatus && flow_role_type != 'admin'}"
                                                                         type="button" 
                                                                         data-bs-toggle="dropdown" 
                                                                         data-boundary="window" 
@@ -1440,7 +1440,7 @@
                                                                             ng-class="{'d-none': !(tab_general_active && item.tasks_type_other == 0)}"
                                                                             >
                                                                             <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 p-1" 
-                                                                                    ng-class="{'disabled-link': isDisableStatus}"
+                                                                                    ng-class="{'disabled-link': isDisableStatus && flow_role_type != 'admin'}"
                                                                                     type="button" 
                                                                                     data-bs-toggle="dropdown" 
                                                                                     data-boundary="window" 
@@ -2111,7 +2111,8 @@
                                                         ng-class="{'disabled-link': 
                                                             isDisableStatus && 
                                                             !isApproveReject && 
-                                                            !isEditWorksheet}"
+                                                            !isEditWorksheet && 
+                                                            flow_role_type != 'admin'}"
                                                         @* ng-change="actionChangeWorksheet(item,item.seq,'frequency_level')" *@
                                                         ng-change="actionChangeResidualRiskRating(item, ws)"
                                                         ng-model="ws.residual_risk_rating" 
@@ -2147,7 +2148,7 @@
                                                             <div class="d-flex flex-column justify-content-center font-sans-serif btn-reveal-trigger position-static" 
                                                                 ng-class="">
                                                                 <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 p-1" 
-                                                                    ng-class="{'disabled-link': isDisableStatus && !isEditWorksheet}"
+                                                                    ng-class="{'disabled-link': (isDisableStatus && !isEditWorksheet && flow_role_type != 'admin')}"
                                                                     type="button" 
                                                                     data-bs-toggle="dropdown" 
                                                                     data-boundary="window" 
@@ -2176,7 +2177,7 @@
                                                             </div>
                                                         </div>
                                                         <textarea class="form-control form-control-sm " 
-                                                            ng-class="{'disabled-link': isDisableStatus && !isEditWorksheet}"
+                                                            ng-class="{'disabled-link': (isDisableStatus && !isEditWorksheet)}"
                                                             rows="2" 
                                                             type="text"
                                                             style="width: 200px; height: 100%; font-size: 10.24px;"
@@ -2341,7 +2342,7 @@
                                             <th class="align-middle" scope="col">End Date</th>
                                         </tr>
                                     </thead>
-                                    <tbody class="list" id="customer-rating-table-body" ng-class="{'disabled-link':(!tab_managerecom_active)}">
+                                    <tbody class="list" id="customer-rating-table-body" ng-class="{'disabled-link': !tab_managerecom_active}">
                                         <tr ng-repeat="(index, item) in data_worksheet_list | filter: filterInitialRiskRatingMain | orderBy:['index_rows']" 
                                             class="hover-actions-trigger btn-reveal-trigger position-static text-center">
 
@@ -2491,15 +2492,10 @@
                                                             ng-change="actionChangeComment(recom)">
                                                         </textarea>
                                                      </div> *@
-                                                    <textarea class="form-control form-control-sm " 
-                                                        ng-class="{'disabled-link': isDisableStatus}"
-                                                        rows="2" 
-                                                        type="text"
-                                                        style="width: 200px; height: 100%; font-size: 10.24px;"
-                                                        placeholder="Comments"
-                                                        ng-change="actionChangeComment(ws)"
-                                                        ng-model="ws.recommendations">
-                                                    </textarea>
+                                                    <p  style="width: 200px; height: 100%; font-size: 10.24px;">
+                                                        {{ ws.recommendations }}
+                                                    </p>
+
                                                 </div>
                                             </td>                                            
 
@@ -2542,7 +2538,7 @@
                                                 <div class="box-recom" ng-repeat="ws in item.worksheet | filter: filterInitialRiskRating">
                                                     <input type="date" 
                                                         class="form-control datetimepicker rounded-1" 
-                                                        ng-class="{'disabled-link': isDisableStatus}"
+                                                        ng-class="{'disabled-link': isDisableStatus && flow_role_type != 'admin'}"
                                                         placeholder="Start Date dd/mm/yyyy"
                                                         ng-model="ws.estimated_start_date"
                                                         max="{{ws.estimated_end_date | date:'yyyy-MM-dd' }}"
@@ -2558,7 +2554,7 @@
                                                 <div class="box-recom" ng-repeat="ws in item.worksheet | filter: filterInitialRiskRating">
                                                     <input type="date" 
                                                         class="form-control datetimepicker rounded-1" 
-                                                        ng-class="{'disabled-link': isDisableStatus}"
+                                                        ng-class="{'disabled-link': isDisableStatus && flow_role_type != 'admin'}"
                                                         placeholder="End Date dd/mm/yyyy"
                                                         ng-model="ws.estimated_end_date"
                                                         ng-min="ws.estimated_start_date | date:'yyyy-MM-dd'"
@@ -2791,7 +2787,7 @@
 
                                                 </td>
                                                 <td class="align-top white-space-nowrap text-start" ng-class="{'disabled-link':(!tab_approver_active)}">
-                                                    <div class="col-md-12 p-1 ps-3" ng-if="(accessInfo.canAccess || accessInfo.isTA2) && item.approver_action_type != 2" >
+                                                    <div class="col-md-12 p-1 ps-3" ng-if="!(item.approver_action_type == 2 || data_header[0].pha_status != 21 || params != 'edit')" >
                                                             <textarea class="form-control rounded-1" 
                                                                     id="floatingTextarea2" 
                                                                     placeholder="{{ accessInfo.canAccess ? 'Enter your comment' : '' }}"
@@ -2801,7 +2797,7 @@
                                                             Please select a valid comment.
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-12 p-1 ps-3" ng-if="(item.approver_action_type == 2 || data_header[0].pha_status != 21)">
+                                                    <div class="col-md-12 p-1 ps-3" ng-if="(item.approver_action_type == 2 &&  data_header[0].pha_status != 21 || params != 'edit' )">
 
                                                         <p class="fw-bold" ng-if="item.comment"
                                                            ng-class="{'disabled-link': !tab_approver_active || !canAccess}" >
