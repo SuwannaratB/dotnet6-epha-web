@@ -1390,6 +1390,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         var json_worksheet = check_data_worksheet_list(flow_action);
         var json_recommendations = check_data_recommendations(flow_action);
         // var json_worksheet = '[]';
+
+        
+
        
   $.ajax({
             url: url_ws + "Flow/set_hra",
@@ -1643,8 +1646,17 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                             // }
                             window.open('hazop/search', "_top");
                         } else if (arr[0].pha_status == '22') {
-                            //กรณีที่ TA2 approve reject
-                            window.open('hazop/search', "_top");
+                            if ($scope.flow_role_type === 'admin') {
+                                const allActionType2 = $scope.data_approver.every(item => item.action_type === 2);
+                            
+                                if (allActionType2) {
+                                    window.open('hazop/search', "_top");
+                                } else {
+                                    get_data_after_save(false, false, $scope.pha_seq);
+                                }
+                            }else{
+                                window.open('hazop/search', "_top");
+                            }
                         } else if (arr[0].pha_status == '91') {
                             //กรณีที่ approve all
                             window.open('hazop/search', "_top");
@@ -1980,8 +1992,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     }
                     set_tab_focus($scope.pha_status,action_part_befor)
 
-
-                    console.log("set_form_action",$scope.tab_approver_active)
 
 
                     
@@ -2481,7 +2491,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
 
     function setup_isApproveReject(header){
-        if (header.approve_status == 'reject') {
+        if (header.approve_status == 'reject' && header.pha_status == 22) {
             return true
         }
         return false
@@ -2680,6 +2690,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 showTabs(set_tabs);
                 setAllTabsInctive();
 
+                $scope.isDisableStatus = true;
+                $scope.isEditWorksheet  = false;
+
                 //button
                 $scope.save_type = false;
                 $scope.submit_type = false;
@@ -2691,6 +2704,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 showTabs(set_tabs);
                 setAllTabsInctive();
     
+
+                $scope.isDisableStatus = true;
+                $scope.isEditWorksheet  = false;
                
     
                 if ($scope.flow_role_type == "admin") {
@@ -6010,12 +6026,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 check_case_approver();
             }
 
-            console.log($scope.flow_role_type)
-            console.log($scope.flow_role_type)
-            if($scope.pha_status == '22' ){
-                check_case_approver();
-            }
-
             save_data_create(action);
 
         }
@@ -6092,7 +6102,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         
             if (hasInsert) {
                 console.log('Insert found. Exiting function.');
-                return; // ออกจากฟังก์ชันทันทีถ้ามี 'insert'
+                return; 
             }
         
             const last_session = $scope.data_session.reduce((max, item) => {
@@ -6100,25 +6110,63 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }, 0);
         
             console.log('Active session:', $scope.active_session, 'Last session:', last_session);
+            
         
             if ($scope.active_session == last_session) {
                 console.log('Active session is equal to last session. Updating approvers...');
                 $scope.data_approver.forEach(item => {
                     if (item.id_session == last_session) { 
                         item.approver_action_type = null;
+                        item.action_review = null;
+                        item.approver_type = null;
                         item.action_status = null;
                         item.comment = null;
                         item.date_review = null;
-                        item.date_review_show = 1;
+                        item.date_review_show = null;
+                        item.action_change = 1;
                         item.action_type = 'update';
                         
                         // Log ข้อมูลแต่ละ item หลังจากการอัปเดต
                         console.log('Updated approver:', item);
                     }
                 });
+
+                
+                let uniqueApprovers = new Set();
+                let itemsToRemove = []; 
+                
+                $scope.data_drawing_approver.forEach(item => {
+                    if (item.id_session == last_session) { 
+                        item.document_file_name = null;
+                        item.document_file_path = null;
+                        item.document_file_size = null;
+                        item.action_change = 1;
+                        item.action_type = 'update';
+                        
+                        if (uniqueApprovers.has(item.id_approver)) {
+                            item.action_change = 1;
+                            item.action_type = 'delete';
+                            $scope.data_drawing_approver_delete.push(item);
+                            
+                            itemsToRemove.push(item);
+                            console.log('Marked duplicate approver for removal:', item);
+                        } else {
+                            uniqueApprovers.add(item.id_approver);
+                        }
+                    }
+                });
+                
+                $scope.data_drawing_approver = $scope.data_drawing_approver.filter(item => !itemsToRemove.includes(item));
+                
+                console.log(" $scope.data_drawing_approver", $scope.data_drawing_approver)
+                console.log(" $scope.data_approver", $scope.data_approver)
+
             } else {
                 console.log('Active session is not equal to last session.');
             }
+
+
+            //must update to delete drawing
         }
         
 
@@ -6423,7 +6471,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             if (!hasInsert) {
                 for (var j = 0; j < copy_data_approver.length; j++) {
                     copy_data_approver[j].action_review = null;
-                }                }
+                }                
+            }
                 
         }
         
@@ -6865,7 +6914,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 }
             }
 
-            console.log("arr_jsonarr_jsonarr_jsonarr_jsonarr_jsonarr_json",arr_json)
             return angular.toJson(arr_json);
         }
     }
@@ -9756,6 +9804,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         let accessInfo = {
             canRemove: false,
             canCopy: false,
+            canAdd: false
         };
     
         if(type == 'session'){
@@ -9765,7 +9814,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             
             if(!$scope.isApproveReject){
                 //normal flow 
-
                 if (index === 0 && 
                     (approverData.length === 0 || approverData[0].user_name == null) &&
                     (memberTeamData.length === 0 || memberTeamData[0].user_name == null)) {
@@ -9777,6 +9825,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 if ((approverData.length > 0 && approverData[0].user_name != null) ||
                     (memberTeamData.length > 0 && memberTeamData[0].user_name != null)) {
                     accessInfo.canCopy = true;
+                    accessInfo.canAdd = true;
+
                 } else {
                     accessInfo.canCopy = false;
                 }
@@ -9793,16 +9843,23 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     meeting_data[0].meeting_end_time_mm != null
                 ) {
                     accessInfo.canCopy = true;
+                    accessInfo.canAdd = true;
                     accessInfo.canRemove = true;
                 } 
             }else{
-                //approver rej flow               
+                //approver rej flow    
+                console.log("$scope.active_session",$scope.active_session)           
+                console.log("$scope.item.id",item.id)           
                 if($scope.active_session === item.id && item.action_type === 'update'){
                     accessInfo.canCopy = true;
+                    accessInfo.canAdd = true;
                     accessInfo.canRemove = false;
                 }else if(item.action_type === 'insert'){
                     accessInfo.canCopy = true;
                     accessInfo.canRemove = true;
+                }else{
+                    accessInfo.canCopy = false;
+                    accessInfo.canRemove = false;                    
                 }
 
 
