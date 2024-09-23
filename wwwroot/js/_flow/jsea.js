@@ -646,7 +646,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     const request = new XMLHttpRequest();
                     request.open("POST", url_ws + 'Flow/importfile_data_jsea');
                     
-                    request.setRequestHeader('Authorization', $scope.token);
+                    request.setRequestHeader('X-CSRF-TOKEN', $scope.token);              
+                    request.withCredentials = true;
 
                     const ALERT_MESSAGES = {
                         INVALID_RESPONSE: 'There was an issue with the response from the server. Please try again later.',
@@ -918,8 +919,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 const request = new XMLHttpRequest();
                 request.open("POST", url_ws + 'Flow/uploadfile_data');
 
-                request.setRequestHeader('Authorization', $scope.token);
-
+                request.setRequestHeader('X-CSRF-TOKEN', $scope.token);              
+                request.withCredentials = true;
 
                 request.onreadystatechange = function () {
                     if (request.readyState === XMLHttpRequest.DONE) {
@@ -1004,8 +1005,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             try {
                 const request = new XMLHttpRequest();
                 request.open("POST", url_ws + 'Flow/uploadfile_data');
-                request.setRequestHeader('Authorization', $scope.token);
-
+                request.setRequestHeader('X-CSRF-TOKEN', $scope.token);              
+                request.withCredentials = true;
                 request.send(fd);
     
                 var arr = $filter('filter')($scope.master_ram, function (item) { return (item.seq == seq); });

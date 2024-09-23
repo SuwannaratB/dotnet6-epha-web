@@ -151,7 +151,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                 const request = new XMLHttpRequest();
                 request.open("POST", url_ws + 'Flow/uploadfile_data_followup');
 
-                request.setRequestHeader('Authorization', $scope.token);
+                request.setRequestHeader('X-CSRF-TOKEN', $scope.token);              
+                request.withCredentials = true;
 
                 request.onreadystatechange = function () {
                     if (request.readyState === XMLHttpRequest.DONE) {
@@ -1606,21 +1607,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
         });
     }
 
-    //access each role
-    $scope.Access_check = function(task) {
-        // If user is an admin, allow access
-        if ($scope.flow_role_type === 'admin') {
-            return true;
-        }
-        
-        // If user is an employee and the task belongs to them, allow access
-        if ($scope.flow_role_type === 'employee' && $scope.user_name === task.responder_user_name) {
-            return true;
-        }
-        
-        //originator cant edit?
-        return false;
-    };
     
         //access each role
         $scope.Access_check = function(task) {

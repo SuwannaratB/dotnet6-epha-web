@@ -212,9 +212,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
 
         $scope.pha_seq = item.id_pha;
         $scope.pha_no = item.document_number;
-        $scope.pha_type_doc = 'edit';
+        $scope.pha_type_doc = 'followup';
 
-        alert($scope.pha_no)
         next_page(controller_text, '', item.user_name);
     }
     $scope.editActionReviewFollowup = function (item) {
@@ -223,7 +222,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
 
         $scope.pha_seq = item.id_pha;
         $scope.pha_no = item.document_number;
-        $scope.pha_type_doc = 'edit';
+        $scope.pha_type_doc = 'review_followup';
 
         next_page(controller_text, '');
     }

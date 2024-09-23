@@ -696,7 +696,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 const request = new XMLHttpRequest();
                 request.open("POST", url_ws + 'Flow/uploadfile_data');
 
-                request.setRequestHeader('Authorization', $scope.token);
+                request.setRequestHeader('X-CSRF-TOKEN', $scope.token);              
+                request.withCredentials = true;
 
                 request.onreadystatechange = function () {
                     if (request.readyState === XMLHttpRequest.DONE) {
@@ -781,8 +782,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 request.open("POST", url_ws + 'Flow/uploadfile_data');
                 request.send(fd);
 
-                request.setRequestHeader('Authorization', $scope.token);
-    
+                request.setRequestHeader('X-CSRF-TOKEN', $scope.token);              
+                request.withCredentials = true;
+                    
                 var arr = $filter('filter')($scope.master_ram, function (item) { return (item.seq == seq); });
                 if (arr.length > 0) {
                     arr[0].document_file_name = file_name;
