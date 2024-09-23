@@ -961,7 +961,7 @@
                                                         </div>
                                                     </td>
 
-                                                    @* Recommendations responded sheet  => status 13 *@
+                                                    @* HRA Recommendations responded sheet  => status 13 *@
                                                     <td class="align-top px-1" style="min-width:200px;" ng-if="flow_status != 14">
                                                         <div class=" p-0 cursor-pointer "
                                                             ng-disabled ="!(accessInfo.isOwner || accessInfo.isAdmin)  && item_d.responder_action_type != 2"
@@ -990,15 +990,13 @@
                                                                 </div>
                                                                 
                                                                 <div class="align-items-center" style="width: 280px"
-                                                                    ng-disabled ="!(accessInfo.isOwner || .isAdmin)  && item_d.responder_action_type != 2">
+                                                                    ng-disabled ="!(accessInfo.isOwner || accessInfo.isAdmin)  && item_d.responder_action_type != 2">
                                                                     <div class="btn-group mb-2 w-100" style="height:60px;">
                                                                         <div ng-if="!item_x.document_file_size" class="icon-button border p-3" 
-                                                                             ng-hide ="accessInfo.isEmployee && item_d.responder_action_type != 2"
                                                                              style="border-color: #0d6efd; background-color: #0d6efd;">
                                                                             <span  class="fa-solid fa-arrow-up-from-bracket fa-lg" style="color: #ffffff;"></span>
                                                                         </div>
                                                                         <div ng-if="item_x.document_file_size" class="icon-button border p-3" 
-                                                                             ng-hide ="!(accessInfo.isOwner || accessInfo.isAdmin)"
                                                                              style="border-color: #0d6efd; background-color: #0d6efd;">
                                                                             <span  class="fa-solid fa-file-pdf fa-lg" style="color: #ffffff;"></span>
                                                                         </div>

@@ -649,6 +649,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                     }
                 });
 
+                console.log($scope.data_pha_doc[0].pha_status)
+                if($scope.data_pha_doc[0].pha_status == 13){
+                    console.log("now we will set doc")
+                    set_follow_up();
+                }
+
 
                 if (true) {
                     $scope.MaxSeqdata_drawing_worksheet = 0;
@@ -772,7 +778,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                 if (!validRemark  && !validComment) {
                     $scope.confirmSaveFollowup('save', item);
                 }
-            }//&& !validUploadFile
+            }
+
+            
 
         } else if ($scope.flow_status == 14) {
             item.action_change = 1;
@@ -831,6 +839,43 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
     $scope.setSeqUpload = function (seq) {
 
         $scope.seqUpload = seq;
+    }
+
+    function set_follow_up(){
+
+        $scope.data_details.forEach(owner => {
+            const exists = $scope.data_drawingworksheet.some(drawingApprover => drawingApprover.id_worksheet === owner.id);
+    
+            if (!exists) {
+                let Format = $scope.data_drawingworksheet[0];
+    
+                let newDrawing = {
+                    ...Format,
+                    no: 1,
+                    id_pha: $scope.data_drawingworksheet[0].id_pha,
+                    id_session: $scope.data_drawingworksheet[0].id_session,
+                    id_worksheet: owner.id,
+                    seq: Number($scope.MaxSeqdata_drawing_worksheet) + 1,
+                    id: Number($scope.MaxSeqdata_drawing_worksheet) + 1,
+                    no: Number($scope.MaxSeqdata_drawing_worksheet) + 1,
+
+                    document_file_name:null,
+                    document_file_path:null,
+                    document_file_size:null,
+                    action_type: 'insert',
+                    action_change: 1,
+                };
+    
+                // เพิ่มค่า seq สูงสุดใหม่
+                $scope.MaxSeqdata_drawing_worksheet = newDrawing.seq;
+    
+                // Push ข้อมูลใหม่เข้าไปใน data_drawing_approver
+                $scope.data_drawingworksheet.push(newDrawing);
+            }
+
+            console.log("$scope.data_drawingworksheet",$scope.data_drawingworksheet)
+        });
+        
     }
 
     function set_valid_items(_item, field) {
@@ -1026,6 +1071,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
         for (let i = 0; i < arr_json.length; i++) {
             arr_json[i].implement = arr_json[i].implement === true ? 1 : 0;
         }        
+
+        if($scope.flow_status == 13){
+            check_case_followup();
+        }
 
         var json_managerecom = angular.toJson(arr_json);
         var json_drawingworksheet = check_data_drawingworksheet(_item.seq);
@@ -1275,6 +1324,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
 
         });
     }
+    
 
     $scope.openModalDataRAM = function (ram_type, _item, ram_type_action, id_ram, preview) {
         var seq = _item.seq;
