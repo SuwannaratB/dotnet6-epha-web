@@ -2704,7 +2704,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 showTabs(set_tabs);
                 setAllTabsInctive();
     
-
                 $scope.isDisableStatus = true;
                 $scope.isEditWorksheet  = false;
                
