@@ -891,23 +891,26 @@
 
                                                     @*Residual risk*@
                                                     <td class="align-middle text-center">
+
                                                         <div class="" 
                                                             style="width: 90px;"
-                                                            ng-if="(flow_status == 13 && item_d.responder_action_type != 2) && (accessInfo.isAdmin || accessInfo.isOwner)">
+                                                            ng-if="((flow_status == 13 && item_d.responder_action_type != 2) || 
+                                                                    (flow_status == 14 && item_d.reviewer_action_type != 2)) && 
+                                                                    (accessInfo.isAdmin || accessInfo.isOwner)">
                                                             <select class="form-select form-select-sm rounded-1 p-2" 
                                                                 ng-model="item_d.residual_risk" 
                                                                 ng-change="actionChangedRisk(item_d)"
-                                                                style=" min-width: 60px; font-size: 10.24px;">
-                                                                @* <option value="" selected>Please select</option> *@
+                                                                style="min-width: 60px; font-size: 10.24px;">
                                                                 <option value="Low">Low</option>
-                                                                <option value="Meduim" >Meduim</option>
-                                                                <option value="High" >High</option>
+                                                                <option value="Meduim">Meduim</option>
+                                                                <option value="High">High</option>
                                                             </select>
-                                                        </div>      
+                                                        </div>
+
                                                         <!---ng-if="item_d.action_status !== 'Closed' || (item_d.action_status === 'Responed' && !accessInfo.canAccess)"---->
                                                         <div class="p-1 rounded-3 m-auto" 
                                                             style="width: 80px;"
-                                                            ng-if="((flow_status == 14 ? item_d.reviewer_action_type : item_d.responder_action_type) == 2)"
+                                                            ng-if="(flow_status == 14 && item_d.responder_action_type != 2) && (accessInfo.isAdmin || accessInfo.isOwner)""
                                                             ng-class="{
                                                                 'bg-danger': (item_d.residual_risk == 'High' || item_d.residual_risk == 'High\r\n'), 
                                                                 'bg-warning': (item_d.residual_risk == 'Meduim' || item_d.residual_risk == 'Meduim\r\n'),
