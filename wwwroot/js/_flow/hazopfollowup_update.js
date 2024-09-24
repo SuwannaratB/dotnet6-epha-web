@@ -151,7 +151,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                 const request = new XMLHttpRequest();
                 request.open("POST", url_ws + 'Flow/uploadfile_data_followup');
 
-                request.setRequestHeader('Authorization', $scope.token);
+                request.setRequestHeader('X-CSRF-TOKEN', $scope.token);              
+                request.withCredentials = true;
 
                 request.onreadystatechange = function () {
                     if (request.readyState === XMLHttpRequest.DONE) {
@@ -168,6 +169,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                             }
 
                             if (parsedResponse && parsedResponse.msg && parsedResponse.msg[0].STATUS === "true") {
+
+                                console.log("upload details")
 
                                 // ทำอะไรกับข้อมูลที่ได้รับเช่น แสดงผลหรือประมวลผลต่อไป
                                 const jsonArray = JSON.parse(responseFromService);
@@ -191,6 +194,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                                         apply();
                                     }
                                 }
+                                console.log("==================arr_details=====================",arr_details);
+                                console.log("==================seq=====================",seq);
+                                console.log("==================$scope.data_drawingworksheet=====================",$scope.data_drawingworksheet);
 
                                 var arr = $filter('filter')($scope.data_drawingworksheet, function (item) { return (item.seq == seq); });
                                 if (arr.length > 0) {
@@ -204,6 +210,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                                     apply();
 
                                 }
+
+                                console.log("==================arr=====================",arr);
 
                                 $("#divLoading").hide(); 
                                 set_alert('Success', 'File attached successfully.');
@@ -648,6 +656,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                     }
                 });
 
+                if($scope.data_pha_doc[0].pha_status == 13){
+                    console.log("now we will set doc")
+                    set_follow_up();
+                }
+
 
                 if (true) {
                     $scope.MaxSeqdata_drawing_worksheet = 0;
@@ -686,7 +699,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                 $scope.DetailsShow2 = '' + arr.pha_doc[0].pha_status_desc;
                 $scope.document_module = (arr.pha_doc[0].pha_status == 13 ? 'followup' : 'review_followup');
  
-                if($scope.flow_role_type != 'admin'){
+                if($scope.flow_role_type != 'admin' && arr.pha_doc[0].pha_status == 13){
                     $scope.toggleStatus = false;
                     $scope.toggleChanged();
                 }                
@@ -771,7 +784,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                 if (!validRemark  && !validComment) {
                     $scope.confirmSaveFollowup('save', item);
                 }
-            }//&& !validUploadFile
+            }
+
+            
 
         } else if ($scope.flow_status == 14) {
             item.action_change = 1;
@@ -832,7 +847,47 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
         $scope.seqUpload = seq;
     }
 
+    function set_follow_up(){
+
+        $scope.data_details.forEach(owner => {
+            const exists = $scope.data_drawingworksheet.some(drawingApprover => drawingApprover.id_worksheet === owner.id);
+
+            var xseq = Number($scope.MaxSeqdata_drawing_worksheet) + 1;
+            $scope.MaxSeqdata_drawing_worksheet = xseq;
+    
+            if (!exists) {
+                let Format = $scope.data_drawingworksheet[0];
+                
+    
+                let newDrawing = {
+                    ...Format,
+                    no: 1,
+                    id_pha: $scope.data_drawingworksheet[0].id_pha,
+                    id_session: $scope.data_drawingworksheet[0].id_session,
+                    id_worksheet: owner.id,
+                    seq: xseq,
+                    id: xseq,
+                    no: xseq,
+
+                    document_file_name:null,
+                    document_file_path:null,
+                    document_file_size:null,
+                    action_type: 'insert',
+                    action_change: 1,
+                };
+    
+                // Push ข้อมูลใหม่เข้าไปใน data_drawing_approver
+                $scope.data_drawingworksheet.push(newDrawing);
+            }
+
+            console.log("$scope.data_drawingworksheet",$scope.data_drawingworksheet)
+        });
+        
+    }
+
     function set_valid_items(_item, field) {
+
+        console.log("_item, field",_item, field)
         try {
             var id_valid = document.getElementById('valid-' + field);
             if (_item == '' || _item == null) {
@@ -891,11 +946,22 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                 }
 
             }else {
+                console.log("($scope.data_drawingworksheet",$scope.data_drawingworksheet)
+                console.log("($scope.data_drawingworksheet", item.seq);
+
+                // Filter to get all matching items
                 var docfiles = $filter('filter')($scope.data_drawingworksheet, function (_item) {
                     return (_item.id_worksheet == item.seq && 
-                            _item.action_type != 'delete' 
+                            _item.action_type != 'delete'
                     );
-                })[0];
+                });
+                           
+                if(docfiles.length > 1){
+                    var docfiles = docfiles.find(function(_item) {
+                        return _item.document_file_name != null && _item.document_file_name != '';
+                    });
+                    
+                }
 
                 const validRemark = set_valid_items(item.responder_comment, 'remark-'+ item.seq);
                 const validUploadFile = set_valid_items(docfiles.document_file_name, 'upload_file-'+ item.seq);
@@ -977,6 +1043,15 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
             $scope.data_drawingworksheet[i].id_pha = pha_seq;
         }
 
+        
+        $scope.data_drawingworksheet.forEach(function(item) {
+            // Check if document_file_size is null
+            if (item.document_file_size == null) {
+                item.action_type = 'delete';
+                item.action_change = 1;
+            }
+        });
+
         var arr_active = [];
         angular.copy($scope.data_drawingworksheet, arr_active);
         var arr_json = $filter('filter')(arr_active, function (item) {
@@ -987,6 +1062,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
             );
         });
 
+
         //ข้อมูลที่ delete อยู่ใน data_drawingworksheet ไม่ได้เก็บไว้ใน data_drawingworksheet_delete
         //ต้องไปปรับ $scope.removeDataWorksheetDrawing 
         for (var i = 0; i < $scope.data_drawingworksheet_delete.length; i++) {
@@ -996,7 +1072,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
             }
         }
 
+
+        // Convert the modified array to JSON
         return angular.toJson(arr_json);
+
     }
 
     $scope.confirmSaveFollowup = function (action, _item) {
@@ -1026,12 +1105,16 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
             arr_json[i].implement = arr_json[i].implement === true ? 1 : 0;
         }        
 
+        /*if($scope.flow_status == 13){
+            check_case_followup();
+        }*/
+
         var json_managerecom = angular.toJson(arr_json);
         var json_drawingworksheet = check_data_drawingworksheet(_item.seq);
 
         var user_name = $scope.user_name;
         var flow_action = action;
-        var token_doc = _item.ID_PHA;
+        var token_doc = conFig.pha_seq();
 
         //alert(url_ws + "Flow/set_follow_up");
         var sub_software = conFig.pha_sub_software().toLowerCase(); 
@@ -1059,87 +1142,91 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                 $('#modalLoading').modal('hide');
             },
             success: function (data) {
-                var arr = data;
-
-                var arr = $filter('filter')($scope.data_details, function (item) {
-                    return ((item.seq == _item.seq && item.action_type == 'update'));
-                });
-                if (arr.length > 0) {
-                    arr[0].action_status = 'Responed';
-                    arr[0].action_type = 'update';
-                    arr[0].action_change = 0;
-                    arr[0].responder_action_type = (action == 'save' ? 1 : 2);
-
-                    //update data_drawingworksheet  
-                    $scope.data_drawingworksheet_delete = [];
-                    for (let i = 0; i < $scope.data_drawingworksheet.length; i++) {
-                        if ($scope.data_drawingworksheet[i].id_worksheet == _item.seq) {
-                            if ($scope.data_drawingworksheet[i].action_type == 'update'
-                                || ($scope.data_drawingworksheet[i].action_type == 'insert' && $scope.data_drawingworksheet[i].action_change == 1)) {
-                                $scope.data_drawingworksheet[i].action_type = 'update';
-                                $scope.data_drawingworksheet[i].action_change = 0;
+                try {
+                    var arr = $filter('filter')($scope.data_details, function (item) {
+                        return ((item.seq == _item.seq && item.action_type == 'update'));
+                    });
+            
+                    if (arr.length > 0) {
+                        arr[0].action_status = 'Responed';
+                        arr[0].action_type = 'update';
+                        arr[0].action_change = 0;
+                        arr[0].responder_action_type = (action == 'save' ? 1 : 2);
+            
+                        // Update data_drawingworksheet  
+                        $scope.data_drawingworksheet_delete = [];
+                        for (let i = 0; i < $scope.data_drawingworksheet.length; i++) {
+                            if ($scope.data_drawingworksheet[i].id_worksheet == _item.seq) {
+                                if ($scope.data_drawingworksheet[i].action_type == 'update'
+                                    || ($scope.data_drawingworksheet[i].action_type == 'insert' && $scope.data_drawingworksheet[i].action_change == 1)) {
+                                    $scope.data_drawingworksheet[i].action_type = 'update';
+                                    $scope.data_drawingworksheet[i].action_change = 0;
+                                }
                             }
                         }
-                    }
-                    if (action == 'save') {
-                        $scope.Action_Msg_Header = 'Success';
-                        $scope.Action_Msg_Detail = 'Data has been successfully saved.';
-                    } else {
-                        $scope.Action_Msg_Header = 'Success';
-                        $scope.Action_Msg_Detail = 'Data has been successfully submitted.';
-                    }
-
-                    apply();
-
-                    if (true) {
-                        if (action === 'save' || $scope.flow_role_type === 'admin') {
-                            
-                            
-                            var arr = $filter('filter')($scope.data_details, function(item) {
-                                return item.responder_action_type === 0 || item.responder_action_type === 1;
-                            });
-
-                            if(arr.length > 0){
-                                get_detail();
-                            }else if ($scope.flow_role_type === 'admin') {
-                                window.open("Home/Portal", "_top");
-                            }
-
+            
+                        // Success message
+                        if (action == 'save') {
+                            $scope.Action_Msg_Header = 'Success';
+                            $scope.Action_Msg_Detail = 'Data has been successfully saved.';
                         } else {
-
-                            var arr = $filter('filter')($scope.data_details, function(item) {
-                                return item.responder_action_type === 0 || item.responder_action_type === 1;
-                            });
-                    
-                            if (arr.length && $scope.user_name) {
-                                var userExists = arr.some(function(detail) {
-                                    return detail.responder_user_name === $scope.user_name;
+                            $scope.Action_Msg_Header = 'Success';
+                            $scope.Action_Msg_Detail = 'Data has been successfully submitted.';
+                        }
+            
+                        apply();
+            
+                        if (true) {
+                            if (action === 'save' || $scope.flow_role_type === 'admin') {
+                                var arr = $filter('filter')($scope.data_details, function(item) {
+                                    return item.responder_action_type === 0 || item.responder_action_type === 1;
                                 });
-                    
-                                if (userExists) {
+            
+                                if (arr.length > 0) {
                                     get_detail();
-                                } else {
+                                } else if ($scope.flow_role_type === 'admin') {
                                     window.open("Home/Portal", "_top");
                                 }
-                            } else { 
-                                setTimeout(function() {
-                                    $('#modalMsg').modal('show');
-                                }, 1000); 
-                    
-                                $('#modalMsg').modal('hide');
-                    
-                                setTimeout(function() {
-                                    window.open("Home/Portal", "_top");
-                                }, 2000); 
+                            } else {
+                                var arr = $filter('filter')($scope.data_details, function(item) {
+                                    return item.responder_action_type === 0 || item.responder_action_type === 1;
+                                });
+            
+                                if (arr.length && $scope.user_name) {
+                                    var userExists = arr.some(function(detail) {
+                                        return detail.responder_user_name === $scope.user_name;
+                                    });
+            
+                                    if (userExists) {
+                                        get_detail();
+                                    } else {
+                                        window.open("Home/Portal", "_top");
+                                    }
+                                } else { 
+                                    setTimeout(function() {
+                                        $('#modalMsg').modal('show');
+                                    }, 1000); 
+            
+                                    $('#modalMsg').modal('hide');
+            
+                                    setTimeout(function() {
+                                        window.open("Home/Portal", "_top");
+                                    }, 2000); 
+                                }
                             }
                         }
+            
+                    } else {
+                        // Error: no matching data found
+                        set_alert('Error', 'Failed to update the data. Please try again.', tabName);
                     }
-                    
-
+                } catch (error) {
+                    // If any unexpected error occurs
+                    console.error('An error occurred:', error);
+                    set_alert('Error', 'An unexpected error occurred. Please try again.', tabName);
                 }
-
-
             },
+            
             error: function (jqXHR, textStatus, errorThrown) {
                 if (jqXHR.status == 500) {
                     alert('Internal error: ' + jqXHR.responseText);
@@ -1274,6 +1361,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
 
         });
     }
+    
 
     $scope.openModalDataRAM = function (ram_type, _item, ram_type_action, id_ram, preview) {
         var seq = _item.seq;
@@ -1606,21 +1694,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
         });
     }
 
-    //access each role
-    $scope.Access_check = function(task) {
-        // If user is an admin, allow access
-        if ($scope.flow_role_type === 'admin') {
-            return true;
-        }
-        
-        // If user is an employee and the task belongs to them, allow access
-        if ($scope.flow_role_type === 'employee' && $scope.user_name === task.responder_user_name) {
-            return true;
-        }
-        
-        //originator cant edit?
-        return false;
-    };
     
         //access each role
         $scope.Access_check = function(task) {
@@ -1630,9 +1703,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                 isOwner:false
             };
 
-            console.log(task)
-            console.log($scope.user_name)
-        
+            //set admin for originator
+
+
+
+            
             // If user is an admin, allow access
             if ($scope.flow_role_type === 'admin') {
                 accessInfo.isAdmin = true;

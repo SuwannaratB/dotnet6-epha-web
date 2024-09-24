@@ -1390,6 +1390,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         var json_worksheet = check_data_worksheet_list(flow_action);
         var json_recommendations = check_data_recommendations(flow_action);
         // var json_worksheet = '[]';
+
+        
+
        
   $.ajax({
             url: url_ws + "Flow/set_hra",
@@ -1643,8 +1646,17 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                             // }
                             window.open('hazop/search', "_top");
                         } else if (arr[0].pha_status == '22') {
-                            //กรณีที่ TA2 approve reject
-                            window.open('hazop/search', "_top");
+                            if ($scope.flow_role_type === 'admin') {
+                                const allActionType2 = $scope.data_approver.every(item => item.action_type === 2);
+                            
+                                if (allActionType2) {
+                                    window.open('hazop/search', "_top");
+                                } else {
+                                    get_data_after_save(false, false, $scope.pha_seq);
+                                }
+                            }else{
+                                window.open('hazop/search', "_top");
+                            }
                         } else if (arr[0].pha_status == '91') {
                             //กรณีที่ approve all
                             window.open('hazop/search', "_top");
@@ -1803,6 +1815,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         $scope.data_session_def = clone_arr_newrow(arr.session);
                         setDefaultMettingDate($scope.data_session[0]);
 
+                        $scope.data_session_last = arr.session_last
+
                         $scope.data_memberteam = arr.memberteam;
                         $scope.data_memberteam_def = clone_arr_newrow(arr.memberteam);
                         $scope.data_memberteam_old = (arr.memberteam);
@@ -1810,9 +1824,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         $scope.data_approver = arr.approver;
                         $scope.data_approver_def = clone_arr_newrow(arr.approver);
                         $scope.data_approver_old = (arr.approver);
-
-                        set_data_approver()
-
 
 
                         $scope.data_relatedpeople_outsider = arr.relatedpeople_outsider;
@@ -1892,6 +1903,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         $scope.data_drawing_approver = arr.drawing_approver;
                         $scope.data_drawing_approver_def = clone_arr_newrow(arr.drawing_approver);
                         $scope.data_drawing_approver_old = (arr.drawing_approver);
+
+                        set_data_approver()
+
                     }
 
                     // Summary of Risk Management
@@ -1978,8 +1992,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     }
                     set_tab_focus($scope.pha_status,action_part_befor)
 
-
-                    console.log("set_form_action",$scope.tab_approver_active)
 
 
                     
@@ -2147,6 +2159,39 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
         }
 
+
+        //set def data_drawing         
+        let active_session = $scope.data_session_last[0].id_session;
+
+        let filteredApprovers = $scope.data_approver.filter(item => item.id_session === active_session);
+        console.log(filteredApprovers)
+        filteredApprovers.forEach(approver => {
+            // ตรวจสอบว่าไม่มี id_approver ที่ตรงกับ approver.id ใน data_drawing_approver
+            const exists = $scope.data_drawing_approver.some(drawingApprover => drawingApprover.id_approver === approver.id);
+    
+            if (approver.id_session === active_session && !exists) {
+                let Format = $scope.data_drawing_approver_def[0];
+    
+                let newApprover = {
+                    ...Format,
+                    no: 1,
+                    id_pha: $scope.data_drawing_approver[0].id_pha,
+                    id_approver: approver.id,
+                    seq: Number($scope.MaxSeqdata_drawing_approver) + 1,
+                    id: Number($scope.MaxSeqdata_drawing_approver) + 1,
+                    id_session: active_session,
+                    action_type: 'insert',
+                };
+    
+                // เพิ่มค่า seq สูงสุดใหม่
+                $scope.MaxSeqdata_drawing_approver = newApprover.seq;
+    
+                // Push ข้อมูลใหม่เข้าไปใน data_drawing_approver
+                $scope.data_drawing_approver.push(newApprover);
+            }
+        });
+        
+        
     }
 
     function setup_summary(data_worksheet){
@@ -2445,7 +2490,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
 
     function setup_isApproveReject(header){
-        if (header.approve_status == 'reject') {
+        if (header.approve_status == 'reject' && header.pha_status == 22) {
             return true
         }
         return false
@@ -2524,7 +2569,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         
             // Check pha_status and add 'approver' tab if pha_status is 21 or 22
             if (pha_status_def == 21 || pha_status_def == 22) {
-                $scope.tabs.splice(7, 0, { name: 'approver', action_part: 8, title: 'Assessment Team Leader (QMTS)', isActive: false, isShow: false });
+                $scope.tabs.splice(6, 0, { name: 'approver', action_part: 8, title: 'Assessment Team Leader (QMTS)', isActive: false, isShow: false });
             }
         
             // Initialize visibility and activity for each tab
@@ -2644,6 +2689,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 showTabs(set_tabs);
                 setAllTabsInctive();
 
+                $scope.isDisableStatus = true;
+                $scope.isEditWorksheet  = false;
+
                 //button
                 $scope.save_type = false;
                 $scope.submit_type = false;
@@ -2655,6 +2703,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 showTabs(set_tabs);
                 setAllTabsInctive();
     
+                $scope.isDisableStatus = true;
+                $scope.isEditWorksheet  = false;
                
     
                 if ($scope.flow_role_type == "admin") {
@@ -2694,6 +2744,18 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 $scope.isDisableStatus = true;
                 // set isApproveReject
                 $scope.isApproveReject =true;
+
+                //active session === lastest session
+                const maxSeq = $scope.data_drawing.reduce((max, item) => {
+                    if (item.action_type === 'update') {
+                        return item.seq > max ? item.seq : max;
+                    }
+                    return max; // ถ้าไม่ตรงเงื่อนไขให้ส่ง max กลับมา
+                }, 0);
+                                
+
+                $scope.active_session = $scope.data_session_last[0].id_session;
+                $scope.active_drawing = maxSeq.seq;
 
                 $scope.submit_type = true;
 
@@ -2826,6 +2888,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 }
     
             }
+            
+            if (pha_status === 22) {
+                if ($scope.data_header[0].pha_request_by.toLowerCase() === $scope.user_name.toLowerCase()) {
+                    $scope.flow_role_type = 'admin';
+                }
+            }
+            
         }
 
 
@@ -5767,6 +5836,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
         $scope.confirmSave = function (action) {
 
+
             //check required field 
             var pha_status = $scope.data_header[0].pha_status;
             // reset data_copy_hazard
@@ -5948,6 +6018,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             if ($scope.params) {
                 return $('#modalEditConfirm').modal('show');
             }   
+            
+            
+            if($scope.pha_status == '22' ){
+                check_case_approver();
+            }
 
             save_data_create(action);
 
@@ -6014,25 +6089,84 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
 
 
-            if(action == 'submit'){
-                //will check data approver befor submit to approver
-                //check_data_approver()
-                check_case_approver();
-            }
+
 
             save_data_approver(action);
         }
 
-        function check_case_approver(){
-            //new session??
+        function check_case_approver() {
+            const hasInsert = $scope.data_session.some(item => item.action_type === 'insert');
+            console.log('Has insert:', hasInsert);
+        
+            if (hasInsert) {
+                console.log('Insert found. Exiting function.');
+                return; 
+            }
+        
+            const last_session = $scope.data_session.reduce((max, item) => {
+                return item.seq > max ? item.seq : max;
+            }, 0);
+        
+            console.log('Active session:', $scope.active_session, 'Last session:', last_session);
+            
+        
+            if ($scope.active_session == last_session) {
+                console.log('Active session is equal to last session. Updating approvers...');
+                $scope.data_approver.forEach(item => {
+                    if (item.id_session == last_session) { 
+                        item.approver_action_type = null;
+                        item.action_review = null;
+                        item.approver_type = null;
+                        item.action_status = null;
+                        item.comment = null;
+                        item.date_review = null;
+                        item.date_review_show = null;
+                        item.action_change = 1;
+                        item.action_type = 'update';
+                        
+                        // Log ข้อมูลแต่ละ item หลังจากการอัปเดต
+                        console.log('Updated approver:', item);
+                    }
+                });
 
-            console.log($scope.data_session)
+                
+                let uniqueApprovers = new Set();
+                let itemsToRemove = []; 
+                
+                $scope.data_drawing_approver.forEach(item => {
+                    if (item.id_session == last_session) { 
+                        item.document_file_name = null;
+                        item.document_file_path = null;
+                        item.document_file_size = null;
+                        item.action_change = 1;
+                        item.action_type = 'update';
+                        
+                        if (uniqueApprovers.has(item.id_approver)) {
+                            item.action_change = 1;
+                            item.action_type = 'delete';
+                            $scope.data_drawing_approver_delete.push(item);
+                            
+                            itemsToRemove.push(item);
+                            console.log('Marked duplicate approver for removal:', item);
+                        } else {
+                            uniqueApprovers.add(item.id_approver);
+                        }
+                    }
+                });
+                
+                $scope.data_drawing_approver = $scope.data_drawing_approver.filter(item => !itemsToRemove.includes(item));
+                
+                console.log(" $scope.data_drawing_approver", $scope.data_drawing_approver)
+                console.log(" $scope.data_approver", $scope.data_approver)
+
+            } else {
+                console.log('Active session is not equal to last session.');
+            }
 
 
-
-            //old session will clear value 
-
+            //must update to delete drawing
         }
+        
 
 
 
@@ -6335,7 +6469,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             if (!hasInsert) {
                 for (var j = 0; j < copy_data_approver.length; j++) {
                     copy_data_approver[j].action_review = null;
-                }                }
+                }                
+            }
                 
         }
         
@@ -6777,7 +6912,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 }
             }
 
-            console.log("arr_jsonarr_jsonarr_jsonarr_jsonarr_jsonarr_json",arr_json)
             return angular.toJson(arr_json);
         }
     }
@@ -9668,58 +9802,95 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         let accessInfo = {
             canRemove: false,
             canCopy: false,
+            canAdd: false
         };
     
         if(type == 'session'){
             let approverData = $scope.data_approver.filter(data => data.id_session === item.id);
             let memberTeamData = $scope.data_memberteam.filter(data => data.id_session === item.id);
             
-            if (index === 0 && 
-                (approverData.length === 0 || approverData[0].user_name == null) &&
-                (memberTeamData.length === 0 || memberTeamData[0].user_name == null)) {
-                accessInfo.canRemove = false;
-            } else {
-                accessInfo.canRemove = true;
-            }
+            
+            if(!$scope.isApproveReject){
+                //normal flow 
+                if (index === 0 && 
+                    (approverData.length === 0 || approverData[0].user_name == null) &&
+                    (memberTeamData.length === 0 || memberTeamData[0].user_name == null)) {
+                    accessInfo.canRemove = false;
+                } else {
+                    accessInfo.canRemove = true;
+                }
+        
+                if ((approverData.length > 0 && approverData[0].user_name != null) ||
+                    (memberTeamData.length > 0 && memberTeamData[0].user_name != null)) {
+                    accessInfo.canCopy = true;
+                    accessInfo.canAdd = true;
+
+                } else {
+                    accessInfo.canCopy = false;
+                }
     
-            if ((approverData.length > 0 && approverData[0].user_name != null) ||
-                (memberTeamData.length > 0 && memberTeamData[0].user_name != null)) {
-                accessInfo.canCopy = true;
-            } else {
-                accessInfo.canCopy = false;
+                let meeting_data = $scope.data_session.filter(data => data.id === item.id);
+    
+                if (
+                    meeting_data[0].meeting_date != null || 
+                    meeting_data[0].meeting_start_time != null || 
+                    meeting_data[0].meeting_start_time_hh != null || 
+                    meeting_data[0].meeting_start_time_mm != null || 
+                    meeting_data[0].meeting_end_time != null || 
+                    meeting_data[0].meeting_end_time_hh != null || 
+                    meeting_data[0].meeting_end_time_mm != null
+                ) {
+                    accessInfo.canCopy = true;
+                    accessInfo.canAdd = true;
+                    accessInfo.canRemove = true;
+                } 
+            }else{
+                //approver rej flow    
+                console.log("$scope.active_session",$scope.active_session)           
+                console.log("$scope.item.id",item.id)           
+                if($scope.active_session === item.id && item.action_type === 'update'){
+                    accessInfo.canCopy = true;
+                    accessInfo.canAdd = true;
+                    accessInfo.canRemove = false;
+                }else if(item.action_type === 'insert'){
+                    accessInfo.canCopy = true;
+                    accessInfo.canRemove = true;
+                }else{
+                    accessInfo.canCopy = false;
+                    accessInfo.canRemove = false;                    
+                }
+
+
             }
 
-            let meeting_data = $scope.data_session.filter(data => data.id === item.id);
-
-            if (
-                meeting_data[0].meeting_date != null || 
-                meeting_data[0].meeting_start_time != null || 
-                meeting_data[0].meeting_start_time_hh != null || 
-                meeting_data[0].meeting_start_time_mm != null || 
-                meeting_data[0].meeting_end_time != null || 
-                meeting_data[0].meeting_end_time_hh != null || 
-                meeting_data[0].meeting_end_time_mm != null
-            ) {
-                accessInfo.canCopy = true;
-                accessInfo.canRemove = true;
-            } 
 
             $scope.sessionAccessInfoMap[item.id] = accessInfo;
             
             
         } else if(type === 'drawing'){
     
-            if(index === 0) {
-                if (item.document_name !== null || item.document_no !== null || item.descriptions !== null ||
-                    item.document_file_name !== null || item.document_file_path !== null) {
-                    accessInfo.canRemove = true;
+            if(!$scope.isApproveReject){
+                //normal flow 
+                if(index === 0) {
+                    if (item.document_name !== null || item.document_no !== null || item.descriptions !== null ||
+                        item.document_file_name !== null || item.document_file_path !== null) {
+                        accessInfo.canRemove = true;
+                    } else {
+                        accessInfo.canRemove = false;
+                    }
                 } else {
-                    accessInfo.canRemove = false;
+                    accessInfo.canRemove = true;
                 }
-            } else {
-                accessInfo.canRemove = true;
+    
+            }else{
+                if($scope.active_session === item.id && item.action_type === 'update'){
+                    accessInfo.canCopy = true;
+                    accessInfo.canRemove = false;
+                }else if(item.action_type === 'insert'){
+                    accessInfo.canCopy = true;
+                    accessInfo.canRemove = true;
+                }
             }
-
             $scope.drawingAccessInfoMap[item.id] = accessInfo;
         }
         
