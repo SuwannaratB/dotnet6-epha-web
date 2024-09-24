@@ -126,7 +126,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
     $scope.selectItem = function (item, idinput) {
         $scope.autoText[idinput] = item.name;
         $scope.filteredItems[idinput] = [];
-        console.log($scope.autoText)
         try {
             var dropdown = document.querySelector(`.autocomplete-dropdown-${idinput}`);
             if (dropdown) {
@@ -191,13 +190,11 @@ AppMenuPage.directive('hidePlaceholderOption', function() {
   
         // Show 
         element.on('hideDropdown', function(event) {
-          console.log("Dropdown closed");
           var placeholderItem = document.querySelector('.is-open .is-active .choices__list .is-selected'); //choices__placeholder
           if (placeholderItem) {placeholderItem.removeClass('ng-hide');}
         });
 
         if (!scope.item.functional_location) {
-          console.log("No selection, hiding placeholder");
         }
       }
     };
@@ -230,7 +227,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     // Track location changes
     $rootScope.$on('$locationChangeStart', function(event, next, current) {
-        console.log('Location is changing from:', current, 'to:', next);
 
         if (unsavedChanges) {
             var confirmLeave = $window.confirm("You have unsaved changes. Are you sure you want to leave?");
@@ -242,7 +238,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     // close tab / browser window
     $window.addEventListener('beforeunload', function(event) {
-        console.log("Trigger Ec=vent",event)
         if (unsavedChanges) {
             var confirmationMessage = 'You have unsaved changes. Are you sure you want to leave?';
     
@@ -543,8 +538,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     
                 //if selcte hazop
                 if (selectedTab.action_part == 5) {
-                    $scope.selectedItemNodeView = $scope.data_node[0].id;
-                    $scope.viewDataNodeList($scope.selectedItemNodeView);
+                    $scope.selectedItemNodeView.seq = $scope.data_node[0].id;
+                    $scope.viewDataNodeList($scope.selectedItemNodeView.seq);
     
                 }   
                          
@@ -603,7 +598,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     activeTabPane.classList.add('show', 'active');
                 }
     
-                console.log("show tabs",$scope.tabs)
                 check_tab(selectedTab[0].name);
     
             }else{
@@ -612,9 +606,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 if (activeTabPane) {
                     activeTabPane.classList.add('show', 'active');
                 }
-    
-                console.log("show tabs",$scope.tabs)
-    
+        
                 check_tab(selectedTab.name);
             }
     
@@ -914,7 +906,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         });
         $scope.changeTab_Focus(arr_tab, tag_name);
 
-        document.getElementById("node_" + $scope.selectedItemNodeView).focus();
+        document.getElementById("node_" + $scope.selectedItemNodeView.seq).focus();
     }
     $scope.changeSearchApprover = function () {
 
@@ -1086,7 +1078,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         $scope.select_history_tracking_record = false;
 
-        $scope.selectedItemNodeView = 0;
+        $scope.selectedItemNodeView = {seq:0};
         $scope.selectedDataNodeWorksheetRamType = null;
 
         $scope.select_rows_level = 5;
@@ -1170,7 +1162,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.action_part = 1;
         var arr_tab = $filter('filter')($scope.tabs, function (item) { return (item.name == val); });
         if (arr_tab.length > 0) { $scope.action_part = Number(arr_tab[0].action_part); }
-        if (val == 'worksheet') { $scope.viewDataNodeList($scope.selectedItemNodeView); }
+        if (val == 'worksheet') { $scope.viewDataNodeList($scope.selectedItemNodeView.seq); }
         //if (val === 'approver') { }
     }
 
@@ -1676,8 +1668,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             json_approver_ta3: json_approver_ta3
         };
         
-        var jsonData = JSON.stringify(data);
-        console.log("Constructed JSON Data:", jsonData);
 
         $.ajax({
             url: url_ws + "flow/set_approve_ta3",
@@ -1769,7 +1759,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             },
             success: function (data) {
                 var arr = data;
-                console.log(arr);
          
 
                 $scope.pha_seq = arr[0].pha_seq;
@@ -1840,7 +1829,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 var arr = data;
                 if (true) {
                     
-                    console.log(arr.nodeworksheet)
                     $scope.data_all = arr;
                     $scope.master_apu = arr.apu;
                     $scope.master_business_unit_def = arr.business_unit;
@@ -1999,14 +1987,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         }
 
 
-                        console.log("will count row ")
                         //get_rowspam
                         $scope.rowspanMap = {};
                         $scope.$evalAsync(function() {
                             computeRowspan();  // Safely schedule this to update the UI
                         });
 
-                        $scope.selectedItemNodeView = $scope.data_nodeworksheet[0].id_node;
+                        $scope.selectedItemNodeView.seq = $scope.data_nodeworksheet[0].id_node;
                     }
 
                 }
@@ -2293,9 +2280,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     showTabs(set_tabs);
                     setTabsActive(set_tabs);
 
-                    if ($scope.selectedItemNodeView == 0) {
+                    if ($scope.selectedItemNodeView.seq == 0) {
                         if ($scope.data_node.length > 0) {
-                            $scope.selectedItemNodeView = $scope.data_node[0].seq;
+                            $scope.selectedItemNodeView.seq = $scope.data_node[0].seq;
                         }
                     }
                 } else {
@@ -2333,7 +2320,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 }
 
     
-                $scope.selectedItemNodeView = $scope.data_node[0].seq;
+                $scope.selectedItemNodeView.seq = $scope.data_node[0].seq;
     
                 $scope.submit_type = true;
     
@@ -2346,7 +2333,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 showTabs(set_tabs);
                 setAllTabsInctive();
 
-                $scope.selectedItemNodeView = $scope.data_node[0].seq;
+                $scope.selectedItemNodeView.seq = $scope.data_node[0].seq;
 
                 //button
                 $scope.save_type = false;
@@ -2359,7 +2346,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 showTabs(set_tabs);
                 setAllTabsInctive();
     
-                $scope.selectedItemNodeView = $scope.data_node[0].seq;
+                $scope.selectedItemNodeView.seq = $scope.data_node[0].seq;
     
                 if ($scope.flow_role_type == "admin") {
                     $scope.save_type = true;
@@ -2374,7 +2361,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 showTabs(set_tabs);
                 setTabsActive(['approver']);
     
-                $scope.selectedItemNodeView = $scope.data_node[0].seq;
+                $scope.selectedItemNodeView.seq = $scope.data_node[0].seq;
     
                 $scope.save_type = true;
                 $scope.submit_type = true;
@@ -2394,7 +2381,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                 check_case_member_review();
     
-                $scope.selectedItemNodeView = $scope.data_node[0].seq;
+                $scope.selectedItemNodeView.seq = $scope.data_node[0].seq;
     
                 $scope.submit_type = true;
 
@@ -2425,7 +2412,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 $scope.submit_type = false;
                 $scope.export_type = true;
     
-                $scope.selectedItemNodeView = $scope.data_node[0].seq;
+                $scope.selectedItemNodeView.seq = $scope.data_node[0].seq;
     
     
             }
@@ -2631,9 +2618,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.tab_managerecom_active = true;
             $scope.tab_approver_active = true;
 
-            if ($scope.selectedItemNodeView == 0) {
+            if ($scope.selectedItemNodeView.seq == 0) {
                 if ($scope.data_node.length > 0) {
-                    $scope.selectedItemNodeView = $scope.data_node[0].seq;
+                    $scope.selectedItemNodeView.seq = $scope.data_node[0].seq;
                 }
             }
         }
@@ -2662,7 +2649,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 const startDateParts = $scope.data_general[0].target_start_date.split('T')[0].split("-");
                 const year = parseInt(startDateParts[0]);
                 $scope.data_general[0].target_start_date = new Date(year, parseInt(startDateParts[1]) - 1, parseInt(startDateParts[2]));
-                console.log( $scope.data_general[0].target_start_date)
             }
     
     
@@ -2670,7 +2656,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 const endDateParts = $scope.data_general[0].target_end_date.split('T')[0].split("-");
                 const year = parseInt(endDateParts[0]);
                 $scope.data_general[0].target_end_date = new Date(year, parseInt(endDateParts[1]) - 1, parseInt(endDateParts[2]));
-                console.log( $scope.data_general[0].target_end_date)
     
             }
             
@@ -2751,10 +2736,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             for (var i = 0; i < xSplitFunc.length; i++) {
                 _functoArr.push(xSplitFunc[i]);
             }
-            console.log('_functoArr');
             if (_functoArr.length > 0) {
                 $scope.data_general[0].functional_location_audition = _functoArr;
-                console.log($scope.data_general[0].functional_location_audition);
             }
             // set unit no
             var name_unitno = $filter('filter')($scope.master_unit_no, function (item) { 
@@ -3084,14 +3067,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
               var key = 'causes' + item.id_node + '-' + item.deviations_no + '-' + item.causes_no;
               $scope.rowspanMap[key] = $scope.data_nodeworksheet.filter(function(entry) {
-                return entry.id_node === $scope.selectedItemNodeView &&
+                return entry.id_node === $scope.selectedItemNodeView.seq &&
                        entry.deviations_no === item.deviations_no &&
                        entry.causes_no === item.causes_no 
               }).length;
 
               var key = 'consequences' + item.id_node + '-' + item.deviations_no + '-' + item.causes_no + '-' + item.consequences_no;
               $scope.rowspanMap[key] = $scope.data_nodeworksheet.filter(function(entry) {
-                return entry.id_node === $scope.selectedItemNodeView &&
+                return entry.id_node === $scope.selectedItemNodeView.seq &&
                        entry.deviations_no === item.deviations_no &&
                        entry.causes_no === item.causes_no &&
                        entry.consequences_no === item.consequences_no
@@ -3099,7 +3082,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
               var key = item.id_node + '-' + item.deviations_no + '-' + item.causes_no + '-' + item.consequences_no + '-' + item.category_no;
               $scope.rowspanMap[key] = $scope.data_nodeworksheet.filter(function(entry) {
-                return entry.id_node === $scope.selectedItemNodeView &&
+                return entry.id_node === $scope.selectedItemNodeView.seq &&
                        entry.deviations_no === item.deviations_no &&
                        entry.causes_no === item.causes_no &&
                        entry.consequences_no === item.consequences_no &&
@@ -3108,7 +3091,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
               var key = 'category' + item.id_node + '-' + item.deviations_no + '-' + item.causes_no + '-' + item.consequences_no + '-' + item.category_no;
               $scope.rowspanMap[key] = $scope.data_nodeworksheet.filter(function(entry) {
-                return entry.id_node === $scope.selectedItemNodeView &&
+                return entry.id_node === $scope.selectedItemNodeView.seq &&
                        entry.deviations_no === item.deviations_no &&
                        entry.causes_no === item.causes_no &&
                        entry.consequences_no === item.consequences_no &&
@@ -3117,13 +3100,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
               var key = 'deviations' + item.id_node + '-' + item.deviations_no ;
               $scope.rowspanMap[key] = $scope.data_nodeworksheet.filter(function(entry) {
-                return entry.id_node === $scope.selectedItemNodeView &&
+                return entry.id_node === $scope.selectedItemNodeView.seq &&
                        entry.deviations_no === item.deviations_no
               }).length;
 
 
             });
-          }
+        }
         
     }
     
@@ -3608,7 +3591,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         newInput.action_type = 'insert';
         newInput.action_change = 1;
         console.clear();
-        console.log(newInput);
 
         running_no_level1_lv1($scope.data_drawing, iNo, index, newInput);
 
@@ -4290,7 +4272,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
 
     $scope.viewDataNodeList = function (seq) {
-        $scope.selectedItemNodeView = seq;
+        $scope.selectedItemNodeView.seq = seq;
         console.log($scope);
         try {
             apply();
@@ -5852,12 +5834,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                         arr_chk = $scope.data_drawing;
                         if (arr_chk.length == 0) { 
-                            $scope.goback_tab = 'node';
-                            
-                            $scope.tabs = $scope.tabs.map(tab => {
-                                tab.isActive = (tab.name === 'node');
-                                return tab;
-                            })
                             
                             set_alert('Warning', 'Please provide a valid Drawing List','node'); return; }
                         for (var i = 0; i < arr_chk.length; i++) {
@@ -5866,12 +5842,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                         arr_chk = $scope.data_node;
                         if (arr_chk.length == 0) { 
-                            $scope.goback_tab = 'node';
-                            
-                            $scope.tabs = $scope.tabs.map(tab => {
-                                tab.isActive = (tab.name === 'node');
-                                return tab;
-                            })
 
                             set_alert('Warning', 'Please provide a valid Node List','node'); return; }
                         for (var i = 0; i < arr_chk.length; i++) {
@@ -6139,6 +6109,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     
     function validateFields(item, mainField, requiredFields) {
+
         let valid = true;
         let allFieldsPresent = true; 
         let isViewDataNodeListSet = false; //
@@ -6164,9 +6135,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 requiredFields.forEach(field => {
                     if (!isViewDataNodeListSet) {
                         $timeout(function() {
-                            $scope.selectedItemNodeView = item.id_node;
+                            $scope.selectedItemNodeView.seq = item.id_node;
 
-                            $scope.viewDataNodeList($scope.selectedItemNodeView);
+                            $scope.viewDataNodeList($scope.selectedItemNodeView.seq);
                         }, 0); 
                         isViewDataNodeListSet = true;
                     }
@@ -6449,8 +6420,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
         }
 
-        console.log("arr_json",arr_json)
-
         //check จากข้อมูล session ให้ delete ออกด้วย
         for (var i = 0; i < $scope.data_memberteam.length; i++) {
             var arr_check = $filter('filter')($scope.data_session, function (item) {
@@ -6463,8 +6432,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 }
             }
         }
-
-        console.log("arr_json",arr_json)
 
         return angular.toJson(arr_json);
     }
@@ -6605,7 +6572,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
         }
 
-        console.log("arr_json",arr_json)
 
 
         //check จากข้อมูลเดิมที่เคยบันทึกไว้ถ้าไม่มีในของเดิมให้ delete ออกด้วย
@@ -6621,8 +6587,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
         }
         
-        console.log("arr_json",arr_json)
-
 
         //check จากข้อมูล session ให้ delete ออกด้วย
         for (var i = 0; i < $scope.data_approver_ta3.length; i++) {
@@ -6636,9 +6600,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 }
             }
         }
-
-        console.log("arr_json",arr_json)
-        //make sure each id_approver have only one ta3
 
         return angular.toJson(arr_json);
     }
@@ -6849,7 +6810,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.Action_Msg_Header = header;
         $scope.Action_Msg_Detail = detail;
     
-        console.log(tab)
         // Set the tab based on where the error occurred (if provided)
         if (tab) {
             $scope.goback_tab = tab;
@@ -6917,12 +6877,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.data_header[0].request_approver = (_arr.expense_type == 'OPEX' ? 0 : 1);
         }
         if (type_text == "ChangeRAM") {
-            console.log($scope.master_ram_level);
             set_master_ram_likelihood(_arr.id_ram);
         }
 
         if (type_text == "node") {
-            $scope.selectedItemNodeView = _seq;
+            $scope.selectedItemNodeView.seq = _seq;
         }
 
         if(type_text === 'area'){
@@ -7389,8 +7348,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }, 2000);
     
         var paginatedItems = $scope.employeelist_page.slice(begin, end);
-
-        console.log("paginatedItems",paginatedItems)
         
         return paginatedItems;
     };
@@ -7637,7 +7594,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                        newInput.user_displayname = employee_displayname;
                        newInput.user_img = employee_img;
    
-                       console.log(newInput)
                        $scope.data_approver_ta3.push(newInput);
    
                        running_no_level1($scope.data_approver_ta3, null, null);
@@ -7708,7 +7664,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             
                 return !(item.seq == seq && item.id_session == seq_session);
             });
-            console.log("call to del",$scope.data_memberteam)
             
             //if delete row 1 clear to null
             if ($scope.data_memberteam.length == 1 || $scope.data_memberteam.no == 1) {
@@ -7739,7 +7694,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             
                 return !(item.seq == seq && item.id_session == seq_session);
             });
-            console.log("call to del",$scope.data_approver)
             
             //if delete row 1 clear to null
             if ($scope.data_approver.length == 1 || $scope.data_approver.no == 1) {
@@ -7920,14 +7874,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
     
     $scope.changeUnitNo = function(unit_no) {
-        console.log(unit_no)
         $scope.data_general[0].id_unit_no = unit_no.id;
         $scope.data_general[0].unit_no_name = unit_no.name;
         $scope.data_general[0].id_area = unit_no.id_area;
         $scope.data_general[0].id_company = unit_no.id_company;
         $scope.data_general[0].action_change = 1;
-
-        console.log("show after set unbit no", $scope.data_general)
     };
 
     $scope.changeTFunctional = function(item) {
@@ -7975,7 +7926,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     });
 
     $scope.filterFunction = function (type) {
-        console.log("type",type)
         if (type == 'unit_no') {
             $scope.master_unit_no_list = $filter('filter')($scope.master_unit_no, function(item) {
                 var itemName = item.name.toLowerCase();
@@ -8098,7 +8048,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             if ($scope.user_name === task.user_name) {
                 accessInfo.isTA2 = true;
                 accessInfo.canAccess = true; // TA2 should have access to their own tasks
-                console.log("User is TA2, granting access:", accessInfo);
             } else {
                 // Check if the user is a TA3 for this task
                 for (let item of $scope.data_approver_ta3) {
