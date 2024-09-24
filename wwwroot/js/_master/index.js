@@ -51,7 +51,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, conFig) {
             {
                 id: 2,
                 title: 'Systemwide Master Data',
-                active: true,
+                active: false,
                 icon: 'fa-solid fa-sliders',
                 sub_menu: [
                     {
@@ -103,69 +103,75 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, conFig) {
             {
                 id: 4,
                 title: 'HRA Module',
-                active: false,
+                active: true,
                 icon: 'fa-solid fa-folder',
                 sub_menu: [
                     {
                         id: 41,
-                        title: 'Type of Hazard',
-                        path: 'Master/HazardType',
-                        active: false,
+                        title: 'Departments',
+                        path: 'Master/Departments',
+                        active: false
                     },
                     {
                         id: 42,
-                        title: 'Health Hazard of Risk Factor',
-                        path: 'Master/HazardRiskFactors',
-                        active: false,
+                        title: 'Sections',
+                        path: 'Master/Sections',
+                        active: false
                     },
                     {
                         id: 43,
-                        title: 'Worker Group',
-                        path: 'Master/WorkerGroupList',
-                        active: false,
+                        title: 'Sub Area',
+                        path: 'Master/SubArea',
+                        active: false
                     },
                     {
                         id: 44,
-                        title: 'Set Worker Group',
-                        path: 'Master/WorkerGroup',
-                        active: false,
+                        title: 'Type of Hazard',
+                        path: 'Master/HazardType',
+                        active: false
                     },
                     {
                         id: 45,
-                        title: 'Frequency Level',
-                        path: 'Master/FrequencyLevel',
-                        active: false,
+                        title: 'Health Hazard of Risk Factor',
+                        path: 'Master/HazardRiskFactors',
+                        active: false
                     },
                     {
                         id: 46,
-                        title: 'Exposure Rating',
-                        path: 'Master/CompareExposureRating',
-                        active: false,
+                        title: 'Health Effect Rating',
+                        path: 'Master/HealthEffectRating',
+                        active: false
                     },
                     {
                         id: 47,
-                        title: 'Initial Risk Rating',
-                        path: 'Master/CompareInitialRiskRating',
-                        active: false,
-                    },
-                    {
-                        id: 47,
-                        title: 'Initial Risk Rating',
-                        path: 'Master/CompareInitialRiskRating',
-                        active: false,
+                        title: 'Worker Group',
+                        path: 'Master/WorkerGroupList',
+                        active: false
                     },
                     {
                         id: 48,
-                        title: 'Departments',
-                        path: 'Master/Departments',
-                        active: false,
+                        title: 'Set Worker Group',
+                        path: 'Master/WorkerGroup',
+                        active: false
                     },
                     {
                         id: 49,
-                        title: 'Sections',
-                        path: 'Master/Sections',
-                        active: false,
+                        title: 'Frequency Level',
+                        path: 'Master/FrequencyLevel',
+                        active: false
                     },
+                    {
+                        id: 410,
+                        title: 'Exposure Rating',
+                        path: 'Master/CompareExposureRating',
+                        active: false
+                    },
+                    {
+                        id: 411,
+                        title: 'Initial Risk Rating',
+                        path: 'Master/CompareInitialRiskRating',
+                        active: false
+                    }                   
                 ]
             },
             {

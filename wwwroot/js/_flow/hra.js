@@ -2160,7 +2160,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
 
 
-        //set def data_drawing         
+        //set def data_drawing   
+        if($scope.data_session_last.length == 0) return
         let active_session = $scope.data_session_last[0].id_session;
 
         let filteredApprovers = $scope.data_approver.filter(item => item.id_session === active_session);

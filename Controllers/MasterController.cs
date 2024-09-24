@@ -99,12 +99,22 @@ namespace dotnet6_epha_web.Controllers
             return View();
         }
         #region HRA
+        public IActionResult SubArea()
+        {
+            _PageDef();
+            return View();
+        }
         public IActionResult HazardType()
         {
             _PageDef();
             return View();
         }
         public IActionResult HazardRiskFactors()
+        {
+            _PageDef();
+            return View();
+        }
+        public IActionResult HealthEffectRating()
         {
             _PageDef();
             return View();
