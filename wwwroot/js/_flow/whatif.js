@@ -478,15 +478,15 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     
                 //if selcte hazop
                 if (selectedTab.action_part == 5) {
-                    $scope.selectedItemNodeView = $scope.data_node[0].id;
-                    $scope.viewDataNodeList($scope.selectedItemNodeView);
+                    $scope.selectedItemListView = $scope.data_node[0].id;
+                    $scope.viewDataNodeList($scope.selectedItemListView);
     
                 }   
                          
                 // default start date recommendations
     
                 if (selectedTab.action_part == 6) {
-                    $scope.data_nodeworksheet.forEach(_item => {
+                    $scope.data_listworksheet.forEach(_item => {
                         if (_item.recommendations && (_item.responder_user_displayname || _item.project_team_text) && !_item.estimated_start_date) {
                             _item.estimated_start_date = new Date();
                             $scope.actionChangeWorksheet(_item, _item.seq, '');
@@ -1998,6 +1998,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                 set_tab_focus(pha_status,action_part_befor)
 
+
+                //get_rowspam
+                $scope.rowspanMap = {};
+                $scope.$evalAsync(function() {
+                    computeRowspan();  // Safely schedule this to update the UI
+                });
+
                 if(true){
                     //JS choice
                     $timeout(function() {
@@ -2729,6 +2736,67 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
     
         }
+
+        function computeRowspan() {
+            $scope.rowspanMap = {};
+            $scope.data_listworksheet.forEach(function(item) {
+
+                var key = 'list_system' + item.id_list + '-' + item.list_system_no ;
+                $scope.rowspanMap[key] = $scope.data_listworksheet.filter(function(entry) {
+                  return entry.id_list === $scope.selectedItemListView &&
+                         entry.list_system_no === item.list_system_no
+                }).length;
+
+                var key = 'list_sub_system' + item.id_list + '-' + item.list_system_no + '-' + item.list_sub_system_no;
+                $scope.rowspanMap[key] = $scope.data_listworksheet.filter(function(entry) {
+                    return entry.id_list === $scope.selectedItemListView &&
+                        entry.list_system_no === item.list_system_no &&
+                        entry.list_sub_system_no === item.list_sub_system_no 
+                }).length;
+
+                var key = 'causes' + item.id_list + '-' + item.list_system_no + '-' + item.list_sub_system_no + '-' + item.causes_no;
+                $scope.rowspanMap[key] = $scope.data_listworksheet.filter(function(entry) {
+                    return entry.id_list === $scope.selectedItemListView &&
+                        entry.list_system_no === item.list_system_no &&
+                        entry.list_sub_system_no === item.list_sub_system_no &&
+                        entry.causes_no === item.causes_no
+                }).length;
+
+                var key = 'consequences' + item.id_list + '-' + item.list_system_no + '-' + item.list_sub_system_no + '-' + item.causes_no + '-' + item.consequences_no;
+                $scope.rowspanMap[key] = $scope.data_listworksheet.filter(function(entry) {
+                    return entry.id_list === $scope.selectedItemListView &&
+                        entry.list_system_no === item.list_system_no &&
+                        entry.list_sub_system_no === item.list_sub_system_no &&
+                        entry.causes_no === item.causes_no &&
+                        entry.consequences_no === item.consequences_no
+                }).length;
+
+                var key = item.id_list + '-' + item.list_system_no + '-' + item.list_sub_system_no + '-' + item.causes_no + '-' + item.consequences_no + '-' + item.category_no;
+                $scope.rowspanMap[key] = $scope.data_listworksheet.filter(function(entry) {
+                    return entry.id_list === $scope.selectedItemListView &&
+                        entry.list_system_no === item.list_system_no &&
+                        entry.list_sub_system_no === item.list_sub_system_no &&
+                        entry.causes_no === item.causes_no &&
+                        entry.consequences_no === item.consequences_no &&
+                        entry.category_no === item.category_no
+                }).length;
+
+                var key = 'category' + item.id_list + '-' + item.list_system_no + '-' + item.list_sub_system_no + '-' + item.causes_no + '-' + item.consequences_no + '-' + item.category_no;
+                $scope.rowspanMap[key] = $scope.data_listworksheet.filter(function(entry) {
+                    return entry.id_list === $scope.selectedItemListView &&
+                        entry.list_system_no === item.list_system_no &&
+                        entry.list_sub_system_no === item.list_sub_system_no &&
+                        entry.causes_no === item.causes_no &&
+                        entry.consequences_no === item.consequences_no &&
+                        entry.category_no === item.category_no
+                }).length;
+
+
+
+
+            });
+        }
+
     }
 
     // <==== set ====>    
@@ -3757,7 +3825,16 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.selectedItemListView = seq;
         console.log($scope);
     };
+
     $scope.remove_listworksheet = function (row_type, item, index) {
+
+
+
+
+        console.log("item",item)
+        console.log("row_type",item)
+        console.log("befor",$scope.data_listworksheet)
+
 
         var seq = item.seq;
         var seq_list_system = item.seq_list_system;
@@ -3881,11 +3958,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 if (arrdelete.length > 0) { $scope.data_listworksheet_delete.push(arrdelete[0]); }
 
                 //เก็บค่า กรองข้อมูลที่เหลือ 
-                $scope.data_listworksheet = $filter('filter')($scope.data_listworksheet, function (item) {
-                    return !((item.seq == seq
-                        || (item.seq_list_sub_system == seq_list_sub_system && item.seq_list_system == seq_list_system))
-                    );
+                $scope.data_listworksheet.forEach(function(item, index) {
+                    if (item.seq == seq || (item.seq_list_sub_system == seq_list_sub_system && item.seq_list_system == seq_list_system)) {
+                        $scope.data_listworksheet.splice(index, 1);
+                    }
                 });
+
 
                 // after reset no
                 const list_system_no = item.list_system_no;
@@ -3988,10 +4066,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
 
 
-        running_index_worksheet('');
-        running_no_level1_lv1($scope.data_listworksheet, 1, 0, null);
+        //running_index_worksheet('');
+        //running_no_level1_lv1($scope.data_listworksheet, 1, 0, null);
 
-        if (row_type == "list_system") {
+        /*if (row_type == "list_system") {
             running_no_list();
         } else if (row_type == "list_sub_system") {
             running_no_list();
@@ -4006,7 +4084,15 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             running_no_listsub(seq_list_system);
             running_no_causes(seq_list_system, seq_list_sub_system);
             running_no_consequences(seq_list_system, seq_list_sub_system, seq_causes);
-        }
+        }*/
+
+        console.log("after",$scope.data_listworksheet)
+        //$scope.compareItems()
+        //updaterow span
+        $scope.$evalAsync(function() {
+            computeRowspan();  // Safely schedule this to update the UI
+        });
+
     }
 
     $scope.adddata_listworksheet_lv1 = function (row_type, item, index) {
@@ -4604,7 +4690,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         newInput.action_type = 'insert';
         newInput.action_change = 1;
         newInput.action_status = 'Open';
-
         
         //copy detail row befor
         if (row_type == "list_system") {
@@ -4640,6 +4725,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         && item.causes_no == causes_no && item.consequences_no == consequences_no;
             });
 
+        console.log("listtttttttttttttttttttttttttttttttttttttt",data)
+
+
             newInput.list_system = data[0].list_system;
             newInput.list_sub_system = data[0].list_sub_system;
             newInput.causes = data[0].causes;
@@ -4652,6 +4740,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         && item.category_no == category_no;
             });
 
+        console.log("listtttttttttttttttttttttttttttttttttttttt",data)
+
+
             newInput.list_system = data[0].list_system;
             newInput.list_sub_system = data[0].list_sub_system;
             newInput.causes = data[0].causes;
@@ -4663,6 +4754,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         insertNewData(newInput,index);
         $scope.data_listworksheet.forEach(function(item, index) {item.index_rows = index;});
+
+        //updaterow span
+        $scope.$evalAsync(function() {
+            computeRowspan();  // Safely schedule this to update the UI
+        });
 
         return;
 
@@ -4964,6 +5060,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     $scope.newdata_worksheet_lv1 = function (row_type, item, index) {
 
+        console.log("will gen data====================================>")
+
         var seq_list = item.id_list;
 
         var seq = item.seq;
@@ -4995,6 +5093,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 item.seq_category = $scope.MaxSeqdata_listworksheetcategory;
             }
         }
+
+        console.log(item,"555555555555555555555555555555555")
 
         var index_rows = Number(item.index_rows);
         var no = Number(item.no);

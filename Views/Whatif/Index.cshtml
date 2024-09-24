@@ -2069,6 +2069,13 @@
                                     <table class="table fs--2 mb-0 table-bordered " cellpadding="0" cellspacing="0">
                                         <thead class=" text-uppercase  text-center  bg-soft  test" style="font-size: 10px;" id="myHeader">
                                             <tr>
+                                                
+                                                @*<th rowspan="2" >id_list}}</th>
+                                                <th rowspan="2" >list_system_no}}</th>
+                                                <th rowspan="2" >list_sub_system_no}}</th>
+                                                <th rowspan="2" >causes_no}}</th>
+                                                <th rowspan="2" >consequences_no}}</th>
+                                                <th rowspan="2" >category_no}}</th>*@
                                                 <th class=" align-middle   mx-0" 
                                                     colspan="1" 
                                                     rowspan="2" 
@@ -2197,10 +2204,18 @@
                                                 ng-if="( data_tasklist.length == 1 ? (data_tasklist[0].list == null ? false : true) : true) "
                                                 ng-repeat="item in data_listworksheet | toArray | filter:{id_list : selectedItemListView}">
 
+
+                                                @*<td>{{item.id_list}}</td>
+                                                <td>{{item.list_system_no}}</td>
+                                                <td>{{item.list_sub_system_no}}</td>
+                                                <td>{{item.causes_no}}</td>
+                                                <td>{{item.consequences_no}}</td>
+                                                <td>{{item.category_no}}</td>*@
                                                 @* List system*@
                                                 <td class="align-top border border-light border-active " style="padding: 0 !important;"
                                                     ng-if="item.row_type === 'list_system'" 
-                                                    rowspan="{{ (data_listworksheet | filter:{id_list : selectedItemListView,list_system_no: item.list_system_no}).length }}">
+                                                    rowspan="{{ rowspanMap['list_system' + item.id_list + '-' + item.list_system_no] || 1 }}">
+                                                    @*rowspan="{{ (data_listworksheet | filter:{id_list : selectedItemListView,list_system_no: item.list_system_no}).length }}"*@
                                                     <div class="d-flex align-items-top w-100" >
                                                         <div class="pt-2">
                                                             <p class="p-0 m-0 me-1 text-end">{{item.list_system_no +'.'}}</p>
@@ -2271,7 +2286,8 @@
                                                 @* List sub system *@
                                                 <td class="align-top border border-light border-active " style="padding: 0 !important;"
                                                     ng-if="item.row_type === 'list_system' || item.row_type =='list_sub_system' " 
-                                                    rowspan="{{ (data_listworksheet | filter:{id_list : selectedItemListView,list_system_no: item.list_system_no,list_sub_system_no: item.list_sub_system_no}).length }}">
+                                                    rowspan="{{ rowspanMap['list_sub_system' + item.id_list + '-' + item.list_system_no + '-' + item.list_sub_system_no] || 1 }}">
+                                                    @*rowspan="{{ (data_listworksheet | filter:{id_list : selectedItemListView,list_system_no: item.list_system_no,list_sub_system_no: item.list_sub_system_no}).length }}"*@
                                                     <div class="d-flex align-items-top w-100">
                                                         <div class="pt-2">
                                                             <p class="p-0 m-0 me-1 text-end">{{item.list_system_no +'.'+item.list_sub_system_no +'.'}}</p>
@@ -2333,7 +2349,8 @@
                                                 @* Cause *@
                                                 <td class="align-top border border-light border-active " style="padding: 0 !important;"
                                                     ng-if="item.row_type === 'list_system' || item.row_type =='list_sub_system' || item.row_type=='causes' " 
-                                                    rowspan="{{ (data_listworksheet | filter:{id_list : selectedItemListView,list_system_no: item.list_system_no,list_sub_system_no: item.list_sub_system_no,causes_no: item.causes_no}).length }}">                                                    
+                                                    rowspan="{{ rowspanMap['causes' + item.id_list + '-' + item.list_system_no + '-' + item.list_sub_system_no + '-' + item.causes_no] || 1 }}">
+                                                    @*rowspan="{{ (data_listworksheet | filter:{id_list : selectedItemListView,list_system_no: item.list_system_no,list_sub_system_no: item.list_sub_system_no,causes_no: item.causes_no}).length }}"*@                                                    
                                                     <div class="d-flex align-items-top w-100" ">
                                                         <div class="pt-2">
                                                             <p class="p-0 m-0 me-1 text-end">{{item.list_system_no +'.'+ item.list_sub_system_no + '.'+item.causes_no }}</p>
@@ -2394,7 +2411,8 @@
                                                 @* Consequence *@
                                                 <td class="align-top border border-light border-active " style="padding: 0 !important;"
                                                     ng-if="item.row_type =='list_system' || item.row_type =='list_sub_system' || item.row_type =='causes' || item.row_type =='consequences'"
-                                                    rowspan="{{ (data_listworksheet | filter:{id_list : selectedItemListView,list_system_no: item.list_system_no,list_sub_system_no: item.list_sub_system_no,causes_no: item.causes_no,consequences_no: item.consequences_no}).length }}">       
+                                                    rowspan="{{ rowspanMap['consequences' + item.id_list + '-' + item.list_system_no + '-' + item.list_sub_system_no + '-' + item.causes_no + '-' + item.consequences_no] || 1 }}">
+                                                    @*rowspan="{{ (data_listworksheet | filter:{id_list : selectedItemListView,list_system_no: item.list_system_no,list_sub_system_no: item.list_sub_system_no,causes_no: item.causes_no,consequences_no: item.consequences_no}).length }}"*@       
                                                     <div class="d-flex align-items-top w-100" >
                                                         <div class="pt-2">
                                                             <p class="p-0 m-0 me-1 text-end">{{item.list_system_no +'.'+item.list_sub_system_no + '.'+item.causes_no  +'.'+item.consequences_no +'.'}}</p>
@@ -2455,7 +2473,8 @@
                                                 @* cat *@
                                                 <td class="align-top border border-light border-active " style="padding: 0 !important;"
                                                     ng-if="item.row_type =='list_system' || item.row_type =='list_sub_system' || item.row_type =='causes' || item.row_type =='consequences' || item.row_type =='category' "
-                                                    rowspan="{{ (data_listworksheet | filter:{id_list : selectedItemListView,list_system_no: item.list_system_no,list_sub_system_no: item.list_sub_system_no,causes_no: item.causes_no,consequences_no: item.consequences_no,category_no: item.category_no}).length }}">       
+                                                    rowspan="{{ rowspanMap['category' + item.id_list + '-' + item.list_system_no + '-' + item.list_sub_system_no + '-' + item.causes_no + '-' + item.consequences_no + '-' + item.category_no] || 1 }}">       
+                                                    @*rowspan="{{ (data_listworksheet | filter:{id_list : selectedItemListView,list_system_no: item.list_system_no,list_sub_system_no: item.list_sub_system_no,causes_no: item.causes_no,consequences_no: item.consequences_no,category_no: item.category_no}).length }}"*@
                                                     <div class="d-flex align-items-top px-0" style="width: 70px;" >
                                                         <div class="align-top font-sans-serif btn-reveal-trigger position-static pt-1 mx-0 px-0" style="width: 20px;">
                                                             <div class="" ng-class="{'d-none':(!tab_worksheet_active)}">
@@ -2496,7 +2515,8 @@
                                                 @* risk assesment start *@
                                                 <td class="align-top border border-light border-end-0 " style="padding: 0 !important;"
                                                     ng-if="item.row_type =='list_system' || item.row_type =='list_sub_system' || item.row_type =='causes' || item.row_type =='consequences' || item.row_type =='category' "
-                                                    rowspan="{{ (data_listworksheet | filter:{id_list : selectedItemListView,list_system_no: item.list_system_no,list_sub_system_no: item.list_sub_system_no,causes_no: item.causes_no,consequences_no: item.consequences_no,category_no: item.category_no}).length }}">
+                                                    rowspan="{{ rowspanMap[item.id_list + '-' + item.list_system_no + '-' + item.list_sub_system_no + '-' + item.causes_no + '-' + item.consequences_no + '-' + item.category_no] || 1 }}">
+                                                    @*rowspan="{{ (data_listworksheet | filter:{id_list : selectedItemListView,list_system_no: item.list_system_no,list_sub_system_no: item.list_sub_system_no,causes_no: item.causes_no,consequences_no: item.consequences_no,category_no: item.category_no}).length }}"*@
                                                     <div class="align-items-center text-end pt-1" style=" width: 20px;"
                                                          ng-class="{'disabled-link':(!tab_worksheet_active)}">
                                                         <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end"
@@ -2508,7 +2528,8 @@
 
                                                 <td class="align-top border border-light border-0 " style="padding: 0 !important;"
                                                     ng-if="item.row_type =='list_system' || item.row_type =='list_sub_system' || item.row_type =='causes' || item.row_type =='consequences' || item.row_type =='category' "
-                                                    rowspan="{{ (data_listworksheet | filter:{id_list : selectedItemListView,list_system_no: item.list_system_no,list_sub_system_no: item.list_sub_system_no,causes_no: item.causes_no,consequences_no: item.consequences_no,category_no: item.category_no}).length }}">
+                                                    rowspan="{{ rowspanMap[item.id_list + '-' + item.list_system_no + '-' + item.list_sub_system_no + '-' + item.causes_no + '-' + item.consequences_no + '-' + item.category_no] || 1 }}">
+                                                    @*rowspan="{{ (data_listworksheet | filter:{id_list : selectedItemListView,list_system_no: item.list_system_no,list_sub_system_no: item.list_sub_system_no,causes_no: item.causes_no,consequences_no: item.consequences_no,category_no: item.category_no}).length }}"*@                                                    
                                                     <div class="align-items-center text-end pt-1" 
                                                             style=" width: 20px;"
                                                             ng-class="{'disabled-link':(!tab_worksheet_active)}">
@@ -2521,7 +2542,8 @@
                                                 </td>
                                                 <td class="align-top border border-light border-0 " style="padding: 0 !important;"
                                                     ng-if="item.row_type =='list_system' || item.row_type =='list_sub_system' || item.row_type =='causes' || item.row_type =='consequences' || item.row_type =='category' "
-                                                    rowspan="{{ (data_listworksheet | filter:{id_list : selectedItemListView,list_system_no: item.list_system_no,list_sub_system_no: item.list_sub_system_no,causes_no: item.causes_no,consequences_no: item.consequences_no,category_no: item.category_no}).length }}">
+                                                    rowspan="{{ rowspanMap[item.id_list + '-' + item.list_system_no + '-' + item.list_sub_system_no + '-' + item.causes_no + '-' + item.consequences_no + '-' + item.category_no] || 1 }}">
+                                                    @*rowspan="{{ (data_listworksheet | filter:{id_list : selectedItemListView,list_system_no: item.list_system_no,list_sub_system_no: item.list_sub_system_no,causes_no: item.causes_no,consequences_no: item.consequences_no,category_no: item.category_no}).length }}"*@                                                    
                                                     <div class="align-items-center text-end  pt-1" style=" width: 30px;">
                                                         <button ng-style=" { 'background-color' : ((item.ram_befor_risk == 'H') ? 'red' : ((item.ram_befor_risk == 'M') ? 'yellow' : ((item.ram_befor_risk == 'L') ? 'green' : '#D3D3D3')) ) }"
                                                                 class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end"
@@ -2542,7 +2564,8 @@
                                                 @* Safeguard / Mitigation *@
                                                 <td class="align-top border border-light border-active " style="padding: 0 !important;"
                                                     ng-if="item.row_type =='list_system' || item.row_type =='list_sub_system' || item.row_type =='causes' || item.row_type =='consequences' || item.row_type =='category' "
-                                                    rowspan="{{ (data_listworksheet | filter:{id_list : selectedItemListView,list_system_no: item.list_system_no,list_sub_system_no: item.list_sub_system_no,causes_no: item.causes_no,consequences_no: item.consequences_no,category_no: item.category_no}).length }}"                                                    
+                                                    rowspan="{{ rowspanMap[item.id_list + '-' + item.list_system_no + '-' + item.list_sub_system_no + '-' + item.causes_no + '-' + item.consequences_no + '-' + item.category_no] || 1 }}">
+                                                    @*rowspan="{{ (data_listworksheet | filter:{id_list : selectedItemListView,list_system_no: item.list_system_no,list_sub_system_no: item.list_sub_system_no,causes_no: item.causes_no,consequences_no: item.consequences_no,category_no: item.category_no}).length }}"*@                                                    
                                                     <div class="d-flex align-items-center w-100" ng-if="!(item.row_type =='category' || item.row_type =='category')">
                                                         <div class="autocomplete-container p-2" ng-class="{'disabled-link':(!tab_worksheet_active)}">
                                                             <textarea class="form-control form-control-sm rounded-1 p-0 m-0 w-100 border-0"
@@ -2569,7 +2592,8 @@
                                                 @* Residual Risk start *@
                                                 <td class="align-top border border-light border-end-0" style="padding: 0 !important;"
                                                     ng-if="item.row_type =='list_system' || item.row_type =='list_sub_system' || item.row_type =='causes' || item.row_type =='consequences' || item.row_type =='category' "
-                                                    rowspan="{{ (data_listworksheet | filter:{id_list : selectedItemListView,list_system_no: item.list_system_no,list_sub_system_no: item.list_sub_system_no,causes_no: item.causes_no,consequences_no: item.consequences_no,category_no: item.category_no}).length }}">
+                                                    rowspan="{{ rowspanMap[item.id_list + '-' + item.list_system_no + '-' + item.list_sub_system_no + '-' + item.causes_no + '-' + item.consequences_no + '-' + item.category_no] || 1 }}">
+                                                    @*rowspan="{{ (data_listworksheet | filter:{id_list : selectedItemListView,list_system_no: item.list_system_no,list_sub_system_no: item.list_sub_system_no,causes_no: item.causes_no,consequences_no: item.consequences_no,category_no: item.category_no}).length }}"*@                                                
                                                     <div class="align-items-center text-end  pt-1" style=" width: 20px;" ng-class="{'disabled-link':(!tab_worksheet_active)}">
                                                         <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end"
                                                                 type="button" ng-click="openModalDataRAM_Worksheet(item,'s',item.seq,'after')">
@@ -2580,7 +2604,8 @@
 
                                                 <td class="align-top border border-light border-0 border-top-0 "style="padding: 0 !important; width: 20px;"
                                                     ng-if="item.row_type =='list_system' || item.row_type =='list_sub_system' || item.row_type =='causes' || item.row_type =='consequences' || item.row_type =='category' "
-                                                    rowspan="{{ (data_listworksheet | filter:{id_list : selectedItemListView,list_system_no: item.list_system_no,list_sub_system_no: item.list_sub_system_no,causes_no: item.causes_no,consequences_no: item.consequences_no,category_no: item.category_no}).length }}">
+                                                    rowspan="{{ rowspanMap[item.id_list + '-' + item.list_system_no + '-' + item.list_sub_system_no + '-' + item.causes_no + '-' + item.consequences_no + '-' + item.category_no] || 1 }}">
+                                                    @*rowspan="{{ (data_listworksheet | filter:{id_list : selectedItemListView,list_system_no: item.list_system_no,list_sub_system_no: item.list_sub_system_no,causes_no: item.causes_no,consequences_no: item.consequences_no,category_no: item.category_no}).length }}"*@  
                                                     <div class="align-items-center text-end pt-1" style=" width: 20px;" ng-class="{'disabled-link':(!tab_worksheet_active)}">
                                                         <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end"
                                                                 type="button" ng-click="openModalDataRAM_Worksheet(item,'l',item.seq,'after')">
@@ -2590,7 +2615,8 @@
                                                 </td>
                                                 <td class="align-top border border-light border-0 border-top-0 "style="padding: 0 !important; width: 30px;"
                                                     ng-if="item.row_type =='list_system' || item.row_type =='list_sub_system' || item.row_type =='causes' || item.row_type =='consequences' || item.row_type =='category' "
-                                                    rowspan="{{ (data_listworksheet | filter:{id_list : selectedItemListView,list_system_no: item.list_system_no,list_sub_system_no: item.list_sub_system_no,causes_no: item.causes_no,consequences_no: item.consequences_no,category_no: item.category_no}).length }}">
+                                                    rowspan="{{ rowspanMap[item.id_list + '-' + item.list_system_no + '-' + item.list_sub_system_no + '-' + item.causes_no + '-' + item.consequences_no + '-' + item.category_no] || 1 }}">
+                                                    @*rowspan="{{ (data_listworksheet | filter:{id_list : selectedItemListView,list_system_no: item.list_system_no,list_sub_system_no: item.list_sub_system_no,causes_no: item.causes_no,consequences_no: item.consequences_no,category_no: item.category_no}).length }}"*@  
                                                     <div class="align-items-center text-end pt-1" style=" width: 30px;">
                                                         <button ng-style=" { 'background-color' : ((item.ram_after_risk == 'H') ? 'red' : ((item.ram_after_risk == 'M') ? 'yellow' : ((item.ram_after_risk == 'L') ? 'green' : '#D3D3D3')) ) }"
                                                                 class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end"
