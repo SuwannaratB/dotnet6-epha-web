@@ -1,52 +1,63 @@
 
-AppMenuPage.filter('MultiFieldFilter', function () {
-    return function (items, searchText) {
-        if (!searchText) {
-            return items;
-        }
-
-        searchText = searchText.toLowerCase();
-
-        return items.filter(function (item) {
-            return (
-                item.document_number.toLowerCase().includes(searchText.toLowerCase()))
-
-        });
-    };
-});
-AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) {
-
-    //  scroll  table header freezer 
-    $scope.handleScroll = function () {
-        const tableContainer = angular.element(document.querySelector('#table-container'));
-        const thead = angular.element(document.querySelector('thead'));
-
-        if (tableContainer && thead) {
-            const containerRect = tableContainer[0].getBoundingClientRect();
-            const containerTop = containerRect.top;
-            const containerBottom = containerRect.bottom;
-
-            const tableRect = thead[0].getBoundingClientRect();
-            const tableTop = tableRect.top;
-            const tableBottom = tableRect.bottom;
-
-            if (containerTop > tableTop || containerBottom < tableBottom) {
-                thead.addClass('sticky');
-            } else {
-                thead.removeClass('sticky');
-            }
-        }
-    };
-
+AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig){
     var url_ws = conFig.service_api_url();
+    get_data();
 
-    function apply() {
-        try {
-            if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
-                $scope.$apply();
+    ///////////////////////////  API Function  ///////////////////////////
+    function call_api_load() {
+        var user_name = $scope.user_name;
+        $.ajax({
+            url: url_ws + "masterdata/get_tasktype", // เปลี่ยน api ใหม่ด้วย
+            data: '{"user_name":"' + user_name + '"}',
+            type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+            headers: {
+                'X-CSRF-TOKEN': $scope.token
+            },
+            xhrFields: {
+                withCredentials: true // เปิดการส่ง Cookie ไปพร้อมกับคำขอ
+            },
+            beforeSend: function () {
+                $("#divLoading").show();
+            },
+            complete: function () {
+                $("#divLoading").hide();
+            },
+            success: function (data) {
+                var arr = data;
+                $scope.data_all = arr;
+                // $scope.data = arr.data;
+                $scope.data_def = clone_arr_newrow(arr.data);
+                setDataFilter()
+                setPagination()
+                get_max_id();
+                apply();
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                if (jqXHR.status == 500) {
+                    alert('Internal error: ' + jqXHR.responseText);
+                } else {
+                    alert('Unexpected ' + textStatus);
+                }
             }
-        } catch { }
-    };
+        });
+    }
+
+    ///////////////////////////  Main Functions  ///////////////////////////
+    function get_data() {
+        arr_def();
+        call_api_load();
+    }
+
+    function arr_def() {
+        $scope.user = JSON.parse(localStorage.getItem('user'));
+        $scope.token = JSON.parse(localStorage.getItem('token'))
+        $scope.user_name = $scope.user['user_name'];
+        $scope.flow_role_type = $scope.user['role_type'];
+
+        $scope.data_all = [];
+        $scope.data = [];
+    }
+
     function clone_arr_newrow(arr_items) {
         var arr_clone = []; var arr_clone_def = [];
         try {
@@ -68,176 +79,135 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         return arr_clone;
     }
 
-    $("#divLoading").hide();
-    $scope.handleLinkClick = function (val) {
-        // ทำสิ่งต่าง ๆ เมื่อคลิกลิงก์
-        console.log('Link clicked!');
-        // คุณสามารถเพิ่มโค้ดอื่น ๆ ที่คุณต้องการทำในฟังก์ชันนี้ได้ 
-        $scope.tabChange = val;
+    function get_max_id() {
+        var arr = $filter('filter')($scope.data_all.max, function (item) {
+            return (item.name == 'seq');
+        });
+        var iMaxSeq = 1; if (arr.length > 0) { iMaxSeq = arr[0].values; }
+        $scope.MaxSeqData = iMaxSeq;
     }
 
-    //call ws get data
-    if (true) {
-        return
-        get_data();
-        function get_max_id() {
-            var arr = $filter('filter')($scope.data_all.max, function (item) { return (item.name == 'seq'); });
-            var iMaxSeq = 1; if (arr.length > 0) { iMaxSeq = arr[0].values; }
-            $scope.MaxSeqDataSeq = iMaxSeq;
-
-        }
-        function arr_def() {
-
-            $scope.data_all = [];
-
-            $scope.data = [];
-
-            $scope.data_delete = [];
-
-            $scope.user_name = conFig.user_name();
-            $scope.flow_role_type = conFig.role_type();//admin,request,responder,approver
-
-        }
-        function get_data() {
-            arr_def();
-            call_api_load();
-        }
-        function get_data_after_save() {
-            call_api_load();
-        }
-
-        function call_api_load() {
-            var user_name = $scope.user_name;
-
-            $.ajax({
-                url: url_ws + "masterdata/get_tasktype",
-                data: '{"user_name":"' + user_name + '"}',
-                type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
-                headers: {
-                    'X-CSRF-TOKEN': $scope.token
-                },
-                xhrFields: {
-                    withCredentials: true // เปิดการส่ง Cookie ไปพร้อมกับคำขอ
-                },
-                beforeSend: function () {
-                    $("#divLoading").show();
-                },
-                complete: function () {
-                    $("#divLoading").hide();
-                },
-                success: function (data) {
-                    var arr = data;
-
-                    $scope.data_all = arr;
-                    $scope.data = arr.data;
-
-                    get_max_id();
-
-                    apply();
-
-                    console.log($scope);
-
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    if (jqXHR.status == 500) {
-                        alert('Internal error: ' + jqXHR.responseText);
-                    } else {
-                        alert('Unexpected ' + textStatus);
-                    }
-                }
-
-            });
-
-        }
-    }
-
-    //call ws set data
-    if (true) {
-        $scope.confirmBack = function () {
-            window.open("/Master/Index", "_top");
-        }
-        $scope.confirmSave = function () {
-
-            var action = "";
-
-            save_data();
-        }
-        function save_data(action) {
-
-            var user_name = $scope.user_name;
-            var flow_role_type = $scope.flow_role_type;
-
-            //save 
-            var flow_action = action || 'save';
-
-            var json_data = check_data();
-
-            $.ajax({
-                url: url_ws + "masterdata/set_tasktype",
-                data: '{"user_name":"' + user_name + '"'
-                    + ',"role_type":"' + flow_role_type + '"'
-                    + ',"json_data": ' + JSON.stringify(json_data)
-                    + '}',
-                type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
-                headers: {
-                    'X-CSRF-TOKEN': $scope.token
-                },
-                xhrFields: {
-                    withCredentials: true // เปิดการส่ง Cookie ไปพร้อมกับคำขอ
-                },
-                beforeSend: function () {
-                    $("#divLoading").show();
-
-                },
-                complete: function () {
-                    $("#divLoading").hide();
-                },
-                success: function (data) {
-                    var arr = data;
-                    console.log(arr);
-
-                    if (arr[0].status == 'true') {
-                        $scope.pha_type_doc = 'update';
-
-                        if (action == 'save') {
-                            get_data_after_save();
-
-                            set_alert('Success', 'Data has been successfully saved.');
-                            apply();
-                        }
-                    }
-                    else {
-                        set_alert('Error', arr[0].status);
-                        apply();
-                    }
-
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    if (jqXHR.status == 500) {
-                        alert('Internal error: ' + jqXHR.responseText);
-                    } else {
-                        alert('Unexpected ' + textStatus);
-                    }
-                }
-
-            });
-
-        }
-        function check_data() {
-
-            var arr_active = [];
-            angular.copy($scope.data, arr_active);
-            var arr_json = $filter('filter')(arr_active, function (item) {
-                return ((item.action_type == 'update' && item.action_change == 1) || item.action_type == 'insert');
-            });
-
-            for (var i = 0; i < $scope.data_delete.length; i++) {
-                $scope.data_delete[i].action_type = 'delete';
-                arr_json.push($scope.data_delete[i]);
+    function apply() {
+        try {
+            if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
+                $scope.$apply();
             }
-            return angular.toJson(arr_json);
+        } catch { }
+    };
+
+    $scope.confirmBack = function () {
+        window.open("/Master/Index", "_top");
+    }
+
+    ///////////////////////////  Pagination  ///////////////////////////
+    function setPagination(){
+        // Pagination settings
+        $scope.pageSize = 8; // จำนวนข้อมูลต่อหน้า
+        $scope.currentPage = 1; // หน้าปัจจุบัน
+        $scope.totalPages = Math.ceil($scope.data_filter.length / $scope.pageSize); // จำนวนหน้าทั้งหมด
+        // สร้างลิสต์ของตัวเลขหน้า
+        $scope.pages = Array.from({ length: $scope.totalPages }, (v, k) => k + 1);
+        $scope.paginate()
+    }
+
+    // ฟังก์ชันสำหรับจัดข้อมูลตามหน้า
+    $scope.paginate = function() {
+        const start = ($scope.currentPage - 1) * $scope.pageSize;
+        const end = start + $scope.pageSize;
+        $scope.paginatedData = $scope.data_filter.slice(start, end);
+    };
+
+    // ฟังก์ชันสำหรับเปลี่ยนหน้า
+    $scope.setPage = function(page) {
+        $scope.currentPage = page;
+        $scope.paginate();
+    };
+
+    // ฟังก์ชันสำหรับไปหน้าก่อนหน้า
+    $scope.prevPage = function() {
+        if ($scope.currentPage > 1) {
+        $scope.currentPage--;
+        $scope.paginate();
+        }
+    };
+
+    // ฟังก์ชันสำหรับไปหน้าถัดไป
+    $scope.nextPage = function() {
+        if ($scope.currentPage < $scope.totalPages) {
+        $scope.currentPage++;
+        $scope.paginate();
+        }
+    };
+
+    //////////////////////////  Future ///////////////////////////
+    function validation(){
+        var list = $filter('filter')($scope.data, function (_item) {
+            return (!_item.name);
+        });
+
+        if(list.length > 0) return false
+
+        return true
+    }
+
+    function setDataFilter(){
+        // $scope.data.sort((a, b) => b.seq - a.seq);
+        $scope.data_filter = $scope.data
+    }
+
+    function newTag(id_elemet){
+        setTimeout(() => {
+            var element = document.getElementById(id_elemet);
+            element.classList.remove("hidden");
+        }, 10);
+    }
+
+    function validationNumber(data, field) {
+        const cleanedValue = data[field].replace(/[^0-9]/g, '');
+        if (cleanedValue === '') {
+            data[field] = null;
+        } else {
+            data[field] = cleanedValue;
         }
     }
 
-
-});
+    //////////////////////////  Alert ///////////////////////////
+    function showAlert(title, text, icon, callback) {
+        Swal.fire({
+            title: title,
+            text: text,
+            icon: icon,
+            showConfirmButton: false, // ซ่อนปุ่มยืนยัน
+            timer: 3000, // ตั้งเวลาให้ปิดเองหลังจาก 3 วินาที
+            timerProgressBar: true, // แสดง progress bar
+        }).then((result) => {
+            if (typeof callback === 'function') {
+                callback();
+            }
+        });
+    }
+    
+    function showConfirm(title, text, icon, 
+        confirmButtonText = 'OK', 
+        cancelButtonText = 'Cancel', 
+        confirmButtonColor, 
+        callback) {
+        Swal.fire({
+            title: title,
+            text: text,
+            icon: icon,
+            showConfirmButton: true, // Show the confirm button
+            showCancelButton: true, // Show the cancel button
+            confirmButtonText: confirmButtonText, // Custom text for the confirm button
+            cancelButtonText: cancelButtonText, // Custom text for the cancel button
+            timer: null, // Do not auto-close
+            timerProgressBar: false, // Disable progress bar
+            confirmButtonColor: confirmButtonColor,
+        }).then((result) => {
+            // Check if the user clicked the confirm button
+            if (result.isConfirmed && typeof callback === 'function') {
+                callback();
+            }
+        });
+    }
+} )
