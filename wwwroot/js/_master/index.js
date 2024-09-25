@@ -89,7 +89,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, conFig) {
                     {
                         id: 31,
                         title: 'Functional Location',
-                        path: 'Master/hazop/FunctionalLocation',
+                        path: 'Master/FunctionalLocation',
                         active: false,
                     },
                     {
