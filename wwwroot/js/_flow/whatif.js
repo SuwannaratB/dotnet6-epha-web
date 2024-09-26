@@ -322,7 +322,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 if (!$scope.dataLoaded) {
                     return;
                 }
-        
+
+                if(data == 'data_listworksheet'){
+                    //updaterow span
+                    $scope.$evalAsync(function() {
+                        computeRowspan();  // Safely schedule this to update the UI
+                    });
+                }
         
                 if ($scope.data_header[0].pha_status === 11 || $scope.data_header[0].pha_status === 12) {
                     $scope.stopTimer();
@@ -352,6 +358,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         setupWatch('data_memberteam');
         setupWatch('data_relatedpeople');
         setupWatch('data_relatedpeople_outsider');
+        setupWatch('data_listworksheet');
     }
 
 
@@ -3739,10 +3746,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             markItemsForDeletion(deletionCondition);
             deleteItems(deletionCondition);
-
-
-
-
 
         }else if (item.row_type === 'list_system' ){
             if(row_type == "list_system"){
