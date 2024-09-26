@@ -3717,13 +3717,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     
     $scope.remove_listworksheet = function (row_type, item, index) {
 
-
+        console.log("row_type",row_type)
         var seq = item.seq;
         var seq_list_system = item.seq_list_system;
         var seq_list_sub_system = item.seq_list_sub_system;
         var seq_causes = item.seq_causes;
         var seq_consequences = item.seq_consequences;
         var seq_category = item.seq_category;
+        var seq_recommendations = item.seq_recommendations;
 
         var data_list_system_no = item.list_system_no;
         var data_list_sub_system_no = item.list_sub_system_no;
@@ -3736,7 +3737,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             return (row_type === "list_sub_system" && item.seq_list_sub_system === seq_list_sub_system && item.seq_list_system === seq_list_system) ||
                 (row_type === "causes" && item.seq_causes === seq_causes && item.seq_list_sub_system === seq_list_sub_system && item.seq_list_system === seq_list_system) ||
                 (row_type === "consequences" && item.seq_consequences === seq_consequences && item.seq_causes === seq_causes && item.seq_list_sub_system === seq_list_sub_system && item.seq_list_system === seq_list_system) ||
-                (row_type === "category" && item.seq_category === item.seq_category && item.seq_consequences === seq_consequences && item.seq_causes === seq_causes && item.seq_list_sub_system === seq_list_sub_system && item.seq_list_system === seq_list_system);
+                (row_type === "category" && item.seq_category === seq_category && item.seq_consequences === seq_consequences && item.seq_causes === seq_causes && item.seq_list_sub_system === seq_list_sub_system && item.seq_list_system === seq_list_system) || 
+                (row_type === "recommendations" && item.seq_recommendations === seq_recommendations && item.seq_category === item.seq_category && item.seq_consequences === seq_consequences && item.seq_causes === seq_causes && item.seq_list_sub_system === seq_list_sub_system && item.seq_list_system === seq_list_system) ;
         };
 
 
@@ -4002,7 +4004,17 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     }
                 }
 
-            }      
+            }  
+            else if(row_type == "recommendations"){
+             console.log(item)   
+                item.recommendations = null;
+
+                item.action_type = 'update';
+                item.action_change = 1;
+
+                return;
+
+            }
         }
 
         // Update numbers for all rows after deletion
