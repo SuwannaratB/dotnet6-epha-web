@@ -395,6 +395,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
     
             console.log("Watcher triggered change for : ", data);
+            if(data == 'data_nodeworksheet'){
+                console.log('555555555555555555555555555555555555')
+                $scope.$evalAsync(function() {
+                    computeRowspan();  // Safely schedule this to update the UI
+                });
+            }            
     
             if ($scope.data_header[0].pha_status === 11 || $scope.data_header[0].pha_status === 12) {
                 $scope.stopTimer();
