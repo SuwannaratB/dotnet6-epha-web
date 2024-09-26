@@ -3704,186 +3704,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
     };
     
-/*    $scope.remove_listworksheet = function(row_type, item, index) {
-    
-        // Delete and reset based on row_type
-        handleDeletion(row_type, item)
-    
-        // Update rows for display (UI update)
-        $scope.$evalAsync(function() {
-            computeRowspan(); 
-        });
-    };
-    function handleDeletion(row_type, data_arr) {
-        let seq_list_system = data_arr.seq_list_system;
-        let seq_list_sub_system = data_arr.seq_list_sub_system;
-        let seq_causes = data_arr.seq_causes;
-        let seq_consequences = data_arr.seq_consequences;
-        
-        let firstItemToKeep = null;
-    
-        $scope.data_del = []
-        // เงื่อนไขการลบข้อมูลตาม row_type
-        const deletionCondition = item => {
-            return (row_type === "list_sub_system" && item.seq_list_sub_system === seq_list_sub_system && item.seq_list_system === seq_list_system) ||
-                (row_type === "causes" && item.seq_causes === seq_causes && item.seq_list_sub_system === seq_list_sub_system && item.seq_list_system === seq_list_system) ||
-                (row_type === "consequences" && item.seq_consequences === seq_consequences && item.seq_causes === seq_causes && item.seq_list_sub_system === seq_list_sub_system && item.seq_list_system === seq_list_system) ||
-                (row_type === "category" && item.seq_category === item.seq_category && item.seq_consequences === seq_consequences && item.seq_causes === seq_causes && item.seq_list_sub_system === seq_list_sub_system && item.seq_list_system === seq_list_system);
-        };
-    
-        if (data_arr.row_type === 'list_system') {
-
-            console.log("data_arr is list system type")
-            // ตรวจสอบว่ามีลูกข้อมูลหรือไม่
-            if (deletionCondition) {
-                let hasNext = hasNextItem(data_arr, row_type, seq_list_system, seq_list_sub_system, seq_causes, seq_consequences);
-
-                console.log("hasNext",hasNext)
-        
-                // ถ้ามีลูกข้อมูล ให้เก็บข้อมูลไว้ใน data_listworksheet_delete และ data_del
-                if (hasNext) {
-                    $scope.data_listworksheet_delete.push(data_arr);
-                    $scope.data_del.push(data_arr);
-                } else {
-                    // ถ้าไม่มีลูกข้อมูล
-                    if (item.row_type !== 'list_system') {
-                        $scope.data_listworksheet_delete.push(data_arr);
-                        $scope.data_del.push(data_arr);
-                    } else {
-                        // ถ้าเป็น list_system เก็บรายการแรกไว้
-                        if (!firstItemToKeep) {
-                            firstItemToKeep = data_arr;
-                        } else {
-                            $scope.data_listworksheet_delete.push(item);
-                            $scope.data_del.push(item);
-                        }
-                    }
-                }
-            }
-            
-
-            if (firstItemToKeep) {
-                console.log("alway keep first")
-                //set_data_worksheet(firstItemToKeep);  // อัปเดตรายการแรกที่เก็บไว้
-            }
-            // ลบข้อมูลจาก data_listworksheet_delete
-            //deleteMarkedItems();
-
-        } else {
-
-            console.log("data_arr not list system type")
-            // สำหรับ row_type อื่นๆ ให้ลบโดยไม่ต้องเช็คลูกข้อมูล
-            markItemsForDeletion(deletionCondition);
-            deleteItems(deletionCondition);
-        }
-    
 
 
+    // ====== Manage to remove worksheet ========
     
-        // Update numbers for all rows after deletion
-        const resetType = {
-            "list_sub_system": "list_sub_system_no",
-            "causes": "causes_no",
-            "consequences": "consequences_no",
-            "category": "category_no"
-        }[row_type];
-    
-        if (resetType) {
-            resetNumbers(resetType, data_arr.list_system_no, data_arr.list_sub_system_no, data_arr.causes_no, data_arr.consequences_no);
-        }
-
-        //updaterow span
-        $scope.$evalAsync(function() {
-            computeRowspan();  // Safely schedule this to update the UI
-        });
-
-    }
-    
-    function markItemsForDeletion(callback) {
-        var arrdelete = $filter('filter')($scope.data_listworksheet, callback);
-
-        if (arrdelete.length > 0) {
-            $scope.data_listworksheet_delete.push(...arrdelete);  // เก็บรายการที่จะลบทั้งหมด
-            console.log("Marked items for deletion:", arrdelete);
-        }
-    }
-
-    function deleteItems(callback) {
-        for (let index = $scope.data_listworksheet.length - 1; index >= 0; index--) {
-            let item = $scope.data_listworksheet[index];
-
-            if (callback(item)) {
-                $scope.data_listworksheet.splice(index, 1);  // ลบข้อมูลจาก array
-                console.log("Removed item:", item);
-            }
-        }
-    }
-
-    function deleteMarkedItems() {
-        $scope.data_del.forEach(function(itemToDelete) {
-            let index = $scope.data_listworksheet.indexOf(itemToDelete);
-            if (index !== -1) {
-                $scope.data_listworksheet.splice(index, 1);  // ลบข้อมูลออกจาก array หลัก
-                console.log("Removed from data_listworksheet:", itemToDelete);
-            }
-        });
-    }
-
-    
-    function hasNextItem(i, row_type, seq_list_system, seq_list_sub_system, seq_causes, seq_consequences) {
-        let hasNextSubSystem = false;
-    
-        // ลูปตรวจสอบลูกข้อมูลที่มากกว่ารายการปัจจุบัน
-        for (let j = 0; j < $scope.data_listworksheet.length; j++) {
-            let nextItem = $scope.data_listworksheet[j];
-    
-            if (row_type === 'list_system') {
-                if (nextItem.seq_list_system === (seq_list_system + 1)) {
-                    hasNextSubSystem = true;
-                    break;
-                }
-            } else if (row_type === 'list_sub_system') {
-                if (nextItem.seq_list_system === seq_list_system && nextItem.seq_list_sub_system === (seq_list_sub_system + 1)) {
-                    hasNextSubSystem = true;
-                    break;
-                }
-            } else if (row_type === 'causes') {
-                if (nextItem.seq_list_system === seq_list_system && nextItem.seq_list_sub_system === seq_list_sub_system && nextItem.seq_causes === (seq_causes + 1)) {
-                    hasNextSubSystem = true;
-                    break;
-                }
-            } else if (row_type === 'consequences') {
-                if (nextItem.seq_list_system === seq_list_system && nextItem.seq_list_sub_system === seq_list_sub_system && nextItem.seq_causes === seq_causes && nextItem.seq_consequences === (seq_consequences + 1)) {
-                    hasNextSubSystem = true;
-                    break;
-                }
-            }
-        }
-    
-        return hasNextSubSystem;
-    }*/
-    
-        function deleteItems(callback) {
-            for (let index = $scope.data_listworksheet.length - 1; index >= 0; index--) {
-                let item = $scope.data_listworksheet[index];
-    
-                if (callback(item)) {
-                    $scope.data_listworksheet.splice(index, 1);  // ลบข้อมูลจาก array
-                    console.log("Removed item:", item);
-                }
-            }
-        }
-    
-        function deleteMarkedItems() {
-            $scope.data_del.forEach(function(itemToDelete) {
-                let index = $scope.data_listworksheet.indexOf(itemToDelete);
-                if (index !== -1) {
-                    $scope.data_listworksheet.splice(index, 1);  // ลบข้อมูลออกจาก array หลัก
-                    console.log("Removed from data_listworksheet:", itemToDelete);
-                }
-            });
-        }    
-
     $scope.remove_listworksheet = function (row_type, item, index) {
 
 
@@ -3901,145 +3725,24 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
 
         //กรณีที่เป็นรายการเดียวไม่ต้องลบ ให้ cleare field 
-        var arrCheck = [];
-        if (true) {
-            if (row_type == "list_system") {
-                var arrCheck = $filter('filter')($scope.data_listworksheet, function (_item) {
-                    return (true);
-                });
-            } else if (row_type == "list_sub_system") {
-                var arrCheck = $filter('filter')($scope.data_listworksheet, function (_item) {
-                    return (_item.seq_list_system == seq_list_system);
-                });
-            } else if (row_type == "causes") {
-                var arrCheck = $filter('filter')($scope.data_listworksheet, function (_item) {
-                    return (_item.seq_list_system == seq_list_system & _item.seq_list_sub_system == seq_list_sub_system);
-                });
-            } else if (row_type == "consequences") {
-                var arrCheck = $filter('filter')($scope.data_listworksheet, function (_item) {
-                    return (_item.seq_list_system == seq_list_system & _item.seq_list_sub_system == seq_list_sub_system & _item.seq_causes == seq_causes);
-                });
-            } else if (row_type == 'category') {
-                var arrCheck = $filter('filter')($scope.data_listworksheet, function (_item) {
-                    return (_item.seq_list_system == seq_list_system
-                        & _item.seq_list_sub_system == seq_list_sub_system
-                        & _item.seq_causes == seq_causes
-                        & _item.seq_consequences == seq_consequences);
-                });
-            }
-        }
+        const deletionCondition = item => {
+            return (row_type === "list_sub_system" && item.seq_list_sub_system === seq_list_sub_system && item.seq_list_system === seq_list_system) ||
+                (row_type === "causes" && item.seq_causes === seq_causes && item.seq_list_sub_system === seq_list_sub_system && item.seq_list_system === seq_list_system) ||
+                (row_type === "consequences" && item.seq_consequences === seq_consequences && item.seq_causes === seq_causes && item.seq_list_sub_system === seq_list_sub_system && item.seq_list_system === seq_list_system) ||
+                (row_type === "category" && item.seq_category === item.seq_category && item.seq_consequences === seq_consequences && item.seq_causes === seq_causes && item.seq_list_sub_system === seq_list_sub_system && item.seq_list_system === seq_list_system);
+        };
 
 
         $scope.data_del = [];
         //Delete row select and upper row
         if (item.row_type !== 'list_system' ) {
 
-            if (row_type == "list_sub_system") {
-
-                //เก็บค่า Delete 
-                var arrdelete = $filter('filter')($scope.data_listworksheet, function (item) {
-                    return ((item.seq_list_sub_system == seq_list_sub_system && item.seq_list_system == seq_list_system));
-                });
-                if (arrdelete.length > 0) { $scope.data_listworksheet_delete.push(arrdelete[0]); }
-
-                // เก็บค่า กรองข้อมูลที่เหลือ
-                for (let index = $scope.data_listworksheet.length - 1; index >= 0; index--) {
-                    let item = $scope.data_listworksheet[index];
-
-                    // ตรวจสอบข้อมูลก่อนทำการลบ (splice)
-                    if (item.seq_list_sub_system == seq_list_sub_system && item.seq_list_system == seq_list_system) {
-                        // ทำการลบ (splice)
-                        $scope.data_listworksheet.splice(index, 1);
-                    }
-                }
+            markItemsForDeletion(deletionCondition);
+            deleteItems(deletionCondition);
 
 
 
-                // after reset no
-                const list_system_no = item.list_system_no;
-                const list_sub_system_no = item.list_sub_system_no;
 
-                resetNumbers('list_sub_system_no', list_system_no, list_sub_system_no, causes_no, consequences_no);
-
-
-            } else if (row_type == "causes") {
-
-
-                //เก็บค่า Delete 
-                var arrdelete = $filter('filter')($scope.data_listworksheet, function (item) {
-                    return (item.seq_causes == seq_causes && item.seq_list_sub_system == seq_list_sub_system && item.seq_list_system == seq_list_system);
-                });
-                if (arrdelete.length > 0) { $scope.data_listworksheet_delete.push(arrdelete[0]); }
-
-                
-                // เก็บค่า กรองข้อมูลที่เหลือ
-                for (let index = $scope.data_listworksheet.length - 1; index >= 0; index--) {
-                    let item = $scope.data_listworksheet[index];
-
-                    // ตรวจสอบข้อมูลก่อนทำการลบ (splice)
-                    if (item.seq_causes == seq_causes && item.seq_list_sub_system == seq_list_sub_system && item.seq_list_system == seq_list_system) {
-                        // ทำการลบ (splice)
-                        $scope.data_listworksheet.splice(index, 1);
-                    }
-                }
-
-                // after reset no
-                const list_system_no = item.list_system_no;
-                const list_sub_system_no = item.list_sub_system_no;
-                const causes_no = item.causes_no;
-
-                resetNumbers('causes_no', list_system_no, list_sub_system_no, causes_no, consequences_no);
-
-            } else if (row_type == "consequences") {
-
-                //เก็บค่า Delete 
-                var arrdelete = $filter('filter')($scope.data_listworksheet, function (item) {
-                    return (item.seq_consequences == seq_consequences && item.seq_causes == seq_causes && item.seq_list_sub_system == seq_list_sub_system && item.seq_list_system == seq_list_system);
-                });
-                if (arrdelete.length > 0) { $scope.data_listworksheet_delete.push(arrdelete[0]); }
-
-                // เก็บค่า กรองข้อมูลที่เหลือ
-                for (let index = $scope.data_listworksheet.length - 1; index >= 0; index--) {
-                    let item = $scope.data_listworksheet[index];
-
-                    // ตรวจสอบข้อมูลก่อนทำการลบ (splice)
-                    if (item.seq_consequences == seq_consequences && item.seq_causes == seq_causes && item.seq_list_sub_system == seq_list_sub_system && item.seq_list_system == seq_list_system) {
-                        // ทำการลบ (splice)
-                        $scope.data_listworksheet.splice(index, 1);
-                    }
-                }
-                // after reset no
-                const list_system_no = item.list_system_no;
-                const list_sub_system_no = item.list_sub_system_no;
-                const causes_no = item.causes_no;
-                const consequences_no = item.consequences_no;
-
-                resetNumbers('consequences_no', list_system_no, list_sub_system_no, causes_no, consequences_no);
-
-
-
-            } else if (row_type == 'category') {
-
-                //เก็บค่า Delete 
-                var arrdelete = $filter('filter')($scope.data_listworksheet, function (item) {
-                    return (item.seq_category == seq_category && item.seq_consequences == seq_consequences && item.seq_causes == seq_causes && item.seq_list_sub_system == seq_list_sub_system && item.seq_list_system == seq_list_system);
-                });
-                if (arrdelete.length > 0) { $scope.data_listworksheet_delete.push(arrdelete[0]); }
-
-                // เก็บค่า กรองข้อมูลที่เหลือ
-                for (let index = $scope.data_listworksheet.length - 1; index >= 0; index--) {
-                    let item = $scope.data_listworksheet[index];
-
-                    // ตรวจสอบข้อมูลก่อนทำการลบ (splice)
-                    if (item.seq_category == seq_category && item.seq_consequences == seq_consequences && item.seq_causes == seq_causes && item.seq_list_sub_system == seq_list_sub_system && item.seq_list_system == seq_list_system) {
-                        // ทำการลบ (splice)
-                        $scope.data_listworksheet.splice(index, 1);
-                    }
-                }
-
-
-
-            }
 
         }else if (item.row_type === 'list_system' ){
             if(row_type == "list_system"){
@@ -4066,10 +3769,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         if (hasNextSubSystem) {
                             $scope.data_listworksheet_delete.push(item);
                             $scope.data_del.push(item);
-                            console.log("Pushed to delete lists:", item);
                         } else {
                             // ถ้าไม่มีลูกข้อมูล
-                            if (!firstItemToKeep) {
+                            if (!firstItemToKeep && data_list_system_no == 1) {
                                 // เก็บรายการแรกไว้สำหรับการอัปเดต
                                 firstItemToKeep = item;
                                 console.log("Keeping first item for update:", item);
@@ -4105,11 +3807,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     }
                 }   
                 
-                // after reset no
-                const list_system_no = item.list_system_no;
-
-                resetNumbers('list_system_no', list_system_no, list_sub_system_no, causes_no, consequences_no);
-
             }
             else if (row_type == "list_sub_system") {
 
@@ -4238,13 +3935,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     }
                 }
 
-                // after reset no
-                const list_system_no = item.list_system_no;
-                const list_sub_system_no = item.list_sub_system_no;
-                const causes_no = item.causes_no;
-
-                resetNumbers('causes_no', list_system_no, list_sub_system_no, causes_no);
-
             }
             else if(row_type == "consequences") {
                 for (let i = $scope.data_listworksheet.length - 1; i >= 0; i--) {
@@ -4309,15 +3999,20 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     }
                 }
 
-                // after reset no
-                const list_system_no = item.list_system_no;
-                const list_sub_system_no = item.list_sub_system_no;
-                const causes_no = item.causes_no;
-                const consequences_no = item.consequences_no;
-
-
-                resetNumbers('consequences_no', list_system_no, list_sub_system_no, causes_no, consequences_no);
             }      
+        }
+
+        // Update numbers for all rows after deletion
+        const resetType = {
+                "list_system": "list_system_no",
+                "list_sub_system": "list_sub_system_no",
+                "causes": "causes_no",
+                "consequences": "consequences_no",
+                "category": "category_no"
+        }[row_type];
+                
+        if (resetType) {
+            resetNumbers(resetType, data_list_system_no, data_list_sub_system_no, data_causes_no, data_consequences_no);
         }
 
         //updaterow span
@@ -4329,7 +4024,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     function resetNumbers(field, list_system_no, list_sub_system_no, causes_no, consequences_no) {
         $scope.data_listworksheet.forEach(item => {
-            if (item.list_system_no == list_system_no && 
+            if ((field === 'list_system_no' ? item.list_system_no > list_system_no : true) && 
                 (field === 'list_sub_system_no' ? item.list_sub_system_no > list_sub_system_no : true) &&
                 (field === 'causes_no' ? item.causes_no > causes_no : true) &&
                 (field === 'consequences_no' ? item.consequences_no > consequences_no : true)) {
@@ -4337,7 +4032,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
         });
     }
-
     
     function set_data_worksheet(item) {
         //กรณีที่เหลือ row เดียว  
@@ -4354,6 +4048,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         item.consequences = null;
 
         item.category_type = null;
+
+        item.list_system_no = 1;
+        item.list_sub_system_no = 1;
+        item.causes_no = 1;
+        item.consequences_no = 1;
 
         item.ram_befor_security = null;
         item.ram_befor_likelihood = null;
@@ -4375,6 +4074,37 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         item.row_type = "list_system";
 
     }
+
+    function markItemsForDeletion(callback) {
+        var arrdelete = $filter('filter')($scope.data_listworksheet, callback);
+
+        if (arrdelete.length > 0) {
+            $scope.data_listworksheet_delete.push(...arrdelete);  // เก็บรายการที่จะลบทั้งหมด
+        }
+    }
+
+    function deleteItems(callback) {
+        for (let index = $scope.data_listworksheet.length - 1; index >= 0; index--) {
+            let item = $scope.data_listworksheet[index];
+
+            if (callback(item)) {
+                $scope.data_listworksheet.splice(index, 1);  // ลบข้อมูลจาก array
+                console.log("Removed item:", item);
+            }
+        }
+    }
+
+    function deleteMarkedItems() {
+        $scope.data_del.forEach(function(itemToDelete) {
+            let index = $scope.data_listworksheet.indexOf(itemToDelete);
+            if (index !== -1) {
+                $scope.data_listworksheet.splice(index, 1);  // ลบข้อมูลออกจาก array หลัก
+                console.log("Removed from data_listworksheet:", itemToDelete);
+            }
+        });
+    }
+
+    // ====== Manage to remove worksheet ========
 
 
     $scope.adddata_listworksheet_lv1 = function (row_type, item, index) {
