@@ -1850,13 +1850,13 @@
                                         </thead>
                                         <tbody class="">
                                             <tr class="rowwork border border-dashed border-top-0 border-bottom-0"
-                                                ng-repeat="item in data_listworksheet | orderBy:'no'">
+                                                ng-repeat="item in data_listworksheet">
 
                                                 @* workstep *@
                                                 <td class="align-top "
                                                     style="padding: 0 !important; width: 200px; max-width:300px;"
                                                     ng-if="item.row_type === 'workstep'" 
-                                                    rowspan="{{ (data_listworksheet | filter:{workstep_no: item.workstep_no}).length }}"
+                                                    rowspan="{{rowspanMap['workstep' + item.workstep_no ] || 1  }}"
                                                     ng-class="{ 'border-active': 
                                                                 ( item.taskdesc_no == item.no - item.index_rows ) && 
                                                                 ( item.potentailhazard_no == item.no - item.index_rows ) &&
@@ -1882,9 +1882,8 @@
                                                                         <span class="fas fa-copy"></span>
                                                                         Add
                                                                     </a>
-                                                                    <div class="dropdown-divider " ng-if="!(item.workstep_no == 1)"></div>
+                                                                    <div class="dropdown-divider "></div>
                                                                     <a class="dropdown-item text-danger"
-                                                                       ng-if="!(item.workstep_no == 1)"
                                                                        ng-click="removeDataworksheet('workstep',item,$index)">
                                                                         <span class="fas fa-times-circle"></span>
                                                                         Remove
@@ -1931,7 +1930,7 @@
                                                 <td class="align-top border-col2-active border-active h-100" 
                                                     style="padding: 0 !important; width: 200px; max-width:300px;"
                                                     ng-if="item.row_type =='workstep' || item.row_type =='taskdesc' " 
-                                                    rowspan="{{ (data_listworksheet | filter:{workstep_no: item.workstep_no,taskdesc_no: item.taskdesc_no}).length }}">
+                                                    rowspan="{{rowspanMap['taskdesc' + item.workstep_no + '-' + item.taskdesc_no ] || 1   }}">
                                                     <!------ng-class="{ 'border-active': ( item.potentailhazard_no == item.no - item.index_rows ) && ( item.possiblecase_no == item.no - item.index_rows )}" ----->
                                                     <div class="d-flex align-items-top w-100"">
                                                         <div>
@@ -1955,9 +1954,8 @@
                                                                         <span class="fas fa-copy"></span>
                                                                         Add
                                                                     </a>
-                                                                    <div class="dropdown-divider " ng-if="!(item.taskdesc_no == 1)"></div>
+                                                                    <div class="dropdown-divider "></div>
                                                                     <a class="dropdown-item text-danger"
-                                                                       ng-if="!(item.taskdesc_no == 1)"
                                                                        ng-click="removeDataworksheet('taskdesc',item,$index)">
                                                                         <span class="fas fa-times-circle"></span> Remove
                                                                     </a>
@@ -1999,7 +1997,7 @@
                                                 @* potentailhazard *@
                                                 <td class="align-top border-col3-active border-active" style="padding: 0 !important; width: 200px; max-width:300px;"
                                                     ng-if="item.row_type =='workstep' || item.row_type =='taskdesc' || item.row_type =='potentailhazard' " 
-                                                    rowspan="{{ (data_listworksheet | filter:{workstep_no: item.workstep_no,taskdesc_no: item.taskdesc_no,potentailhazard_no:item.potentailhazard_no}).length }}">
+                                                    rowspan="{{rowspanMap['potentailhazard' + item.workstep_no + '-' + item.taskdesc_no + '-' + item.potentailhazard_no ] || 1  }}">
                                                     <div class="d-flex align-items-top w-100">
                                                         <div>
                                                             <p class="p-0 m-0 me-1 text-end">{{item.workstep_no  + '.'+item.taskdesc_no + '.'+item.potentailhazard_no +'.'}}</p>
@@ -2023,9 +2021,8 @@
                                                                         <span class="fas fa-copy"></span>
                                                                         Add
                                                                     </a>
-                                                                    <div class="dropdown-divider " ng-if="!(item.potentailhazard_no == 1)"></div>
+                                                                    <div class="dropdown-divider " ></div>@*ng-if="!(item.potentailhazard_no == 1)"*@
                                                                     <a class="dropdown-item text-danger"
-                                                                       ng-if="!(item.potentailhazard_no == 1)"
                                                                        ng-click="removeDataworksheet('potentailhazard',item,$index)">
                                                                         <span class="fas fa-times-circle"></span> Remove
                                                                     </a>
@@ -2090,9 +2087,8 @@
                                                                         <span class="fas fa-copy"></span>
                                                                         Add
                                                                     </a>
-                                                                    <div class="dropdown-divider " ng-if="!(item.possiblecase_no == 1)"></div>
+                                                                    <div class="dropdown-divider "></div>
                                                                     <a class="dropdown-item text-danger"
-                                                                       ng-if="!(item.possiblecase_no == 1)"
                                                                        ng-click="removeDataworksheet('possiblecase',item,$index)">
                                                                         <span class="fas fa-times-circle"></span> Remove
                                                                     </a>

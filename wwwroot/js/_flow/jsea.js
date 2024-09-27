@@ -328,6 +328,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             if (!$scope.dataLoaded) {
                 return;
             }
+
+            if(data == 'data_listworksheet'){
+                //updaterow span
+                $scope.$evalAsync(function() {
+                    computeRowspan();  // Safely schedule this to update the UI
+                });
+            }
         
             if ($scope.data_header[0].pha_status === 11 || $scope.data_header[0].pha_status === 12) {
                 $scope.stopTimer();
@@ -362,7 +369,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     setupWatch('data_memberteam');
     setupWatch('data_relatedpeople');
     setupWatch('data_relatedpeople_outsider');
-    setupWatch('data_tasks_worksheet');
+    setupWatch('data_listworksheet');
 
 
     $scope.formatTo24Hour = function (_time) {
@@ -520,7 +527,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     
         $scope.goBackToTab = function (){
 
-            console.log("$scope.goback_tab = 'general';",$scope.goback_tab)
             var tag_name = $scope.goback_tab;
     
             var arr_tab = $filter('filter')($scope.tabs, function (item) {
@@ -904,6 +910,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 set_alert('Error', 'An unexpected error occurred. Please try again or contact support.',tabName);
             }
         }
+
+
+
 
         function uploadFile(file, seq, fileName, fileSizeKB, filePart, fileDoc,tabName) {
             const fd = new FormData();
@@ -3141,19 +3150,19 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     
                 //ram_action_security, ram_action_likelihood, ram_action_risk, estimated_start_date, estimated_end_date, document_file_path, document_file_name, action_status, responder_action_type, responder_user_name, responder_user_displayname
                 try {
-                    var start_date = new Date($scope.data_nodeworksheet[i].estimated_start_date);
+                    var start_date = new Date($scope.data_listworksheet[i].estimated_start_date);
                     if (!isNaN(start_date.getTime())) {
                         var start_date_utc = new Date(Date.UTC(start_date.getFullYear(), start_date.getMonth(), start_date.getDate()));
-                        $scope.data_nodeworksheet[i].estimated_start_date = start_date_utc.toISOString().split('T')[0];
+                        $scope.data_listworksheet[i].estimated_start_date = start_date_utc.toISOString().split('T')[0];
                     }
                 } catch (error) {}
                 
                 try {
-                    if($scope.data_nodeworksheet[i].estimated_end_date !== null){
-                        var end_date = new Date($scope.data_nodeworksheet[i].estimated_end_date);
+                    if($scope.data_listworksheet[i].estimated_end_date !== null){
+                        var end_date = new Date($scope.data_listworksheet[i].estimated_end_date);
                         if (!isNaN(end_date.getTime())) { 
                             var end_date_utc = new Date(Date.UTC(end_date.getFullYear(), end_date.getMonth(), end_date.getDate()));
-                            $scope.data_nodeworksheet[i].estimated_end_date = end_date_utc.toISOString().split('T')[0];
+                            $scope.data_listworksheet[i].estimated_end_date = end_date_utc.toISOString().split('T')[0];
                         }                    
                     }
                 } catch (error) {}
@@ -3412,7 +3421,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 for (var w = 0; w < arr_approver.length; w++) {
 
                     //recommendations_no
-                    /*arr_approver[w].recommendations_no = (arr_approver[w].recommendations_no == null ? arr_approver[w].consequences_no : arr_approver[w].recommendations_no);
+                    /*arr_approver[w].recommendations_no = (arr_approver[w].recommendations_no == null ? arr_approver[w].possiblecase_no : arr_approver[w].recommendations_no);
                     var arr_node = $filter('filter')($scope.data_node, function (item) {
                         return (item.id == arr_worksheet[w].id_node);
                     });
@@ -4381,207 +4390,440 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         var seq_possiblecase = item.seq_possiblecase;
         var seq_category = item.seq_category;
 
+        var data_workstep_no = item.workstep_no;
+        var data_taskdesc_no = item.taskdesc_no;
+        var data_potentailhazard_no = item.potentailhazard_no;
+        var data_possiblecase_no = item.possiblecase_no;
+
         //กรณีที่เป็นรายการเดียวไม่ต้องลบ ให้ cleare field 
-        var arrCheck = [];
-        if (true) {
-            if (row_type == "workstep") {
-                var arrCheck = $filter('filter')($scope.data_listworksheet, function (_item) {
-                    return (true);
-                });
-            } else if (row_type == "taskdesc") {
-                var arrCheck = $filter('filter')($scope.data_listworksheet, function (_item) {
-                    return (_item.seq_workstep == seq_workstep);
-                });
-            } else if (row_type == "potentailhazard") {
-                var arrCheck = $filter('filter')($scope.data_listworksheet, function (_item) {
-                    return (_item.seq_workstep == seq_workstep & _item.seq_taskdesc == seq_taskdesc);
-                });
-            } else if (row_type == "possiblecase") {
-                var arrCheck = $filter('filter')($scope.data_listworksheet, function (_item) {
-                    return (_item.seq_workstep == seq_workstep & _item.seq_taskdesc == seq_taskdesc & _item.seq_potentailhazard == seq_potentailhazard);
-                });
-            } else if (row_type == "category") {
-                var arrCheck = $filter('filter')($scope.data_listworksheet, function (_item) {
-                    return (_item.seq_workstep == seq_workstep
-                        & _item.seq_taskdesc == seq_taskdesc
-                        & _item.seq_potentailhazard == seq_potentailhazard
-                        & _item.seq_possiblecase == seq_possiblecase);
-                });
-            }
-        }
+        const deletionCondition = item => {
+            return (row_type === "taskdesc" && item.seq_workstep === seq_workstep && item.seq_taskdesc === seq_taskdesc) ||
+                (row_type === "potentailhazard" && item.seq_workstep === seq_workstep && item.seq_taskdesc === seq_taskdesc && item.seq_potentailhazard === seq_potentailhazard) ||
+                (row_type === "possiblecase" && item.seq_workstep === seq_workstep && item.seq_taskdesc === seq_taskdesc && item.seq_potentailhazard === seq_potentailhazard && item.seq_possiblecase === seq_possiblecase) ||
+                (row_type === "category" && item.seq_workstep === seq_workstep && item.seq_taskdesc === seq_taskdesc && item.seq_potentailhazard === seq_potentailhazard && item.seq_possiblecase === seq_possiblecase && item.seq_category === seq_category);
+        };
 
-        if (arrCheck.length == 1) {
-            //กรณีที่เหลือ row เดียวให้ add rows ใหม่ ??? จะไม่มีกรณีนี้แล้ว เนื่องจาก row แรกจะไม่ให้แสดงปุ่มลบ
-            add_row_workstep(arrCheck);
-            return;
-        }
+        console.log("item.row_type",item.row_type)
 
+        $scope.data_del = [];
         //Delete row select and upper row
-        if (true) {
-            if (row_type == "workstep") {
+        if (item.row_type !== 'workstep' ) {
 
-                //เก็บค่า Delete 
-                var arrdelete = $filter('filter')($scope.data_listworksheet, function (item) {
-                    return ((item.seq == seq
-                        || item.seq_workstep == seq_workstep) && item.action_type == 'update');
-                });
-                if (arrdelete.length > 0) { $scope.data_listworksheet_delete.push(arrdelete[0]); }
+            markItemsForDeletion(deletionCondition);
+            deleteItems(deletionCondition);
 
-                //เก็บค่า กรองข้อมูลที่เหลือ 
-                $scope.data_listworksheet = $filter('filter')($scope.data_listworksheet, function (item) {
-                    return !((item.seq == seq
-                        || item.seq_workstep == seq_workstep));
-                });
+        }else if (item.row_type === 'workstep' ){
+            if(row_type == "workstep"){
 
-            } else if (row_type == "taskdesc") {
+                let firstItemToKeep = null;  // เก็บรายการแรกเพื่อใช้สำหรับการอัปเดต
+                for (let i = $scope.data_listworksheet.length - 1; i >= 0; i--) {
+                    let item = $scope.data_listworksheet[i];
+            
+                    if (item.seq_workstep == seq_workstep) {
+                        // ตรวจสอบว่ามีลูกข้อมูลหรือไม่
+                        let hasNextSubSystem = false;
+            
+                        for (let j = i + 1; j < $scope.data_listworksheet.length; j++) {
+                            let nextItem = $scope.data_listworksheet[j];
+            
+                            // ตรวจสอบว่า nextItem เป็นลูกของ item หรือไม่ โดยตรวจสอบ seq_workstep + 1
+                            if (nextItem.workstep_no == (item.workstep_no + 1)) {
+                                hasNextSubSystem = true;
+                                break;
+                            }
+                        }
+            
+                        console.log("hasNextSubSystem",hasNextSubSystem)
+                        // ถ้ามีลูกข้อมูล ให้เก็บข้อมูลทั้งหมดใน data_listworksheet_delete และ data_del
+                        if (hasNextSubSystem) {
+                            $scope.data_listworksheet_delete.push(item);
+                            $scope.data_del.push(item);
+                        } else {
+                            // ถ้าไม่มีลูกข้อมูล
+                            if (!firstItemToKeep && data_workstep_no == 1) {
+                                // เก็บรายการแรกไว้สำหรับการอัปเดต
+                                firstItemToKeep = item;
+                                console.log("Keeping first item for update:", item);
+                            } else {
+                                // ถ้าพบรายการอื่นๆ ให้ลบข้อมูล (push ลง data_listworksheet_delete)
+                                $scope.data_listworksheet_delete.push(item);
+                                $scope.data_del.push(item);
 
-                //เก็บค่า Delete 
-                var arrdelete = $filter('filter')($scope.data_listworksheet, function (item) {
-                    return ((item.seq == seq
-                        || (item.seq_taskdesc == seq_taskdesc && item.seq_workstep == seq_workstep))
-                        && item.action_type == 'update');
-                });
-                if (arrdelete.length > 0) { $scope.data_listworksheet_delete.push(arrdelete[0]); }
-
-                //เก็บค่า กรองข้อมูลที่เหลือ 
-                $scope.data_listworksheet = $filter('filter')($scope.data_listworksheet, function (item) {
-                    return !((item.seq == seq
-                        || (item.seq_taskdesc == seq_taskdesc && item.seq_workstep == seq_workstep))
-                    );
-                });
-
-                // after reset no
-                const workstep_no = item.workstep_no;
-                const taskdesc_no = item.taskdesc_no;
-                $scope.data_listworksheet.forEach(function(item) {
-                    if ( item.workstep_no == workstep_no) {
-                        if (item.taskdesc_no > taskdesc_no ) {
-                            item.taskdesc_no = item.taskdesc_no - 1;
+                            }
                         }
                     }
-                });
+                }
+            
+                if (firstItemToKeep) {
+                    set_data_worksheet(firstItemToKeep);
+                }
+            
+                // ลบข้อมูลจาก data_listworksheet ที่เก็บไว้ใน data_listworksheet_delete
+                deleteMarkedItems()
 
-            } else if (row_type == "potentailhazard") {
 
-                //เก็บค่า Delete 
-                var arrdelete = $filter('filter')($scope.data_listworksheet, function (item) {
-                    return ((item.seq == seq
-                        || (item.seq_potentailhazard == seq_potentailhazard && item.seq_taskdesc == seq_taskdesc && item.seq_workstep == seq_workstep))
-                        && item.action_type == 'update');
-                });
-                if (arrdelete.length > 0) { $scope.data_listworksheet_delete.push(arrdelete[0]); }
-
-                //เก็บค่า กรองข้อมูลที่เหลือ 
-                $scope.data_listworksheet = $filter('filter')($scope.data_listworksheet, function (item) {
-                    return !((item.seq == seq
-                        || (item.seq_potentailhazard == seq_potentailhazard && item.seq_taskdesc == seq_taskdesc && item.seq_workstep == seq_workstep))
-                    );
-                });
-
-                // after reset no
-                const workstep_no = item.workstep_no;
-                const taskdesc_no = item.taskdesc_no;
-                const potentailhazard_no = item.potentailhazard_no;
-                $scope.data_listworksheet.forEach(function(item) {
-                    if ( item.workstep_no == workstep_no && item.taskdesc_no == taskdesc_no) {
-                        if (item.potentailhazard_no > potentailhazard_no ) {
-                            item.potentailhazard_no = item.potentailhazard_no - 1;
-                        }
-                    }
-                });
-
-            } else if (row_type == "possiblecase") {
-
-                //เก็บค่า Delete 
-                var arrdelete = $filter('filter')($scope.data_listworksheet, function (item) {
-                    return ((item.seq == seq
-                        || (item.seq_possiblecase == seq_possiblecase && item.seq_potentailhazard == seq_potentailhazard
-                            && item.seq_taskdesc == seq_taskdesc && item.seq_workstep == seq_workstep))
-                        && item.action_type == 'update');
-                });
-                if (arrdelete.length > 0) { $scope.data_listworksheet_delete.push(arrdelete[0]); }
-
-                //เก็บค่า กรองข้อมูลที่เหลือ 
-                $scope.data_listworksheet = $filter('filter')($scope.data_listworksheet, function (item) {
-                    return !((item.seq == seq
-                        || (item.seq_possiblecase == seq_possiblecase && item.seq_potentailhazard == seq_potentailhazard
-                            && item.seq_taskdesc == seq_taskdesc && item.seq_workstep == seq_workstep))
-                    );
-                });
-
-                // after reset no
-                const workstep_no = item.workstep_no;
-                const taskdesc_no = item.taskdesc_no;
-                const potentailhazard_no = item.potentailhazard_no;
-                const possiblecase_no = item.possiblecase_no;
-                $scope.data_listworksheet.forEach(function(item) {
-                    if ( item.workstep_no == workstep_no && item.taskdesc_no == taskdesc_no && item.potentailhazard_no == potentailhazard_no) {
-                        if (item.possiblecase_no > possiblecase_no ) {
-                            item.possiblecase_no = item.possiblecase_no - 1;
-                        }
-                    }
-                });     
                 
-            } else if (row_type == "category") {
-                //เก็บค่า Delete 
-                var arrdelete = $filter('filter')($scope.data_listworksheet, function (item) {
-                    return ((item.seq == seq
-                        || (item.seq_category == seq_category && item.seq_possiblecase == seq_possiblecase && item.seq_potentailhazard == seq_potentailhazard && item.seq_taskdesc == seq_taskdesc && item.seq_workstep == seq_workstep))
-                        && item.action_type == 'update');
-                });
-                if (arrdelete.length > 0) { $scope.data_listworksheet_delete.push(arrdelete[0]); }
-
-                //เก็บค่า กรองข้อมูลที่เหลือ 
-                $scope.data_listworksheet = $filter('filter')($scope.data_listworksheet, function (item) {
-                    return !((item.seq == seq
-                        || (item.seq_category == seq_category && item.seq_possiblecase == seq_possiblecase && item.seq_potentailhazard == seq_potentailhazard && item.seq_taskdesc == seq_taskdesc && item.seq_workstep == seq_workstep))
-                    );
-                });
-                  
             }
+            else if (row_type == "taskdesc") {
+
+                for (let i = $scope.data_listworksheet.length - 1; i >= 0; i--) {
+                    let item = $scope.data_listworksheet[i];
+            
+                    // ลบข้อมูลที่ seq_taskdesc = 1
+                    if (item.seq_workstep == seq_workstep && item.seq_taskdesc == seq_taskdesc) {
+            
+                        // ตรวจสอบว่ามีลูกข้อมูล (next item) หรือไม่
+                        let hasNextSubSystem = false;
+            
+                        for (let j = i + 1; j < $scope.data_listworksheet.length; j++) {
+                            let nextItem = $scope.data_listworksheet[j];
+                            
+                            // ตรวจสอบว่า nextItem เป็นลูกของ item หรือไม่
+                            if (nextItem.seq_workstep == seq_workstep && 
+                                nextItem.taskdesc_no == (item.taskdesc_no + 1)) {
+                                hasNextSubSystem = true;
+                                break;
+                            }
+                        }
+                        console.log("hasNextSubSystem",hasNextSubSystem)
+                        // ถ้ามี next item.taskdesc_no => push into data_listworksheet_delete
+                        if (hasNextSubSystem) {
+                            $scope.data_listworksheet_delete.push(item); 
+                            $scope.data_del.push(item); 
+
+
+                            console.log("$scope.data_del",$scope.data_del)
+                        } else {
+                            // ถ้าไม่มีลูกข้อมูล และ item.row_type ไม่ใช่ 'workstep' => push into data_listworksheet_delete
+                            if (item.row_type !== 'workstep') {
+                                console.log("will mark")
+                                $scope.data_listworksheet_delete.push(item); 
+                                $scope.data_del.push(item); 
+
+                            } else {
+                                console.log("Cannot remove item because it's a workstep:", item);
+                            }
+                        }
+                    }
+                }
+            
+                // ลบข้อมูลจาก data_listworksheet ที่เก็บไว้ใน data_listworksheet_delete
+                deleteMarkedItems()
+
+
+
+                // อัปเดตข้อมูลที่เหลือ โดยเปลี่ยน row_type ของ seq_taskdesc ที่มากกว่า 1 แต่แค่ชั้นถัดไป (เช่น seq_taskdesc == 2)
+                for (let i = 0; i < $scope.data_listworksheet.length; i++) {
+                    let item = $scope.data_listworksheet[i];
+
+                        // ถ้า seq_taskdesc == 2 ต้องเปลี่ยน row_type จาก taskdesc เป็น workstep
+                    if (item.seq_workstep == seq_workstep && 
+                        item.taskdesc_no == (data_taskdesc_no + 1)) {
+                        if (item.row_type === 'taskdesc') {
+                            item.row_type = 'workstep';
+                            console.log("Updating row_type to 'workstep' for item:", item);
+                        }
+                    }
+                }
+
+
+                // after reset no
+                const workstep_no = item.workstep_no;
+                const taskdesc_no = item.taskdesc_no;
+
+                resetNumbers('taskdesc_no', workstep_no, taskdesc_no);
+            } 
+            else if (row_type == "potentailhazard") {
+                
+                for (let i = $scope.data_listworksheet.length - 1; i >= 0; i--) {
+                    let item = $scope.data_listworksheet[i];
+            
+                    // ลบข้อมูลที่ seq_taskdesc = 1
+                    if (item.seq_workstep == seq_workstep && 
+                        item.seq_taskdesc == seq_taskdesc &&
+                        item.seq_potentailhazard == seq_potentailhazard) {
+            
+                        // ตรวจสอบว่ามีลูกข้อมูล (next item) หรือไม่
+                        let hasNextSubSystem = false;
+            
+                        for (let j = i + 1; j < $scope.data_listworksheet.length; j++) {
+                            let nextItem = $scope.data_listworksheet[j];
+                            
+                            // ตรวจสอบว่า nextItem เป็นลูกของ item หรือไม่
+                            if (nextItem.seq_workstep == seq_workstep && 
+                                nextItem.seq_taskdesc == seq_taskdesc &&
+                                nextItem.potentailhazard_no == (item.potentailhazard_no + 1) ) {
+                                hasNextSubSystem = true;
+                                break;
+                            }
+                        }
+            
+                        console.log("hasNextSubSystem",hasNextSubSystem)
+                        // ถ้ามี next item.taskdesc_no => push into data_listworksheet_delete
+                        if (hasNextSubSystem) {
+                            $scope.data_listworksheet_delete.push(item); 
+                            $scope.data_del.push(item); 
+
+                            console.log("$scope.data_del",$scope.data_del)
+                        } else {
+                            // ถ้าไม่มีลูกข้อมูล และ item.row_type ไม่ใช่ 'workstep' => push into data_listworksheet_delete
+                            if (item.row_type !== 'workstep') {
+                                $scope.data_listworksheet_delete.push(item); 
+                                $scope.data_del.push(item); 
+
+                            } else {
+                                console.log("Cannot remove item because it's a workstep:", item);
+                            }
+                        }
+                    }
+                }
+
+            
+                // ลบข้อมูลจาก data_listworksheet ที่เก็บไว้ใน data_listworksheet_delete
+                deleteMarkedItems()
+
+                // อัปเดตข้อมูลที่เหลือ โดยเปลี่ยน row_type ของ seq_taskdesc ที่มากกว่า 1 แต่แค่ชั้นถัดไป (เช่น seq_taskdesc == 2)
+                for (let i = 0; i < $scope.data_listworksheet.length; i++) {
+                    let item = $scope.data_listworksheet[i];
+
+                        // ถ้า seq_taskdesc == 2 ต้องเปลี่ยน row_type จาก taskdesc เป็น workstep
+                    if (item.seq_workstep == seq_workstep && 
+                        item.seq_taskdesc == seq_taskdesc && 
+                        item.potentailhazard_no == (data_potentailhazard_no + 1)) {
+
+
+                        if (item.row_type === 'potentailhazard') {
+                            item.row_type = 'workstep';
+                            console.log("Updating row_type to 'workstep' for item:", item);
+                        }
+                    }
+                }
+
+            }
+            else if(row_type == "possiblecase") {
+                for (let i = $scope.data_listworksheet.length - 1; i >= 0; i--) {
+                    let item = $scope.data_listworksheet[i];
+            
+                    // ลบข้อมูลที่ seq_taskdesc = 1
+                    if (item.seq_possiblecase == seq_possiblecase && item.seq_potentailhazard == seq_potentailhazard && 
+                        item.seq_taskdesc == seq_taskdesc && item.seq_workstep == seq_workstep) {
+            
+                        // ตรวจสอบว่ามีลูกข้อมูล (next item) หรือไม่
+                        let hasNextSubSystem = false;
+            
+                        for (let j = i + 1; j < $scope.data_listworksheet.length; j++) {
+                            let nextItem = $scope.data_listworksheet[j];
+                            
+                            // ตรวจสอบว่า nextItem เป็นลูกของ item หรือไม่
+                            if (nextItem.seq_workstep == seq_workstep && 
+                                nextItem.seq_taskdesc == item.seq_taskdesc && 
+                                nextItem.seq_potentailhazard == item.seq_potentailhazard &&
+                                nextItem.possiblecase_no == item.possiblecase_no + 1) {
+                                hasNextSubSystem = true;
+                                break;
+                            }
+                        }
+
+                        console.log("hasNextSubSystem",hasNextSubSystem)
+                        // ถ้ามี next item.taskdesc_no => push into data_listworksheet_delete
+                        if (hasNextSubSystem) {
+                            $scope.data_listworksheet_delete.push(item); 
+                            $scope.data_del.push(item); 
+
+
+                            console.log("$scope.data_del",$scope.data_del)
+                        } else {
+                            // ถ้าไม่มีลูกข้อมูล และ item.row_type ไม่ใช่ 'workstep' => push into data_listworksheet_delete
+                            if (item.row_type !== 'workstep') {
+                                $scope.data_listworksheet_delete.push(item); 
+                                $scope.data_del.push(item); 
+
+                            } else {
+                                console.log("Cannot remove item because it's a workstep:", item);
+                            }
+                        }
+                    }
+                }
+            
+                // ลบข้อมูลจาก data_listworksheet ที่เก็บไว้ใน data_listworksheet_delete
+                deleteMarkedItems()
+
+
+
+                // อัปเดตข้อมูลที่เหลือ โดยเปลี่ยน row_type ของ seq_taskdesc ที่มากกว่า 1 แต่แค่ชั้นถัดไป (เช่น seq_taskdesc == 2)
+                for (let i = 0; i < $scope.data_listworksheet.length; i++) {
+                    let item = $scope.data_listworksheet[i];
+
+                    // ถ้า seq_taskdesc == 2 ต้องเปลี่ยน row_type จาก taskdesc เป็น workstep
+                    if (item.seq_workstep == seq_workstep && 
+                        item.seq_taskdesc == seq_taskdesc && 
+                        item.seq_potentailhazard == seq_potentailhazard &&
+                        item.possiblecase_no == (data_possiblecase_no + 1)) {
+                        if (item.row_type === 'possiblecase') {
+
+                            console.log("update")
+                            item.row_type = 'workstep';
+                            console.log("Updating row_type to 'workstep' for item:", item);
+                        }
+                    }
+                }
+
+            }      
         }
-         
-        running_no_format_2($scope.data_listworksheet, 1, 0, null);
-        if (row_type == "workstep") {
-            running_no_workstep();
-        } else if (row_type == "taskdesc") {
-            running_no_workstep();
-            running_no_taskdesc(seq_workstep);
+
+        // Update numbers for all rows after deletion
+        const resetType = {
+                "workstep": "workstep_no",
+                "taskdesc": "taskdesc_no",
+                "potentailhazard": "potentailhazard_no",
+                "possiblecase": "possiblecase_no",
+                "category": "category_no"
+        }[row_type];
+                
+        if (resetType) {
+            resetNumbers(resetType, data_workstep_no, data_taskdesc_no, data_potentailhazard_no, data_possiblecase_no);
         }
+
+        //updaterow span
+        $scope.$evalAsync(function() {
+            computeRowspan();  // Safely schedule this to update the UI
+        });
     };
-    function add_row_workstep(arrCheck) {
+    function computeRowspan() {
+        $scope.rowspanMap = {};
+        $scope.data_listworksheet.forEach(function(item) {
+    
+            var key = 'workstep' + item.workstep_no ;
+            $scope.rowspanMap[key] = $scope.data_listworksheet.filter(function(entry) {
+              return entry.workstep_no === item.workstep_no
+            }).length;
+    
+            var key = 'taskdesc' + item.workstep_no + '-' + item.taskdesc_no;
+            $scope.rowspanMap[key] = $scope.data_listworksheet.filter(function(entry) {
+                return entry.workstep_no === item.workstep_no &&
+                    entry.taskdesc_no === item.taskdesc_no 
+            }).length;
+    
+            var key = 'potentailhazard' + item.workstep_no + '-' + item.taskdesc_no + '-' + item.potentailhazard_no;
+            $scope.rowspanMap[key] = $scope.data_listworksheet.filter(function(entry) {
+                return entry.workstep_no === item.workstep_no &&
+                    entry.taskdesc_no === item.taskdesc_no &&
+                    entry.potentailhazard_no === item.potentailhazard_no
+            }).length;
+    
+            var key = 'possiblecase' + item.workstep_no + '-' + item.taskdesc_no + '-' + item.potentailhazard_no + '-' + item.possiblecase_no;
+            $scope.rowspanMap[key] = $scope.data_listworksheet.filter(function(entry) {
+                return entry.workstep_no === item.workstep_no &&
+                    entry.taskdesc_no === item.taskdesc_no &&
+                    entry.potentailhazard_no === item.potentailhazard_no &&
+                    entry.possiblecase_no === item.possiblecase_no
+            }).length;
+    
+            var key = item.workstep_no + '-' + item.taskdesc_no + '-' + item.potentailhazard_no + '-' + item.possiblecase_no + '-' + item.category_no;
+            $scope.rowspanMap[key] = $scope.data_listworksheet.filter(function(entry) {
+                return entry.workstep_no === item.workstep_no &&
+                    entry.taskdesc_no === item.taskdesc_no &&
+                    entry.potentailhazard_no === item.potentailhazard_no &&
+                    entry.possiblecase_no === item.possiblecase_no &&
+                    entry.category_no === item.category_no
+            }).length;
+    
+            var key = 'category' + item.workstep_no + '-' + item.taskdesc_no + '-' + item.potentailhazard_no + '-' + item.possiblecase_no + '-' + item.category_no;
+            $scope.rowspanMap[key] = $scope.data_listworksheet.filter(function(entry) {
+                return entry.workstep_no === item.workstep_no &&
+                    entry.taskdesc_no === item.taskdesc_no &&
+                    entry.potentailhazard_no === item.potentailhazard_no &&
+                    entry.possiblecase_no === item.possiblecase_no &&
+                    entry.category_no === item.category_no
+            }).length;
+    
+    
+    
+    
+        });
+    }
+    function set_data_worksheet(item) {
         //กรณีที่เหลือ row เดียว  
-        arrCheck[0].action_type = 'update';
-        arrCheck[0].action_change = 1;
-        arrCheck[0].action_status = 'Open';
+        item.action_type = 'update';
+        item.action_change = 1;
+        item.action_status = 'Open';
 
-        arrCheck[0].workstep = null;
-        arrCheck[0].taskdesc = null;
-        arrCheck[0].potentailhazard = null;
-        arrCheck[0].possiblecase = null;
+        item.index_rows = 0;
+        item.no = 1;
 
-        arrCheck[0].category_type = null;
+        item.workstep = null;
+        item.taskdesc = null;
+        item.potentailhazard = null;
+        item.possiblecase = null;
 
-        arrCheck[0].ram_befor_security = null;
-        arrCheck[0].ram_befor_likelihood = null;
-        arrCheck[0].ram_befor_risk = null;
-        arrCheck[0].major_accident_event = null;
-        arrCheck[0].safety_critical_equipment = null;
-        arrCheck[0].existing_safeguards = null;
-        arrCheck[0].ram_after_security = null;
-        arrCheck[0].ram_after_likelihood = null;
-        arrCheck[0].ram_after_risk = null;
-        arrCheck[0].recommendations = null;
+        item.category_type = null;
 
-        arrCheck[0].responder_user_id = null;
-        arrCheck[0].responder_user_name = null;
-        arrCheck[0].responder_user_email = null;
-        arrCheck[0].responder_user_displayname = null;
-        arrCheck[0].responder_user_img = null;
+        item.workstep_no = 1;
+        item.taskdesc_no = 1;
+        item.potentailhazard_no = 1;
+        item.possiblecase_no = 1;
+        item.category_no = 1;
 
-        arrCheck[0].row_type = row_type == "workstep";
+        item.ram_befor_security = null;
+        item.ram_befor_likelihood = null;
+        item.ram_befor_risk = null;
+        item.major_accident_event = null;
+        item.safety_critical_equipment = null;
+        item.existing_safeguards = null;
+        item.ram_after_security = null;
+        item.ram_after_likelihood = null;
+        item.ram_after_risk = null;
+        item.recommendations = null;
+        
+        item.responder_user_id = null;
+        item.responder_user_name = null;
+        item.responder_user_email = null;
+        item.responder_user_displayname = null;
+        item.responder_user_img = null;
+        
+        item.row_type = "workstep";
         apply();
     }
+    function resetNumbers(field, workstep_no, taskdesc_no, potentailhazard_no, possiblecase_no) {
+        $scope.data_listworksheet.forEach(item => {
+            if ((field === 'workstep_no' ? item.workstep_no > workstep_no : true) && 
+                (field === 'taskdesc_no' ? item.taskdesc_no > taskdesc_no : true) &&
+                (field === 'potentailhazard_no' ? item.potentailhazard_no > potentailhazard_no : true) &&
+                (field === 'possiblecase_no' ? item.possiblecase_no > possiblecase_no : true)) {
+                item[field]--;
+            }
+        });
+    }
+
+    function markItemsForDeletion(callback) {
+        var arrdelete = $filter('filter')($scope.data_listworksheet, callback);
+
+        if (arrdelete.length > 0) {
+            $scope.data_listworksheet_delete.push(...arrdelete);  // เก็บรายการที่จะลบทั้งหมด
+        }
+    }
+
+    function deleteItems(callback) {
+        for (let index = $scope.data_listworksheet.length - 1; index >= 0; index--) {
+            let item = $scope.data_listworksheet[index];
+
+            if (callback(item)) {
+                $scope.data_listworksheet.splice(index, 1);  // ลบข้อมูลจาก array
+                console.log("Removed item:", item);
+            }
+        }
+    }
+
+    function deleteMarkedItems() {
+        $scope.data_del.forEach(function(itemToDelete) {
+            let index = $scope.data_listworksheet.indexOf(itemToDelete);
+            if (index !== -1) {
+                $scope.data_listworksheet.splice(index, 1);  // ลบข้อมูลออกจาก array หลัก
+                console.log("Removed from data_listworksheet:", itemToDelete);
+            }
+        });
+    }    
+
     $scope.removedata_listworksheet = function (seq) {
 
         $scope.data_listworksheet = $filter('filter')($scope.data_listworksheet, function (item) {
