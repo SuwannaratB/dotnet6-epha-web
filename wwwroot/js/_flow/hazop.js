@@ -4876,12 +4876,74 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             }
             else if(row_type == "recommendations"){
-                item.recommendations = null;
+                for (let i = $scope.data_nodeworksheet.length - 1; i >= 0; i--) {
+                    let item = $scope.data_nodeworksheet[i];
+            
+                    // ลบข้อมูลที่ seq_consequences = 1
+                    if (item.seq_node == seq_node &&
+                        item.seq_guide_word == seq_guide_word &&
+                        item.seq_causes == seq_causes && 
+                        item.seq_consequences == seq_consequences &&
+                        item.seq_category == seq_category &&
+                        item.seq_recommendations == seq_recommendations) {
+                        console.log("Marking item for deletion:", item);
+            
+                        // ตรวจสอบว่ามีลูกข้อมูล (next item) หรือไม่
+                        let hasNextSubSystem = false;
+            
+                        for (let j = i + 1; j < $scope.data_nodeworksheet.length; j++) {
+                            let nextItem = $scope.data_nodeworksheet[j];
+                            
+                            // ตรวจสอบว่า nextItem เป็นลูกของ item หรือไม่
+                            if (nextItem.seq_node == seq_node &&
+                                nextItem.seq_guide_word == seq_guide_word &&
+                                nextItem.seq_causes == seq_causes && 
+                                nextItem.seq_consequences == seq_consequences &&
+                                nextItem.seq_category == seq_category &&
+                                nextItem.seq_recommendations == (item.seq_recommendations + 1) ) {
+                                hasNextSubSystem = true;
+                                break;
+                            }
+                        }
+            
+                        // ถ้ามี next item.consequences_no => push into data_nodeworksheet_delete
+                        if (hasNextSubSystem) {
+                            $scope.data_nodeworksheet_delete.push(item); 
+                            $scope.data_del.push(item); 
+                        } else {
+                            // ถ้าไม่มีลูกข้อมูล และ item.row_type ไม่ใช่ 'causes' => push into data_nodeworksheet_delete
+                            if (item.row_type !== 'causes') {
+                                $scope.data_nodeworksheet_delete.push(item); 
+                                $scope.data_del.push(item); 
 
-                item.action_type = 'update';
-                item.action_change = 1;
+                            } else {
+                                console.log("Cannot remove item because it's a causes:", item);
+                            }
+                        }
+                    }
+                }
 
-                return;
+            
+                // ลบข้อมูลจาก data_nodeworksheet ที่เก็บไว้ใน data_nodeworksheet_delete
+                deleteMarkedItems()
+
+                // อัปเดตข้อมูลที่เหลือ โดยเปลี่ยน row_type ของ seq_consequences ที่มากกว่า 1 แต่แค่ชั้นถัดไป (เช่น seq_consequences == 2)
+                for (let i = 0; i < $scope.data_nodeworksheet.length; i++) {
+                    let item = $scope.data_nodeworksheet[i];
+
+                    // ถ้า seq_consequences == 2 ต้องเปลี่ยน row_type จาก consequences เป็น causes
+                    if (item.seq_node == seq_node &&
+                        item.seq_guide_word == seq_guide_word &&
+                        item.seq_causes == seq_causes && 
+                        item.seq_consequences == seq_consequences && 
+                        nextItem.seq_category == seq_category &&
+                        nextItem.seq_recommendations == (item.seq_recommendations + 1) ) {
+                        if (item.row_type === 'recommendations') {
+                            item.row_type = 'causes';
+                            console.log("Updating row_type to 'causes' for item:", item);
+                        }
+                    }
+                }
 
             }
         }
