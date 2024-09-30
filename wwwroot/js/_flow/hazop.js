@@ -538,6 +538,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                             $scope.tab_managerecom_active = true;
                             $scope.tab_worksheet_show = true;
                             $scope.tab_managerecom_show = true;
+
+                            $scope.confirmSave('save')
+                            
                         }
                     }
                 }
@@ -7819,6 +7822,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     };
 
     $scope.removeDataEmployee = function (data, seq_session,type) {
+
+        console.log("will remove")
 
         var seq = data.seq;
 
