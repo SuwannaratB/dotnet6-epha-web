@@ -8604,52 +8604,68 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         return true;
     }
 
-    function validConduct(){
+    function validConduct() {
+        // Early return if general validation fails
         if (!validGeneral()) {
             return false;
         }
-
+    
+        // Early return if session validation fails
         if (!validSessions()) {
             return false;
         }
-
+    
+        // Early return if node validation fails
         if (!validNode()) {
             return false;
         }
-
+    
+        // Worksheet validation
         if (!checkWorksheet()) {  
-            $scope.validMessage = 'Please provide valid data in the worksheet'
+            $scope.validMessage = 'Please provide valid data in the worksheet';
             $scope.goback_tab = 'worksheet';                          
-            return false;
+            return false;  // Stop here if worksheet validation fails
         }
-
+    
+        // Check if there's at least one valid recommendation
         const hasValidRecommendations = $scope.data_nodeworksheet.some(item => 
-            item.recommendations && item.recommendations.trim()
+            item.recommendations && typeof item.recommendations === 'string' && item.recommendations.trim()
         );
-
+    
         if (!hasValidRecommendations) {
             $scope.validMessage = 'Please provide at least one valid recommendation.';
             $scope.goback_tab = 'worksheet';  
-
+    
+            // Loop through all items and set validation for missing recommendations
             for (let i = 0; i < $scope.data_nodeworksheet.length; i++) {
                 const item = $scope.data_nodeworksheet[i];
                 
+                // Ensure recommendations exist and are valid
                 if (!item.recommendations || !item.recommendations.trim()) {
                     set_valid_items(item.recommendations, 'worksheet-recommendations-' + item.seq);
                 }
             }
-
-            return false;
+    
+            return false;  // Stop here if no valid recommendation
         }
-
-        if (!checkManage()) {
-            $scope.validMessage = 'Please provide valid data in the Manage Recommendations.';
-            $scope.goBackToTab = 'manage';
-            return false;
+    
+        // If there are valid recommendations, continue with manage recommendation check
+        for (let i = 0; i < $scope.data_nodeworksheet.length; i++) {
+            const item = $scope.data_nodeworksheet[i];
+    
+            // Ensure recommendations exist and are valid
+            if (item.recommendations && typeof item.recommendations === 'string' && item.recommendations.trim()) {
+                if (!checkManage(item.seq)) {
+                    $scope.validMessage = 'Please provide valid data in the Manage Recommendations.';
+                    $scope.goBackToTab = 'manage';
+                    return false;  // Stop here if manage recommendation validation fails
+                }
+            }
         }
-
-        return true;
-    }    
+    
+        return true;  // Return true if all validations pass
+    }
+      
 
     function validGeneral(){
         if (!$scope.data_general[0].sub_expense_type ||
@@ -8816,25 +8832,35 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
         
 
-        function checkManage(){
-
+        function checkManage(seq) {
             var bCheckValid_Manage = false;
-
             var arr_chk = $scope.data_nodeworksheet;
+        
             for (var i = 0; i < arr_chk.length; i++) {
-                if (set_valid_items(arr_chk[i].estimated_start_date, 'worksheet-estimated-start-' + arr_chk[i].seq)) {
-                    bCheckValid_Manage = true;
-                }
-                if (set_valid_items(arr_chk[i].estimated_end_date, 'worksheet-estimated-end-' + arr_chk[i].seq)) {
-                    bCheckValid_Manage = true;
+
+                if(arr_chk[i].seq === seq){
+                    if (!arr_chk[i].estimated_start_date) {
+                        if (set_valid_items(arr_chk[i].estimated_start_date, 'nodeworksheet-estimated-start-' + arr_chk[i].seq)) {
+                            bCheckValid_Manage = true;
+                        }
+                    }
+            
+                    if (!arr_chk[i].estimated_end_date) {
+                        if (set_valid_items(arr_chk[i].estimated_end_date, 'nodeworksheet-estimated-end-' + arr_chk[i].seq)) {
+                            bCheckValid_Manage = true;
+                        }
+                    }
                 }
             }
         
-            // If second block validations passed
             if (bCheckValid_Manage) {
-                console.log("All validations passed");
+                console.log("Some items were missing start or end dates and were validated.");
                 return true;
             }
+        
+            console.log("All items have both start and end dates.");
+            return false;
         }
+        
 
 });
