@@ -4521,44 +4521,70 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         
         //copy detail row befor
         if (row_type == "causes") {
-            
             newInput.deviations_no = item.deviations_no;
+            newInput.deviations = item.deviations;
+        
+            newInput.id_guide_word = item.id_guide_word;
+            newInput.guidewords_no = item.guidewords_no;
+            newInput.guidewords = item.guidewords;     
+        
         }
         else if (row_type == "consequences") {
             var data = $scope.data_nodeworksheet.filter(function(item) {
                 return item.causes_no == causes_no 
             });
+        
             newInput.deviations_no = item.deviations_no;
-            newInput.causes_no = item.causes_no;
-
             newInput.deviations = item.deviations;
+        
+            newInput.id_guide_word = item.id_guide_word;
+            newInput.guidewords_no = item.guidewords_no;
+            newInput.guidewords = item.guidewords;     
+        
+        
+            newInput.causes_no = item.causes_no;
+        
             newInput.causes = item.causes;
-
+        
         }
         else if (row_type == 'category') {
             var data = $scope.data_nodeworksheet.filter(function(item) {
                 return item.causes_no == causes_no && item.consequences_no == consequences_no ;
             });
+        
             newInput.deviations_no = item.deviations_no;
-            newInput.causes_no = item.causes_no;
-
             newInput.deviations = item.deviations;
+        
+            newInput.id_guide_word = item.id_guide_word;
+            newInput.guidewords_no = item.guidewords_no;
+            newInput.guidewords = item.guidewords;     
+        
+            newInput.causes_no = item.causes_no;
+        
             newInput.causes = item.causes;
             newInput.consequences = item.consequences;
         }
         else if(row_type == 'recommendations'){
+        
             newInput.deviations_no = item.deviations_no;
+            newInput.deviations = item.deviations;
+        
+            newInput.id_guide_word = item.id_guide_word;
+            newInput.guidewords_no = item.guidewords_no;
+            newInput.guidewords = item.guidewords;     
+        
             newInput.causes_no = item.causes_no;
             newInput.consequences_no = item.consequences_no;
             newInput.category_no = item.category_no;
-
-            newInput.deviations = item.deviations;
+        
             newInput.causes = item.causes;
             newInput.consequences = item.consequences;
             newInput.category = item.category;
-
+        
         }
 
+
+        console.log("newInput",)
 
 
         $scope.selectdata_nodeworksheet = xseq;
@@ -4600,12 +4626,252 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         apply();
     }
+    $scope.adddata_nodeworksheet = function (row_type, item, index) {
+        if (true) {
+            if (row_type.indexOf('causes') > -1) { row_type = 'causes'; }
+            else if (row_type.indexOf('consequences') > -1) { row_type = 'consequences'; }
+            else if (row_type.indexOf('category') > -1) { row_type = 'category'; }
 
-    function ensureUnique(dataList,type) {
+            if (item.seq_causes == null) {
+                $scope.MaxSeqdata_nodeworksheetCauses = Number($scope.MaxSeqdata_nodeworksheetCauses) + 1;
+                item.seq_causes = $scope.MaxSeqdata_nodeworksheetCauses;
+            }
+            if (item.seq_consequences == null) {
+                $scope.MaxSeqdata_nodeworksheetConsequences = Number($scope.MaxSeqdata_nodeworksheetConsequences) + 1;
+                item.seq_consequences = $scope.MaxSeqdata_nodeworksheetConsequences;
+            }
+            if (item.seq_category == null) {
+                $scope.MaxSeqdata_nodeworksheetCat = Number($scope.MaxSeqdata_nodeworksheetCat) + 1;
+                item.seq_category = $scope.MaxSeqdata_nodeworksheetCat;
+            }
+            item.seq_guide_word = (item.seq_guide_word == null ? item.id_guide_word : item.seq_guide_word);
+
+        }
+
+        var seq_node = item.seq_node;
+        var seq_guide_word = (item.seq_guide_word == null ? item.id_guide_word : item.seq_guide_word);
+        var seq = item.seq;
+        var seq_causes = item.seq_causes;
+        var seq_consequences = item.seq_consequences;
+        var seq_category = item.seq_category;
+        var seq_recommendations = item.seq_recommendations;
+
+        var index_rows = Number(item.index_rows);
+        var no = Number(item.no);
+        var causes_no = Number(item.causes_no);
+        var consequences_no = Number(item.consequences_no);
+        var category_no = Number(item.category_no);
+        var recommendations_no = '';
+
+        var guidewords = item.guidewords;
+        var deviations = item.deviations;
+        var guidewords_no = item.guidewords_no;
+
+        var arr_def = [];
+        angular.copy($scope.data_nodeworksheet, arr_def);
+        //row now //where we click at cuase number?
+        var iNo = no;
+        if (row_type == "causes") {
+            var arr = $filter('filter')(arr_def, function (_item) {
+                return (_item.no >= no && _item.id_node == seq_node && _item.seq_guide_word == seq_guide_word
+                    && _item.seq_causes == seq_causes);
+            });
+            if (arr.length > 0) {
+                arr.sort((a, b) => a.no - b.no);
+                iNo = arr[arr.length - 1].no;
+                index_rows = arr[arr.length - 1].index_rows;
+            }
+
+        } else if (row_type == "consequences") {
+            var arr = $filter('filter')(arr_def, function (_item) {
+                return (_item.no >= no && _item.id_node == seq_node && _item.seq_guide_word == seq_guide_word
+                    && _item.seq_causes == seq_causes && _item.seq_consequences == seq_consequences);
+            });
+            if (arr.length > 0) {
+                iNo = arr[arr.length - 1].no;
+                index_rows = arr[arr.length - 1].index_rows;
+            }
+        } else if (row_type == "category") {
+            var arr = $filter('filter')(arr_def, function (_item) {
+                return (_item.no >= no && _item.id_node == seq_node && _item.seq_guide_word == seq_guide_word
+                    && _item.seq_causes == seq_causes && _item.seq_consequences == seq_consequences && _item.seq_category == seq_category);
+            });
+            if (arr.length > 0) {
+                iNo = arr[arr.length - 1].no;
+                index_rows = arr[arr.length - 1].index_rows;
+            }
+        } else if (row_type == 'recommendations') {
+            var arr = $filter('filter')(arr_def, function (_item) {
+                return (_item.no >= no && _item.id_node == seq_node
+                    && _item.seq_guide_word == seq_guide_word
+                    && _item.seq_causes == seq_causes
+                    && _item.seq_consequences == seq_consequences
+                    && _item.seq_category == seq_category
+                    && _item.seq_recommendations == seq_recommendations);
+            });
+            if (arr.length > 0) {
+                iNo = arr[arr.length - 1].no;
+                index_rows = arr[arr.length - 1].index_rows;
+            }
+        }
+
+        $scope.MaxSeqdata_nodeworksheet = Number($scope.MaxSeqdata_nodeworksheet) + 1;
+        var xseq = $scope.MaxSeqdata_nodeworksheet;
+
+        if (row_type == "causes") {
+            $scope.MaxSeqdata_nodeworksheetCauses = Number($scope.MaxSeqdata_nodeworksheetCauses) + 1;
+            seq_causes = $scope.MaxSeqdata_nodeworksheetCauses;
+
+            //กรณีที่เป็น causes ให้ +1 
+            causes_no += 1;
+            consequences_no = 1;
+            category_no = 1;
+        }
+        if (row_type == "consequences") {
+            $scope.MaxSeqdata_nodeworksheetConsequences = Number($scope.MaxSeqdata_nodeworksheetConsequences) + 1;
+            seq_consequences = $scope.MaxSeqdata_nodeworksheetConsequences;
+
+            //กรณีที่เป็น consequences ให้ +1
+            consequences_no += 1;
+            category_no = 1;
+        }
+        if (row_type == "category") {
+            $scope.MaxSeqdata_nodeworksheetCat = Number($scope.MaxSeqdata_nodeworksheetCat) + 1;
+            seq_category = $scope.MaxSeqdata_nodeworksheetCat;
+
+            //กรณีที่เป็น cat ให้ +1
+            category_no += 1;
+            //recommendations_no = 1;
+            
+        }
+        if (row_type == "recommendations") {
+            $scope.MaxSeqdata_nodeworksheetrecommendations = Number($scope.MaxSeqdata_nodeworksheetrecommendations) + 1;
+            seq_recommendations = $scope.MaxSeqdata_nodeworksheetrecommendations;
+
+            //กรณีที่เป็น cat ให้ +1
+            //recommendations_no += 1;
+            
+        }
+       
+
+        var newInput = clone_arr_newrow($scope.data_nodeworksheet_def)[0];
+        newInput.seq = xseq;
+        newInput.id = xseq;
+        newInput.id_node = seq_node;
+        newInput.seq_node = seq_node;
+
+        newInput.row_type = row_type;//guideword,causes,consequences,cat
+
+        newInput.id_guide_word = seq_guide_word;
+        newInput.seq_guide_word = seq_guide_word;
+        newInput.guidewords = guidewords;
+        newInput.deviations = deviations;
+        newInput.guidewords_no = guidewords_no;
+
+        newInput.seq_causes = seq_causes;
+        newInput.seq_consequences = seq_consequences;
+        newInput.seq_category = seq_category;
+
+        newInput.index_rows = (index_rows + 0.5);
+        newInput.no = (no + 0.5);
+        newInput.no1 = '';
+        newInput.causes_no = causes_no;
+        newInput.consequences_no = consequences_no;
+        newInput.category_no = category_no;
+        newInput.recommendations_no = '';
+
+        newInput.action_type = 'insert';
+        newInput.action_change = 1;
+        newInput.action_status = 'Open';
+
+        
+        //copy detail row befor
+        if (row_type == "causes") {
+            newInput.deviations_no = item.deviations_no;
+            newInput.deviations = item.deviations;
+        
+            newInput.id_guide_word = item.id_guide_word;
+            newInput.guidewords_no = item.guidewords_no;
+            newInput.guidewords = item.guidewords;     
+        
+        }
+        else if (row_type == "consequences") {
+            var data = $scope.data_nodeworksheet.filter(function(item) {
+                return item.causes_no == causes_no 
+            });
+        
+            newInput.deviations_no = item.deviations_no;
+            newInput.deviations = item.deviations;
+        
+            newInput.id_guide_word = item.id_guide_word;
+            newInput.guidewords_no = item.guidewords_no;
+            newInput.guidewords = item.guidewords;     
+        
+        
+            newInput.causes_no = item.causes_no;
+        
+            newInput.causes = item.causes;
+        
+        }
+        else if (row_type == 'category') {
+            var data = $scope.data_nodeworksheet.filter(function(item) {
+                return item.causes_no == causes_no && item.consequences_no == consequences_no ;
+            });
+        
+            newInput.deviations_no = item.deviations_no;
+            newInput.deviations = item.deviations;
+        
+            newInput.id_guide_word = item.id_guide_word;
+            newInput.guidewords_no = item.guidewords_no;
+            newInput.guidewords = item.guidewords;     
+        
+            newInput.causes_no = item.causes_no;
+        
+            newInput.causes = item.causes;
+            newInput.consequences = item.consequences;
+        }
+        else if(row_type == 'recommendations'){
+        
+            newInput.deviations_no = item.deviations_no;
+            newInput.deviations = item.deviations;
+        
+            newInput.id_guide_word = item.id_guide_word;
+            newInput.guidewords_no = item.guidewords_no;
+            newInput.guidewords = item.guidewords;     
+        
+            newInput.causes_no = item.causes_no;
+            newInput.consequences_no = item.consequences_no;
+            newInput.category_no = item.category_no;
+        
+            newInput.causes = item.causes;
+            newInput.consequences = item.consequences;
+            newInput.category = item.category;
+        
+        }
+
+
+        insertNewData(newInput,index);
+        $scope.data_nodeworksheet.forEach(function(item, index) {
+            item.index_rows = index;
+            item.action_change = 1;
+        });
+
+
+        //updaterow span
+        $scope.$evalAsync(function() {
+            computeRowspan();  // Safely schedule this to update the UI
+        });
+        
+        
+
+        apply();
+    }    
+
+    function ensureUnique(dataList,targetIdList,type) {
     
         if(type === 'recom'){
             let count = 1;
-
+    
             dataList.forEach((item, index) => {
     
                 if (item.recommendations !== null && item.recommendations !== '') {
@@ -4616,40 +4882,208 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }else{
             let previous = {};
             dataList.forEach((item, index) => {
-    
-                if (previous.list_system_no === item.list_system_no && type !== 'recom') {
-                    if (previous.list_system_no >= item.list_system_no && item.row_type === 'list_system'){
-                        item.list_system_no = previous.list_system_no + 1;
-                    }
-    
-                    if (previous.list_sub_system_no >= item.list_sub_system_no && item.row_type === 'list_sub_system') {
-                        item.list_sub_system_no = previous.list_sub_system_no + 1;
-                    }
-                    if (previous.list_sub_system_no === item.list_sub_system_no && previous.causes_no >= item.causes_no && (item.row_type === 'causes'||item.row_type === 'list_sub_system')) {
-                        if(previous.seq_causes === item.seq_causes){
-                            item.causes_no = previous.causes_no
-                        }else{
-                            item.causes_no = previous.causes_no + 1;
+                
+                if(item.id_node === targetIdList) {
+
+                    if(previous.guidewords_no === item.guidewords_no){
+                        if (previous.causes_no === item.causes_no && type !== 'recom') {
+            
+                            if (previous.causes_no >= item.causes_no && item.row_type === 'causes') {
+                                item.causes_no = previous.causes_no + 1;
+                            }
+                
+                            if (previous.consequences_no >= item.consequences_no && item.row_type === 'consequences') {
+                                item.consequences_no = previous.consequences_no + 1;
+                            }
+                
+                            if (previous.consequences_no === item.consequences_no && previous.category_no >= item.category_no && 
+                                (item.row_type === 'category' || item.row_type === 'consequences')) {
+                
+                                if (previous.seq_category === item.seq_category) {
+                                    item.category_no = previous.category_no;
+                                } else {
+                                    item.category_no = previous.category_no + 1;
+                                }
+                            }
+                
+                            if (previous.consequences_no === item.consequences_no && previous.category_no === item.category_no && 
+                                previous.recommendations_no >= item.recommendations_no && 
+                                (item.row_type === 'category' || item.row_type === 'consequences' || item.row_type === 'recommendations')) {
+                                item.recommendations_no = '';
+                            }
+
                         }
-                        
                     }
-                    if (previous.list_sub_system_no === item.list_sub_system_no && previous.causes_no === item.causes_no && previous.consequences_no >= item.consequences_no 
-                        && (item.row_type === 'causes'||item.row_type === 'list_sub_system' || item.row_type === 'consequences')) {
-                        item.consequences_no = previous.consequences_no + 1;
-                    }
-                    if (previous.list_sub_system_no === item.list_sub_system_no && previous.causes_no === item.causes_no && previous.consequences_no === item.consequences_no && previous.category_no >= item.category_no 
-                        && (item.row_type === 'causes'||item.row_type === 'list_sub_system' || item.row_type === 'consequences' || item.row_type === 'category')) {
-                        item.category_no = previous.category_no + 1;
-                    }
-                    if (previous.list_sub_system_no === item.list_sub_system_no && previous.causes_no === item.causes_no && previous.consequences_no >= item.consequences_no && previous.category_no === item.category_no && previous.recommendations_no >= item.recommendations_no 
-                        && (item.row_type === 'causes'||item.row_type === 'list_sub_system' || item.row_type === 'consequences' || item.row_type === 'category' || item.row_type === 'recommendations')) {
-                        item.recommendations_no = '';
+                                
+                    previous = { ...item };
+            
+                } else {
+                    previous = {};
+                }
+            });
+            
+        }
+    }
+    
+    function insertNewData(newData,data_index) {    
+    
+        let index = -1;
+    
+        for (let i = 0; i < $scope.data_nodeworksheet.length; i++) {
+            const item = $scope.data_nodeworksheet[i];
+            
+            
+            if (item.id_node !== newData.id_node) {
+                continue;
+            }
+
+            if (item.guidewords_no !== newData.guidewords_no) {
+                continue;
+            }
+            
+            // General condition to update the index for different row types
+            if ( newData.row_type !== 'recommendations' &&
+                ((item.causes_no > newData.causes_no) ||
+                (newData.row_type === 'consequences' && item.causes_no === newData.causes_no && item.consequences_no >= newData.consequences_no) ||
+                (item.causes_no === newData.causes_no && item.consequences_no === newData.consequences_no && item.category_no === newData.category_no 
+                && item.recommendations_no === newData.recommendations_no && item.category_no === newData.category_no))) {
+                index = i;
+
+                break;
+            }
+            
+            // Specific conditions for 'category' row type
+            if (newData.row_type === 'consequences' && item.guidewords_no === newData.guidewords_no 
+                && item.causes_no === newData.causes_no) {
+                //index = item.category_no >= newData.category_no ? i : i + 1;
+                //break;
+                const set_category = $scope.data_nodeworksheet.filter(data => 
+                    data.guidewords_no === item.guidewords_no && 
+                    data.causes_no === item.causes_no && 
+                    data.consequences_no === item.consequences_no 
+                );
+    
+                for (let j = 0; j < set_category.length; j++) {
+                    if (set_category[j].recommendation_no) {
+                        index = i + j + 1;
+                        break;
                     }
                 }
-                previous = { ...item };
-            });
+                
+                if (index === -1) {
+                    index = i + set_category.length;
+                }
+                
+                console.log(index)
+                break;                       
+            }
+
+            // Specific conditions for 'category' row type
+            if (newData.row_type === 'category' && item.guidewords_no === newData.guidewords_no 
+                && item.causes_no === newData.causes_no 
+                && item.consequences_no === newData.consequences_no) {
+                //index = item.category_no >= newData.category_no ? i : i + 1;
+                //break;
+                const set_category = $scope.data_nodeworksheet.filter(data => 
+                    data.causes_no === item.causes_no && 
+                    data.consequences_no === item.consequences_no && 
+                    data.category_no === item.category_no 
+                );
+    
+                for (let j = 0; j < set_category.length; j++) {
+                    if (set_category[j].recommendation_no) {
+                        index = i + j + 1;
+                        break;
+                    }
+                }
+                
+                if (index === -1) {
+                    index = i + set_category.length;
+                }
+                
+                console.log(index)
+                break;                       
+            }
+            
+            // Specific conditions for 'recommendations' row type
+            if (newData.row_type === 'recommendations' && item.guidewords_no === newData.guidewords_no  
+                && item.causes_no === newData.causes_no 
+                && item.consequences_no === newData.consequences_no 
+                && item.category_no === newData.category_no ) {
+
+    
+                const set_recommendations = $scope.data_nodeworksheet.filter(data => 
+                    data.causes_no === item.causes_no && 
+                    data.consequences_no === item.consequences_no && 
+                    data.category_no === item.category_no && 
+                    data.recommendations_no === item.recommendations_no
+                );
+    
+                for (let j = 0; j < set_recommendations.length; j++) {
+                    if (set_recommendations[j].recommendation_no) {
+                        index = i + j + 1;
+                        break;
+                    }
+                }
+                
+                if (index === -1) {
+                    index = i + set_recommendations.length;
+                }
+                
+                console.log(index)
+                break;                
+            }
+            
+            // Specific conditions for 'category' row type
+            /*if ((newData.row_type === 'category') && item.causes_no === newData.causes_no 
+                && item.consequences_no === newData.consequences_no 
+                && item.category_no === newData.category_no 
+                && item.recommendations_no === newData.recommendations_no) {
+    
+                const set_category = $scope.data_nodeworksheet.filter(data => 
+                    data.causes_no === item.causes_no && 
+                    data.consequences_no === item.consequences_no && 
+                    data.category_no === item.category_no && 
+                    data.recommendations_no === item.recommendations_no && 
+                    data.category_no === item.category_no
+                );
+                for (let j = 0; j < set_category.length; j++) {
+                    if (set_category[j].recommendation_no) {
+                        index = i + j + 1;
+                        break;
+                    }
+                }
+                
+                if (index === -1) {
+                    index = i + set_category.length;
+                }
+                
+                console.log(index)
+                break;
+            }
+            
+            // Specific condition for 'recommendations' row type
+            if (newData.row_type === 'recommendations' && item.causes_no === newData.causes_no 
+                && item.consequences_no === newData.consequences_no && item.category_no === newData.category_no 
+                && item.recommendations_no === newData.recommendations_no && item.category_no === newData.category_no) {
+                    
+                index = data_index + 1;
+    
+                break;
+            }*/
+    
         }
 
+        console.log(index)
+            
+        if (index === -1) {
+            index = $scope.data_nodeworksheet.length;
+        }
+            
+        $scope.data_nodeworksheet.splice(index, 0, newData);
+            
+        ensureUnique($scope.data_nodeworksheet,newData.id_node);
+            
     }
 
     $scope.copyNodeList = function (level, seq) {
@@ -5999,186 +6433,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     if(invalidFieldFound) return;
                     
                 }
-                else if (pha_status == "12") {
+                else if(pha_status == '12'){
 
-                    var bCheckValid_Session = false;
-                    var bCheckValid_Node = false;
-                    var bCheckValid_Worksheet = false;
-                    var bCheckValid_Manage = false;
+                    if (arr_chk[0].expense_type == '' || arr_chk[0].expense_type == null) { set_alert('Warning', 'Please select a valid Expense Type'); return; }
+                    if (arr_chk[0].sub_expense_type == '' || arr_chk[0].sub_expense_type == null) { set_alert('Warning', 'Please select a valid Sub-Expense Type'); return; }
+                    if (arr_chk[0].id_apu == '' || arr_chk[0].id_apu == null) { set_alert('Warning', 'Please select a valid Area Process Unit'); return; }
 
-                    var requiredFields = [
-                        { field: 'expense_type', errorId: 'expense_type_error' },
-                        { field: 'sub_expense_type', errorId: 'sub_expense_type_error' },
-                        { field: 'id_apu', errorId: 'id_apu_error' }
-                    ];
-                
-                    var invalidFieldFound = false;
-                    requiredFields.forEach(function (item) {
-                        if (!arr_chk[0][item.field]) {
-                            $scope.goback_tab = 'general';
-                            
-                            $scope.tabs = $scope.tabs.map(tab => {
-                                tab.isActive = (tab.name === 'general');
-                                return tab;
-                            });
-
-                            set_alert('Warning', 'Please select a valid General Information','general');
-                            validateSelect(item.field, item.errorId);
-                            invalidFieldFound = true; 
-                        }
-                    });
-
-                    if (true) {
-                        arr_chk = $scope.data_memberteam;
-                        if (arr_chk.length == 0) { 
-                            $scope.goback_tab = 'session';
-                            
-                            $scope.tabs = $scope.tabs.map(tab => {
-                                tab.isActive = (tab.name === 'session');
-                                return tab;
-                            })
-                            
-                            set_alert('Warning', 'Please provide a valid Session List','session'); return; }
-                        else {
-                            var irows_last = arr_chk.length - 1;
-                            if (arr_chk[irows_last].user_name == null) { 
-                                $scope.goback_tab = 'session';
-                            
-                                $scope.tabs = $scope.tabs.map(tab => {
-                                    tab.isActive = (tab.name === 'session');
-                                    return tab;
-                                })
-
-                                set_alert('Warning', 'Please provide a valid Session List','session'); return; }
-                        }
-
-                        if ($scope.data_header[0].request_approver > 0) {
-
-                            arr_chk = $scope.data_approver;
-                            if (arr_chk.length == 0) { 
-                                $scope.goback_tab = 'session';
-                            
-                                $scope.tabs = $scope.tabs.map(tab => {
-                                    tab.isActive = (tab.name === 'session');
-                                    return tab;
-                                })
-                                
-                                set_alert('Warning', 'Please provide a valid ApproverTA2 List','session'); return; }
-                            else {
-                                var irows_last = arr_chk.length - 1;
-                                if (arr_chk[irows_last].user_name == null) { 
-                                    $scope.goback_tab = 'session';
-                            
-                                    $scope.tabs = $scope.tabs.map(tab => {
-                                        tab.isActive = (tab.name === 'session');
-                                        return tab;
-                                    })
-
-                                    set_alert('Warning', 'Please provide a valid ApproverTA2 List','session'); return; }
-                            }
-
-                        }
-                    }
-
-                    if (true) {
-
-                        arr_chk = $scope.data_drawing;
-                        if (arr_chk.length == 0) { 
-                            
-                            set_alert('Warning', 'Please provide a valid Drawing List','node'); return; }
-                        for (var i = 0; i < arr_chk.length; i++) {
-                            if (set_valid_items(arr_chk[i].node, 'drawing-document-file-' + arr_chk[i].seq)) { bCheckValid_Node = true; }
-                        }
-
-                        arr_chk = $scope.data_node;
-                        if (arr_chk.length == 0) { 
-
-                            set_alert('Warning', 'Please provide a valid Node List','node'); return; }
-                        for (var i = 0; i < arr_chk.length; i++) {
-                            if (set_valid_items(arr_chk[i].node, 'node-node-' + arr_chk[i].seq)) { bCheckValid_Node = true; }
-                        }
-                    }
-
-                    /*if (true) {
-                        arr_chk = $scope.data_nodeworksheet;
-                        /*for (var i = 0; i < arr_chk.length; i++) {
-
-                            if (set_valid_items(arr_chk[i].causes, 'nodeworksheet-causes-' + arr_chk[i].seq)) { bCheckValid_Worksheet = true; }
-                            if (set_valid_items(arr_chk[i].consequences, 'nodeworksheet-consequences-' + arr_chk[i].seq)) { bCheckValid_Worksheet = true; }
-                            // if (set_valid_items(arr_chk[i].responder_user_name, 'nodeworksheet-responder-' + arr_chk[i].seq)) { bCheckValid_Worksheet = true; }
-                            if (set_valid_items(arr_chk[i].estimated_start_date, 'nodeworksheet-estimated-start-' + arr_chk[i].seq)) { bCheckValid_Manage = true; }
-                            if (set_valid_items(arr_chk[i].estimated_end_date, 'nodeworksheet-estimated-end-' + arr_chk[i].seq)) { bCheckValid_Manage = true; }
-                            
-                            if (set_valid_items(arr_chk[i].category_type, 'nodeworksheet-category_type-' + arr_chk[i].seq)) { bCheckValid_Worksheet = true; }
-                            if (set_valid_items(arr_chk[i].major_accident_event, 'nodeworksheet-major_accident_event-' + arr_chk[i].seq)) { bCheckValid_Worksheet = true; }
-                            if (set_valid_items(arr_chk[i].existing_safeguards, 'nodeworksheet-existing_safeguards-' + arr_chk[i].seq)) { bCheckValid_Worksheet = true; }
-                            // if (set_valid_items(arr_chk[i].recommendations, 'nodeworksheet-recommendations-' + arr_chk[i].seq)) { bCheckValid_Worksheet = true; }
-                        }
-                    }*/
-
-                        if (true) {
-                            var node = $scope.data_node;
-
-                            for (var i = 0; i < node.length; i++){
-                                var arr_chk = $scope.data_nodeworksheet.filter(item => item.id_node === node[i].id);
-                        
-                                var bCheckValid_Worksheet = false;
-                            
-                                //check หา 
-                                for (var j = 0; j < arr_chk.length; j++) {
-                                    let item = arr_chk[j];                        
-                                    var valid = false;
-                                    if ((item['causes'] !== undefined && item['causes'] !== null && item['causes'] !== '') ||
-                                        (item['consequences'] !== undefined && item['consequences'] !== null && item['consequences'] !== '') ||
-                                        (item['category_type'] !== undefined && item['category_type'] !== null && item['category_type'] !== '')) {
-    
-                                        // Validate based on the first present field among 'causes', 'consequences', 'category_type'
-                                        if (item['causes'] !== undefined && item['causes'] !== null && item['causes'] !== '') {
-                                            valid = validateFields(item, 'causes', ['consequences', 'category_type', 'major_accident_event', 'existing_safeguards']);
-                                        } else if (item['consequences'] !== undefined && item['consequences'] !== null && item['consequences'] !== '') {
-                                            valid = validateFields(item, 'consequences', ['causes', 'category_type', 'major_accident_event', 'existing_safeguards']);
-                                        } else if (item['category_type'] !== undefined && item['category_type'] !== null && item['category_type'] !== '') {
-                                            valid = validateFields(item, 'category_type', ['causes', 'consequences', 'major_accident_event', 'existing_safeguards']);
-                                        }
-    
-                                        if(!valid){
-                                            bCheckValid_Worksheet = true; 
-                                        }
-    
-    
-    
-                                    } /*else {
-                                        bCheckValid_Worksheet = false; 
-                                        continue; 
-                                    }*/
-                                }    
-                                if (bCheckValid_Worksheet) {
-                                    $scope.goback_tab = 'worksheet'
-                                
-                                    $scope.tabs = $scope.tabs.map(tab => {
-                                        tab.isActive = (tab.name === 'worksheet');
-                                        return tab;
-                                    })
-    
-                                    set_alert('Warning', 'Please provide valid data in the worksheet','worksheet');
-                                    return; 
-                                }
-
-                            }
-
-                        
-        
-                        }
-
-
-                    var tag_name = '';
-                    if (bCheckValid_Node) { bCheckValid = true; tag_name = 'node'; }
-                    else if (bCheckValid_Worksheet) { bCheckValid = true; tag_name = 'worksheet'; }
-                    else if (bCheckValid_Manage) { bCheckValid = true; tag_name = 'manage'; }
-
-                    if (bCheckValid) {
-                        var arr_tab = $filter('filter')($scope.tabs, function (item) { return ((item.name == tag_name)); });
-                        $scope.changeTab_Focus(arr_tab, tag_name);
+                    if (!validConduct()) {
+                        return set_alert('Warning', $scope.validMessage, $scope.goback_tab);
                     }
                 }
 
@@ -6277,7 +6539,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         } else if (action == 'confirm_submit_approver') {
             $('#modalSendMailApprover').modal('hide');
         } else if (action == 'save') {
-        console.log("action",action)
+
 
             var arr_chk = $scope.data_general;
 
@@ -7197,7 +7459,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 _arr.no = maxRecommendationsNo;
                 /*let maxNo = 0;
 
-                $scope.data_listworksheet.forEach(item => {
+                $scope.data_nodeworksheet.forEach(item => {
                     if (item.no > maxNo) {
                         maxNo = item.no;
                     }
@@ -7899,7 +8161,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     $scope.removeDataEmployee = function (data, seq_session,type) {
 
-        console.log("will remove")
 
         var seq = data.seq;
 
@@ -7910,6 +8171,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 return (item.seq == seq && item.action_type == 'update');
             });
             if (arrdelete.length > 0) { $scope.data_memberteam_delete.push(arrdelete[0]); }
+
+            console.log("arrdelete",arrdelete)
     
             $scope.data_memberteam = $filter('filter')($scope.data_memberteam, function (item) {
                 if (item.seq == seq && item.id_session == seq_session) {
@@ -8154,14 +8417,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         const targetElement = event.target;
         const id = targetElement.getAttribute('id');
         var id_dropdown = '';
-        var id_list = '';
+        var id_node = '';
 
         if (id) {
             id_dropdown = id.substring(0, id.indexOf('_'));
         }
         // click button
         if (id_dropdown == 'dropdown') {
-            id_list = id.substring(id.indexOf("_") + 1); 
+            id_node = id.substring(id.indexOf("_") + 1); 
         }
         // click input text
         if (id == 'dropdown_input') {
@@ -8177,7 +8440,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         //$scope.data_request_type_list =  $scope.data_request_type;
         // show
         try {
-            document.getElementById(id_list).classList.toggle("show");
+            document.getElementById(id_node).classList.toggle("show");
         } catch (error) {}
     });
 
@@ -8320,17 +8583,73 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     
     
 
+
     function validBeforRegister() {
-        if (validGeneral() &&
-            validSessions() &&
-            validDrawing() &&
-            validNode()
-        ) {
-            return true
+        if (!validGeneral()) {
+            return false;
         }
 
-        return false
+        if (!validSessions()) {
+            return false;
+        }
+
+        if (!validDrawing()) {
+            return false;
+        }
+
+        if (!validNode()) {
+            return false;
+        }
+
+        return true;
     }
+
+    function validConduct(){
+        if (!validGeneral()) {
+            return false;
+        }
+
+        if (!validSessions()) {
+            return false;
+        }
+
+        if (!validNode()) {
+            return false;
+        }
+
+        if (!checkWorksheet()) {  
+            $scope.validMessage = 'Please provide valid data in the worksheet'
+            $scope.goback_tab = 'worksheet';                          
+            return false;
+        }
+
+        const hasValidRecommendations = $scope.data_nodeworksheet.some(item => 
+            item.recommendations && item.recommendations.trim()
+        );
+
+        if (!hasValidRecommendations) {
+            $scope.validMessage = 'Please provide at least one valid recommendation.';
+            $scope.goback_tab = 'worksheet';  
+
+            for (let i = 0; i < $scope.data_nodeworksheet.length; i++) {
+                const item = $scope.data_nodeworksheet[i];
+                
+                if (!item.recommendations || !item.recommendations.trim()) {
+                    set_valid_items(item.recommendations, 'worksheet-recommendations-' + item.seq);
+                }
+            }
+
+            return false;
+        }
+
+        if (!checkManage()) {
+            $scope.validMessage = 'Please provide valid data in the Manage Recommendations.';
+            $scope.goBackToTab = 'manage';
+            return false;
+        }
+
+        return true;
+    }    
 
     function validGeneral(){
         if (!$scope.data_general[0].sub_expense_type ||
@@ -8439,6 +8758,83 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.validMessage = ''
         return true
     }
+        //Check worksheet valid at conduct
+        function checkWorksheet() {
+            var bCheckValid_Worksheet = false;
+            
+            // First Block of Validations
+            var node = $scope.data_node;
+            console.log("Starting Worksheet Validation...");
+        
+            for (var i = 0; i < node.length; i++) {
+                console.log("Validating task:", node[i]);
+        
+                var arr_chk = $scope.data_nodeworksheet.filter(item => item.id_node === node[i].id);
+                console.log("Found corresponding items in data_nodeworksheet:", arr_chk);
+        
+                for (var j = 0; j < arr_chk.length; j++) {
+                    let item = arr_chk[j];
+                    var valid = false;
+        
+                    console.log("Validating item:", item);
+        
+                    // Check the required fields
+                    if ((item['causes'] !== undefined && item['causes'] !== null && item['causes'] !== '') ||
+                        (item['consequences'] !== undefined && item['consequences'] !== null && item['consequences'] !== '') ||
+                        (item['category_type'] !== undefined && item['category_type'] !== null && item['category_type'] !== '')) {
 
+                        // Validate based on the first present field among 'causes', 'consequences', 'category_type'
+                        if (item['causes'] !== undefined && item['causes'] !== null && item['causes'] !== '') {
+                            valid = validateFields(item, 'causes', ['consequences', 'category_type', 'major_accident_event', 'existing_safeguards']);
+                        } else if (item['consequences'] !== undefined && item['consequences'] !== null && item['consequences'] !== '') {
+                            valid = validateFields(item, 'consequences', ['causes', 'category_type', 'major_accident_event', 'existing_safeguards']);
+                        } else if (item['category_type'] !== undefined && item['category_type'] !== null && item['category_type'] !== '') {
+                            valid = validateFields(item, 'category_type', ['causes', 'consequences', 'major_accident_event', 'existing_safeguards']);
+                        }
+        
+                        // Log whether validation passed or failed for this item
+                        if (valid) {
+                            console.log("Validation passed for item:", item);
+                        } else {
+                            console.log("Validation failed for item:", item);
+                            bCheckValid_Worksheet = true;
+                        }
+                    } else {
+                        console.log("No required fields filled for item:", item);
+                    }
+                }
+        
+                // If any worksheet validation failed, stop and return false
+                if (bCheckValid_Worksheet) {
+                    console.log("Validation failed for task:", node[i]);
+                    return false;  // Stop further validation
+                }
+            }
+        
+            console.log("All tasks validated successfully.");
+            return true;
+        }
+        
+
+        function checkManage(){
+
+            var bCheckValid_Manage = false;
+
+            var arr_chk = $scope.data_nodeworksheet;
+            for (var i = 0; i < arr_chk.length; i++) {
+                if (set_valid_items(arr_chk[i].estimated_start_date, 'worksheet-estimated-start-' + arr_chk[i].seq)) {
+                    bCheckValid_Manage = true;
+                }
+                if (set_valid_items(arr_chk[i].estimated_end_date, 'worksheet-estimated-end-' + arr_chk[i].seq)) {
+                    bCheckValid_Manage = true;
+                }
+            }
+        
+            // If second block validations passed
+            if (bCheckValid_Manage) {
+                console.log("All validations passed");
+                return true;
+            }
+        }
 
 });

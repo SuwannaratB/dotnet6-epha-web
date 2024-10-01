@@ -980,7 +980,7 @@
                                                     </td>
 
                                                     <td class="align-middle white-space col-3">
-                                                        <div class="row uploadbox align-items-center" ng-if="tab_general_active">
+                                                        <div class="row uploadbox align-items-center">
                                                             <div class="btn-group">
                                                                 <div class="icon-button border p-3" style="border-color: #0d6efd; background-color: #0d6efd;">
                                                                     <span ng-if="!item.document_file_size" class="fa-solid fa-arrow-up-from-bracket fa-lg" style="color: #ffffff;"></span>
@@ -999,7 +999,6 @@
                                                                     <div class="d-flex align-items-center">
                                                                         <span class="mr-3 nametext"
                                                                             id="filename{{item.seq}}" 
-                                                                            ng-class="{'d-none':(!tab_general_active)}"
                                                                             ng-click="downloadFile(item)"
                                                                             ng-if="item.document_file_size>0">
                                                                             <b style="font-size:x-small;">
@@ -2119,12 +2118,13 @@
                                     <table class="table fs--2 mb-0 table-bordered " cellpadding="0" cellspacing="0">
                                         <thead class=" text-uppercase  text-center  bg-soft  test" style="font-size: 10px;" id="myHeader">
                                             <tr class="">
-                                                @*<th rowspan="2">no</th>
+                                                <th rowspan="2">no</th>
                                                 <th rowspan="2">node</th>
                                                 <th rowspan="2">deviations</th>
                                                 <th rowspan="2">causes_no</th>
                                                 <th rowspan="2">consequences_no</th>
-                                                <th rowspan="2">Recom</th>*@
+                                                <th rowspan="2">Recom</th>
+                                                <th rowspan="2">Row type</th>
                                                 <th class=" align-middle mx-0" 
                                                     colspan="1" 
                                                     rowspan="2" 
@@ -2296,7 +2296,7 @@
                                                 ng-if="( data_node.length == 1 ? (data_node[0].node == null ? false : true) : true) "
                                                 ng-repeat="item in data_nodeworksheet | toArray | filter:{id_node : selectedItemNodeView.seq} | sortNodeworksheet"
                                                 ng-init="accessInfo = Access_check(item)"> 
-   @* <!-- Second td for id_node -->
+  <!-- Second td for id_node -->
     <td class="align-top border border-light border-active">
         {{ item.no }}
     </td>
@@ -2324,7 +2324,10 @@
         <!-- Sixth td for consequences_no -->
     <td class="align-top border border-light border-active">
         {{ item.recommendations_no }}
-    </td>*@
+    </td>
+    <td class="align-top border border-light border-active">
+        {{ item.row_type }}
+    </td>  
                                                 <!-----no---->
                                                 <td class="align-top border border-light border-active " style="padding: 0 !important; width: 80px;"
                                                     ng-if="( item.causes_no == 1 && item.consequences_no == 1) && item.row_type == 'causes' "
@@ -2334,7 +2337,7 @@
                                                     <p class=" mx-1 ms-0  text-1100 fw-bold max-w-100 " ng-if="( item.causes_no == 1 && item.consequences_no == 1) && item.row_type == 'causes' ">{{item.guidewords_no +'.'+  (item.deviations == null? item.guidewords : item.deviations +' '+ item.guidewords  )   }}  </p>*@
                                                     <p class=" mx-1 ms-0  text-1100 fw-bold max-w-100 " >
 
-                                                        {{$index + 1}} {{ item.deviations }}
+                                                        {{item.deviations_no}} {{ item.deviations }}
 
                                                     </p>
                                                 </td>
@@ -2365,7 +2368,7 @@
                                                                     <span class="fas fa-cog text-info align-top"></span>
                                                                 </button>
                                                                 <div class="dropdown-menu dropdown-menu-end py-2 align-top">
-                                                                    <a class="dropdown-item text-success" ng-click="adddata_nodeworksheet_lv1('causes',item,$index)">
+                                                                    <a class="dropdown-item text-success" ng-click="adddata_nodeworksheet('causes',item,$index)">
                                                                         <span class="fas fa-copy"></span>
                                                                         Add
                                                                     </a>
@@ -2445,7 +2448,7 @@
                                                                 </button>
                                                                 <div class="dropdown-menu dropdown-menu-end py-2 align-top">
                                                                     <a class="dropdown-item text-success"
-                                                                       ng-click="adddata_nodeworksheet_lv1('consequences',item,$index)">
+                                                                       ng-click="adddata_nodeworksheet('consequences',item,$index)">
                                                                         <span class="fas fa-copy"></span>
                                                                         Add
                                                                     </a>
@@ -2526,7 +2529,7 @@
                                                                     <span class="fas fa-cog text-info align-top"></span>
                                                                 </button>
                                                                 <div class="dropdown-menu dropdown-menu-end py-2 align-top">
-                                                                    <a class="dropdown-item text-success" ng-click="adddata_nodeworksheet_lv1('category',item)">
+                                                                    <a class="dropdown-item text-success" ng-click="adddata_nodeworksheet('category',item)">
                                                                         <span class="fas fa-copy"></span>
                                                                         Add
                                                                     </a>
@@ -2750,7 +2753,7 @@
                                                             </button>
                                                             <div class="dropdown-menu dropdown-menu-end py-2 align-top">
                                                                 <a class="dropdown-item text-success"
-                                                                   ng-click="adddata_nodeworksheet_lv1('recommendations',item,$index)">
+                                                                   ng-click="adddata_nodeworksheet('recommendations',item,$index)">
                                                                     <span class="fas fa-copy"></span>
                                                                     Add
                                                                 </a>
@@ -4005,7 +4008,7 @@
                                     data-toggle="tooltip" 
                                     data-placement="top" 
                                     title="Remove"
-                                    ng-click="removeDataEmployee(item2.seq, selectdata_session,selectDatFormType)">
+                                    ng-click="removeDataEmployee(item2, selectdata_session,selectDatFormType)">
                                 <span class="fa-regular fa-trash-can fa-lg"></span>
                             </button>                            
                             <label class="mb-0 ms-3 text-1100 fw-bold" style="width: 25%; border-color: #f1f2f4;">{{ item2.user_displayname }}</label>
