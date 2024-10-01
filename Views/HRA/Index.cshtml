@@ -1559,6 +1559,22 @@
                                         <div class="content-container d-flex flex-column p-4">
                                             <span class="title-filter">Filter Worksheet</span>
                                             <div class="list-container">
+                                                @* Job Type/Change Type *@
+                                                <div class="checkbox-container">
+                                                    <div class="topic">Job Type/Change Type</div>
+                                                    <div ng-repeat="filter in optionJobType" class="form-check" style="margin-bottom: 0">
+                                                        <input type="checkbox" class="form-check-input" ng-model="filter.selected" id="filter{{ $index }}">
+                                                        <label class="form-check-label" for="filter{{ $index }}" style="font-size: 10.24px;">{{ filter.name }}</label>
+                                                    </div>
+                                                </div>
+                                                @* Frequency Level *@
+                                                <div class="checkbox-container">
+                                                    <div class="topic">Frequency Level</div>
+                                                    <div ng-repeat="filter in optionFrequency" class="form-check" style="margin-bottom: 0">
+                                                        <input type="checkbox" class="form-check-input" ng-model="filter.selected" id="filter{{ $index }}">
+                                                        <label class="form-check-label" for="filter{{ $index }}" style="font-size: 10.24px;">{{ filter.name }}</label>
+                                                    </div>
+                                                </div>
                                                 @* Initial Risk Rating *@
                                                 <div class="checkbox-container">
                                                     <div class="topic">Initial Risk Rating</div>
