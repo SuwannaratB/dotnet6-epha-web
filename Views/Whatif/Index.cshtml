@@ -2202,7 +2202,7 @@
                                         <tbody class="">
                                             <tr class="rowwork border border-dashed"
                                                 ng-if="( data_tasklist.length == 1 ? (data_tasklist[0].list == null ? false : true) : true) "
-                                                ng-repeat="item in data_listworksheet | toArray | filter:{id_list : selectedItemListView.seq}">
+                                                ng-repeat="item in data_listworksheet | toArray | filter:{id_list : selectedItemListView.seq} | orderBy:index_row">
 
 
                                                 @*<td>{{item.id_list}}</td>

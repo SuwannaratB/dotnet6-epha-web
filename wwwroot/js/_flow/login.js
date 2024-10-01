@@ -34,7 +34,7 @@ app.controller("ctrlApp", function ($scope, conFig) {
             $.ajax({
                 url: url_ws + "Login/check_authorization",
                 data: '{"user_name":"' + user_name + '","pass_word":"' + pass_word + '"}',
-                type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+                type: "POST", contentType: "application/json; charset=utf-8", 
                 headers: {
                     'X-CSRF-TOKEN': token
                 },
@@ -48,11 +48,30 @@ app.controller("ctrlApp", function ($scope, conFig) {
                     $("#divLoading").hide();
                 },
                 success: function (data) {
-                    var arr = data;
-                    if (arr) {
-                        localStorage.setItem('user', JSON.stringify(arr[0]))
-                        localStorage.setItem('token', JSON.stringify(token))
-                        window.location.href = "Home/Portal";
+                    try {
+                        if (typeof data === "string") {
+                            // Step 1: Decode the HTML-encoded response
+                            const decodedData = htmlDecode(data);
+            
+                            // Step 2: Try to parse the decoded data as JSON
+                            const jsonData = JSON.parse(decodedData);
+            
+                            console.log("Decoded and Parsed Data:", jsonData);
+
+                            var arr = jsonData;
+                            if (arr) {
+                                localStorage.setItem('user', JSON.stringify(arr[0]))
+                                localStorage.setItem('token', JSON.stringify(token))
+                                window.location.href = "Home/Portal";
+                            }
+
+                        } else {
+                            // If it's already an object, log it
+                            console.log("Parsed Data:", data);
+                        }
+                    } catch (err) {
+                        console.error('Failed to parse JSON:', err);
+                        console.error('Received data:', data);
                     }
 
                 },
@@ -75,4 +94,10 @@ app.controller("ctrlApp", function ($scope, conFig) {
           }
       });
   }
+
+  function htmlDecode(input) {
+    const doc = new DOMParser().parseFromString(input, 'text/html');
+    return doc.documentElement.textContent;
+}
+
 });

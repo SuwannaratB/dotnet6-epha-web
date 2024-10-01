@@ -213,7 +213,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, conFig) {
         $.ajax({
             url: url_ws + "Login/check_authorization_page",
             data: '{"user_name":"' + user_name + '"}',
-            type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+            type: "POST", contentType: "application/json; charset=utf-8",
             headers: {
                 'X-CSRF-TOKEN': $scope.token
             },
@@ -227,17 +227,42 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, conFig) {
                 $('#divLoading').hide();
             },
             success: function (data) {
-                var arr = data;
-                if (arr.length > 0) {
-                    //$scope.menu_hazop = arr.some(item => item.page_controller === 'hazop');
-                    //$scope.menu_jsea = arr.some(item => item.page_controller === 'jsea');
-                    //$scope.menu_whatif = arr.some(item => item.page_controller === 'whatif');
-                    //$scope.menu_hra = arr.some(item => item.page_controller === 'hra');
-                    //$scope.menu_bowtie = arr.some(item => item.page_controller === 'bowtie');
-                    //$scope.menu_report = arr.some(item => item.page_controller === 'report');
-                    //$scope.menu_master = arr.some(item => item.page_controller === 'master');
-                }
-                apply();
+
+                try {
+                    if (typeof data === "string") {
+                        // Step 1: Decode the HTML-encoded response
+                        const decodedData = htmlDecode(data);
+        
+                        // Step 2: Try to parse the decoded data as JSON
+                        const jsonData = JSON.parse(decodedData);
+        
+                        console.log("Decoded and Parsed Data:", jsonData);
+
+                        var arr = jsonData;
+                        if (arr) {
+                            console.log("================================================",arr)
+                            if (arr.length > 0) {
+                                //$scope.menu_hazop = arr.some(item => item.page_controller === 'hazop');
+                                //$scope.menu_jsea = arr.some(item => item.page_controller === 'jsea');
+                                //$scope.menu_whatif = arr.some(item => item.page_controller === 'whatif');
+                                //$scope.menu_hra = arr.some(item => item.page_controller === 'hra');
+                                //$scope.menu_bowtie = arr.some(item => item.page_controller === 'bowtie');
+                                //$scope.menu_report = arr.some(item => item.page_controller === 'report');
+                                //$scope.menu_master = arr.some(item => item.page_controller === 'master');
+                            }
+                            apply();
+            
+                        }
+
+                    } else {
+                        // If it's already an object, log it
+                        console.log("Parsed Data:", data);
+                    }
+                } catch (err) {
+                    console.error('Failed to parse JSON:', err);
+                    console.error('Received data:', data);
+                }                
+
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 if (jqXHR.status == 500) {
@@ -251,7 +276,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, conFig) {
         $scope.menu_main_jseamodule = false;
         $scope.menu_main_whatifmodule = false;
     };
-
+    function htmlDecode(input) {
+        const doc = new DOMParser().parseFromString(input, 'text/html');
+        return doc.documentElement.textContent;
+    }
     function role_menu_sub() {
         var action_menu_def = true;
         //$scope.menu_main_manageuser = action_menu_def;
