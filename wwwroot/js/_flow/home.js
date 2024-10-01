@@ -33,7 +33,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, conFig) {
             url: url_ws + `Login/check_authorization_page`,
             // url: url_ws + "Login/check_authorization_page_fix",
             data: '{"user_name":"' + $scope.user_name + '","page_controller":"' + '' + '"}',
-            type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+            type: "POST", contentType: "application/json; charset=utf-8",
             headers: {
                 'X-CSRF-TOKEN': $scope.token
             },
@@ -47,27 +47,50 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, conFig) {
                 $('#divLoading').hide();
             },
             success: function (data) {
-                var arr = data;
-                console.log("================================================",arr)
-                if (arr.length > 0) {
-                    $scope.menu_hazop = arr.some(item => item.page_controller === 'hazop');
-                    $scope.menu_jsea = arr.some(item => item.page_controller === 'jsea');
-                    $scope.menu_whatif = arr.some(item => item.page_controller === 'whatif');
-                    $scope.menu_hra = arr.some(item => item.page_controller === 'hra');
-                    $scope.menu_bowtie = arr.some(item => item.page_controller === 'bowtie');
-                    $scope.menu_report = arr.some(item => item.page_controller === 'report');
-                    $scope.menu_master = arr.some(item => item.page_controller === 'master');
 
-                    $scopefollowup_page_hazop = arr.some(item => item.page_controller === 'hazop' && item.followup_page === 1);
-                    $scopefollowup_page_jsea = arr.some(item => item.page_controller === 'jsea' && item.followup_page === 1);
-                    $scopefollowup_page_whatif = arr.some(item => item.page_controller === 'whatif' && item.followup_page === 1);
-                    $scopefollowup_page_hra = (arr.some(item => item.page_controller === 'hra' && item.followup_page === 1) ? 1 : 0);
-                    $scopefollowup_page_bowtie = arr.some(item => item.page_controller === 'bowtie' && item.followup_page === 1);
-                    $scopefollowup_page_report = arr.some(item => item.page_controller === 'report' && item.followup_page === 1);
-                    $scopefollowup_page_master = arr.some(item => item.page_controller === 'master' && item.followup_page === 1);
+                try {
+                    if (typeof data === "string") {
+                        // Step 1: Decode the HTML-encoded response
+                        const decodedData = htmlDecode(data);
+        
+                        // Step 2: Try to parse the decoded data as JSON
+                        const jsonData = JSON.parse(decodedData);
+        
+                        console.log("Decoded and Parsed Data:", jsonData);
+
+                        var arr = jsonData;
+                        if (arr) {
+                            console.log("================================================",arr)
+                            if (arr.length > 0) {
+                                $scope.menu_hazop = arr.some(item => item.page_controller === 'hazop');
+                                $scope.menu_jsea = arr.some(item => item.page_controller === 'jsea');
+                                $scope.menu_whatif = arr.some(item => item.page_controller === 'whatif');
+                                $scope.menu_hra = arr.some(item => item.page_controller === 'hra');
+                                $scope.menu_bowtie = arr.some(item => item.page_controller === 'bowtie');
+                                $scope.menu_report = arr.some(item => item.page_controller === 'report');
+                                $scope.menu_master = arr.some(item => item.page_controller === 'master');
+            
+                                $scopefollowup_page_hazop = arr.some(item => item.page_controller === 'hazop' && item.followup_page === 1);
+                                $scopefollowup_page_jsea = arr.some(item => item.page_controller === 'jsea' && item.followup_page === 1);
+                                $scopefollowup_page_whatif = arr.some(item => item.page_controller === 'whatif' && item.followup_page === 1);
+                                $scopefollowup_page_hra = (arr.some(item => item.page_controller === 'hra' && item.followup_page === 1) ? 1 : 0);
+                                $scopefollowup_page_bowtie = arr.some(item => item.page_controller === 'bowtie' && item.followup_page === 1);
+                                $scopefollowup_page_report = arr.some(item => item.page_controller === 'report' && item.followup_page === 1);
+                                $scopefollowup_page_master = arr.some(item => item.page_controller === 'master' && item.followup_page === 1);
+                            }
+            
+                            apply();
+                        }
+
+                    } else {
+                        // If it's already an object, log it
+                        console.log("Parsed Data:", data);
+                    }
+                } catch (err) {
+                    console.error('Failed to parse JSON:', err);
+                    console.error('Received data:', data);
                 }
 
-                apply();
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 if (jqXHR.status == 500) {
@@ -87,6 +110,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, conFig) {
             }
         } catch { }
     }
+    function htmlDecode(input) {
+        const doc = new DOMParser().parseFromString(input, 'text/html');
+        return doc.documentElement.textContent;
+    }
+
     $scope.selected_menu = function (page) {
       
         var controller_action_befor = 'Home/Portal'; 
