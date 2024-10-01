@@ -2587,7 +2587,75 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     }
 
+    function check_case_approver() {
+        const hasInsert = $scope.data_session.some(item => item.action_type === 'insert');
+        console.log('Has insert:', hasInsert);
     
+        if (hasInsert) {
+            console.log('Insert found. Exiting function.');
+            return; 
+        }
+    
+        const last_session = $scope.data_session.reduce((max, item) => {
+            return item.seq > max ? item.seq : max;
+        }, 0);
+    
+        console.log('Active session:', $scope.active_session, 'Last session:', last_session);
+        
+    
+        if ($scope.active_session == last_session) {
+            console.log('Active session is equal to last session. Updating approvers...');
+            $scope.data_approver.forEach(item => {
+                if (item.id_session == last_session) { 
+                    item.approver_action_type = null;
+                    item.action_review = null;
+                    item.approver_type = null;
+                    item.action_status = null;
+                    item.comment = null;
+                    item.date_review = null;
+                    item.date_review_show = null;
+                    item.action_change = 1;
+                    item.action_type = 'update';
+                    
+                    // Log ข้อมูลแต่ละ item หลังจากการอัปเดต
+                    console.log('Updated approver:', item);
+                }
+            });
+
+            
+            let uniqueApprovers = new Set();
+            let itemsToRemove = []; 
+            
+            $scope.data_drawing_approver.forEach(item => {
+                if (item.id_session == last_session) { 
+                    item.document_file_name = null;
+                    item.document_file_path = null;
+                    item.document_file_size = null;
+                    item.action_change = 1;
+                    item.action_type = 'update';
+                    
+                    if (uniqueApprovers.has(item.id_approver)) {
+                        item.action_change = 1;
+                        item.action_type = 'delete';
+                        $scope.data_drawing_approver_delete.push(item);
+                        
+                        itemsToRemove.push(item);
+                        console.log('Marked duplicate approver for removal:', item);
+                    } else {
+                        uniqueApprovers.add(item.id_approver);
+                    }
+                }
+            });
+            
+            $scope.data_drawing_approver = $scope.data_drawing_approver.filter(item => !itemsToRemove.includes(item));
+            
+            console.log(" $scope.data_drawing_approver", $scope.data_drawing_approver)
+            console.log(" $scope.data_approver", $scope.data_approver)
+
+        } else {
+            console.log('Active session is not equal to last session.');
+        }
+    }    
     function check_case_member_review() {
 
         if ($scope.data_header[0].pha_status == 12
@@ -3071,50 +3139,54 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
 
         function computeRowspan() {
-            $scope.rowspanMap = {};
-            $scope.data_nodeworksheet.forEach(function(item) {
+            if (Array.isArray($scope.data_nodeworksheet) && $scope.data_nodeworksheet.length > 0) {
+                $scope.rowspanMap = {};
+                $scope.data_nodeworksheet.forEach(function(item) {
+    
+                  var key = 'causes' + item.id_node + '-' + item.deviations_no + '-' + item.causes_no;
+                  $scope.rowspanMap[key] = $scope.data_nodeworksheet.filter(function(entry) {
+                    return entry.id_node === $scope.selectedItemNodeView.seq &&
+                           entry.deviations_no === item.deviations_no &&
+                           entry.causes_no === item.causes_no 
+                  }).length;
+    
+                  var key = 'consequences' + item.id_node + '-' + item.deviations_no + '-' + item.causes_no + '-' + item.consequences_no;
+                  $scope.rowspanMap[key] = $scope.data_nodeworksheet.filter(function(entry) {
+                    return entry.id_node === $scope.selectedItemNodeView.seq &&
+                           entry.deviations_no === item.deviations_no &&
+                           entry.causes_no === item.causes_no &&
+                           entry.consequences_no === item.consequences_no
+                  }).length;
+    
+                  var key = item.id_node + '-' + item.deviations_no + '-' + item.causes_no + '-' + item.consequences_no + '-' + item.category_no;
+                  $scope.rowspanMap[key] = $scope.data_nodeworksheet.filter(function(entry) {
+                    return entry.id_node === $scope.selectedItemNodeView.seq &&
+                           entry.deviations_no === item.deviations_no &&
+                           entry.causes_no === item.causes_no &&
+                           entry.consequences_no === item.consequences_no &&
+                           entry.category_no === item.category_no
+                  }).length;
+    
+                  var key = 'category' + item.id_node + '-' + item.deviations_no + '-' + item.causes_no + '-' + item.consequences_no + '-' + item.category_no;
+                  $scope.rowspanMap[key] = $scope.data_nodeworksheet.filter(function(entry) {
+                    return entry.id_node === $scope.selectedItemNodeView.seq &&
+                           entry.deviations_no === item.deviations_no &&
+                           entry.causes_no === item.causes_no &&
+                           entry.consequences_no === item.consequences_no &&
+                           entry.category_no === item.category_no
+                  }).length;
+    
+                  var key = 'deviations' + item.id_node + '-' + item.deviations_no ;
+                  $scope.rowspanMap[key] = $scope.data_nodeworksheet.filter(function(entry) {
+                    return entry.id_node === $scope.selectedItemNodeView.seq &&
+                           entry.deviations_no === item.deviations_no
+                  }).length;
+    
+    
+                });                
+            }
+            
 
-              var key = 'causes' + item.id_node + '-' + item.deviations_no + '-' + item.causes_no;
-              $scope.rowspanMap[key] = $scope.data_nodeworksheet.filter(function(entry) {
-                return entry.id_node === $scope.selectedItemNodeView.seq &&
-                       entry.deviations_no === item.deviations_no &&
-                       entry.causes_no === item.causes_no 
-              }).length;
-
-              var key = 'consequences' + item.id_node + '-' + item.deviations_no + '-' + item.causes_no + '-' + item.consequences_no;
-              $scope.rowspanMap[key] = $scope.data_nodeworksheet.filter(function(entry) {
-                return entry.id_node === $scope.selectedItemNodeView.seq &&
-                       entry.deviations_no === item.deviations_no &&
-                       entry.causes_no === item.causes_no &&
-                       entry.consequences_no === item.consequences_no
-              }).length;
-
-              var key = item.id_node + '-' + item.deviations_no + '-' + item.causes_no + '-' + item.consequences_no + '-' + item.category_no;
-              $scope.rowspanMap[key] = $scope.data_nodeworksheet.filter(function(entry) {
-                return entry.id_node === $scope.selectedItemNodeView.seq &&
-                       entry.deviations_no === item.deviations_no &&
-                       entry.causes_no === item.causes_no &&
-                       entry.consequences_no === item.consequences_no &&
-                       entry.category_no === item.category_no
-              }).length;
-
-              var key = 'category' + item.id_node + '-' + item.deviations_no + '-' + item.causes_no + '-' + item.consequences_no + '-' + item.category_no;
-              $scope.rowspanMap[key] = $scope.data_nodeworksheet.filter(function(entry) {
-                return entry.id_node === $scope.selectedItemNodeView.seq &&
-                       entry.deviations_no === item.deviations_no &&
-                       entry.causes_no === item.causes_no &&
-                       entry.consequences_no === item.consequences_no &&
-                       entry.category_no === item.category_no
-              }).length;
-
-              var key = 'deviations' + item.id_node + '-' + item.deviations_no ;
-              $scope.rowspanMap[key] = $scope.data_nodeworksheet.filter(function(entry) {
-                return entry.id_node === $scope.selectedItemNodeView.seq &&
-                       entry.deviations_no === item.deviations_no
-              }).length;
-
-
-            });
         }
         
     }
@@ -6249,7 +6321,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         if (action === 'save' && $scope.isMainApprover) {
             return $('#modalEditConfirm').modal('show');
         }
-                        
+
+        if($scope.pha_status == '22' ){
+            check_case_approver();
+        }
+
         save_data_create(action, action_def);
         
 
