@@ -825,59 +825,42 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         // $scope.user_name = conFig.user_name();
         $scope.pha_seq = conFig.pha_seq();
         $scope.pha_type_doc = conFig.pha_type_doc();
-
         $scope.currentYear = new Date().getFullYear();
-        
         $scope.object_items_name = null;
-
         $scope.selectViewTypeFollowup = true;
-
         $scope.action_part = 1;
-
         $scope.data_all = [];
-
         $scope.master_company = [];
         $scope.master_apu = [];
-
         $scope.data_header = [];
         $scope.data_general = [];
         $scope.data_session = [];
         $scope.data_memberteam = [];
         $scope.data_approver = [];
         $scope.data_drawing = [];
-
         $scope.data_subareas = [];
         $scope.data_hazard = [];
         $scope.data_tasks = [];
         $scope.data_workers = [];
         $scope.hazard_standard = [];
-
         $scope.data_worksheet = [];
-
         $scope.data_session_delete = [];
         $scope.data_memberteam_delete = [];
         $scope.data_relatedpeople_outsider_delete = [];
         $scope.data_approver_delete = [];
         $scope.data_drawing_delete = [];
         $scope.data_drawing_approver_delete = [];
-
         $scope.data_subareas_delete = [];
         $scope.data_hazard_delete = [];
         $scope.data_tasks_delete = [];
         $scope.data_descriptions_delete= [];
         $scope.data_workers_delete = [];
-
         $scope.data_worksheet_delete = [];
         $scope.data_recommendations_delete = [];
-
-
         $scope.select_history_tracking_record = false;
-
         $scope.employeelist = [];
         $scope.employeelist_def = [];
         $scope.employeelist_show = [];
-
-
         // ล้างช่องข้อมูลหลังจากเพิ่มข้อความ
         $scope.employee_id = '';
         $scope.employee_name = '';
@@ -885,46 +868,26 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.employee_email = '';
         $scope.employee_type = 'Contract';
         $scope.employee_img = 'assets/img/team/avatar.webp'
-
         $scope.searchdata = '';
         $scope.searchEmployee = '';
-
         $scope.searchdataMemberTeam = '';
         $scope.searchdataResponder = '';
         $scope.searchdataApprover = '';
-        
         // filter worksheet
-        $scope.optionInitial = [
-            {   
-                name: 'Acceptable', 
-                name_check: 'Acceptable Risk', 
-                selected: false 
-            },
-            { 
-                name: 'Low', 
-                name_check: 'Low', 
-                selected: false 
-            },
-            { 
-                name: 'Medium', 
-                name_check: 'Meduim', 
-                selected: false 
-            },
-            { 
-                name: 'High', 
-                name_check: 'High', 
-                selected: false 
-            },
-            { 
-                name: 'Very High', 
-                name_check: 'Very High', 
-                selected: false 
-            }
-        ];
-        $scope.optionExposure = []
+        $scope.optionJobType = [];
+        $scope.optionSubArea = [];
+        $scope.optionHealthEffectRating = [];
+        $scope.optionExposureBand = [];
+        $scope.optionFrequency = [];
+        $scope.optionInitial = [];
+        $scope.optionExposure = [];
         $scope.searchQueryWorksheet = ''; // search worksheet
         $scope.isFilterWorksheet = false; // open or close modal filter worksheet
         $scope.countFilterWorksheet = null; // amount options filter
+        $scope.selectFilterWorksheet = {
+            exposure: null,
+            exposure_band: null, 
+        }
         $scope.selectFilterExposure = {
             value: null
         };
@@ -1841,26 +1804,20 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     if (true) {
                         // add key count_riskfactors
                         $scope.hazard_standard = arr.hazard_standard;
-
                         arr.hazard = setup_hazard(arr.hazard);
-
                         $scope.data_subareas = arr.subareas;
                         $scope.data_subareas_def = clone_arr_newrow(arr.subareas);
                         $scope.data_subareas_old = (arr.subareas);
-
                         $scope.data_hazard = arr.hazard;
                         $scope.data_hazard_def = clone_arr_newrow(arr.hazard);
                         $scope.data_hazard_old = (arr.hazard);
-
                         // set 
                         $scope.data_subareas_list = arr.subareas;
                         $scope.data_subareas_list[0].hazard = arr.hazard;
                         // backup
                         $scope.data_subareas_default = arr.subareas;
                         $scope.data_hazard_default = arr.hazard;
-                        
                         $scope.data_subareas_list = groupHazardList(arr.hazard);
-
                         $scope.riskfactors_duplicate = setup_riskfactors_duplicate($scope.master_hazard_riskfactors_list);
                     }
 
@@ -1870,11 +1827,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         $scope.data_tasks = taskList;
                         $scope.data_tasks_def = clone_arr_newrow(taskList);
                         $scope.data_tasks_old = (taskList);
-
                         $scope.data_workers = arr.workers;
                         $scope.data_workers_def = clone_arr_newrow(arr.workers);
                         $scope.data_workers_old = (arr.workers);
-
                         $scope.data_descriptions_def = clone_arr_newrow(arr.descriptions);
                         $scope.data_tasks = groupTaksList($scope.data_tasks);
                     }
@@ -1883,19 +1838,24 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     if (true) {
                         $scope.data_recommendations = arr.recommendations;
                         $scope.data_recommendations_def = clone_arr_newrow(arr.recommendations);
-
                         $scope.data_worksheet = set_data_managerecom(arr.worksheet);
                         $scope.data_worksheet_def = clone_arr_newrow(arr.worksheet);
-
                         $scope.data_worksheet_old = (arr.worksheet);
                         $scope.data_worksheet_list = setup_worksheet($scope.data_subareas_list, $scope.data_tasks, arr.worksheet);
                         // $scope.data_worksheet_list = setup_recommendations($scope.data_worksheet_list, $scope.data_recommendations);
-
                         $scope.display_worksheet_filter = angular.copy($scope.data_worksheet_list)
-
                         $scope.display_recommendations_filter = setup_tabrecommendations($scope.data_worksheet_list)
-                       
                         $scope.data_worksheet_list_def = $scope.data_worksheet_list
+                    }
+
+                    // Filter Worksheet, Recommendations Tab
+                    if (true) {
+                        $scope.optionJobType = setOptionJobType()
+                        $scope.optionSubArea = setOptionSubArea()
+                        $scope.optionHealthEffectRating = setOptionHealthEffectRating('worksheet')
+                        $scope.optionExposureBand = $scope.setOptionExposureBand(null, 'worksheet')
+                        $scope.optionFrequency = setOptionFrequency()
+                        $scope.optionInitial = setOptionInitial()
                     }
 
                     //Approver
@@ -1903,13 +1863,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         $scope.data_drawing_approver = arr.drawing_approver;
                         $scope.data_drawing_approver_def = clone_arr_newrow(arr.drawing_approver);
                         $scope.data_drawing_approver_old = (arr.drawing_approver);
-
                         set_data_approver()
-
                     }
 
                     // Summary of Risk Management
-                    $scope.data_summary = setup_summary( $scope.data_worksheet_list);
+                    if (true) {
+                        $scope.data_summary = setup_summary( $scope.data_worksheet_list);
+                    }
 
                     set_format_date_time();  //set format date
 
@@ -9164,13 +9124,309 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
 
     $scope.openFilter = function(type){
-        if(type == 'worksheet') return $scope.isFilterWorksheet = !$scope.isFilterWorksheet
-        if(type == 'recommendations') return $scope.isFilterRecommendations = !$scope.isFilterRecommendations
+        if(type == 'worksheet') {
+            return $scope.isFilterWorksheet = !$scope.isFilterWorksheet
+        } 
+
+        if(type == 'recommendations') {
+            return $scope.isFilterRecommendations = !$scope.isFilterRecommendations
+        }
     }
-    
+
     $scope.closeFilter = function(type){
         if(type == 'worksheet') return $scope.isFilterWorksheet = false
         if(type == 'recommendations') return $scope.isFilterRecommendations = false
+    }
+
+    $scope.applyFilters = function(type){
+        if (type == 'worksheet') {
+            $scope.countFilterWorksheet = null
+            $scope.isProcessFilterWorksheet = false;
+            var init_worksheet = $scope.data_worksheet_list
+            // เช็คว่าข้อมูลที่ได้จากการ JobvType
+            if (checkOptions('worksheet', $scope.optionJobType)) {
+                $scope.val_filterJobType = filterJobType(init_worksheet, 'worksheet');
+                $scope.countFilterWorksheet =  $scope.countFilterWorksheet + $scope.val_filterJobType.selectFilter.length
+                init_worksheet = $scope.val_filterJobType.displayFilter
+                $scope.isProcessFilterWorksheet = true
+            }
+            // เช็คว่าข้อมูลที่ได้จากการ Sub Area
+            if (checkOptions('worksheet', $scope.optionSubArea)) {
+                $scope.val_filterSubArea = filterSubArea(init_worksheet, 'worksheet');
+                $scope.countFilterWorksheet =  $scope.countFilterWorksheet + $scope.val_filterSubArea.selectFilter.length
+                init_worksheet = $scope.val_filterSubArea.displayFilter
+                $scope.isProcessFilterWorksheet = true
+            }
+            // เช็คว่าข้อมูลที่ได้จากการ Health Effect Rating 
+            if (checkOptions('worksheet', $scope.optionHealthEffectRating)) {
+                $scope.val_filterHealthEffectRating  = filterHealthEffectRating (init_worksheet, 'worksheet');
+                $scope.countFilterWorksheet =  $scope.countFilterWorksheet + $scope.val_filterHealthEffectRating.selectFilter.length
+                init_worksheet = $scope.val_filterHealthEffectRating .displayFilter
+                $scope.isProcessFilterWorksheet = true
+            }
+            // เช็คว่าข้อมูลที่ได้จากการ Exposure Band
+            console.log($scope.optionExposureBand)
+            if (checkOptions('worksheet', $scope.optionExposureBand)) {
+                $scope.val_filterExposureBand  = filterExposureBand(init_worksheet, 'worksheet');
+                $scope.countFilterWorksheet =  $scope.countFilterWorksheet + $scope.val_filterExposureBand.selectFilter.length
+                init_worksheet = $scope.val_filterExposureBand .displayFilter
+                $scope.isProcessFilterWorksheet = true
+            }
+            // เช็คว่าข้อมูลที่ได้จากการ Filter Frequency
+            if (checkOptions('worksheet', $scope.optionFrequency)) {
+                $scope.val_filterFrequency = filterFrequency(init_worksheet, 'worksheet');
+                $scope.countFilterWorksheet =  $scope.countFilterWorksheet + $scope.val_filterFrequency.selectFilter.length
+                init_worksheet = $scope.val_filterFrequency.displayFilter
+                $scope.isProcessFilterWorksheet = true
+            }
+            // เช็คว่าข้อมูลที่ได้จากการ Filter Initial
+            if (checkOptions('worksheet', $scope.optionInitial)) {
+                $scope.val_filterInitial = filterInitailRisk(init_worksheet, 'worksheet');
+                $scope.countFilterWorksheet =  $scope.countFilterWorksheet + $scope.val_filterInitial.selectFilter.length
+                init_worksheet = $scope.val_filterInitial.displayFilter
+                $scope.isProcessFilterWorksheet = true
+            }
+            // เช็คว่าข้อมูลที่ได้จากการ Filter Exposure
+            if (checkOptions('worksheet', $scope.optionExposure)) {
+                $scope.val_filterExposure = filterExposure(init_worksheet, 'worksheet');
+                $scope.countFilterWorksheet =  $scope.countFilterWorksheet + $scope.val_filterExposure.selectFilter.length
+                init_worksheet = $scope.val_filterExposure.displayFilter
+                $scope.isProcessFilterWorksheet = true
+            }
+            // เช็คถ้าเลือก/ไม่เลือก Filter 
+            if ($scope.isProcessFilterWorksheet) {
+                $scope.display_worksheet_filter = init_worksheet
+            } else {
+                $scope.display_worksheet_filter = $scope.data_worksheet_list
+            }
+            // ปิด modal
+            $scope.closeFilter('worksheet');
+        }
+
+        if (type == 'recommendations') {
+            $scope.countFilterRecommendations = null
+            $scope.isProcessFilterRecommendations = false;
+            var init_worksheet = $scope.data_worksheet_list
+            // เช็คว่าข้อมูลที่ได้จากการ Filter Exposure
+            if (checkFilterExposure('recommendations')) {
+                $scope.val_filterExposureRecommendations = filterExposure(init_worksheet, 'recommendations');
+                $scope.countFilterRecommendations =  $scope.countFilterRecommendations + $scope.val_filterExposureRecommendations.selectFilter.length
+                init_worksheet = $scope.val_filterExposureRecommendations.displayFilter
+                $scope.isProcessFilterRecommendations = true
+            }
+            // เช็คว่าข้อมูลที่ได้จากการ Filter Initial
+            if (checkInitailRisk('recommendations')) {
+                $scope.val_filterInitialRecommendations = filterInitailRisk(init_worksheet, 'recommendations');
+                $scope.countFilterRecommendations =  $scope.countFilterRecommendations + $scope.val_filterInitialRecommendations.selectFilter.length
+                init_worksheet = $scope.val_filterInitialRecommendations.displayFilter
+                $scope.isProcessFilterRecommendations = true
+            }
+            // เช็คว่าข้อมูลที่ได้จากการ Filter Recommendations
+            if (checkRecommendauions('recommendations')) {
+                $scope.val_filterRecommendations = filterRecommendations(init_worksheet, 'recommendations');
+                $scope.countFilterRecommendations =  $scope.countFilterRecommendations + $scope.val_filterRecommendations.selectFilter.length
+                init_worksheet = $scope.val_filterRecommendations.displayFilter
+                $scope.isProcessFilterRecommendations = true
+            }
+            // เช็คถ้าไม่เลือก/ไม่เลือก Filter 
+            if ($scope.isProcessFilterRecommendations) {
+                $scope.display_recommendations_filter = init_worksheet
+            } else {
+                $scope.display_recommendations_filter = setup_tabrecommendations($scope.data_worksheet_list)
+            }
+            // ปิด modal
+            $scope.closeFilter('recommendations');
+        }
+    }
+
+    $scope.clearFilters = function(type){
+        if (type == 'worksheet') {
+            // Data Job Type
+            $scope.val_filterJobType = null;
+            $scope.optionJobType.forEach(element => {
+                element.selected = false
+            });
+            // Data Sub Area
+            $scope.val_filterSubArea = null;
+            $scope.optionSubArea.forEach(element => {
+                element.selected = false
+            });
+            // Data Health Effect Rating
+            $scope.val_filterHealthEffectRating = null;
+            $scope.optionHealthEffectRating.forEach(element => {
+                element.selected = false
+            });
+            // Data Exposure Band
+            $scope.selectFilterWorksheet.exposure_band = null
+            $scope.val_filterExposureBand = null;
+            $scope.optionExposureBand.forEach(element => {
+                element.selected = false
+            });
+            // Data Frequency
+            $scope.val_filterFrequency = null;
+            $scope.optionFrequency.forEach(element => {
+                element.selected = false
+            });
+            // Data Initial Risk
+            $scope.val_filterInitial = null;
+            $scope.optionInitial.forEach(element => {
+                element.selected = false
+            });
+            // Data Exposure
+            $scope.selectFilterWorksheet.exposure = null
+            $scope.val_filterExposure = null;
+            $scope.selectFilterExposure.value = ''
+            $scope.optionExposure.forEach(element => {
+                element.selected = false
+            });
+            // clear search
+            $scope.val_search = null
+            $scope.searchQueryWorksheet = ''
+            // clear count
+            $scope.countFilterWorksheet = null
+            // เรียงข้อมูล display
+            $scope.display_worksheet_filter = $scope.data_worksheet_list
+            // ปิด modal
+            // $scope.closeFilter('worksheet)
+        }
+
+        if (type == 'recommendations') {
+            // Data Exposure
+            $scope.val_filterExposureRecommendations = null;
+            $scope.selectFilterExposureRecommendations.value = ''
+            $scope.optionExposureRecommendations.forEach(element => {
+                element.selected = false
+            });
+            // Data Initial Risk
+            $scope.val_filterInitialRecommendations = null;
+            $scope.optionInitialRecommendations.forEach(element => {
+                element.selected = false
+            });
+            // Data Recommendations
+            $scope.val_filterRecommendations = null;
+            $scope.selectFilterRecommendations.value = ''
+            $scope.optionRecommendations.forEach(element => {
+                element.selected = false
+            });
+            // clear count
+            $scope.countFilterRecommendations = null
+            // เรียงข้อมูล display
+            $scope.display_recommendations_filter = setup_tabrecommendations($scope.data_worksheet_list)
+            // ปิด modal
+            // $scope.closeFilter('recommendations)
+        }
+        
+    }
+
+    function setOptionJobType() {
+        var data = angular.copy($scope.master_worker_group)
+        if(data.length == 0) return console.log('master_worker_group not found!')
+        data.forEach(element => {
+            element.selected = false;
+        });
+
+        return data
+    }
+
+    function setOptionHealthEffectRating(type) {
+        if (type = 'worksheet') {
+            let uniqueData = new Set();
+            $scope.data_worksheet_list.forEach(ws_ls => {
+                ws_ls.worksheet.forEach(ws => {
+                    if (ws.health_effect_rating) {
+                        uniqueData.add(ws.health_effect_rating);
+                    }
+                });
+            });
+            $scope.optionHealthEffectRating = Array.from(uniqueData).map(name => ({
+                name,
+                selected: false
+            }));
+            return $scope.optionHealthEffectRating
+        }
+    }
+
+    $scope.setOptionExposureBand = function(change, type) {
+        if (type = 'worksheet') {
+            if (!change) {
+                // set Exposure Band
+                let uniqueData = new Set();
+                $scope.data_worksheet_list.forEach(ws_ls => {
+                    ws_ls.worksheet.forEach(ws => {
+                        if (ws.exposure_band) {
+                            uniqueData.add(ws.exposure_band);
+                        }
+                    });
+                });
+                $scope.optionExposureBand = Array.from(uniqueData).map(name => ({
+                    name,
+                    selected: false
+                }));
+                return $scope.optionExposureBand
+            } else {
+                // change Exposure Band
+                $scope.optionExposureBand.forEach(element => {
+                    if (element.name == $scope.selectFilterWorksheet.exposure_band) {
+                        element.selected = true
+                    }else{
+                        element.selected = false
+                    }
+                });
+                console.log($scope.optionExposureBand)
+                return
+            }
+            
+        }
+    }
+
+    function setOptionSubArea() {
+        var data = angular.copy($scope.master_subarea)
+        if(data.length == 0) return console.log('data_subareas_list not found!')
+        data.forEach(element => {
+            element.selected = false;
+        });
+        console.log(data)
+        return data
+    }
+
+    function setOptionFrequency() {
+        var data = angular.copy($scope.master_frequency_level)
+        if(data.length == 0) return console.log('master_frequency_level not found!')
+        data.forEach(element => {
+            element.selected = false;
+        });
+
+        return data
+    }
+
+    function setOptionInitial() {
+        return  [
+            {   
+                name: 'Acceptable', 
+                name_check: 'Acceptable Risk', 
+                selected: false 
+            },
+            { 
+                name: 'Low', 
+                name_check: 'Low', 
+                selected: false 
+            },
+            { 
+                name: 'Medium', 
+                name_check: 'Meduim', 
+                selected: false 
+            },
+            { 
+                name: 'High', 
+                name_check: 'High', 
+                selected: false 
+            },
+            { 
+                name: 'Very High', 
+                name_check: 'Very High', 
+                selected: false 
+            }
+        ];
     }
 
     $scope.setOptionExposure = function(change, type) {
@@ -9201,8 +9457,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     element.selected = false
                 }
             });
-    
-            console.log($scope.optionExposure)
         }
 
         if (type == 'recommendations') {
@@ -9274,121 +9528,26 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
     }
 
-    $scope.applyFilters = function(type){
+    function checkOptions(type, inputData){
+        if(!inputData) return false
+        var data = inputData
         if (type == 'worksheet') {
-            $scope.countFilterWorksheet = null
-            $scope.isProcessFilterWorksheet = false;
-            var init_worksheet = $scope.data_worksheet_list
-            // เช็คว่าข้อมูลที่ได้จากการ Filter Exposure
-            if (checkFilterExposure('worksheet')) {
-                $scope.val_filterExposure = filterExposure(init_worksheet, 'worksheet');
-                $scope.countFilterWorksheet =  $scope.countFilterWorksheet + $scope.val_filterExposure.selectFilter.length
-                init_worksheet = $scope.val_filterExposure.displayFilter
-                $scope.isProcessFilterWorksheet = true
-            }
-            // เช็คว่าข้อมูลที่ได้จากการ Filter Initial
-            if (checkInitailRisk('worksheet')) {
-                $scope.val_filterInitial = filterInitailRisk(init_worksheet, 'worksheet');
-                $scope.countFilterWorksheet =  $scope.countFilterWorksheet + $scope.val_filterInitial.selectFilter.length
-                init_worksheet = $scope.val_filterInitial.displayFilter
-                $scope.isProcessFilterWorksheet = true
-            }
-            // เช็คถ้าเลือก/ไม่เลือก Filter 
-            if ($scope.isProcessFilterWorksheet) {
-                $scope.display_worksheet_filter = init_worksheet
-            } else {
-                $scope.display_worksheet_filter = $scope.data_worksheet_list
-            }
-            // ปิด modal
-            $scope.closeFilter('worksheet');
-        }
-
-        if (type == 'recommendations') {
-            $scope.countFilterRecommendations = null
-            $scope.isProcessFilterRecommendations = false;
-            var init_worksheet = $scope.data_worksheet_list
-            // เช็คว่าข้อมูลที่ได้จากการ Filter Exposure
-            if (checkFilterExposure('recommendations')) {
-                $scope.val_filterExposureRecommendations = filterExposure(init_worksheet, 'recommendations');
-                $scope.countFilterRecommendations =  $scope.countFilterRecommendations + $scope.val_filterExposureRecommendations.selectFilter.length
-                init_worksheet = $scope.val_filterExposureRecommendations.displayFilter
-                $scope.isProcessFilterRecommendations = true
-            }
-            // เช็คว่าข้อมูลที่ได้จากการ Filter Initial
-            if (checkInitailRisk('recommendations')) {
-                $scope.val_filterInitialRecommendations = filterInitailRisk(init_worksheet, 'recommendations');
-                $scope.countFilterRecommendations =  $scope.countFilterRecommendations + $scope.val_filterInitialRecommendations.selectFilter.length
-                init_worksheet = $scope.val_filterInitialRecommendations.displayFilter
-                $scope.isProcessFilterRecommendations = true
-            }
-            // เช็คว่าข้อมูลที่ได้จากการ Filter Recommendations
-            if (checkRecommendauions('recommendations')) {
-                $scope.val_filterRecommendations = filterRecommendations(init_worksheet, 'recommendations');
-                $scope.countFilterRecommendations =  $scope.countFilterRecommendations + $scope.val_filterRecommendations.selectFilter.length
-                init_worksheet = $scope.val_filterRecommendations.displayFilter
-                $scope.isProcessFilterRecommendations = true
-            }
-            // เช็คถ้าไม่เลือก/ไม่เลือก Filter 
-            if ($scope.isProcessFilterRecommendations) {
-                $scope.display_recommendations_filter = init_worksheet
-            } else {
-                $scope.display_recommendations_filter = setup_tabrecommendations($scope.data_worksheet_list)
-            }
-            // ปิด modal
-            $scope.closeFilter('recommendations');
+            const result = $filter('filter')(data, function (_item) { 
+                return _item.selected
+            });
+            if (result.length > 0) return true
+            return false
         }
     }
 
-    $scope.clearFilters = function(type){
+    function checkFrequency(type){
         if (type == 'worksheet') {
-            // Data Exposure
-            $scope.val_filterExposure = null;
-            $scope.selectFilterExposure.value = ''
-            $scope.optionExposure.forEach(element => {
-                element.selected = false
+            const result = $filter('filter')($scope.optionFrequency, function (_item) { 
+                return _item.selected
             });
-            // Data Initial Risk
-            $scope.val_filterInitial = null;
-            $scope.optionInitial.forEach(element => {
-                element.selected = false
-            });
-            // clear search
-            $scope.val_search = null
-            $scope.searchQueryWorksheet = ''
-            // clear count
-            $scope.countFilterWorksheet = null
-            // เรียงข้อมูล display
-            $scope.display_worksheet_filter = $scope.data_worksheet_list
-            // ปิด modal
-            // $scope.closeFilter('worksheet)
+            if (result.length > 0) return true
+            return false
         }
-
-        if (type == 'recommendations') {
-            // Data Exposure
-            $scope.val_filterExposureRecommendations = null;
-            $scope.selectFilterExposureRecommendations.value = ''
-            $scope.optionExposureRecommendations.forEach(element => {
-                element.selected = false
-            });
-            // Data Initial Risk
-            $scope.val_filterInitialRecommendations = null;
-            $scope.optionInitialRecommendations.forEach(element => {
-                element.selected = false
-            });
-            // Data Recommendations
-            $scope.val_filterRecommendations = null;
-            $scope.selectFilterRecommendations.value = ''
-            $scope.optionRecommendations.forEach(element => {
-                element.selected = false
-            });
-            // clear count
-            $scope.countFilterRecommendations = null
-            // เรียงข้อมูล display
-            $scope.display_recommendations_filter = setup_tabrecommendations($scope.data_worksheet_list)
-            // ปิด modal
-            // $scope.closeFilter('recommendations)
-        }
-        
     }
 
     function checkFilterExposure(type){
@@ -9439,34 +9598,32 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
     }
 
-    function filterExposure(init_worksheet, type){
+    function filterJobType(init_worksheet, type){
         if (type == 'worksheet') {
-            let selectFilter = $scope.optionExposure.filter((option) => option.selected).map((option) => option.name);
-
+            let selectFilter = $scope.optionJobType.filter((option) => option.selected).map((option) => option.id);
             var displayFilter = []
 
-            for (let i = 0; i < init_worksheet.length; i++) {
-                let tmp_list = init_worksheet[i].worksheet.filter((item) =>
-                    selectFilter.includes(item.health_hazard)
-                );
-                if (tmp_list.length > 0) {
-                    var data = angular.copy(init_worksheet[i])
-                    data.worksheet = tmp_list
-                    displayFilter.push(data)
-                }
+            let tmp_list = init_worksheet.filter((item) =>{
+                return item.id_worker_group && selectFilter.includes(item.id_worker_group);
             }
+            );
 
+            if (tmp_list.length > 0) {
+                displayFilter = angular.copy(tmp_list)
+            }
             return {  selectFilter, displayFilter }
         }
+    }
 
-        if (type == 'recommendations') {
-            let selectFilter = $scope.optionExposureRecommendations.filter((option) => option.selected).map((option) => option.name);
-
+    function filterSubArea(init_worksheet, type){
+        console.log($scope.optionSubArea)
+        if (type == 'worksheet') {
+            let selectFilter = $scope.optionSubArea.filter((option) => option.selected).map((option) => option.name);
             var displayFilter = []
-
             for (let i = 0; i < init_worksheet.length; i++) {
-                let tmp_list = init_worksheet[i].worksheet.filter((item) =>
-                    selectFilter.includes(item.health_hazard) && item.recommendations
+                let tmp_list = init_worksheet[i].worksheet.filter((item) =>{
+                        return item.sub_area && selectFilter.includes(item.sub_area);
+                    }
                 );
                 if (tmp_list.length > 0) {
                     var data = angular.copy(init_worksheet[i])
@@ -9474,7 +9631,64 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     displayFilter.push(data)
                 }
             }
+            return {  selectFilter, displayFilter }
+        }
+    }
 
+    function filterHealthEffectRating(init_worksheet, type){
+        if (type == 'worksheet') {
+            let selectFilter = $scope.optionHealthEffectRating.filter((option) => option.selected).map((option) => option.name);
+            var displayFilter = []
+            for (let i = 0; i < init_worksheet.length; i++) {
+                let tmp_list = init_worksheet[i].worksheet.filter((item) =>{
+                        return item.health_effect_rating && selectFilter.includes(item.health_effect_rating);
+                    }
+                );
+                if (tmp_list.length > 0) {
+                    var data = angular.copy(init_worksheet[i])
+                    data.worksheet = tmp_list
+                    displayFilter.push(data)
+                }
+            }
+            return {  selectFilter, displayFilter }
+        }
+    }
+
+    function filterExposureBand(init_worksheet, type){
+        console.log($scope.optionExposureBand)
+        if (type == 'worksheet') {
+            let selectFilter = $scope.optionExposureBand.filter((option) => option.selected).map((option) => option.name);
+            var displayFilter = []
+            for (let i = 0; i < init_worksheet.length; i++) {
+                let tmp_list = init_worksheet[i].worksheet.filter((item) =>{
+                        return item.exposure_band && selectFilter.includes(item.exposure_band);
+                    }
+                );
+                if (tmp_list.length > 0) {
+                    var data = angular.copy(init_worksheet[i])
+                    data.worksheet = tmp_list
+                    displayFilter.push(data)
+                }
+            }
+            return {  selectFilter, displayFilter }
+        }
+    }
+
+    function filterFrequency(init_worksheet, type){
+        if (type == 'worksheet') {
+            let selectFilter = $scope.optionFrequency.filter((option) => option.selected).map((option) => option.id);
+            var displayFilter = []
+            for (let i = 0; i < init_worksheet.length; i++) {
+                let tmp_list = init_worksheet[i].worksheet.filter((item) =>{
+                        return item.id_frequency_level && selectFilter.includes(item.id_frequency_level);
+                    }
+                );
+                if (tmp_list.length > 0) {
+                    var data = angular.copy(init_worksheet[i])
+                    data.worksheet = tmp_list
+                    displayFilter.push(data)
+                }
+            }
             return {  selectFilter, displayFilter }
         }
     }
@@ -9511,6 +9725,44 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     displayFilter.push(data)
                 }
             }
+            return {  selectFilter, displayFilter }
+        }
+    }
+
+    function filterExposure(init_worksheet, type){
+        if (type == 'worksheet') {
+            let selectFilter = $scope.optionExposure.filter((option) => option.selected).map((option) => option.name);
+            var displayFilter = []
+            for (let i = 0; i < init_worksheet.length; i++) {
+                let tmp_list = init_worksheet[i].worksheet.filter((item) =>
+                    selectFilter.includes(item.health_hazard)
+                );
+                if (tmp_list.length > 0) {
+                    var data = angular.copy(init_worksheet[i])
+                    data.worksheet = tmp_list
+                    displayFilter.push(data)
+                }
+            }
+
+            return {  selectFilter, displayFilter }
+        }
+
+        if (type == 'recommendations') {
+            let selectFilter = $scope.optionExposureRecommendations.filter((option) => option.selected).map((option) => option.name);
+
+            var displayFilter = []
+
+            for (let i = 0; i < init_worksheet.length; i++) {
+                let tmp_list = init_worksheet[i].worksheet.filter((item) =>
+                    selectFilter.includes(item.health_hazard) && item.recommendations
+                );
+                if (tmp_list.length > 0) {
+                    var data = angular.copy(init_worksheet[i])
+                    data.worksheet = tmp_list
+                    displayFilter.push(data)
+                }
+            }
+
             return {  selectFilter, displayFilter }
         }
     }
@@ -9560,18 +9812,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         return { searchQuery, displayFilter }
     }
     
-    // $document.on('click', function() {
-    //     $scope.$apply(function() {
-    //         $scope.isInitialRisk = false;
-    //     });
-    // });
-
-    // angular.element(document.querySelector('.btn-worksheet-filter')).on('click', function(event) {
-    //     event.stopPropagation();
-    // });
-    // angular.element(document.querySelector('.btn-filter-worksheet')).on('click', function(event) {
-    //     event.stopPropagation();
-    // });
     $scope.selectFilterInitialRisk = function(item){
         if(item == 'all') {
             // filter ข้อมูล
