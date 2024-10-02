@@ -1989,7 +1989,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                         if($scope.pha_status == '13'){
                             for (let i = 0; i < $scope.data_nodeworksheet.length; i++) {
-                                if ($scope.data_nodeworksheet[i].recommendations_no == '0') {
+                                if ($scope.data_nodeworksheet[i].recommendations_no == 0) {
                                     // If recommendations is '0', set it to null
                                     $scope.data_nodeworksheet[i].recommendations_no = null;
                                 } 
@@ -3013,7 +3013,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                                 newInput.no = iNo;
                                 newInput.causes_no = 1;
                                 newInput.consequences_no = 1;
-                                newInput.recommendations_no = '';
+                                newInput.recommendations_no = null;
                                 newInput.category_no = 1;
     
                                 newInput.action_type = 'insert';
@@ -3828,7 +3828,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                             newInput.no = iNo;
                             newInput.causes_no = 1;
                             newInput.consequences_no = 1;
-                            newInput.recommendations_no = '';
+                            newInput.recommendations_no = null;
                             newInput.category_no = 1;
 
                             newInput.action_type = 'insert';
@@ -4396,7 +4396,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         var causes_no = Number(item.causes_no);
         var consequences_no = Number(item.consequences_no);
         var category_no = Number(item.category_no);
-        var recommendations_no = '';
+        var recommendations_no = null;
 
         var guidewords = item.guidewords;
         var deviations = item.deviations;
@@ -4509,11 +4509,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         newInput.index_rows = (index_rows + 0.5);
         newInput.no = (no + 0.5);
-        newInput.no1 = '';
+        newInput.no1 = null;
         newInput.causes_no = causes_no;
         newInput.consequences_no = consequences_no;
         newInput.category_no = category_no;
-        newInput.recommendations_no = '';
+        newInput.recommendations_no = null;
 
         newInput.action_type = 'insert';
         newInput.action_change = 1;
@@ -4662,7 +4662,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         var causes_no = Number(item.causes_no);
         var consequences_no = Number(item.consequences_no);
         var category_no = Number(item.category_no);
-        var recommendations_no = '';
+        var recommendations_no = null;
 
         var guidewords = item.guidewords;
         var deviations = item.deviations;
@@ -4775,11 +4775,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         newInput.index_rows = (index_rows + 0.5);
         newInput.no = (no + 0.5);
-        newInput.no1 = '';
+        newInput.no1 = null;
         newInput.causes_no = causes_no;
         newInput.consequences_no = consequences_no;
         newInput.category_no = category_no;
-        newInput.recommendations_no = '';
+        newInput.recommendations_no = null;
 
         newInput.action_type = 'insert';
         newInput.action_change = 1;
@@ -4910,7 +4910,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                             if (previous.consequences_no === item.consequences_no && previous.category_no === item.category_no && 
                                 previous.recommendations_no >= item.recommendations_no && 
                                 (item.row_type === 'category' || item.row_type === 'consequences' || item.row_type === 'recommendations')) {
-                                item.recommendations_no = '';
+                                item.recommendations_no = null;
                             }
 
                         }
@@ -8691,7 +8691,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             if (item.recommendations && typeof item.recommendations === 'string' && item.recommendations.trim()) {
                 if (!checkManage(item.seq)) {
                     $scope.validMessage = 'Please provide valid data in the Manage Recommendations.';
-                    $scope.goBackToTab = 'manage';
+                    $scope.goback_tab = 'manage';
                     return false;  // Stop here if manage recommendation validation fails
                 }
             }
@@ -8887,11 +8887,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         
             if (bCheckValid_Manage) {
                 console.log("Some items were missing start or end dates and were validated.");
-                return true;
+                return false;
             }
         
             console.log("All items have both start and end dates.");
-            return false;
+            return true;
         }
         
 
