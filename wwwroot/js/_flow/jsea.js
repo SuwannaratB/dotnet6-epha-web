@@ -2331,6 +2331,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 if($scope.data_header[0].pha_status === 11 || $scope.data_header[0].pha_status === 12){
                     $scope.startTimer();  
                 }
+                
+                //updaterow span
+                $scope.$evalAsync(function() {
+                    computeRowspan();  // Safely schedule this to update the UI
+                });
 
                 $('#divPage').removeClass('d-none');
 

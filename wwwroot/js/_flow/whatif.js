@@ -4608,7 +4608,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     $scope.adddata_listworksheet = function (row_type, item, index){
 
-        console.log("adddddddddddddddddddddddddddd")
         if (true) {
 
             if (item.seq_list_system == null) {
