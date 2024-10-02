@@ -30,14 +30,14 @@
     <div class="card container mt-6 px-6 py-4">
         <div class="title">
             <span class=" me-2 text-primary"><B>|</B></span> 
-            Departments
+            Name of Sub Area : Equipment
         </div>
         <hr>
         <div class="d-flex align-items-end justify-content-between pb-2">
             <div class="d-flex gap-4">
                 <button class="d-flex btn btn-sm btn-success gap-2" ng-click="newData()">
                     <i class="fa-solid fa-plus"></i>
-                    New Department
+                    New Equipment
                 </button>
             </div>
             <div class="d-flex align-items-end gap-4">
@@ -54,6 +54,8 @@
                         <th class="align-middle"  style="min-width: 90px">No</th>
                         <th class="align-middle">Name</th>
                         <th class="align-middle">Description</th>
+                        <th class="align-middle">Sections</th>
+                        <th class="align-middle">Section Group</th>
                         @* <th class="align-middle" style="width: 120px;">Company</th> *@
                         <th class="align-middle" style="min-width:100px">Active</th>
                         <th class="align-middle" style="min-width:100px">Management</th>
@@ -71,7 +73,7 @@
                         <td class="align-middle ">
                             <div class="col-auto pt-2">
                                 <textarea class="form-control form-control-sm " 
-                                    rows="1" 
+                                    rows="3" 
                                     type="text"
                                     style=" min-width: 160px;"
                                     placeholder="Name"
@@ -86,7 +88,7 @@
                         <td class="align-middle ">
                             <div class="col-auto pt-2">
                                 <textarea class="form-control form-control-sm" 
-                                    rows="1" 
+                                    rows="3" 
                                     type="text"
                                     style=" min-width: 160px;"
                                     placeholder="Name"
@@ -95,6 +97,36 @@
                                     ng-change="actionChangedData(item,'descriptions')">
                                 </textarea>
                                 <div class="validation-message">{{true ? '' : 'field is required.'}}</div>
+                            </div>
+                        </td>
+
+                        <td class="align-middle ">
+                             <div class="col-auto pt-2">
+                                <select class="form-control mb-0 col-auto" 
+                                    style="min-width: 160px;"
+                                    placeholder="Name"
+                                    ng-model="item.id_sections_group"
+                                    ng-change="actionChangedData(item,'sections_group')">
+                                    <option ng-repeat="item2 in data_sections" ng-value="item2.id">
+                                        {{item2.name}}
+                                    </option>
+                                </select>
+                                <div class="validation-message">{{item.id_sections_group ? '' : 'field is required.'}}</div>
+                            </div>
+                        </td>
+
+                        <td class="align-middle ">
+                             <div class="col-auto pt-2">
+                                <select class="form-control mb-0 col-auto" 
+                                    style="min-width: 160px;"
+                                    placeholder="Name"
+                                    ng-model="item.id_sections_group"
+                                    ng-change="actionChangedData(item,'sections_group')">
+                                    <option ng-repeat="item2 in data_section_group" ng-value="item2.id">
+                                        {{item2.name}}
+                                    </option>
+                                </select>
+                                <div class="validation-message">{{item.id_sections_group ? '' : 'field is required.'}}</div>
                             </div>
                         </td>
 
@@ -166,5 +198,5 @@
     <script src="~/assets/js/phoenix.js"></script>
     <script src="~/assets/js/choices.min.js"></script>
     <script src="~/assets/js/fakedata.js"></script>
-    <script src="~/js/_master/hra/departments.js"></script>
+    <script src="~/js/_master/hra/equipment.js"></script>
 }

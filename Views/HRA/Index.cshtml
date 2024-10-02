@@ -1589,13 +1589,33 @@
                                                             <label class="form-check-label" for="filter{{ $index }}" style="font-size: 10.24px;">{{ filter.name }}</label>
                                                         </div>
                                                     </div>
+                                                </div> 
+                                                <div class="d-flex flex-column gap-2">
+                                                    @* Exposure Level *@
+                                                    <div class="checkbox-container">
+                                                        <div class="topic">Exposure Level</div>
+                                                        <div ng-repeat="filter in optionExposurelevel" class="form-check" style="margin-bottom: 0; min-height: 4px;">
+                                                            <input type="checkbox" class="form-check-input" ng-model="filter.selected" id="filter{{ $index }}">
+                                                            <label class="form-check-label" for="filter{{ $index }}" style="font-size: 10.24px;">{{ filter.name }}</label>
+                                                        </div>
+                                                    </div>
+                                                    @* Exposure Rating *@
+                                                    <div class="checkbox-container">
+                                                        <div class="topic">Exposure Rating</div>
+                                                        <div ng-repeat="filter in optionExposureRating" class="form-check" style="margin-bottom: 0; min-height: 4px;">
+                                                            <input type="checkbox" class="form-check-input" ng-model="filter.selected" id="filter{{ $index }}">
+                                                            <label class="form-check-label" for="filter{{ $index }}" style="font-size: 10.24px;">{{ filter.name }}</label>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                @* Initial Risk Rating *@
-                                                <div class="checkbox-container">
-                                                    <div class="topic">Initial Risk Rating</div>
-                                                    <div ng-repeat="filter in optionInitial" class="form-check" style="margin-bottom: 0; min-height: 4px;">
-                                                        <input type="checkbox" class="form-check-input" ng-model="filter.selected" id="filter{{ $index }}">
-                                                        <label class="form-check-label" for="filter{{ $index }}" style="font-size: 10.24px;">{{ filter.name }}</label>
+                                                <div class="d-flex flex-column gap-2">
+                                                    @* Initial Risk Rating *@
+                                                    <div class="checkbox-container">
+                                                        <div class="topic">Initial Risk Rating</div>
+                                                        <div ng-repeat="filter in optionInitial" class="form-check" style="margin-bottom: 0; min-height: 4px;">
+                                                            <input type="checkbox" class="form-check-input" ng-model="filter.selected" id="filter{{ $index }}">
+                                                            <label class="form-check-label" for="filter{{ $index }}" style="font-size: 10.24px;">{{ filter.name }}</label>
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <div class="d-flex flex-column gap-2">
@@ -1604,11 +1624,24 @@
                                                         <div class="topic">Exposure Band</div>
                                                         <select class="form-control"
                                                             style="max-width: 150px; font-size: 10.24px;"
-                                                            @* ng-click="setOptionExposure('', 'worksheet')" *@
                                                             ng-change="setOptionExposureBand('change','worksheet')"
                                                             ng-model="selectFilterWorksheet.exposure_band">
                                                             <option value="">All</option>
                                                             <option ng-repeat="item_option in optionExposureBand" 
+                                                                    ng-value="item_option.name">
+                                                                {{item_option.name}}
+                                                            </option>
+                                                        </select>
+                                                    </div>
+                                                    @* Standard *@
+                                                    <div class="checkbox-container">
+                                                        <div class="topic">Standard</div>
+                                                        <select class="form-control"
+                                                            style="max-width: 150px; font-size: 10.24px;"
+                                                            ng-change="setOptionStandard('change','worksheet')"
+                                                            ng-model="selectFilterWorksheet.standard">
+                                                            <option value="">All</option>
+                                                            <option ng-repeat="item_option in optionStandard" 
                                                                     ng-value="item_option.name">
                                                                 {{item_option.name}}
                                                             </option>
@@ -1621,7 +1654,7 @@
                                                             style="max-width: 150px; font-size: 10.24px;"
                                                             ng-click="setOptionExposure('', 'worksheet')"
                                                             ng-change="setOptionExposure('change','worksheet')"
-                                                            ng-model="selectFilterExposure.value">
+                                                            ng-model="selectFilterWorksheet.exposure">
                                                             <option value="">All</option>
                                                             <option ng-repeat="item_option in optionExposure" 
                                                                     ng-value="item_option.name">
