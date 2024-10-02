@@ -2265,7 +2265,8 @@
                                                                       ng-style="{'min-height': (30 * (data_listworksheet | filter:{id_list : selectedItemListView.seq,list_system_no: item.list_system_no}).length) + 'px'}"
                                                                       ng-readonly="!can_edit"
                                                                       ng-model="item.list_system"
-                                                                      ng-keyup="filterResultHistory(item.list_system, 'list', 'list_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')">
+                                                                      ng-keyup="clearAllValidationMessages(item.seq,'list_sub_system');
+                                                                      filterResultHistory(item.list_system, 'list', 'list_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')">
                                                             </textarea>
                                                             <div class="autocomplete-dropdown" style="position: absolute;" ng-show="isShow == 'list_worksheet_'+ item.seq"
                                                                  ng-class="{'ng-show' : (filteredArr[0].fieldID == ('list_worksheet_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('liat_worksheet_'+item.seq)) }">
@@ -2328,7 +2329,8 @@
                                                                       ng-style="{'min-height': (30 * (data_listworksheet | filter:{id_list : selectedItemListView.seq,list_system_no: item.list_system_no,list_sub_system_no: item.list_sub_system_no}).length) + 'px'}"
                                                                       ng-readonly="!can_edit"
                                                                       ng-model="item.list_sub_system"
-                                                                      ng-keyup="filterResultHistory(item.list_sub_system, 'listsub', 'listsub_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')">
+                                                                      ng-keyup="clearAllValidationMessages(item.seq,'list_sub_system');
+                                                                      filterResultHistory(item.list_sub_system, 'listsub', 'listsub_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')">
                                                             </textarea>
                                                             <div class="autocomplete-dropdown" style="position: absolute;" ng-show="isShow == 'listsub_worksheet_'+ item.seq"
                                                                  ng-class="{'ng-show' : (filteredArr[0].fieldID == ('listsub_worksheet_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('listsub_worksheet_'+item.seq)) }">
@@ -2390,7 +2392,8 @@
                                                                       ng-style="{'min-height': (30 * (data_listworksheet | filter:{id_list : selectedItemListView.seq,list_system_no: item.list_system_no,list_sub_system_no: item.list_sub_system_no,causes_no: item.causes_no}).length) + 'px'}"
                                                                       ng-readonly="!can_edit"
                                                                       ng-model="item.causes"
-                                                                      ng-keyup="filterResultHistory(item.causes, 'causes', 'causes_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')">
+                                                                      ng-keyup="clearAllValidationMessages(item.seq,'causes');
+                                                                      filterResultHistory(item.causes, 'causes', 'causes_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')">
                                                             </textarea>
                                                             <div class="autocomplete-dropdown" style="position: absolute;" ng-show="isShow == 'listsub_worksheet_'+ item.seq"
                                                                  ng-class="{'ng-show' : (filteredArr[0].fieldID == ('causes_worksheet_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('causes_worksheet_'+item.seq)) }">
@@ -2452,7 +2455,8 @@
                                                                       ng-style="{'min-height': (30 * (data_listworksheet | filter:{id_list : selectedItemListView.seq,list_system_no: item.list_system_no,list_sub_system_no: item.list_sub_system_no,causes_no: item.causes_no,consequences_no: item.consequences_no}).length) + 'px'}"
                                                                       ng-readonly="!can_edit"
                                                                       ng-model="item.consequences"
-                                                                      ng-keyup="filterResultHistory(item.consequences, 'consequences', 'consequences_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')">
+                                                                      ng-keyup="clearAllValidationMessages(item.seq,'consequences');
+                                                                      filterResultHistory(item.consequences, 'consequences', 'consequences_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')">
                                                             </textarea>
                                                             <div class="autocomplete-dropdown" style="position: absolute;" ng-show="isShow == 'consequences_worksheet_'+ item.seq"
                                                                  ng-class="{'ng-show' : (filteredArr[0].fieldID == ('consequences_worksheet_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('consequences_worksheet_'+item.seq)) }">
@@ -2693,6 +2697,7 @@
                                                                       placeholder="Recommendations" 
                                                                       rows="3"
                                                                       ng-model="item.recommendations"
+                                                                      ng-change="clearAllValidationMessages(item.seq,'recom');"
                                                                       ng-keyup="filterResultHistory(item.recommendations, 'recommendations', 'recommendations_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'recom')">
                                                             </textarea>
                                                             <div class="autocomplete-dropdown" style="position: absolute;" ng-show="showResults"

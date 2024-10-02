@@ -296,7 +296,7 @@
                                                     @* Hazop recommendations responded sheet 14 *@
                                                     <td class="align-top px-1" style="min-width:200px;" ng-if="flow_status == 14">
                                                         <div class=" p-0 cursor-pointer "
-                                                             ng-repeat="item_x in data_drawingworksheet | filter:{id_worksheet:item_d.seq, action_type : '!delete'}">
+                                                             ng-repeat="item_x in data_drawingworksheet_reviewer | filter:{id_worksheet:item_d.seq, action_type : '!delete'}">
                                                             <div class="d-flex align-items-center flex-nowrap"
                                                                  @* ng-if="!((flow_status == 14 ? item_d.reviewer_action_type : item_d.responder_action_type) == 2)" *@
                                                                  >
@@ -308,12 +308,12 @@
                                                                     </button>
                                                                     <div class="dropdown-menu dropdown-menu-end py-2">
                                                                         <a class="dropdown-item text-success"
-                                                                           ng-click=addDataWorksheetDrawing(item_x,item_d.seq)>
+                                                                           ng-click="addDataWorksheetDrawing(item_x,item_d.seq,'reviewer')">
                                                                             <span class="fas fa-copy"></span>
                                                                             Add
                                                                         </a>
                                                                         <div class="dropdown-divider"></div>
-                                                                        <a class="dropdown-item text-danger" ng-click=removeDataWorksheetDrawing(item_x,item_d.seq)>
+                                                                        <a class="dropdown-item text-danger" ng-click="removeDataWorksheetDrawing(item_x,item_d.seq,'reviewer')">
                                                                             <span class="fas fa-times-circle"></span> Remove
                                                                         </a>
                                                                     </div>
@@ -585,7 +585,7 @@
                                                     <td class="align-top px-1" style="min-width:200px;" ng-if="flow_status != 14">
                                                         <div class=" p-0 cursor-pointer "
                                                             ng-disabled ="!(accessInfo.isOwner || accessInfo.isAdmin)  && item_d.responder_action_type != 2"
-                                                            ng-repeat="item_x in data_drawingworksheet | filter:{id_worksheet:item_d.seq, action_type : '!delete'}">
+                                                            ng-repeat="item_x in data_drawingworksheet_responder | filter:{id_worksheet:item_d.seq, action_type : '!delete'}">
                                                             <div class="d-flex align-items-center flex-nowrap"
                                                                  ng-class="{ 'no-drop': !accessInfo.isOwner && !accessInfo.isAdmin, 'cursor-pointer': accessInfo.isOwner }">
                                                                 <div class="font-sans-serif btn-reveal-trigger position-static me-1">
@@ -603,12 +603,12 @@
                                                                     </button>
                                                                     <div class="dropdown-menu dropdown-menu-end py-2">
                                                                         <a class="dropdown-item text-success"
-                                                                           ng-click=addDataWorksheetDrawing(item_x,item_d.seq)>
+                                                                           ng-click="addDataWorksheetDrawing(item_x,item_d.seq,'responder')">
                                                                             <span class="fas fa-copy"></span>
                                                                             Add
                                                                         </a>
                                                                         <div class="dropdown-divider"></div>
-                                                                        <a class="dropdown-item text-danger" ng-click=removeDataWorksheetDrawing(item_x,item_d.seq)>
+                                                                        <a class="dropdown-item text-danger" ng-click="removeDataWorksheetDrawing(item_x,item_d.seq,'responder')">
                                                                             <span class="fas fa-times-circle"></span>
                                                                             Remove
                                                                         </a>
@@ -968,7 +968,7 @@
                                                     <td class="align-top px-1" style="min-width:200px;" ng-if="flow_status != 14">
                                                         <div class=" p-0 cursor-pointer "
                                                             ng-disabled ="!(accessInfo.isOwner || accessInfo.isAdmin)  && item_d.responder_action_type != 2"
-                                                            ng-repeat="item_x in data_drawingworksheet | filter:{id_worksheet:item_d.seq, action_type : '!delete'}">
+                                                            ng-repeat="item_x in data_drawingworksheet_responder | filter:{id_worksheet:item_d.seq, action_type : '!delete'}">
                                                             <div class="d-flex align-items-center flex-nowrap"
                                                                  ng-class="{ 'no-drop': !accessInfo.isOwner && !accessInfo.isAdmin, 'cursor-pointer': accessInfo.isOwner }">
                                                                 <div class="font-sans-serif btn-reveal-trigger position-static me-1">
@@ -980,12 +980,12 @@
                                                                     </button>
                                                                     <div class="dropdown-menu dropdown-menu-end py-2">
                                                                         <a class="dropdown-item text-success"
-                                                                           ng-click=addDataWorksheetDrawing(item_x,item_d.seq)>
+                                                                           ng-click="addDataWorksheetDrawing(item_x,item_d.seq,'responder')">
                                                                             <span class="fas fa-copy"></span>
                                                                             Add
                                                                         </a>
                                                                         <div class="dropdown-divider"></div>
-                                                                        <a class="dropdown-item text-danger" ng-click=removeDataWorksheetDrawing(item_x,item_d.seq)>
+                                                                        <a class="dropdown-item text-danger" ng-click="removeDataWorksheetDrawing(item_x,item_d.seq,'responder')">
                                                                             <span class="fas fa-times-circle"></span>
                                                                             Remove
                                                                         </a>
@@ -1064,7 +1064,7 @@
                                                     @* Recommendations responded sheet => status 14 *@
                                                     <td class="align-top px-1" style="min-width:200px;" ng-if="flow_status == 14">
                                                         <div class=" p-0 cursor-pointer "
-                                                             ng-repeat="item_x in data_drawingworksheet | filter:{id_worksheet:item_d.seq, action_type : '!delete'}"
+                                                             ng-repeat="item_x in data_drawingworksheet_reviewer | filter:{id_worksheet:item_d.seq, action_type : '!delete'}"
                                                               ng-if="item_x.id_worksheet == item_d.seq">
                                                             <div class="d-flex flex-nowrap"
                                                                  ng-if="!((flow_status == 14 ? item_d.reviewer_action_type : item_d.responder_action_type) == 2)">
@@ -1076,12 +1076,12 @@
                                                                     </button>
                                                                     <div class="dropdown-menu dropdown-menu-end py-2">
                                                                         <a class="dropdown-item text-success"
-                                                                           ng-click=addDataWorksheetDrawing(item_x,item_d.seq)>
+                                                                           ng-click="addDataWorksheetDrawing(item_x,item_d.seq,'reviewer')">
                                                                             <span class="fas fa-copy"></span>
                                                                             Add
                                                                         </a>
                                                                         <div class="dropdown-divider"></div>
-                                                                        <a class="dropdown-item text-danger" ng-click=removeDataWorksheetDrawing(item_x,item_d.seq)>
+                                                                        <a class="dropdown-item text-danger" ng-click="removeDataWorksheetDrawing(item_x,item_d.seq,'reviewer')"">
                                                                             <span class="fas fa-times-circle"></span> Remove
                                                                         </a>
                                                                     </div>
@@ -1196,6 +1196,7 @@
                                                     @* <td class="align-middle  px-0">
                                                         <div class="text-danger"><b>{{item_d.over_due}}</b></div>
                                                     </td> *@
+
 
                                                     <td class="align-top px-0 pt-0 ">
                                                         <div class="d-flex" 
@@ -1611,7 +1612,7 @@
                 <div class="modal-body">
                     <div class="bg-white position-relative top-1"
                          ng-repeat="item_x in filteredData = (data_drawingworksheet_responder | filter:{id_worksheet:id_worksheet_select})">
-                        <div ng-if="$index === 0 || item_x.id_worksheet !== filteredData[$index - 1].id_worksheet">
+                        <div >@*ng-if="$index === 0 || item_x.id_worksheet !== filteredData[$index - 1].id_worksheet"*@
                             <a href="{{item_x.document_file_path}}" target="_blank">
                                 {{item_x.document_file_name}}
                             </a>

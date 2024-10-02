@@ -6417,7 +6417,39 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
         return false
     }
+    $scope.clearAllValidationMessages = function (seq, type) {
 
+        function clearValidationMessage(elementId) {
+            var id_valid = document.getElementById(elementId);
+    
+            if (id_valid) {
+                if (id_valid.classList.contains('d-block')) {
+                    id_valid.classList.remove('d-block'); 
+                }
+                if (id_valid.classList.contains('feedback')) {
+                    id_valid.classList.remove('feedback'); 
+                }
+                id_valid.style.display = 'none';  
+            }
+        }
+    
+        if (type === 'recom') {
+            $scope.data_listworksheet.forEach(item => {
+                clearValidationMessage(`valid-worksheet-recommendations-${item.seq}`);
+            });
+        } else {
+            let typeMap = {
+                'list_system': 'valid-worksheet-list_system-',
+                'list_sub_system': 'valid-worksheet-list_sub_system-',
+                'causes': 'valid-worksheet-causes-',
+                'consequences': 'valid-worksheet-consequences-',
+            };
+            
+            if (typeMap[type]) {
+                clearValidationMessage(typeMap[type] + seq);
+            }
+        }
+    };
     function clear_valid_items(field) {
         var id_valid = document.getElementById('valid-' + field);
         id_valid.className = "invalid-feedback text-danger";
@@ -8470,33 +8502,35 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             return true;
         }
 
-        function validConduct(){
+        function validConduct() {
             if (!validGeneral()) {
                 return false;
             }
-    
+        
             if (!validSessions()) {
                 return false;
             }
-    
+        
             if (!validTask()) {
                 return false;
             }
-
+        
+            // Worksheet validation
             if (!checkWorksheet()) {  
-                $scope.validMessage = 'Please provide valid data in the worksheet'
+                $scope.validMessage = 'Please provide valid data in the worksheet';
                 $scope.goback_tab = 'worksheet';                          
                 return false;
             }
-
+        
+            // Check if there's at least one valid recommendation
             const hasValidRecommendations = $scope.data_listworksheet.some(item => 
-                item.recommendations && item.recommendations.trim()
+                item.recommendations && typeof item.recommendations === 'string' && item.recommendations.trim()
             );
-
+        
             if (!hasValidRecommendations) {
                 $scope.validMessage = 'Please provide at least one valid recommendation.';
                 $scope.goback_tab = 'worksheet';  
-
+        
                 for (let i = 0; i < $scope.data_listworksheet.length; i++) {
                     const item = $scope.data_listworksheet[i];
                     
@@ -8504,17 +8538,23 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         set_valid_items(item.recommendations, 'worksheet-recommendations-' + item.seq);
                     }
                 }
-
-                return false;
+        
+                return false;  
             }
-
-            if (!checkManage()) {
-                $scope.validMessage = 'Please provide valid data in the Manage Recommendations.';
-                $scope.goBackToTab = 'manage';
-                return false;
+        
+            for (let i = 0; i < $scope.data_listworksheet.length; i++) {
+                const item = $scope.data_listworksheet[i];
+        
+                if (item.recommendations && typeof item.recommendations === 'string' && item.recommendations.trim()) {
+                    if (!checkManage(item.seq)) {
+                        $scope.validMessage = 'Please provide valid data in the Manage Recommendations.';
+                        $scope.goback_tab = 'manage';
+                        return false;  
+                    }
+                }
             }
-
-            return true;
+        
+            return true; 
         }
     
         
@@ -8725,27 +8765,43 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
         
 
-        function checkManage(){
-
+        function checkManage(seq) {
             var bCheckValid_Manage = false;
-
             var arr_chk = $scope.data_listworksheet;
+        
             for (var i = 0; i < arr_chk.length; i++) {
-                if (set_valid_items(arr_chk[i].estimated_start_date, 'worksheet-estimated-start-' + arr_chk[i].seq)) {
-                    bCheckValid_Manage = true;
-                }
-                if (set_valid_items(arr_chk[i].estimated_end_date, 'worksheet-estimated-end-' + arr_chk[i].seq)) {
-                    bCheckValid_Manage = true;
+
+                if(arr_chk[i].seq === seq){
+                    if (!arr_chk[i].estimated_start_date) {
+                        if (set_valid_items(arr_chk[i].estimated_start_date, 'worksheet-estimated-start-' + arr_chk[i].seq)) {
+                            bCheckValid_Manage = true;
+                        }
+                    }
+            
+                    if (!arr_chk[i].estimated_end_date) {
+                        if (set_valid_items(arr_chk[i].estimated_end_date, 'worksheet-estimated-end-' + arr_chk[i].seq)) {
+                            bCheckValid_Manage = true;
+                        }
+                    }
+
+
+                    //check ต้องมี ram after risk ที่เป็น medium high
+                    if (!arr_chk[i].ram_after_risk) {
+                        if (set_valid_items(arr_chk[i].estimated_end_date, 'worksheet-ram-after-risk-' + arr_chk[i].seq)) {
+                            bCheckValid_Manage = true;
+                        }
+                    }
                 }
             }
         
-            // If second block validations passed
             if (bCheckValid_Manage) {
-                console.log("All validations passed");
-                return true;
+                console.log("Some items were missing start or end dates and were validated.");
+                return false;
             }
-        }
         
+            console.log("All items have both start and end dates.");
+            return true;
+        }        
 
 
 });

@@ -8883,6 +8883,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                             bCheckValid_Manage = true;
                         }
                     }
+
+
+                    //check ต้องมี ram after risk ที่เป็น medium high
+                    if (!arr_chk[i].ram_after_risk) {
+                        if (set_valid_items(arr_chk[i].estimated_end_date, 'nodeworksheet-ram-after-risk-' + arr_chk[i].seq)) {
+                            bCheckValid_Manage = true;
+                        }
+                    }
                 }
             }
         
