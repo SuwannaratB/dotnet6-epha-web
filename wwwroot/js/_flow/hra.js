@@ -825,59 +825,42 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         // $scope.user_name = conFig.user_name();
         $scope.pha_seq = conFig.pha_seq();
         $scope.pha_type_doc = conFig.pha_type_doc();
-
         $scope.currentYear = new Date().getFullYear();
-        
         $scope.object_items_name = null;
-
         $scope.selectViewTypeFollowup = true;
-
         $scope.action_part = 1;
-
         $scope.data_all = [];
-
         $scope.master_company = [];
         $scope.master_apu = [];
-
         $scope.data_header = [];
         $scope.data_general = [];
         $scope.data_session = [];
         $scope.data_memberteam = [];
         $scope.data_approver = [];
         $scope.data_drawing = [];
-
         $scope.data_subareas = [];
         $scope.data_hazard = [];
         $scope.data_tasks = [];
         $scope.data_workers = [];
         $scope.hazard_standard = [];
-
         $scope.data_worksheet = [];
-
         $scope.data_session_delete = [];
         $scope.data_memberteam_delete = [];
         $scope.data_relatedpeople_outsider_delete = [];
         $scope.data_approver_delete = [];
         $scope.data_drawing_delete = [];
         $scope.data_drawing_approver_delete = [];
-
         $scope.data_subareas_delete = [];
         $scope.data_hazard_delete = [];
         $scope.data_tasks_delete = [];
         $scope.data_descriptions_delete= [];
         $scope.data_workers_delete = [];
-
         $scope.data_worksheet_delete = [];
         $scope.data_recommendations_delete = [];
-
-
         $scope.select_history_tracking_record = false;
-
         $scope.employeelist = [];
         $scope.employeelist_def = [];
         $scope.employeelist_show = [];
-
-
         // ล้างช่องข้อมูลหลังจากเพิ่มข้อความ
         $scope.employee_id = '';
         $scope.employee_name = '';
@@ -885,22 +868,26 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.employee_email = '';
         $scope.employee_type = 'Contract';
         $scope.employee_img = 'assets/img/team/avatar.webp'
-
         $scope.searchdata = '';
         $scope.searchEmployee = '';
-
         $scope.searchdataMemberTeam = '';
         $scope.searchdataResponder = '';
         $scope.searchdataApprover = '';
-        
         // filter worksheet
         $scope.optionJobType = [];
+        $scope.optionSubArea = [];
+        $scope.optionHealthEffectRating = [];
+        $scope.optionExposureBand = [];
         $scope.optionFrequency = [];
         $scope.optionInitial = [];
         $scope.optionExposure = [];
         $scope.searchQueryWorksheet = ''; // search worksheet
         $scope.isFilterWorksheet = false; // open or close modal filter worksheet
         $scope.countFilterWorksheet = null; // amount options filter
+        $scope.selectFilterWorksheet = {
+            exposure: null,
+            exposure_band: null, 
+        }
         $scope.selectFilterExposure = {
             value: null
         };
@@ -1864,6 +1851,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     // Filter Worksheet, Recommendations Tab
                     if (true) {
                         $scope.optionJobType = setOptionJobType()
+                        $scope.optionSubArea = setOptionSubArea()
+                        $scope.optionHealthEffectRating = setOptionHealthEffectRating('worksheet')
+                        $scope.optionExposureBand = $scope.setOptionExposureBand(null, 'worksheet')
                         $scope.optionFrequency = setOptionFrequency()
                         $scope.optionInitial = setOptionInitial()
                     }
@@ -9142,161 +9132,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             return $scope.isFilterRecommendations = !$scope.isFilterRecommendations
         }
     }
-    
+
     $scope.closeFilter = function(type){
         if(type == 'worksheet') return $scope.isFilterWorksheet = false
         if(type == 'recommendations') return $scope.isFilterRecommendations = false
-    }
-
-    function setOptionJobType() {
-        var data = angular.copy($scope.master_worker_group)
-        if(data.length == 0) return console.log('master_worker_group not found!')
-        data.forEach(element => {
-            element.selected = false;
-        });
-
-        return data
-    }
-
-    function setOptionFrequency() {
-        var data = angular.copy($scope.master_frequency_level)
-        if(data.length == 0) return console.log('master_frequency_level not found!')
-        data.forEach(element => {
-            element.selected = false;
-        });
-
-        return data
-    }
-
-    function setOptionInitial() {
-        return  [
-            {   
-                name: 'Acceptable', 
-                name_check: 'Acceptable Risk', 
-                selected: false 
-            },
-            { 
-                name: 'Low', 
-                name_check: 'Low', 
-                selected: false 
-            },
-            { 
-                name: 'Medium', 
-                name_check: 'Meduim', 
-                selected: false 
-            },
-            { 
-                name: 'High', 
-                name_check: 'High', 
-                selected: false 
-            },
-            { 
-                name: 'Very High', 
-                name_check: 'Very High', 
-                selected: false 
-            }
-        ];
-    }
-
-    $scope.setOptionExposure = function(change, type) {
-        if (type == 'worksheet') {
-            let uniqueExposures = new Set();
-    
-            $scope.data_worksheet_list.forEach(ws_ls => {
-                ws_ls.worksheet.forEach(ws => {
-                    if (ws.health_hazard) {
-                        uniqueExposures.add(ws.health_hazard);
-                    }
-                });
-            });
-            // Convert the Set back to an array of objects
-            $scope.optionExposure = Array.from(uniqueExposures).map(name => ({
-                name,
-                selected: false
-             }));
-    
-            //  console.log( $scope.selectFilterExposure.value )
-    
-            if(!change) return
-    
-            $scope.optionExposure.forEach(element => {
-                if (element.name == $scope.selectFilterExposure.value) {
-                    element.selected = true
-                }else{
-                    element.selected = false
-                }
-            });
-    
-            console.log($scope.optionExposure)
-        }
-
-        if (type == 'recommendations') {
-            let uniqueExposures = new Set();
-    
-            $scope.data_worksheet_list.forEach(ws_ls => {
-                ws_ls.worksheet.forEach(ws => {
-                    if (ws.health_hazard && ws.recommendations) {
-                        uniqueExposures.add(ws.health_hazard);
-                    }
-                });
-            });
-            // Convert the Set back to an array of objects
-            $scope.optionExposureRecommendations = Array.from(uniqueExposures).map(name => ({
-                name,
-                selected: false
-             }));
-    
-            //  console.log( $scope.selectFilterExposure.value )
-    
-            if(!change) return
-    
-            $scope.optionExposureRecommendations.forEach(element => {
-                if (element.name == $scope.selectFilterExposureRecommendations.value) {
-                    element.selected = true
-                }else{
-                    element.selected = false
-                }
-            });
-    
-            console.log($scope.optionExposureRecommendations)
-        }
-    }
-
-    $scope.setOptionRecommendations = function(change, type) {
-        if (type == 'worksheet') {
-           
-        }
-
-        if (type == 'recommendations') {
-            let uniqueRecommendations = new Set();
-    
-            $scope.data_worksheet_list.forEach(ws_ls => {
-                ws_ls.worksheet.forEach(ws => {
-                    if (ws.health_hazard && ws.recommendations) {
-                        uniqueRecommendations.add(ws.recommendations);
-                    }
-                });
-            });
-            // Convert the Set back to an array of objects
-            $scope.optionRecommendations = Array.from(uniqueRecommendations).map(name => ({
-                name,
-                selected: false
-             }));
-    
-            //  console.log( $scope.selectFilterExposure.value )
-    
-            if(!change) return
-    
-            $scope.optionRecommendations.forEach(element => {
-                if (element.name == $scope.selectFilterRecommendations.value) {
-                    element.selected = true
-                }else{
-                    element.selected = false
-                }
-            });
-    
-            console.log($scope.optionRecommendations)
-        }
     }
 
     $scope.applyFilters = function(type){
@@ -9309,6 +9148,28 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 $scope.val_filterJobType = filterJobType(init_worksheet, 'worksheet');
                 $scope.countFilterWorksheet =  $scope.countFilterWorksheet + $scope.val_filterJobType.selectFilter.length
                 init_worksheet = $scope.val_filterJobType.displayFilter
+                $scope.isProcessFilterWorksheet = true
+            }
+            // เช็คว่าข้อมูลที่ได้จากการ Sub Area
+            if (checkOptions('worksheet', $scope.optionSubArea)) {
+                $scope.val_filterSubArea = filterSubArea(init_worksheet, 'worksheet');
+                $scope.countFilterWorksheet =  $scope.countFilterWorksheet + $scope.val_filterSubArea.selectFilter.length
+                init_worksheet = $scope.val_filterSubArea.displayFilter
+                $scope.isProcessFilterWorksheet = true
+            }
+            // เช็คว่าข้อมูลที่ได้จากการ Health Effect Rating 
+            if (checkOptions('worksheet', $scope.optionHealthEffectRating)) {
+                $scope.val_filterHealthEffectRating  = filterHealthEffectRating (init_worksheet, 'worksheet');
+                $scope.countFilterWorksheet =  $scope.countFilterWorksheet + $scope.val_filterHealthEffectRating.selectFilter.length
+                init_worksheet = $scope.val_filterHealthEffectRating .displayFilter
+                $scope.isProcessFilterWorksheet = true
+            }
+            // เช็คว่าข้อมูลที่ได้จากการ Exposure Band
+            console.log($scope.optionExposureBand)
+            if (checkOptions('worksheet', $scope.optionExposureBand)) {
+                $scope.val_filterExposureBand  = filterExposureBand(init_worksheet, 'worksheet');
+                $scope.countFilterWorksheet =  $scope.countFilterWorksheet + $scope.val_filterExposureBand.selectFilter.length
+                init_worksheet = $scope.val_filterExposureBand .displayFilter
                 $scope.isProcessFilterWorksheet = true
             }
             // เช็คว่าข้อมูลที่ได้จากการ Filter Frequency
@@ -9385,6 +9246,22 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.optionJobType.forEach(element => {
                 element.selected = false
             });
+            // Data Sub Area
+            $scope.val_filterSubArea = null;
+            $scope.optionSubArea.forEach(element => {
+                element.selected = false
+            });
+            // Data Health Effect Rating
+            $scope.val_filterHealthEffectRating = null;
+            $scope.optionHealthEffectRating.forEach(element => {
+                element.selected = false
+            });
+            // Data Exposure Band
+            $scope.selectFilterWorksheet.exposure_band = null
+            $scope.val_filterExposureBand = null;
+            $scope.optionExposureBand.forEach(element => {
+                element.selected = false
+            });
             // Data Frequency
             $scope.val_filterFrequency = null;
             $scope.optionFrequency.forEach(element => {
@@ -9396,6 +9273,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 element.selected = false
             });
             // Data Exposure
+            $scope.selectFilterWorksheet.exposure = null
             $scope.val_filterExposure = null;
             $scope.selectFilterExposure.value = ''
             $scope.optionExposure.forEach(element => {
@@ -9438,6 +9316,216 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             // $scope.closeFilter('recommendations)
         }
         
+    }
+
+    function setOptionJobType() {
+        var data = angular.copy($scope.master_worker_group)
+        if(data.length == 0) return console.log('master_worker_group not found!')
+        data.forEach(element => {
+            element.selected = false;
+        });
+
+        return data
+    }
+
+    function setOptionHealthEffectRating(type) {
+        if (type = 'worksheet') {
+            let uniqueData = new Set();
+            $scope.data_worksheet_list.forEach(ws_ls => {
+                ws_ls.worksheet.forEach(ws => {
+                    if (ws.health_effect_rating) {
+                        uniqueData.add(ws.health_effect_rating);
+                    }
+                });
+            });
+            $scope.optionHealthEffectRating = Array.from(uniqueData).map(name => ({
+                name,
+                selected: false
+            }));
+            return $scope.optionHealthEffectRating
+        }
+    }
+
+    $scope.setOptionExposureBand = function(change, type) {
+        if (type = 'worksheet') {
+            if (!change) {
+                // set Exposure Band
+                let uniqueData = new Set();
+                $scope.data_worksheet_list.forEach(ws_ls => {
+                    ws_ls.worksheet.forEach(ws => {
+                        if (ws.exposure_band) {
+                            uniqueData.add(ws.exposure_band);
+                        }
+                    });
+                });
+                $scope.optionExposureBand = Array.from(uniqueData).map(name => ({
+                    name,
+                    selected: false
+                }));
+                return $scope.optionExposureBand
+            } else {
+                // change Exposure Band
+                $scope.optionExposureBand.forEach(element => {
+                    if (element.name == $scope.selectFilterWorksheet.exposure_band) {
+                        element.selected = true
+                    }else{
+                        element.selected = false
+                    }
+                });
+                console.log($scope.optionExposureBand)
+                return
+            }
+            
+        }
+    }
+
+    function setOptionSubArea() {
+        var data = angular.copy($scope.master_subarea)
+        if(data.length == 0) return console.log('data_subareas_list not found!')
+        data.forEach(element => {
+            element.selected = false;
+        });
+        console.log(data)
+        return data
+    }
+
+    function setOptionFrequency() {
+        var data = angular.copy($scope.master_frequency_level)
+        if(data.length == 0) return console.log('master_frequency_level not found!')
+        data.forEach(element => {
+            element.selected = false;
+        });
+
+        return data
+    }
+
+    function setOptionInitial() {
+        return  [
+            {   
+                name: 'Acceptable', 
+                name_check: 'Acceptable Risk', 
+                selected: false 
+            },
+            { 
+                name: 'Low', 
+                name_check: 'Low', 
+                selected: false 
+            },
+            { 
+                name: 'Medium', 
+                name_check: 'Meduim', 
+                selected: false 
+            },
+            { 
+                name: 'High', 
+                name_check: 'High', 
+                selected: false 
+            },
+            { 
+                name: 'Very High', 
+                name_check: 'Very High', 
+                selected: false 
+            }
+        ];
+    }
+
+    $scope.setOptionExposure = function(change, type) {
+        if (type == 'worksheet') {
+            let uniqueExposures = new Set();
+    
+            $scope.data_worksheet_list.forEach(ws_ls => {
+                ws_ls.worksheet.forEach(ws => {
+                    if (ws.health_hazard) {
+                        uniqueExposures.add(ws.health_hazard);
+                    }
+                });
+            });
+            // Convert the Set back to an array of objects
+            $scope.optionExposure = Array.from(uniqueExposures).map(name => ({
+                name,
+                selected: false
+             }));
+    
+            //  console.log( $scope.selectFilterExposure.value )
+    
+            if(!change) return
+    
+            $scope.optionExposure.forEach(element => {
+                if (element.name == $scope.selectFilterExposure.value) {
+                    element.selected = true
+                }else{
+                    element.selected = false
+                }
+            });
+        }
+
+        if (type == 'recommendations') {
+            let uniqueExposures = new Set();
+    
+            $scope.data_worksheet_list.forEach(ws_ls => {
+                ws_ls.worksheet.forEach(ws => {
+                    if (ws.health_hazard && ws.recommendations) {
+                        uniqueExposures.add(ws.health_hazard);
+                    }
+                });
+            });
+            // Convert the Set back to an array of objects
+            $scope.optionExposureRecommendations = Array.from(uniqueExposures).map(name => ({
+                name,
+                selected: false
+             }));
+    
+            //  console.log( $scope.selectFilterExposure.value )
+    
+            if(!change) return
+    
+            $scope.optionExposureRecommendations.forEach(element => {
+                if (element.name == $scope.selectFilterExposureRecommendations.value) {
+                    element.selected = true
+                }else{
+                    element.selected = false
+                }
+            });
+    
+            console.log($scope.optionExposureRecommendations)
+        }
+    }
+
+    $scope.setOptionRecommendations = function(change, type) {
+        if (type == 'worksheet') {
+           
+        }
+
+        if (type == 'recommendations') {
+            let uniqueRecommendations = new Set();
+    
+            $scope.data_worksheet_list.forEach(ws_ls => {
+                ws_ls.worksheet.forEach(ws => {
+                    if (ws.health_hazard && ws.recommendations) {
+                        uniqueRecommendations.add(ws.recommendations);
+                    }
+                });
+            });
+            // Convert the Set back to an array of objects
+            $scope.optionRecommendations = Array.from(uniqueRecommendations).map(name => ({
+                name,
+                selected: false
+             }));
+    
+            //  console.log( $scope.selectFilterExposure.value )
+    
+            if(!change) return
+    
+            $scope.optionRecommendations.forEach(element => {
+                if (element.name == $scope.selectFilterRecommendations.value) {
+                    element.selected = true
+                }else{
+                    element.selected = false
+                }
+            });
+    
+            console.log($scope.optionRecommendations)
+        }
     }
 
     function checkOptions(type, inputData){
@@ -9527,6 +9615,65 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
     }
 
+    function filterSubArea(init_worksheet, type){
+        console.log($scope.optionSubArea)
+        if (type == 'worksheet') {
+            let selectFilter = $scope.optionSubArea.filter((option) => option.selected).map((option) => option.name);
+            var displayFilter = []
+            for (let i = 0; i < init_worksheet.length; i++) {
+                let tmp_list = init_worksheet[i].worksheet.filter((item) =>{
+                        return item.sub_area && selectFilter.includes(item.sub_area);
+                    }
+                );
+                if (tmp_list.length > 0) {
+                    var data = angular.copy(init_worksheet[i])
+                    data.worksheet = tmp_list
+                    displayFilter.push(data)
+                }
+            }
+            return {  selectFilter, displayFilter }
+        }
+    }
+
+    function filterHealthEffectRating(init_worksheet, type){
+        if (type == 'worksheet') {
+            let selectFilter = $scope.optionHealthEffectRating.filter((option) => option.selected).map((option) => option.name);
+            var displayFilter = []
+            for (let i = 0; i < init_worksheet.length; i++) {
+                let tmp_list = init_worksheet[i].worksheet.filter((item) =>{
+                        return item.health_effect_rating && selectFilter.includes(item.health_effect_rating);
+                    }
+                );
+                if (tmp_list.length > 0) {
+                    var data = angular.copy(init_worksheet[i])
+                    data.worksheet = tmp_list
+                    displayFilter.push(data)
+                }
+            }
+            return {  selectFilter, displayFilter }
+        }
+    }
+
+    function filterExposureBand(init_worksheet, type){
+        console.log($scope.optionExposureBand)
+        if (type == 'worksheet') {
+            let selectFilter = $scope.optionExposureBand.filter((option) => option.selected).map((option) => option.name);
+            var displayFilter = []
+            for (let i = 0; i < init_worksheet.length; i++) {
+                let tmp_list = init_worksheet[i].worksheet.filter((item) =>{
+                        return item.exposure_band && selectFilter.includes(item.exposure_band);
+                    }
+                );
+                if (tmp_list.length > 0) {
+                    var data = angular.copy(init_worksheet[i])
+                    data.worksheet = tmp_list
+                    displayFilter.push(data)
+                }
+            }
+            return {  selectFilter, displayFilter }
+        }
+    }
+
     function filterFrequency(init_worksheet, type){
         if (type == 'worksheet') {
             let selectFilter = $scope.optionFrequency.filter((option) => option.selected).map((option) => option.id);
@@ -9585,9 +9732,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     function filterExposure(init_worksheet, type){
         if (type == 'worksheet') {
             let selectFilter = $scope.optionExposure.filter((option) => option.selected).map((option) => option.name);
-
             var displayFilter = []
-
             for (let i = 0; i < init_worksheet.length; i++) {
                 let tmp_list = init_worksheet[i].worksheet.filter((item) =>
                     selectFilter.includes(item.health_hazard)

@@ -755,7 +755,7 @@ ul.nav li a.btn-nav-menu.btn-outline-primary:hover {
 
 .list-container {
   display: flex;
-  gap: 56px;
+  gap: 20px;
 }
 
 .checkbox-container {
