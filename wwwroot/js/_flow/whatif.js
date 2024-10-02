@@ -2055,13 +2055,37 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     }
 
-    function ensureArray(scope, variable) {
-        scope.$watch(variable, function(newVal) {
-            if (!Array.isArray(newVal)) {
-                scope[variable] = [];
+    function handleApiResponse(arr) {
+        try {
+            // Using the utility function to safely get arrays or return an empty array
+            $scope.data_general = safeGetArray(arr, 'general').filter((item, index) => index === 0);
+            $scope.data_memberteam = safeGetArray(arr, 'memberteam');
+            $scope.data_memberteam_def = clone_arr_newrow($scope.data_memberteam);
+            $scope.data_memberteam_old = $scope.data_memberteam;
+    
+            $scope.data_approver = safeGetArray(arr, 'approver');
+            $scope.data_approver_def = clone_arr_newrow($scope.data_approver);
+            $scope.data_approver_old = $scope.data_approver;
+    
+            $scope.data_tasklistdrawing = safeGetArray(arr, 'tasklistdrawing');
+            for (let i = 0; i < $scope.data_tasklistdrawing.length; i++) {
+                if ($scope.data_tasklistdrawing[i].document_file_path.indexOf('/FollowUp/') > -1) {
+                    $scope.data_tasklistdrawing[i].document_file_path = $scope.data_tasklistdrawing[i].document_file_path.replace('/FollowUp/', '/whatif/');
+                }
             }
-        }, true);
+            $scope.data_tasklistdrawing_def = clone_arr_newrow($scope.data_tasklistdrawing);
+    
+            // Example for safely checking a non-array property
+            $scope.data_session = safeGetArray(arr, 'session');
+            $scope.data_session_def = clone_arr_newrow($scope.data_session);
+    
+            // Handle other properties...
+        } catch (error) {
+            console.error("An unexpected error occurred:", error);
+            alertUser("Something went wrong. Please try again later.");
+        }
     }
+
 
     function get_params() {
         var queryParams = new URLSearchParams(window.location.search);
@@ -3587,7 +3611,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         new_worksheet.causes_no = 1;
         new_worksheet.consequences_no = 1;
         new_worksheet.category_no = 1;
-        new_worksheet.recommendations_no = '';
+        new_worksheet.recommendations_no = null;
     
         new_worksheet.row_type = 'list_system';
         new_worksheet.action_type = 'insert';
@@ -4788,7 +4812,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         newInput.causes_no = causes_no;
         newInput.consequences_no = consequences_no;
         newInput.category_no = category_no;
-        newInput.recommendations_no = '';
+        newInput.recommendations_no = null;
 
         newInput.action_type = 'insert';
         newInput.action_change = 1;
@@ -4923,7 +4947,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                             previous.consequences_no >= item.consequences_no && previous.category_no === item.category_no && 
                             previous.recommendations_no >= item.recommendations_no && 
                             (item.row_type === 'causes' || item.row_type === 'list_sub_system' || item.row_type === 'consequences' || item.row_type === 'category' || item.row_type === 'recommendations')) {
-                            item.recommendations_no = '';
+                            item.recommendations_no = null;
                         }
                     }
                     
