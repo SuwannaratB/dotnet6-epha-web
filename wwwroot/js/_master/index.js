@@ -74,7 +74,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, conFig) {
                     },
                     {
                         id: 24,
-                        title: 'Unit No/Name of Sub Area',
+                        title: 'Unit No/ Name of Area',
                         path: 'Master/BusinessUnit',
                         active: false,
                     },
@@ -106,22 +106,28 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, conFig) {
                 active: true,
                 icon: 'fa-solid fa-folder',
                 sub_menu: [
-                    {
-                        id: 41,
-                        title: 'Departments',
-                        path: 'Master/Departments',
-                        active: false
-                    },
+                    // {
+                    //     id: 41,
+                    //     title: 'Departments',
+                    //     path: 'Master/Departments',
+                    //     active: false
+                    // },
+                    // {
+                    //     id: 42,
+                    //     title: 'Sections',
+                    //     path: 'Master/Sections',
+                    //     active: false
+                    // },
                     {
                         id: 42,
-                        title: 'Sections',
-                        path: 'Master/Sections',
+                        title: 'Name of Sub Area : Sections Group',
+                        path: 'Master/SubArea',
                         active: false
                     },
                     {
                         id: 43,
-                        title: 'Sub Area',
-                        path: 'Master/SubArea',
+                        title: 'Name of Sub Area : Equipment',
+                        path: 'Master/SubAreaEquipment',
                         active: false
                     },
                     {
@@ -136,12 +142,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, conFig) {
                         path: 'Master/HazardRiskFactors',
                         active: false
                     },
-                    {
-                        id: 46,
-                        title: 'Health Effect Rating',
-                        path: 'Master/HealthEffectRating',
-                        active: false
-                    },
+                    // {
+                    //     id: 46,
+                    //     title: 'Health Effect Rating',
+                    //     path: 'Master/HealthEffectRating',
+                    //     active: false
+                    // },
                     {
                         id: 47,
                         title: 'Worker Group',
