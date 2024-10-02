@@ -498,6 +498,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     if(true){
         $scope.changeTab = function (selectedTab) {
             $scope.action_part = selectedTab.action_part;
+            
     
             try {
     
@@ -6676,9 +6677,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         var elementSelector = '.form-label .' + field + ' .choices';
         var selectElement = document.querySelector(elementSelector);
         var errorDiv = document.getElementById(errorId);
-    
-        console.log(elementSelector);
-        console.log(selectElement);
+
     
         if (selectElement) {
             selectElement.classList.add('is-invalid', 'mb-0');
@@ -6746,7 +6745,40 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
         return false
     }
+    $scope.clearAllValidationMessages = function (seq, type) {
 
+        function clearValidationMessage(elementId) {
+            var id_valid = document.getElementById(elementId);
+    
+            if (id_valid) {
+                if (id_valid.classList.contains('d-block')) {
+                    id_valid.classList.remove('d-block'); 
+                }
+                if (id_valid.classList.contains('feedback')) {
+                    id_valid.classList.remove('feedback'); 
+                }
+                id_valid.style.display = 'none';  
+            }
+        }
+    
+        if (type === 'recom') {
+            $scope.data_nodeworksheet.forEach(item => {
+                clearValidationMessage(`valid-worksheet-recommendations-${item.seq}`);
+            });
+        } else {
+            let typeMap = {
+                'causes': 'valid-nodeworksheet-causes-',
+                'consequences': 'valid-nodeworksheet-consequences-',
+                'category': 'valid-nodeworksheet-category_type-'
+            };
+            
+            if (typeMap[type]) {
+                clearValidationMessage(typeMap[type] + seq);
+            }
+        }
+    };
+    
+    
     function clear_valid_items(field) {
         //valid-nodeworksheet-responder-{{item.seq}}  --> -nodeworksheet-responder-{{item.seq}} 
         var id_valid = document.getElementById('valid-' + field);
@@ -7449,9 +7481,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     $scope.actionChangeWorksheet = function (_arr, _seq, type_text) {
 
+
         if(type_text == 'recom' && (_arr.recommendations !== null || _arr.recommendations !== '')){
             if($scope.data_header[0].pha_status === 12) {
-                ensureUnique($scope.data_nodeworksheet,type_text);
+                console.log('will uniq')
+                ensureUnique($scope.data_nodeworksheet,'',type_text);
             }else{
                 
                 let maxRecommendationsNo = Math.max(...$scope.data_nodeworksheet.map(item => Number(item.recommendations_no) || 0));
@@ -7633,8 +7667,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
 
     $scope.recommentAction_valid = function(item) {
-        $scope.recomment_clear_valid = 'nodeworksheet-responder-' + item.seq;
-        clear_valid_items('nodeworksheet-responder-' + item.seq)
+        $scope.recomment_clear_valid = 'valid-worksheet-recommendations-' + item.seq;
+        //clear_valid_items('valid-worksheet-recommendations-' + item.seq)
     }
 
     $scope.filterResultHistory = function (fieldText, fieldName, fieldID) {
@@ -8780,32 +8814,30 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             
             // First Block of Validations
             var node = $scope.data_node;
-            console.log("Starting Worksheet Validation...");
         
             for (var i = 0; i < node.length; i++) {
-                console.log("Validating task:", node[i]);
         
                 var arr_chk = $scope.data_nodeworksheet.filter(item => item.id_node === node[i].id);
-                console.log("Found corresponding items in data_nodeworksheet:", arr_chk);
-        
+
+
                 for (var j = 0; j < arr_chk.length; j++) {
                     let item = arr_chk[j];
                     var valid = false;
-        
-                    console.log("Validating item:", item);
-        
+
+                
                     // Check the required fields
-                    if ((item['causes'] !== undefined && item['causes'] !== null && item['causes'] !== '') ||
+                    if (item['recommendations'] &&
+                        ((item['causes'] !== undefined && item['causes'] !== null && item['causes'] !== '') ||
                         (item['consequences'] !== undefined && item['consequences'] !== null && item['consequences'] !== '') ||
-                        (item['category_type'] !== undefined && item['category_type'] !== null && item['category_type'] !== '')) {
+                        (item['category_type'] !== undefined && item['category_type'] !== null && item['category_type'] !== ''))) {
 
                         // Validate based on the first present field among 'causes', 'consequences', 'category_type'
                         if (item['causes'] !== undefined && item['causes'] !== null && item['causes'] !== '') {
-                            valid = validateFields(item, 'causes', ['consequences', 'category_type', 'major_accident_event', 'existing_safeguards']);
+                            valid = validateFields(item, 'causes', ['consequences', 'category_type'/*, 'major_accident_event', 'existing_safeguards'*/]);
                         } else if (item['consequences'] !== undefined && item['consequences'] !== null && item['consequences'] !== '') {
-                            valid = validateFields(item, 'consequences', ['causes', 'category_type', 'major_accident_event', 'existing_safeguards']);
+                            valid = validateFields(item, 'consequences', ['causes', 'category_type'/*, 'major_accident_event', 'existing_safeguards'*/]);
                         } else if (item['category_type'] !== undefined && item['category_type'] !== null && item['category_type'] !== '') {
-                            valid = validateFields(item, 'category_type', ['causes', 'consequences', 'major_accident_event', 'existing_safeguards']);
+                            valid = validateFields(item, 'category_type', ['causes', 'consequences', /*'major_accident_event', 'existing_safeguards'*/]);
                         }
         
                         // Log whether validation passed or failed for this item
