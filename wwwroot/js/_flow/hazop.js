@@ -1987,7 +1987,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         var arr_copy_def = angular.copy($scope.data_nodeworksheet, arr_copy_def);
                         arr_copy_def.sort((a, b) => Number(b.recommendations_no) - Number(a.recommendations_no));
 
-                        if($scope.pha_status == '13'){
+                        if($scope.pha_status == '12'){
+                            console.log($scope.pha_status)
                             for (let i = 0; i < $scope.data_nodeworksheet.length; i++) {
                                 if ($scope.data_nodeworksheet[i].recommendations_no == 0) {
                                     // If recommendations is '0', set it to null
@@ -2000,7 +2001,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         //get_rowspam
                         $scope.rowspanMap = {};
                         $scope.$evalAsync(function() {
-                            computeRowspan();  // Safely schedule this to update the UI
+                            computeRowspan();  
                         });
 
                         $scope.selectedItemNodeView.seq = $scope.data_nodeworksheet[0].id_node;
