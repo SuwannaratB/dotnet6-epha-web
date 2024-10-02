@@ -161,7 +161,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     $rootScope.$on('$locationChangeStart', function(event, next, current) {
         console.log('Location is changing from:', current, 'to:', next);
 
-        if (unsavedChanges) {
+        if ($scope.unsavedChanges) {
             var confirmLeave = $window.confirm("You have unsaved changes. Are you sure you want to leave?");
             if (!confirmLeave) {
                 event.preventDefault();
@@ -172,7 +172,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     // close tab / browser window
     $window.addEventListener('beforeunload', function(event) {
         console.log("Trigger Ec=vent",event)
-        if (unsavedChanges) {
+        if ($scope.unsavedChanges) {
             var confirmationMessage = 'You have unsaved changes. Are you sure you want to leave?';
     
             event.preventDefault();
