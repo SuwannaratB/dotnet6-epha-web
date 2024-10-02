@@ -8657,7 +8657,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             if (item.recommendations && typeof item.recommendations === 'string' && item.recommendations.trim()) {
                 if (!checkManage(item.seq)) {
                     $scope.validMessage = 'Please provide valid data in the Manage Recommendations.';
-                    $scope.goBackToTab = 'manage';
+                    $scope.goback_tab = 'manage';
                     return false;  // Stop here if manage recommendation validation fails
                 }
             }
@@ -8855,11 +8855,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         
             if (bCheckValid_Manage) {
                 console.log("Some items were missing start or end dates and were validated.");
-                return true;
+                return false;
             }
         
             console.log("All items have both start and end dates.");
-            return false;
+            return true;
         }
         
 
