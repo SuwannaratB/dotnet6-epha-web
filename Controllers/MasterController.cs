@@ -144,7 +144,7 @@ namespace dotnet6_epha_web.Controllers
             _PageDef();
             return View();
         }
-        public IActionResult Departments()
+        public IActionResult SubAreaEquipment()
         {
             _PageDef();
             return View();

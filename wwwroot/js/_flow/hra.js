@@ -878,6 +878,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.optionSubArea = [];
         $scope.optionHealthEffectRating = [];
         $scope.optionExposureBand = [];
+        $scope.optionStandard = [];
+        $scope.optionExposurelevel = [];
+        $scope.optionExposureRating = [];
         $scope.optionFrequency = [];
         $scope.optionInitial = [];
         $scope.optionExposure = [];
@@ -887,10 +890,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.selectFilterWorksheet = {
             exposure: null,
             exposure_band: null, 
+            standard: null, 
         }
-        $scope.selectFilterExposure = {
-            value: null
-        };
+        // $scope.selectFilterExposure = {
+        //     value: null
+        // };
         // filter recommendations
         $scope.optionInitialRecommendations = [
             {   
@@ -1854,6 +1858,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         $scope.optionSubArea = setOptionSubArea()
                         $scope.optionHealthEffectRating = setOptionHealthEffectRating('worksheet')
                         $scope.optionExposureBand = $scope.setOptionExposureBand(null, 'worksheet')
+                        $scope.optionStandard = $scope.setOptionStandard(null, 'worksheet')
+                        $scope.optionExposurelevel = setOptionExposurelevel() 
+                        $scope.optionExposureRating = setOptionExposureRating() 
                         $scope.optionFrequency = setOptionFrequency()
                         $scope.optionInitial = setOptionInitial()
                     }
@@ -9165,11 +9172,31 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 $scope.isProcessFilterWorksheet = true
             }
             // เช็คว่าข้อมูลที่ได้จากการ Exposure Band
-            console.log($scope.optionExposureBand)
             if (checkOptions('worksheet', $scope.optionExposureBand)) {
                 $scope.val_filterExposureBand  = filterExposureBand(init_worksheet, 'worksheet');
                 $scope.countFilterWorksheet =  $scope.countFilterWorksheet + $scope.val_filterExposureBand.selectFilter.length
                 init_worksheet = $scope.val_filterExposureBand .displayFilter
+                $scope.isProcessFilterWorksheet = true
+            }
+            // เช็คว่าข้อมูลที่ได้จากการ Standard
+            if (checkOptions('worksheet', $scope.optionStandard)) {
+                $scope.val_filterStandard  = filterStandard(init_worksheet, 'worksheet');
+                $scope.countFilterWorksheet =  $scope.countFilterWorksheet + $scope.val_filterStandard.selectFilter.length
+                init_worksheet = $scope.val_filterStandard .displayFilter
+                $scope.isProcessFilterWorksheet = true
+            }
+            // เช็คว่าข้อมูลที่ได้จากการ Exposure level
+            if (checkOptions('worksheet', $scope.optionExposurelevel)) {
+                $scope.val_filterExposurelevel  = filterExposurelevel(init_worksheet, 'worksheet');
+                $scope.countFilterWorksheet =  $scope.countFilterWorksheet + $scope.val_filterExposurelevel.selectFilter.length
+                init_worksheet = $scope.val_filterExposurelevel .displayFilter
+                $scope.isProcessFilterWorksheet = true
+            }
+            // เช็คว่าข้อมูลที่ได้จากการ Exposure Rating
+            if (checkOptions('worksheet', $scope.optionExposureRating)) {
+                $scope.val_filterExposureRating  = filterExposureRating(init_worksheet, 'worksheet');
+                $scope.countFilterWorksheet =  $scope.countFilterWorksheet + $scope.val_filterExposureRating.selectFilter.length
+                init_worksheet = $scope.val_filterExposureRating .displayFilter
                 $scope.isProcessFilterWorksheet = true
             }
             // เช็คว่าข้อมูลที่ได้จากการ Filter Frequency
@@ -9262,6 +9289,22 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.optionExposureBand.forEach(element => {
                 element.selected = false
             });
+            // Data Standard
+            $scope.selectFilterWorksheet.standard = null
+            $scope.val_filterStandard = null;
+            $scope.optionStandard.forEach(element => {
+                element.selected = false
+            });
+            // Data Exposure level
+            $scope.val_filterExposurelevel = null;
+            $scope.optionExposurelevel.forEach(element => {
+                element.selected = false
+            });
+            // Data Exposure Rating
+            $scope.val_filterExposureRating = null;
+            $scope.optionExposureRating.forEach(element => {
+                element.selected = false
+            });
             // Data Frequency
             $scope.val_filterFrequency = null;
             $scope.optionFrequency.forEach(element => {
@@ -9275,7 +9318,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             // Data Exposure
             $scope.selectFilterWorksheet.exposure = null
             $scope.val_filterExposure = null;
-            $scope.selectFilterExposure.value = ''
             $scope.optionExposure.forEach(element => {
                 element.selected = false
             });
@@ -9379,6 +9421,39 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
     }
 
+    $scope.setOptionStandard = function(change, type) {
+        if (type = 'worksheet') {
+            if (!change) {
+                // set Exposure Band
+                let uniqueData = new Set();
+                $scope.data_worksheet_list.forEach(ws_ls => {
+                    ws_ls.worksheet.forEach(ws => {
+                        if (ws.standard_value) {
+                            uniqueData.add(ws.standard_value);
+                        }
+                    });
+                });
+                $scope.optionStandard = Array.from(uniqueData).map(name => ({
+                    name,
+                    selected: false
+                }));
+                return $scope.optionStandard
+            } else {
+                // change Exposure Band
+                $scope.optionStandard.forEach(element => {
+                    if (element.name == $scope.selectFilterWorksheet.standard) {
+                        element.selected = true
+                    }else{
+                        element.selected = false
+                    }
+                });
+                console.log($scope.optionStandard)
+                return
+            }
+            
+        }
+    }
+
     function setOptionSubArea() {
         var data = angular.copy($scope.master_subarea)
         if(data.length == 0) return console.log('data_subareas_list not found!')
@@ -9387,6 +9462,41 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         });
         console.log(data)
         return data
+    }
+
+    function setOptionExposurelevel() {
+        var data = angular.copy($scope.master_exposure_level)
+        if(data.length == 0) return console.log('master_exposure_level not found!')
+        data.forEach(element => {
+            element.selected = false;
+        });
+
+        return data
+    }
+
+    function setOptionExposureRating() {
+        return  [
+            {   
+                name: '[1] = ไม่ได้รับสัมผัส', 
+                selected: false 
+            },
+            { 
+                name: '[2] = น้อย',  
+                selected: false 
+            },
+            { 
+                name: '[3] = ปานกลาง',  
+                selected: false 
+            },
+            { 
+                name: '[4] = สูง', 
+                selected: false 
+            },
+            { 
+                name: '[5] = สูงมาก', 
+                selected: false 
+            }
+        ];
     }
 
     function setOptionFrequency() {
@@ -9451,7 +9561,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             if(!change) return
     
             $scope.optionExposure.forEach(element => {
-                if (element.name == $scope.selectFilterExposure.value) {
+                if (element.name == $scope.selectFilterWorksheet.exposure) {
                     element.selected = true
                 }else{
                     element.selected = false
@@ -9662,6 +9772,63 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             for (let i = 0; i < init_worksheet.length; i++) {
                 let tmp_list = init_worksheet[i].worksheet.filter((item) =>{
                         return item.exposure_band && selectFilter.includes(item.exposure_band);
+                    }
+                );
+                if (tmp_list.length > 0) {
+                    var data = angular.copy(init_worksheet[i])
+                    data.worksheet = tmp_list
+                    displayFilter.push(data)
+                }
+            }
+            return {  selectFilter, displayFilter }
+        }
+    }
+
+    function filterStandard(init_worksheet, type){
+        if (type == 'worksheet') {
+            let selectFilter = $scope.optionStandard.filter((option) => option.selected).map((option) => option.name);
+            var displayFilter = []
+            for (let i = 0; i < init_worksheet.length; i++) {
+                let tmp_list = init_worksheet[i].worksheet.filter((item) =>{
+                        return item.standard_value && selectFilter.includes(item.standard_value);
+                    }
+                );
+                if (tmp_list.length > 0) {
+                    var data = angular.copy(init_worksheet[i])
+                    data.worksheet = tmp_list
+                    displayFilter.push(data)
+                }
+            }
+            return {  selectFilter, displayFilter }
+        }
+    }
+
+    function filterExposurelevel(init_worksheet, type){
+        if (type == 'worksheet') {
+            let selectFilter = $scope.optionExposurelevel.filter((option) => option.selected).map((option) => option.id);
+            var displayFilter = []
+            for (let i = 0; i < init_worksheet.length; i++) {
+                let tmp_list = init_worksheet[i].worksheet.filter((item) =>{
+                        return item.id_exposure_level && selectFilter.includes(item.id_exposure_level);
+                    }
+                );
+                if (tmp_list.length > 0) {
+                    var data = angular.copy(init_worksheet[i])
+                    data.worksheet = tmp_list
+                    displayFilter.push(data)
+                }
+            }
+            return {  selectFilter, displayFilter }
+        }
+    }
+
+    function filterExposureRating(init_worksheet, type){
+        if (type == 'worksheet') {
+            let selectFilter = $scope.optionExposureRating.filter((option) => option.selected).map((option) => option.name);
+            var displayFilter = []
+            for (let i = 0; i < init_worksheet.length; i++) {
+                let tmp_list = init_worksheet[i].worksheet.filter((item) =>{
+                        return item.exposure_rating && selectFilter.includes(item.exposure_rating);
                     }
                 );
                 if (tmp_list.length > 0) {
