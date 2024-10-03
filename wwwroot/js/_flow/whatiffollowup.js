@@ -229,6 +229,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
     }
     function get_data(page_load) {
         var user_name = $scope.user_name;
+        var role_type = $scope.flow_role_type;
+
         var token_doc = '';
 
         var sub_software = 'whatif';
@@ -236,7 +238,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
         $.ajax({
             url: url_ws + "Flow/load_follow_up",
-            data: '{"sub_software":"whatif","user_name":"' + user_name + '","token_doc":"' + token_doc + '","type_doc":"' + type_doc + '"}',
+            data: '{"sub_software":"whatif","user_name":"' + user_name + '","role_type":"' + role_type + '","token_doc":"' + token_doc + '","type_doc":"' + type_doc + '"}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
             headers: {
                 'X-CSRF-TOKEN': $scope.token
@@ -420,6 +422,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         var pha_status = arr.pha_status;
         var responder_user_name = '';
         var user_name = $scope.user_name;
+        var role_type = $scope.flow_role_type;
+
 
         //a.pha_sub_software, a.seq as pha_seq,a.pha_no, g.pha_request_name, a.pha_status, vw.user_displayname as responder_user_displayname
         if ($scope.tabChange == 'worksheet') {
@@ -443,7 +447,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         $.ajax({
             url: controller_text + "/next_page",
             data: '{"pha_sub_software":"' + pha_sub_software + '","pha_seq":"' + pha_seq + '","pha_no":"' + pha_no + '","pha_type_doc":"' + pha_type_doc + '","responder_user_name":"' + responder_user_name + '"'
-                + ',"controller_page":"' + controller_text + '","pha_status":"' + pha_status + '","user_name":"' + user_name +'"'
+                + ',"controller_page":"' + controller_text + '","pha_status":"' + pha_status + '","role_type":"' + role_type + '","user_name":"' + user_name +'"'
                 + ',"controller_action_befor":"whatif/followup"'
                 + '}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
