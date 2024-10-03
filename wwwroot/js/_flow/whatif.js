@@ -610,6 +610,17 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                 if (fileInput.files.length > 0) {
                     const file = fileInput.files[0];
+
+                     // Allowed characters regex (same logic as your backend)
+                     const allowedCharsRegex = /^[()a-zA-Z0-9_.\-\u0E00-\u0E7F\s]+$/;
+                    
+                     // Validate file name for allowed characters
+                     if (!allowedCharsRegex.test(file.name)) {
+                         set_alert('Warning', 'The file name contains invalid characters. Only letters, digits, and special characters like () _ - . are allowed.',tabName);
+ 
+                         return;
+                     }
+                                         
                     const validation = validateFile(file, 10240, allowedFileTypes);
 
                     if (!validation.valid) {
