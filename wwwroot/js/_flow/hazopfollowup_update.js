@@ -410,14 +410,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
         var pha_sub_software = conFig.pha_sub_software().toLowerCase()//'hazop';//item.pha_sub_software;
         var pha_status = $scope.flow_status;
         var user_name = $scope.user_name;
-
+        var flow_role_type = $scope.flow_role_type;
         conFig.pha_seq = $scope.data_details[0].seq;
         conFig.pha_type_doc = 'preview';
 
         $.ajax({
             url: controller_text + "/next_page",
             data: '{"pha_seq":"' + conFig.pha_seq + '","pha_type_doc":"' + conFig.pha_type_doc + '"'
-                + ',"pha_sub_software":"' + pha_sub_software + '","pha_status":"' + pha_status + '","user_name":"' + user_name + '"}',
+                + ',"pha_sub_software":"' + pha_sub_software + '","pha_status":"' + pha_status + '","user_name":"' + user_name + '","row_type":"' + flow_role_type + '"}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
             headers: {
                 'X-CSRF-TOKEN': $scope.token
@@ -546,11 +546,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
     function next_page(controller_text, pha_status) {
         controller_text = controller_text.toLowerCase();
         var user_name = $scope.user_name;
+        var flow_role_type = $scope.flow_role_type;
         
         $.ajax({
             url: controller_text + "/next_page",
             data: '{"pha_seq":"' + conFig.pha_seq + '","pha_type_doc":"' + conFig.pha_type_doc + '"'
-                + ',"pha_sub_software":"' + controller_text + '","pha_status":"' + pha_status + '","user_name":"' + user_name + '"}',
+                + ',"pha_sub_software":"' + controller_text + '","pha_status":"' + pha_status + '","user_name":"' + user_name + '","row_type":"' + flow_role_type + '"}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
             headers: {
                 'X-CSRF-TOKEN': $scope.token
@@ -581,6 +582,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
     function get_detail() {
 
         var user_name = $scope.user_name;
+        var flow_role_type = $scope.flow_role_type;
         var pha_no = conFig.pha_no();
         var token_doc = conFig.pha_seq();
         var responder_user_name = conFig.responder_user_name();
@@ -601,7 +603,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
         //reviewer_comment
         $.ajax({
             url: url_ws + "Flow/load_follow_up_details",
-            data: '{"sub_software":"' + sub_software + '","user_name":"' + user_name + '"'
+            data: '{"sub_software":"' + sub_software + '","user_name":"' + user_name + '","row_type":"' + flow_role_type + '"'
                 + ',"token_doc":"' + token_doc + '"'
                 + ',"pha_no":"' + pha_no + '","responder_user_name":"' + responder_user_name + '"}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
@@ -1113,6 +1115,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
         var json_drawingworksheet = check_data_drawingworksheet(_item.seq);
 
         var user_name = $scope.user_name;
+        var flow_role_type = $scope.flow_role_type;
         var flow_action = action;
         var token_doc = conFig.pha_seq();
 
@@ -1121,7 +1124,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
 
         $.ajax({
             url: url_ws + "Flow/set_follow_up",
-            data: '{"sub_software":"' + sub_software + '","user_name":"' + user_name + '","token_doc":"' + token_doc + '"'
+            data: '{"sub_software":"' + sub_software + '","user_name":"' + user_name + '","row_type":"' + flow_role_type + '","token_doc":"' + token_doc + '"'
                 + ',"flow_action": "' + flow_action + '"'
                 + ', "json_managerecom": ' + JSON.stringify(json_managerecom)
                 + ', "json_drawingworksheet": ' + JSON.stringify(json_drawingworksheet)
@@ -1277,13 +1280,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
         var json_managerecom = angular.toJson(arr_json);
 
         var user_name = $scope.user_name;
+        var flow_role_type = $scope.flow_role_type;
         var flow_action = action;
         var token_doc = conFig.pha_seq();
         var sub_software = conFig.pha_sub_software().toLowerCase() 
 
         $.ajax({
             url: url_ws + "Flow/set_follow_up_review",
-            data: '{"sub_software":"' + sub_software + '","user_name":"' + user_name + '","token_doc":"' + token_doc + '"'
+            data: '{"sub_software":"' + sub_software + '","user_name":"' + user_name + '","row_type":"' + flow_role_type + '","token_doc":"' + token_doc + '"'
                 + ',"flow_action": "' + flow_action + '"'
                 + ', "json_managerecom": ' + JSON.stringify(json_managerecom)
                 + ', "json_drawingworksheet": ' + JSON.stringify(json_drawingworksheet)
@@ -1606,6 +1610,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
 
     $scope.openModalTempletes = function(data_type, actions,seq_worksheet) {
         var user_name = $scope.data_details[0].responder_user_name;
+        var flow_role_type = $scope.flow_role_type;
         var seq = $scope.data_details[0].id_pha;
         var sub_software = $scope.data_details[0].pha_sub_software;
     
@@ -1619,6 +1624,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
             url = url_ws + "Flow/export_recommendation_by_action_owner";
             data = '{"sub_software":"' + sub_software + 
                     '","user_name":"' + user_name + 
+                    '","row_type":"' + flow_role_type +
                     '","seq":"' + seq + 
                     '","export_type":"' + data_type + 
                     '"}'
@@ -1626,6 +1632,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
             url = url_ws + "Flow/export_recommendation_by_item";
             data = '{"sub_software":"' + sub_software + 
                     '","user_name":"' + user_name + 
+                    '","row_type":"' + flow_role_type +
                     '","seq":"' + seq + 
                     '","export_type":"' + data_type +
                     '","seq_worksheet":"' + seq_worksheet + 
