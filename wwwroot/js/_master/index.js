@@ -216,9 +216,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, conFig) {
         }
         //call api
         var user_name = $scope.user_name;
+        var flow_role_type = $scope.role_type;
         $.ajax({
             url: url_ws + "Login/check_authorization_page",
-            data: '{"user_name":"' + user_name + '"}',
+            data: '{"user_name":"' + user_name + '","row_type":"' + flow_role_type + '"}',
             type: "POST", contentType: "application/json; charset=utf-8",
             headers: {
                 'X-CSRF-TOKEN': $scope.token
