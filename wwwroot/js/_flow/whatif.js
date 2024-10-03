@@ -754,6 +754,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             fd.append("file_name", file_name);
             fd.append("sub_software", sub_software);
             fd.append("user_name", $scope.user_name);
+            fd.append("role_type", $scope.flow_role_type);
+
     
             try {
                 const request = new XMLHttpRequest();
@@ -1276,6 +1278,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         //EPHA_M_RAM_LEVEL
         var json_ram_level = check_data_ram_level();
         var json_ram_master = check_master_ram();
+        var role_type = $scope.flow_role_type;
+
 
         //submit, submit_without, submit_complete
         if(action == 'submit_complete'){
@@ -1293,7 +1297,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         $.ajax({
             url: url_ws + "Flow/set_whatif",
-            data: '{"user_name":"' + user_name + '","token_doc":"' + token_doc + '","pha_status":"' + pha_status + '","pha_version":"' + pha_version + '","action_part":"' + action_part + '"'
+            data: '{"user_name":"' + user_name + '","role_type":"' + role_type + '","token_doc":"' + token_doc + '","pha_status":"' + pha_status + '","pha_version":"' + pha_version + '","action_part":"' + action_part + '"'
                 + ',"json_header":' + JSON.stringify(json_header)
                 + ',"json_general":' + JSON.stringify(json_general)
                 + ',"json_functional_audition":' + JSON.stringify(json_functional_audition)
@@ -1414,6 +1418,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         var pha_seq = arr[0].pha_seq;
                         var pha_no = arr[0].pha_no;
                         var pha_type_doc = "edit";
+                        var role_type = $scope.flow_role_type;
+
 
                         $scope.pha_seq = arr[0].pha_seq;
 
@@ -1421,7 +1427,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                         $.ajax({
                             url: controller_text + "/set_session_doc",
-                            data: '{"controller_action_befor":"' + controller_action_befor + '","pha_seq":"' + pha_seq + '","user_name":"' + user_name + '"'
+                            data: '{"controller_action_befor":"' + controller_action_befor + '","pha_seq":"' + pha_seq + '","user_name":"' + user_name + '","role_type":"' + role_type + '"'
                                 + ',"pha_no":"' + pha_no + '","pha_status":"' + pha_status + '","pha_type_doc":"' + pha_type_doc + '"}',
                             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
                             headers: {
@@ -1497,6 +1503,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         //submit, submit_without, submit_complete
         var flow_action = (action == 'submit_complete' ? 'submit' : action);
+        var role_type = $scope.flow_role_type;
+
 
         var id_session = '';
         var seq = '';
@@ -1526,7 +1534,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         $.ajax({
             url: url_ws + "flow/set_approve",
-            data: '{"sub_software":"whatif","user_name":"' + user_name + '","role_type":"' + flow_role_type + '","action":"' + flow_action + '","token_doc":"' + pha_seq + '","pha_status":"' + pha_status + '"'
+            data: '{"sub_software":"whatif","user_name":"' + user_name + '","role_type":"' + role_type + '","action":"' + flow_action + '","token_doc":"' + pha_seq + '","pha_status":"' + pha_status + '"'
                 + ',"id_session":"' + id_session + '","seq":"' + seq + '","action_status":"' + action_status + '","comment":"' + comment + '","user_approver":"' + user_approver + '"'
                 + ', "json_approver": ' + JSON.stringify(json_approver)
                 + ', "json_drawing_approver": ' + JSON.stringify(json_drawing_approver)
@@ -1614,6 +1622,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         var pha_seq = $scope.data_header[0].seq;
         var pha_status = $scope.data_header[0].pha_status;
         var flow_role_type = $scope.flow_role_type;
+        var role_type = $scope.flow_role_type;
+
 
         var flow_action = action;
 
@@ -1624,7 +1634,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         $.ajax({
             url: url_ws + "flow/set_approve_ta3",
-            data: '{"sub_software":"whatif","user_name":"' + user_name + '","role_type":"' + flow_role_type + '","token_doc":"' + pha_seq + '","action":"' + flow_action 
+            data: '{"sub_software":"whatif","user_name":"' + user_name + '","role_type":"' + role_type + '","token_doc":"' + pha_seq + '","action":"' + flow_action 
                 + '","json_header":' + JSON.stringify(json_header) 
                 + ',"json_approver":' + JSON.stringify(json_approver) 
                 + ',"json_approver_ta3":' + JSON.stringify(json_approver_ta3) 
@@ -1695,13 +1705,15 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
 
         var type_doc = $scope.pha_type_doc;//review_document
+        var role_type = $scope.flow_role_type;
+
 
         $scope.params = get_params();
 
 
         $.ajax({
             url: url_ws + "Flow/get_whatif_details",
-            data: '{"sub_software":"whatif","user_name":"' + user_name + '","token_doc":"' + pha_seq + '","type_doc":"' + type_doc + '"}',
+            data: '{"sub_software":"whatif","user_name":"' + user_name + '","role_type":"' + role_type + '","token_doc":"' + pha_seq + '","type_doc":"' + type_doc + '"}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
             headers: {
                 'X-CSRF-TOKEN': $scope.token
@@ -3749,11 +3761,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             newInput.action_type = 'insert'
             $scope.master_ram.push(newInput);
         }
-        var json_ram_master = angular.toJson($scope.master_ram);;
+        var json_ram_master = angular.toJson($scope.master_ram);
+        var role_type = $scope.flow_role_type;
+
 
         $.ajax({
             url: url_ws + "Flow/set_master_ram",
-            data: '{"user_name":"' + user_name + '"'
+            data: '{"user_name":"' + user_name + '","role_type":"' + role_type + '"'
                 + ',"json_ram_master":' + JSON.stringify(json_ram_master)
                 + '}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
@@ -5991,10 +6005,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             var user_name = $scope.user_name;
             var token_doc = $scope.data_header[0].seq;
+            var role_type = $scope.flow_role_type;
+
 
             $.ajax({
                 url: url_ws + "Flow/send_notification_member_review",
-                data: '{"sub_software":"whatif","user_name":"' + user_name + '","pha_seq":"' + token_doc + '"}',
+                data: '{"sub_software":"whatif","user_name":"' + user_name + '","role_type":"' + role_type + '","pha_seq":"' + token_doc + '"}',
                 type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
                 headers: {
                     'X-CSRF-TOKEN': $scope.token
