@@ -485,7 +485,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     const validation = validateFile(file, 10240, ['pdf', 'eml', 'msg']);
         
                     if (!validation.valid) {
-                        set_alert('Warning', validation.message);
+                        set_alert('Warning', validation.message,'general');
                         return;
                     }
         
@@ -526,13 +526,24 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         
                 if (fileInput.files.length > 0) {
                     const file = fileInput.files[0];
-                    const validation = validateFile(file, 10240, ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'jpg', 'png', 'gif']);
-        
-                    if (!validation.valid) {
-                        set_alert('Warning', validation.message);
+
+                    console.log(file)
+                    // Allowed characters regex (same logic as your backend)
+                    const allowedCharsRegex = /^[()a-zA-Z0-9_.\-\u0E00-\u0E7F\s]+$/;
+                    
+                    // Validate file name for allowed characters
+                    if (!allowedCharsRegex.test(file.name)) {
+                        set_alert('Warning', 'The file name contains invalid characters. Only letters, digits, and special characters like () _ - . are allowed.','general');
+
                         return;
                     }
         
+                    const validation = validateFile(file, 10240, ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'jpg', 'png', 'gif']);
+        
+                    if (!validation.valid) {
+                        set_alert('Warning', validation.message,'general');
+                        return;
+                    }
         
                     uploadFile(file, fileSeq, file.name, validation.fileSizeKB, file_part, fileDoc)
                         .then(response => {
@@ -546,6 +557,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                                 arr[0].action_change = 1;
                                 $scope.$apply(); // Ensure the scope is updated
                             }
+        
+                            updateDataSessionAccessInfo();
                             set_alert('Success', 'Your file has been successfully attached.');
                         })
                         .catch(error => {
@@ -553,14 +566,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         });
                 } else {
                     fileInfoSpan.textContent = "";
-                    set_alert('Warning', "No file selected. Please select a file to upload.");
+                    set_alert('Warning', "No file selected. Please select a file to upload.",'general');
                 }
             } catch (error) {
                 console.error('Unexpected error during file selection:', error);
                 set_alert('Error', 'An unexpected error occurred. Please try again or contact support.');
             }
         };
-
+        
         function uploadFile(file, seq, fileName, fileSizeKB, filePart, fileDoc) {
             const fd = new FormData();
             fd.append("file_obj", file);
@@ -587,15 +600,15 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                                 if (parsedResponse && parsedResponse.msg && parsedResponse.msg.length > 0 && parsedResponse.msg[0].STATUS === "true") {
                                     resolve(parsedResponse.msg[0]);
                                 } else {
-                                    set_alert('Warning', 'The system encountered an issue processing your file. Please try again or contact support if the problem persists.');
+                                    set_alert('Warning', 'The system encountered an issue processing your file. Please try again or contact support if the problem persists.','general');
                                     reject('Service response indicated an issue.');
                                 }
                             } catch (e) {
-                                set_alert('Error', 'Unexpected issue occurred while processing your request. Please try again later.');
+                                set_alert('Error', 'Unexpected issue occurred while processing your request. Please try again later.','general');
                                 reject(e);
                             }
                         } else {
-                            set_alert('Error', 'We are unable to complete your request at the moment. Please check your connection or try again later.');
+                            set_alert('Error', 'We are unable to complete your request at the moment. Please check your connection or try again later.','general');
                             reject('Error during server request: ' + request.status);
                         }
                     }
@@ -1105,7 +1118,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 if (selectedTab.name == 'worksheet') {
                     if(!validBeforRegister()) {
                         $scope.action_part = 5
-                        return set_alert('Warning',$scope.validMessage)
+                        return set_alert('Warning',$scope.validMessage,'worksheet')
                     }
                     $scope.confirmSave('confirm_submit_register_without')
                     return; 
@@ -1113,7 +1126,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 if (selectedTab.name == 'manage') {
                     if(!validBeforRegister()) {
                         $scope.action_part = 6
-                        return set_alert('Warning',$scope.validMessage)
+                        return set_alert('Warning',$scope.validMessage,'manage')
                     }
                     // if(!validWorksheet()) 
                     //     return set_alert('Warning','Please provide a valid Worksheet')
@@ -1121,7 +1134,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 if (selectedTab.name == 'list_name') {
                     if(!validBeforRegister()) {
                         $scope.action_part = 7
-                        return set_alert('Warning',$scope.validMessage)
+                        return set_alert('Warning',$scope.validMessage,'list_name')
                     }
                 }
             } else if ($scope.data_header[0].pha_status == 12 || $scope.data_header[0].pha_status == 22) {
@@ -2601,6 +2614,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         function set_form_action(action_part_befor, action_save, page_load) {
     
             $scope.action_part = action_part_befor;
+            console.log($scope.data_header[0].pha_status)
     
             var pha_status_def = Number($scope.data_header[0].pha_status);
             initializeTabs(pha_status_def);
@@ -2615,23 +2629,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 showTabs(set_tabs);
                 setTabsActive(set_tabs);
 
-                if (page_load) {
-
-                    var tag_name = 'general';
-                    var arr_tab = $filter('filter')($scope.tabs, function (item) {
-                        return ((item.action_part == $scope.action_part));
-                    });
-                    if (arr_tab.length > 0) {
-                        $scope.changeTab(arr_tab[0], tag_name);
-                        if (action_save == true) { $scope.action_part = arr_tab[0].action_part; }
-                    }
- 
-                }
-
                     //button
-                    $scope.cancle_type = true;               
-                    $scope.save_type = true;
-                    $scope.submit_type = true;                   
+                $scope.cancle_type = true;               
+                $scope.save_type = true;
+                $scope.submit_type = true;                   
 
     
             }
@@ -2640,10 +2641,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 check_case_member_review();
 
     
-                const set_tabs = [ 'worksheet', 'managerecom'];
+                const set_tabs = [ 'general', 'areas', 'worker','worksheet', 'managerecom'];
             
                 showTabs(set_tabs);
                 setTabsActive(set_tabs);
+
+                
+                $scope.isDisableStatus = false;
+                $scope.isEditWorksheet  = false;
 
                 //button
                 $scope.save_type = true;
@@ -2708,9 +2713,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                 check_case_member_review();
     
-                // set isDisableStatus PHA STATUS > 12 (waitting follow up)
-                $scope.isDisableStatus = true;
-                // set isApproveReject
+                $scope.isDisableStatus = false;
+                $scope.isEditWorksheet  = false;
                 $scope.isApproveReject =true;
 
                 //active session === lastest session
@@ -2770,11 +2774,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 $scope.submit_review = false;
             }
 
-            console.log('$scope.pha_type_doc',$scope.pha_type_doc)
-            console.log('$scope.pha_type_doc',$scope.params)
-    
-            console.log("in pha 21 we will set",  $scope.tab_approver_active)
-
     
             $scope.date_to_approve_moc_text = '';
             $scope.date_approve_moc_text = '';
@@ -2797,6 +2796,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         
             if (pha_status === 11) {
                 arr_tab = $filter('filter')($scope.tabs, item => item.action_part === action_part_befor);
+
+                console.log(arr_tab)
                 $scope.changeTab_Focus(arr_tab, arr_tab.name);
             } 
             else if ([12, 13, 14, 22].includes(pha_status) || 
@@ -2834,6 +2835,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
 
         function set_form_access(pha_status,params,flow_role_type){
+
+            $scope.readonly = false;
+
+
             if(pha_status === 11 || pha_status === 12){
                 $scope.can_edit = true;
             }
@@ -2850,9 +2855,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         $scope.can_edit = true;
                     } else {
                         $scope.can_edit = false;
+                        $scope.readonly = true;
                     }
                 } else {
                     $scope.can_edit = false; 
+                    $scope.readonly = true;
+
                 }
     
             }
@@ -5765,15 +5773,15 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     
                                  apply();
                             } else {
-                                set_alert('Warning', response.IMPORT_DATA_MSG || 'The system encountered an issue processing your file. Please try again.');
+                                set_alert('Warning', response.IMPORT_DATA_MSG || 'The system encountered an issue processing your file. Please try again.','report');
                             }
                         } else {
                             // If data.msg is undefined or not in the expected format
-                            set_alert('Warning', 'Unexpected response from the server. Please try again or contact support.');
+                            set_alert('Warning', 'Unexpected response from the server. Please try again or contact support.','report');
                         }
                     } catch (e) {
                         // Catch any JSON parsing or unexpected errors during success handling
-                        set_alert('Error', 'An unexpected error occurred while processing the response. Please try again later.');
+                        set_alert('Error', 'An unexpected error occurred while processing the response. Please try again later.','report');
                         console.error('Error during success handling:', e);
                     }
                 },        
@@ -5834,19 +5842,19 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                         if (true) {
                             arr_chk = $scope.data_memberteam;
-                            if (arr_chk.length == 0) { $scope.goback_tab = 'session';set_alert('Warning', 'Please provide a valid Session List'); return; }
+                            if (arr_chk.length == 0) { set_alert('Warning', 'Please provide a valid Session List','general'); return; }
                             else {
                                 var irows_last = arr_chk.length - 1;
-                                if (arr_chk[irows_last].user_name == null) { $scope.goback_tab = 'session';set_alert('Warning', 'Please provide a valid Session List'); return; }
+                                if (arr_chk[irows_last].user_name == null) {set_alert('Warning', 'Please provide a valid Session List','general'); return; }
                             }
 
                             if ($scope.data_header[0].request_approver > 0) {
 
                                 arr_chk = $scope.data_approver;
-                                if (arr_chk.length == 0) { $scope.goback_tab = 'general';set_alert('Warning', 'Please provide a valid Assessment Team Leader List'); return; }
+                                if (arr_chk.length == 0) { set_alert('Warning', 'Please provide a valid Assessment Team Leader List','general'); return; }
                                 else {
                                     var irows_last = arr_chk.length - 1;
-                                    if (arr_chk[irows_last].user_name == null) { $scope.goback_tab = 'general';set_alert('Warning', 'Please provide a valid Assessment Team Leader List'); return; }
+                                    if (arr_chk[irows_last].user_name == null) {set_alert('Warning', 'Please provide a valid Assessment Team Leader List','general'); return; }
                                 }
 
                             }
@@ -5857,12 +5865,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                                 if(isRecom) break;
                             }
-                            if (!isRecom) return set_alert('Warning','Please provide a valid Manage Recommendations')
+                            if (!isRecom) return set_alert('Warning','Please provide a valid Manage Recommendations','managerecom')
                             
                             // validation
                             // validActionOwner()
                             if(!validRecommendations()) {
-                                return set_alert('Warning',$scope.validMessage)
+                                return set_alert('Warning',$scope.validMessage,'managerecom')
                             }
                         }
 
@@ -5911,7 +5919,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     $('#modalSendMailRegister').modal('hide');
                 } else if (action == 'confirm_submit_register_without') {
                     if(!validBeforRegister()) 
-                        return set_alert('Warning',$scope.validMessage)
+                        return set_alert('Warning',$scope.validMessage,'general')
 
                     $scope.Action_Msg_Confirm = true;
                     action = 'submit_without';
@@ -6043,6 +6051,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
 
             if (action == 'submit') {
+
                 if (arr_chk.action_status == 'reject') {
                     if (arr_chk.comment == '' || arr_chk.comment == null || arr_chk.comment == undefined) {
                         //set_alert('Warning', 'Please enter your comment'); 
@@ -6924,9 +6933,17 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     //set_alert
     if (true) {
-        function set_alert(header, detail) {
+        function set_alert(header, detail, tab) {
             $scope.Action_Msg_Header = header;
             $scope.Action_Msg_Detail = detail;
+        
+            // Set the tab based on where the error occurred (if provided)
+            if (tab) {
+                $scope.goback_tab = tab;
+            } else {
+                $scope.goback_tab = 'general';
+            }
+        
         
             $timeout(function() {
                 $('#modalMsg').modal({
@@ -6934,6 +6951,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     keyboard: false 
                 }).modal('show');
         
+                // Hide the modal after 2 seconds if it's a success message
                 if (header === 'Success') {
                     $timeout(function() {
                         $('#modalMsg').modal('hide');
@@ -7425,7 +7443,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         $scope.openDataEmployeeAdd = function (item, form_type) {
 
-            console.log(item)
             $scope.selectedData = item;
 
             $scope.selectedUser = {
@@ -7446,11 +7463,19 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             if($scope.selectDatFormType == 'worker')
 
                 $scope.data_worker_list = item.worker_list
-
-            if (form_type === 'manage') {
                 $scope.manage_ws_recom = item;
 
+                var manage = $scope.manage_ws_recom
+                $scope.selectedComment = manage.recommendations;
+                $scope.selectedFactor = manage.health_hazard;
+                $scope.selectedInitialRisk = manage.initial_risk_rating;
+
+                $scope.data_worksheet_show = $scope.worksheet_Filter($scope.data_worksheet_list)
+
+            if (form_type === 'manage') {
+            
                 $scope.action_tabs = 'search_tab'; //1 for em || 2 for teams to sent to p'kul
+
             }
 
             updateClickedStates(form_type);
@@ -7483,16 +7508,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.action_tabs = tab;
 
             if (tab === 'manage_tabs') {
-                var manage = $scope.manage_ws_recom
-                $scope.selectedComment = manage.recommendations;
-                $scope.selectedFactor = manage.health_hazard;
-                $scope.selectedInitialRisk = manage.initial_risk_rating;
-
                 $scope.isFilterActive = true;
 
-                $scope.data_worksheet_show = $scope.worksheet_Filter($scope.data_worksheet_list)
-
-                console.log("$scope.data_worksheet_show",$scope.data_worksheet_show)
             } else {
                 $scope.isFilterActive = false;
             }
@@ -7984,6 +8001,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.searchIndicator = {
                 text: ''
             }        
+
+            $scope.data_worksheet_show = [];
             $scope.selectedUser = {};
         };
     
@@ -10210,7 +10229,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         let accessInfo = {
             canRemove: false,
             canCopy: false,
-            canAdd: false
+            canAdd: false,
         };
     
         if(type == 'session'){
@@ -10253,21 +10272,23 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     accessInfo.canRemove = true;
                 } 
             }else{
+                //ถ้าไม่ใช่ admin || originator ทำไม่ได้
                 //approver rej flow    
                 console.log("$scope.active_session",$scope.active_session)           
                 console.log("$scope.item.id",item.id)           
-                if($scope.active_session === item.id && item.action_type === 'update'){
-                    accessInfo.canCopy = true;
-                    accessInfo.canAdd = true;
-                    accessInfo.canRemove = false;
-                }else if(item.action_type === 'insert'){
-                    accessInfo.canCopy = true;
-                    accessInfo.canRemove = true;
-                }else{
-                    accessInfo.canCopy = false;
-                    accessInfo.canRemove = false;                    
+                if($scope.flow_role_type === 'admin' || $scope.data_header[0].pha_request_by === $scope.user_name){
+                    if($scope.active_session === item.id && item.action_type === 'update'){
+                        accessInfo.canCopy = true;
+                        accessInfo.canAdd = true;
+                        accessInfo.canRemove = false;
+                    }else if(item.action_type === 'insert'){
+                        accessInfo.canCopy = true;
+                        accessInfo.canRemove = true;
+                    }else{
+                        accessInfo.canCopy = false;
+                        accessInfo.canRemove = false;                    
+                    }
                 }
-
 
             }
 
@@ -10280,6 +10301,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             if(!$scope.isApproveReject){
                 //normal flow 
                 if(index === 0) {
+
+                    console.log("item",item)
                     if (item.document_name !== null || item.document_no !== null || item.descriptions !== null ||
                         item.document_file_name !== null || item.document_file_path !== null) {
                         accessInfo.canRemove = true;
@@ -10289,14 +10312,19 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 } else {
                     accessInfo.canRemove = true;
                 }
+
+                accessInfo.canAdd = true;
+
     
             }else{
-                if($scope.active_session === item.id && item.action_type === 'update'){
-                    accessInfo.canCopy = true;
-                    accessInfo.canRemove = false;
-                }else if(item.action_type === 'insert'){
-                    accessInfo.canCopy = true;
-                    accessInfo.canRemove = true;
+                if($scope.flow_role_type === 'admin' || $scope.data_header[0].pha_request_by === $scope.user_name){
+                    if($scope.active_session === item.id && item.action_type === 'update'){
+                        accessInfo.canCopy = true;
+                        accessInfo.canRemove = false;
+                    }else if(item.action_type === 'insert'){
+                        accessInfo.canCopy = true;
+                        accessInfo.canRemove = true;
+                    }
                 }
             }
             $scope.drawingAccessInfoMap[item.id] = accessInfo;
@@ -10308,31 +10336,45 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     //access each role
     $scope.Access_check = function(task) {
         let accessInfo = {
-            canAccess: false,
-            isTA2: false,
-            isTA3: false
+            canAccess: false, // General access flag (for both viewing and uploading)
+            isTA2: false,     // Role: Task owner (TA2)
+            isTA3: false,     // Role: Approver (TA3)
+            canViewOnly: false // Regular employee can view if exists
         };
     
-        // If user is an admin, allow access
+        console.log("we will check access")
+        // Admin has full access
         if ($scope.flow_role_type === 'admin') {
             accessInfo.canAccess = true;
             return accessInfo;
         }
     
-        // If user is an employee
+        // Employee (could be TA2 or TA3 or regular employee)
         if ($scope.flow_role_type === 'employee') {
-            // Check if the task belongs to the user (TA2)
+            // Check if user is TA2 (task owner)
             if ($scope.user_name === task.user_name) {
                 accessInfo.isTA2 = true;
-                accessInfo.canAccess = true; // TA2 should have access to their own tasks
+                accessInfo.canAccess = task.status !== 21; // TA2 can upload until status is 21 (submitted)
             } else {
+                // Check if user is TA3 (approver)
+                if ($scope.data_approver_ta3) {
+                    for (let item of $scope.data_approver_ta3) {
+                        if (item.id_approver === task.id && $scope.user_name === item.user_name) {
+                            accessInfo.isTA3 = true;
+                            accessInfo.canAccess = true; // TA3 has access to view/download
+                        }
+                    }
+                }
 
-                if(!$scope.data_approver_ta3){return;}
-                // Check if the user is a TA3 for this task
-                for (let item of $scope.data_approver_ta3) {
-                    if (item.id_approver === task.id && $scope.user_name == item.user_name) {
-                        accessInfo.isTA3 = true;
-                        accessInfo.canAccess = true; // TA3 should not have access                       
+                // Check if a document is uploaded for the matching id_approver
+                if ($scope.data_drawing_approver) {
+                    for (let drawing of $scope.data_drawing_approver) {
+                        if (drawing.id_approver === task.id) {
+                            if (drawing.document_file_size) {
+                                console.log("task matches id_approver, document_file_size exists", drawing);
+                                accessInfo.canViewOnly = true; // Regular employees can only view the document if uploaded
+                            }
+                        }
                     }
                 }
             }
@@ -10340,6 +10382,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     
         return accessInfo;
     };
+    
 
     setTimeout(() => {
         const backdrops = document.querySelectorAll('.modal-backdrop');
@@ -10350,5 +10393,49 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         });
     }, 10); 
     
+
+
+
+    //====================================Fern test========================================//
+    /*$scope.statuses = [
+        {id: 11, name: "Draft"},
+        {id: 12, name: "Waiting PHA Conduct"},
+        {id: 13, name: "Waiting Follow Up"},
+        {id: 14, name: "Waiting Review Follow Up"},
+        {id: 21, name: "Waiting Approve Review"},
+        {id: 22, name: "Approve Reject"},
+        {id: 81, name: "Cancle"},
+        {id: 91, name: "Closed"}
+    ];
+    
+
+    
+    // Function to change status when the button is clicked
+    $scope.changeStatus = function(statusId) {
+        $scope.data_header[0].pha_status = statusId; // Update pha_status with selected statusId
+    
+        // Update the display name
+        const selectedStatus = $scope.statuses.filter(item => item.id === statusId)[0];
+        if (selectedStatus) {
+            $scope.data_header[0].pha_status_displayname = selectedStatus.name;
+        }
+    
+        console.log('Status changed to:', $scope.data_header[0].pha_status, 'Display Name:', $scope.data_header[0].pha_status_displayname);
+
+
+
+        //set form 
+
+            set_form_action($scope.action_part_befor, !false, true);
+            set_form_access(statusId,$scope.params,$scope.flow_role_type);
+            set_tab_focus(statusId,$scope.action_part_befor)      
+    };
+    
+    $scope.changeRole = function(role) {
+        $scope.flow_role_type = role;
+
+        $scope.Access_check($scope.data_approver)
+    };
+*/
     
 });

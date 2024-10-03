@@ -871,6 +871,17 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                 if (fileInput.files.length > 0) {
                     const file = fileInput.files[0];
+
+                     // Allowed characters regex (same logic as your backend)
+                     const allowedCharsRegex = /^[()a-zA-Z0-9_.\-\u0E00-\u0E7F\s]+$/;
+                    
+                     // Validate file name for allowed characters
+                     if (!allowedCharsRegex.test(file.name)) {
+                         set_alert('Warning', 'The file name contains invalid characters. Only letters, digits, and special characters like () _ - . are allowed.',tabName);
+ 
+                         return;
+                     }
+                                         
                     const validation = validateFile(file, 10240, allowedFileTypes);
 
                     if (!validation.valid) {
@@ -2331,6 +2342,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 if($scope.data_header[0].pha_status === 11 || $scope.data_header[0].pha_status === 12){
                     $scope.startTimer();  
                 }
+                
+                //updaterow span
+                $scope.$evalAsync(function() {
+                    computeRowspan();  // Safely schedule this to update the UI
+                });
 
                 $('#divPage').removeClass('d-none');
 
@@ -2498,6 +2514,17 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     
             if (pha_status_def == 11) {
 
+                const set_tabs = ['general','ram', 'worksheet',  'report'];
+            
+                showTabs(set_tabs);
+                setTabsActive(set_tabs);
+    
+                $scope.submit_type = true;
+    
+
+            }
+            else if (pha_status_def == 12) {
+    
                 const set_tabs = ['general','ram', 'worksheet', 'approver', 'report'];
             
                 showTabs(set_tabs);

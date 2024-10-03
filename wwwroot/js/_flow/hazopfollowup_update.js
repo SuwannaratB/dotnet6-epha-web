@@ -194,21 +194,34 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                                         apply();
                                     }
                                 }
-                                console.log("==================arr_details=====================",arr_details);
-                                console.log("==================seq=====================",seq);
-                                console.log("==================$scope.data_drawingworksheet=====================",$scope.data_drawingworksheet);
 
-                                var arr = $filter('filter')($scope.data_drawingworksheet, function (item) { return (item.seq == seq); });
-                                if (arr.length > 0) {
-                                    arr[0].document_file_name = file_name;
-                                    arr[0].document_file_size = file_size;
-                                    arr[0].document_file_path = service_file_url + file_path;// (url_ws.replace('/api/', '/')) + 'AttachedFileTemp/Hazop/' + file_name;
-                                    arr[0].document_module = $scope.document_module;
-                                    arr[0].action_change = 1;
-                                    clear_valid_items('upload_file-'+ $scope.seqUpload);
-                                    $scope.seqUpload = null;
-                                    apply();
 
+                                if($scope.data_header[0].pha_status === 13){
+                                    var arr = $filter('filter')($scope.data_drawingworksheet_responder, function (item) { return (item.seq == seq); });
+                                    if (arr.length > 0) {
+                                        arr[0].document_file_name = file_name;
+                                        arr[0].document_file_size = file_size;
+                                        arr[0].document_file_path = service_file_url + file_path;// (url_ws.replace('/api/', '/')) + 'AttachedFileTemp/Hazop/' + file_name;
+                                        arr[0].document_module = $scope.document_module;
+                                        arr[0].action_change = 1;
+                                        clear_valid_items('upload_file-'+ $scope.seqUpload);
+                                        $scope.seqUpload = null;
+                                        apply();
+    
+                                    }
+                                }else if($scope.data_header[0].pha_status === 14){
+                                    var arr = $filter('filter')($scope.data_drawingworksheet_reviewer, function (item) { return (item.seq == seq); });
+                                    if (arr.length > 0) {
+                                        arr[0].document_file_name = file_name;
+                                        arr[0].document_file_size = file_size;
+                                        arr[0].document_file_path = service_file_url + file_path;// (url_ws.replace('/api/', '/')) + 'AttachedFileTemp/Hazop/' + file_name;
+                                        arr[0].document_module = $scope.document_module;
+                                        arr[0].action_change = 1;
+                                        clear_valid_items('upload_file-'+ $scope.seqUpload);
+                                        $scope.seqUpload = null;
+                                        apply();
+    
+                                    }
                                 }
 
                                 console.log("==================arr=====================",arr);
@@ -447,7 +460,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
     }
 
     //add Drawing
-    $scope.addDataWorksheetDrawing = function (item_draw, seq_nodeworksheet) {
+    $scope.addDataWorksheetDrawing = function (item_draw, seq_nodeworksheet,type) {
         //item_draw = data_drawingworksheet
         var seq = item_draw.seq;
         var id_pha = item_draw.id_pha;
@@ -476,14 +489,21 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
             no: 1
         }
 
-        $scope.data_drawingworksheet.push(add_items);
+        if(type === 'reviewer'){
+            $scope.data_drawingworksheet_reviewer.push(add_items);
+
+        }else if(type === 'responder'){
+            $scope.data_drawingworksheet_responder.push(add_items);
+
+        }
+
         var ino = 0;
         for (const value of $scope.data_drawingworksheet) {
             value.no = ino; ino++;
         }
         apply();
     }
-    $scope.removeDataWorksheetDrawing = function (item_draw, seq_nodeworksheet) {
+    $scope.removeDataWorksheetDrawing = function (item_draw, seq_nodeworksheet,type) {
         console.log("item_draw",item_draw)
         console.log("$scope.data_drawingworksheet",$scope.data_drawingworksheet)
         var seq = item_draw.seq;
@@ -494,22 +514,51 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
         fileNameDisplay.textContent = ''; // ล้างข้อความที่แสดงชื่อไฟล์*/
 
         //หา same  id_worksheet if > 1 splice item_draw , if === 1 set null
-        var item_draw_worksheet = $scope.data_drawingworksheet.filter(function(item) {
-            return item.id_worksheet === item_draw.id_worksheet;
-        });
-    
-        if (item_draw_worksheet.length === 1) {
-            item_draw.document_file_name = "";
-            item_draw.document_file_path = "";
-            item_draw.document_file_size = 0;
-        } else {
-            var del_item_draw = $scope.data_drawingworksheet.findIndex(function(item) {
-                return item.seq === item_draw.seq;
+
+        if(type === 'reviewer'){
+            var item_draw_worksheet = $scope.data_drawingworksheet_reviewer.filter(function(item) {
+                return item.id_worksheet === item_draw.id_worksheet;
             });
-            if (del_item_draw !== -1) {
-                $scope.data_drawingworksheet.splice(del_item_draw, 1);
+        
+            if (item_draw_worksheet.length === 1) {
+                item_draw.document_file_name = "";
+                item_draw.document_file_path = "";
+                item_draw.document_file_size = 0;
+            } else {
+                var del_item_draw = $scope.data_drawingworksheet_reviewer.findIndex(function(item) {
+                    return item.seq === item_draw.seq;
+                });
+                if (del_item_draw !== -1) {
+                    $scope.data_drawingworksheet_reviewer[del_item_draw].action_type = 'delete';
+                    $scope.data_drawingworksheet_reviewer[del_item_draw].action_change = 1;
+
+                    //$scope.data_drawingworksheet_reviewer.splice(del_item_draw, 1);
+                }
             }
+        }else if(type === 'responder'){
+            var item_draw_worksheet = $scope.data_drawingworksheet_responder.filter(function(item) {
+                return item.id_worksheet === item_draw.id_worksheet;
+            });
+        
+            if (item_draw_worksheet.length === 1) {
+                item_draw.document_file_name = "";
+                item_draw.document_file_path = "";
+                item_draw.document_file_size = 0;
+            } else {
+                var del_item_draw = $scope.data_drawingworksheet_responder.findIndex(function(item) {
+                    return item.seq === item_draw.seq;
+                });
+                
+                if (del_item_draw !== -1) {
+
+                    $scope.data_drawingworksheet_responder[del_item_draw].action_type = 'delete';
+                    $scope.data_drawingworksheet_responder[del_item_draw].action_change = 1;
+
+                    //$scope.data_drawingworksheet_responder.splice(del_item_draw, 1);
+                }
+            }            
         }
+
 
         //var del = document.getElementById('del-' + seq);
         //del.style.display = "none";
@@ -656,15 +705,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                     }
                 });
 
-                if($scope.data_pha_doc[0].pha_status == 13){
-                    console.log("now we will set doc")
-                    set_follow_up();
-                }
-
-
                 if (true) {
                     $scope.MaxSeqdata_drawing_worksheet = 0;
                     var arr_check = $filter('filter')(arr.max, function (item) { return (item.name == 'drawingworksheet'); });
+
+                    console.log("arr_check",arr_check)
                     var iMaxSeq = 1; if (arr_check.length > 0) { iMaxSeq = arr_check[0].values; }
                     $scope.MaxSeqdata_drawing_worksheet = iMaxSeq;
                 }
@@ -698,7 +743,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                 $scope.DetailsShow = '' + arr.pha_doc[0].pha_no + ' (' + arr.pha_doc[0].pha_request_name + ')';
                 $scope.DetailsShow2 = '' + arr.pha_doc[0].pha_status_desc;
                 $scope.document_module = (arr.pha_doc[0].pha_status == 13 ? 'followup' : 'review_followup');
- 
+
+                if($scope.data_pha_doc[0].pha_status == 13){
+                    console.log("now we will set doc")
+                    set_follow_up();
+                }else if($scope.data_pha_doc[0].pha_status == 14){
+                    set_review_follow_up();
+                }
+
                 if($scope.flow_role_type != 'admin' && arr.pha_doc[0].pha_status == 13){
                     $scope.toggleStatus = false;
                     $scope.toggleChanged();
@@ -850,7 +902,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
     function set_follow_up(){
 
         $scope.data_details.forEach(owner => {
-            const exists = $scope.data_drawingworksheet.some(drawingApprover => drawingApprover.id_worksheet === owner.id);
+            const exists = $scope.data_drawingworksheet_responder.some(drawingApprover => drawingApprover.id_worksheet === owner.id);
 
             var xseq = Number($scope.MaxSeqdata_drawing_worksheet) + 1;
             $scope.MaxSeqdata_drawing_worksheet = xseq;
@@ -877,14 +929,49 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                 };
     
                 // Push ข้อมูลใหม่เข้าไปใน data_drawing_approver
-                $scope.data_drawingworksheet.push(newDrawing);
+                $scope.data_drawingworksheet_responder.push(newDrawing);
             }
 
-            console.log("$scope.data_drawingworksheet",$scope.data_drawingworksheet)
+            console.log("$scope.data_drawingworksheet",$scope.data_drawingworksheet_responder)
         });
         
     }
 
+    function set_review_follow_up(){
+        $scope.data_details.forEach(owner => {
+            const exists = $scope.data_drawingworksheet_reviewer.some(drawingApprover => drawingApprover.id_worksheet === owner.id);
+
+            var xseq = Number($scope.MaxSeqdata_drawing_worksheet) + 1;
+            $scope.MaxSeqdata_drawing_worksheet = xseq;
+    
+            if (!exists) {
+                let Format = $scope.data_drawingworksheet[0];
+                
+    
+                let newDrawing = {
+                    ...Format,
+                    no: 1,
+                    id_pha: owner.id_pha,
+                    id_session: owner.id_session,
+                    id_worksheet: owner.id,
+                    seq: xseq,
+                    id: xseq,
+                    no: xseq,
+
+                    document_file_name:null,
+                    document_file_path:null,
+                    document_file_size:null,
+                    action_type: 'insert',
+                    action_change: 1,
+                };
+    
+                // Push ข้อมูลใหม่เข้าไปใน data_drawing_approver
+                $scope.data_drawingworksheet_reviewer.push(newDrawing);
+            }
+
+            console.log("$scope.data_drawingworksheet",$scope.data_drawingworksheet_reviewer)
+        });
+    }
     function set_valid_items(_item, field) {
 
         console.log("_item, field",_item, field)
@@ -913,6 +1000,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
     $scope.showConfirmDialogSubmit = function (item, action) {
         clear_form_valid();
 
+        console.log(item)
         if (action == 'submit') {
             //เนื่องจากย้ายมาในระดับ row
             $scope.id_worksheet_select = item.seq;
@@ -928,27 +1016,60 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
             // }
 
             // check implement
-            if (item.implement) {
+            if (!item.implement) {
                 if ($scope.data_header[0].pha_status === 13) {
-                    if (!item.document_file_name_owner) {
-                        const validUploadFile = set_valid_items(item.document_file_name, 'upload_file-' + item.seq);
-                        if (validUploadFile) {
-                            return;
+                    const isMatchingWorksheet = $scope.data_details.some(detail => 
+                        item.id_worksheet === detail.id && 
+                        $scope.user_name === detail.responder_user_name
+                    );
+                
+                    if (isMatchingWorksheet) {
+                        const hasValidFileSize = $scope.data_drawingworksheet_responder.some(drawingItem => 
+                            drawingItem.document_file_size > 0
+                        );
+                
+                        if (hasValidFileSize) {
+                            const validUploadFile = set_valid_items(item.document_file_name, 'upload_file-' + item.seq);
+                            if (validUploadFile) {
+                                return true; 
+                            }
+                        } else {
+                            console.error("No valid document file size found in data_drawingworksheet");
+                            return false;
                         }
                     }
-                } else if ($scope.data_header[0].pha_status === 14) {
-                    if (!item.document_file_name) {
-                        const validUploadFile = set_valid_items(item.document_file_name, 'upload_file-' + item.seq);
-                        if (validUploadFile) {
-                            return;
+
+                    const validRemark = set_valid_items(item.responder_comment, 'remark-'+ item.seq);
+                    if (validRemark) {
+                        return
+                    }
+                
+                }
+                 else if ($scope.data_header[0].pha_status === 14) {
+                    const isMatchingWorksheet = $scope.data_details.some(detail => 
+                        item.id_worksheet === detail.id && 
+                        $scope.user_name === detail.responder_user_name
+                    );
+                
+                    if (isMatchingWorksheet) {
+                        const hasValidFileSize = $scope.data_drawingworksheet_reviewer.some(drawingItem => 
+                            drawingItem.document_file_size > 0
+                        );
+                
+                        if (hasValidFileSize) {
+                            const validUploadFile = set_valid_items(item.document_file_name, 'upload_file-' + item.seq);
+                            if (validUploadFile) {
+                                return true; 
+                            }
+                        } else {
+                            console.error("No valid document file size found in data_drawingworksheet");
+                            return false;
                         }
                     }
                 }
 
             }else {
-                console.log("($scope.data_drawingworksheet",$scope.data_drawingworksheet)
-                console.log("($scope.data_drawingworksheet", item.seq);
-
+                /*if ($scope.data_header[0].pha_status === 13) {
                 // Filter to get all matching items
                 var docfiles = $filter('filter')($scope.data_drawingworksheet, function (_item) {
                     return (_item.id_worksheet == item.seq && 
@@ -968,17 +1089,56 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                 if (validRemark || validUploadFile) {
                     return
                 }
-            }
+                }*/
 
-
-            if ($scope.data_drawingworksheet.length > 0) {
-                var arr_drawing = $filter('filter')($scope.data_drawingworksheet, function (item) {
-                    return (item.id_worksheet == $scope.id_worksheet_select); /* && item.document_file_name != null*/
-                });
-                if (arr_drawing.length == 0) { $scope.form_valid.valid_document_file = true; return; } else {
-                    //document_file_name 
+                if ($scope.data_header[0].pha_status === 13) {
+                    const isMatchingWorksheet = $scope.data_details.some(detail => 
+                        item.id_worksheet === detail.id && 
+                        $scope.user_name === detail.responder_user_name
+                    );
+                
+                    if (isMatchingWorksheet) {
+                        const hasValidFileSize = $scope.data_drawingworksheet_responder.some(drawingItem => 
+                            drawingItem.document_file_size > 0
+                        );
+                
+                        if (hasValidFileSize) {
+                            const validUploadFile = set_valid_items(item.document_file_name, 'upload_file-' + item.seq);
+                            if (validUploadFile) {
+                                return true; 
+                            }
+                        } else {
+                            console.error("No valid document file size found in data_drawingworksheet");
+                            return false;
+                        }
+                    }
+                
+                }
+                 else if ($scope.data_header[0].pha_status === 14) {
+                    const isMatchingWorksheet = $scope.data_details.some(detail => 
+                        item.id_worksheet === detail.id && 
+                        $scope.user_name === detail.responder_user_name
+                    );
+                
+                    if (isMatchingWorksheet) {
+                        const hasValidFileSize = $scope.data_drawingworksheet_reviewer.some(drawingItem => 
+                            drawingItem.document_file_size > 0
+                        );
+                
+                        if (hasValidFileSize) {
+                            const validUploadFile = set_valid_items(item.document_file_name, 'upload_file-' + item.seq);
+                            if (validUploadFile) {
+                                return true; 
+                            }
+                        } else {
+                            console.error("No valid document file size found in data_drawingworksheet");
+                            return false;
+                        }
+                    }
                 }
             }
+
+
 
 
             if ($scope.flow_status == 14) {
@@ -1033,18 +1193,18 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
 
         } else { $('#modalConfirmSubmit').modal('hide'); }
     };
-    function check_data_drawingworksheet(id_worksheet) {
+    function check_data_drawingworksheet_responder(id_worksheet) {
 
         var pha_seq = $scope.data_details[0].id_pha;
         //var id_worksheet = $scope.data_details[0].id_worksheet;
 
-        for (var i = 0; i < $scope.data_drawingworksheet.length; i++) {
-            $scope.data_drawingworksheet[i].id = Number($scope.data_drawingworksheet[i].seq);
-            $scope.data_drawingworksheet[i].id_pha = pha_seq;
+        for (var i = 0; i < $scope.data_drawingworksheet_responder.length; i++) {
+            $scope.data_drawingworksheet_responder[i].id = Number($scope.data_drawingworksheet_responder[i].seq);
+            $scope.data_drawingworksheet_responder[i].id_pha = pha_seq;
         }
 
         
-        $scope.data_drawingworksheet.forEach(function(item) {
+        $scope.data_drawingworksheet_responder.forEach(function(item) {
             // Check if document_file_size is null
             if (item.document_file_size == null) {
                 item.action_type = 'delete';
@@ -1053,31 +1213,55 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
         });
 
         var arr_active = [];
-        angular.copy($scope.data_drawingworksheet, arr_active);
+        angular.copy($scope.data_drawingworksheet_responder, arr_active);
         var arr_json = $filter('filter')(arr_active, function (item) {
             return (
                 ((item.action_type == 'update' && item.action_change == 1)
-                    || (item.action_type == 'insert' && item.action_change == 1))
+                    || (item.action_type == 'insert' && item.action_change == 1)
+                    || (item.action_type == 'delete' && item.action_change == 1))
                 && item.id_worksheet == id_worksheet
             );
         });
 
+        // Convert the modified array to JSON
+        return angular.toJson(arr_json);
 
-        //ข้อมูลที่ delete อยู่ใน data_drawingworksheet ไม่ได้เก็บไว้ใน data_drawingworksheet_delete
-        //ต้องไปปรับ $scope.removeDataWorksheetDrawing 
-        for (var i = 0; i < $scope.data_drawingworksheet_delete.length; i++) {
-            if ($scope.data_drawingworksheet_delete[i].id_worksheet == id_worksheet) {
-                $scope.data_drawingworksheet_delete[i].action_type = 'delete';
-                arr_json.push($scope.data_drawingworksheet_delete[i]);
-            }
+    }
+    function check_data_drawingworksheet_reviewer(id_worksheet) {
+
+        var pha_seq = $scope.data_details[0].id_pha;
+        //var id_worksheet = $scope.data_details[0].id_worksheet;
+
+        for (var i = 0; i < $scope.data_drawingworksheet_reviewer.length; i++) {
+            $scope.data_drawingworksheet_reviewer[i].id = Number($scope.data_drawingworksheet_reviewer[i].seq);
+            $scope.data_drawingworksheet_reviewer[i].id_pha = pha_seq;
         }
+
+        
+        $scope.data_drawingworksheet_reviewer.forEach(function(item) {
+            // Check if document_file_size is null
+            if (item.document_file_size == null) {
+                item.action_type = 'delete';
+                item.action_change = 1;
+            }
+        });
+
+        var arr_active = [];
+        angular.copy($scope.data_drawingworksheet_reviewer, arr_active);
+        var arr_json = $filter('filter')(arr_active, function (item) {
+            return (
+                ((item.action_type == 'update' && item.action_change == 1)
+                    || (item.action_type == 'insert' && item.action_change == 1)
+                    || (item.action_type == 'delete' && item.action_change == 1))
+                && item.id_worksheet == id_worksheet
+            );
+        });
 
 
         // Convert the modified array to JSON
         return angular.toJson(arr_json);
 
     }
-
     $scope.confirmSaveFollowup = function (action, _item) {
         var arr_active = [];
         angular.copy($scope.data_details, arr_active);
@@ -1110,7 +1294,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
         }*/
 
         var json_managerecom = angular.toJson(arr_json);
-        var json_drawingworksheet = check_data_drawingworksheet(_item.seq);
+        var json_drawingworksheet = check_data_drawingworksheet_responder(_item.seq);
+
+        console.log("json_drawingworksheet",json_drawingworksheet)
 
         var user_name = $scope.user_name;
         var flow_action = action;
@@ -1239,8 +1425,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
     }
     $scope.confirmSaveReviewFollowup = function (action, _item) {
           
-        console.log(action, _item)
-        var json_drawingworksheet = check_data_drawingworksheet(_item.seq);
+        var json_drawingworksheet = check_data_drawingworksheet_reviewer(_item.seq);
+
+        console.log("json_drawingworksheet",json_drawingworksheet)
 
         var arr_active = [];
         angular.copy($scope.data_details, arr_active);
@@ -1704,8 +1891,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
             };
 
             //set admin for originator
-
-
+            if($scope.data_pha_doc[0].pha_status === 14){
+                $scope.flow_role_type = 'admin'
+            }
 
             
             // If user is an admin, allow access

@@ -2407,7 +2407,8 @@
                                                                       ng-style="{'min-height': (30 * (data_nodeworksheet | filter:{id_node : selectedItemNodeView.seq,deviations: item.deviations,causes_no: item.causes_no}).length) + 'px'}"
                                                                       ng-readonly="!can_edit"
                                                                       ng-model="item.causes"
-                                                                      ng-keyup="filterResultHistory(item.causes, 'causes', 'causes_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')">
+                                                                      ng-keyup="clearAllValidationMessages(item.seq,'causes');
+                                                                      filterResultHistory(item.causes, 'causes', 'causes_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')">
                                                             </textarea>
                                                             <div class="autocomplete-dropdown" style="position: absolute;" ng-show="isShow == 'causes_worksheet_'+ item.seq"
                                                                  ng-class="{'ng-show' : (filteredArr[0].fieldID == ('causes_worksheet_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('causes_worksheet_'+item.seq)) }">
@@ -2488,7 +2489,8 @@
                                                                       ng-style="{'min-height': (30 * (data_nodeworksheet | filter:{id_node : selectedItemNodeView.seq,deviations: item.deviations,causes_no: item.causes_no,consequences_no: item.consequences_no}).length) + 'px'}"
                                                                       ng-readonly="!can_edit"                                                                      
                                                                       ng-model="item.consequences"
-                                                                      ng-keyup="filterResultHistory(item.consequences, 'consequences', 'consequences_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')">
+                                                                      ng-keyup="clearAllValidationMessages(item.seq,'consequences');
+                                                                      filterResultHistory(item.consequences, 'consequences', 'consequences_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')">
                                                             </textarea>
                                                             <div class="autocomplete-dropdown" style="position: absolute;" ng-show="isShow == 'consequences_worksheet_'+ item.seq"
                                                                  ng-class="{'ng-show' : (filteredArr[0].fieldID == ('consequences_worksheet_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('consequences_worksheet_'+item.seq)) }">
@@ -2544,7 +2546,7 @@
                                                         </div>
                                                         <select class="form-select rounded-1 mx-1 p-1  border-start-0  border-end-0 border-top-0 "
                                                                 ng-class="{'disabled-link':(!tab_worksheet_active)}"
-                                                                ng-change="actionChangeWorksheet(item,item.seq,'')" 
+                                                                ng-change="actionChangeWorksheet(item,item.seq,'');clearAllValidationMessages(item.seq,'category')" 
                                                                 ng-model="item.category_type">
                                                             <option ng-selected="item.category_type == item2.id"
                                                                     ng-repeat="item2 in DataCategory" 
@@ -2555,7 +2557,7 @@
                                                     </div>
                                                     <div id="valid-nodeworksheet-category_type-{{item.seq}}"
                                                         class="invalid-feedback text-danger" style="margin-top: 17px;">
-                                                        Please a valid.
+                                                        Please a valid category
                                                     </div>
                                                 </td>
 
@@ -2794,9 +2796,10 @@
                                                                       rows="3"
                                                                       ng-readonly="!can_edit"
                                                                       ng-model="item.recommendations"
-                                                                      ng-change="recommentAction($index)"
+                                                                      ng-change="clearAllValidationMessages(item.seq,'recom');"
                                                                       ng-keyup="
-                                                                      filterResultHistory(item.recommendations, 'recommendations', 'recommendations_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'recom')">
+                                                                      filterResultHistory(item.recommendations, 'recommendations', 'recommendations_worksheet_'+ item.seq);
+                                                                      actionChangeWorksheet(item,item.seq,'recom')">
                                                             </textarea>
                                                             <div class="autocomplete-dropdown" style="position: absolute;" ng-show="isShow == 'recommendations_worksheet_'+ item.seq"
                                                                  ng-class="{'ng-show' : (filteredArr[0].fieldID == ('recommendations_worksheet_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('recommendations_worksheet_'+item.seq)) }">
@@ -2844,7 +2847,7 @@
                                                 <td class="align-top border border-light border-active" style="padding: 0 !important; width: 120px;">
                                                     <div class="d-flex align-items-center ">
                                                         <div ng-class="{'disabled-link': (!action_owner_active) || (item.action_status === 'Responed')}">
-                                                            <button ng-click="openDataEmployeeAdd(item, 'owner'); recommentAction_valid(item);" 
+                                                            <button ng-click="openDataEmployeeAdd(item, 'owner');"
                                                                     class="px-0 mx-1"
                                                                     ng-class="{
                                                                         'btn btn-dark': item.action_status === 'Responded',
@@ -3398,6 +3401,11 @@
                                                         </button>
                                                     </div>
                                                 </div>
+
+                                                 <div id="valid-nodeworksheet-ram-after-risk-{{item.seq}}"
+                                                     class="invalid-feedback text-danger">
+                                                    Please provide a valid Risk.
+                                                </div>                                               
                                             </td>
 
                                             <td class="align-top rating white-space-nowrap " ng-class="{'disabled-link':(!tab_managerecom_active)}">
