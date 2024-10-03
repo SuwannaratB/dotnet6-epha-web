@@ -4750,50 +4750,44 @@
                 </div>
                 <div class="modal-body  ">
                     <div class="row" ng-if="data_general[0].id_ram==5">
-                        <div class="row">
-                            <div class="col-1"></div>
-                            <div class="col-5 d-flex justify-content-start gap-10">
-                                <span class="mx-1 d-flex pt-5">
-                                    <a class="m-1 text-info cursor-pointer"
-                                       href="{{y.document_definition_file_path}}" 
-                                       target="_blank"
-                                       ng-repeat="y in master_ram | toArray | filter:{id: data_general[0].id_ram}">
-                                       Definition Consequence Rating
-                                       <span class="fas fa-file-pdf fa-lg ms-1"></span>
-                                    </a>
-                                </span>
-                            </div>
-                            <div class="col-5 d-flex justify-content-center" style="padding: 10px 10px;gap: 65px;">
-                                <div class="d-flex justify-content-end align-items-center flex-column"
-                                     ng-repeat="item_ram in master_likelihood_level | toArray | filter:{id_ram:data_general[0].id_ram,columns_level:item_ram.columns_level}">
-                                    <label for="likelihood"><b>{{item_ram.likelihood_level}}</b></label>
-                                    <input type="radio"
-                                           id="likelihood"
-                                           name="likelihood"
-                                           ng-hide="data_header[0].pha_status === 21 ? !can_edit : false"
-                                           ng-checked="cal_ram_action_likelihood == item_ram.likelihood_level"
-                                           ng-click="selectDataRAM('l',item_ram.likelihood_level)"
-                                           style="cursor: pointer; width:25px; height:25px;">
-                                </div>
-                            </div>
-                            <div class="col-1 d-flex justify-content-end"></div>
-                        </div>
-                        <div class="col-1 d-flex flex-column justify-content-end" style="gap: 40px; padding: 0px;  padding-bottom: 20px;">
-                            <div class="d-flex justify-content-end align-items-center gap-2"
-                                 ng-repeat="item_ram in master_security_level | toArray | filter:{id_ram:data_general[0].id_ram,category_type:item_ram.category_type}">
-                                <label for="security_level"><b>{{item_ram.security_level}}</b></label>
-                                <input type="radio"
-                                       id="security_level"
-                                       name="security_level"
-                                       ng-hide="data_header[0].pha_status === 21 ? !can_edit : false "
-                                       ng-checked="cal_ram_action_security == item_ram.security_level"
-                                       ng-click="selectDataRAM('s',item_ram.security_level)"
-                                       style="cursor: pointer; width:25px; height:25px;">
-                            </div>
-                        </div>
+                        <div class="col-1"></div>
                         <div class="col-11">
-                            <div class="cursor-pointer " ng-repeat="itemRam in master_ram | toArray | filter:{id: data_general[0].id_ram}">
+                            <span class="mx-1 d-flex pt-5">
+                                <a class="m-1 text-info cursor-pointer"
+                                    href="{{y.document_definition_file_path}}" 
+                                    target="_blank"
+                                    ng-repeat="y in master_ram | toArray | filter:{id: data_general[0].id_ram}">
+                                    Definition Consequence Rating
+                                    <span class="fas fa-file-pdf fa-lg ms-1"></span>
+                                </a>
+                            </span>
+                        </div>
+                        <div class="col-1"></div>
+                        <div class="col-11">
+                            <div class="cursor-pointer " style="position: relative;" ng-repeat="itemRam in master_ram | toArray | filter:{id: data_general[0].id_ram}">
                                 <img ng-src="{{itemRam.document_file_path}}" style="width:100%;" />
+                                @* Security *@
+                                 <div id="security_level-{{$index}}" ng-repeat="item_ram in master_security_level | toArray | filter:{id_ram:data_general[0].id_ram,category_type:item_ram.category_type}">
+                                    @* <label for="security_level"><b>{{item_ram.security_level}}</b></label> *@
+                                    <input type="radio"
+                                        id="security_level"
+                                        name="security_level"
+                                        ng-hide="data_header[0].pha_status === 21 ? !can_edit : false "
+                                        ng-checked="cal_ram_action_security == item_ram.security_level"
+                                        ng-click="selectDataRAM('s',item_ram.security_level)"
+                                        style="cursor: pointer; width:25px; height:25px;">
+                                </div>
+                                @* likelihood *@
+                                 <div id="likelihood-{{$index}}" ng-repeat="item_ram in master_likelihood_level | toArray | filter:{id_ram:data_general[0].id_ram,columns_level:item_ram.columns_level}">
+                                    @* <label for="likelihood"><b>{{item_ram.likelihood_level}}</b></label> *@
+                                    <input type="radio"
+                                        id="likelihood"
+                                        name="likelihood"
+                                        ng-hide="data_header[0].pha_status === 21 ? !can_edit : false"
+                                        ng-checked="cal_ram_action_likelihood == item_ram.likelihood_level"
+                                        ng-click="selectDataRAM('l',item_ram.likelihood_level)"
+                                        style="cursor: pointer; width:25px; height:25px;">
+                                </div>
                             </div>
                         </div>
                     </div>

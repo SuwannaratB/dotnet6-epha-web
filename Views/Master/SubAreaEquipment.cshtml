@@ -41,6 +41,29 @@
                 </button>
             </div>
             <div class="d-flex align-items-end gap-4">
+                <div class="dropdown">
+                    <label class="form-label ps-0 pb-1 col-auto" for="plant">Departments</label>
+                    <select class="form-control mb-0 col-auto" 
+                        ng-model="selectOption.departments"
+                        ng-change="actionfilter('departments', selectOption.departments)">
+                        <option ng-repeat="item2 in data_departments" ng-value="item2.id">
+                            {{item2.name}}
+                        </option>
+                    </select>
+                </div>
+                <div class="dropdown">
+                    <label class="form-label ps-0 pb-1 col-auto" for="area">Sections</label>
+                    <select class="form-control mb-0 col-auto" 
+                        ng-model="selectOption.sections"
+                        ng-change="actionfilter('sections', selectOption.sections)">
+                        <option 
+                        ng-if="item2.departments == selectOption.departments" 
+                            ng-repeat="item2 in data_sections" 
+                            ng-value="item2.id">
+                            {{item2.name}}
+                        </option>
+                    </select>
+                </div>
                 <div class="d-flex gap-2">
                     <button class="btn btn-sm btn-secondary" style="width: 100px;" ng-click="confirmBack()">Back</button>
                     <button class="btn btn-sm btn-primary " style="width: 100px;" ng-click="confirmSave()">Save</button>
@@ -54,7 +77,8 @@
                         <th class="align-middle"  style="min-width: 90px">No</th>
                         <th class="align-middle">Name</th>
                         <th class="align-middle">Description</th>
-                        <th class="align-middle">Sections</th>
+                        @* <th class="align-middle">Departments</th>
+                        <th class="align-middle">Sections</th> *@
                         <th class="align-middle">Section Group</th>
                         @* <th class="align-middle" style="width: 120px;">Company</th> *@
                         <th class="align-middle" style="min-width:100px">Active</th>
@@ -100,6 +124,21 @@
                             </div>
                         </td>
 
+                        @* <td class="align-middle ">
+                             <div class="col-auto pt-2">
+                                <select class="form-control mb-0 col-auto" 
+                                    style="min-width: 160px;"
+                                    placeholder="Name"
+                                    ng-model="item.id_sections_group"
+                                    ng-change="actionChangedData(item,'sections_group')">
+                                    <option ng-repeat="item2 in data_departments" ng-value="item2.id">
+                                        {{item2.name}}
+                                    </option>
+                                </select>
+                                <div class="validation-message">{{item.id_sections_group ? '' : 'field is required.'}}</div>
+                            </div>
+                        </td>
+
                         <td class="align-middle ">
                              <div class="col-auto pt-2">
                                 <select class="form-control mb-0 col-auto" 
@@ -111,9 +150,9 @@
                                         {{item2.name}}
                                     </option>
                                 </select>
-                                <div class="validation-message">{{item.id_sections_group ? '' : 'field is required.'}}</div>
+                                <div class="validation-message">{{item.id_sections ? '' : 'field is required.'}}</div>
                             </div>
-                        </td>
+                        </td> *@
 
                         <td class="align-middle ">
                              <div class="col-auto pt-2">

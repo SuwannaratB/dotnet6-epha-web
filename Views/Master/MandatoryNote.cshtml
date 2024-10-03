@@ -53,8 +53,6 @@
                     <tr class="text-center">
                         <th class="align-middle"  style="min-width: 90px">No</th>
                         <th class="align-middle">Name</th>
-                        <th class="align-middle">Description</th>
-                        @* <th class="align-middle" style="width: 120px;">Company</th> *@
                         <th class="align-middle" style="min-width:100px">Active</th>
                         <th class="align-middle" style="min-width:100px">Management</th>
                     </tr>
@@ -71,7 +69,7 @@
                         <td class="align-middle ">
                             <div class="col-auto pt-2">
                                 <textarea class="form-control form-control-sm " 
-                                    rows="1" 
+                                    rows="4" 
                                     type="text"
                                     style=" min-width: 160px;"
                                     placeholder="Name"
@@ -80,21 +78,6 @@
                                     ng-change="actionChangedData(item,'name')">
                                 </textarea>
                                 <div class="validation-message">{{item.name ? '' : 'field is required.'}}</div>
-                            </div>
-                        </td>
-
-                        <td class="align-middle ">
-                            <div class="col-auto pt-2">
-                                <textarea class="form-control form-control-sm" 
-                                    rows="1" 
-                                    type="text"
-                                    style=" min-width: 160px;"
-                                    placeholder="Name"
-                                    ng-required="true"
-                                    ng-model="item.descriptions"
-                                    ng-change="actionChangedData(item,'descriptions')">
-                                </textarea>
-                                <div class="validation-message">{{true ? '' : 'field is required.'}}</div>
                             </div>
                         </td>
 

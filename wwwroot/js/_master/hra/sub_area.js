@@ -78,7 +78,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig){
                 }
                 $scope.pha_type_doc = 'update';
                 showAlert('Success', 'Data has been successfully saved.', 'success', function() {
-                    get_data_after_save();
+                    call_api_load();
                     apply();
                 });
             },
@@ -106,9 +106,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig){
         $scope.user_name = $scope.user['user_name'];
         $scope.flow_role_type = $scope.user['role_type'];
 
+        $scope.data_delete = [];
         $scope.data_all = [];
         $scope.data = [];
-        $scope.data_delete = [];
     }
 
     $scope.confirmSave = function () {

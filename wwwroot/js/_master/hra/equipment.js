@@ -27,8 +27,17 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig){
                 $scope.data = arr.data;
                 $scope.data_def = clone_arr_newrow(arr.data);
                 // master
-                $scope.data_sections = arr.sections
-                $scope.data_section_group = arr.sections_group
+                $scope.data_section_group = $filter('filter')(arr.sections_group, item => item.id)
+                $scope.data_departments = $filter('filter')(arr.departments, item => item.id)
+                $scope.data_sections = $filter('filter')(arr.sections, item => item.id)
+                // master default
+                $scope.data_section_group_def = $filter('filter')(arr.sections_group, item => item.id)
+                $scope.data_departments_def = $filter('filter')(arr.departments, item => item.id)
+                $scope.data_sections_def = $filter('filter')(arr.sections, item => item.id)
+                // var
+                $scope.selectOption['departments'] = $scope.data_departments[0].id
+                $scope.selectOption['sections'] = $scope.data_sections[0].id
+                // functions
                 setDataFilter()
                 setPagination()
                 get_max_id();
@@ -108,13 +117,23 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig){
         $scope.token = JSON.parse(localStorage.getItem('token'))
         $scope.user_name = $scope.user['user_name'];
         $scope.flow_role_type = $scope.user['role_type'];
-
+        // all data
         $scope.data_delete = [];
         $scope.data_all = [];
         $scope.data = [];
-        $scope.data_sections = [];
+        // master data
+        $scope.data_departments = [];
         $scope.data_sections = [];
         $scope.data_section_group = [];
+        // master default
+        $scope.data_departments_def = [];
+        $scope.data_sections_def = [];
+        $scope.data_section_def = [];
+        // var
+        $scope.selectOption = {
+            departments: null,
+            sections: null,
+        }
     }
 
     $scope.confirmSave = function () {
@@ -178,6 +197,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig){
         newInput.id = seq;
         newInput.active_type = 1;
         newInput.disable_page = 0;
+        newInput.id_sections = $scope.selectOption['sections'];
         newInput.action_type = 'insert';
         newInput.action_change = 1;
         $scope.data.push(newInput);
@@ -192,6 +212,23 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig){
         //     "id_sections_group": 1,
         //     "id_sections": "CMCE",
         // }
+    }
+
+    $scope.actionfilter = function(type, data){
+        if (type == 'departments') {
+            // console.log(data)
+            var data_section = $filter('filter')($scope.data_sections_def, function (item) {
+                return (item.departments == data);
+            });
+            $scope.selectOption['sections'] = data_section[0].id
+        }
+
+        if (type == 'sections') {
+
+        }
+
+        setDataFilter();
+        setPagination();
     }
 
     $scope.confirmBack = function () {
@@ -251,7 +288,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig){
 
     function setDataFilter(){
         // $scope.data.sort((a, b) => b.seq - a.seq);
-        $scope.data_filter = $scope.data
+        $scope.data_filter = $filter('filter')($scope.data, item => item.id_sections == $scope.selectOption['sections'])
     }
 
     function newTag(id_elemet){
