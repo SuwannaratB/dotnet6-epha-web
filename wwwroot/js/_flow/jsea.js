@@ -2503,6 +2503,17 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     
             if (pha_status_def == 11) {
 
+                const set_tabs = ['general','ram', 'worksheet',  'report'];
+            
+                showTabs(set_tabs);
+                setTabsActive(set_tabs);
+    
+                $scope.submit_type = true;
+    
+
+            }
+            else if (pha_status_def == 12) {
+    
                 const set_tabs = ['general','ram', 'worksheet', 'approver', 'report'];
             
                 showTabs(set_tabs);

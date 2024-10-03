@@ -2640,7 +2640,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 check_case_member_review();
 
     
-                const set_tabs = [ 'worksheet', 'managerecom'];
+                const set_tabs = [ 'general', 'areas', 'worker','worksheet', 'managerecom'];
             
                 showTabs(set_tabs);
                 setTabsActive(set_tabs);
@@ -7425,7 +7425,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         $scope.openDataEmployeeAdd = function (item, form_type) {
 
-            console.log(item)
             $scope.selectedData = item;
 
             $scope.selectedUser = {
@@ -7446,11 +7445,19 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             if($scope.selectDatFormType == 'worker')
 
                 $scope.data_worker_list = item.worker_list
-
-            if (form_type === 'manage') {
                 $scope.manage_ws_recom = item;
 
+                var manage = $scope.manage_ws_recom
+                $scope.selectedComment = manage.recommendations;
+                $scope.selectedFactor = manage.health_hazard;
+                $scope.selectedInitialRisk = manage.initial_risk_rating;
+
+                $scope.data_worksheet_show = $scope.worksheet_Filter($scope.data_worksheet_list)
+
+            if (form_type === 'manage') {
+            
                 $scope.action_tabs = 'search_tab'; //1 for em || 2 for teams to sent to p'kul
+
             }
 
             updateClickedStates(form_type);
@@ -7483,16 +7490,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.action_tabs = tab;
 
             if (tab === 'manage_tabs') {
-                var manage = $scope.manage_ws_recom
-                $scope.selectedComment = manage.recommendations;
-                $scope.selectedFactor = manage.health_hazard;
-                $scope.selectedInitialRisk = manage.initial_risk_rating;
-
                 $scope.isFilterActive = true;
 
-                $scope.data_worksheet_show = $scope.worksheet_Filter($scope.data_worksheet_list)
-
-                console.log("$scope.data_worksheet_show",$scope.data_worksheet_show)
             } else {
                 $scope.isFilterActive = false;
             }
@@ -7984,6 +7983,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.searchIndicator = {
                 text: ''
             }        
+
+            $scope.data_worksheet_show = [];
             $scope.selectedUser = {};
         };
     

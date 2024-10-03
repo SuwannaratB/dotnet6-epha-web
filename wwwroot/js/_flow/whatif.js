@@ -2215,7 +2215,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 const set_tabs = ['general', 'task', 'worksheet', 'managerecom'];
             
                 showTabs(set_tabs);
-                setTabsActive(['worksheet', 'managerecom']);
+                setTabsActive(set_tabs);
 
                 if ($scope.data_listworksheet.length == 0) {
                     $scope.tab_managerecom_show = false;

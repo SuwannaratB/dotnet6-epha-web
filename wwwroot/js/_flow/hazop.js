@@ -1403,6 +1403,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                             },
                             success: function (data) {
 
+
                                 if ($scope.leavePage) {
                                     window.open("home/portal", "_top");
                                     return;
@@ -2323,7 +2324,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 const set_tabs = ['general', 'node', 'worksheet', 'managerecom'];
             
                 showTabs(set_tabs);
-                setTabsActive(['worksheet', 'managerecom']);
+                setTabsActive(set_tabs);
 
                 if ($scope.data_nodeworksheet.length == 0) {
                     $scope.tab_managerecom_show = false;
