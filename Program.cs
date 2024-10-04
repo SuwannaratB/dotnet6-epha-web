@@ -17,11 +17,13 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy(MyAllowSpecificOrigins, policy =>
     {
-        policy.WithOrigins(
-            "https://qas-epha.thaioilgroup.com"
-        )
-        .AllowAnyHeader()
-        .AllowAnyMethod();
+       policy.WithOrigins(
+        "https://qas-epha.thaioilgroup.com", 
+        "https://localhost:7098", 
+        "https://localhost:7052")
+        .AllowCredentials()
+        .WithHeaders("Content-Type", "X-CSRF-TOKEN")
+        .WithMethods("GET", "POST");
     });
 });
 
