@@ -232,8 +232,32 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig){
         setPagination();
     }
 
+    $scope.actionChangedData = function(type, data){
+        if (type == 'sections_group') {
+            // data.id_sections_group = 
+        }
+
+        console.log(data)
+    }
+
     $scope.confirmBack = function () {
         window.open("/Master/Index", "_top");
+    }
+
+    function check_data() {
+        var data_list = [];
+        angular.copy($scope.data, data_list);
+
+        var arr_json = $filter('filter')(data_list, function (item) {
+            return ((item.action_type == 'update' && item.action_change == 1) || item.action_type == 'insert');
+        });
+
+        for (var i = 0; i < $scope.data_delete.length; i++) {
+            $scope.data_delete[i].action_type = 'delete';
+            arr_json.push($scope.data_delete[i]);
+        }
+        console.log(arr_json)
+        return angular.toJson(arr_json);
     }
 
     ///////////////////////////  Pagination  ///////////////////////////
@@ -279,7 +303,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig){
     //////////////////////////  Future ///////////////////////////
     function validation(){
         var list = $filter('filter')($scope.data, function (_item) {
-            return (!_item.name);
+            return (!_item.name || !_item.id_sections_group);
         });
 
         if(list.length > 0) return false
