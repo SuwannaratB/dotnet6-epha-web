@@ -37,7 +37,7 @@
             <div class="d-flex gap-4">
                 <button class="d-flex btn btn-sm btn-success gap-2" ng-click="newData()">
                     <i class="fa-solid fa-plus"></i>
-                    Worker Group
+                    Worker Group List
                 </button>
             </div>
             <div class="d-flex align-items-end gap-4">
@@ -52,9 +52,9 @@
                 <thead class="bg-white"> 
                     <tr class="text-center">
                         <th class="align-middle"  style="min-width: 90px">No</th>
-                        <th class="align-middle">Name</th>
-                        <th class="align-middle">Description</th>
-                        @* <th class="align-middle" style="width: 120px;">Company</th> *@
+                        <th class="align-middle">Display Name</th>
+                        <th class="align-middle">Username</th>
+                        <th class="align-middle">Worker Group</th>
                         <th class="align-middle" style="min-width:100px">Active</th>
                         <th class="align-middle" style="min-width:100px">Management</th>
                     </tr>
@@ -74,12 +74,12 @@
                                     rows="1" 
                                     type="text"
                                     style=" min-width: 160px;"
-                                    placeholder="Name"
+                                    placeholder="Display Name"
                                     ng-required="true"
-                                    ng-model="item.name"
-                                    ng-change="actionChangedData(item,'name')">
+                                    ng-model="item.user_displayname"
+                                    ng-change="actionChangedData(item,'user_displayname')">
                                 </textarea>
-                                <div class="validation-message">{{item.name ? '' : 'field is required.'}}</div>
+                                <div class="validation-message">{{item.user_displayname ? '' : 'field is required.'}}</div>
                             </div>
                         </td>
 
@@ -89,12 +89,27 @@
                                     rows="1" 
                                     type="text"
                                     style=" min-width: 160px;"
-                                    placeholder="Name"
+                                    placeholder="Username"
                                     ng-required="true"
-                                    ng-model="item.descriptions"
-                                    ng-change="actionChangedData(item,'descriptions')">
+                                    ng-model="item.user_name"
+                                    ng-change="actionChangedData(item,'user_name')">
                                 </textarea>
-                                <div class="validation-message">{{true ? '' : 'field is required.'}}</div>
+                                <div class="validation-message">{{item.user_name ? '' : 'field is required.'}}</div>
+                            </div>
+                        </td>
+
+                        <td class="align-middle">
+                            <div class="col-auto pt-2">
+                                <select class="form-control mb-0 col-auto" 
+                                    style="min-width: 160px;"
+                                    placeholder="Worker Group"
+                                    ng-model="item.id_worker_group"
+                                    ng-change="actionChangedData(item, 'worker_group')">
+                                    <option ng-repeat="item2 in data_worker_group" ng-value="item2.id">
+                                        {{item2.name}}
+                                    </option>
+                                </select>
+                                <div class="validation-message">{{item.id_worker_group ? '' : 'field is required.'}}</div>
                             </div>
                         </td>
 
@@ -166,5 +181,5 @@
     <script src="~/assets/js/phoenix.js"></script>
     <script src="~/assets/js/choices.min.js"></script>
     <script src="~/assets/js/fakedata.js"></script>
-    <script src="~/js/_master/hra/workergroup.js"></script>
+    <script src="~/js/_master/hra/workergroup_list.js"></script>
 }

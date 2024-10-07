@@ -7,7 +7,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig){
         var user_name = $scope.user_name;
         var flow_role_type = $scope.flow_role_type;
         $.ajax({
-            url: url_ws + "masterdata/get_master_group_list", // เปลี่ยน api ใหม่ด้วย
+            url: url_ws + "masterdata/get_master_worker_list", // เปลี่ยน api ใหม่ด้วย
             data: '{"user_name":"' + user_name + '","row_type":"' + flow_role_type + '"}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
             headers: {
@@ -24,9 +24,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig){
             },
             success: function (data) {
                 var arr = data;
+                // general
                 $scope.data_all = arr;
-                // $scope.data = arr.data;
+                $scope.data = arr.data;
                 $scope.data_def = clone_arr_newrow(arr.data);
+                // master
+                $scope.data_worker_group = arr.worker_group;
+                // function
                 setDataFilter()
                 setPagination()
                 get_max_id();
@@ -42,6 +46,59 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig){
         });
     }
 
+    function save_data(action) {
+        var user_name = $scope.user_name;
+        var flow_role_type = $scope.flow_role_type;
+        //save 
+        var flow_action = action || 'save'; 
+        var json_data = check_data();
+        $.ajax({
+            url: url_ws + "masterdata/set_master_worker_list",
+            data: '{"user_name":"' + user_name + '"'
+                + ',"role_type":"' + flow_role_type + '"'
+                + ',"page_name":"unit"'
+                + ',"json_data": ' + JSON.stringify(json_data)
+                + '}',
+            type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+            headers: {
+                'X-CSRF-TOKEN': $scope.token
+            },
+            xhrFields: {
+                withCredentials: true // เปิดการส่ง Cookie ไปพร้อมกับคำขอ
+            },
+            beforeSend: function () {
+                $("#divLoading").show();
+
+            },
+            complete: function () {
+                $("#divLoading").hide();
+            },
+            success: function (data) {
+                var arr = data;
+                if(arr[0].status == 'false') {
+                    showAlert('Error', arr[0].status, 'error', function() {
+                        apply()
+                    });
+                    return
+                }
+                $scope.pha_type_doc = 'update';
+                showAlert('Success', 'Data has been successfully saved.', 'success', function() {
+                    get_data_after_save();
+                    apply();
+                });
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                if (jqXHR.status == 500) {
+                    alert('Internal error: ' + jqXHR.responseText);
+                } else {
+                    alert('Unexpected ' + textStatus);
+                }
+            }
+
+        });
+
+    }
+
     ///////////////////////////  Main Functions  ///////////////////////////
     function get_data() {
         arr_def();
@@ -53,9 +110,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig){
         $scope.token = JSON.parse(localStorage.getItem('token'))
         $scope.user_name = $scope.user['user_name'];
         $scope.flow_role_type = $scope.user['role_type'];
-
+        // general
+        $scope.data_delete = [];
         $scope.data_all = [];
         $scope.data = [];
+        // master
+        $scope.data_worker_group = [];
     }
 
     function clone_arr_newrow(arr_items) {
@@ -95,8 +155,70 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig){
         } catch { }
     };
 
+    $scope.confirmSave = function () {
+        if(!validation()) {
+            return showAlert(`Invalid Data`,`The data you entered is invalid. Please check and try again.`, `error`);
+         } 
+ 
+         showConfirm(   'Are you sure?',    
+             'Do you really want to proceed?', 
+             'info',              
+             'Yes, Save',            
+             'No',  
+             '#3874ff',      
+             function() {
+                 save_data();
+             }
+         );
+    }
+
     $scope.confirmBack = function () {
         window.open("/Master/Index", "_top");
+    }
+
+    $scope.newData = function (item) {
+        var seq = Number($scope.MaxSeqData);
+        var newInput = clone_arr_newrow($scope.data_def)[0];
+        newInput.seq = seq;
+        newInput.id = seq;
+        newInput.no = seq;
+        newInput.active_type = 1;
+        newInput.disable_page = 0;
+        newInput.action_type = 'insert';
+        newInput.action_change = 1;
+        // newInput.id_worker_group = 1;
+        $scope.data.push(newInput);
+        $scope.MaxSeqData = Number($scope.MaxSeqData) + 1
+        setDataFilter()
+        setPagination()
+        $scope.setPage($scope.totalPages)
+        newTag(`new-${seq}`)
+        apply();
+    }
+
+    $scope.actionChangedData = function (arr, field) {
+        arr.action_change = 1;
+        if (field == "accept_status") {
+            arr.active_type = 0
+        } else if (field == "inaccept_status") {
+            arr.active_type = 1
+        }
+        console.log(arr)
+        apply();
+    }
+
+    function check_data() {
+        var arr_active = [];
+        angular.copy($scope.data, arr_active);
+        var arr_json = $filter('filter')(arr_active, function (item) {
+            return ((item.action_type == 'update' && item.action_change == 1) || item.action_type == 'insert');
+        });
+
+        for (var i = 0; i < $scope.data_delete.length; i++) {
+            $scope.data_delete[i].action_type = 'delete';
+            arr_json.push($scope.data_delete[i]);
+        }
+        return angular.toJson(arr_json);
     }
 
     ///////////////////////////  Pagination  ///////////////////////////
@@ -142,7 +264,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig){
     //////////////////////////  Future ///////////////////////////
     function validation(){
         var list = $filter('filter')($scope.data, function (_item) {
-            return (!_item.name);
+            return (!_item.user_displayname || !_item.user_name || !_item.id_worker_group);
         });
 
         if(list.length > 0) return false

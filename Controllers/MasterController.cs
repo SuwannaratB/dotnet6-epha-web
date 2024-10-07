@@ -119,7 +119,7 @@ namespace dotnet6_epha_web.Controllers
             _PageDef();
             return View();
         }
-        public IActionResult WorkerGroupList()
+        public IActionResult WorkGroup()
         {
             _PageDef();
             return View();

@@ -91,8 +91,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig){
                 }
                 $scope.pha_type_doc = 'update';
                 showAlert('Success', 'Data has been successfully saved.', 'success', function() {
-                    get_data_after_save();
-                    apply();
+                    call_api_load();
+                    apply(); 
                 });
             },
             error: function (jqXHR, textStatus, errorThrown) {
