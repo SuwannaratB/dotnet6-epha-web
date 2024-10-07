@@ -949,6 +949,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         var seq = $scope.data_header[0].seq;
         var user_name = $scope.user_name;
+        var flow_role_type = $scope.flow_role_type;
 
         var action_export_report_type = "hazop_report";
 
@@ -968,7 +969,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         $.ajax({
             url: url_ws + "Flow/" + action_export_report_type,
-            data: '{"sub_software":"hazop","user_name":"' + user_name + '","seq":"' + seq + '","export_type":"' + data_type + '"}',
+            data: '{"sub_software":"hazop","user_name":"' + user_name + '","row_type":"' + flow_role_type + '","seq":"' + seq + '","export_type":"' + data_type + '"}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
             headers: {
                 'X-CSRF-TOKEN': $scope.token
@@ -1287,6 +1288,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         var action_part = $scope.action_part;
         var user_name = $scope.user_name;
+        var flow_role_type = $scope.flow_role_type;
         var token_doc = $scope.token_doc + "";
         var pha_status = $scope.data_header[0].pha_status;
         var pha_version = $scope.data_header[0].pha_version;
@@ -1331,7 +1333,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         
         $.ajax({
             url: url_ws + "Flow/set_hazop",
-            data: '{"user_name":"' + user_name + '","token_doc":"' + token_doc + '","pha_status":"' + pha_status + '","pha_version":"' + pha_version + '","action_part":"' + action_part + '"'
+            data: '{"user_name":"' + user_name +'","row_type":"' + flow_role_type + '","token_doc":"' + token_doc + '","pha_status":"' + pha_status + '","pha_version":"' + pha_version + '","action_part":"' + action_part + '"'
                 + ',"json_header":' + JSON.stringify(json_header)
                 + ',"json_general":' + JSON.stringify(json_general)
                 + ',"json_functional_audition":' + JSON.stringify(json_functional_audition)
@@ -1371,6 +1373,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 var arr = data;
     
                 var user_name = $scope.user_name
+                var flow_role_type = $scope.flow_role_type;
                 //after save set to true and false 
                 $scope.data_nodeworksheet = data.data_nodeworksheet;
                 try{
@@ -1397,7 +1400,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                         $.ajax({
                             url: controller_text + "/set_session_doc",
-                            data: '{"controller_action_befor":"' + controller_action_befor + '","user_name":"' + user_name + '","pha_seq":"' + pha_seq + '"'
+                            data: '{"controller_action_befor":"' + controller_action_befor + '","user_name":"' + user_name + '","row_type":"' + flow_role_type + '","pha_seq":"' + pha_seq + '"'
                                 + ',"pha_no":"' + pha_no + '","pha_status":"' + pha_status + '","pha_type_doc":"' + pha_type_doc + '"}',
                             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
                             headers: {
@@ -1461,7 +1464,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                         $.ajax({
                             url: controller_text + "/set_session_doc",
-                            data: '{"controller_action_befor":"' + controller_action_befor + '","user_name":"' + user_name + '","pha_seq":"' + pha_seq + '"'
+                            data: '{"controller_action_befor":"' + controller_action_befor + '","user_name":"' + user_name + '","row_type":"' + flow_role_type + '","pha_seq":"' + pha_seq + '"'
                                 + ',"pha_no":"' + pha_no + '","pha_status":"' + pha_status + '","pha_type_doc":"' + pha_type_doc + '"}',
                             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
                             headers: {
@@ -1822,12 +1825,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     function call_api_load(page_load, action_submit, user_name, pha_seq) {
 
         var type_doc = $scope.pha_type_doc;//review_document
-
+        var flow_role_type = $scope.flow_role_type;
         $scope.params = get_params();
 
         $.ajax({
             url: url_ws + "Flow/get_hazop_details",
-            data: '{"sub_software":"hazop","user_name":"' + user_name + '","token_doc":"' + pha_seq + '","type_doc":"' + type_doc + '"}',
+            data: '{"sub_software":"hazop","user_name":"' + user_name + '","row_type":"' + flow_role_type + '","token_doc":"' + pha_seq + '","type_doc":"' + type_doc + '"}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
             headers: {
                 'X-CSRF-TOKEN': $scope.token
@@ -4296,10 +4299,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.master_ram.push(newInput);
         }
         var json_ram_master = angular.toJson($scope.master_ram);;
+        var flow_role_type = $scope.flow_role_type;
 
         $.ajax({
             url: url_ws + "Flow/set_master_ram",
-            data: '{"user_name":"' + user_name + '"'
+            data: '{"user_name":"' + user_name + '","row_type":"' + flow_role_type + '"'
                 + ',"json_ram_master":' + JSON.stringify(json_ram_master)
                 + '}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
@@ -6189,12 +6193,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         var page_end_first = _item.page_end_first;
         var page_end_second = _item.page_end_second;
         var user_name = $scope.user_name
+        var flow_role_type = $scope.flow_role_type;
 
         $.ajax({
             url: url_ws + "Flow/copy_pdf_file",
             data: '{"sub_software":"hazop","file_name":"' + file_name + '","file_path":"' + file_path + '"'
                 + ',"page_start_first":"' + page_start_first + '","page_start_second":"' + page_start_second + '"'
-                + ',"page_end_first":"' + page_end_first + '","page_end_second":"' + page_end_second + '","user_name":"' + user_name + '"'
+                + ',"page_end_first":"' + page_end_first + '","page_end_second":"' + page_end_second + '","user_name":"' + user_name + '","row_type":"' + flow_role_type + '"'
                 + '}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
             headers: {
@@ -6256,12 +6261,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             var page = conFig.controller_action_befor();
             var controller_text = "hazop";
             var user_name = $scope.user_name
+            var flow_role_type = $scope.flow_role_type;
             //conFig.pha_seq = null;
             conFig.pha_type_doc = pha_type_doc;
 
             $.ajax({
                 url: controller_text + "/next_page",
-                data: '{"controller_action_befor":"' + page + '","pha_type_doc":"' + pha_type_doc + '","user_name":"' + user_name + '"}',
+                data: '{"controller_action_befor":"' + page + '","pha_type_doc":"' + pha_type_doc + '","user_name":"' + user_name + '","row_type":"' + flow_role_type + '"}',
                 type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
                 headers: {
                     'X-CSRF-TOKEN': $scope.token
@@ -6337,12 +6343,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $('#modalSendMailTeam').modal('hide');
 
             var user_name = $scope.user_name;
+            var flow_role_type = $scope.flow_role_type;
             var token_doc = $scope.data_header[0].seq;
 
             $.ajax({
                 //url: url_ws + "Flow/set_email_member_review_stamp",
                 url: url_ws + "Flow/send_notification_member_review",
-                data: '{"sub_software":"hazop","user_name":"' + user_name + '","pha_seq":"' + token_doc + '"}',
+                data: '{"sub_software":"hazop","user_name":"' + user_name + '","row_type":"' + flow_role_type + '","pha_seq":"' + token_doc + '"}',
                 type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
                 headers: {
                     'X-CSRF-TOKEN': $scope.token
@@ -7864,9 +7871,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     
     function getEmployees( indicator, callback){
         var user_name = $scope.user_name
+        var flow_role_type = $scope.flow_role_type;
+
         $.ajax({
             url: url_ws + "Flow/employees_search",
-            data: '{"user_indicator":"' + indicator + '","user_name":"' + user_name + '"'
+            data: '{"user_indicator":"' + indicator + '","user_name":"' + user_name + '","row_type":"' + flow_role_type + '"'
                 + ',"max_rows":"50"'
                 + '}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
