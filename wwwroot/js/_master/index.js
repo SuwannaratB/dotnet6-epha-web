@@ -106,18 +106,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, conFig) {
                 active: true,
                 icon: 'fa-solid fa-folder',
                 sub_menu: [
-                    // {
-                    //     id: 41,
-                    //     title: 'Departments',
-                    //     path: 'Master/Departments',
-                    //     active: false
-                    // },
-                    // {
-                    //     id: 42,
-                    //     title: 'Sections',
-                    //     path: 'Master/Sections',
-                    //     active: false
-                    // },
                     {
                         id: 42,
                         title: 'Name of Sub Area : Sections Group',
@@ -150,13 +138,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, conFig) {
                     // },
                     {
                         id: 47,
-                        title: 'Worker Group',
-                        path: 'Master/WorkerGroupList',
+                        title: 'Work Group',
+                        path: 'Master/WorkGroup',
                         active: false
                     },
                     {
                         id: 48,
-                        title: 'Set Worker Group',
+                        title: 'Worker Group',
                         path: 'Master/WorkerGroup',
                         active: false
                     },
