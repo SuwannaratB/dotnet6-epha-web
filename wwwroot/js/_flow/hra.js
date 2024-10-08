@@ -2639,7 +2639,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 showTabs(set_tabs);
                 setTabsActive(set_tabs);
 
-                    //button
+                //button
                 $scope.cancle_type = true;               
                 $scope.save_type = true;
                 $scope.submit_type = true;                   
@@ -10357,7 +10357,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             canViewOnly: false // Regular employee can view if exists
         };
     
-        console.log("we will check access")
         // Admin has full access
         if ($scope.flow_role_type === 'admin') {
             accessInfo.canAccess = true;
