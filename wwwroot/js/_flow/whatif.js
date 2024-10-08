@@ -1781,6 +1781,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     $scope.data_session = arr.session;
                     $scope.data_session_def = clone_arr_newrow(arr.session);
 
+                    $scope.data_session_last = arr.session_last
+
+
                     $scope.data_memberteam = arr.memberteam;
                     $scope.data_memberteam_def = clone_arr_newrow(arr.memberteam);
                     $scope.data_memberteam_old = (arr.memberteam);
@@ -1809,6 +1812,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                     $scope.data_tasklist = JSON.parse(replace_hashKey_arr(arr.tasklist));
                     $scope.data_tasklist_def = clone_arr_newrow(arr.tasklist);
+                    
 
                     //แก้ไขเบื้องต้น เนื่องจาก path file ผิดต้องเป็น folder what if 
                     for (let i = 0; i < arr.tasklistdrawing; i++) {
@@ -1856,6 +1860,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     set_data_listworksheet('');
                     set_master_ram_likelihood('');
                     $scope.checkAndGenerateWorksheet();
+                    
 
                     try {
                         var id_session_last = arr.session[arr.session.length - 1].seq;
@@ -2319,7 +2324,18 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 check_case_member_review();
     
                 $scope.selectedItemListView.seq = $scope.data_tasklist[0].seq;
-    
+
+                //active session === lastest session
+                const maxSeq = $scope.data_drawing.reduce((max, item) => {
+                    if (item.action_type === 'update') {
+                        return item.seq > max ? item.seq : max;
+                    }
+                    return max; // ถ้าไม่ตรงเงื่อนไขให้ส่ง max กลับมา
+                }, 0);
+
+                $scope.active_session = $scope.data_session_last[0].id_session;
+                $scope.active_drawing = maxSeq.seq;
+
                 $scope.submit_type = true;
 
                 $scope.isApproveReject =true;

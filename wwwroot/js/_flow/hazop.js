@@ -1916,6 +1916,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     $scope.data_session = arr.session;
                     $scope.data_session_def = clone_arr_newrow(arr.session);
 
+                    $scope.data_session_last = arr.session_last
+
+
                     $scope.data_memberteam = arr.memberteam;
                     $scope.data_memberteam_def = clone_arr_newrow(arr.memberteam);
                     $scope.data_memberteam_old = (arr.memberteam);
@@ -2419,7 +2422,19 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 check_case_member_review();
     
                 $scope.selectedItemNodeView.seq = $scope.data_node[0].seq;
-    
+
+                //active session === lastest session
+                const maxSeq = $scope.data_drawing.reduce((max, item) => {
+                    if (item.action_type === 'update') {
+                        return item.seq > max ? item.seq : max;
+                    }
+                    return max; // ถ้าไม่ตรงเงื่อนไขให้ส่ง max กลับมา
+                }, 0);
+
+
+                $scope.active_session = $scope.data_session_last[0].id_session;
+                $scope.active_drawing = maxSeq.seq;
+
                 $scope.submit_type = true;
 
                 $scope.isApproveReject =true;
@@ -2491,7 +2506,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
 
         function set_form_access(pha_status,params,flow_role_type){
-            if(pha_status === 11 || pha_status === 12){
+            if(pha_status === 11 || pha_status === 12 || pha_status === 22){
                 $scope.can_edit = true;
             }
 
@@ -3469,6 +3484,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         running_no_level1_lv1($scope.data_session, iNo, index, newInput);
 
+        $scope.MaxSeqDataSession = xValues;
         $scope.selectdata_session = xValues;
         apply();
     }
@@ -3513,7 +3529,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 arrmember[i].action_type = 'insert';
                 arrmember[i].action_change = 1;
 
-                arrmember[i].seq = $scope.selectdata_memberteam;
+                arrmember[i].seq = seq;
                 arrmember[i].id = $scope.selectdata_memberteam;
 
                 $scope.data_memberteam.push(arrmember[i]);
@@ -3522,18 +3538,18 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
         if (true) {
             var arr_copy = [];
-            angular.copy($scope.data_approve, arr_copy);
+            angular.copy($scope.data_approver, arr_copy);
             var arrmember = $filter('filter')(arr_copy, function (item) { return (item.id_session == seq); });
             for (let i = 0; i < arrmember.length; i++) {
                 arrmember[i].id_session = Number(id_session);
                 arrmember[i].action_type = 'insert';
                 arrmember[i].action_change = 1;
 
-                arrmember[i].seq = $scope.selectdata_memberteam;
-                arrmember[i].id = $scope.selectdata_memberteam;
+                arrmember[i].seq = seq;
+                arrmember[i].id = $scope.selectdata_approver;
 
-                $scope.data_memberteam.push(arrmember[i]);
-                $scope.selectdata_memberteam += 1;
+                $scope.data_approver.push(arrmember[i]);
+                $scope.selectdata_approver += 1;
             }
         }
 
@@ -8642,8 +8658,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         accessInfo.canCopy = true;
                         accessInfo.canRemove = true;
                     }else{
-                        accessInfo.canCopy = false;
-                        accessInfo.canRemove = false;                    
+                        accessInfo.canCopy = true;
+                        accessInfo.canAdd = true;
+                        accessInfo.canRemove = true;                
                     }
                 }
 
@@ -8912,21 +8929,31 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     function validNode(){
         for (let i = 0; i < $scope.data_node.length; i++) {
             if (!$scope.data_node[i].node) {
-                if(!$scope.data_node[i].document_file_name) $scope.validMessage = 'Please select a valid Node'
+                if(!$scope.data_node[i].node) {
+                    $scope.validMessage = 'Please select a valid Node'
+                }else{
+
+                    const node_drawing = $scope.data_nodedrawing.filter(d => d.id_node === $scope.data_node[i].node);
+
+                    if (node_drawing.length == 0 && node_drawing[0].id_drawing == null){
+                        $scope.validMessage = 'Please select a valid Drawing'
+                        
+                    }
+                }
                 
                 $scope.goback_tab = 'node';
                 return false
             }
         }
         
-        for (let i = 0; i < $scope.data_nodedrawing.length; i++) {
+        /*for (let i = 0; i < $scope.data_nodedrawing.length; i++) {
             if (!$scope.data_nodedrawing[i].id_drawing) {
                 if(!$scope.data_nodedrawing[i].id_drawing) $scope.validMessage = 'Please select a valid Drawing'
     
                 $scope.goback_tab = 'node';
                 return false
             }
-        }
+        }*/
 
         $scope.validMessage = ''
         return true
