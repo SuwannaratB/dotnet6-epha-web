@@ -2291,7 +2291,7 @@
                                                 ng-if="( data_node.length == 1 ? (data_node[0].node == null ? false : true) : true) "
                                                 ng-repeat="item in data_nodeworksheet | toArray | filter:{id_node : selectedItemNodeView.seq} | sortNodeworksheet"
                                                 ng-init="accessInfo = Access_check(item)"> 
-  @*<!-- Second td for id_node -->
+ @*<!-- Second td for id_node -->
     <td class="align-top border border-light border-active">
         {{ item.no }}
     </td>
@@ -2322,7 +2322,7 @@
     </td>
     <td class="align-top border border-light border-active">
         {{ item.row_type }}
-    </td>  *@
+    </td> *@
                                                 <!-----no---->
                                                 <td class="align-top border border-light border-active " style="padding: 0 !important; width: 80px;"
                                                     ng-if="( item.causes_no == 1 && item.consequences_no == 1) && item.row_type == 'causes' "
@@ -2761,7 +2761,7 @@
                                                         <div class="autocomplete-container" 
                                                             style=" width: 100%; " 
                                                             ng-if="item.recommendations!=''">
-                                                            {{item.recommendations_no}} 
+                                                            {{item.recommendations_action_no}} 
                                                             @*<textarea class="form-control form-control-sm rounded-1 p-0 m-0 w-100 border-0 text-center"
                                                                       style=" width: 50px; font-size: 10px;resize: none;"
                                                                       placeholder="No" 

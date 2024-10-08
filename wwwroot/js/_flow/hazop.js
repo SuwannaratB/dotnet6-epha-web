@@ -4696,6 +4696,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         apply();
     }
     $scope.adddata_nodeworksheet = function (row_type, item, index) {
+
+
+        console.log(row_type)
+        console.log(item)
         if (true) {
             if (row_type.indexOf('causes') > -1) { row_type = 'causes'; }
             else if (row_type.indexOf('consequences') > -1) { row_type = 'consequences'; }
@@ -4730,7 +4734,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         var causes_no = Number(item.causes_no);
         var consequences_no = Number(item.consequences_no);
         var category_no = Number(item.category_no);
-        var recommendations_no = null;
+        var recommendations_no = Number(item.recommendations_no);
 
         var guidewords = item.guidewords;
         var deviations = item.deviations;
@@ -4818,7 +4822,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             seq_recommendations = $scope.MaxSeqdata_nodeworksheetrecommendations;
 
             //กรณีที่เป็น cat ให้ +1
-            //recommendations_no += 1;
+            recommendations_no += 1;
             
         }
        
@@ -4841,13 +4845,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         newInput.seq_consequences = seq_consequences;
         newInput.seq_category = seq_category;
 
-        newInput.index_rows = (index_rows + 0.5);
+        newInput.index_rows = index_rows;
         newInput.no = (no + 0.5);
         newInput.no1 = null;
         newInput.causes_no = causes_no;
         newInput.consequences_no = consequences_no;
         newInput.category_no = category_no;
-        newInput.recommendations_no = null;
+        newInput.recommendations_no = recommendations_no;
 
         newInput.action_type = 'insert';
         newInput.action_change = 1;
@@ -4944,7 +4948,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             dataList.forEach((item, index) => {
     
                 if (item.recommendations !== null && item.recommendations !== '') {
-                    item.recommendations_no = count; 
+                    item.recommendations_action_no = count; 
                     count++; 
                 }
             });
@@ -4978,7 +4982,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                             if (previous.consequences_no === item.consequences_no && previous.category_no === item.category_no && 
                                 previous.recommendations_no >= item.recommendations_no && 
                                 (item.row_type === 'category' || item.row_type === 'consequences' || item.row_type === 'recommendations')) {
-                                item.recommendations_no = null;
+                                if (previous.seq_recommendations === item.seq_recommendations) {
+                                    item.recommendations_no = previous.recommendations_no;
+                                } else {
+                                    item.recommendations_no = previous.recommendations_no + 1;
+                                }                                
                             }
 
                         }
@@ -5022,16 +5030,23 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
             
             // Specific conditions for 'category' row type
-            if (newData.row_type === 'consequences' && item.guidewords_no === newData.guidewords_no 
+            /*if (newData.row_type === 'consequences' && item.guidewords_no === newData.guidewords_no 
                 && item.causes_no === newData.causes_no) {
                 //index = item.category_no >= newData.category_no ? i : i + 1;
                 //break;
+
+                console.log("item.causes_no ", item.causes_no, "newData.causes_no", newData.causes_no);
+                console.log("item.consequences_no ", item.consequences_no, "newData.consequences_no", newData.consequences_no);
+                console.log("item.category_no ", item.category_no, "newData.category_no", newData.category_no);
+
+
                 const set_category = $scope.data_nodeworksheet.filter(data => 
                     data.guidewords_no === item.guidewords_no && 
                     data.causes_no === item.causes_no && 
                     data.consequences_no === item.consequences_no 
                 );
     
+                console.log("set_category",set_category)
                 for (let j = 0; j < set_category.length; j++) {
                     if (set_category[j].recommendation_no) {
                         index = i + j + 1;
@@ -5040,12 +5055,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 }
                 
                 if (index === -1) {
-                    index = i + set_category.length;
+                    index = i + set_category.length + 1;
                 }
                 
                 console.log(index)
                 break;                       
-            }
+            }*/
+        
 
             // Specific conditions for 'category' row type
             if (newData.row_type === 'category' && item.guidewords_no === newData.guidewords_no 
@@ -5053,11 +5069,21 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 && item.consequences_no === newData.consequences_no) {
                 //index = item.category_no >= newData.category_no ? i : i + 1;
                 //break;
+
+
+                
+                console.log("item.causes_no ", item.causes_no, "newData.causes_no", newData.causes_no);
+                console.log("item.consequences_no ", item.consequences_no, "newData.consequences_no", newData.consequences_no);
+                console.log("item.category_no ", item.category_no, "newData.category_no", newData.category_no);
+
                 const set_category = $scope.data_nodeworksheet.filter(data => 
+                    data.guidewords_no === item.guidewords_no  &&
                     data.causes_no === item.causes_no && 
                     data.consequences_no === item.consequences_no && 
                     data.category_no === item.category_no 
                 );
+
+                console.log("set_category",set_category)
     
                 for (let j = 0; j < set_category.length; j++) {
                     if (set_category[j].recommendation_no) {
@@ -5065,6 +5091,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         break;
                     }
                 }
+                console.log(set_category.length)
                 
                 if (index === -1) {
                     index = i + set_category.length;
@@ -5082,6 +5109,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     
                 const set_recommendations = $scope.data_nodeworksheet.filter(data => 
+                    data.guidewords_no === item.guidewords_no  &&
                     data.causes_no === item.causes_no && 
                     data.consequences_no === item.consequences_no && 
                     data.category_no === item.category_no && 
@@ -5099,7 +5127,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     index = i + set_recommendations.length;
                 }
                 
-                console.log(index)
+                console.log("indexindexindexindexindexindexindexindex",index)
                 break;                
             }
             
@@ -5143,13 +5171,17 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     
         }
 
-        console.log(index)
             
         if (index === -1) {
             index = $scope.data_nodeworksheet.length;
         }
+
+        console.log(index)
+
             
         $scope.data_nodeworksheet.splice(index, 0, newData);
+
+        console.log("=========================================$scope.data_nodeworksheet=======================================",newData)
             
         ensureUnique($scope.data_nodeworksheet,newData.id_node);
             
