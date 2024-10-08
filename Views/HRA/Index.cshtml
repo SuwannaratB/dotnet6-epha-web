@@ -802,8 +802,7 @@
                                                     @* Buton Action *@
                                                     <td class="align-top " 
                                                         style="width: 158px;" 
-                                                        ng-hide="!tab_general_active"
-                                                        ng-disable="tab_general_active || (data_header[0].pha_status === 22 && flow_role_type !== 'admin')">
+                                                        ng-hide="!tab_general_active  || (data_header[0].pha_status === 22 && flow_role_type !== 'admin')">
                                                         <div class="col-12" style="width: 158px;">
                                                             <div class="float-end">
                                                                 <span class="mx-1">
@@ -2931,7 +2930,7 @@
                                                         ng-repeat="item_x in data_drawing_approver | toArray | filter:{id_approver : item.seq}">
                                                         <div class="d-flex flex-nowrap justify-content-center align-items-center">
                                                             <!-- Cog icon (Only TA2, TA3, and Admins can see it and only if not submitted) -->
-                                                            <div class="font-sans-serif btn-reveal-trigger position-static me-1">
+                                                            <div class="font-sans-serif btn-reveal-trigger position-static me-1" ng-hide="isApproveReject">
                                                                 <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 p-1"
                                                                     ng-if="(accessInfo.canAccess || accessInfo.isTA2 || accessInfo.isTA3) && (item.approver_action_type != 2)"
                                                                     type="button" data-bs-toggle="dropdown" data-boundary="window"
@@ -2957,9 +2956,10 @@
                                                             <!-- File upload/download section -->
                                                             <div class="btn-group my-2" ng-show="accessInfo.canAccess || accessInfo.canViewOnly">
                                                                 <!-- Upload button (Only visible to TA2 who can still upload) -->
-                                                                <div class="icon-button border p-3"
+                                                                
+                                                                <div class="icon-button border p-3" ng-hide="isApproveReject && !item.document_file_size"
                                                                     style="border-color: #0d6efd; background-color: #0d6efd;">
-                                                                    <span class="fa-solid fa-arrow-up-from-bracket fa-lg"  ng-hide="item_x.document_file_size || !accessInfo.isTA " style="color: #ffffff;"></span>
+                                                                    <span class="fa-solid fa-arrow-up-from-bracket fa-lg"  ng-hide="item_x.document_file_size || !accessInfo.isTA2 " style="color: #ffffff;"></span>
                                                                     <span class="fa-solid fa-file-pdf fa-lg" ng-show="!item.document_file_size || accessInfo.canViewOnly"  style="color: #ffffff;"></span>
                                                                 </div>
                                                                  
