@@ -861,6 +861,8 @@
                                                     <td class="align-top " 
                                                         style="width: 158px;" 
                                                         ng-hide="!tab_general_active  || (data_header[0].pha_status === 22 && flow_role_type !== 'admin')">
+                                                        {{'SEQ' + item.seq}}
+                                                        {{'No' + item.no}}
                                                         <div class="col-12" style="width: 158px;">
                                                             <div class="float-end">
                                                                 <span class="mx-1">
@@ -2782,7 +2784,7 @@
                                                         </span>
                                                         <div class="autocomplete-container" style=" width: 100%; " ng-class="{'disabled-link':(!tab_worksheet_active)}">
                                                             <textarea class="form-control form-control-sm rounded-1 p-0 m-0 w-100 border border-end-0 border-top-0"
-                                                                      style=" width: 400px; font-size: 10px;"
+                                                                      style=" width: 400px; font-size: 10px; resize: none;"
                                                                       id="recommendations_worksheet_{{item.seq}}" 
                                                                       name="recommendations_worksheet_{{item.seq}}"
                                                                       placeholder="Recommendations" 
@@ -3647,7 +3649,6 @@
                                                             </div>
                                                             <!-- File upload/download section -->
                                                             <div class="btn-group my-2" ng-show="accessInfo.canAccess || accessInfo.canViewOnly">
-                                                                {{'item_x.document_file_size' + item_x.document_file_size}}
                                                                 <!-- Upload button (Only visible to TA2 who can still upload) -->
                                                                 <div class="icon-button border p-3" ng-hide="isApproveReject && !item_x.document_file_size"
                                                                     style="border-color: #0d6efd; background-color: #0d6efd;">
