@@ -359,6 +359,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                 }] : [{ id_parameter: 0, id_area_application: 0 }];
                 setDataFilter()
                 setPagination()
+                setPaginationGuideWords()
                 get_max_id();
                 apply();
             },
@@ -481,6 +482,18 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
     $scope.actionfilter = function(section, data){
 
+        if (section == 'search_guide_words') {
+            const query = data.toLowerCase()
+            $scope.data_guide_word_filter = $scope.data.filter(item => {
+                return (item.deviations && item.deviations.toLowerCase().includes(query)) ||
+                (item.guide_words && item.guide_words.toLowerCase().includes(query)) ||
+                (item.area_application && item.area_application.toLowerCase().includes(query)) ||
+                (item.process_deviation && item.process_deviation.toLowerCase().includes(query));
+            });
+            setPaginationGuideWords();
+            return
+        }
+
         if((!$scope.selected['application'] && parseNumber($scope.selected['application']) != 0)&&
             (!$scope.selected['parameter'] && parseNumber($scope.selected['parameter']) != 0)
         ) {
@@ -509,6 +522,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         $scope.flow_role_type = $scope.user['role_type'];
         // $scope.user_name = conFig.user_name();
         // $scope.flow_role_type = conFig.role_type();//admin,request,responder,approver
+        $scope.display_data = [];
         $scope.data_all = [];
         $scope.data = [];
         //ไม่แน่ใจว่า list เก็บ model เป็น value หรือ text นะ 
@@ -517,6 +531,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         $scope.data_drawing = [];
         $scope.data_drawing_delete = [];
         $scope.selected = {
+            search_guide_words: '',
             application: '',
             parameter: ''
         }
@@ -599,6 +614,46 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         }
     };
 
+    ///////////////////////////  Pagination Guide Words  ///////////////////////////
+    function setPaginationGuideWords(){
+        // Pagination settings
+        $scope.pageSizeGuideWords = 8; // จำนวนข้อมูลต่อหน้า
+        $scope.currentPageGuideWords = 1; // หน้าปัจจุบัน
+        $scope.totalPagesGuideWords = Math.ceil($scope.data_guide_word_filter.length / $scope.pageSizeGuideWords); // จำนวนหน้าทั้งหมด
+        // สร้างลิสต์ของตัวเลขหน้า
+        $scope.pagesGuideWords = Array.from({ length: $scope.totalPagesGuideWords }, (v, k) => k + 1);
+        $scope.paginateGuideWords()
+    }
+
+    // ฟังก์ชันสำหรับจัดข้อมูลตามหน้า
+    $scope.paginateGuideWords = function() {
+        const start = ($scope.currentPageGuideWords - 1) * $scope.pageSizeGuideWords;
+        const end = start + $scope.pageSizeGuideWords;
+        $scope.paginatedGuideWords= $scope.data_guide_word_filter.slice(start, end);
+    };
+
+    // ฟังก์ชันสำหรับเปลี่ยนหน้า
+    $scope.setPageGuideWords = function(page) {
+        $scope.currentPageGuideWords = page;
+        $scope.paginateGuideWords();
+    };
+
+    // ฟังก์ชันสำหรับไปหน้าก่อนหน้า
+    $scope.prevPageGuideWords = function() {
+        if ($scope.currentPageGuideWords > 1) {
+        $scope.currentPageGuideWords--;
+        $scope.paginateGuideWords();
+        }
+    };
+
+    // ฟังก์ชันสำหรับไปหน้าถัดไป
+    $scope.nextPageGuideWords = function() {
+        if ($scope.currentPageGuideWords < $scope.totalPagesGuideWords) {
+        $scope.currentPageGuideWords++;
+        $scope.paginateGuideWords();
+        }
+    };
+
     //////////////////////////  Future ///////////////////////////
     function validation(){
         var list = $filter('filter')($scope.data, function (_item) {
@@ -617,6 +672,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
     function setDataFilter(){
         // $scope.data.sort((a, b) => b.seq - a.seq);
         $scope.data_filter = $scope.data
+        $scope.data_guide_word_filter = $scope.data
     }
 
     function newTag(id_elemet){
