@@ -232,7 +232,39 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig){
         setPagination();
     }
 
-    $scope.actionChangedData = function(type, data){
+    $scope.removeData = function (item) {
+        showConfirm(   'Are you sure?',             // Title
+            'Do you really want to proceed?', // Text
+            'error',                   // Icon (e.g., 'success', 'error', 'warning')
+            'Yes, Delete',              // Custom text for the confirm button
+            'No',  
+            '#d33',      
+            function() {
+                if(!item) return showAlert('Error', 'Data remove not Found!', 'error');
+
+                var del_item = $filter('filter')($scope.data, function (_item) {
+                    return (_item.seq == item.seq);
+                })[0];
+        
+                if(!del_item) return showAlert('Error', 'Data remove not Found!', 'error');
+        
+                $scope.data_delete.push(del_item)
+
+                $scope.data = $filter('filter')($scope.data, function (_item) {
+                    return (_item.seq != del_item.seq);
+                });
+
+                showAlert('Success', 'Data has been successfully Deleted.', 'success', function() {
+                    setDataFilter()
+                    setPagination()
+                    apply();
+                });
+            }
+        );
+    };
+
+    $scope.actionChangedData = function(data, type){
+        data.action_change = 1;
         if (type == 'sections_group') {
             // data.id_sections_group = 
         }
