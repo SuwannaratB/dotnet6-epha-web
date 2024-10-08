@@ -56,7 +56,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig){
             url: url_ws + "masterdata/set_master_worker_list",
             data: '{"user_name":"' + user_name + '"'
                 + ',"role_type":"' + flow_role_type + '"'
-                + ',"page_name":"unit"'
+                + ',"page_name":"worker_group"'
                 + ',"json_data": ' + JSON.stringify(json_data)
                 + '}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",

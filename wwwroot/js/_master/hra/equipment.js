@@ -28,15 +28,16 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig){
                 $scope.data = arr.data;
                 $scope.data_def = clone_arr_newrow(arr.data);
                 // master
-                $scope.data_section_group = $filter('filter')(arr.sections_group, item => item.id)
+                $scope.data_sections_group = $filter('filter')(arr.sections_group, item => item.id)
                 $scope.data_departments = $filter('filter')(arr.departments, item => item.id)
                 $scope.data_sections = $filter('filter')(arr.sections, item => item.id)
                 // master default
-                $scope.data_section_group_def = $filter('filter')(arr.sections_group, item => item.id)
+                $scope.data_sections_group_def = $filter('filter')(arr.sections_group, item => item.id)
                 $scope.data_departments_def = $filter('filter')(arr.departments, item => item.id)
                 $scope.data_sections_def = $filter('filter')(arr.sections, item => item.id)
                 // var
                 $scope.selectOption['departments'] = $scope.data_departments[0].id
+                $scope.selectOption['sections_group'] = $scope.data_sections_group[0].id
                 $scope.selectOption['sections'] = $scope.data_sections[0].id
                 // functions
                 setDataFilter()
@@ -133,6 +134,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig){
         // var
         $scope.selectOption = {
             departments: null,
+            sections_group: null,
             sections: null,
         }
     }
@@ -199,6 +201,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig){
         newInput.active_type = 1;
         newInput.disable_page = 0;
         newInput.id_sections = $scope.selectOption['sections'];
+        newInput.id_sections_group = $scope.selectOption['sections_group'];
         newInput.action_type = 'insert';
         newInput.action_change = 1;
         $scope.data.push(newInput);
@@ -209,10 +212,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig){
         newTag(`new-${seq}`)
         console.log(newInput)
         apply();
-        // {
-        //     "id_sections_group": 1,
-        //     "id_sections": "CMCE",
-        // }
     }
 
     $scope.actionfilter = function(type, data){
@@ -222,10 +221,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig){
                 return (item.departments == data);
             });
             $scope.selectOption['sections'] = data_section[0].id
-        }
-
-        if (type == 'sections') {
-
         }
 
         setDataFilter();
@@ -345,7 +340,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig){
 
     function setDataFilter(){
         // $scope.data.sort((a, b) => b.seq - a.seq);
-        $scope.data_filter = $filter('filter')($scope.data, item => item.id_sections == $scope.selectOption['sections'])
+        $scope.data_filter = $filter('filter')($scope.data, item =>
+             item.id_sections == $scope.selectOption['sections'] && 
+             item.id_sections_group == $scope.selectOption['sections_group'] )
     }
 
     function newTag(id_elemet){
