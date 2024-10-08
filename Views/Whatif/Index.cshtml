@@ -813,15 +813,15 @@
                                                     </td>
 
                                                     @* Buton Action *@
-                                                    <td class="align-top col-auto p-2 py-3" style="width: 158px;" ng-class="{'d-none': (!tab_general_active)}">
-
+                                                    <td class="align-top " 
+                                                        style="width: 158px;" 
+                                                        ng-hide="!tab_general_active  || (data_header[0].pha_status === 22 && flow_role_type !== 'admin')">
                                                         <div class="col-12" style="width: 158px;">
                                                             <div class="float-end">
                                                                 <span class="mx-1">
                                                                     <button class="btn btn-outline-secondary p-2" 
-                                                                        ng-class="{'disabled-link': isDisableStatus}"
-                                                                        style="color: #ff2828; background-color: #f1f2f4; border-color: #ff2828;"
                                                                         ng-disabled="!sessionAccessInfoMap[item.id].canRemove"
+                                                                        style="color: #ff2828; background-color: #f1f2f4; border-color: #ff2828;"
                                                                         ng-click="triggerRemove(item,item.seq,$index,'session')">
                                                                         <span class="fa-regular fa-trash-can fa-lg"></span>
                                                                     </button>
@@ -829,34 +829,30 @@
 
                                                                 <span class="mx-1">
                                                                     <button class="btn btn-outline-secondary p-2" 
-                                                                        ng-class="{'disabled-link': isDisableStatus}"
                                                                         ng-disabled="!sessionAccessInfoMap[item.id].canCopy"  
                                                                         style="color: #2445fc; background-color: #f1f2f4; border-color: #2445fc;"
                                                                         ng-click=copyDataSession(item.seq,$index)>
                                                                         <span class="fas fa-copy fa-lg"></span>
                                                                     </button>
                                                                 </span>
+
                                                                 <span class="mx-1 d-none">
                                                                     <button class="btn btn-outline-secondary p-2" 
-                                                                            style="color: #1336fc; background-color: #f1f2f4; border-color: #a8a8a8;"
-                                                                            ng-click=copyDataSession(item.seq,$index)
-                                                                            data-toggle="tooltip" 
-                                                                            data-placement="top" 
-                                                                            title="Copy">
+                                                                        ng-class="{'disabled-link': isDisableStatus && flow_role_type !== 'admin'}"
+                                                                        style="color: #1336fc; background-color: #f1f2f4; border-color: #a8a8a8;"
+                                                                        ng-click=copyDataSession(item.seq,$index)>
                                                                         <span class="fas fa-copy fa-lg"></span>
                                                                     </button>
                                                                 </span>
+
                                                                 <span class="mx-1">
                                                                     <button class="btn btn-outline-secondary p-2" 
-                                                                            style="color: #0abe0a; background-color: #f1f2f4; border-color: #0abe0a;"
-                                                                            ng-click=addDataSession(item.seq,$index)
-                                                                            data-toggle="tooltip" 
-                                                                            data-placement="top" 
-                                                                            title="Add">
+                                                                        ng-disabled="!sessionAccessInfoMap[item.id].canAdd"                                                                       
+                                                                        style="color: #0abe0a; background-color: #f1f2f4; border-color: #0abe0a;"
+                                                                        ng-click=addDataSession(item.seq,$index)>
                                                                         <span class="fas fa-square-plus fa-lg"></span>
                                                                     </button>
                                                                 </span>
-
                                                             </div>
                                                         </div>
                                                     </td>
@@ -3425,21 +3421,22 @@
                                                             </div>
                                                     </div>
                                                 </td>
-                                                <td class="align-top white-space-nowrap" ng-class="{'disabled-link border-bottom':(!tab_approver_active)}">
-                                                    <div class="col-md-12 p-1 ps-3 text-start"  ng-if="(accessInfo.canAccess || accessInfo.isTA2) && item.approver_action_type != 2">
+                                                <td class="align-top white-space-nowrap" ng-class="{'disabled-link':(!tab_approver_active)}">
+                                                    <div class="col-md-12 p-1 ps-3 text-start"  ng-if="!isApproveReject && item.approver_action_type != 2">
                                                         <div class="form-check form-check-inline cursor-pointer ps-0">
-                                                            <span class="fa-solid far fa-file-pdf text-danger" style="font-size:15px;" ng-click="confirmExport('whatif_report','pdf')"></span>
+                                                            <span class="fa-solid far fa-file-pdf text-danger" style="font-size:15px;" 
+                                                                ng-click="confirmExport('hazop_report','pdf')"></span>
                                                             <b>
-                                                                What's if Report
+                                                                WHAT'S IF Report
                                                             </b>
                                                         </div><br />
-                                                        <div class="form-check form-check-inline" ng-if="!accessInfo.isTA3" >
+                                                        <div class="form-check form-check-inline" ng-if="(accessInfo.canAccess || accessInfo.isTA2) && !accessInfo.isTA3" >
                                                             <input class="form-check-input" id="inlineRadio-{{item.seq}}" type="radio"
                                                                    name="inlineRadioOptions-{{item.seq}}" 
                                                                    value="approve" checked ng-model="item.action_status" />
                                                             <label class="form-check-label" for="inlineRadioApprove-{{item.seq}}"> Approve</label>
                                                         </div>
-                                                        <div class="form-check form-check-inline" ng-if="!accessInfo.isTA3">
+                                                        <div class="form-check form-check-inline" ng-if="(accessInfo.canAccess || accessInfo.isTA2) && !accessInfo.isTA3">
                                                             <input class="form-check-input" id="inlineRadioOptions-{{item.seq}}" type="radio"
                                                                    name="inlineRadioOptions-{{item.seq}}" 
                                                                    value="reject" checked ng-model="item.action_status" />
@@ -3450,17 +3447,17 @@
                                                         </div>
                                                     </div>
 
-
-                                                    <div class="col-md-12 p-1 ps-3 text-start" ng-if="item.approver_action_type == 2">
+                                                    <div class="col-md-12 p-1 ps-3 text-start" ng-if="(item.approver_action_type == 2 || isApproveReject)">
                                                         <div class="form-check form-check-inline cursor-pointer p-0">
                                                             <span class="fa-solid far fa-file-pdf text-danger" style="font-size:15px;" ng-click="confirmExport('hazop_report','pdf')"></span>
                                                             <b>
-                                                                What's if Report
+                                                                HRA Report
                                                             </b>
                                                         </div><br />
-                                                        <p>{{item.action_status =='approve' ? 'Approve' : 'Send back with Comment' }}</p>
+                                                        <p>{{item.action_status =='approve' ? 'Approve' : item.action_status =='reject' ? 'Send back with Comment' : '' }}</p>
                                                     </div>
-                                                </td>                                                
+
+                                                </td>                                           
 
                                                 <td class="align-top white-space-nowrap text-start" ng-class="{'disabled-link border-bottom':(!tab_approver_active)}">
                                                     <div class="col-md-12 p-1 ps-3" ng-if="!(item.approver_action_type == 2 || data_header[0].pha_status != 21)" >
@@ -3483,58 +3480,68 @@
                                                 </td>
                                                 <td class="align-top px-1" style="min-width:200px;">
                                                     @* {{item.seq}} *@
-                                                    <div class=" p-0 cursor-pointer " 
-                                                         ng-repeat="item_x in data_drawing_approver  | toArray | filter:{id_approver : item.seq}  ">
-                                                        <div class="d-flex flex-nowrap">
-                                                            <div class="font-sans-serif btn-reveal-trigger position-static me-1" 
-                                                                ng-if="(accessInfo.canAccess || accessInfo.isTA2 ||accessInfo.isTA3) && (item.approver_action_type != 2)">
+                                                    <div class="p-0 cursor-pointer" 
+                                                        ng-repeat="item_x in data_drawing_approver | toArray | filter:{id_approver : item.seq}">
+                                                        <div class="d-flex flex-nowrap justify-content-center align-items-center">
+                                                            <!-- Cog icon (Only TA2, TA3, and Admins can see it and only if not submitted) -->
+                                                            <div class="font-sans-serif btn-reveal-trigger position-static me-1">
                                                                 <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 p-1"
-                                                                        ng-if="(accessInfo.canAccess || accessInfo.isTA2 || accessInfo.isTA3)"
-                                                                        type="button" data-bs-toggle="dropdown" data-boundary="window"
-                                                                        aria-haspopup="true" aria-expanded="false" data-bs-reference="parent">
+                                                                    ng-if="(accessInfo.canAccess || accessInfo.isTA2 || accessInfo.isTA3) && (item.approver_action_type != 2)"
+                                                                    type="button" data-bs-toggle="dropdown" data-boundary="window"
+                                                                    aria-haspopup="true" aria-expanded="false" data-bs-reference="parent">
                                                                     <span class="fas fa-cog text-info"></span>
                                                                 </button>
                                                                 <div class="dropdown-menu dropdown-menu-end py-2">
-                                                                    <a class="dropdown-item text-success"
-                                                                       ng-click=addDataApproverDrawing(item_x,item.seq,item.id_session)>
+                                                                    <!-- Add option (Visible to TA2, TA3, or admin) -->
+                                                                    <a class="dropdown-item text-success" 
+                                                                        ng-click=addDataApproverDrawing(item_x,item.seq,item.id_session)>
                                                                         <span class="fas fa-copy"></span>
                                                                         Add
                                                                     </a>
                                                                     <div class="dropdown-divider"></div>
-                                                                    <a class="dropdown-item text-danger"
-                                                                        ng-click=removeDataApproverDrawing(item_x,item_d.seq)>
-                                                                        <span class="fas fa-times-circle"></span> 
-                                                                         Remove
+                                                                    <!-- Remove option (Visible to TA2, TA3, or admin) -->
+                                                                    <a class="dropdown-item text-danger" 
+                                                                        ng-click="triggerRemove(item_x,item_d.seq, $index,'ApproverDrawing')">
+                                                                        <span class="fas fa-times-circle"></span>
+                                                                        Remove
                                                                     </a>
                                                                 </div>
                                                             </div>
-                                                            <div class="btn-group my-2" >
-                                                                <div class="icon-button border p-3" style="border-color: #0d6efd; background-color: #0d6efd;"
-                                                                    ng-hide="!(accessInfo.canAccess || accessInfo.isTA2 || accessInfo.isTA3) && !item_x.document_file_size">
-                                                                        <span ng-if="!item_x.document_file_size" class="fa-solid fa-arrow-up-from-bracket fa-lg" style="color: #ffffff;"></span>
-                                                                        <span ng-if="item_x.document_file_size" class="fa-solid fa-file-pdf fa-lg" style="color: #ffffff;"></span>                                                                  </div>
+                                                            <!-- File upload/download section -->
+                                                            <div class="btn-group my-2" ng-show="accessInfo.canAccess || accessInfo.canViewOnly">
+                                                                <!-- Upload button (Only visible to TA2 who can still upload) -->
+                                                                <div class="icon-button border p-3" ng-hide="isApproveReject && !item.document_file_size"
+                                                                    style="border-color: #0d6efd; background-color: #0d6efd;">
+                                                                    <span class="fa-solid fa-arrow-up-from-bracket fa-lg"  ng-hide="item_x.document_file_size || !accessInfo.isTA2 " style="color: #ffffff;"></span>
+                                                                    <span class="fa-solid fa-file-pdf fa-lg" ng-show="!item.document_file_size || accessInfo.canViewOnly"  style="color: #ffffff;"></span>
+                                                                </div>
+                                                                 
+
+                                                                <!-- Upload input (Only visible to TA2 if no file uploaded yet) -->
                                                                 <button class="Upload-button btn ps-3" 
-                                                                        ng-show="(accessInfo.canAccess || accessInfo.isTA2 || accessInfo.isTA3) && !item_x.document_file_size">
+                                                                        ng-show="!item_x.document_file_size && accessInfo.isTA2">
                                                                     <span class="nametext ms-3 filename-text me-2 d-none" id="filename-approver-{{item_x.seq}}">
-                                                                        {{(item_x.document_file_size>0? item_x.document_file_name + '('+  item_x.document_file_size + 'KB)' : '')}}
+                                                                        {{(item_x.document_file_size>0 ? item_x.document_file_name + '(' + item_x.document_file_size + 'KB)' : '')}}
                                                                     </span>
-                                                                    <label class="dz-message-text fw-bold p-1 " for="attfile-approver-{{item_x.seq}}">
+                                                                    <label class="dz-message-text fw-bold p-1" for="attfile-approver-{{item_x.seq}}">
                                                                         Upload File (Max size 10mb)
                                                                     </label>
                                                                     <input type="file" id="attfile-approver-{{item_x.seq}}"
                                                                         name="file_approver_{{item_x.seq}}"
                                                                         onchange="angular.element(this).scope().fileSelectApprover(this, 'approver')"
                                                                         style="display:none" />
-
                                                                 </button>
-                                                                <button class="Upload-button btn cursor-pointer" style="width:250px;" ng-if="item_x.document_file_size > 0">
+
+                                                                <!-- Download button (Visible to everyone if file exists) -->
+                                                                <button class="Upload-button btn cursor-pointer" style="width:250px;" ng-if="item_x.document_file_size">
                                                                     <div class="d-flex align-items-center">
                                                                         <span class="nametext filename-text me-2 cursor-pointer" ng-click="downloadFile(item_x)">
                                                                             {{truncateFilename(item_x.document_file_name, 20)}} ({{item_x.document_file_size}} KB)
                                                                         </span>
                                                                     </div>
                                                                 </button>
-                                                            </div>                                                              
+                                                            </div>                                                            
+
                                                         </div>
                                                     </div>
                                                     <div ng-class="{'invalid-feedback text-danger': !(form_valid.valid_document_file==true && item.seq == id_approver_select), 'feedback text-danger': form_valid.valid_document_file}">

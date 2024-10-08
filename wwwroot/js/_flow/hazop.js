@@ -949,6 +949,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         var seq = $scope.data_header[0].seq;
         var user_name = $scope.user_name;
+        var flow_role_type = $scope.flow_role_type;
 
         var action_export_report_type = "hazop_report";
 
@@ -968,7 +969,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         $.ajax({
             url: url_ws + "Flow/" + action_export_report_type,
-            data: '{"sub_software":"hazop","user_name":"' + user_name + '","seq":"' + seq + '","export_type":"' + data_type + '"}',
+            data: '{"sub_software":"hazop","user_name":"' + user_name + '","row_type":"' + flow_role_type + '","seq":"' + seq + '","export_type":"' + data_type + '"}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
             headers: {
                 'X-CSRF-TOKEN': $scope.token
@@ -1287,6 +1288,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         var action_part = $scope.action_part;
         var user_name = $scope.user_name;
+        var flow_role_type = $scope.flow_role_type;
         var token_doc = $scope.token_doc + "";
         var pha_status = $scope.data_header[0].pha_status;
         var pha_version = $scope.data_header[0].pha_version;
@@ -1331,7 +1333,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         
         $.ajax({
             url: url_ws + "Flow/set_hazop",
-            data: '{"user_name":"' + user_name + '","token_doc":"' + token_doc + '","pha_status":"' + pha_status + '","pha_version":"' + pha_version + '","action_part":"' + action_part + '"'
+            data: '{"user_name":"' + user_name +'","row_type":"' + flow_role_type + '","token_doc":"' + token_doc + '","pha_status":"' + pha_status + '","pha_version":"' + pha_version + '","action_part":"' + action_part + '"'
                 + ',"json_header":' + JSON.stringify(json_header)
                 + ',"json_general":' + JSON.stringify(json_general)
                 + ',"json_functional_audition":' + JSON.stringify(json_functional_audition)
@@ -1371,6 +1373,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 var arr = data;
     
                 var user_name = $scope.user_name
+                var flow_role_type = $scope.flow_role_type;
                 //after save set to true and false 
                 $scope.data_nodeworksheet = data.data_nodeworksheet;
                 try{
@@ -1397,7 +1400,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                         $.ajax({
                             url: controller_text + "/set_session_doc",
-                            data: '{"controller_action_befor":"' + controller_action_befor + '","user_name":"' + user_name + '","pha_seq":"' + pha_seq + '"'
+                            data: '{"controller_action_befor":"' + controller_action_befor + '","user_name":"' + user_name + '","row_type":"' + flow_role_type + '","pha_seq":"' + pha_seq + '"'
                                 + ',"pha_no":"' + pha_no + '","pha_status":"' + pha_status + '","pha_type_doc":"' + pha_type_doc + '"}',
                             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
                             headers: {
@@ -1461,7 +1464,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                         $.ajax({
                             url: controller_text + "/set_session_doc",
-                            data: '{"controller_action_befor":"' + controller_action_befor + '","user_name":"' + user_name + '","pha_seq":"' + pha_seq + '"'
+                            data: '{"controller_action_befor":"' + controller_action_befor + '","user_name":"' + user_name + '","row_type":"' + flow_role_type + '","pha_seq":"' + pha_seq + '"'
                                 + ',"pha_no":"' + pha_no + '","pha_status":"' + pha_status + '","pha_type_doc":"' + pha_type_doc + '"}',
                             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
                             headers: {
@@ -1822,12 +1825,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     function call_api_load(page_load, action_submit, user_name, pha_seq) {
 
         var type_doc = $scope.pha_type_doc;//review_document
-
+        var flow_role_type = $scope.flow_role_type;
         $scope.params = get_params();
 
         $.ajax({
             url: url_ws + "Flow/get_hazop_details",
-            data: '{"sub_software":"hazop","user_name":"' + user_name + '","token_doc":"' + pha_seq + '","type_doc":"' + type_doc + '"}',
+            data: '{"sub_software":"hazop","user_name":"' + user_name + '","row_type":"' + flow_role_type + '","token_doc":"' + pha_seq + '","type_doc":"' + type_doc + '"}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
             headers: {
                 'X-CSRF-TOKEN': $scope.token
@@ -1849,6 +1852,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
 
                 var arr = data;
+                // set isDisableStatus PHA STATUS > 12 (waitting follow up)
+                $scope.isDisableStatus = setup_isDisabledPHAStatus(arr.header[0])
+                // set isApproveReject
+                $scope.isApproveReject = setup_isApproveReject(arr.header[0])
+                // set isApproveReject
+                $scope.isEditWorksheet = setup_isEditWorksheet($scope.params)
+
                 if (true) {
                     
                     $scope.data_all = arr;
@@ -2361,6 +2371,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 //button
                 $scope.save_type = false;
                 $scope.submit_type = false;
+
+                $scope.isDisableStatus = true;
             }
             else if (pha_status_def == 14) {
 
@@ -2375,6 +2387,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     $scope.save_type = true;
                     $scope.submit_type = true;
                 }
+
+                $scope.isDisableStatus = true;
     
             }
             else if (pha_status_def == 21) {
@@ -2407,6 +2421,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 $scope.selectedItemNodeView.seq = $scope.data_node[0].seq;
     
                 $scope.submit_type = true;
+
+                $scope.isApproveReject =true;
 
             }
             else if (pha_status_def == 81) {
@@ -2730,6 +2746,28 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     //set form
     if(true){
+        function setup_isDisabledPHAStatus(header){
+            if (header.pha_status > 12) {
+                console.log(`PHA status: ${header.pha_status} isDisableStatus: true`)
+                return true
+            }
+            console.log(`PHA status: ${header.pha_status} isDisableStatus: false`)
+            return false
+        }
+    
+        function setup_isApproveReject(header){
+            if (header.approve_status == 'reject' && header.pha_status == 22) {
+                return true
+            }
+            return false
+        }
+    
+        function setup_isEditWorksheet(params){
+            if (params == 'edit') {
+                return true
+            }
+            return false
+        }        
         function set_data_general() {
 
             if (($scope.data_general[0].id_ram + '') == '') {
@@ -4296,10 +4334,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.master_ram.push(newInput);
         }
         var json_ram_master = angular.toJson($scope.master_ram);;
+        var flow_role_type = $scope.flow_role_type;
 
         $.ajax({
             url: url_ws + "Flow/set_master_ram",
-            data: '{"user_name":"' + user_name + '"'
+            data: '{"user_name":"' + user_name + '","row_type":"' + flow_role_type + '"'
                 + ',"json_ram_master":' + JSON.stringify(json_ram_master)
                 + '}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
@@ -5160,7 +5199,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     $scope.removeDataNodeWorksheet = function (row_type, item, index) {
 
-        console.log("row_type",row_type)
         var seq = item.seq;
         var seq_node = item.seq_node;
         var seq_guide_word = item.seq_guide_word;
@@ -5186,8 +5224,15 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         //Delete row select and upper row
         if (item.row_type !== 'causes' ) {
 
-            markItemsForDeletion(deletionCondition);
-            deleteItems(deletionCondition);
+            //normal case ที่ row type === item.row_type
+            if(item.row_type === row_type){
+                markItemsForDeletion(deletionCondition);
+                deleteItems(deletionCondition);
+            }else{
+                //will clear data after this row type
+                console.log("will clear data after this row type?")
+            }
+
 
         }else if (item.row_type === 'causes' ){
             if(row_type == "causes"){
@@ -6189,12 +6234,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         var page_end_first = _item.page_end_first;
         var page_end_second = _item.page_end_second;
         var user_name = $scope.user_name
+        var flow_role_type = $scope.flow_role_type;
 
         $.ajax({
             url: url_ws + "Flow/copy_pdf_file",
             data: '{"sub_software":"hazop","file_name":"' + file_name + '","file_path":"' + file_path + '"'
                 + ',"page_start_first":"' + page_start_first + '","page_start_second":"' + page_start_second + '"'
-                + ',"page_end_first":"' + page_end_first + '","page_end_second":"' + page_end_second + '","user_name":"' + user_name + '"'
+                + ',"page_end_first":"' + page_end_first + '","page_end_second":"' + page_end_second + '","user_name":"' + user_name + '","row_type":"' + flow_role_type + '"'
                 + '}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
             headers: {
@@ -6256,12 +6302,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             var page = conFig.controller_action_befor();
             var controller_text = "hazop";
             var user_name = $scope.user_name
+            var flow_role_type = $scope.flow_role_type;
             //conFig.pha_seq = null;
             conFig.pha_type_doc = pha_type_doc;
 
             $.ajax({
                 url: controller_text + "/next_page",
-                data: '{"controller_action_befor":"' + page + '","pha_type_doc":"' + pha_type_doc + '","user_name":"' + user_name + '"}',
+                data: '{"controller_action_befor":"' + page + '","pha_type_doc":"' + pha_type_doc + '","user_name":"' + user_name + '","row_type":"' + flow_role_type + '"}',
                 type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
                 headers: {
                     'X-CSRF-TOKEN': $scope.token
@@ -6337,12 +6384,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $('#modalSendMailTeam').modal('hide');
 
             var user_name = $scope.user_name;
+            var flow_role_type = $scope.flow_role_type;
             var token_doc = $scope.data_header[0].seq;
 
             $.ajax({
                 //url: url_ws + "Flow/set_email_member_review_stamp",
                 url: url_ws + "Flow/send_notification_member_review",
-                data: '{"sub_software":"hazop","user_name":"' + user_name + '","pha_seq":"' + token_doc + '"}',
+                data: '{"sub_software":"hazop","user_name":"' + user_name + '","row_type":"' + flow_role_type + '","pha_seq":"' + token_doc + '"}',
                 type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
                 headers: {
                     'X-CSRF-TOKEN': $scope.token
@@ -7864,9 +7912,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     
     function getEmployees( indicator, callback){
         var user_name = $scope.user_name
+        var flow_role_type = $scope.flow_role_type;
+
         $.ajax({
             url: url_ws + "Flow/employees_search",
-            data: '{"user_indicator":"' + indicator + '","user_name":"' + user_name + '"'
+            data: '{"user_indicator":"' + indicator + '","user_name":"' + user_name + '","row_type":"' + flow_role_type + '"'
                 + ',"max_rows":"50"'
                 + '}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
@@ -8536,90 +8586,150 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         let accessInfo = {
             canRemove: false,
             canCopy: false,
+            canAdd: false,
         };
     
         if(type == 'session'){
             let approverData = $scope.data_approver.filter(data => data.id_session === item.id);
             let memberTeamData = $scope.data_memberteam.filter(data => data.id_session === item.id);
             
-            if (index === 0 && 
-                (approverData.length === 0 || approverData[0].user_name == null) &&
-                (memberTeamData.length === 0 || memberTeamData[0].user_name == null)) {
-                accessInfo.canRemove = false;
-            } else {
-                accessInfo.canRemove = true;
-            }
+            
+            if(!$scope.isApproveReject){
+                //normal flow 
+                if (index === 0 && 
+                    (approverData.length === 0 || approverData[0].user_name == null) &&
+                    (memberTeamData.length === 0 || memberTeamData[0].user_name == null)) {
+                    accessInfo.canRemove = false;
+                } else {
+                    accessInfo.canRemove = true;
+                }
+        
+                if ((approverData.length > 0 && approverData[0].user_name != null) ||
+                    (memberTeamData.length > 0 && memberTeamData[0].user_name != null)) {
+                    accessInfo.canCopy = true;
+                    accessInfo.canAdd = true;
+
+                } else {
+                    accessInfo.canCopy = false;
+                }
     
-            if ((approverData.length > 0 && approverData[0].user_name != null) ||
-                (memberTeamData.length > 0 && memberTeamData[0].user_name != null)) {
-                accessInfo.canCopy = true;
-            } else {
-                accessInfo.canCopy = false;
+                let meeting_data = $scope.data_session.filter(data => data.id === item.id);
+    
+                if (
+                    meeting_data[0].meeting_date != null || 
+                    meeting_data[0].meeting_start_time != null || 
+                    meeting_data[0].meeting_start_time_hh != null || 
+                    meeting_data[0].meeting_start_time_mm != null || 
+                    meeting_data[0].meeting_end_time != null || 
+                    meeting_data[0].meeting_end_time_hh != null || 
+                    meeting_data[0].meeting_end_time_mm != null
+                ) {
+                    accessInfo.canCopy = true;
+                    accessInfo.canAdd = true;
+                    accessInfo.canRemove = true;
+                } 
+            }else{
+                //ถ้าไม่ใช่ admin || originator ทำไม่ได้
+                //approver rej flow    
+                console.log("$scope.active_session",$scope.active_session)           
+                console.log("$scope.item.id",item.id)           
+                if($scope.flow_role_type === 'admin' || $scope.data_header[0].pha_request_by === $scope.user_name){
+                    if($scope.active_session === item.id && item.action_type === 'update'){
+                        accessInfo.canCopy = true;
+                        accessInfo.canAdd = true;
+                        accessInfo.canRemove = false;
+                    }else if(item.action_type === 'insert'){
+                        accessInfo.canCopy = true;
+                        accessInfo.canRemove = true;
+                    }else{
+                        accessInfo.canCopy = false;
+                        accessInfo.canRemove = false;                    
+                    }
+                }
+
             }
 
-            let meeting_data = $scope.data_session.filter(data => data.id === item.id);
-
-            if (
-                meeting_data[0].meeting_date != null || 
-                meeting_data[0].meeting_start_time != null || 
-                meeting_data[0].meeting_start_time_hh != null || 
-                meeting_data[0].meeting_start_time_mm != null || 
-                meeting_data[0].meeting_end_time != null || 
-                meeting_data[0].meeting_end_time_hh != null || 
-                meeting_data[0].meeting_end_time_mm != null
-            ) {
-                accessInfo.canCopy = true;
-                accessInfo.canRemove = true;
-            } 
 
             $scope.sessionAccessInfoMap[item.id] = accessInfo;
             
             
         } else if(type === 'drawing'){
     
-            if(index === 0) {
-                if (item.document_name !== null || item.document_no !== null || item.descriptions !== null ||
-                    item.document_file_name !== null || item.document_file_path !== null) {
-                    accessInfo.canRemove = true;
-                } else {
-                    accessInfo.canRemove = false;
-                }
-            } else {
-                accessInfo.canRemove = true;
-            }
+            if(!$scope.isApproveReject){
+                //normal flow 
+                if(index === 0) {
 
+                    console.log("item",item)
+                    if (item.document_name !== null || item.document_no !== null || item.descriptions !== null ||
+                        item.document_file_name !== null || item.document_file_path !== null) {
+                        accessInfo.canRemove = true;
+                    } else {
+                        accessInfo.canRemove = false;
+                    }
+                } else {
+                    accessInfo.canRemove = true;
+                }
+
+                accessInfo.canAdd = true;
+
+    
+            }else{
+                if($scope.flow_role_type === 'admin' || $scope.data_header[0].pha_request_by === $scope.user_name){
+                    if($scope.active_session === item.id && item.action_type === 'update'){
+                        accessInfo.canCopy = true;
+                        accessInfo.canRemove = false;
+                    }else if(item.action_type === 'insert'){
+                        accessInfo.canCopy = true;
+                        accessInfo.canRemove = true;
+                    }
+                }
+            }
             $scope.drawingAccessInfoMap[item.id] = accessInfo;
         }
         
         
-    };
+    };    
 
-    //access each role
     $scope.Access_check = function(task) {
         let accessInfo = {
-            canAccess: false,
-            isTA2: false,
-            isTA3: false
+            canAccess: false, // General access flag (for both viewing and uploading)
+            isTA2: false,     // Role: Task owner (TA2)
+            isTA3: false,     // Role: Approver (TA3)
+            canViewOnly: false // Regular employee can view if exists
         };
     
-        // If user is an admin, allow access
+        // Admin has full access
         if ($scope.flow_role_type === 'admin') {
             accessInfo.canAccess = true;
             return accessInfo;
         }
     
-        // If user is an employee
+        // Employee (could be TA2 or TA3 or regular employee)
         if ($scope.flow_role_type === 'employee') {
-            // Check if the task belongs to the user (TA2)
+            // Check if user is TA2 (task owner)
             if ($scope.user_name === task.user_name) {
                 accessInfo.isTA2 = true;
-                accessInfo.canAccess = true; // TA2 should have access to their own tasks
+                accessInfo.canAccess = task.status !== 21; // TA2 can upload until status is 21 (submitted)
             } else {
-                // Check if the user is a TA3 for this task
-                for (let item of $scope.data_approver_ta3) {
-                    if (item.id_approver === task.id && $scope.user_name == item.user_name) {
-                        accessInfo.isTA3 = true;
-                        accessInfo.canAccess = true; // TA3 should not have access                       
+                // Check if user is TA3 (approver)
+                if ($scope.data_approver_ta3) {
+                    for (let item of $scope.data_approver_ta3) {
+                        if (item.id_approver === task.id && $scope.user_name === item.user_name) {
+                            accessInfo.isTA3 = true;
+                            accessInfo.canAccess = true; // TA3 has access to view/download
+                        }
+                    }
+                }
+
+                // Check if a document is uploaded for the matching id_approver
+                if ($scope.data_drawing_approver) {
+                    for (let drawing of $scope.data_drawing_approver) {
+                        if (drawing.id_approver === task.id) {
+                            if (drawing.document_file_size) {
+                                console.log("task matches id_approver, document_file_size exists", drawing);
+                                accessInfo.canViewOnly = true; // Regular employees can only view the document if uploaded
+                            }
+                        }
                     }
                 }
             }

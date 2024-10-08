@@ -23,9 +23,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
     ///////////////////////////  API Function  ///////////////////////////
     function call_api_load() {
         var user_name = $scope.user_name;
+        let flow_role_type = $scope.flow_role_type;
         $.ajax({
             url: url_ws + "masterdata/get_master_toc",
-            data: '{"user_name":"' + user_name + '"}',
+            data: '{"user_name":"' + user_name + '","row_type":"' + flow_role_type + '"}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
             headers: {
                 'X-CSRF-TOKEN': $scope.token
