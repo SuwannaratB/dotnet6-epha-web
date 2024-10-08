@@ -212,10 +212,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig){
         newTag(`new-${seq}`)
         console.log(newInput)
         apply();
-        // {
-        //     "id_sections_group": 1,
-        //     "id_sections": "CMCE",
-        // }
     }
 
     $scope.actionfilter = function(type, data){
