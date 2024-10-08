@@ -636,9 +636,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
         var controller_text = 'hra'; 
 
-        if ($scope.data_header && $scope.data_header.length > 0 && $scope.data_header[0].pha_sub_software) {
-            controller_text = $scope.data_header[0].pha_sub_software;
-        }
+        // if ($scope.data_header && $scope.data_header.length > 0 && $scope.data_header[0].pha_sub_software) {
+        //     controller_text = $scope.data_header[0].pha_sub_software;
+        // }
         conFig.pha_seq = null;
         conFig.pha_type_doc = 'create';
         var pha_status = '11'; 
