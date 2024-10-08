@@ -197,6 +197,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
     }
     function get_data(page_load) {
         var user_name = $scope.user_name;
+        var role_type = $scope.flow_role_type;
+
         var token_doc = '';
 
         if (conFig.pha_seq() != '') {
@@ -210,7 +212,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
         $.ajax({
             url: url_ws + "Flow/load_follow_up",
-            data: '{"sub_software":"' + sub_software +'","user_name":"' + user_name + '","token_doc":"' + token_doc + '","type_doc":"' + type_doc + '"}',
+            data: '{"sub_software":"' + sub_software +'","user_name":"' + user_name + '","role_type":"' + role_type + '","token_doc":"' + token_doc + '","type_doc":"' + type_doc + '"}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
             headers: {
                 'X-CSRF-TOKEN': $scope.token
@@ -363,11 +365,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
         });
 
+        var role_type = $scope.flow_role_type;
+
 
         if ($scope.tabUpdateFollowUp == true) {
             $.ajax({
                 url: url_ws + "Flow/load_follow_up",
-                data: '{"sub_software":"' + sub_software +'","user_name":"' + user_name + '","token_doc":"' + token_doc + '","type_doc":"' + type_doc + '"}',
+                data: '{"sub_software":"' + sub_software +'","user_name":"' + user_name + '","role_type":"' + role_type + '","token_doc":"' + token_doc + '","type_doc":"' + type_doc + '"}',
                 type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
                 headers: {
                     'X-CSRF-TOKEN': $scope.token
@@ -429,6 +433,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         var pha_status = arr.pha_status;
         var responder_user_name = '';
         var user_name = $scope.user_name;
+        var role_type = $scope.flow_role_type;
+
 
 
         //a.pha_sub_software, a.seq as pha_seq,a.pha_no, g.pha_request_name, a.pha_status, vw.user_displayname as responder_user_displayname
@@ -453,7 +459,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         $.ajax({
             url: controller_text + "/next_page",
             data: '{"pha_sub_software":"' + pha_sub_software + '","pha_seq":"' + pha_seq + '","pha_no":"' + pha_no + '","pha_type_doc":"' + pha_type_doc + '","responder_user_name":"' + responder_user_name + '"'
-                + ',"controller_page":"' + controller_text + '","pha_status":"' + pha_status + '","user_name":"' + user_name + '"'
+                + ',"controller_page":"' + controller_text + '","pha_status":"' + pha_status + '","user_name":"' + user_name + '","role_type":"' + role_type + '"'
                 + ',"controller_action_befor":"hra/followup"'
                 + '}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
@@ -497,11 +503,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
     function next_page(controller_text, pha_status) {
         controller_text = controller_text.toLowerCase();
         var user_name = $scope.user_name;
+        var role_type = $scope.flow_role_type;
+
 
         $.ajax({
             url: controller_text + "/next_page",
             data: '{"pha_seq":"' + conFig.pha_seq + '","pha_type_doc":"' + conFig.pha_type_doc + '"'
-                + ',"pha_sub_software":"' + controller_text + '","user_name":"' + user_name + '","pha_status":"' + pha_status + '"}',
+                + ',"pha_sub_software":"' + controller_text + '","user_name":"' + user_name + '","role_type":"' + role_type + '","pha_status":"' + pha_status + '"}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
             headers: {
                 'X-CSRF-TOKEN': $scope.token
@@ -531,6 +539,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
     }
     function get_detail(pha_no, responder_user_name) {
         var user_name = $scope.user_name;
+        var role_type = $scope.flow_role_type;
+
         var token_doc = '';
 
         var sub_software = 'hra';
@@ -538,7 +548,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
         $.ajax({
             url: url_ws + "Flow/load_follow_up_details",
-            data: '{"sub_software":"' + sub_software +'","user_name":"' + user_name + '","token_doc":"' + token_doc + '","type_doc":"' + type_doc + '","pha_no":"' + pha_no + '","responder_user_name":"' + responder_user_name + '"}',
+            data: '{"sub_software":"' + sub_software +'","user_name":"' + user_name + '","role_type":"' + role_type + '","token_doc":"' + token_doc + '","type_doc":"' + type_doc + '","pha_no":"' + pha_no + '","responder_user_name":"' + responder_user_name + '"}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
             headers: {
                 'X-CSRF-TOKEN': $scope.token
@@ -581,10 +591,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
     $scope.confirmFollowBackSearch = function () {
         var controller_text = $scope.data_header ? $scope.data_header[0].pha_sub_software : 'hra';
         var user_name = $scope.user_name;
+        var role_type = $scope.flow_role_type;
+
 
         $.ajax({
             url: controller_text + "/follow_back_search",
-            data: '{"pha_seq":"","pha_type_doc":"search","pha_sub_software":"' + controller_text + '","user_name":"' + user_name + '","pha_status":""}',
+            data: '{"pha_seq":"","pha_type_doc":"search","pha_sub_software":"' + controller_text + '","user_name":"' + user_name + '","role_type":"' + role_type + '","pha_status":""}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
             headers: {
                 'X-CSRF-TOKEN': $scope.token
@@ -631,10 +643,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         conFig.pha_type_doc = 'create';
         var pha_status = '11'; 
         var user_name = $scope.user_name;
+        var role_type = $scope.flow_role_type;
+
 
         $.ajax({
             url: controller_text + "/next_page",
-            data: '{"pha_seq":"' + conFig.pha_seq + '","pha_type_doc":"' + conFig.pha_type_doc + '","user_name":"' + user_name + '"'
+            data: '{"pha_seq":"' + conFig.pha_seq + '","pha_type_doc":"' + conFig.pha_type_doc + '","user_name":"' + user_name + '","role_type":"' + role_type + '"'
                 + ',"pha_sub_software":"' + controller_text + '","pha_status":"' + pha_status + '"}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
             headers: {
@@ -685,13 +699,15 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         var json_managerecom = angular.toJson(arr_json);
 
         var user_name = $scope.user_name;
+        var role_type = $scope.flow_role_type;
+
         var flow_action = action;
         var token_doc = 'update';
         var sub_software = 'hra';
 
         $.ajax({
             url: url_ws + "Flow/set_follow_up",
-            data: '{"sub_software":"' + sub_software +'","user_name":"' + user_name + '","token_doc":"' + token_doc + '","flow_action":' + JSON.stringify(flow_action) + '"json_managerecom":' + JSON.stringify(json_managerecom) + '}',
+            data: '{"sub_software":"' + sub_software +'","user_name":"' + user_name + '","role_type":"' + role_type + '","token_doc":"' + token_doc + '","flow_action":' + JSON.stringify(flow_action) + '"json_managerecom":' + JSON.stringify(json_managerecom) + '}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
             headers: {
                 'X-CSRF-TOKEN': $scope.token
@@ -761,13 +777,15 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
 
         var user_name = $scope.user_name;
+        var role_type = $scope.flow_role_type;
+
         var flow_action = action;
         var token_doc = 'update';
         var sub_software = 'hra';
 
         $.ajax({
             url: url_ws + "Flow/set_follow_up_review",
-            data: '{"sub_software":"' + sub_software +'","user_name":"' + user_name + '","token_doc":"' + token_doc + '","flow_action":' + JSON.stringify(flow_action) + ',"json_general":' + JSON.stringify(json_general) + ',"json_managerecom":' + JSON.stringify(json_managerecom) + '}',
+            data: '{"sub_software":"' + sub_software +'","user_name":"' + user_name + '","role_type":"' + role_type + '","token_doc":"' + token_doc + '","flow_action":' + JSON.stringify(flow_action) + ',"json_general":' + JSON.stringify(json_general) + ',"json_managerecom":' + JSON.stringify(json_managerecom) + '}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
             headers: {
                 'X-CSRF-TOKEN': $scope.token

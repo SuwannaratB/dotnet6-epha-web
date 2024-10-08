@@ -104,10 +104,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
         var token_doc = '';
         var sub_software = 'hazop';
         var type_doc = 'search';
+        var role_type = $scope.flow_role_type;
 
         $.ajax({
             url: url_ws + "Flow/load_home_tasks",
-            data: '{"sub_software":"' + sub_software + '","user_name":"' + user_name + '","token_doc":"' + token_doc + '","type_doc":"' + type_doc + '"}',
+            data: '{"sub_software":"' + sub_software + '","user_name":"' + user_name + '","role_type":"' + role_type + '","token_doc":"' + token_doc + '","type_doc":"' + type_doc + '"}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
             headers: {
                 'X-CSRF-TOKEN': $scope.token
@@ -357,12 +358,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
 
         var seq = item.id_pha;
         var user_name = $scope.user_name;
+        var role_type = $scope.flow_role_type;
 
         var action_export_report_type = "export_" + sub_software + "_report";
 
         $.ajax({
             url: url_ws + "Flow/" + action_export_report_type,
-            data: '{"sub_software":"hazop","user_name":"' + user_name + '","seq":"' + seq + '","export_type":"' + data_type + '"}',
+            data: '{"sub_software":"hazop","user_name":"' + user_name + '","role_type":"' + role_type + '","seq":"' + seq + '","export_type":"' + data_type + '"}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
             headers: {
                 'X-CSRF-TOKEN': $scope.token

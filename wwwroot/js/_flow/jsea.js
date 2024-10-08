@@ -646,6 +646,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 
                 fd.append("sub_software", 'jsea');
                 fd.append("user_name", $scope.user_name);
+                fd.append("role_type", $scope.flow_role_type);
+
         
                 try {
                     $("#divLoading").show(); 
@@ -934,6 +936,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             fd.append("file_part", filePart); // drawing, responder, approver
             fd.append("sub_software", 'jsea');
             fd.append("user_name", $scope.user_name);
+            fd.append("role_type", $scope.flow_role_type);
+
         
             return new Promise((resolve, reject) => {
                 const request = new XMLHttpRequest();
@@ -1021,6 +1025,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             fd.append("file_name", file_name);
             fd.append("sub_software", sub_software);
             fd.append("user_name", $scope.user_name);
+            fd.append("role_type", $scope.flow_role_type);
+
     
             try {
                 const request = new XMLHttpRequest();
@@ -1123,6 +1129,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     
             var seq = $scope.data_header[0].seq;
             var user_name = $scope.user_name;
+            var role_type = $scope.flow_role_type;
+
     
             var action_export_report_type = "jsea_report";
     
@@ -1140,7 +1148,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     
             $.ajax({
                 url: url_ws + "Flow/" + action_export_report_type,
-                data: '{"sub_software":"jsea","user_name":"' + user_name + '","seq":"' + seq + '","export_type":"' + data_type + '"}',
+                data: '{"sub_software":"jsea","user_name":"' + user_name + '","role_type":"' + role_type + '","seq":"' + seq + '","export_type":"' + data_type + '"}',
                 type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
                 headers: {
                     'X-CSRF-TOKEN': $scope.token
@@ -1210,11 +1218,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             var action_export_report_type = "export_template_jsea";
             var data_type = "template";
             var ram_type = $scope.data_general[0].id_ram;
+            var role_type = $scope.flow_role_type;
+
     
     
             $.ajax({
                 url: url_ws + "Flow/" + action_export_report_type,
-                data: '{"sub_software":"jsea","user_name":"' + user_name + '","seq":"' + seq + '","export_type":"' + data_type + '","ram_type":"' + ram_type + '"}',
+                data: '{"sub_software":"jsea","user_name":"' + user_name + '","role_type":"' + role_type + '","seq":"' + seq + '","export_type":"' + data_type + '","ram_type":"' + ram_type + '"}',
                 type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
                 headers: {
                     'X-CSRF-TOKEN': $scope.token
@@ -1527,12 +1537,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         //EPHA_M_RAM_LEVEL
         var json_ram_level = check_data_ram_level();
         var json_ram_master = check_master_ram();
+        var role_type = $scope.flow_role_type;
+
 
         var flow_action = (action == 'submit_complete' ? 'submit' : action);
 
         $.ajax({
             url: url_ws + "Flow/set_jsea",
-            data: '{"user_name":"' + user_name + '","token_doc":"' + token_doc + '","pha_status":"' + pha_status + '","pha_version":"' + pha_version + '","action_part":"' + action_part + '"'
+            data: '{"user_name":"' + user_name + '","role_type":"' + role_type + '","token_doc":"' + token_doc + '","pha_status":"' + pha_status + '","pha_version":"' + pha_version + '","action_part":"' + action_part + '"'
                 + ',"json_header":' + JSON.stringify(json_header)
                 + ',"json_general":' + JSON.stringify(json_general)
                 + ',"json_functional_audition":' + JSON.stringify(json_functional_audition)
@@ -1575,6 +1587,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         var pha_seq = arr[0].pha_seq;
                         var pha_no = arr[0].pha_no;
                         var pha_type_doc = "edit";
+                        var role_type = $scope.flow_role_type;
+
 
                         $scope.pha_seq = arr[0].pha_seq;
 
@@ -1584,7 +1598,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                         $.ajax({
                             url: controller_text + "/set_session_doc",
-                            data: '{"controller_action_befor":"' + controller_action_befor + '","pha_seq":"' + pha_seq + '","user_name":"' + user_name + '"'
+                            data: '{"controller_action_befor":"' + controller_action_befor + '","pha_seq":"' + pha_seq + '","user_name":"' + user_name + '","role_type":"' + role_type + '"'
                                 + ',"pha_no":"' + pha_no + '","pha_status":"' + pha_status + '","pha_type_doc":"' + pha_type_doc + '"}',
                             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
                             headers: {
@@ -1645,6 +1659,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         var pha_seq = arr[0].pha_seq;
                         var pha_no = arr[0].pha_no;
                         var pha_type_doc = "edit";
+                        var role_type = $scope.flow_role_type;
+
 
                         $scope.pha_seq = arr[0].pha_seq;
 
@@ -1652,7 +1668,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                         $.ajax({
                             url: controller_text + "/set_session_doc",
-                            data: '{"controller_action_befor":"' + controller_action_befor + '","pha_seq":"' + pha_seq + '","user_name":"' + user_name + '"'
+                            data: '{"controller_action_befor":"' + controller_action_befor + '","pha_seq":"' + pha_seq + '","user_name":"' + user_name + '","role_type":"' + role_type + '"'
                                 + ',"pha_no":"' + pha_no + '","pha_status":"' + pha_status + '","pha_type_doc":"' + pha_type_doc + '"}',
                             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
                             headers: {
@@ -1751,10 +1767,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         } else { set_alert('Error', 'No Data.'); return; }
         var json_drawing_approver = check_data_drawing_approver(id_session);
         var json_approver = check_data_approver();
+        var role_type = $scope.flow_role_type;
+
 
         $.ajax({
             url: url_ws + "flow/set_approve",
-            data: '{"sub_software":"jsea","user_name":"' + user_name + '","role_type":"' + flow_role_type + '","action":"' + flow_action + '","token_doc":"' + pha_seq + '","pha_status":"' + pha_status + '"'
+            data: '{"sub_software":"jsea","user_name":"' + user_name + '","role_type":"' + role_type + '","action":"' + flow_action + '","token_doc":"' + pha_seq + '","pha_status":"' + pha_status + '"'
                 + ',"id_session":"' + id_session + '","seq":"' + seq + '","action_status":"' + action_status + '","comment":"' + comment + '","user_approver":"' + user_approver + '"'
                 + ', "json_approver": ' + JSON.stringify(json_approver)
                 + ', "json_drawing_approver": ' + JSON.stringify(json_drawing_approver)
@@ -1883,7 +1901,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         var token_doc = $scope.token_doc + "";
         var pha_seq = $scope.data_header[0].seq;
         var pha_status = $scope.data_header[0].pha_status;
-        var flow_role_type = $scope.flow_role_type;
+        var role_type = $scope.flow_role_type;
+
 
         //submit, submit_without, submit_complete
 
@@ -1892,7 +1911,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         $.ajax({
             url: url_ws + "flow/edit_worksheet",
-            data: '{"sub_software":"jsea","user_name":"' + user_name + '","role_type":"' + flow_role_type + '","action":"' + flow_action + '","token_doc":"' + pha_seq + '","pha_status":"' + pha_status + '"'
+            data: '{"sub_software":"jsea","user_name":"' + user_name + '","role_type":"' + role_type + '","action":"' + flow_action + '","token_doc":"' + pha_seq + '","pha_status":"' + pha_status + '"'
                 + ', "json_worksheet": ' + JSON.stringify(json_worksheet)
                 + '}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
@@ -1950,13 +1969,16 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
     function call_api_load(page_load, action_submit, user_name, pha_seq) {
         var type_doc = $scope.pha_type_doc;//review_document
+        var role_type = $scope.flow_role_type;
+
 
         $scope.params = get_params();
+        
         
 
         $.ajax({
             url: url_ws + "Flow/get_jsea_details",
-            data: '{"sub_software":"jsea","user_name":"' + user_name + '","token_doc":"' + pha_seq + '","type_doc":"' + type_doc + '"}',
+            data: '{"sub_software":"jsea","user_name":"' + user_name + '","role_type":"' + role_type + '","token_doc":"' + pha_seq + '","type_doc":"' + type_doc + '"}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
             headers: {
                 'X-CSRF-TOKEN': $scope.token
@@ -4119,10 +4141,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
         var json_ram_master = angular.toJson($scope.master_ram);
         var user_name = $scope.user_name;
+        var role_type = $scope.flow_role_type;
+
 
         $.ajax({
             url: url_ws + "Flow/set_master_ram",
-            data: '{"user_name":"' + user_name + '"'
+            data: '{"user_name":"' + user_name + '","role_type":"' + role_type + '"'
                 + ',"json_ram_master":' + JSON.stringify(json_ram_master)
                 + '}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
@@ -5410,10 +5434,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             var user_name = $scope.user_name;
             var token_doc = $scope.data_header[0].seq;
+            var role_type = $scope.flow_role_type;
+
 
             $.ajax({
                 url: url_ws + "Flow/send_notification_member_review",
-                data: '{"sub_software":"jsea","user_name":"' + user_name + '","pha_seq":"' + token_doc + '"}',
+                data: '{"sub_software":"jsea","user_name":"' + user_name + '","role_type":"' + role_type + '","pha_seq":"' + token_doc + '"}',
                 type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
                 headers: {
                     'X-CSRF-TOKEN': $scope.token
@@ -6218,12 +6244,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     function getEmployees( indicator, callback){
         var user_name = $scope.user_name;
+        var role_type = $scope.flow_role_type;
+
         
         $.ajax({
             url: url_ws + "Flow/employees_search",
             data: '{"user_indicator":"' + indicator + '","user_name":"' + user_name +'"'
                 + ',"max_rows":"50"'
-                + ',"user_name":"' + user_name + '"'
+                + ',"user_name":"' + user_name + '","role_type":"' + role_type + '"'
                 + '}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
             headers: {
