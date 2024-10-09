@@ -1091,9 +1091,8 @@
                                                                     <span class="fas fa-copy"></span>
                                                                     Add
                                                                 </a>
-                                                                <div class="dropdown-divider" ng-if="!(item.no == 1)"></div>
+                                                                <div class="dropdown-divider"></div>
                                                                 <a class="dropdown-item text-danger" 
-                                                                    ng-if="!(item.no == 1)"
                                                                     ng-click="triggerRemove(item, '', $index,'SubAreasList')">
                                                                     <!---ng-click="removeDataSubAreasList(item, $index)">----->
                                                                    <span class="fas fa-times-circle"></span> 
@@ -1170,9 +1169,8 @@
                                                                         <span class="fas fa-copy"></span>
                                                                         Add
                                                                     </a>
-                                                                    <div class="dropdown-divider" ng-if="!(item_list.no == 1)"></div>
+                                                                    <div class="dropdown-divider"></div>
                                                                     <a class="dropdown-item text-danger" 
-                                                                        ng-if="!(item_list.no == 1)"
                                                                         ng-click="triggerRemove(item, item_list, $index,'HazardList')">
                                                                         <!---ng-click="removeDataHazardList(item, item_list, $index)"----->
                                                                         <span class="fas fa-times-circle"></span>
@@ -1228,9 +1226,8 @@
                                                                         <span class="fas fa-copy"></span>
                                                                         Add
                                                                     </a>
-                                                                    <div class="dropdown-divider"  ng-if="(item_list.no_type_hazard == item.hazard[$index - 1].no_type_hazard)"></div>
+                                                                    <div class="dropdown-divider"></div>
                                                                     <a class="dropdown-item text-danger" 
-                                                                        ng-if="(item_list.no_type_hazard == item.hazard[$index - 1].no_type_hazard)"
                                                                         ng-click="triggerRemove(item, item_list, $index,'HealthHazard')">
                                                                         <!---ng-click="removeDataHealthHazard(item, item_list, $index)"----->
                                                                         <span class="fas fa-times-circle"></span>
@@ -1664,6 +1661,7 @@
                                                         <div class="topic">Exposure Band</div>
                                                         <select class="form-control"
                                                             style="max-width: 150px; font-size: 10.24px;"
+                                                            ng-click="setOptionExposureBand('', 'worksheet')"
                                                             ng-change="setOptionExposureBand('change','worksheet')"
                                                             ng-model="selectFilterWorksheet.exposure_band">
                                                             <option value="">All</option>
