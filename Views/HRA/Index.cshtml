@@ -2633,6 +2633,7 @@
                                                                         'btn btn-dark': ws.action_status === 'Responded',
                                                                         'btn btn-link': ws.action_status !== 'Responded' || ws.action_status !== 'Close'
                                                                     }"
+                                                                    ng-hide="!tab_worksheet_active"
                                                                     data-toggle="tooltip" 
                                                                     title="Add Employee">
                                                                 <span class="far fa-address-book"></span>
@@ -2783,12 +2784,17 @@
                                                 <td class="align-top rating px-1 d-flex flex-column align-items-center justify-content-start" style="border: none;">
                                                     <div class="d-flex justify-content-start flex-column px-4 w-100">
                                                         <div class="py-1 mb-3">
-                                                            <button class="btn btn-outline-secondary p-1 cursor-pointer col-auto" 
-                                                                ng-class="{'disabled-link': isDisableStatus}"
-                                                                style="color: #2445fc; background-color: #f1f2f4; border-color: #f1f2f4;"
-                                                                ng-click="openDataEmployeeAdd(item,'worker')">
-                                                                <span class="far fa-address-book fa-lg pe-1"></span>
-                                                                Add Workers
+                                                            <button class="btn btn-outline-primary btn-sm d-flex align-items-center mb-2 custom-btn p-2 px-3"
+                                                                    ng-class="{
+                                                                        'disabled-link': !tab_list_name_active,
+                                                                        'btn btn-dark': ws.action_status === 'Responded',
+                                                                        'btn btn-link': ws.action_status !== 'Responded' || ws.action_status !== 'Close'
+                                                                    }"
+                                                                    style="color: #2445fc; background-color: #f1f2f4; border-color: #2445fc; transition: all 0.3s ease;"
+                                                                    ng-click="openDataEmployeeAdd(item, 'worker')">
+                                                                <span ng-if="tab_list_name_active" class="far fa-address-book fa-lg pe-2"></span>
+                                                                <span ng-if="tab_list_name_active">Add Worker</span>
+                                                                <span ng-if="!tab_list_name_active">Worker</span>
                                                             </button>
                                                         </div>
                                                         <div class="d-flex justify-content-start w-100 ps-2 py-1"
@@ -2958,16 +2964,16 @@
                                                             <div class="btn-group my-2" ng-show="accessInfo.canAccess || accessInfo.canViewOnly">
                                                                 <!-- Upload button (Only visible to TA2 who can still upload) -->
                                                                 
-                                                                <div class="icon-button border p-3" ng-hide="isApproveReject && !item.document_file_size"
+                                                                <div class="icon-button border p-3"
                                                                     style="border-color: #0d6efd; background-color: #0d6efd;">
-                                                                    <span class="fa-solid fa-arrow-up-from-bracket fa-lg"  ng-hide="item_x.document_file_size || !accessInfo.isTA2 " style="color: #ffffff;"></span>
-                                                                    <span class="fa-solid fa-file-pdf fa-lg" ng-show="!item.document_file_size || accessInfo.canViewOnly"  style="color: #ffffff;"></span>
+                                                                    <span class="fa-solid fa-arrow-up-from-bracket fa-lg"  ng-show="!item_x.document_file_size " style="color: #ffffff;"></span>
+                                                                    <span class="fa-solid fa-file-pdf fa-lg" ng-show="item_x.document_file_size"  style="color: #ffffff;"></span>
                                                                 </div>
                                                                  
 
                                                                 <!-- Upload input (Only visible to TA2 if no file uploaded yet) -->
                                                                 <button class="Upload-button btn ps-3" 
-                                                                        ng-show="!item_x.document_file_size && accessInfo.isTA2">
+                                                                        ng-show="!item_x.document_file_size && (accessInfo.isTA2 || accessInfo.canAccess)">
                                                                     <span class="nametext ms-3 filename-text me-2 d-none" id="filename-approver-{{item_x.seq}}">
                                                                         {{(item_x.document_file_size>0 ? item_x.document_file_name + '(' + item_x.document_file_size + 'KB)' : '')}}
                                                                     </span>

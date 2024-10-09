@@ -2130,6 +2130,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     
                 }
 
+                $scope.pha_status = $scope.data_header[0].pha_status;
+
                 //set form 
                 if(!$scope.params){
                     set_form_action(action_part_befor, !action_submit, page_load);
@@ -2417,7 +2419,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 const set_tabs = ['general', 'node', 'worksheet', 'managerecom','approver'];
             
                 showTabs(set_tabs);
-                setTabsActive(['general', 'node', 'worksheet', 'managerecom']);
+                if($scope.flow_role_type === 'admin' || $scope.user_name === $scope.data_header[0].request_user_name){
+                    setTabsActive(['general', 'node', 'worksheet', 'managerecom']);
+
+                }
 
                 check_case_member_review();
     
@@ -3212,14 +3217,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     
                   var key = 'causes' + item.id_node + '-' + item.deviations_no + '-' + item.causes_no;
                   $scope.rowspanMap[key] = $scope.data_nodeworksheet.filter(function(entry) {
-                    return entry.id_node === $scope.selectedItemNodeView.seq &&
+                    return entry.id_node === item.id_node &&
                            entry.deviations_no === item.deviations_no &&
                            entry.causes_no === item.causes_no 
                   }).length;
     
                   var key = 'consequences' + item.id_node + '-' + item.deviations_no + '-' + item.causes_no + '-' + item.consequences_no;
                   $scope.rowspanMap[key] = $scope.data_nodeworksheet.filter(function(entry) {
-                    return entry.id_node === $scope.selectedItemNodeView.seq &&
+                    return entry.id_node === item.id_node &&
                            entry.deviations_no === item.deviations_no &&
                            entry.causes_no === item.causes_no &&
                            entry.consequences_no === item.consequences_no
@@ -3227,7 +3232,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     
                   var key = item.id_node + '-' + item.deviations_no + '-' + item.causes_no + '-' + item.consequences_no + '-' + item.category_no;
                   $scope.rowspanMap[key] = $scope.data_nodeworksheet.filter(function(entry) {
-                    return entry.id_node === $scope.selectedItemNodeView.seq &&
+                    return entry.id_node === item.id_node &&
                            entry.deviations_no === item.deviations_no &&
                            entry.causes_no === item.causes_no &&
                            entry.consequences_no === item.consequences_no &&
@@ -3236,7 +3241,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     
                   var key = 'category' + item.id_node + '-' + item.deviations_no + '-' + item.causes_no + '-' + item.consequences_no + '-' + item.category_no;
                   $scope.rowspanMap[key] = $scope.data_nodeworksheet.filter(function(entry) {
-                    return entry.id_node === $scope.selectedItemNodeView.seq &&
+                    return entry.id_node === item.id_node &&
                            entry.deviations_no === item.deviations_no &&
                            entry.causes_no === item.causes_no &&
                            entry.consequences_no === item.consequences_no &&
@@ -3245,7 +3250,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     
                   var key = 'deviations' + item.id_node + '-' + item.deviations_no ;
                   $scope.rowspanMap[key] = $scope.data_nodeworksheet.filter(function(entry) {
-                    return entry.id_node === $scope.selectedItemNodeView.seq &&
+                    return entry.id_node === item.id_node &&
                            entry.deviations_no === item.deviations_no
                   }).length;
     
@@ -4464,7 +4469,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         var causes_no = Number(item.causes_no);
         var consequences_no = Number(item.consequences_no);
         var category_no = Number(item.category_no);
-        var recommendations_no = null;
+        var recommendations_no = Number(item.recommendations_no);;
 
         var guidewords = item.guidewords;
         var deviations = item.deviations;
@@ -8740,6 +8745,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     };    
 
     $scope.Access_check = function(task) {
+
+        console.log(task)
+        console.log(task)
         let accessInfo = {
             canAccess: false, // General access flag (for both viewing and uploading)
             isTA2: false,     // Role: Task owner (TA2)
@@ -8755,6 +8763,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     
         // Employee (could be TA2 or TA3 or regular employee)
         if ($scope.flow_role_type === 'employee') {
+
+            console.log($scope.user_name)
+            console.log(task.user_name)
             // Check if user is TA2 (task owner)
             if ($scope.user_name === task.user_name) {
                 accessInfo.isTA2 = true;

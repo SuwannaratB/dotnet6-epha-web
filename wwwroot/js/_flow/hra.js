@@ -2611,10 +2611,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         function setAllTabsInctive() {
             $scope.tab_general_active = false;
-            $scope.tab_node_active = false;
+            //$scope.tab_node_active = false;
             $scope.tab_worksheet_active = false;
             $scope.tab_managerecom_active = false;
             $scope.tab_approver_active = false;
+
+            $scope.tab_areas_active = false;
+            $scope.tab_workers_active = false;
+            $scope.tab_list_name_active = false;
 
             // Ensure the tab is always active
             $scope.tab_report_active = true;
@@ -2719,11 +2723,22 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 const set_tabs = ['general', 'areas', 'worker', 'worksheet', 'manage','approver'];
             
                 showTabs(set_tabs);
-                setTabsActive(['general', 'areas', 'worker', 'worksheet', 'manage']);
+
+                if($scope.flow_role_type === 'admin' ||($scope.data_header[0].pha_request_by.toLowerCase() === $scope.user_name.toLowerCase())){
+                    setTabsActive(['general', 'areas', 'worker', 'worksheet', 'manage']);
+                    $scope.isDisableStatus = false;
+                }else{
+                    setAllTabsInctive();
+
+                    $scope.isDisableStatus = true;
+
+                }
+
+                console.log($scope.tab_areas_active)
+
 
                 check_case_member_review();
     
-                $scope.isDisableStatus = false;
                 $scope.isEditWorksheet  = false;
                 $scope.isApproveReject =true;
 
@@ -10305,6 +10320,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     }else if(item.action_type === 'insert'){
                         accessInfo.canCopy = true;
                         accessInfo.canRemove = true;
+                        accessInfo.canAdd = true;
+
                     }else{
                         accessInfo.canCopy = false;
                         accessInfo.canRemove = false;                    
@@ -10345,6 +10362,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     }else if(item.action_type === 'insert'){
                         accessInfo.canCopy = true;
                         accessInfo.canRemove = true;
+                        accessInfo.canAdd = true;
+
                     }
                 }
             }
@@ -10387,11 +10406,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 }
 
                 // Check if a document is uploaded for the matching id_approver
-                if ($scope.data_drawing_approver) {
+                if ($scope.data_drawing_approver && task.approver_action_type === 2) {
                     for (let drawing of $scope.data_drawing_approver) {
                         if (drawing.id_approver === task.id) {
                             if (drawing.document_file_size) {
-                                console.log("task matches id_approver, document_file_size exists", drawing);
                                 accessInfo.canViewOnly = true; // Regular employees can only view the document if uploaded
                             }
                         }

@@ -1892,6 +1892,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
         //access each role
         $scope.Access_check = function(task) {
             let accessInfo = {
+                canAccess:false,
                 isAdmin: false,
                 isEmployee: false,
                 isOwner:false
@@ -1906,6 +1907,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
             // If user is an admin, allow access
             if ($scope.flow_role_type === 'admin') {
                 accessInfo.isAdmin = true;
+                accessInfo.canAccess = true;
                                 
                 return accessInfo;
             }
@@ -1916,6 +1918,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
                 if ($scope.user_name === task.responder_user_name) {
 
                     accessInfo.isOwner = true;
+                    accessInfo.canAccess = true;
+
                 } else {
 
                     accessInfo.isEmployee = true;

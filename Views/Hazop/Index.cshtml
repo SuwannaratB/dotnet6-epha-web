@@ -711,12 +711,13 @@
                                                         <div class="row d-flex">
                                                             <!-- Member Team Section -->
                                                             <div class="col-4">
-                                                                <div class="mb-2 d-flex align-items-center" ng-if="tab_general_active">
+                                                                <div class="mb-2 d-flex align-items-center">
                                                                     <button class="btn btn-outline-primary btn-sm d-flex align-items-center mb-2 custom-btn p-2"
                                                                             style="color: #2445fc; background-color: #f1f2f4; border-color: #2445fc; transition: all 0.3s ease;"
                                                                             ng-click="openDataEmployeeAdd(item, 'member')">
-                                                                        <span class="far fa-address-book fa-lg pe-2"></span>
-                                                                        Add Member Team
+                                                                        <span ng-if="tab_general_active" class="far fa-address-book fa-lg pe-2"></span>
+                                                                        <span ng-if="tab_general_active">Add Member Team</span>
+                                                                        <span ng-if="!tab_general_active">Member Team</span>
                                                                     </button>
                                                                     <span class="fa-stack fa-md cursor-pointer ms-2"
                                                                         data-bs-toggle="tooltip" 
@@ -726,7 +727,6 @@
                                                                         <i class="fa-solid fa-circle-info fa-lg" style="color: #2445fc;"></i>
                                                                     </span>
                                                                 </div>
-                                                                <div ng-if="!tab_general_active"><h6>Member Team</h6></div>
 
 
                                                                 <div ng-repeat="item2 in data_memberteam" 
@@ -748,12 +748,13 @@
 
                                                             <!-- Approver Section -->
                                                             <div class="col-4" ng-if="data_general[0].expense_type=='CAPEX' && data_general[0].sub_expense_type=='Normal'">
-                                                                <div class="mb-2 d-flex align-items-center" ng-if="tab_general_active">
+                                                                <div class="mb-2 d-flex align-items-center">
                                                                     <button class="btn btn-outline-primary btn-sm d-flex align-items-center mb-2 custom-btn"
                                                                             style="color: #2445fc; background-color: #f1f2f4; border-color: #2445fc; transition: all 0.3s ease;"
                                                                             ng-click="openDataEmployeeAdd(item, 'approver')" title="Assign approvers for this session">
-                                                                        <span class="far fa-address-book fa-lg pe-2"></span>
-                                                                        Add Approver
+                                                                        <span ng-if="tab_general_active" class="far fa-address-book fa-lg pe-2"></span>
+                                                                        <span ng-if="tab_general_active">Add Assessment Team Leader</span>
+                                                                        <span ng-if="!tab_general_active">Assessment Team Leader</span>
                                                                     </button>
                                                                     <span class="fa-stack fa-md cursor-pointer ms-2"
                                                                         data-bs-toggle="tooltip" 
@@ -763,7 +764,6 @@
                                                                         <i class="fa-solid fa-circle-info fa-lg" style="color: #2445fc;"></i>
                                                                     </span>
                                                                 </div>
-                                                                <div ng-if="!tab_general_active"><h6>Approver</h6></div>
 
 
                                                                 <div ng-repeat="item2 in data_approver" 
@@ -861,8 +861,8 @@
                                                     <td class="align-top " 
                                                         style="width: 158px;" 
                                                         ng-hide="!tab_general_active  || (data_header[0].pha_status === 22 && flow_role_type !== 'admin')">
-                                                        {{'SEQ' + item.seq}}
-                                                        {{'No' + item.no}}
+                                                        @*{{'SEQ' + item.seq}}
+                                                        {{'No' + item.no}}*@
                                                         <div class="col-12" style="width: 158px;">
                                                             <div class="float-end">
                                                                 <span class="mx-1">
@@ -2289,8 +2289,7 @@
                                             
                                             <tr class="rowwork border border-dashed" 
                                                 ng-if="( data_node.length == 1 ? (data_node[0].node == null ? false : true) : true) "
-                                                ng-repeat="item in data_nodeworksheet | toArray | filter:{id_node : selectedItemNodeView.seq} | sortNodeworksheet"
-                                                ng-init="accessInfo = Access_check(item)"> 
+                                                ng-repeat="item in data_nodeworksheet | toArray | filter:{id_node : selectedItemNodeView.seq} | sortNodeworksheet"> 
  @*<!-- Second td for id_node -->
     <td class="align-top border border-light border-active">
         {{ item.no }}
@@ -2341,10 +2340,13 @@
                                                     <p class=" mx-1  text-1100 fw-bold " ng-if="( item.causes_no == 1 && item.consequences_no == 1) && item.row_type == 'causes' ">{{ item.deviations }}  </p>
                                                 </td>*@
 
+
                                                 @* causes *@
                                                 <td class="align-top border border-light border-active " style="padding: 0 !important;"
                                                     ng-if="item.row_type === 'causes'" 
                                                     rowspan="{{ rowspanMap['causes' + item.id_node + '-' + item.deviations_no + '-' + item.causes_no] || 1 }}">
+                                                    
+                                                    
                                                     @*rowspan="{{ (data_nodeworksheet | filter:{id_node : selectedItemNodeView.seq,deviations: item.deviations,causes_no: item.causes_no}).length }}"*@
                                                     <div class="d-flex align-items-top w-100">
                                                         <div>
@@ -3618,8 +3620,8 @@
                                                         </p>
                                                     </div>
                                                 </td>
-                                                <td class="align-top px-1" style="min-width:200px;">
-                                                    @* {{item.seq}} *@
+                                                <td class="align-top justify-content-center px-1" style="min-width:200px;">
+                                                    <!-- Loop through approvers -->
                                                     <div class="p-0 cursor-pointer" 
                                                         ng-repeat="item_x in data_drawing_approver | toArray | filter:{id_approver : item.seq}">
                                                         <div class="d-flex flex-nowrap justify-content-center align-items-center">
@@ -3650,16 +3652,17 @@
                                                             <!-- File upload/download section -->
                                                             <div class="btn-group my-2" ng-show="accessInfo.canAccess || accessInfo.canViewOnly">
                                                                 <!-- Upload button (Only visible to TA2 who can still upload) -->
-                                                                <div class="icon-button border p-3" ng-hide="isApproveReject && !item_x.document_file_size"
+                                                                
+                                                                <div class="icon-button border p-3" 
                                                                     style="border-color: #0d6efd; background-color: #0d6efd;">
-                                                                    <span class="fa-solid fa-arrow-up-from-bracket fa-lg"  ng-hide="item_x.document_file_size || !accessInfo.isTA2 " style="color: #ffffff;"></span>
-                                                                    <span class="fa-solid fa-file-pdf fa-lg" ng-show="!item.document_file_size || accessInfo.canViewOnly"  style="color: #ffffff;"></span>
+                                                                    <span class="fa-solid fa-arrow-up-from-bracket fa-lg"  ng-show="!item_x.document_file_size " style="color: #ffffff;"></span>
+                                                                    <span class="fa-solid fa-file-pdf fa-lg" ng-show="item_x.document_file_size"  style="color: #ffffff;"></span>
                                                                 </div>
                                                                  
 
                                                                 <!-- Upload input (Only visible to TA2 if no file uploaded yet) -->
                                                                 <button class="Upload-button btn ps-3" 
-                                                                        ng-show="!item_x.document_file_size && accessInfo.isTA2">
+                                                                        ng-show="!item_x.document_file_size && (accessInfo.isTA2 || accessInfo.canAccess)">
                                                                     <span class="nametext ms-3 filename-text me-2 d-none" id="filename-approver-{{item_x.seq}}">
                                                                         {{(item_x.document_file_size>0 ? item_x.document_file_name + '(' + item_x.document_file_size + 'KB)' : '')}}
                                                                     </span>
@@ -3680,10 +3683,12 @@
                                                                         </span>
                                                                     </div>
                                                                 </button>
-                                                            </div>                                                            
+                                                            </div>
 
                                                         </div>
                                                     </div>
+
+                                                    <!-- Error message for invalid document -->
                                                     <div ng-class="{'invalid-feedback text-danger': !(form_valid.valid_document_file==true && item.seq == id_approver_select), 'feedback text-danger': form_valid.valid_document_file}">
                                                         Please provide a valid document file.
                                                     </div>
@@ -3703,18 +3708,18 @@
                                                     </div>
                                                 </td>
                                                 <td class="align-top px-1 py-3" ng-class="{'disabled-link': (!tab_approver_active)}">
-                                                    <div class="d-flex" ng-class="{ 'no-drop': !canAccess, 'cursor-pointer': canAccess }" ng-hide="pha_status != 21">
+                                                    <div class="d-flex"  ng-hide="pha_status != 21">
                                                         <button class="btn btn-outline text-primary p-1 m-2 me-0"
                                                                 style="background-color: #f1f2f4; width:50px;"
                                                                 ng-click="confirmDialogApprover(item, 'save')"
-                                                                ng-show="(accessInfo.canAccess || accessInfo.isTA2 || accessInfo.isTA3) && item.approver_action_type != 2">
+                                                                ng-show="(accessInfo.canAccess || accessInfo.isTA2) && item.approver_action_type != 2">
                                                             <span class="fa fa-save text-primary fa-lg"></span><br />
                                                             <span style="font-size:8px">Save</span>
                                                         </button>
                                                         <button class="btn btn-outline text-success p-1 m-2 ms-1"
                                                                 style="background-color: #f1f2f4; width:80px;"
                                                                 ng-click="confirmDialogApprover(item, 'submit')"
-                                                                ng-show="(accessInfo.canAccess || accessInfo.isTA2 || accessInfo.isTA3) && item.approver_action_type != 2"
+                                                                ng-show="(accessInfo.canAccess || accessInfo.isTA2) && item.approver_action_type != 2"
                                                                 ng-disabled="!accessInfo.canAccess">
                                                             <span class="fa fa-save text-success fa-lg"></span><br />
                                                             <span style="font-size:8px">Submit</span>

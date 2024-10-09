@@ -2001,6 +2001,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     
                 }
 
+                $scope.pha_status = $scope.data_header[0].pha_status;
+
                 //set form 
                 if(!$scope.params){
                     set_form_action(action_part_befor, !action_submit, page_load);
@@ -2319,7 +2321,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 const set_tabs = ['general', 'task', 'worksheet', 'managerecom','approver'];
             
                 showTabs(set_tabs);
-                setTabsActive(['general', 'task', 'worksheet', 'managerecom']);
+
+                if($scope.flow_role_type === 'admin' || $scope.user_name === $scope.data_header[0].request_user_name){
+                    setTabsActive(['general', 'task', 'worksheet', 'managerecom']);
+                }
 
                 check_case_member_review();
     
@@ -4731,13 +4736,17 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         var seq_recommendations = item.seq_recommendations;
 
         var index_rows = Number(item.index_rows);
-        var no = '';
+        var no = Number(item.no);
         var list_system_no = Number(item.list_system_no);
         var list_sub_system_no = Number(item.list_sub_system_no);
         var causes_no = Number(item.causes_no);
         var consequences_no = Number(item.consequences_no);
         var category_no = Number(item.category_no);
         var recommendations_no = Number(item.recommendations_no);
+
+
+
+        console.log("Number(item.no)",no)
 
         var arr_def = [];
         angular.copy($scope.data_listworksheet, arr_def);
@@ -4935,8 +4944,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         && item.causes_no == causes_no && item.consequences_no == consequences_no;
             });
 
-        console.log("listtttttttttttttttttttttttttttttttttttttt",data)
-
 
             newInput.list_system = data[0].list_system;
             newInput.list_sub_system = data[0].list_sub_system;
@@ -4961,6 +4968,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.selectdata_listworksheet = xseq;
 
         insertNewData(newInput,index);
+
+        console.log(newInput)
         $scope.data_listworksheet.forEach(function(item, index) {
             item.index_rows = index;
             item.action_change = 1;
@@ -4984,7 +4993,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             dataList.forEach((item, index) => {
     
                 if (item.recommendations !== null && item.recommendations !== '') {
-                    item.recommendations_no = count; 
+                    item.recommendations_action_no = count; 
                     count++; 
                 }
             });
@@ -5030,7 +5039,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                             previous.consequences_no >= item.consequences_no && previous.category_no === item.category_no && 
                             previous.recommendations_no >= item.recommendations_no && 
                             (item.row_type === 'causes' || item.row_type === 'list_sub_system' || item.row_type === 'consequences' || item.row_type === 'category' || item.row_type === 'recommendations')) {
-                            item.recommendations_no = null;
+                            item.recommendations_no = previous.recommendations_no + 1;
                         }
                     }
                     
@@ -5106,12 +5115,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 && item.causes_no === newData.causes_no ) {
                 //index = item.consequences_no >= newData.consequences_no ? i : i + 1;
                 //break;
-                console.log("item.list_system_no ", item.list_system_no, "newData.list_system_no", newData.list_system_no);
-                console.log("item.list_sub_system_no ", item.list_sub_system_no, "newData.list_sub_system_no", newData.list_sub_system_no);
-                console.log("item.causes_no ", item.causes_no, "newData.causes_no", newData.causes_no);
-                console.log("item.consequences_no ", item.consequences_no, "newData.consequences_no", newData.consequences_no);
-                console.log("item.category_no ", item.category_no, "newData.category_no", newData.category_no);
-                console.log("item.recommendations_no ", item.recommendations_no, "newData.recommendations_no", newData.recommendations_no);
 
                 const set_consequences = $scope.data_listworksheet.filter(data => 
                     data.list_system_no === item.list_system_no && 
@@ -8877,8 +8880,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
     
             for (let i = 0; i < $scope.data_tasklist.length; i++) {
-                if (!$scope.data_tasklist[i].node) {
-                    $scope.validMessage = 'Please select a valid Node';
+                if (!$scope.data_tasklist[i].list) {
+                    $scope.validMessage = 'Please select a valid Task';
                     $scope.goback_tab = 'node';
                     return false;
                 } else {

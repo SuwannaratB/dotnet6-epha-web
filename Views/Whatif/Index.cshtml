@@ -646,8 +646,9 @@
                                                                     <button class="btn btn-outline-primary btn-sm d-flex align-items-center mb-2 custom-btn p-2"
                                                                             style="color: #2445fc; background-color: #f1f2f4; border-color: #2445fc; transition: all 0.3s ease;"
                                                                             ng-click="openDataEmployeeAdd(item, 'member')">
-                                                                        <span class="far fa-address-book fa-lg pe-2"></span>
-                                                                        Add Member Team
+                                                                        <span ng-if="tab_general_active" class="far fa-address-book fa-lg pe-2"></span>
+                                                                        <span ng-if="tab_general_active">Add Member Team</span>
+                                                                        <span ng-if="!tab_general_active">Member Team</span>
                                                                     </button>
                                                                     <span class="fa-stack fa-md cursor-pointer ms-2"
                                                                         data-bs-toggle="tooltip" 
@@ -681,8 +682,9 @@
                                                                     <button class="btn btn-outline-primary btn-sm d-flex align-items-center mb-2 custom-btn"
                                                                             style="color: #2445fc; background-color: #f1f2f4; border-color: #2445fc; transition: all 0.3s ease;"
                                                                             ng-click="openDataEmployeeAdd(item, 'approver')" title="Assign approvers for this session">
-                                                                        <span class="far fa-address-book fa-lg pe-2"></span>
-                                                                        Add Approver
+                                                                        <span ng-if="tab_general_active" class="far fa-address-book fa-lg pe-2"></span>
+                                                                        <span ng-if="tab_general_active">Add Approver</span>
+                                                                        <span ng-if="!tab_general_active">Approver</span>
                                                                     </button>
                                                                     <span class="fa-stack fa-md cursor-pointer ms-2"
                                                                         data-bs-toggle="tooltip" 
@@ -711,8 +713,9 @@
                                                                     <button class="btn btn-outline-primary btn-sm d-flex align-items-center mb-2 custom-btn"
                                                                             style="color: #2445fc; background-color: #f1f2f4; border-color: #2445fc; transition: all 0.3s ease;"
                                                                             ng-click="openDataEmployeeAdd(item, 'specialist')" data-bs-toggle="tooltip" title="Add specialists (e.g., Third party, Licensor, etc)">
-                                                                        <span class="far fa-address-book fa-lg pe-2"></span>
-                                                                        Add Specialist
+                                                                        <span ng-if="tab_general_active" class="far fa-address-book fa-lg pe-2"></span>
+                                                                        <span ng-if="tab_general_active">Add Specialist</span>
+                                                                        <span ng-if="!tab_general_active">Specialist</span>
                                                                     </button>
                                                                     <span class="fa-stack fa-md cursor-pointer ms-2"
                                                                         data-bs-toggle="tooltip" 
@@ -2662,7 +2665,7 @@
                                                         <div class="autocomplete-container" ng-class="{'disabled-link':(!tab_worksheet_active)}"
                                                              ng-if="item.recommendations!=''">
                                                              @*{{item.recommendations_no}} *@
-                                                             {{item.recommendations_no}} 
+                                                             {{item.recommendations_action_no}} 
                                                              @* <textarea class="form-control form-control-sm rounded-1 p-0 m-0 w-100 border border-end-0 border-top-0 text-center"
                                                                       style=" width: 50px; font-size: 10px;"
                                                                       placeholder="No" rows="1"
@@ -2694,7 +2697,8 @@
                                                                       rows="3"
                                                                       ng-model="item.recommendations"
                                                                       ng-change="clearAllValidationMessages(item.seq,'recom');"
-                                                                      ng-keyup="filterResultHistory(item.recommendations, 'recommendations', 'recommendations_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'recom')">
+                                                                      ng-keyup="filterResultHistory(item.recommendations, 'recommendations', 'recommendations_worksheet_'+ item.seq);
+                                                                                actionChangeWorksheet(item,item.seq,'recom')">
                                                             </textarea>
                                                             <div class="autocomplete-dropdown" style="position: absolute;" ng-show="showResults"
                                                                  ng-class="{'ng-show' : (filteredArr[0].fieldID == ('recommendations_worksheet_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('recommendations_worksheet_'+item.seq)) }">

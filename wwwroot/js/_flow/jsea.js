@@ -2285,7 +2285,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                     } catch (ex) { alert(ex); console.clear(); }*/
                     
-                    var pha_status = $scope.data_header[0].pha_status
+                    $scope.pha_status = $scope.data_header[0].pha_status;
                     //set form 
                     if(!$scope.params){
                         set_form_action(action_part_befor, !action_submit, page_load);
@@ -2579,7 +2579,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 const set_tabs = ['general','ram', 'worksheet', 'approver', 'report'];
             
                 showTabs(set_tabs);
-                setTabsActive(['general','ram', 'worksheet', 'report']);
+                
+                if($scope.flow_role_type === 'admin' || $scope.user_name === $scope.data_header[0].request_user_name){
+                    setTabsActive(['general','ram', 'worksheet', 'report']);
+                }
                 check_case_member_review();
     
                 $scope.submit_type = true;
