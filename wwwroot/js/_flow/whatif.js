@@ -1943,7 +1943,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 if (arr.user_in_pha_no[0].pha_no == '' && $scope.flow_role_type != 'admin') {
                     if (arr.header[0].action_type != 'insert') {
                         $scope.tab_general_active = false;
-                        $scope.tab_node_active = false;
+                        $scope.tab_task_active = false;
                         $scope.tab_worksheet_active = false;
                         $scope.tab_managerecom_active = false;
 
@@ -1954,7 +1954,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 } else if (arr.user_in_pha_no[0].pha_no != '' && $scope.flow_role_type != 'admin') {
                     if (arr.header[0].action_type != 'insert') {
                         $scope.tab_general_active = false;
-                        $scope.tab_node_active = false;
+                        $scope.tab_task_active = false;
                         $scope.tab_worksheet_active = false;
                         $scope.tab_managerecom_active = false;
 
@@ -2006,7 +2006,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     set_form_action(action_part_befor, !action_submit, page_load);
                     set_form_access(pha_status,$scope.params,$scope.flow_role_type)   
                 }else{
-                    set_edit_form();
+                    set_edit_form(pha_status,$scope.params,$scope.flow_role_type);
                 }
 
                 set_tab_focus(pha_status,action_part_befor)
@@ -2187,7 +2187,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         function setAllTabsInctive() {
             $scope.tab_general_active = false;
-            $scope.tab_node_active = false;
+            $scope.tab_task_active = false;
             $scope.tab_worksheet_active = false;
             $scope.tab_managerecom_active = false;
             $scope.tab_approver_active = false;
@@ -2228,7 +2228,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 if (page_load) {
     
                     var arr_submit = $filter('filter')($scope.data_tasklist, function (item) {
-                        return ((item.node !== '' && item.action_type !== null));
+                        return ((item.task !== '' && item.action_type !== null));
                     });
                     if (arr_submit.length > 0) {
                         $scope.submit_type = true;
@@ -2439,7 +2439,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
         }
         
-        function set_edit_form(){
+        function set_edit_form(status,params,flow_role_type){
 
             //edit
             //edit_action_owner
@@ -2451,7 +2451,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             if(params !== 'edit') {
                 $scope.tab_general_active = false;
-                $scope.tab_node_active = false;
+                $scope.tab_task_active = false;
                 $scope.tab_worksheet_active = false;
                 $scope.tab_managerecom_active = false;
                 $scope.tab_approver_active = false;
@@ -2473,7 +2473,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             if(params === 'edit' && flow_role_type === 'admin') {
                 $scope.tab_general_active = true;
-                $scope.tab_node_active = true;
+                $scope.tab_task_active = true;
                 $scope.tab_worksheet_active = true;
                 $scope.tab_managerecom_active = true;
                 $scope.tab_approver_active = true;
@@ -8876,8 +8876,39 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 }
             }
     
+            for (let i = 0; i < $scope.data_tasklist.length; i++) {
+                if (!$scope.data_tasklist[i].node) {
+                    $scope.validMessage = 'Please select a valid Node';
+                    $scope.goback_tab = 'node';
+                    return false;
+                } else {
+                    for (let i = 0; i < $scope.data_tasklist.length; i++) {
+                        let currentTask = $scope.data_tasklist[i].id; 
+    
+                        const task_drawing = $scope.data_tasklistdrawing.filter(d => d.id_list === currentTask);
+    
+                        console.log("node_drawing",task_drawing)
+                        if (task_drawing.length === 0) {
+                            $scope.validMessage = 'Please select a valid Drawing';
+                            $scope.goback_tab = 'node';
+                            return false;
+                        }
+    
+                        if (task_drawing[0].id_drawing == null) {
+                            $scope.validMessage = 'Please select a valid Drawing';
+                            $scope.goback_tab = 'node';
+                            return false;
+                        }
+                    }
+    
+                }
+            }
+            
+            
+    
             $scope.validMessage = ''
             return true
+
         }
 
         //Check worksheet valid at conduct

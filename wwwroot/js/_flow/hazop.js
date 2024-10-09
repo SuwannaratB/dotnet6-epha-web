@@ -2135,7 +2135,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     set_form_action(action_part_befor, !action_submit, page_load);
                     set_form_access(pha_status,$scope.params,$scope.flow_role_type)   
                 }else{
-                    set_edit_form();
+                    set_edit_form(pha_status,$scope.params,$scope.flow_role_type);
                 }
 
                 set_tab_focus(pha_status,action_part_befor)
@@ -2538,7 +2538,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             }
         }
         
-        function set_edit_form(){
+        function set_edit_form(status,params,flow_role_type){
 
             //edit
             //edit_action_owner
@@ -8961,31 +8961,33 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     function validNode(){
         for (let i = 0; i < $scope.data_node.length; i++) {
             if (!$scope.data_node[i].node) {
-                if(!$scope.data_node[i].node) {
-                    $scope.validMessage = 'Please select a valid Node'
-                }else{
+                $scope.validMessage = 'Please select a valid Node';
+                $scope.goback_tab = 'node';
+                return false;
+            } else {
+                for (let i = 0; i < $scope.data_node.length; i++) {
+                    let currentNode = $scope.data_node[i].id; 
 
-                    const node_drawing = $scope.data_nodedrawing.filter(d => d.id_node === $scope.data_node[i].node);
+                    const node_drawing = $scope.data_nodedrawing.filter(d => d.id_node === currentNode);
 
-                    if (node_drawing.length == 0 && node_drawing[0].id_drawing == null){
-                        $scope.validMessage = 'Please select a valid Drawing'
-                        
+                    console.log("node_drawing",node_drawing)
+                    if (node_drawing.length === 0) {
+                        $scope.validMessage = 'Please select a valid Drawing';
+                        $scope.goback_tab = 'node';
+                        return false;
+                    }
+
+                    if (node_drawing[0].id_drawing == null) {
+                        $scope.validMessage = 'Please select a valid Drawing';
+                        $scope.goback_tab = 'node';
+                        return false;
                     }
                 }
-                
-                $scope.goback_tab = 'node';
-                return false
+
             }
         }
         
-        /*for (let i = 0; i < $scope.data_nodedrawing.length; i++) {
-            if (!$scope.data_nodedrawing[i].id_drawing) {
-                if(!$scope.data_nodedrawing[i].id_drawing) $scope.validMessage = 'Please select a valid Drawing'
-    
-                $scope.goback_tab = 'node';
-                return false
-            }
-        }*/
+        
 
         $scope.validMessage = ''
         return true

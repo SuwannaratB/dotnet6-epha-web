@@ -2291,7 +2291,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         set_form_action(action_part_befor, !action_submit, page_load);
                         set_form_access(pha_status,$scope.params,$scope.flow_role_type)   
                     }else{
-                        set_edit_form();
+                        set_edit_form(pha_status,$scope.params,$scope.flow_role_type);
                     }
 
                     set_tab_focus(pha_status,action_part_befor)
@@ -2734,7 +2734,54 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 console.error("Error: No valid tab found for the current pha_status and action_part_befor.");
             }
         }
-        
+        function set_edit_form(status,params,flow_role_type){
+
+            //edit
+            //edit_action_owner
+            //edit_approver
+            if(params != 'edit_approver'){
+                $scope.action_owner_active = true;
+            }  
+            
+
+            if(params !== 'edit') {
+                $scope.tab_general_active = false;
+                //$scope.tab_node_active = false;
+                $scope.tab_worksheet_active = false;
+                $scope.tab_managerecom_active = false;
+                $scope.tab_approver_active = false;
+
+                if(params === 'edit_action_owner'){
+                    $scope.action_owner_active = true;
+
+                } 
+
+                if(params === 'edit_approver'){
+                    $scope.action_owner_active = false;
+
+                }  
+
+                $scope.can_edit = false;
+
+
+            }
+
+            if(params === 'edit' && flow_role_type === 'admin') {
+                $scope.tab_general_active = true;
+                //$scope.tab_node_active = true;
+                $scope.tab_worksheet_active = true;
+                $scope.tab_managerecom_active = true;
+                $scope.tab_approver_active = true;
+
+                $scope.save_type = true;
+                $scope.can_edit = true;
+
+            }
+
+            if(params != 'edit_approver'){
+                $scope.action_owner_active = true;
+            }  
+        }        
         function set_access_formaction(arr) {
             // params === admin action
         
