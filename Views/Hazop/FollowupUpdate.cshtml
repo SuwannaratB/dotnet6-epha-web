@@ -552,7 +552,8 @@
                                                         <div class="d-flex justify-content-center align-items-center h-100 w-100 p-2">
                                                             @*{{"accessInfo.isOwner          " + accessInfo.isOwner}}
                                                             {{"accessInfo.isAdmin          " + accessInfo.isAdmin}}*@
-                                                            <div class="m-auto" ng-class="{ 'no-drop': !(accessInfo.isOwner || accessInfo.isAdmin), 'cursor-pointer': (accessInfo.isOwner || accessInfo.isAdmin) }">
+                                                            <div class="m-auto" ng-class="{ 'no-drop': !(accessInfo.isOwner || accessInfo.isAdmin), 'cursor-pointer': (accessInfo.isOwner || accessInfo.isAdmin) }"
+                                                                ng-hide="!(accessInfo.isOwner || accessInfo.isAdmin)">
                                                                 <input type="checkbox" ng-model="item_d.implement"
                                                                        class="round-3"
                                                                        ng-class="{ 'cant-Access': !(accessInfo.isOwner || accessInfo.isAdmin) }"
@@ -565,6 +566,7 @@
                                                     <td class="align-middle">
                                                         <div class="p-2" 
                                                             style="width: 200px;"
+                                                            ng-hide="!(accessInfo.isOwner || accessInfo.isAdmin)"
                                                             ng-disabled="!(accessInfo.isOwner || accessInfo.isAdmin) && item_d.responder_action_type != 2">
                                                                 <textarea class="form-control form-control-sm rounded-1 p-0 mt-1 w-100 border border-end-0 border-top-0"
                                                                     style="width: 100vh; font-size: 10px;"
@@ -578,6 +580,9 @@
                                                                  class="invalid-feedback text-danger">
                                                                 Please provide a valid Remark.
                                                             </div>
+                                                        </div>
+                                                        <div class="p-2"  ng-if="item_d.responder_comment && item_d.responder_action_type == 2">
+                                                            {{item_d.responder_comment}}
                                                         </div>
                                                     </td>
 
