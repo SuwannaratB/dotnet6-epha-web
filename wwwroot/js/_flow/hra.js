@@ -7901,14 +7901,20 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         
                         $scope.data_worksheet_show = $scope.worksheet_Filter($scope.data_worksheet_list)
 
+                        console.log("$scope.data_worksheet_show",$scope.data_worksheet_show)
 
-                        if($scope.params !== 'edit_action_owner' && $scope.data_worksheet_show.length > 1){
+
+                        if ($scope.params !== 'edit_action_owner' && (
+                            $scope.data_worksheet_show.length > 1 || 
+                            $scope.data_worksheet_show[0].sub_areas.length > 1)) {
+                                
                             $scope.showModal().then(function(applyRecommendation) {
                                 if (applyRecommendation) {
                                     $('#modalEmployeeAdd').modal('hide');
                                 }
                             });
                         }
+                        
 
                     }
                     //$('#modalEmployeeAdd').modal('hide');
