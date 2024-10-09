@@ -891,11 +891,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.optionJobType = [];
         $scope.optionSubArea = [];
         $scope.optionHealthEffectRating = [];
+        $scope.optionFrequency = [];
         $scope.optionExposureBand = [];
         $scope.optionStandard = [];
         $scope.optionExposurelevel = [];
         $scope.optionExposureRating = [];
-        $scope.optionFrequency = [];
         $scope.optionInitial = [];
         $scope.optionExposure = [];
         $scope.searchQueryWorksheet = ''; // search worksheet
@@ -3988,6 +3988,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
 
         $scope.removeDataSubAreasList = function (item_area, index) {
+            // check this one
+            // let check_list = $filter('filter')($scope.data_subareas_list, function (item,idx) {
+            //     return (item_area.seq != item.seq);
+            // });
+            if($scope.data_subareas_list.length == 1) return resetSubArea(item_area)
+
             // remove
             var delItem = $filter('filter')($scope.data_subareas_list, function (item,idx) {
                 return (idx == index);
@@ -4130,6 +4136,25 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
 
         $scope.removeDataHazardList = function (item_area, item_hazard, index) {
+            // check this one
+            const check_list = $filter('filter')(item_area.hazard, function (item,idx) {
+                return (item_hazard.seq != item.seq && item_hazard.no_type_hazard != item.no_type_hazard);
+            });
+
+            if(check_list.length == 0) {
+                // เหลือไว้ 1 item ที่เหลือลบ
+                for (let i = 0; i < item_area['hazard'].length; i++) {
+                    if (i > 0 && item_area['hazard'][i].no_type_hazard == item_hazard.no_type_hazard) {
+                        $scope.data_hazard_delete.push(item_area['hazard'][i])
+                    }
+                }
+
+                setActiveOption(item_area, item_hazard, item_hazard.id_type_hazard)
+                item_area.hazard = [resetTypeHazard(item_area.hazard[0])]
+                return 
+            } 
+
+            // remove 
             var delItem = $filter('filter')(item_area.hazard, function (item, idx) {
                 return (item.no_type_hazard == item_hazard.no_type_hazard && item.no_subareas == item_hazard.no_subareas);
             });
@@ -4212,6 +4237,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
 
         $scope.removeDataHealthHazard = function (item_area, item_hazard, index) {
+            // check this one
+            const check_list = $filter('filter')(item_area.hazard, function (item,idx) {
+                return (item_hazard.seq != item.seq && item_hazard.no_type_hazard == item.no_type_hazard);
+            });
+            console.log(check_list)
+            if(check_list.length == 0) {
+                return item_hazard = [resetHealthHazard(item_hazard)]
+            } 
             // remove
             var delItem = $filter('filter')(item_area.hazard, function (item, idx) {
                 return (idx == index);
@@ -4265,6 +4298,43 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             }
         };
+
+        function resetSubArea(item){
+            item.sub_area = null;
+            item.id_sub_area = null;
+            item.work_of_task = null;
+            item.action_change = 1;
+            item.hazard = [resetTypeHazard(item.hazard[0])];
+        }
+
+        function resetTypeHazard(item){
+            item.type_hazard = null
+            item.id_type_hazard = null
+            item.sub_area = null
+            item.sub_area = null
+            item.id_subareas = null
+            item.action_change = 1
+            const resetHealth = resetHealthHazard(item);
+            const mergedItem = { ...item, ...resetHealth };
+            return mergedItem
+        }
+
+        function resetHealthHazard(item){
+            item.health_hazard = null
+            item.id_health_hazard = null
+            item.health_effect_rating = null
+            item.id_health_effect = null
+            item.standard_type_text = null
+            item.standard_unit = null
+            item.standard_value = null
+            item.tlv_standard = null
+            item.action_change = 1
+            return item
+        }
+
+        function resetFactor(item_area){
+            console.log(item_area)
+        }
 
         $scope.copyHazard = function (subArea, item) {
 
@@ -9448,7 +9518,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         element.selected = false
                     }
                 });
-                console.log($scope.optionExposureBand)
                 return
             }
             
