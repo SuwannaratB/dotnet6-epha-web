@@ -156,4 +156,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, conFig) {
         return true;
     }; 
 
+    $scope.redirect = function(){
+        window.location.href = 'http://localhost:4200/'
+    }
+
 });

@@ -342,7 +342,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig){
         // $scope.data.sort((a, b) => b.seq - a.seq);
         $scope.data_filter = $filter('filter')($scope.data, item =>
              item.id_sections == $scope.selectOption['sections'] && 
-             item.id_sections_group == $scope.selectOption['sections_group'] )
+             item.id_sections_group == $scope.selectOption['sections_group'] 
+        )
     }
 
     function newTag(id_elemet){
