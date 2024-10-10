@@ -4155,7 +4155,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             const check_list = $filter('filter')(item_area.hazard, function (item,idx) {
                 return (item_hazard.seq != item.seq && item_hazard.no_type_hazard != item.no_type_hazard);
             });
-
+            console.log(check_list)
+            console.log('=====================')
             if(check_list.length == 0) {
                 // เหลือไว้ 1 item ที่เหลือลบ
                 for (let i = 0; i < item_area['hazard'].length; i++) {
@@ -4163,6 +4164,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         $scope.data_hazard_delete.push(item_area['hazard'][i])
                     }
                 }
+                resetWorksheetForHazardList(item_hazard)
 
                 setActiveOption(item_area, item_hazard, item_hazard.id_type_hazard)
                 item_area.hazard = [resetTypeHazard(item_area.hazard[0])]
@@ -4204,50 +4206,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 }
 
                 // remove worksheet
-                for (let i = 0; i < $scope.data_worksheet_list.length; i++) {
-                    var list = [];
-                    for (let j = 0; j < $scope.data_worksheet_list[i].worksheet.length; j++) {
-                        let found = false; // Flag เพื่อเช็คว่า item นี้จะถูกลบหรือไม่
-                        for (let k = 0; k < delItem.length; k++) {
-                            if ($scope.data_worksheet_list[i].worksheet[j].seq_hazard == delItem[k].seq) {
-                                // remove worksheet
-                                $scope.data_worksheet_delete.push($scope.data_worksheet_list[i].worksheet[j]);
-                                found = true; 
-                                // remove comments
-                                // removeCommentAll($scope.data_worksheet_list[i].worksheet[j])
-                                // ออกจาก loop ทันทีเมื่อเจอ match
-                                break; 
-                            }
-                        }
-
-                        if (!found) list.push($scope.data_worksheet_list[i].worksheet[j]); // ถ้าไม่พบ match, เพิ่ม item เข้า list ใหม่
-                    }
-                    $scope.data_worksheet_list[i].worksheet = list; // อัพเดท worksheet ด้วย list ใหม่
-                }
-                // sort 
-                for (let i = 0; i < $scope.data_worksheet_list.length; i++) {
-                    for (let j = 0; j < $scope.data_worksheet_list[i].worksheet.length; j++) {
-                        for (let k = 0; k < delItem.length; k++) {
-                            if($scope.data_worksheet_list[i].worksheet[j].no >= delItem[k].no){
-                                $scope.data_worksheet_list[i].worksheet[j].action_change = 1;
-                                $scope.data_worksheet_list[i].worksheet[j].no = $scope.data_worksheet_list[i].worksheet[j].no - 1;
-                                if ($scope.data_worksheet_list[i].worksheet[j].subarea_no == delItem[k].no_subareas) {
-                                    $scope.data_worksheet_list[i].worksheet[j].hazard_no = $scope.data_worksheet_list[i].worksheet[j].hazard_no - 1;   
-                                }
-                            }
-                        }
-                    }
-                }
-
-                // set default dropdown type hazard
-                const id_type_hazard = delItem[0].id_type_hazard;
-                setActiveOption(item_area, item_hazard, id_type_hazard)
-                // sort no comments
-                sortNumberComments();
-                // เรียงข้อมูล display
-                $scope.display_worksheet_filter = angular.copy($scope.data_worksheet_list)
-
-                console.log('data_worksheet_list',$scope.data_worksheet_list)
+                removeWorksheetForHazardList(delItem, item_area, item_hazard);
             }
         }
 
@@ -4256,8 +4215,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             const check_list = $filter('filter')(item_area.hazard, function (item,idx) {
                 return (item_hazard.seq != item.seq && item_hazard.no_type_hazard == item.no_type_hazard);
             });
-            console.log(check_list)
+            console.log($scope.data_worksheet_list)
             if(check_list.length == 0) {
+                resetWorksheetForHealthHazard(item_hazard);
                 return item_hazard = [resetHealthHazard(item_hazard)]
             } 
             // remove
@@ -4279,40 +4239,142 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 });
 
                 // remove worksheet
-                for (let i = 0; i < $scope.data_worksheet_list.length; i++) {
-                    var list = [];
-                    for (let j = 0; j < $scope.data_worksheet_list[i].worksheet.length; j++) {
-                        if ($scope.data_worksheet_list[i].worksheet[j].hazard_no == delItem.no &&
-                            $scope.data_worksheet_list[i].worksheet[j].subarea_no == delItem.no_subareas
-                        ) {
-                            // remove worksheet
-                            $scope.data_worksheet_delete.push($scope.data_worksheet_list[i].worksheet[j])
-                            // remove comments
-                            // removeCommentAll($scope.data_worksheet_list[i].worksheet[j])
-                        }else {
-                            list.push($scope.data_worksheet_list[i].worksheet[j])
-                        }
-                    }
-                    $scope.data_worksheet_list[i].worksheet = list;
-                }
-                // sort number
-                for (let i = 0; i < $scope.data_worksheet_list.length; i++) {
-                    for (let j = 0; j < $scope.data_worksheet_list[i].worksheet.length; j++) {
-                        $scope.data_worksheet_list[i].worksheet[j].no = j + 1;
-                        $scope.data_worksheet_list[i].worksheet[j].action_change = 1;
-
-                        if ($scope.data_worksheet_list[i].worksheet[j].hazard_no == $scope.data_worksheet_delete[0].hazard_no + 1) {
-                            $scope.data_worksheet_list[i].worksheet[j].hazard_no = $scope.data_worksheet_list[i].worksheet[j].hazard_no - 1;
-                        }
-                    }
-                }
-                // sort no comments
-                sortNumberComments();
-                // เรียงข้อมูล display
-                $scope.display_worksheet_filter = angular.copy($scope.data_worksheet_list)
+                removeWorksheetForHealHazard(delItem);
 
             }
         };
+
+        function removeWorksheetForHazardList(delItem, item_area, item_hazard){
+            for (let i = 0; i < $scope.data_worksheet_list.length; i++) {
+                var list = [];
+                for (let j = 0; j < $scope.data_worksheet_list[i].worksheet.length; j++) {
+                    let found = false; // Flag เพื่อเช็คว่า item นี้จะถูกลบหรือไม่
+                    for (let k = 0; k < delItem.length; k++) {
+                        if ($scope.data_worksheet_list[i].worksheet[j].seq_hazard == delItem[k].seq) {
+                            // remove worksheet
+                            $scope.data_worksheet_delete.push($scope.data_worksheet_list[i].worksheet[j]);
+                            found = true; 
+                            break; 
+                        }
+                    }
+
+                    if (!found) list.push($scope.data_worksheet_list[i].worksheet[j]); // ถ้าไม่พบ match, เพิ่ม item เข้า list ใหม่
+                }
+                $scope.data_worksheet_list[i].worksheet = list; // อัพเดท worksheet ด้วย list ใหม่
+            }
+            // sort 
+            for (let i = 0; i < $scope.data_worksheet_list.length; i++) {
+                for (let j = 0; j < $scope.data_worksheet_list[i].worksheet.length; j++) {
+                    for (let k = 0; k < delItem.length; k++) {
+                        if($scope.data_worksheet_list[i].worksheet[j].no >= delItem[k].no){
+                            $scope.data_worksheet_list[i].worksheet[j].action_change = 1;
+                            $scope.data_worksheet_list[i].worksheet[j].no = $scope.data_worksheet_list[i].worksheet[j].no - 1;
+                            if ($scope.data_worksheet_list[i].worksheet[j].subarea_no == delItem[k].no_subareas) {
+                                $scope.data_worksheet_list[i].worksheet[j].hazard_no = $scope.data_worksheet_list[i].worksheet[j].hazard_no - 1;   
+                            }
+                        }
+                    }
+                }
+            }
+            // set default dropdown type hazard
+            const id_type_hazard = delItem[0].id_type_hazard;
+            setActiveOption(item_area, item_hazard, id_type_hazard)
+            // sort no comments
+            sortNumberComments();
+            // เรียงข้อมูล display
+            $scope.display_worksheet_filter = angular.copy($scope.data_worksheet_list)
+            console.log('data_worksheet_list',$scope.data_worksheet_list)
+        }
+
+        function resetWorksheetForHazardList(itemHazard){
+            console.log(itemHazard)
+            console.log('=====================')
+            for (let i = 0; i < $scope.data_worksheet_list.length; i++) {
+                for (let j = 0; j < $scope.data_worksheet_list[i].worksheet.length; j++) {
+                    // reset 1 item
+                    if ($scope.data_worksheet_list[i].worksheet[j].id_hazard == itemHazard.seq) {
+                        $scope.data_worksheet_list[i].worksheet[j].type_hazard = null
+                        $scope.data_worksheet_list[i].worksheet[j].health_hazard = null
+                        $scope.data_worksheet_list[i].worksheet[j].health_effect_rating = null
+                        $scope.data_worksheet_list[i].worksheet[j].standard_type_text = null
+                        $scope.data_worksheet_list[i].worksheet[j].standard_unit = null
+                        $scope.data_worksheet_list[i].worksheet[j].standard_value = null
+                        $scope.data_worksheet_list[i].worksheet[j].action_change = 1
+                    }
+                    // ลบ item ที่เหลือออก
+                    if ($scope.data_worksheet_list[i].worksheet[j].subarea_no == itemHazard.no_subareas &&
+                        $scope.data_worksheet_list[i].worksheet[j].type_hazard == itemHazard.type_hazard &&
+                        $scope.data_worksheet_list[i].worksheet[j].hazard_no != 1 
+                     ) {
+                        $scope.data_worksheet_delete.push($scope.data_worksheet_list[i].worksheet[j])
+                    }
+                }
+            }
+            console.log($scope.data_worksheet_delete)
+            // ลบข้อมูลจาก worksheet ที่อยู่ใน data_worksheet_delete
+            for (let i = 0; i < $scope.data_worksheet_list.length; i++) {
+                $scope.data_worksheet_list[i].worksheet = $scope.data_worksheet_list[i].worksheet.filter(item => 
+                    !$scope.data_worksheet_delete.some(deletedItem => 
+                        deletedItem.seq === item.seq
+                    )
+                );
+            }
+            // sort no comments
+            sortNumberComments();
+            // เรียงข้อมูล display
+            $scope.display_worksheet_filter = angular.copy($scope.data_worksheet_list)
+        }
+
+        function removeWorksheetForHealHazard(delItem){
+            for (let i = 0; i < $scope.data_worksheet_list.length; i++) {
+                var list = [];
+                for (let j = 0; j < $scope.data_worksheet_list[i].worksheet.length; j++) {
+                    if ($scope.data_worksheet_list[i].worksheet[j].hazard_no == delItem.no &&
+                        $scope.data_worksheet_list[i].worksheet[j].subarea_no == delItem.no_subareas
+                    ) {
+                        // remove worksheet
+                        $scope.data_worksheet_delete.push($scope.data_worksheet_list[i].worksheet[j])
+                        // remove comments
+                        // removeCommentAll($scope.data_worksheet_list[i].worksheet[j])
+                    }else {
+                        list.push($scope.data_worksheet_list[i].worksheet[j])
+                    }
+                }
+                $scope.data_worksheet_list[i].worksheet = list;
+            }
+            // sort number
+            for (let i = 0; i < $scope.data_worksheet_list.length; i++) {
+                for (let j = 0; j < $scope.data_worksheet_list[i].worksheet.length; j++) {
+                    $scope.data_worksheet_list[i].worksheet[j].no = j + 1;
+                    $scope.data_worksheet_list[i].worksheet[j].action_change = 1;
+
+                    if ($scope.data_worksheet_list[i].worksheet[j].hazard_no == $scope.data_worksheet_delete[0].hazard_no + 1) {
+                        $scope.data_worksheet_list[i].worksheet[j].hazard_no = $scope.data_worksheet_list[i].worksheet[j].hazard_no - 1;
+                    }
+                }
+            }
+            // sort no comments
+            sortNumberComments();
+            // เรียงข้อมูล display
+            $scope.display_worksheet_filter = angular.copy($scope.data_worksheet_list)
+        }
+
+        function resetWorksheetForHealthHazard(itemHazard){
+            for (let i = 0; i < $scope.data_worksheet_list.length; i++) {
+                for (let j = 0; j < $scope.data_worksheet_list[i].worksheet.length; j++) {
+                    if ($scope.data_worksheet_list[i].worksheet[j].hazard_no == itemHazard.no &&
+                        $scope.data_worksheet_list[i].worksheet[j].subarea_no == itemHazard.no_subareas
+                    ) {
+                        $scope.data_worksheet_list[i].worksheet[j].health_hazard = null
+                        $scope.data_worksheet_list[i].worksheet[j].health_effect_rating = null
+                        $scope.data_worksheet_list[i].worksheet[j].standard_type_text = null
+                        $scope.data_worksheet_list[i].worksheet[j].standard_unit = null
+                        $scope.data_worksheet_list[i].worksheet[j].standard_value = null
+                        $scope.data_worksheet_list[i].worksheet[j].action_change = 1
+                    }
+                }
+            }
+        }
 
         function resetSubArea(item){
             item.sub_area = null;
@@ -4345,10 +4407,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             item.tlv_standard = null
             item.action_change = 1
             return item
-        }
-
-        function resetFactor(item_area){
-            console.log(item_area)
         }
 
         $scope.copyHazard = function (subArea, item) {
