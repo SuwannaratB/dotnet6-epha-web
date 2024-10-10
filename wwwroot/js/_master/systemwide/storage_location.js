@@ -103,38 +103,44 @@ AppMenuPage.controller(
 
     //call ws get data
     if (true) {
-      get_data(true);
+      get_data();
 
       function arr_def() {
+        $scope.user = JSON.parse(localStorage.getItem('user'));
+        $scope.token = JSON.parse(localStorage.getItem('token'))
+        $scope.user_name = $scope.user['user_name'];
+        $scope.flow_role_type = $scope.user['role_type'];
+        // $scope.user_name = conFig.user_name();
+        // $scope.flow_role_type = conFig.role_type(); //admin,request,responder,approver
         $scope.data_all = [];
-
         $scope.data_company = [];
         $scope.data_sections = [];
         // $scope.functions = 'functions'
-
         //ไม่แน่ใจว่า list เก็บ model เป็น value หรือ text นะ
         $scope.data_filter = [{ id_key1: 0, id_key2: 0 }];
 
-        $scope.user_name = conFig.user_name();
-        $scope.flow_role_type = conFig.role_type(); //admin,request,responder,approver
       }
 
-      function get_data(page_load) {
+      function get_data() {
         arr_def();
-
-        var user_name = conFig.user_name();
-        call_api_load(page_load, user_name);
+        call_api_load();
       }
 
-      function call_api_load(page_load) {
+      function call_api_load() {
         var user_name = $scope.user_name;
-
+        let flow_role_type = $scope.flow_role_type;
         $.ajax({
           url: url_ws + "masterdata/get_master_company",
-          data: '{"user_name":"' + user_name + '"}',
+          data: '{"user_name":"' + user_name + '","row_type":"' + flow_role_type + '"}',
           type: "POST",
           contentType: "application/json; charset=utf-8",
           dataType: "json",
+          headers: {
+            'X-CSRF-TOKEN': $scope.token
+          },
+          xhrFields: {
+              withCredentials: true // เปิดการส่ง Cookie ไปพร้อมกับคำขอ
+          },
           beforeSend: function () {
             $("#divLoading").show();
           },

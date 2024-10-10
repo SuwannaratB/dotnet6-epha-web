@@ -99,7 +99,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
     //call ws get data
     if (true) {
-        get_data(true);
+        get_data();
 
         $scope.showFileName = function (inputId) {
             var fileUpload = document.getElementById('file-upload-' + inputId);
@@ -214,7 +214,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                             if (arr.length > 0) {
                                 arr[0].action_change = 0;
                                 arr[0].document_file_name = file_name;
-                                arr[0].document_file_path = (url_ws.replace('/api/', '')) + file_path;// (url_ws.replace('/api/', '/')) + 'AttachedFileTemp/Hazop/' + file_name;
+                                arr[0].document_file_path = service_file_url + file_path;// (url_ws.replace('/api/', '/')) + 'AttachedFileTemp/Hazop/' + file_name;
                                 arr[0].document_file_size = file_size;
                                 arr[0].document_module = "guide_words";
                                 arr[0].module = "guide_words";
@@ -287,6 +287,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                 + ',"json_drawing": ' + JSON.stringify(json_drawing)
                 + '}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+            headers: {
+                'X-CSRF-TOKEN': $scope.token
+            },
+            xhrFields: {
+                withCredentials: true // เปิดการส่ง Cookie ไปพร้อมกับคำขอ
+            },
             beforeSend: function () {
                 $("#divLoading").show();
 
@@ -304,7 +310,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                 }
                 $scope.pha_type_doc = 'update';
                 showAlert('Success', 'Data has been successfully saved.', 'success', function() {
-                    get_data_after_save(false);
+                    get_data_after_save();
                     apply();
                 });
             },
@@ -320,13 +326,19 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
     }
 
-    function call_api_load(page_load) {
+    function call_api_load() {
         var user_name = $scope.user_name;
-
+        var flow_role_type = $scope.flow_role_type;
         $.ajax({
             url: url_ws + "masterdata/get_master_guidewords",
-            data: '{"user_name":"' + user_name + '"}',
+            data: '{"user_name":"' + user_name + '","row_type":"' + flow_role_type + '"}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+            headers: {
+                'X-CSRF-TOKEN': $scope.token
+            },
+            xhrFields: {
+                withCredentials: true // เปิดการส่ง Cookie ไปพร้อมกับคำขอ
+            },
             beforeSend: function () {
                 $("#divLoading").show();
             },
@@ -347,6 +359,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                 }] : [{ id_parameter: 0, id_area_application: 0 }];
                 setDataFilter()
                 setPagination()
+                setPaginationGuideWords()
                 get_max_id();
                 apply();
             },
@@ -421,7 +434,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         apply();
     }
 
-    $scope.removeData = function(seq, index) {
+    $scope.removeData = function(item) {
         // Show the confirmation dialog
         Swal.fire({
             title: "Are you sure?",
@@ -434,32 +447,22 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         }).then((result) => {
             if (result.isConfirmed) {
                 // Perform the deletion if confirmed
-                var arrdelete = $filter('filter')($scope.data, function(item) {
-                    return item.seq == seq;
-                });
+                var delItem = $filter('filter')($scope.data, function(_item) {
+                    return _item.seq == item.seq;
+                })[0];
 
-                if (arrdelete.length > 0) {
-                    $scope.data_delete.push(arrdelete[0]);
-                }
+                if (!delItem) return console.log('item delete not found!')
+                
+                $scope.data_delete.push(delItem);
 
                 $scope.data = $filter('filter')($scope.data, function(item) {
-                    return item.seq != arrdelete[0].seq;
+                    return item.seq != delItem.seq;
                 });
-
-                if ($scope.data.length == 0) {
-                    $scope.addData();
-                    return;
-                }
                 
-                $scope.$apply(); 
-                
-                // Show success message
-                Swal.fire({
-                    title: "Deleted!",
-                    text: "Your file has been deleted.",
-                    icon: "success",
-                    timer: 1000,
-                    showConfirmButton: false
+                showAlert('Success', 'Data has been successfully Deleted.', 'success', function() {
+                    setDataFilter()
+                    setPagination()
+                    apply();
                 });
             }
         });
@@ -478,6 +481,18 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
     }
 
     $scope.actionfilter = function(section, data){
+
+        if (section == 'search_guide_words') {
+            const query = data.toLowerCase()
+            $scope.data_guide_word_filter = $scope.data.filter(item => {
+                return (item.deviations && item.deviations.toLowerCase().includes(query)) ||
+                (item.guide_words && item.guide_words.toLowerCase().includes(query)) ||
+                (item.area_application && item.area_application.toLowerCase().includes(query)) ||
+                (item.process_deviation && item.process_deviation.toLowerCase().includes(query));
+            });
+            setPaginationGuideWords();
+            return
+        }
 
         if((!$scope.selected['application'] && parseNumber($scope.selected['application']) != 0)&&
             (!$scope.selected['parameter'] && parseNumber($scope.selected['parameter']) != 0)
@@ -501,6 +516,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
     }
 
     function arr_def() {
+        $scope.user = JSON.parse(localStorage.getItem('user'));
+        $scope.token = JSON.parse(localStorage.getItem('token'))
+        $scope.user_name = $scope.user['user_name'];
+        $scope.flow_role_type = $scope.user['role_type'];
+        // $scope.user_name = conFig.user_name();
+        // $scope.flow_role_type = conFig.role_type();//admin,request,responder,approver
+        $scope.display_data = [];
         $scope.data_all = [];
         $scope.data = [];
         //ไม่แน่ใจว่า list เก็บ model เป็น value หรือ text นะ 
@@ -509,22 +531,19 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         $scope.data_drawing = [];
         $scope.data_drawing_delete = [];
         $scope.selected = {
+            search_guide_words: '',
             application: '',
             parameter: ''
         }
-        $scope.user_name = conFig.user_name();
-        $scope.flow_role_type = conFig.role_type();//admin,request,responder,approver
     }
 
-    function get_data(page_load) {
+    function get_data() {
         arr_def();
-        var user_name = conFig.user_name();
-        call_api_load(page_load, user_name);
+        call_api_load();
     }
 
-    function get_data_after_save(page_load) {
-        var user_name = conFig.user_name();
-        call_api_load(false, user_name);
+    function get_data_after_save() {
+        call_api_load();
     }
 
     function check_data() {
@@ -595,6 +614,46 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         }
     };
 
+    ///////////////////////////  Pagination Guide Words  ///////////////////////////
+    function setPaginationGuideWords(){
+        // Pagination settings
+        $scope.pageSizeGuideWords = 8; // จำนวนข้อมูลต่อหน้า
+        $scope.currentPageGuideWords = 1; // หน้าปัจจุบัน
+        $scope.totalPagesGuideWords = Math.ceil($scope.data_guide_word_filter.length / $scope.pageSizeGuideWords); // จำนวนหน้าทั้งหมด
+        // สร้างลิสต์ของตัวเลขหน้า
+        $scope.pagesGuideWords = Array.from({ length: $scope.totalPagesGuideWords }, (v, k) => k + 1);
+        $scope.paginateGuideWords()
+    }
+
+    // ฟังก์ชันสำหรับจัดข้อมูลตามหน้า
+    $scope.paginateGuideWords = function() {
+        const start = ($scope.currentPageGuideWords - 1) * $scope.pageSizeGuideWords;
+        const end = start + $scope.pageSizeGuideWords;
+        $scope.paginatedGuideWords= $scope.data_guide_word_filter.slice(start, end);
+    };
+
+    // ฟังก์ชันสำหรับเปลี่ยนหน้า
+    $scope.setPageGuideWords = function(page) {
+        $scope.currentPageGuideWords = page;
+        $scope.paginateGuideWords();
+    };
+
+    // ฟังก์ชันสำหรับไปหน้าก่อนหน้า
+    $scope.prevPageGuideWords = function() {
+        if ($scope.currentPageGuideWords > 1) {
+        $scope.currentPageGuideWords--;
+        $scope.paginateGuideWords();
+        }
+    };
+
+    // ฟังก์ชันสำหรับไปหน้าถัดไป
+    $scope.nextPageGuideWords = function() {
+        if ($scope.currentPageGuideWords < $scope.totalPagesGuideWords) {
+        $scope.currentPageGuideWords++;
+        $scope.paginateGuideWords();
+        }
+    };
+
     //////////////////////////  Future ///////////////////////////
     function validation(){
         var list = $filter('filter')($scope.data, function (_item) {
@@ -613,6 +672,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
     function setDataFilter(){
         // $scope.data.sort((a, b) => b.seq - a.seq);
         $scope.data_filter = $scope.data
+        $scope.data_guide_word_filter = $scope.data
     }
 
     function newTag(id_elemet){

@@ -1,33 +1,329 @@
 ﻿@{
     ViewData["Title"] = "Authorization Setting";
-
     Layout = "~/Views/Shared/_LayoutWeb.cshtml";
-
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.3/angular.min.js"></script>
-
     <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&amp;display=swap"
         rel="stylesheet">
-
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
-
     <link rel="stylesheet" href="~/assets/css/theme.min.css">
-
     <link rel="stylesheet" href="~/assets/css/tablefreezer.css">
-
     <link href="~/assets/css/theme.min.css" type="text/css" rel="stylesheet" id="style-default">
-
     <link href="~/assets/css/choices.min.css" type="text/css" rel="stylesheet">
-
     <link href="~/css/autocomplete.css" type="text/css" rel="stylesheet">
-
     <script src="~/assets/js/config.js"></script>
-
-
     <script src="~/assets/js/all.min.js"></script>
+    <link rel="stylesheet" href="~/css/masterStyles/main_style.css">
 
 }
 
-<div class="content mt-1" style="font-size: 12px; min-height: auto!important;" id="divPage" ng-controller="ctrlAppPage">
+<div class="p-6" id="divPage" ng-controller="ctrlAppPage">
+    <div class="card container mt-6 px-6 py-4">
+        <div class="title">
+            <span class=" me-2 text-primary"><B>|</B></span> 
+            Authorization Setting
+        </div>
+        <hr>
+        <div class="d-flex align-items-end justify-content-between pb-2">
+            <div class="d-flex gap-4">
+                <button class="btn btn-sm btn-success d-flex gap-2" ng-click="newData()">
+                    <i class="fa-solid fa-plus"></i>
+                    New Authorization Setting
+                </button>
+            </div>
+            <div class="d-flex align-items-end gap-4">
+                <div class="d-flex gap-2">
+                    <button class="btn btn-sm btn-secondary" style="width: 100px;" ng-click="confirmBack()">Back</button>
+                    <button class="btn btn-sm btn-primary " style="width: 100px;" ng-click="confirmSave()">Save</button>
+                </div>
+            </div>
+        </div>
+        <div class="card p-2 overflow-auto">
+            <table class="table table-sm fs--1 mb-0" >
+                <thead class="bg-white"> 
+                    <tr class="text-center">
+                        <th class="align-middle"  style="min-width: 90px">No</th>
+                        <th class="align-middle">Role Type</th>
+                        <th class="align-middle">Setting Menu</th>
+                        <th class="align-middle" style="min-width:100px">Setting Employee</th>
+                        <th class="align-middle" style="min-width:100px">Management</th>
+                    </tr>
+                </thead>
+                <tbody class="list">
+                    <tr class="hover-actions-trigger btn-reveal-trigger position-static text-center"
+                         ng-repeat="item in paginatedData" id="tr-{{item.seq}}">
+
+                        <td class="align-middle position-relative">
+                            <div id="new-{{item.seq}}" class="new hidden">New</div>
+                            {{$index + 1 + ((currentPage - 1) * pageSize)}}
+                        </td>
+
+                        <td class="align-middle ">
+                            <div class="col-auto pt-2">
+                                <textarea class="form-control form-control-sm " 
+                                    rows="1" 
+                                    type="text"
+                                    style=" min-width: 160px;"
+                                    placeholder="Name"
+                                    ng-required="true"
+                                    ng-model="item.name"
+                                    ng-change="actionChangedData(item,'name')">
+                                </textarea>
+                                <div class="validation-message">{{item.name ? '' : 'field is required.'}}</div>
+                            </div>
+                        </td>
+
+                        <td class="align-middle ">
+                            <div class="d-flex align-items-center justify-content-center gap-2 cursor-pointer" ng-click="openDataMenuList(item)">
+                                <span class="fa-solid far fa fa-gear text-danger" style="font-size: 15px;">
+                                </span>
+                                <b style="font-size: 11px;">Setting Menu</b>
+                            </div>
+                        </td>
+
+                        <td class="align-middle">
+                            <div class="d-flex align-items-center justify-content-center gap-2 cursor-pointer" ng-click="openDataEmployeeAdd(item)">
+                                <span class="fa-solid far fa fa-gear text-danger" style="font-size: 15px;">
+                                </span>
+                                <b style="font-size: 11px;">Setting Employee</b>
+                            </div>
+                        </td>
+
+                        <td class="align-middle ">
+                            <button class="btn btn-outline-secondary p-2"
+                                style="color: #ff2828; background-color: #f1f2f4; border-color: #ff2828;"
+                                ng-click=removeData(item)
+                                data-toggle="tooltip"
+                                data-placement="top"
+                                title="Remove">
+                                <span class="fa-regular fa-trash-can fa-lg"></span>
+                            </button>
+                        </td>
+                    </tr>
+
+                    <tr ng-if="data_filter.length == 0">
+                        <td colspan="10">
+                            <p class="mb-0 ms-3 text-1100 fw-bold text-center"> Not Found </p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <ul class="pagination d-flex align-items-center justify-content-center mt-2">
+                <li class="page-item" ng-class="{disabled: currentPage === 1}">
+                    <a class="page-link" href="" ng-click="prevPage()" tabindex="-1">Previous</a>
+                </li>
+                <li class="page-item" ng-show="1 < currentPage - range" ng-click="setPage(1)">
+                    <a class="page-link" href="">1</a>
+                </li>
+                <li class="page-item" ng-show="1 < currentPage - range">
+                    <span class="page-link">...</span>
+                </li>
+                <li class="page-item" ng-repeat="page in pages"
+                    ng-show="page >= currentPage - range && page <= currentPage + range"
+                    ng-class="{active: currentPage === page}">
+                    <a class="page-link" href="" ng-click="setPage(page)">{{page}}</a>
+                </li>
+                <li class="page-item" ng-show="totalPages > currentPage + range">
+                    <span class="page-link">...</span>
+                </li>
+                <li class="page-item" ng-show="totalPages > currentPage + range" ng-click="setPage(totalPages)">
+                    <a class="page-link" href="">{{totalPages}}</a>
+                </li>
+                <li class="page-item" ng-class="{disabled: currentPage === totalPages}">
+                    <a class="page-link" href="" ng-click="nextPage()">Next</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="modal fade modal-xl" id="modalMenuList" tabindex="-1" aria-labelledby="modalMenuListLabel" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="text-900 mb-0" data-anchor="data-anchor" id="modalEmployeeCheckLabel">
+                        <span class=" me-2 text-primary"><B>|</B></span> Choose the menu in the
+                        {{selectdata_role_type_name}} group.
+                    </h5>
+                    <button class="btn p-1" type="button" data-bs-dismiss="modal" aria-label="Close">
+                        <svg class="svg-inline--fa fa-xmark fs--1" aria-hidden="true" focusable="false"
+                            data-prefix="fas" data-icon="xmark" role="img" xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 320 512" data-fa-i2svg="">
+                            <path fill="currentColor"
+                                d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z">
+                            </path>
+                        </svg>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    @* start แสดงข้อมูลที่ ค้นหาตาม textsearch*@
+                    <div class="bg-white border-top border-bottom border-200 position-relative top-1">
+                        <div class="table-responsive scrollbar-overlay mx-n1 px-1">
+                            <table class="table table-sm fs--1 mb-0">
+                                <thead class=" text-uppercase">
+                                    <tr class="text-center">
+                                        <th class=""> </th>
+                                        <th class="pe-5" scope="col">Page Type</th>
+                                        <th class="pe-5" scope="col">Module</th>
+                                        <th class="pe-5" scope="col">Menu Name</th>
+                                    </tr>
+                                </thead>
+                                <tbody class=" list">
+                                    <tr class="hover-actions-trigger btn-reveal-trigger position-static text-center"
+                                        ng-repeat="item in data_menu">
+                                        <td class="">
+                                            <label class="dropdown-item text-primary" style="cursor: pointer;">
+                                                <input class="form-check-input" 
+                                                    id="flexSwitchCheckChecked"
+                                                    style="cursor: pointer; width: 10px; height: 10px;" 
+                                                    type="checkbox"
+                                                    ng-checked="checkedMenuSetting(item.seq)"
+                                                    ng-click="choosDataMenu(item,'choos_menu')" />
+                                            </label>
+                                        </td>
+                                        <td class="">{{item.page_type}} </td>
+                                        <td class="">{{item.page_controller}} </td>
+                                        <td class="">{{item.name}} </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    @* end แสดงข้อมูลที่ ค้นหาตาม textsearch*@
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade modal-xl" id="modalEmployeeAdd" tabindex="-1" aria-labelledby="modalEmployeeAddLabel"
+        aria-hidden="true" style="display: none;">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="text-900 mb-0" data-anchor="data-anchor" id="modalEmployeeCheckLabel">
+                        <span class=" me-2 text-primary"><B>|</B></span> Choose the Employee/Contract in the
+                        {{selectdata_role_type_name}} group.
+                    </h5>
+
+                    <button class="btn p-1" type="button" data-bs-dismiss="modal" aria-label="Close">
+                        <svg class="svg-inline--fa fa-xmark fs--1" aria-hidden="true" focusable="false"
+                            data-prefix="fas" data-icon="xmark" role="img" xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 320 512" data-fa-i2svg="">
+                            <path fill="currentColor"
+                                d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z">
+                            </path>
+                        </svg>
+                    </button>
+
+                </div>
+                <div class="modal-body">
+
+                    <div class="mb-4">
+
+                        <div class="row g-3">
+
+                            <div class="col-auto">
+
+                                <div class="search-box position-relative">
+
+                                    <input class="form-control search-input search" ng-model="searchText"
+                                        placeholder="Search" ng-change="fillterDataEmployeeAdd()" />
+                                    <span class="fas fa-search search-box-icon"></span>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    @* start แสดงข้อมูลที่ ค้นหาตาม textsearch*@
+                    <div class="bg-white border-top border-bottom border-200 position-relative top-1">
+                        <div class="table-responsive scrollbar-overlay mx-n1 px-1">
+                            <table class="table table-sm fs--1 mb-0">
+                                <thead class=" text-uppercase">
+                                    <tr class="text-center">
+                                        <th class=""> </th>
+                                        <th class="pe-5" scope="col">Employee</th>
+                                        <th class="pe-5" scope="col">Indicator</th>
+                                        <th class="pe-5" scope="col">E-Mail</th>
+                                        <th class="pe-5" scope="col">Employee Type</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody class=" list">
+
+                                    <tr class="hover-actions-trigger btn-reveal-trigger position-static text-center"
+                                        ng-if="employeelist_show.length > 0 && employeelist_show[0].employee_displayname !== null"
+                                        ng-repeat="item in employeelist_show">
+
+                                        <td class="">
+                                            <a class="dropdown-item text-primary" ng-click="choosDataEmployee(item)"
+                                                style="cursor: pointer;">
+                                                Add
+                                            </a>
+                                        </td>
+
+                                        <td class="">
+                                            <a class=" text-decoration-none d-flex align-items-center">
+                                                <div class="avatar avatar-m" style="height: 20px; width: 20px;">
+                                                    <img ng-if="item.employee_img" class="rounded-circle"
+                                                        ng-src="../../{{ item.employee_img }}" alt="">
+                                                </div>
+                                                <p class="mb-0 ms-3 text-1100 fw-bold">
+                                                    ({{item.employee_id}}){{item.employee_displayname}} </p>
+                                            </a>
+                                        </td>
+
+                                        <td class="">{{item.employee_position}} </td>
+
+                                        <td class="">{{item.employee_email}} </td>
+
+                                        <td class="">{{item.employee_type}}</td>
+
+                                    </tr>
+                                    <tr ng-if="employeelist_show[0].employee_displayname === null">
+                                        <td colspan="5">
+                                            <p class="mb-0 ms-3 text-1100 fw-bold text-center"> Not Found </p>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                    @* end แสดงข้อมูลที่ ค้นหาตาม textsearch*@
+
+
+                </div>
+                <div class="modal-header bg-soft">
+                    <h5 class="text-900 mb-0">
+                        <span class=" me-2 text-primary"><B>|</B></span> Employee/Contract in the
+                        {{selectdata_role_type_name}} group.
+                    </h5>
+                </div>
+                <div class="modal-body">
+                    <div class="col-auto"
+                        ng-repeat="item2 in data_role_setting | filter:{id_role_group: selectdata_role_type }"
+                        ng-if="!(item2.user_displayname == '' || item2.user_displayname == null)">
+                        <div class="d-flex align-items-center p-1" style="height: 20px;">
+                            <button id="del-{{item2.seq}}" class="btn btn-link text-danger"
+                                ng-click="removeDataEmployee(item2.seq, selectdata_role_type)">
+                                Remove
+                            </button>
+                            <label class="mb-0 ms-3 text-1100 fw-bold" style="width:80%;border-color: #f1f2f4;">{{
+                                item2.user_displayname}}</label>
+
+                        </div>
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@* <div class="content mt-1" style="font-size: 12px; min-height: auto!important;" id="divPage" ng-controller="ctrlAppPage">
 
     <div class="row g-0">
 
@@ -168,7 +464,6 @@
 
     </div>
 
-    @* Modal Menu Add Start *@
     <div class="modal fade modal-xl" id="modalMenuList" tabindex="-1" aria-labelledby="modalMenuListLabel"
         aria-hidden="true" style="display: none;">
         <div class="modal-dialog modal-dialog-centered">
@@ -192,8 +487,6 @@
                 </div>
                 <div class="modal-body">
 
-
-                    @* start แสดงข้อมูลที่ ค้นหาตาม textsearch*@
                     <div class="bg-white border-top border-bottom border-200 position-relative top-1">
                         <div class="table-responsive scrollbar-overlay mx-n1 px-1">
                             <table class="table table-sm fs--1 mb-0">
@@ -228,7 +521,6 @@
 
                         </div>
                     </div>
-                    @* end แสดงข้อมูลที่ ค้นหาตาม textsearch*@
 
 
                 </div>
@@ -236,10 +528,7 @@
             </div>
         </div>
     </div>
-    @* Modal Menu end Start *@
 
-
-    @* Modal Employee Add Start *@
     <div class="modal fade modal-xl" id="modalEmployeeAdd" tabindex="-1" aria-labelledby="modalEmployeeAddLabel"
         aria-hidden="true" style="display: none;">
         <div class="modal-dialog modal-dialog-centered">
@@ -281,8 +570,6 @@
                         </div>
 
                     </div>
-
-                    @* start แสดงข้อมูลที่ ค้นหาตาม textsearch*@
                     <div class="bg-white border-top border-bottom border-200 position-relative top-1">
                         <div class="table-responsive scrollbar-overlay mx-n1 px-1">
                             <table class="table table-sm fs--1 mb-0">
@@ -338,7 +625,6 @@
 
                         </div>
                     </div>
-                    @* end แสดงข้อมูลที่ ค้นหาตาม textsearch*@
 
 
                 </div>
@@ -369,11 +655,8 @@
             </div>
         </div>
     </div>
-    @* Modal Employee Add End *@
+</div> *@
 
-
-
-</div>
 @section Scripts {
 
     <script src="~/assets/js/angular.min.js"></script>
@@ -382,6 +665,6 @@
     <script src="~/assets/js/choices.min.js"></script>
     <script src="~/assets/js/fakedata.js"></script>
 
-    <script src="~/js/_master/authorizationsetting.js"></script>
+    <script src="~/js/_master/manage_user/authorizationsetting.js"></script>
 
 }

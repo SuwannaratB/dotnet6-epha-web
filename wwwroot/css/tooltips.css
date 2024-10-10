@@ -126,9 +126,11 @@
 }
 
 .ram-l-5 {
-  padding-right: 128px !important; 
   gap: 57px;
-  padding: 20px 0;
+  padding-top: 20px;
+  padding-right: 128px; 
+  padding-bottom: 20px;
+  padding-left: 0px;
 }
 
 .ram-s-4 {
@@ -137,9 +139,11 @@
 }
 
 .ram-l-4 {
-  padding-right: 65px !important; 
   gap: 152px;
-  padding: 20px 0;
+  padding-top: 20px;
+  padding-right: 65px; 
+  padding-bottom: 20px;
+  padding-left: 0px;
 }
 
 

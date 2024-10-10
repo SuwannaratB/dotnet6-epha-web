@@ -41,16 +41,6 @@
                     <i class="fa-solid fa-plus"></i>
                     New Guide Word
                 </button>
-                <div class="d-flex gap-2">
-                    @* <button class="d-flex btn btn-sm btn-outline-gray gap-2" ng-click="">
-                        <i class="fa-solid fa-file-arrow-down" style="color: burlywood;"></i>
-                        Import Excel
-                    </button>
-                    <button class="d-flex btn btn-sm btn-outline-gray gap-2" ng-click="">
-                        <i class="fa-solid fa-download" style="color: darkcyan;"></i>
-                        Export Excel
-                    </button> *@
-                </div>
             </div>
             <div class="d-flex align-items-end gap-4">
                 <div class="dropdown">
@@ -264,232 +254,105 @@
                 </li>
             </ul>
         </div>
-    </div>
-</div>
 
-
-@* <div class="content mt-1" style="font-size: 12px; min-height: auto!important;" id="divPage" ng-controller="ctrlAppPage">
-    <div class="row g-0">
-        <div class="col-12">
-            <div class="card shadow-sm p-2 mb-3 bg-light rounded">
-                <div class="card-body p-2">
-                    <div class="row">
-                        <div class="m-3 row  gx-0 align-items-center">
-                            <div class="card px-2"
-                                style="padding: 20px 20px 20px 20px; max-width: calc(100% - 30px); box-sizing: border-box;">
-                                <div class="row g-3 justify-content-between align-items-center pt-2 pb-3">
-                                    <div class="col-6 col-md">
-                                        <h5 class="text-900 mb-0" data-anchor="data-anchor"> <span
-                                                class=" me-2 text-primary"><B>|</B></span>Guide Words</h5>
-                                        <div style="padding: 20px 4px 20px 4px;">
-                                            <hr style="margin: 0 4px; border: 0; border-top: 1px solid #ccc;" />
-                                        </div>
-
-                                        <div class="row g-3 align-items-center pt-2">
-                                            <div class="col-auto d-none">
-
-                                                <h6 class="fw-semi-bold text-primary ng-binding"><b></b></h6>
-                                            </div>
-                                            <div class="col-md-6 pt-3">
-                                                <button class="btn btn-custom btn-sm"
-                                                    style="color: #0abe0a; background-color: #0abe0a; border-color: #0abe0a;"
-                                                    ng-click="addData(item, $index)">
-                                                    <span class="fa-solid fa-plus" style="color: #fff;"></span>
-                                                    <span class="form-label mb-0" style="color: #ffffff;">New Guide
-                                                        Word</span>
-                                                </button>
-                                            </div>
-
-                                            <div class="col-md-2 align-items-center">
-                                                <div class="row g-0 align-items-center">
-                                                    <div class="col-12">
-                                                        <label class="form-label ps-0">
-                                                            Parameter
-                                                        </label>
-                                                        <label class="form-label ps-0"
-                                                            ng-if="select_history_tracking_record">
-                                                            <a class="form-label far fa-comment-alt text-warning cursor-pointer "
-                                                                data-bs-toggle="tooltip" data-bs-html="true">
-                                                            </a>
-                                                        </label>
-                                                        <div class="d-flex me-3 cursor-pointer">
-                                                            <select class="form-control cursor-pointer"
-                                                                ng-model="data_filter[0].id_parameter"
-                                                                ng-change="actionChange(itemM, 'parameter')">
-                                                                <option ng-repeat="itemM in master_parameter"
-                                                                    ng-value="itemM.id" ng-selected="data_filter[0].id">
-                                                                    {{itemM.name}}
-                                                                </option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="col-md-2 align-items-center">
-                                                <div class="row g-0 align-items-center">
-                                                    <div class="col-12">
-                                                        <label class="form-label ps-0">
-                                                            Application
-                                                        </label>
-                                                        <label class="form-label ps-0"
-                                                            ng-if="select_history_tracking_record">
-                                                            <a class="form-label far fa-comment-alt text-warning cursor-pointer "
-                                                                data-bs-toggle="tooltip" data-bs-html="true">
-                                                            </a>
-                                                        </label>
-                                                        <div class="d-flex me-3">
-                                                            <select class="form-control cursor-pointer"
-                                                                ng-model="data_filter[0].id_area_application"
-                                                                ng-change="actionChange(itemM, 'area_application')">
-                                                                <option
-                                                                    ng-repeat="itemM in master_area_application | filter:{id_parameter:data_filter[0].id_parameter}"
-                                                                    ng-value="itemM.id">
-                                                                    {{itemM.name}}
-                                                                </option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-auto pt-3">
-                                                <div class="position-relative">
-                                                    <button class="btn btn-secondary btn-sm" style="width: 100px;"
-                                                        ng-click="confirmBack()">Back</button>
-                                                    <button class="btn btn-primary btn-sm" style="width: 100px;"
-                                                        ng-click="confirmSave()">Save</button>
-                                                </div>
-                                            </div>
-                                        </div>
-
-
-                                        <div class="row g-3 justify-content-between align-items-center pt-2 pb-3">
-
-                                            <div class="table-responsive scrollbar " id="table-container">
-
-                                                <table class="table fs--2 mb-0 " cellpadding="0" cellspacing="0">
-                                                    <thead class=" text-uppercase  text-center  bg-soft "
-                                                        style="font-size: 10px;" id="myHeader">
-                                                        <tr>
-
-                                                            <td style='padding: 15px;'>No</td>
-                                                            <td style='padding: 15px;'>Default Active</td>
-                                                            <td style='padding: 15px;'>Deviations</td>
-                                                            <td style='padding: 15px;'>Guide Words</td>
-                                                            <td style='padding: 15px;'>Process Deviation</td>
-                                                            <td style='padding: 15px;'>Active</td>
-                                                            <td style='padding: 15px;'></td>
-                                                        </tr>
-                                                    </thead>
-
-                                                    <tbody class="customer-rating-table-body">
-                                                        <tr class="hover-actions-trigger btn-reveal-trigger position-static rowwork"
-                                                            ng-repeat="item in data"
-                                                            ng-if="item.id_parameter == data_filter[0].id_parameter && item.id_area_application == data_filter[0].id_area_application">
-
-
-                                                            <td class="align-top text-center">
-                                                                <div class="p-1 ">
-                                                                    <h6 class="fw-semi-bold">{{$index +1}}</h6>
-                                                                </div>
-                                                            </td>
-                                                            <td class="align-top text-center">
-                                                                <div class="p-1 ">
-                                                                    <input class="form-check-input"
-                                                                        id="flexSwitchCheckChecked"
-                                                                        style="cursor: pointer;width:20px; height:20px;"
-                                                                        type="checkbox"
-                                                                        ng-model="item.def_selected"
-                                                                        ng-true-value="'1'" ng-false-value="'0'"
-                                                                        ng-change="actionChangedData(item,'def_selected')" />
-                                                                </div>
-                                                            </td>
-
-                                                            <td class="text-start">
-                                                                <input class="form-control" id="deviations"
-                                                                    data-ng-model="item.deviations" type="text"
-                                                                    placeholder="Deviations"
-                                                                    ng-change="actionChangedData(item, 'deviations')" />
-                                                            </td>
-
-
-                                                            <td class="text-start">
-                                                                <input class="form-control" id="guide_words"
-                                                                    data-ng-model="item.guide_words" type="text"
-                                                                    placeholder="Guide Words"
-                                                                    ng-change="actionChangedData(item, 'guide_words')" />
-                                                            </td>
-                                                            <td class="text-start">
-                                                                <input class="form-control" id="process_deviation"
-                                                                    data-ng-model="item.process_deviation" type="text"
-                                                                    placeholder="Process Deviation"
-                                                                    ng-change="actionChangedData(item, 'process_deviation')" />
-                                                            </td>
-                                                            <td class="align-top text-center">
-                                                                <div class="p-1 ">
-                                                                    <input class="form-check-input"
-                                                                        id="flexSwitchCheckChecked"
-                                                                        style="cursor: pointer; width: 20px; height: 20px;"
-                                                                        type="checkbox" ng-model="item.active_type"
-                                                                        ng-true-value="'1'" ng-false-value="'0'"
-                                                                        ng-change="actionChangedData(item, 'active_type')" />
-                                                                </div>
-                                                            </td>
-                                                            <td class="align-top text-center">
-                                                                <div class="p-1 ">
-
-
-                                                                    <button class="btn btn-outline-secondary p-2"
-                                                                        data-toggle="tooltip" data-placement="top"
-                                                                        title="Remove"
-                                                                        style="color: #ff2828; background-color: #f1f2f4; border-color: #ff2828;"
-                                                                        ng-click=removeData(item,$index)>
-                                                                        <span
-                                                                            class="fa-regular fa-trash-can fa-lg"></span>
-                                                                    </button>
-
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-
-                                                </table>
-
-                                            </div>
-
-                                        </div>
-                                        <div>
-                                            File Atthachment : เอกสารประกอบไม่ใช่การ Import data เข้าระบบ
-                                        </div>
-                                        <div class="row g-3 align-items-center pt-2" *ngFor="let item of data_drawing">
-    <div class="btn-group col-md-3" >
-        <div class="icon-button border p-3" style="border-color: #0d6efd; background-color: #0d6efd;">
-            <span ng-if="(item.document_file_size === null)"class="fa-solid fa-arrow-up-from-bracket fa-lg" style="color: #ffffff;"></span>
-            <span ng-if="!(item.document_file_size === null)"class="fa-solid fa-file-pdf fa-lg" style="color: #ffffff;"></span>
-        </div>
-        <button class="Upload-button btn ps-3" style="border: 1px solid #0d6efd; background-color: transparent; color: #0d6efd; width: fit-content;">
-
-            <label class="dz-message-text fw-bold cursor-pointer" for="attfile-{{item.seq}}">
-                Upload File (Word, Excel, PDF, Image)
-            </label>
-            <input type="file" id="attfile-{{item.seq}}" name="file{{item.seq}}" onchange="angular.element(this).scope().fileSelect(this)" style="display:none" />
-        </button>
-        <button class="Upload-button btn ps-3" style="border: none; background-color: transparent; color: #0d6efd;"
-        ng-if="item.document_file_size !== null">
-            <div class="d-flex align-items-center">
-                <span class="mr-3 nametext" id="filename{{item.seq}}" ng-click="downloadFile(item)">
-                    <b style="font-size:x-small;">
-                        {{data_drawing}}
-                        {{truncateFilename(item.document_file_name, 20)}} ({{item.document_file_size}} KB)
-                    </b>
-                </span>
-                <a id="deluploadfile-{{item.seq}}" class="btn btn-link text-danger p-0 ms-2" ng-click="clearFileName(item.seq)">
-                    <span class="fa-regular fa-trash-can fa-lg"></span>
-                </a>
+        <div class="d-flex gap-4 py-4">
+            <div class="search-box p-1">
+                <form class="position-relative" data-bs-toggle="search" data-bs-display="static">
+                    <input class="form-control search-input search" 
+                        type="search"
+                        placeholder="Search"
+                        aria-label="Search" 
+                        ng-model="selected.search_guide_words"
+                        ng-change="actionfilter('search_guide_words', selected.search_guide_words)" />
+                    <span class="fas fa-search search-box-icon"></span>
+                </form>
             </div>
-        </button>
+        </div>
+
+        <div class="card p-2 overflow-auto">
+            <table class="table table-sm fs--1 mb-0" >
+                <thead class="bg-white"> 
+                    <tr class="">
+                        <th class="align-middle text-center" style="width: 5%;">Active</th>
+                        <th class="align-middle text-start" style="width: 10%;">Deviations</th>
+                        <th class="align-middle text-start" style="width: 10%;">Guide Words</th>
+                        <th class="align-middle text-start">Process Deviation (Examples of Cause)</th>
+                        <th class="align-middle text-start" style="width: 10%;">Area of Application</th>
+                    </tr>
+                </thead>
+                <tbody class="list">
+                    <tr class="hover-actions-trigger btn-reveal-trigger position-static text-center"
+                         ng-repeat="item in paginatedGuideWords" 
+                         id="tr-{{item.seq}}">
+                        <td class="align-middle">
+                            <input type="checkbox" 
+                                disabled
+                                class="form-check-input"
+                                style="cursor: pointer;width:20px; height:20px;"
+                                ng-if="(item.active_type==1)" 
+                                checked
+                                ng-click="actionChangedData(item,'accept_status')">
+                            <input type="checkbox" 
+                                disabled
+                                class="form-check-input"
+                                style="cursor: pointer;width:20px; height:20px;"
+                                ng-if="!(item.active_type==1)"
+                                ng-click="actionChangedData(item,'inaccept_status')">
+                        </td>
+
+                        <td class="align-middle ">
+                            <div class="text-start">{{item.deviations}}</div>
+                        </td>
+
+                        <td class="align-middle ">
+                            <div class="text-start">{{item.guide_words}}</div>
+                        </td>
+
+                        <td class="align-middle ">
+                            <div class="text-start">{{item.process_deviation}}</div>
+                        </td>
+
+                        <td class="align-middle ">
+                            <div class="text-start">{{item.area_application}}</div>
+                        </td>
+                    </tr>
+
+                    <tr ng-if="paginatedGuideWords.length == 0">
+                        <td colspan="10">
+                            <p class="mb-0 ms-3 text-1100 fw-bold text-center"> Not Found </p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <ul class="pagination d-flex align-items-center justify-content-center mt-2">
+                <li class="page-item" ng-class="{disabled: currentPageGuideWords === 1}">
+                    <a class="page-link" href="" ng-click="prevPageGuideWords()" tabindex="-1">Previous</a>
+                </li>
+                <li class="page-item" ng-show="1 < currentPageGuideWords - range" ng-click="setPageGuideWords(1)">
+                    <a class="page-link" href="">1</a>
+                </li>
+                <li class="page-item" ng-show="1 < currentPageGuideWords - range">
+                    <span class="page-link">...</span>
+                </li>
+                <li class="page-item" ng-repeat="page in pagesGuideWords"
+                    ng-show="page >= currentPageGuideWords - range && page <= currentPageGuideWords + range"
+                    ng-class="{active: currentPageGuideWords === page}">
+                    <a class="page-link" href="" ng-click="setPageGuideWords(page)">{{page}}</a>
+                </li>
+                <li class="page-item" ng-show="totalPagesGuideWords > currentPageGuideWords + range">
+                    <span class="page-link">...</span>
+                </li>
+                <li class="page-item" ng-show="totalPagesGuideWords > currentPageGuideWords + range" ng-click="setPageGuideWords(totalPagesGuideWords)">
+                    <a class="page-link" href="">{{totalPagesGuideWords}}</a>
+                </li>
+                <li class="page-item" ng-class="{disabled: currentPageGuideWords === totalPagesGuideWords}">
+                    <a class="page-link" href="" ng-click="nextPageGuideWords()">Next</a>
+                </li>
+            </ul>
+        </div>
     </div>
-</div> *@
+    
+</div>
 
     @section Scripts {
 
@@ -498,7 +361,7 @@
         <script src="~/assets/js/phoenix.js"></script>
         <script src="~/assets/js/choices.min.js"></script>
         <script src="~/assets/js/fakedata.js"></script>
-
-        <script src="~/js/_master/hazop_guidewords.js"></script>
+        <script type="text/javascript">var service_file_url = "@ViewBag.service_file_url";</script>
+        <script src="~/js/_master/hazop/guidewords.js"></script>
 
     }

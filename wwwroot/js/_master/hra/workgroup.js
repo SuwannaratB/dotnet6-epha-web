@@ -18,16 +18,23 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
     var url_ws = conFig.service_api_url();
 
-    get_data(true);
+    get_data();
 
     ///////////////////////////  API Function  ///////////////////////////
-    function call_api_load(page_load) {
+    function call_api_load() {
         var user_name = $scope.user_name;
+        var flow_role_type = $scope.flow_role_type;
         var id_sections = "";
         $.ajax({
             url: url_ws + "masterdata/get_master_group_list",
-            data: '{"user_name":"' + user_name + '"}',
+            data: '{"user_name":"' + user_name + '","row_type":"' + flow_role_type + '"}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+            headers: {
+                'X-CSRF-TOKEN': $scope.token
+            },
+            xhrFields: {
+                withCredentials: true // เปิดการส่ง Cookie ไปพร้อมกับคำขอ
+            },
             beforeSend: function () {
                 $("#divLoading").show();
             },
@@ -68,6 +75,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                 + ',"json_data": ' + JSON.stringify(json_data)
                 + '}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+            headers: {
+                'X-CSRF-TOKEN': $scope.token
+            },
+            xhrFields: {
+                withCredentials: true // เปิดการส่ง Cookie ไปพร้อมกับคำขอ
+            },
             beforeSend: function () {
                 $("#divLoading").show();
 
@@ -85,7 +98,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                 }
                 $scope.pha_type_doc = 'update';
                 showAlert('Success', 'Data has been successfully saved.', 'success', function() {
-                    get_data_after_save(false);
+                    get_data_after_save();
                     apply();
                 });
             },
@@ -195,8 +208,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
     }
 
     function arr_def() {
-        $scope.user_name = conFig.user_name();
-        $scope.flow_role_type = conFig.role_type();//admin,request,responder,approver
+        $scope.user = JSON.parse(localStorage.getItem('user'));
+        $scope.token = JSON.parse(localStorage.getItem('token'))
+        $scope.user_name = $scope.user['user_name'];
+        $scope.flow_role_type = $scope.user['role_type'];
+        // $scope.user_name = conFig.user_name();
+        // $scope.flow_role_type = conFig.role_type();//admin,request,responder,approver
         $scope.data_all = [];
         $scope.data = [];
         $scope.data_delete = [];
@@ -204,15 +221,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         $scope.data_filter = [{ id_key1: 0, id_key2: 0 }];
     }
 
-    function get_data(page_load) {
+    function get_data() {
         arr_def();
-        var user_name = conFig.user_name();
-        call_api_load(page_load, user_name);
+        call_api_load();
     }
 
-    function get_data_after_save(page_load) {
-        var user_name = conFig.user_name();
-        call_api_load(false, user_name);
+    function get_data_after_save() {
+        call_api_load();
     }
 
     function apply() {

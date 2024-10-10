@@ -17,7 +17,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
     var url_ws = conFig.service_api_url();
 
-    get_data(true);
+    get_data();
 
     //call ws get data
     if (true) {
@@ -121,6 +121,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                 + ',"json_drawing": ' + JSON.stringify(json_drawing)
                 + '}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+            headers: {
+                'X-CSRF-TOKEN': $scope.token
+            },
+            xhrFields: {
+                withCredentials: true // เปิดการส่ง Cookie ไปพร้อมกับคำขอ
+            },
             beforeSend: function () {
                 $("#divLoading").show();
             },
@@ -137,7 +143,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                 }
                 $scope.pha_type_doc = 'update';
                 showAlert('Success', 'Data has been successfully saved.', 'success', function() {
-                    get_data_after_save(false);
+                    get_data_after_save();
                     apply();
                 });
             },
@@ -152,13 +158,20 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         });
     }
 
-    function call_api_load(page_load) {
+    function call_api_load() {
         var user_name = $scope.user_name;
+        var flow_role_type = $scope.flow_role_type;
 
         $.ajax({
             url: url_ws + "masterdata/get_master_functionallocation",
-            data: '{"user_name":"' + user_name + '"}',
+            data: '{"user_name":"' + user_name + '","row_type":"' + flow_role_type + '"}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+            headers: {
+                'X-CSRF-TOKEN': $scope.token
+            },
+            xhrFields: {
+                withCredentials: true // เปิดการส่ง Cookie ไปพร้อมกับคำขอ
+            },
             beforeSend: function () {
                 $("#divLoading").show();
             },
@@ -218,7 +231,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                         if (arr.length > 0) {
                             arr[0].action_change = 0;
                             arr[0].document_file_name = file_name;
-                            arr[0].document_file_path = (url_ws.replace('/api/', '')) + file_path;// (url_ws.replace('/api/', '/')) + 'AttachedFileTemp/Hazop/' + file_name;
+                            arr[0].document_file_path = service_file_url + file_path;// (url_ws.replace('/api/', '/')) + 'AttachedFileTemp/Hazop/' + file_name;
                             arr[0].document_file_size = file_size;
                             arr[0].document_module = "functional_location";
                             arr[0].module = "functional_location"
@@ -388,24 +401,26 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
     }
 
     function arr_def() {
+        $scope.user = JSON.parse(localStorage.getItem('user'));
+        $scope.token = JSON.parse(localStorage.getItem('token'))
+        $scope.user_name = $scope.user['user_name'];
+        $scope.flow_role_type = $scope.user['role_type'];
+        // $scope.user_name = conFig.user_name();
+        // $scope.flow_role_type = conFig.role_type();//admin,request,responder,approver
         $scope.data_all = [];
         $scope.data = [];
         //ไม่แน่ใจว่า list เก็บ model เป็น value หรือ text นะ 
         $scope.data_filter = [{ id_key1: 0, id_key2: 0 }];
         $scope.data_delete = [];
-        $scope.user_name = conFig.user_name();
-        $scope.flow_role_type = conFig.role_type();//admin,request,responder,approver
     }
 
-    function get_data(page_load) {
+    function get_data() {
         arr_def();
-        var user_name = conFig.user_name();
-        call_api_load(page_load, user_name);
+        call_api_load();
     }
 
-    function get_data_after_save(page_load) {
-        var user_name = conFig.user_name();
-        call_api_load(false, user_name);
+    function get_data_after_save() {
+        call_api_load();
     }
 
     ///////////////////////////  Pagination  ///////////////////////////
