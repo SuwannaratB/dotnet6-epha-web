@@ -1091,8 +1091,9 @@
                                                                     <span class="fas fa-copy"></span>
                                                                     Add
                                                                 </a>
-                                                                <div class="dropdown-divider"></div>
+                                                                <div class="dropdown-divider" ng-if="$index != 0" ></div>
                                                                 <a class="dropdown-item text-danger" 
+                                                                    ng-if="$index != 0" 
                                                                     ng-click="triggerRemove(item, '', $index,'SubAreasList')">
                                                                     <!---ng-click="removeDataSubAreasList(item, $index)">----->
                                                                    <span class="fas fa-times-circle"></span> 
@@ -1169,8 +1170,9 @@
                                                                         <span class="fas fa-copy"></span>
                                                                         Add
                                                                     </a>
-                                                                    <div class="dropdown-divider"></div>
-                                                                    <a class="dropdown-item text-danger" 
+                                                                    <div class="dropdown-divider" ng-if="$index != 0" ></div>
+                                                                    <a class="dropdown-item text-danger"
+                                                                        ng-if="$index != 0" 
                                                                         ng-click="triggerRemove(item, item_list, $index,'HazardList')">
                                                                         <!---ng-click="removeDataHazardList(item, item_list, $index)"----->
                                                                         <span class="fas fa-times-circle"></span>
