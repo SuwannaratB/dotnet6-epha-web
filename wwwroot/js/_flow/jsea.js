@@ -2286,6 +2286,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     } catch (ex) { alert(ex); console.clear(); }*/
                     
                     $scope.pha_status = $scope.data_header[0].pha_status;
+
+                    const pha_status = $scope.pha_status;
                     //set form 
                     if(!$scope.params){
                         set_form_action(action_part_befor, !action_submit, page_load);
