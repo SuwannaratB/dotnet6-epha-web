@@ -2117,11 +2117,12 @@
                                             <tr class="">
                                                 @*<th rowspan="2">no</th>
                                                 <th rowspan="2">node</th>
-                                                <th rowspan="2">deviations</th>
+                                                <th rowspan="2">deviations</th>*@
                                                 <th rowspan="2">causes_no</th>
                                                 <th rowspan="2">consequences_no</th>
+                                                <th rowspan="2">cat</th>
                                                 <th rowspan="2">Recom</th>
-                                                <th rowspan="2">Row type</th>*@
+                                                <th rowspan="2">Row type</th>
                                                 <th class=" align-middle mx-0" 
                                                     colspan="1" 
                                                     rowspan="2" 
@@ -2292,7 +2293,7 @@
                                             <tr class="rowwork border border-dashed" 
                                                 ng-if="( data_node.length == 1 ? (data_node[0].node == null ? false : true) : true) "
                                                 ng-repeat="item in data_nodeworksheet | toArray | filter:{id_node : selectedItemNodeView.seq} | sortNodeworksheet"> 
- @*<!-- Second td for id_node -->
+    @*<!-- Second td for id_node -->
     <td class="align-top border border-light border-active">
         {{ item.no }}
     </td>
@@ -2306,7 +2307,6 @@
     <td class="align-top border border-light border-active">
         {{ item.deviations_no }}
     </td>
-
     <!-- Fifth td for causes_no -->
     <td class="align-top border border-light border-active">
         {{ item.causes_no }}
@@ -2316,6 +2316,9 @@
     <td class="align-top border border-light border-active">
         {{ item.consequences_no }}
     </td>
+    <td class="align-top border border-light border-active">
+        {{ item.category_no }}
+    </td>
 
         <!-- Sixth td for consequences_no -->
     <td class="align-top border border-light border-active">
@@ -2324,6 +2327,27 @@
     <td class="align-top border border-light border-active">
         {{ item.row_type }}
     </td> *@
+
+    <!-- Fifth td for causes_no -->
+    <td class="align-top border border-light border-active">
+        {{ item.seq_causes }}
+    </td>
+
+    <!-- Sixth td for consequences_no -->
+    <td class="align-top border border-light border-active">
+        {{ item.seq_consequences }}
+    </td>
+    <td class="align-top border border-light border-active">
+        {{ item.seq_category }}
+    </td>
+
+        <!-- Sixth td for consequences_no -->
+    <td class="align-top border border-light border-active">
+        {{ item.recommendations_no }}
+    </td>
+    <td class="align-top border border-light border-active">
+        {{ item.row_type }}
+    </td> 
                                                 <!-----no---->
                                                 <td class="align-top border border-light border-active " style="padding: 0 !important; width: 80px;"
                                                     ng-if="( item.causes_no == 1 && item.consequences_no == 1) && item.row_type == 'causes' "

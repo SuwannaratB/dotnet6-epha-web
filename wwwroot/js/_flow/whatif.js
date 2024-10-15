@@ -4494,6 +4494,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         newInput.action_change = 1;
         newInput.action_status = 'Open';
 
+        console.log(newInput)
         
         //copy detail row befor
         if (row_type == "list_system") {

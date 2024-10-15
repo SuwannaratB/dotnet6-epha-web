@@ -4559,7 +4559,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             //กรณีที่เป็น cat ให้ +1
             category_no += 1;
-            //recommendations_no = 1;
+            recommendations_no = 1;
             
         }
         if (row_type == "recommendations") {
@@ -4567,7 +4567,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             seq_recommendations = $scope.MaxSeqdata_nodeworksheetrecommendations;
 
             //กรณีที่เป็น cat ให้ +1
-            //recommendations_no += 1;
+            recommendations_no += 1;
             
         }
        
@@ -4589,6 +4589,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         newInput.seq_causes = seq_causes;
         newInput.seq_consequences = seq_consequences;
         newInput.seq_category = seq_category;
+        newInput.seq_recommendations = seq_recommendations;
 
         newInput.index_rows = (index_rows + 0.5);
         newInput.no = (no + 0.5);
@@ -4603,6 +4604,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         newInput.action_status = 'Open';
 
         
+        console.log(newInput)
         //copy detail row befor
         if (row_type == "causes") {
             newInput.deviations_no = item.deviations_no;
@@ -4712,9 +4714,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
     $scope.adddata_nodeworksheet = function (row_type, item, index) {
 
-
-        console.log(row_type)
-        console.log(item)
         if (true) {
             if (row_type.indexOf('causes') > -1) { row_type = 'causes'; }
             else if (row_type.indexOf('consequences') > -1) { row_type = 'consequences'; }
@@ -4996,12 +4995,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 
                             if (previous.consequences_no === item.consequences_no && previous.category_no === item.category_no && 
                                 previous.recommendations_no >= item.recommendations_no && 
-                                (item.row_type === 'category' || item.row_type === 'consequences' || item.row_type === 'recommendations')) {
-                                if (previous.seq_recommendations === item.seq_recommendations) {
-                                    item.recommendations_no = previous.recommendations_no;
-                                } else {
-                                    item.recommendations_no = previous.recommendations_no + 1;
-                                }                                
+                                (item.row_type === 'consequences' || item.row_type === 'category' || item.row_type === 'recommendations')) {
+                                item.recommendations_no = previous.recommendations_no + 1;                          
                             }
 
                         }
@@ -5269,6 +5264,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         var seq_consequences = item.seq_consequences;
         var seq_category = item.seq_category;
         var seq_recommendations = item.seq_recommendations;
+        var recommendations_no = item.recommendations_no;
 
         var data_causes_no = item.causes_no;
         var data_consequences_no = item.consequences_no;
@@ -5279,9 +5275,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         const deletionCondition = item => {
             return (row_type === "consequences" && item.seq_node === seq_node && item.seq_guide_word === seq_guide_word && item.seq_consequences === seq_consequences && item.seq_causes === seq_causes) ||
                 (row_type === "category" && item.seq_node === seq_node && item.seq_guide_word === seq_guide_word && item.seq_category === seq_category && item.seq_consequences === seq_consequences && item.seq_causes === seq_causes) ||
-                (row_type === "recommendations" && item.seq_node === seq_node && item.seq_guide_word === seq_guide_word && item.seq_recommendations === seq_recommendations && item.seq_category === seq_category && item.seq_consequences === seq_consequences && item.seq_causes === seq_causes) ;
+                (row_type === "recommendations" && item.seq_node === seq_node && item.seq_guide_word === seq_guide_word && item.recommendations_no === recommendations_no && item.seq_category === seq_category && item.seq_consequences === seq_consequences && item.seq_causes === seq_causes) ;
         };
-
 
         $scope.data_del = [];
         //Delete row select and upper row
