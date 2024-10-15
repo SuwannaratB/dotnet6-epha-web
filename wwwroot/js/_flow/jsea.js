@@ -2000,7 +2000,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 var action_part_befor = $scope.action_part;//(page_load == false ? $scope.action_part : 0);
                 var tabs_befor = (page_load == false ? $scope.tabs : null);
                 var arr = data;
-
+                // set isDisableStatus PHA STATUS > 12 (waitting follow up)
+                $scope.isDisableStatus = setup_isDisabledPHAStatus(arr.header[0])
+                // set isApproveReject
+                $scope.isApproveReject = setup_isApproveReject(arr.header[0])
+                // set isApproveReject
+                $scope.isEditWorksheet = setup_isEditWorksheet($scope.params)
                 if (true) {
                     $scope.data_all = arr;
                     arr.company.push({ id: 9999, name: 'Other' })
@@ -2060,6 +2065,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                     $scope.data_session = arr.session;
                     $scope.data_session_def = clone_arr_newrow(arr.session);
+
+                    $scope.data_session_last = arr.session_last;
                    
                     $scope.data_memberteam = arr.memberteam;
                     $scope.data_memberteam_def = clone_arr_newrow(arr.memberteam);
@@ -2230,7 +2237,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
                         if ($scope.data_general[0].id_apu == null || $scope.data_general[0].id_apu == '') {
                             $scope.data_general[0].id_apu = null;
-                            var arr_clone_def = { id: null, name: 'Please select' };
+                            //var arr_clone_def = { id: null, name: 'Please select' };
                             $scope.master_apu.splice(0, 0, arr_clone_def);
                         }
 
@@ -2588,6 +2595,19 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 check_case_member_review();
     
                 $scope.submit_type = true;
+                //active session === lastest session
+                const maxSeq = $scope.data_drawing.reduce((max, item) => {
+                    if (item.action_type === 'update') {
+                        return item.seq > max ? item.seq : max;
+                    }
+                    return max; // ถ้าไม่ตรงเงื่อนไขให้ส่ง max กลับมา
+                }, 0);
+
+
+                $scope.active_session = $scope.data_session_last[0].id_session;
+                $scope.active_drawing = maxSeq.seq;
+                
+                $scope.isApproveReject =true;
 
             }
             else if (pha_status_def == 81) {
@@ -3348,7 +3368,28 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     }
 
     // <!======================== set Data ==============================!?>
+    function setup_isDisabledPHAStatus(header){
+        if (header.pha_status > 12) {
+            console.log(`PHA status: ${header.pha_status} isDisableStatus: true`)
+            return true
+        }
+        console.log(`PHA status: ${header.pha_status} isDisableStatus: false`)
+        return false
+    }
 
+    function setup_isApproveReject(header){
+        if (header.approve_status == 'reject' && header.pha_status == 22) {
+            return true
+        }
+        return false
+    }
+
+    function setup_isEditWorksheet(params){
+        if (params == 'edit') {
+            return true
+        }
+        return false
+    }   
     function set_data_general() {
 
         if (($scope.data_general[0].id_ram + '') == '') {
@@ -7076,6 +7117,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
     $scope.getAccessInfo = function(item, index, type) {
         let accessInfo = {
+            canAdd :false,
             canRemove: false,
             canCopy: false,
         };
@@ -7084,38 +7126,60 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             let approverData = $scope.data_approver.filter(data => data.id_session === item.id);
             let memberTeamData = $scope.data_memberteam.filter(data => data.id_session === item.id);
             let relatedPeopleData = $scope.data_relatedpeople.filter(data => data.id_session === item.id);
-            
-            if (index === 0 && 
-                (approverData.length === 0 || approverData[0].user_name == null) &&
-                (memberTeamData.length === 0 || memberTeamData[0].user_name == null) &&
-                (relatedPeopleData.length === 0 || relatedPeopleData[0].user_name == null)) {
-                accessInfo.canRemove = false;
-            } else {
-                accessInfo.canRemove = true;
-            }
+
+            if(!$scope.isApproveReject){
+                if (index === 0 && 
+                    (approverData.length === 0 || approverData[0].user_name == null) &&
+                    (memberTeamData.length === 0 || memberTeamData[0].user_name == null) &&
+                    (relatedPeopleData.length === 0 || relatedPeopleData[0].user_name == null)) {
+                    accessInfo.canRemove = false;
+                } else {
+                    accessInfo.canRemove = true;
+                }
+        
+                if ((approverData.length > 0 && approverData[0].user_name != null) ||
+                    (memberTeamData.length > 0 && memberTeamData[0].user_name != null) ||
+                    (relatedPeopleData.length > 0 && relatedPeopleData[0].user_display_name != null)) {
+                    accessInfo.canCopy = true;
+                } else {
+                    accessInfo.canCopy = false;
+                }
     
-            if ((approverData.length > 0 && approverData[0].user_name != null) ||
-                (memberTeamData.length > 0 && memberTeamData[0].user_name != null) ||
-                (relatedPeopleData.length > 0 && relatedPeopleData[0].user_display_name != null)) {
-                accessInfo.canCopy = true;
-            } else {
-                accessInfo.canCopy = false;
+                let meeting_data = $scope.data_session.filter(data => data.id === item.id);
+    
+                if (
+                    meeting_data[0].meeting_date != null || 
+                    meeting_data[0].meeting_start_time != null || 
+                    meeting_data[0].meeting_start_time_hh != null || 
+                    meeting_data[0].meeting_start_time_mm != null || 
+                    meeting_data[0].meeting_end_time != null || 
+                    meeting_data[0].meeting_end_time_hh != null || 
+                    meeting_data[0].meeting_end_time_mm != null
+                ) {
+                    accessInfo.canCopy = true;
+                    accessInfo.canRemove = true;
+                } 
+            }else{
+                console.log("$scope.active_session",$scope.active_session)           
+                console.log("$scope.item.id",item.id)           
+                if($scope.flow_role_type === 'admin' || $scope.data_header[0].pha_request_by === $scope.user_name){
+                    if($scope.active_session === item.id && item.action_type === 'update'){
+                        accessInfo.canCopy = true;
+                        accessInfo.canAdd = true;
+                        accessInfo.canRemove = false;
+                    }else if(item.action_type === 'insert'){
+                        accessInfo.canCopy = true;
+                        accessInfo.canRemove = true;
+                        accessInfo.canAdd = true;
+                    }else{
+                        accessInfo.canCopy = true;
+                        accessInfo.canAdd = true;
+                        accessInfo.canRemove = true;                
+                    }
+                }                
             }
+            
 
-            let meeting_data = $scope.data_session.filter(data => data.id === item.id);
-
-            if (
-                meeting_data[0].meeting_date != null || 
-                meeting_data[0].meeting_start_time != null || 
-                meeting_data[0].meeting_start_time_hh != null || 
-                meeting_data[0].meeting_start_time_mm != null || 
-                meeting_data[0].meeting_end_time != null || 
-                meeting_data[0].meeting_end_time_hh != null || 
-                meeting_data[0].meeting_end_time_mm != null
-            ) {
-                accessInfo.canCopy = true;
-                accessInfo.canRemove = true;
-            } 
 
             $scope.sessionAccessInfoMap[item.id] = accessInfo;
             

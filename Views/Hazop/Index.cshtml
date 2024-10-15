@@ -25,7 +25,7 @@
 
     <script src="~/assets/js/all.min.js"></script> 
 
-    <script src="employee.js"></script>
+    //<script src="employee.js"></script>
 
     <link rel="stylesheet" href="~/css/myStyles.css">
 }
@@ -298,19 +298,19 @@
                                             </a>
                                         </label>
                                         <label class="form-label ps-0" for="area"></label>
-                                        <select class="form-control js-choice-apu mb-0" id="id_apu"
-                                                ng-class="{'disabled-link':(!tab_general_active || !(tab_general_active && data_header[0].pha_status<=12 ))}"
-                                                data-choices="data-choices"
-                                                data-options='{"removeItemButton":true,"placeholder":true}'
-                                                ng-change="actionChange(item,item.seq,'area')"
-                                                ng-model="item.id_apu"
-                                                ng-disabled="!tab_general_active || !(tab_general_active && data_header[0].pha_status <= 12)"
-                                                hide-placeholder-option>
-                                            @*<option value="" selected ng-if="!placeholderHidden">Please select</option>*@
-                                            <option ng-repeat="item2 in master_apu" ng-value="item2.id" >
-                                                {{item2.name}}
-                                            </option>
-                                        </select>
+                                            <select class="form-control js-choice-apu mb-0" id="id_apu"
+                                                    ng-class="{'disabled-link':(!tab_general_active)}"
+                                                    data-choices="data-choices"
+                                                    data-options='{"removeItemButton":true,"placeholder":true}'
+                                                    ng-change="actionChange(item,item.seq,'area')"
+                                                    ng-model="item.id_apu"
+                                                    ng-disabled="!tab_general_active"
+                                                    hide-placeholder-option>
+                                                <option ng-repeat="item2 in master_apu" ng-value="item2.id">
+                                                    {{item2.name}}
+                                                </option>
+                                            </select>
+
                                         @*<select class="form-select rounded-1 disabled-link" ng-if="!tab_general_active"
                                                 ng-model="item.id_apu">
                                             <option ng-selected="item.id_apu == item2.id"

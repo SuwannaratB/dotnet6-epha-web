@@ -8536,6 +8536,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     }else if(item.action_type === 'insert'){
                         accessInfo.canCopy = true;
                         accessInfo.canRemove = true;
+                        accessInfo.canAdd = true;
                     }else{
                         accessInfo.canCopy = false;
                         accessInfo.canRemove = false;                    

@@ -224,7 +224,20 @@
                                                        data-bs-placement="top" title=" Area Process Unit : A" data-bs-html="true"></a>
                                                 </label>
                                                 <label class="form-label ps-0" for="area"></label>
-                                                <select class="form-control js-choice-apu"
+                                                <select class="form-control js-choice-apu mb-0" id="id_apu"
+                                                        ng-class="{'disabled-link':(!tab_general_active)}"
+                                                        data-choices="data-choices"
+                                                        data-options='{"removeItemButton":true,"placeholder":true}'
+                                                        ng-change="actionChange(item,item.seq,'area')"
+                                                        ng-model="item.id_apu"
+                                                        ng-disabled="!tab_general_active"
+                                                        hide-placeholder-option>
+                                                    <option ng-repeat="item2 in master_apu" ng-value="item2.id">
+                                                        {{item2.name}}
+                                                    </option>
+                                                </select>
+                                           
+                                                @*<select class="form-control js-choice-apu"
                                                         ng-class="{'disabled-\link':(!tab_general_active)}"
                                                         data-choices="data-choices"
                                                         data-options='{"removeItemButton":true,"placeholder":true}'
@@ -233,7 +246,7 @@
                                                             ng-value="item2.id">
                                                         {{item2.name}}
                                                     </option>
-                                                </select>
+                                                </select>*@
 
                                             </div>
 
@@ -1003,6 +1016,7 @@
 
                                                                 <span class="mx-1">
                                                                     <button class="btn btn-outline-secondary p-2" 
+                                                                            ng-disabled="!sessionAccessInfoMap[item.id].canAdd"  
                                                                             style="color: #0abe0a; background-color: #f1f2f4; border-color: #0abe0a;"
                                                                             data-toggle="tooltip" 
                                                                             data-placement="top" 

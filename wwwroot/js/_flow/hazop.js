@@ -1917,7 +1917,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     $scope.data_session = arr.session;
                     $scope.data_session_def = clone_arr_newrow(arr.session);
 
-                    $scope.data_session_last = arr.session_last
+                    $scope.data_session_last = arr.session_last;
 
 
                     $scope.data_memberteam = arr.memberteam;
@@ -8701,6 +8701,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     }else if(item.action_type === 'insert'){
                         accessInfo.canCopy = true;
                         accessInfo.canRemove = true;
+                        accessInfo.canAdd = true;
                     }else{
                         accessInfo.canCopy = true;
                         accessInfo.canAdd = true;
