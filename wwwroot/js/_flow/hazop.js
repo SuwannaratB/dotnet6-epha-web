@@ -1046,6 +1046,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.user = JSON.parse(localStorage.getItem('user'));
         $scope.token = JSON.parse(localStorage.getItem('token'))
         $scope.user_name = $scope.user['user_name'];
+        $scope.flow_role_type = $scope.user['role_type'];
         // $scope.user_name = conFig.user_name();
         $scope.pha_seq = conFig.pha_seq();
         $scope.pha_type_doc = conFig.pha_type_doc();
@@ -2419,8 +2420,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 const set_tabs = ['general', 'node', 'worksheet', 'managerecom','approver'];
             
                 showTabs(set_tabs);
-                if($scope.flow_role_type === 'admin' || $scope.user_name === $scope.data_header[0].request_user_name){
-                    setTabsActive(['general', 'node', 'worksheet', 'managerecom']);
+
+                if($scope.flow_role_type === 'admin' ||($scope.data_header[0].pha_request_by.toLowerCase() === $scope.user_name.toLowerCase())){
+                    setTabsActive(['general', 'areas', 'worker', 'worksheet', 'manage']);
+                    $scope.isDisableStatus = false;
+                }else{
+                    setAllTabsInctive();
+
+                    $scope.isDisableStatus = true;
 
                 }
 
@@ -8761,6 +8768,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             return accessInfo;
         }
     
+        console.log("$scope.flow_role_type",$scope.flow_role_type)
         // Employee (could be TA2 or TA3 or regular employee)
         if ($scope.flow_role_type === 'employee') {
 

@@ -713,6 +713,7 @@
                                                             <div class="col-4">
                                                                 <div class="mb-2 d-flex align-items-center">
                                                                     <button class="btn btn-outline-primary btn-sm d-flex align-items-center mb-2 custom-btn p-2"
+                                                                            ng-class="{'disabled-link': !tab_general_active}"
                                                                             style="color: #2445fc; background-color: #f1f2f4; border-color: #2445fc; transition: all 0.3s ease;"
                                                                             ng-click="openDataEmployeeAdd(item, 'member')">
                                                                         <span ng-if="tab_general_active" class="far fa-address-book fa-lg pe-2"></span>
@@ -750,6 +751,7 @@
                                                             <div class="col-4" ng-if="data_general[0].expense_type=='CAPEX' && data_general[0].sub_expense_type=='Normal'">
                                                                 <div class="mb-2 d-flex align-items-center">
                                                                     <button class="btn btn-outline-primary btn-sm d-flex align-items-center mb-2 custom-btn"
+                                                                            ng-class="{'disabled-link': !tab_general_active}"
                                                                             style="color: #2445fc; background-color: #f1f2f4; border-color: #2445fc; transition: all 0.3s ease;"
                                                                             ng-click="openDataEmployeeAdd(item, 'approver')" title="Assign approvers for this session">
                                                                         <span ng-if="tab_general_active" class="far fa-address-book fa-lg pe-2"></span>
@@ -2604,7 +2606,7 @@
                                                                 style="width: 30px;height:30px !important;">
                                                             <div class="d-flex text-center" style=" width: 20px;">
                                                                 <h6 class="me-1 text-center" style=" width: 20px;">{{item.ram_befor_risk}}</h6>
-                                                                <span class="fas fa-pencil-alt fa-sm " style=" width: 8px;"></span>
+                                                                <span class="fas fa-pencil-alt fa-sm " ng-hide="!tab_worksheet_active" style=" width: 8px;"></span>
                                                             </div>
                                                         </button>
                                                     </div>
@@ -2729,7 +2731,7 @@
                                                                 style="width: 30px; height:30px !important;">
                                                             <div class="d-flex text-center" style=" width: 25px;">
                                                                 <h6 class="me-1 text-center" style=" width: 30px;">{{item.ram_after_risk}}</h6>
-                                                                <span class="fas fa-pencil-alt fa-sm " style=" width: 8px;"></span>
+                                                                <span class="fas fa-pencil-alt fa-sm " ng-hide="!tab_worksheet_active" style=" width: 8px;"></span>
                                                             </div>
                                                         </button>
                                                     </div>
