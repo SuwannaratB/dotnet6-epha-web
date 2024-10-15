@@ -621,7 +621,7 @@
                                                                 </div>
                                                                 
                                                                 <div class="align-items-center" style="width: 280px"
-                                                                    ng-disabled ="!(accessInfo.isOwner || accessInfo.isAdmin)  && item_d.responder_action_type != 2">
+                                                                    ng-hide ="!(accessInfo.isOwner || accessInfo.isAdmin)  && item_d.responder_action_type != 2">
                                                                     <div class="btn-group mb-2 w-100" style="height:60px;">
                                                                         <div ng-if="!item_x.document_file_size" class="icon-button border p-3" 
                                                                              ng-hide ="accessInfo.isEmployee && item_d.responder_action_type != 2"

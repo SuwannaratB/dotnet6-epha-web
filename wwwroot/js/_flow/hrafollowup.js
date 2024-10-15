@@ -24,7 +24,7 @@ AppMenuPage.filter('MultiFieldFilter', function () {
         } else {
             return items.filter(function (item) {
                 const isPHA = item.pha_sub_software && item.pha_sub_software.toLowerCase() === 'hra';
-                console.log(`Item PHA check (non-worksheet): ${item.pha_sub_software} -> ${isPHA}`);
+
                 return (
                     item.data_by.toLowerCase().includes(search_data_by) &&
                     item.pha_no.toLowerCase().includes(search_pha_no) &&
@@ -38,7 +38,9 @@ AppMenuPage.filter('MultiFieldFilter', function () {
 
 AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) {
     $('#divLoading').hide();
-
+    $scope.searchMultiChange = function () {
+        $scope.searchMultiText.data_by = $scope.tabChange;
+    }
     $scope.showConfirmDialog = function (item) {
 
         if ($scope.flow_status == 13) {
@@ -83,6 +85,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
     };
 
+    
     //  add file 
     $scope.clearFileName = function (inputId) {
 
@@ -189,6 +192,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         // คุณสามารถเพิ่มโค้ดอื่น ๆ ที่คุณต้องการทำในฟังก์ชันนี้ได้
 
         $scope.tabChange = val;
+        $scope.searchMultiChange();
 
     }
 
@@ -227,6 +231,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         $scope.tabUpdateFollowUp = false;
         $scope.flow_status = 0;
         //alert($scope.flow_role_type);
+
+        $scope.searchMultiText = { pha_no: '', user_displayname: '', data_by: 'worksheet' };
     }
     function page_load() {
         arr_def();
@@ -316,6 +322,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                 $scope.flow_status = arr.header[0].pha_status;
 
                 $scope.data_header_all = arr.header_all;
+                const data_all_hra = $scope.data_header.filter( item => item.pha_sub_software === 'hra' && item.data_by === 'owner')
+                const data_all_hazop = $scope.data_header.filter( item => item.pha_sub_software === 'hazop' && item.data_by === 'owner')
+                const data_all_what = $scope.data_header.filter( item => item.pha_sub_software === 'whatif' && item.data_by === 'owner')
+                console.log("======================== HRA ===================",data_all_hra)
+                console.log("======================== HAZOP ===================",data_all_hazop)
+                console.log("======================== What if ===================",data_all_what)
 
                 $scope.data_general = arr.general;
                 if ($scope.data_general[0].pha_sub_software == null) {

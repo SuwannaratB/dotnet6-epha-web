@@ -1931,6 +1931,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$
     
         
     $scope.hasResponderUserDisplayName = function(item) {
+        console.log(item.responder_user_displayname)
         return item.responder_user_displayname && item.responder_user_displayname.trim() !== '';
     };
 

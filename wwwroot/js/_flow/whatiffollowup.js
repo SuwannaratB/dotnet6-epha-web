@@ -1,34 +1,38 @@
-
 AppMenuPage.filter('MultiFieldFilter', function () {
     return function (items, searchMultiText) {
-        if (!searchMultiText.pha_no
-            && !searchMultiText.data_by
-            && !searchMultiText.user_displayname) {
-            return items;
+        if (!searchMultiText || (!searchMultiText.pha_no && !searchMultiText.data_by && !searchMultiText.user_displayname)) {
+            return items; 
         }
-        var search_data_by = searchMultiText.data_by.toLowerCase();
 
-        var search_pha_no = searchMultiText.pha_no.toLowerCase();
-        var search_user_displayname = searchMultiText.user_displayname.toLowerCase();
+        var search_data_by = searchMultiText.data_by ? searchMultiText.data_by.toLowerCase() : '';
+        var search_pha_no = searchMultiText.pha_no ? searchMultiText.pha_no.toLowerCase() : '';
+        var search_user_displayname = searchMultiText.user_displayname ? searchMultiText.user_displayname.toLowerCase() : '';
 
-        if (search_data_by == 'worksheet') {
-             
+        console.log("search_pha_no:", search_pha_no);
+        console.log("search_data_by:", search_data_by);
+
+        if (search_data_by === 'worksheet') {
             return items.filter(function (item) {
+                const isPHA = item.pha_sub_software && item.pha_sub_software.toLowerCase() === 'whatif';
+                console.log(`Item PHA check (worksheet): ${item.pha_sub_software} -> ${isPHA}`);
                 return (
-                    item.data_by.toLowerCase().includes(search_data_by.toLowerCase()) &&
-                    item.pha_no.toLowerCase().includes(search_pha_no.toLowerCase()) 
-                )
-
+                    item.data_by.toLowerCase().includes(search_data_by) &&
+                    item.pha_no.toLowerCase().includes(search_pha_no) &&
+                    isPHA
+                );
             });
         } else {
             return items.filter(function (item) {
+                const isPHA = item.pha_sub_software && item.pha_sub_software.toLowerCase() === 'whatif';                
                 return (
-                    item.data_by.toLowerCase().includes(search_data_by.toLowerCase()) &&
-                    item.responder_user_displayname.toLowerCase().includes(search_user_displayname.toLowerCase())
-                )
+                    item.data_by.toLowerCase().includes(search_data_by) &&
+                    item.pha_no.toLowerCase().includes(search_pha_no) &&
+                    item.responder_user_displayname.toLowerCase().includes(search_user_displayname) &&
+                    isPHA
+                );
+
 
             });
-
         }
     };
 });

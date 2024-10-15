@@ -9,7 +9,6 @@ AppMenuPage.filter('MultiFieldFilter', function () {
         var search_pha_no = searchMultiText.pha_no ? searchMultiText.pha_no.toLowerCase() : '';
         var search_user_displayname = searchMultiText.user_displayname ? searchMultiText.user_displayname.toLowerCase() : '';
 
-        console.log("search_user_displayname",search_user_displayname)
 
         if (search_data_by === 'worksheet') {
             return items.filter(function (item) {
