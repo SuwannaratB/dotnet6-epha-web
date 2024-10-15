@@ -1702,6 +1702,21 @@
                                                             </option>
                                                         </select>
                                                     </div>
+                                                    @* Hierarchy of Control (ALARP) *@
+                                                    <div class="checkbox-container">
+                                                        <div class="topic">Hierarchy of Control (ALARP)</div>
+                                                        <select class="form-control"
+                                                            style="max-width: 150px; font-size: 10.24px;"
+                                                            ng-click="setOptionHierarchy('', 'worksheet')"
+                                                            ng-change="setOptionHierarchy('change','worksheet')"
+                                                            ng-model="selectFilterWorksheet.exposure">
+                                                            <option value="">All</option>
+                                                            <option ng-repeat="item_option in optionHierarchy" 
+                                                                    ng-value="item_option.name">
+                                                                {{item_option.name}}
+                                                            </option>
+                                                        </select>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <hr>
