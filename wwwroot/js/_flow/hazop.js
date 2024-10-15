@@ -1916,6 +1916,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     $scope.data_session_def = clone_arr_newrow(arr.session);
 
                     $scope.data_session_last = arr.session_last;
+                    $scope.data_session_last_reject = arr.session_last_reject;
 
 
                     $scope.data_memberteam = arr.memberteam;
@@ -2409,6 +2410,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     
     
                 $scope.selectSendBack = ($scope.data_header[0].approve_status == 'approve' ? 'option1' : 'option2');
+
+                $scope.active_session = $scope.data_session_last[0].id_session;
     
                 check_case_member_review();
     
@@ -2442,7 +2445,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 }, 0);
 
 
-                $scope.active_session = $scope.data_session_last[0].id_session;
+                if($scope.data_session_last_reject){
+                    $scope.active_session = $scope.data_session_last_reject[0].id_session;
+                }
                 $scope.active_drawing = maxSeq.seq;
 
                 $scope.submit_type = true;
@@ -7205,8 +7210,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             // If any 'insert' is found, set action_review to null for all objects
             if (!hasInsert) {
                 for (var j = 0; j < copy_data_approver.length; j++) {
-                    copy_data_approver[j].action_review = null;
-                }                }
+                    if(copy_data_approver[j].action_status === 'reject' && copy_data_approver[j].action_review === 2){
+                        copy_data_approver[j].action_review = null;
+                        copy_data_approver[j].action_change = 1;
+
+                    }
+                }                
+            }
                 
         }
         

@@ -1,37 +1,37 @@
 
 AppMenuPage.filter('MultiFieldFilter', function () {
     return function (items, searchMultiText) {
-        if (!searchMultiText.pha_no
-            && !searchMultiText.data_by
-            && !searchMultiText.user_displayname) {
-            return items;
+        if (!searchMultiText) {
+            return items; 
         }
-        var search_data_by = searchMultiText.data_by.toLowerCase();
 
-        var search_pha_no = searchMultiText.pha_no.toLowerCase();
-        var search_user_displayname = searchMultiText.user_displayname.toLowerCase();
+        var search_data_by = searchMultiText.data_by ? searchMultiText.data_by.toLowerCase() : '';
+        var search_pha_no = searchMultiText.pha_no ? searchMultiText.pha_no.toLowerCase() : '';
+        var search_user_displayname = searchMultiText.user_displayname ? searchMultiText.user_displayname.toLowerCase() : '';
 
-        if (search_data_by == 'worksheet') {
-             
+        console.log("search_user_displayname",search_user_displayname)
+
+        if (search_data_by === 'worksheet') {
             return items.filter(function (item) {
                 return (
-                    item.data_by.toLowerCase().includes(search_data_by.toLowerCase()) &&
-                    item.pha_no.toLowerCase().includes(search_pha_no.toLowerCase()) 
-                )
-
+                    item.pha_sub_software && item.pha_sub_software.toLowerCase() === 'hazop' &&
+                    item.data_by.toLowerCase().includes(search_data_by) &&
+                    item.pha_no.toLowerCase().includes(search_pha_no)
+                );
             });
         } else {
             return items.filter(function (item) {
                 return (
-                    item.data_by.toLowerCase().includes(search_data_by.toLowerCase()) &&
-                    item.responder_user_displayname.toLowerCase().includes(search_user_displayname.toLowerCase())
-                )
-
+                    item.pha_sub_software && item.pha_sub_software.toLowerCase() === 'hazop' &&
+                    item.data_by.toLowerCase().includes(search_data_by) &&
+                    item.pha_no.toLowerCase().includes(search_pha_no) &&
+                    item.responder_user_displayname.toLowerCase().includes(search_user_displayname)
+                );
             });
-
         }
     };
 });
+
 
 AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) {
     $('#divLoading').hide();

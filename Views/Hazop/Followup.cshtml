@@ -87,293 +87,6 @@
                 </div>
                 <div class="card-body p-2" ng-repeat="item_m in data_general">
 
-                    <div class="d-none" style="z-index: -1;">
-                        <div class="row  g-3 align-items-center mx-3">
-                            <div class="col-md-2 ">
-                                <div class="row g-0 align-items-center">
-
-                                    <div class="col-12 p-1">
-                                        <label class="form-label ps-0">
-                                            Sub-Software
-                                        </label>
-                                        <label class="form-label ps-0" ng-if="select_history_tracking_record">
-                                            <a class="form-label far fa-comment-alt text-warning cursor-pointer " data-bs-toggle="tooltip"
-                                               data-bs-html="true"></a>
-                                        </label>
-
-                                        <div class="d-flex me-3">
-                                            <div class="">
-                                                <select class="form-control" ng-model="item_m.pha_sub_software"
-                                                        ng-change="actionChange(item_m)">
-                                                    <option selected>HAZOP</option>
-                                                    <option>JSEA</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-
-                                <label class="form-label ps-0">Expense Type</label>
-                                <label class="form-label ps-0" ng-if="select_history_tracking_record">
-                                    <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
-                                       data-bs-placement="top" title=" Expense Type : OPEX" data-bs-html="true"></a>
-                                </label>
-
-                                <select class="form-select rounded-1" id="expense_type" placeholder="Expense Type"
-                                        name="expense_type"
-                                        ng-model="item_m.expense_type"
-                                        ng-change="actionChange(item_m)">
-                                    <option id="OPEX">OPEX</option>
-                                    <option id="CAPEX">CAPEX</option>
-                                </select>
-                            </div>
-                            <div class="col-md-2 ">
-
-                                <label class="form-label ps-0">
-                                    Sub Expense Type
-                                </label>
-                                <label class="form-label ps-0" ng-if="select_history_tracking_record">
-                                    <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
-                                       data-bs-placement="top" name="sub_expanse_type" title=" Sub Expense Type : Normal" data-bs-html="true"></a>
-                                </label>
-                                <select class="form-select  text-uppercase rounded-1"
-                                        ng-model="item_m.sub_expense_type"
-                                        ng-change="actionChange(item_m)">
-                                    <option id="Normal">Normal</option>
-                                    <option id="Study">Study</option>
-                                </select>
-                            </div>
-                            <div class="col-md-3 ">
-                                <div class="row g-0 align-items-center">
-
-                                    <div class="col-12 p-1">
-                                        <label class="form-label ps-0" for="unit">Reference MOC </label>
-                                        <label class="form-label ps-0" ng-if="select_history_tracking_record">
-                                            <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
-                                               data-bs-placement="top" title=" Reference MOC : PN-13081" data-bs-html="true"></a>
-                                        </label>
-                                        <input type="text" name="reference_moc" class="form-control rounded-1" placeholder="Reference MOC" autocomplete="off"
-                                               value="PN-13089"
-                                               ng-model="item_m.reference_moc"
-                                               ng-keyup="actionChange(item_m)">
-                                    </div>
-
-                                </div>
-                            </div>
-                            <div class="col-md-2 p-1" ng-if="item_m.expense_type =='CAPEX' && item_m.sub_expense_type == 'Normal'">
-
-                                <label class="form-label ps-0" for="approver">TA2 Approver</label>
-                                <label class="form-label ps-0" ng-if="select_history_tracking_record">
-                                    <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
-                                       data-bs-placement="top" title=" TA2 Approver : xxxx " data-bs-html="true"></a>
-                                </label>
-
-                                <select class="form-control js-choice-approver"
-                                        data-choices="data-choices"
-                                        data-options='{"removeItemButton":true,"placeholder":true}'
-                                        ng-model="item_m.approver_user_name"
-                                        ng-change="actionChange(item_m)">
-                                    <option ng-repeat="item2 in master_approver" ng-value="item2.employee_name">{{item2.employee_displayname}}</option>
-                                </select>
-
-                            </div>
-
-                        </div>
-
-                        <div class="mx-3 row  g-3 align-items-center">
-                            <!-- area -->
-                            <div class="col-md-2 p-1 ">
-                                <div class="row g-0 align-items-center">
-                                    <div class="col-10 p-1  ">
-
-                                        <label class="form-label ps-0" for="area">Area Process Unit </label>
-                                        <label class="form-label ps-0" ng-if="select_history_tracking_record">
-                                            <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
-                                               data-bs-placement="top" title=" Area Process Unit : A" data-bs-html="true"></a>
-                                        </label>
-                                        <select class="form-control js-choice-apu"
-                                                data-choices="data-choices"
-                                                data-options='{"removeItemButton":true,"placeholder":true}'
-                                                ng-model="item_m.id_apu"
-                                                ng-change="actionChange(item_m)">
-                                            <option ng-repeat="item2 in master_apu" ng-value="item2.id">{{item2.name}}</option>
-                                        </select>
-                                    </div>
-
-                                </div>
-                            </div>
-                            <!-- area -->
-                            <div class="col-md-3 p-1">
-                                <div class="row g-0 align-items-center">
-
-                                    <div class="col-12 p-1">
-                                        <label class="form-label ps-0" for="organizerSingle">
-                                            Functional
-                                            Location
-                                        </label>
-
-                                        <label class="form-label ps-0" ng-if="select_history_tracking_record"><a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip" data-bs-placement="top" title=" Functional Location : TPX-76-LICSA-002-TX" data-bs-html="true"></a></label>
-
-                                        <select class="form-control js-choice-functional"
-                                                data-choices="data-choices"
-                                                data-options='{"removeItemButton":true,"placeholder":true}'>
-                                            <option ng-repeat="item2 in master_functional" ng-value="item2.id">{{item2.name}}</option>
-                                        </select>
-
-                                        <input type="text" ng-if="item_m.expense_type=='CAPEX' && item_m.sub_expense_type=='Study'"
-                                               class="form-control rounded-1" name="functional_location">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Business Unit -->
-                            <div class="col-md-2 p-1">
-
-                                <label class="form-label ps-0" for="unit">Business Unit </label>
-                                <label class="form-label ps-0" ng-if="select_history_tracking_record">
-                                    <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
-                                       data-bs-placement="top" title=" Business Unit : ADIP Unit" data-bs-html="true"></a>
-                                </label>
-
-                                <select class="form-control js-choice-business_unit"
-                                        data-choices="data-choices"
-                                        data-options='{"removeItemButton":true,"placeholder":true}'>
-                                    <option ng-repeat="item2 in master_unit_no_show" ng-value="item2.id">{{item2.name}}</option>
-                                </select>
-
-                            </div>
-
-                            <!-- Unit No -->
-                            <div class="col-md-2 p-1">
-
-                                <label class="form-label ps-0" for="unit">Unit No </label>
-                                <label class="form-label ps-0" ng-if="select_history_tracking_record">
-                                    <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
-                                       data-bs-placement="top" title=" Unit No : ADIP Unit" data-bs-html="true"></a>
-                                </label>
-                                <select class="form-control js-choice-unit_no"
-                                        data-choices="data-choices"
-                                        data-options='{"removeItemButton":true,"placeholder":true}'>
-                                    <option ng-repeat="item2 in master_unit_no_show" ng-value="item2.id">{{item2.name}}</option>
-                                </select>
-                            </div>
-
-
-                        </div>
-
-                        <div class="mx-3 row  g-3 align-items-center">
-
-                            <!-- Project No -->
-                            <div class="col-md-2 p-1">
-
-
-                                <label class="form-label ps-0">Project No</label>
-                                <label class="form-label ps-0" ng-if="select_history_tracking_record">
-                                    <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
-                                       data-bs-placement="top"
-                                       title=" Project No : HAZOP-2023-00000XX"
-                                       data-bs-html="true"></a>
-                                </label>
-
-                                <input type="text" name="project_no" class="form-control rounded-1" placeholder="Project No" autocomplete="off"
-                                       ng-model="item_m.project_no"
-                                       ng-keyup="actionChange(item_m)">
-
-                            </div>
-                            <!-- Project Name -->
-                            <div class="col-md-3 p-1">
-
-
-                                <label class="form-label ps-0" for="unit" ng-if="item_m.expense_type=='CAPEX'">Project Name</label>
-                                <label class="form-label ps-0" for="unit" ng-if="item_m.expense_type=='OPEX'">e-MOC Request Number</label>
-                                <label class="form-label ps-0" ng-if="select_history_tracking_record">
-                                    <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
-                                       data-bs-placement="top"
-                                       title=" Project Name : PXXXXXXX-0001 New close loop drain of CDU-1 Analyzer"
-                                       data-bs-html="true"></a>
-                                </label>
-
-                                <input class="form-control rounded-1" type="text" placeholder="Project Name"
-                                       name="project_name"
-                                       ng-keyup="filterResultGeneral(item_m.pha_request_name, 'pha_request_name')">
-
-                                <ul class="list-group mt-2 w-25" style="position: absolute;" ng-show="showResults">
-                                    <li class="list-group-item "
-                                        ng-repeat="result in filteredResults | filter:{field:'pha_request_name'}"
-                                        ng-click="selectResult(result,item,'pha_request_name')">
-                                        {{ result.name }}
-                                    </li>
-                                </ul>
-
-
-                            </div>
-
-                            <!-- Target Date -->
-                            <div class="col-md-7 p-1">
-
-                                <div class="row g-0 align-items-center">
-                                    <div class="col-md-3 p-1">
-
-                                        <label class="form-label ps-0" for="tgs_date">Target Start Date</label>
-                                        <label class="form-label ps-0" ng-if="select_history_tracking_record">
-                                            <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
-                                               data-bs-placement="top" title=" Target Start Date :  " data-bs-html="true"></a>
-                                        </label>
-                                        <input type="date" name="ts_date"
-                                               class="form-control rounded-1 datetimepicker" id="tgs_date"
-                                               placeholder="dd/mm/yyyy">
-
-                                    </div>
-
-                                    <div class="col-md-3 p-1">
-
-
-                                        <label class="form-label ps-0" for="tge_date">Target End Date</label>
-                                        <label class="form-label ps-0" ng-if="select_history_tracking_record">
-                                            <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
-                                               data-bs-placement="top" title=" Target End Date :  " data-bs-html="true"></a>
-                                        </label>
-                                        <input type="date" name="te_date"
-                                               class="form-control rounded-1 datetimepicker" id="tgs_date"
-                                               placeholder="dd/mm/yyyy">
-
-                                    </div>
-
-
-                                    <div class="col-md-3 p-1">
-
-                                        <label class="form-label ps-0" for="tgs_date">Actual Start Date</label>
-                                        <label class="form-label ps-0" ng-if="select_history_tracking_record">
-                                            <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
-                                               data-bs-placement="top" title=" Actual Start Date :  " data-bs-html="true"></a>
-                                        </label>
-                                        <input type="date" name="as_date"
-                                               class="form-control rounded-1 datetimepicker" id="tgs_date"
-                                               placeholder="dd/mm/yyyy">
-                                    </div>
-
-                                    <div class="col-md-3 p-1">
-
-                                        <label class="form-label ps-0" for="tge_date">Actual End Date</label>
-                                        <label class="form-label ps-0" ng-if="select_history_tracking_record">
-                                            <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
-                                               data-bs-placement="top" title=" Actual End Date :  " data-bs-html="true"></a>
-                                        </label>
-                                        @*item_m.actual_end_date*@
-                                        <input type="date" name="ae_date"
-                                               class="form-control rounded-1  datetimepicker"
-                                               id="tgs_date" placeholder="dd/mm/yyyy">
-
-                                    </div>
-
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-
                     <div class="">
                         <div class="row g-3 justify-content-between align-items-center pt-2 pb-3" ng-if="flow_role_type=='admin'">
 
@@ -387,7 +100,7 @@
                                 <li class="mx-2">
                                     <a class="btn btn-outline-primary border border-0 " style="border-radius: 10px 10px 0px 0px !important; "
                                        id="profile-tab" data-bs-toggle="tab" href="#tab-responder" role="tab" aria-controls="tab-responder"
-                                       aria-selected="false" ng-click="handleLinkClick('responder')">Responder</a>
+                                       aria-selected="false" ng-click="handleLinkClick('owner')">Responder</a>
                                 </li>
                             </ul>
                         </div>
@@ -401,9 +114,9 @@
                                             <th class="align-middle text-center" scope="col" style="font-size: 10px;" rowspan="2"></th>
                                             <th class="align-middle" scope="col" style="font-size: 10px;" rowspan="2">Sub-Software</th>
                                             <th class="align-middle" scope="col" style="font-size: 10px;" rowspan="2">PHA Status</th>
-                                            <th class="align-middle" scope="col" style="font-size: 10px;" rowspan="2" ng-if="tabChange == 'worksheet'">PHA No.</th>
+                                            <th class="align-middle" scope="col" style="font-size: 10px;" rowspan="2" >PHA No.</th>
                                             <th class="align-middle" scope="col" style="font-size: 10px;" rowspan="2" ng-if="tabChange == 'worksheet'">Project Name/e-MOC Request Number</th>
-                                            <th class="align-middle" scope="col" style="font-size: 10px;" rowspan="2" ng-if="tabChange == 'responder'">Owner</th>
+                                            <th class="align-middle" scope="col" style="font-size: 10px;" rowspan="2" ng-if="tabChange == 'owner'">Owner</th>
                                             <th class="align-middle text-center" scope="col" colspan="3">Items Status</th>
                                             <th class="align-middle text-center" scope="col" style="font-size: 10px;" rowspan="2" ng-if="tabChange == 'worksheet'"></th>
                                         </tr>
@@ -416,7 +129,7 @@
                                     <tbody class="customer-rating-table-body">
                                         <tr class="hover-actions-trigger btn-reveal-trigger position-static rowwork"
                                             ng-repeat="item_h in data_header | MultiFieldFilter: searchMultiText "
-                                            ng-if="item_h.action_type == 'update' && ((item_h.pha_status == 13 && tabChange == 'responder') || flow_role_type=='admin') ">
+                                            ng-if="item_h.action_type == 'update' && ((item_h.pha_status == 13 && tabChange == 'owner') || flow_role_type=='admin') ">
                                             <td class="align-top" style="width:100px;">
 
                                                 <button class="btn btn-outline text-primary p-1" style=" background-color: #f1f2f4;width:100px; "
@@ -435,7 +148,7 @@
                                                     <h6 class="fw-semi-bold text-uppercase">{{item_h.pha_status_name}}</h6>
                                                 </div>
                                             </td>
-                                            <td class="align-top" ng-if="tabChange == 'worksheet'">
+                                            <td class="align-top" >@*ng-if="tabChange == 'worksheet'"*@
                                                 <div class="p-1 text-center">
                                                     <h6 class="fw-semi-bold">{{item_h.pha_no}}</h6>
                                                 </div>
@@ -445,7 +158,7 @@
                                                     <h6 class="fw-semi-bold">{{item_h.pha_request_name}}</h6>
                                                 </div>
                                             </td>
-                                            <td class="align-top" ng-if="tabChange == 'responder'">
+                                            <td class="align-top" ng-if="tabChange == 'owner'">
                                                 <div class="p-1 ">
                                                     <h6 class="fw-semi-bold">{{item_h.responder_user_displayname}}</h6>
                                                 </div>
@@ -476,7 +189,7 @@
                                 </table> 
                             </div>
 
-                            <div class="table-responsive scrollbar tableFixHead" id="table-container" style="font-size: 10px;" tabindex="1"
+                            @*<div class="table-responsive scrollbar tableFixHead" id="table-container" style="font-size: 10px;" tabindex="1"
                                  ng-if="!(flow_role_type =='admin')">
                                 <table class="table fs--2 mb-0 table-bordered " cellpadding="0" cellspacing="0">
                                     <thead class=" text-uppercase  text-center  bg-soft  test" style="font-size: 10px;" id="myHeader">
@@ -548,7 +261,7 @@
                                         </tr>
                                     </tbody>
                                 </table> 
-                            </div>
+                            </div>*@
                         </div>
                     </div>
 

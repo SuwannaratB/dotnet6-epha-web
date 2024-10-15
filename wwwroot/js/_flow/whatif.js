@@ -1,39 +1,34 @@
-
-AppMenuPage.filter('MemberteamMultiFieldFilter', function () {
-    return function (items, searchText) {
-        if (!searchText) {
-            return items;
+AppMenuPage.filter('MultiFieldFilter', function () {
+    return function (items, searchMultiText) {
+        if (!searchMultiText) {
+            return items; 
         }
 
-        searchText = searchText.toLowerCase();
-        if (searchText.length < 3) { return; }
-        return items.filter(function (item) {
-            return (
-                item.employee_id.toLowerCase().includes(searchText.toLowerCase()) ||
-                item.employee_displayname.toLowerCase().includes(searchText.toLowerCase()) ||
-                item.employee_email.toLowerCase().includes(searchText.toLowerCase())
-            );
-        }).slice(0, 10);
-    };
-});
-AppMenuPage.filter('ResponderMultiFieldFilter', function () {
-    return function (items, searchResponderText) {
-        if (!searchResponderText) {
-            return items;
+        var search_data_by = searchMultiText.data_by ? searchMultiText.data_by.toLowerCase() : '';
+        var search_pha_no = searchMultiText.pha_no ? searchMultiText.pha_no.toLowerCase() : '';
+        var search_user_displayname = searchMultiText.user_displayname ? searchMultiText.user_displayname.toLowerCase() : '';
+
+        if (search_data_by === 'worksheet') {
+            return items.filter(function (item) {
+                return (
+                    item.pha_sub_software && item.pha_sub_software.toLowerCase() === 'whatif' &&
+                    item.data_by.toLowerCase().includes(search_data_by) &&
+                    item.pha_no.toLowerCase().includes(search_pha_no)
+                );
+            });
+        } else {
+            return items.filter(function (item) {
+                return (
+                    item.pha_sub_software && item.pha_sub_software.toLowerCase() === 'whatif' &&
+                    item.data_by.toLowerCase().includes(search_data_by) &&
+                    item.pha_no.toLowerCase().includes(search_pha_no) &&
+                    item.responder_user_displayname.toLowerCase().includes(search_user_displayname)
+                );
+            });
         }
-
-        searchResponderText = searchResponderText.toLowerCase();
-        if (searchResponderText.length < 3) { return; }
-
-        return items.filter(function (item) {
-            return (
-                item.employee_id.toLowerCase().includes(searchResponderText.toLowerCase()) ||
-                item.employee_displayname.toLowerCase().includes(searchResponderText.toLowerCase()) ||
-                item.employee_email.toLowerCase().includes(searchResponderText.toLowerCase())
-            );
-        });
     };
 });
+
 AppMenuPage.filter('toArray', function() {
     return function(obj) {
       if (!obj) {
@@ -1781,7 +1776,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     $scope.data_session = arr.session;
                     $scope.data_session_def = clone_arr_newrow(arr.session);
 
-                    $scope.data_session_last = arr.session_last
+                    $scope.data_session_last = arr.session_last;
+                    $scope.data_session_last_reject = arr.session_last_reject;
 
 
                     $scope.data_memberteam = arr.memberteam;
@@ -2313,6 +2309,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     
                 $scope.selectSendBack = ($scope.data_header[0].approve_status == 'approve' ? 'option1' : 'option2');
     
+                $scope.active_session = $scope.data_session_last[0].id_session;
                 check_case_member_review();
     
             }
@@ -2338,7 +2335,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     return max; // ถ้าไม่ตรงเงื่อนไขให้ส่ง max กลับมา
                 }, 0);
 
-                $scope.active_session = $scope.data_session_last[0].id_session;
+                if($scope.data_session_last_reject){
+                    $scope.active_session = $scope.data_session_last_reject[0].id_session;
+                }
                 $scope.active_drawing = maxSeq.seq;
 
                 $scope.submit_type = true;
@@ -6809,8 +6808,13 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             // If any 'insert' is found, set action_review to null for all objects
             if (!hasInsert) {
                 for (var j = 0; j < copy_data_approver.length; j++) {
-                    copy_data_approver[j].action_review = null;
-                }                }
+                    if(copy_data_approver[j].action_status === 'reject' && copy_data_approver[j].action_review === 2){
+                        copy_data_approver[j].action_review = null;
+                        copy_data_approver[j].action_change = 1;
+
+                    }
+                }                
+            }
                 
         }
         

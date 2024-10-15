@@ -101,7 +101,7 @@
                                 <li class="mx-2">
                                     <a class="btn btn-outline-primary border border-0 " style="border-radius: 10px 10px 0px 0px !important; "
                                        id="profile-tab" data-bs-toggle="tab" href="#tab-responder" role="tab" aria-controls="tab-responder"
-                                       aria-selected="false" ng-click="handleLinkClick('responder')">Responder</a>
+                                       aria-selected="false" ng-click="handleLinkClick('owner')">Responder</a>
                                 </li>
                             </ul>
                         </div>
@@ -116,9 +116,9 @@
                                             <th class="align-middle text-center" scope="col" style="font-size: 10px;" rowspan="2"></th>
                                             <th class="align-middle" scope="col" style="font-size: 10px;" rowspan="2">Sub-Software</th>
                                             <th class="align-middle" scope="col" style="font-size: 10px;" rowspan="2">PHA Status</th>
-                                            <th class="align-middle" scope="col" style="font-size: 10px;" rowspan="2" ng-if="tabChange == 'worksheet'">PHA No.</th>
+                                            <th class="align-middle" scope="col" style="font-size: 10px;" rowspan="2">PHA No.</th>
                                             <th class="align-middle" scope="col" style="font-size: 10px;" rowspan="2" ng-if="tabChange == 'worksheet'">Project Name/e-MOC Request Number</th>
-                                            <th class="align-middle" scope="col" style="font-size: 10px;" rowspan="2" ng-if="tabChange == 'responder'">Owner</th>
+                                            <th class="align-middle" scope="col" style="font-size: 10px;" rowspan="2" ng-if="tabChange == 'owner'">Owner</th>
                                             <th class="align-middle text-center" scope="col" colspan="3">Items Status</th>
                                             <th class="align-middle text-center" scope="col" style="font-size: 10px;" rowspan="2" ng-if="tabChange == 'worksheet'"></th>
                                         </tr>
@@ -130,8 +130,8 @@
                                     </thead>
                                     <tbody class="customer-rating-table-body">
                                         <tr class="hover-actions-trigger btn-reveal-trigger position-static rowwork"
-                                            ng-repeat="item_h in data_header | MultiFieldFilter: searchMultiText "
-                                            ng-if="item_h.action_type == 'update' && ((item_h.pha_status == 13 && tabChange == 'responder') || flow_role_type=='admin') ">
+                                            ng-repeat="item_h in data_header | MultiFieldFilter: searchMultiText"
+                                            ng-if="item_h.action_type == 'update' && ((item_h.pha_status == 13 && tabChange == 'owner') || flow_role_type=='admin') ">
                                             <td class="align-top" style="width:100px;">
 
                                                 <button class="btn btn-outline text-primary p-1" style=" background-color: #f1f2f4;width:100px; "
@@ -150,7 +150,7 @@
                                                     <h6 class="fw-semi-bold text-uppercase">{{item_h.pha_status_name}}</h6>
                                                 </div>
                                             </td>
-                                            <td class="align-top" ng-if="tabChange == 'worksheet'">
+                                            <td class="align-top">
                                                 <div class="p-1 text-center">
                                                     <h6 class="fw-semi-bold">{{item_h.pha_no}}</h6>
                                                 </div>
@@ -160,7 +160,7 @@
                                                     <h6 class="fw-semi-bold">{{item_h.pha_request_name}}</h6>
                                                 </div>
                                             </td>
-                                            <td class="align-top" ng-if="tabChange == 'responder'">
+                                            <td class="align-top" ng-if="tabChange == 'owner'">
                                                 <div class="p-1 ">
                                                     <h6 class="fw-semi-bold">{{item_h.responder_user_displayname}}</h6>
                                                 </div>
@@ -191,7 +191,7 @@
                                 </table> 
                             </div>
 
-                            <div class="table-responsive scrollbar tableFixHead" id="table-container" style="font-size: 10px;" tabindex="1"
+                            @*<div class="table-responsive scrollbar tableFixHead" id="table-container" style="font-size: 10px;" tabindex="1"
                                  ng-if="!(flow_role_type =='admin')">
                                 <table class="table fs--2 mb-0 table-bordered " cellpadding="0" cellspacing="0">
                                     <thead class=" text-uppercase  text-center  bg-soft  test" style="font-size: 10px;" id="myHeader">
@@ -263,7 +263,7 @@
                                         </tr>
                                     </tbody>
                                 </table> 
-                            </div>
+                            </div>*@
                         </div>
                     </div>
 
