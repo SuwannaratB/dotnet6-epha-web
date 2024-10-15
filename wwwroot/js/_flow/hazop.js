@@ -1449,8 +1449,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                             }
 
                         });
-
-
                     }
                     else if (action == 'submit_without') {
 
