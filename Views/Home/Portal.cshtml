@@ -104,6 +104,7 @@
 
                                 <a id="menu_search" 
                                     href="hazop/search" 
+                                    @* ng-click="redirect('search')" *@
                                     ng-if="menu_search"
                                     class="card-menu col-xxl-3 col-xl-3 col-lg-4 col-md-6 col-sm-9 col-12 text-decoration-none">
                                     <div class="card border-0 rounded shadow p-3 mb-3 aspect-ratio aspect-ratio-4x3"
@@ -140,5 +141,6 @@
 </div>
 
 @section scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
     <script src="~/js/_flow/home.js"></script> 
 }

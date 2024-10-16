@@ -1,0 +1,338 @@
+@{
+    ViewData["Title"] = "Worker Group";
+
+    Layout = "~/Views/Shared/_LayoutWeb.cshtml";
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.3/angular.min.js"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&amp;display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+
+    <link rel="stylesheet" href="~/assets/css/theme.min.css">
+
+    <link rel="stylesheet" href="~/assets/css/tablefreezer.css">
+
+    <link href="~/assets/css/theme.min.css" type="text/css" rel="stylesheet" id="style-default">
+
+    <link href="~/assets/css/choices.min.css" type="text/css" rel="stylesheet">
+
+    <link href="~/css/autocomplete.css" type="text/css" rel="stylesheet">
+
+    <script src="~/assets/js/config.js"></script>
+
+    <script src="~/assets/js/all.min.js"></script>
+
+    <link rel="stylesheet" href="~/css/masterStyles/main_style.css">
+}
+
+<div class="p-6" id="divPage" ng-controller="ctrlAppPage">
+    <div class="card container mt-6 px-6 py-4">
+        <div class="title">
+            <span class=" me-2 text-primary"><B>|</B></span> 
+            Worker List
+        </div>
+        <hr>
+        <div class="d-flex align-items-end justify-content-between pb-2">
+            <div class="d-flex gap-4">
+                <button class="d-flex btn btn-sm btn-success gap-2" ng-click="newData()">
+                    <i class="fa-solid fa-plus"></i>
+                    Worker List
+                </button>
+            </div>
+            <div class="d-flex align-items-end gap-4">
+                @* <div class="dropdown">
+                    <label class="form-label ps-0 pb-1 col-auto" for="area">Work List</label>
+                    <select class="form-control mb-0 col-auto" 
+                        style="padding: 7px"
+                        ng-model="selected.work_group"
+                        ng-change="actionfilter('work_group', selected.work_group)">
+                        <option ng-repeat="item2 in data_worker_group" ng-value="item2.id">
+                            {{item2.name}}
+                        </option>
+                    </select>
+                </div> *@
+                <div class="d-flex gap-2">
+                    <button class="btn btn-sm btn-secondary" style="width: 100px;" ng-click="confirmBack()">Back</button>
+                    <button class="btn btn-sm btn-primary " style="width: 100px;" ng-click="confirmSave()">Save</button>
+                </div>
+            </div>
+        </div>
+        <div class="card p-2 overflow-auto">
+            <table class="table table-sm fs--1 mb-0" >
+                <thead class="bg-white"> 
+                    <tr class="text-center">
+                        <th class="align-middle"  style="min-width: 90px">No</th>
+                        <th class="align-middle">Display Name</th>
+                        <th class="align-middle">Username</th>
+                        <th class="align-middle"></th>
+                        <th class="align-middle" style="min-width:100px">Active</th>
+                        <th class="align-middle" style="min-width:100px">Management</th>
+                    </tr>
+                </thead>
+                <tbody class="list">
+                    <tr class="hover-actions-trigger btn-reveal-trigger position-static text-center"
+                         ng-repeat="item in paginatedData" id="tr-{{item.seq}}">
+
+                        <td class="align-middle position-relative">
+                            <div id="new-{{item.seq}}" class="new hidden">New</div>
+                            {{$index + 1 + ((currentPage - 1) * pageSize)}}
+                        </td>
+
+                        <td class="align-middle ">
+                            <div class="col-auto pt-2">
+                                <textarea class="form-control form-control-sm " 
+                                    disabled
+                                    rows="1" 
+                                    type="text"
+                                    style=" min-width: 160px;"
+                                    placeholder="Display Name"
+                                    ng-required="true"
+                                    ng-model="item.user_displayname"
+                                    ng-change="actionChangedData(item,'user_displayname')">
+                                </textarea>
+                                <div class="validation-message">{{item.user_displayname ? '' : 'field is required.'}}</div>
+                            </div>
+                        </td>
+
+                        <td class="align-middle ">
+                            <div class="col-auto pt-2">
+                                <textarea class="form-control form-control-sm" 
+                                    disabled
+                                    rows="1" 
+                                    type="text"
+                                    style=" min-width: 160px;"
+                                    placeholder="Username"
+                                    ng-required="true"
+                                    ng-model="item.user_name"
+                                    ng-change="actionChangedData(item,'user_name')">
+                                </textarea>
+                                <div class="validation-message">{{item.user_name ? '' : 'field is required.'}}</div>
+                            </div>
+                        </td>
+
+                        <td class="align-middle ">
+                            <span ng-click="openModalEmployeeAdd(item)" 
+                                class="far fa-address-book fa-lg text-primary cursor-pointer" 
+                                style="font-size: 18px;">
+                            </span>
+                        </td>
+
+                        <td class="align-middle">
+                            <input type="checkbox" 
+                                class="form-check-input"
+                                style="cursor: pointer;width:20px; height:20px;"
+                                ng-if="(item.active_type==1)" 
+                                checked
+                                ng-click="actionChangedData(item,'accept_status')">
+                            <input type="checkbox" 
+                                class="form-check-input"
+                                style="cursor: pointer;width:20px; height:20px;"
+                                ng-if="!(item.active_type==1)"
+                                ng-click="actionChangedData(item,'inaccept_status')">
+                        </td>
+
+                        <td class="align-middle ">
+                            <button class="btn btn-outline-secondary p-2"
+                                style="color: #ff2828; background-color: #f1f2f4; border-color: #ff2828;"
+                                ng-click=removeData(item)
+                                data-toggle="tooltip"
+                                data-placement="top"
+                                title="Remove">
+                                <span class="fa-regular fa-trash-can fa-lg"></span>
+                            </button>
+                        </td>
+                    </tr>
+
+                    <tr ng-if="data_filter.length == 0">
+                        <td colspan="10">
+                            <p class="mb-0 ms-3 text-1100 fw-bold text-center"> Not Found </p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <ul class="pagination d-flex align-items-center justify-content-center mt-2">
+                <li class="page-item" ng-class="{disabled: currentPage === 1}">
+                    <a class="page-link" href="" ng-click="prevPage()" tabindex="-1">Previous</a>
+                </li>
+                <li class="page-item" ng-show="1 < currentPage - range" ng-click="setPage(1)">
+                    <a class="page-link" href="">1</a>
+                </li>
+                <li class="page-item" ng-show="1 < currentPage - range">
+                    <span class="page-link">...</span>
+                </li>
+                <li class="page-item" ng-repeat="page in pages"
+                    ng-show="page >= currentPage - range && page <= currentPage + range"
+                    ng-class="{active: currentPage === page}">
+                    <a class="page-link" href="" ng-click="setPage(page)">{{page}}</a>
+                </li>
+                <li class="page-item" ng-show="totalPages > currentPage + range">
+                    <span class="page-link">...</span>
+                </li>
+                <li class="page-item" ng-show="totalPages > currentPage + range" ng-click="setPage(totalPages)">
+                    <a class="page-link" href="">{{totalPages}}</a>
+                </li>
+                <li class="page-item" ng-class="{disabled: currentPage === totalPages}">
+                    <a class="page-link" href="" ng-click="nextPage()">Next</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!--Modal Employee Add Start-->
+    <div class="modal fade modal-xl" id="modalEmployeeAdd" tabindex="-1" aria-labelledby="modalEmployeeAddLabel" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content scrollbar" style="max-height: calc(100vh - 100px); overflow-y:auto;">
+
+                <div class="modal-header">
+                    <h5 class="text-900 mb-0" data-anchor="data-anchor" id="modalEmployeeCheckLabel">
+                        <span class="me-2 text-primary"><B>|</B></span> Search Employee/Contract
+                    </h5>
+                    <button class="btn p-1" type="button" data-bs-dismiss="modal" aria-label="Close" ng-click="clearFormData()">
+                        <svg class="svg-inline--fa fa-xmark fs--1" 
+                            aria-hidden="true" 
+                            focusable="false" 
+                            data-prefix="fas"
+                            data-icon="xmark" 
+                            role="img" 
+                            xmlns="http://www.w3.org/2000/svg" 
+                            viewBox="0 0 320 512"
+                            data-fa-i2svg="">
+                            <path 
+                                fill="currentColor"
+                                d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z">
+                            </path>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <div>
+                        <div class="mb-4">
+                            <div class="row g-3">
+                                <div class="col-auto">
+                                    @* <label for="" style="font-size: 14px; font-weight: bold; padding-left: 4px;">Indicator</label> *@
+                                    <div class="search-box position-relative">
+                                        <input class="form-control search-input search"
+                                            ng-model="selected.search_emp" 
+                                            placeholder="Search"
+                                            ng-change="fillterDataEmployeeAdd()" />
+                                        <span class="fas fa-search search-box-icon"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @* start แสดงข้อมูลที่ ค้นหาตาม textsearch*@
+                        <div class="bg-white border-top border-bottom border-200 position-relative top-1" >
+                            <div class="table-responsive scrollbar-overlay mx-n1 px-1">
+                                <table class="table table-sm fs--1 mb-0" >
+                                    <thead class=" text-uppercase">
+                                        <tr class="text-center">
+                                            <th class=""> </th>
+                                            <th class="pe-5" scope="col">Employee</th>
+                                            <th class="" scope="col">Section</th>
+                                            <th class="" scope="col">Indicator</th>
+                                            <th class="" scope="col">E-Mail</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class=" list" style="border-collapse: separate; border-spacing: 0 10px; width: 100%;">
+                                        <tr class="hover-actions-trigger btn-reveal-trigger position-static text-center cursor-pointer modal-employee"
+                                            ng-class="{'selected-row': clickedStates[item.employee_name]}"
+                                            style="margin: 10px 0; padding: 20px; border-radius: 15px; transition: background-color 0.3s ease, box-shadow 0.3s ease; box-shadow: 0 4px 10px rgba(0,0,0,0.1); background: white;"
+                                            ng-repeat="item in employeelist_show"
+                                            ng-click="choosDataEmployee(item)">
+                                            <td class="">
+                                                <span class="mx-1">
+                                                    <button class="btn btn-outline-primary p-1 cursor-pointer"
+                                                        ng-class="{'btn-outline-primary': !clickedStates[item.employee_name], 'btn-clicked': clickedStates[item.employee_name]}"                                                             
+                                                        data-toggle="tooltip" 
+                                                        data-placement="top" 
+                                                        title="choose Employee" >
+                                                        <span class="fa-solid fa-user-plus">Add</span>
+                                                    </button>
+                                                </span>
+                                            </td>
+                                            <td class="">
+                                                <a class=" text-decoration-none d-flex align-items-center">
+                                                    <div class="avatar avatar-m" style="height: 20px; width: 20px;">
+                                                        <img ng-if="item.employee_img " class="rounded-circle" 
+                                                             ng-class="{ 'skeleton': loadingData }"
+                                                             ng-src="../../{{ item.employee_img }}" alt="">
+                                                    </div>
+                                                    <p class="mb-0 ms-3 text-1100 fw-bold">
+                                                        {{item.employee_displayname}} 
+                                                    </p>
+                                                </a>
+                                            </td>
+                                            <td class="text-center m-0">
+                                                <p class="m-0">{{ item.employee_position }}</p>
+                                            </td>
+                                            <td class="text-center m-0">
+                                                <p class="m-0">{{ item.employee_position + '-' + item.employee_displayname.split(' ')[0] }}</p>
+                                            </td>
+                                            <td class="text-center">
+                                                <p class="m-0">{{ item.employee_email }}</p>
+                                            </td>
+
+                                        </tr>
+                                        <!-- Show "please enter" message  -->
+                                        <tr ng-if="!searchText && !searchIndicator.text && employeelist_show.length < 1">
+                                            <td colspan="5">
+                                                <p class="mb-0 ms-3 text-muted fw-bold text-center"> Enter employee details to search. </p>
+                                            </td>
+                                        </tr>
+
+                                        <!-- Show "Not Found" message when employeelist_show is empty or the first item is null -->
+                                        <tr ng-if="employeelist_show[0].employee_displayname === null">
+                                                <td colspan="5">
+                                                    <p class="mb-0 ms-3 text-1100 fw-bold text-center"> Not Found </p>
+                                                </td>
+                                            </tr>                                   
+                                    </tbody>
+                                </table>
+                                <div class="pagination-container" ng-show="employeelist_show.length > 1">
+                                    <button class="pagination-button" ng-disabled="currentPage === 1" ng-click="action_changepage('prevPage')">
+                                        Previous
+                                    </button>
+                                    <span class="pagination-info">
+                                        Page {{currentPage}} of {{totalPages}}
+                                    </span>
+                                    <button class="pagination-button" ng-disabled="currentPage === totalPages" ng-click="action_changepage('nextPage')">
+                                        Next
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        @* end แสดงข้อมูลที่ ค้นหาตาม textsearch*@
+                        <div class="col-auto py-2" ng-if="selected.addEmployee.user_displayname">
+                            <div class="d-flex align-items-center p-1" style="height: 20px;">
+                                <button class="btn btn-outline-secondary p-1" 
+                                        style="color: #ff2828; background-color: #f1f2f4; border-color: #ff2828; width: 25px; height:25px;"
+                                        data-toggle="tooltip" 
+                                        data-placement="top" 
+                                        title="Remove"
+                                        ng-click="removeDataEmployee()"
+                                        ng-if="selected.addEmployee.user_displayname">
+                                    <span class="fa-regular fa-trash-can fa-lg"></span>
+                                </button>                  
+                                <div class="mb-0 ms-3 text-1100 fw-bold" style="width: 80%; border-color: #f1f2f4; font-size: 12px;">
+                                    {{ selected.addEmployee.user_displayname }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Modal Employee Check End-->
+</div>
+
+@section Scripts {
+    <script src="~/assets/js/angular.min.js"></script>
+    <script src="~/assets/js/lodash.min.js"></script>
+    <script src="~/assets/js/phoenix.js"></script>
+    <script src="~/assets/js/choices.min.js"></script>
+    <script src="~/assets/js/fakedata.js"></script>
+    <script src="~/js/_master/hra/worker_list.js"></script>
+}

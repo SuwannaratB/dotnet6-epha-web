@@ -898,6 +898,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.optionExposureRating = [];
         $scope.optionInitial = [];
         $scope.optionExposure = [];
+        $scope.optionHierarchy = [];
         $scope.searchQueryWorksheet = ''; // search worksheet
         $scope.isFilterWorksheet = false; // open or close modal filter worksheet
         $scope.countFilterWorksheet = null; // amount options filter
@@ -9786,6 +9787,38 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             });
     
             console.log($scope.optionExposureRecommendations)
+        }
+    }
+
+    $scope.setOptionHierarchy = function(change, type){
+        if (type = 'worksheet') {
+            if (!change) {
+                // set Exposure Band
+                let uniqueData = new Set();
+                $scope.data_worksheet_list.forEach(ws_ls => {
+                    ws_ls.worksheet.forEach(ws => {
+                        if (ws.hierarchy_of_control) {
+                            uniqueData.add(ws.hierarchy_of_control);
+                        }
+                    });
+                });
+                $scope.optionHierarchy = Array.from(uniqueData).map(name => ({
+                    name,
+                    selected: false
+                }));
+                return $scope.optionHierarchy
+            } else {
+                // change Exposure Band
+                $scope.optionHierarchy.forEach(element => {
+                    if (element.name == $scope.selectFilterWorksheet.exposure_band) {
+                        element.selected = true
+                    }else{
+                        element.selected = false
+                    }
+                });
+                return
+            }
+            
         }
     }
 

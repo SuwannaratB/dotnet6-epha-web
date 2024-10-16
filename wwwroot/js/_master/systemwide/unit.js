@@ -375,6 +375,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
     function setDataFilter(){
         // $scope.data.sort((a, b) => b.seq - a.seq);
         $scope.data_filter = $scope.data
+        $scope.selected['area'] = ''
+        $scope.selected['plant'] = ''
+        $scope.selected['toc'] = ''
     }
 
     function newTag(id_elemet){
