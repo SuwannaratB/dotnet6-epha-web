@@ -156,8 +156,23 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, conFig) {
         return true;
     }; 
 
-    $scope.redirect = function(){
-        window.location.href = 'http://localhost:4200/'
+    $scope.redirect = function(module){
+        // ใช้ CryptoJS เพื่อเข้ารหัสข้อมูล
+        const data = { 
+            module: module, 
+            token: $scope.token,
+            username: $scope.user_name ,
+            role_type: $scope.role_type,
+        };
+        const jsonData = JSON.stringify(data);
+        const secretKey = 'your-secret-key'; // คีย์ลับที่ใช้สำหรับเข้ารหัส
+
+        // เข้ารหัสข้อมูลด้วย AES และแปลงเป็นสตริง
+        const encryptedData = CryptoJS.AES.encrypt(jsonData, secretKey).toString();
+        console.log('Encrypted Data:', encryptedData);
+
+        // ส่งข้อมูลผ่าน URL
+        window.location.href = `http://localhost:4200/?key=${encodeURIComponent(encryptedData)}`;
     }
 
 });

@@ -137,15 +137,21 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, conFig) {
                     //     active: false
                     // },
                     {
-                        id: 47,
+                        id: 46,
                         title: 'Work Group',
                         path: 'Master/WorkGroup',
                         active: false
                     },
                     {
-                        id: 48,
+                        id: 47,
                         title: 'Worker Group',
                         path: 'Master/WorkerGroup',
+                        active: false
+                    },
+                    {
+                        id: 48,
+                        title: 'Worker List',
+                        path: 'Master/WorkerList',
                         active: false
                     },
                     {
