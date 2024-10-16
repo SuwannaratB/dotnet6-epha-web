@@ -4474,15 +4474,24 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
         if (row_type == "taskdesc") {
             newInput.workstep = item.workstep;
+
+            newInput.workstep_no = item.workstep_no;
         }
         else if (row_type == "potentailhazard") {
             newInput.workstep = item.workstep;
             newInput.taskdesc = item.taskdesc;
+
+            newInput.workstep_no = item.workstep_no;
+            newInput.taskdesc_no = item.taskdesc_no
         }
         else if (row_type == "possiblecase") {
             newInput.workstep = item.workstep;
             newInput.taskdesc = item.taskdesc;
             newInput.potentailhazard = item.potentailhazard;
+
+            newInput.workstep_no = item.workstep_no;
+            newInput.taskdesc_no = item.taskdesc_no;
+            newInput.potentailhazard_no = item.potentailhazard_no;
         }
         else if (row_type == 'category') {
             newInput.workstep = item.workstep;
@@ -4492,19 +4501,32 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         }
         $scope.selectdata_listworksheet = xseq;
 
-        running_index_worksheet(seq);
+        //running_index_worksheet(seq);
         index = index_rows;
 
         console.clear();
 
-        running_index_level1_lv1($scope.data_listworksheet, iNo, index, newInput);
+        insertNewData(newInput,index);
+        
+        $scope.data_listworksheet.forEach(function(item, index) {
+            item.index_rows = index;
+            item.action_change = 1;
+        });
+
+
+        //updaterow span
+        $scope.$evalAsync(function() {
+            computeRowspan();  // Safely schedule this to update the UI
+        });
+
+        /*running_index_level1_lv1($scope.data_listworksheet, iNo, index, newInput);
 
         if (!(row_type == "cat")) {
             running_no_workstep();
             running_no_taskdesc(seq_workstep);
             running_no_potentailhazard(seq_workstep, seq_taskdesc);
             running_no_possiblecase(seq_workstep, seq_taskdesc, seq_potentailhazard);
-        }
+        }*/
 
         // for (let i = 0; i < $scope.data_listworksheet.length; i++) {
         //     if ($scope.data_listworksheet[i]) {
@@ -4517,23 +4539,124 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
         console.log('all => ',$scope.data_listworksheet)
     }
+
+    function ensureUnique(dataList,targetIdList) {
     
-    function running_index_worksheet(def_seq) {
-        $scope.data_listworksheet.sort((a, b) => a.index_rows - b.index_rows);
+            let previous = {};
+            dataList.forEach((item, index) => {
+                
+                if(item.id_list === targetIdList) {
+            
+                    if (previous.workstep_no === item.workstep_no) {
+            
+                        if (previous.workstep_no >= item.workstep_no && item.row_type === 'workstep') {
+                            item.workstep_no = previous.workstep_no + 1;
+                        }
+            
+                        if (previous.taskdesc_no >= item.taskdesc_no && item.row_type === 'taskdesc') {
+                            item.taskdesc_no = previous.taskdesc_no + 1;
+                        }
+            
+                        if (previous.taskdesc_no === item.taskdesc_no && previous.potentailhazard_no >= item.potentailhazard_no && 
+                            (item.row_type === 'potentailhazard' || item.row_type === 'taskdesc')) {
+            
+                            item.potentailhazard_no = previous.potentailhazard_no + 1;
+                        }
+            
+                        if (previous.taskdesc_no === item.taskdesc_no && previous.potentailhazard_no === item.potentailhazard_no && 
+                            previous.consequences_no >= item.consequences_no && 
+                            (item.row_type === 'potentailhazard' || item.row_type === 'taskdesc' || item.row_type === 'possiblecase')) {
+                            item.possiblecase_no = previous.possiblecase_no + 1;
+                        }
+            
 
-        var _index = 0;
-        for (var i = 0; i < $scope.data_listworksheet.length; i++) {
-            $scope.data_listworksheet[i].index_rows = i;
-
-            if (def_seq != '') {
-                if ($scope.data_listworksheet[i].seq == def_seq) {
-                    _index = i;//กรณีที่เป็น node > 1
+                    }
+                    
+                    previous = { ...item };
+            
+                } else {
+                    previous = {};
                 }
-            }
-        }
-
-        return _index;
+            });
+            
+        //console.log("After ensuring uniqueness:");
+        //console.table(dataList);
     }
+    
+    function insertNewData(newData,data_index) {    
+
+        let index = -1;
+        console.log("newData",newData)
+    
+        for (let i = 0; i < $scope.data_listworksheet.length; i++) {
+            const item = $scope.data_listworksheet[i];
+            
+            
+            // General condition to update the index for different row types
+            if ( newData.row_type !== 'possiblecase' &&
+                ((item.workstep_no > newData.workstep_no) ||
+                (newData.row_type === 'taskdesc' && item.workstep_no === newData.workstep_no && item.taskdesc_no >= newData.taskdesc_no) ||
+                (item.workstep_no === newData.workstep_no && item.taskdesc_no === newData.taskdesc_no && item.potentailhazard_no === newData.potentailhazard_no 
+                && item.possiblecase_no === newData.possiblecase_no))) {
+                index = i;
+
+                console.log("44444444444")
+                break;
+            }
+            
+            // Specific conditions for 'potentailhazard' row type
+            if (newData.row_type === 'potentailhazard' && item.workstep_no === newData.workstep_no 
+                && item.taskdesc_no === newData.taskdesc_no) {
+                //index = item.potentailhazard_no >= newData.potentailhazard_no ? i : i + 1;
+                //break;
+                const set_potentailhazard = $scope.data_listworksheet.filter(data => 
+                    data.workstep_no === item.workstep_no && 
+                    data.taskdesc_no === item.taskdesc_no && 
+                    data.potentailhazard_no === item.potentailhazard_no 
+                );
+    
+                for (let j = 0; j < set_potentailhazard.length; j++) {
+                    if (set_potentailhazard[j].recommendation_no) {
+                        index = i + j + 1;
+                        break;
+                    }
+                }
+                
+                console.log(index)
+                console.log(set_potentailhazard)
+                console.log("====================================================")
+    
+                if (index === -1) {
+                    index = i + set_potentailhazard.length;
+                }
+                
+                console.log(index)
+                console.log(set_potentailhazard)
+                console.log("====================================================")
+                break;                       
+            }
+            
+            // Specific condition for 'possiblecase' row type
+            if (newData.row_type === 'possiblecase' && item.workstep_no === newData.workstep_no 
+                && item.taskdesc_no === newData.taskdesc_no && item.potentailhazard_no === newData.potentailhazard_no ) {
+                    
+                index = data_index + 1;
+    
+                break;
+            }
+    
+        }
+            
+        if (index === -1) {
+            index = $scope.data_listworksheet.length;
+        }
+            
+        $scope.data_listworksheet.splice(index, 0, newData);
+            
+        ensureUnique($scope.data_listworksheet,newData.id_list);
+            
+    }
+    
     $scope.removeDataworksheet = function (row_type, item, index) {
 
         var seq = item.seq;
@@ -5046,60 +5169,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         };
         arr_items.sort((a, b) => a.taskdesc_no - b.taskdesc_no);
     }
-    function running_no_potentailhazard(seq_workstep, seq_taskdesc) {
-        var arr_items = $filter('filter')($scope.data_listworksheet, function (item) {
-            return (item.seq_workstep == seq_workstep
-                && item.seq_taskdesc == seq_taskdesc
-                && (item.row_type == 'workstep' || item.row_type == 'taskdesc' || item.row_type == 'potentailhazard'));
-        });
-        arr_items.sort((a, b) => a.no - b.no);
-        var first_row = true;
-        var iNoNew = 1;
 
-        for (let i = 0; i < arr_items.length; i++) {
-            arr_items[i].potentailhazard_no = (iNoNew);
-            iNoNew++;
-        };
-        arr_items.sort((a, b) => a.potentailhazard_no - b.potentailhazard_no);
-    }
-    function running_no_possiblecase(seq_workstep, seq_taskdesc, seq_potentailhazard) {
-        //workstep,taskdesc,potentailhazard,possiblecase,category
-        var arr_items = $filter('filter')($scope.data_listworksheet, function (item) {
-            return (item.seq_workstep == seq_workstep
-                && item.seq_taskdesc == seq_taskdesc
-                && item.seq_potentailhazard == seq_potentailhazard
-                && (item.row_type == 'workstep' || item.row_type == 'taskdesc' || item.row_type == 'potentailhazard' || item.row_type == 'possiblecase'));
-        });
-        arr_items.sort((a, b) => a.no - b.no);
-        var first_row = true;
-        var iNoNew = 1;
-
-        for (let i = 0; i < arr_items.length; i++) {
-            arr_items[i].possiblecase_no = (iNoNew);
-            iNoNew++;
-        };
-        arr_items.sort((a, b) => a.possiblecase_no - b.possiblecase_no);
-    }
-
-    function running_no_category(seq_workstep, seq_taskdesc, seq_potentailhazard, seq_possiblecase) {
-        //workstep,taskdesc,potentailhazard,possiblecase,category
-        var arr_items = $filter('filter')($scope.data_listworksheet, function (item) {
-            return (item.seq_workstep == seq_workstep
-                && item.seq_taskdesc == seq_taskdesc
-                && item.seq_potentailhazard == seq_potentailhazard
-                && item.seq_possiblecase == seq_possiblecase
-                && (item.row_type == 'workstep' || item.row_type == 'taskdesc' || item.row_type == 'potentailhazard' || item.row_type == 'possiblecase' || item.row_type == 'category'));
-        });
-        arr_items.sort((a, b) => a.no - b.no);
-        var first_row = true;
-        var iNoNew = 1;
-
-        for (let i = 0; i < arr_items.length; i++) {
-            arr_items[i].category_no = (iNoNew);
-            iNoNew++;
-        };
-        arr_items.sort((a, b) => a.category_no - b.category_no);
-    }
     $scope.openModalDataRAM_Worksheet = function (_item, ram_type, seq, ram_type_action) {
         $scope.selectdata_listworksheet = seq;
         $scope.selectedDataNodeWorksheetRamType = ram_type;
