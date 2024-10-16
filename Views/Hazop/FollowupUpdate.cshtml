@@ -268,7 +268,7 @@
                                             </thead>
 
                                             <tbody class="list" id="customer-rating-table-body text-1100 ">
-                                                <tr ng-repeat="item_d in data_details | filter: hasResponderUserDisplayName"
+                                                <tr ng-repeat="item_d in data_details | filter: hasResponderUserDisplayName | orderBy: 'recommendations_no'"
                                                     ng-init="accessInfo = Access_check(item_d)"
                                                     class="hover-actions-trigger btn-reveal-trigger position-static px-0 text-center">
                                                     <td class="align-top  px-1">
@@ -581,9 +581,9 @@
                                                                 Please provide a valid Remark.
                                                             </div>
                                                         </div>
-                                                        <div class="p-2"  ng-if="item_d.responder_comment && item_d.responder_action_type == 2">
+                                                        @*<div class="p-2"  ng-if="item_d.responder_comment && item_d.responder_action_type == 2">
                                                             {{item_d.responder_comment}}
-                                                        </div>
+                                                        </div>*@
                                                     </td>
 
                                                     @* Hazop recommendations responded sheet 13 *@
@@ -828,7 +828,7 @@
                                             </thead>
 
                                             <tbody class="list" id="customer-rating-table-body text-1100 ">
-                                                <tr ng-repeat="item_d in data_details"
+                                                <tr ng-repeat="item_d in data_details | orderBy: 'recommendations_no'"
                                                     ng-init="accessInfo = Access_check(item_d)"
                                                     class="hover-actions-trigger btn-reveal-trigger position-static px-0 text-center">
                                                     <td class="align-top  px-1">

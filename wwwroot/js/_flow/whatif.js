@@ -3689,7 +3689,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         new_worksheet.causes_no = 1;
         new_worksheet.consequences_no = 1;
         new_worksheet.category_no = 1;
-        new_worksheet.recommendations_no = null;
+        new_worksheet.recommendations_no = 1;
     
         new_worksheet.row_type = 'list_system';
         new_worksheet.action_type = 'insert';
@@ -4873,7 +4873,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.MaxSeqdata_listworksheetrecommendations = Number($scope.MaxSeqdata_listworksheetrecommendations) + 1;
             seq_recommendations = $scope.MaxSeqdata_listworksheetrecommendations;
 
-            //recommendations_no += 1;
+            recommendations_no += 1;
         }
 
         var arr_list = $filter('filter')($scope.data_tasklist, function (_item) {
@@ -4904,7 +4904,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         newInput.causes_no = causes_no;
         newInput.consequences_no = consequences_no;
         newInput.category_no = category_no;
-        newInput.recommendations_no = null;
+        newInput.recommendations_no = recommendations_no;
 
         newInput.action_type = 'insert';
         newInput.action_change = 1;
@@ -4968,8 +4968,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.selectdata_listworksheet = xseq;
 
         insertNewData(newInput,index);
-
-        console.log(newInput)
+        
         $scope.data_listworksheet.forEach(function(item, index) {
             item.index_rows = index;
             item.action_change = 1;
@@ -5015,12 +5014,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             
                         if (previous.list_sub_system_no === item.list_sub_system_no && previous.causes_no >= item.causes_no && 
                             (item.row_type === 'causes' || item.row_type === 'list_sub_system')) {
-            
-                            if (previous.seq_causes === item.seq_causes) {
-                                item.causes_no = previous.causes_no;
-                            } else {
-                                item.causes_no = previous.causes_no + 1;
-                            }
+                            item.causes_no = previous.causes_no + 1;
                         }
             
                         if (previous.list_sub_system_no === item.list_sub_system_no && previous.causes_no === item.causes_no && 
@@ -5052,12 +5046,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             
         }
 
-
-
-
-    
-        //console.log("After ensuring uniqueness:");
-        //console.table(dataList);
     }
     
     function insertNewData(newData,data_index) {    
@@ -5093,7 +5081,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     data.causes_no === item.causes_no 
                 );
 
-                console.log("settttttttttttttttttttttttttttttt",set_causes)
                 for (let j = 0; j < set_causes.length; j++) {
                     if (set_causes[j].recommendation_no) {
                         index = i + j + 1;
@@ -5101,11 +5088,17 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     }
                 }
                 
+                console.log(index)
+                console.log(set_causes)
+                console.log("====================================================")
+
                 if (index === -1) {
                     index = i + set_causes.length;
                 }
                 
                 console.log(index)
+                console.log(set_causes)
+                console.log("====================================================")
                 break;                       
             }
             
@@ -5129,12 +5122,18 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         break;
                     }
                 }
+
+                console.log(index)
+                console.log(set_consequences)
+                console.log("====================================================")
+
                 
                 if (index === -1) {
                     index = i + set_consequences.length;
                 }
                 
                 console.log(index)
+                console.log(set_consequences)
                 break;                
             }
             
@@ -5157,12 +5156,16 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         break;
                     }
                 }
-                
+                console.log(index)
+                console.log(set_category)
+                console.log("====================================================")                
                 if (index === -1) {
                     index = i + set_category.length;
                 }
                 
                 console.log(index)
+                console.log(set_category)
+                console.log("====================================================")
                 break;
             }
             
@@ -5187,49 +5190,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         ensureUnique($scope.data_listworksheet,newData.id_list);
             
     }
-    $scope.compareItems = function(a, b) {
-        if (a.list_system_no !== b.list_system_no) {
-          return a.list_system_no - b.list_system_no;
-        }
-        if (a.list_sub_system_no !== b.list_sub_system_no) {
-          return a.list_sub_system_no - b.list_sub_system_no;
-        }
-        if (a.causes_no !== b.causes_no) {
-          return a.causes_no - b.causes_no;
-        }
-        if (a.consequences_no !== b.consequences_no) {
-          return a.consequences_no - b.consequences_no;
-        }
-        return a.category_no - b.category_no;
-    };
-  
-      // Function to find the correct insertion index
-    $scope.findInsertionIndex = function(arr, item, compareFunction) {
-        let low = 0;
-        let high = arr.length;
-  
-        while (low < high) {
-          let mid = Math.floor((low + high) / 2);
-          console.log(`low: ${low}, mid: ${mid}, high: ${high}`);
-          console.log(`Comparing arr[${mid}]:`, arr[mid], 'with item:', item);
-          let comparison = compareFunction(arr[mid], item);
-          console.log('Comparison result:', comparison);
-          if (comparison < 0) {
-            low = mid + 1;
-          } else {
-            high = mid;
-          }
-        }
-        
-        // Final check
-        if (high < arr.length && compareFunction(arr[high], item) < 0) {
-          console.log('Final check indicates high index should be adjusted');
-          low = high + 1;
-        }
-  
-        console.log(`Final insertion index: ${low}`);
-        return low;
-    };
 
     $scope.copyList = function (level, seq) {
         if (level && seq) {
