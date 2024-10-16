@@ -3125,7 +3125,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         $scope.data_nodeworksheet[i].index_rows = i;
                     }
     
-                    running_recommendations_no();
+                    //running_recommendations_no();
     
                     set_data_managerecom();
     
@@ -3832,8 +3832,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         //add NodeDrawing  
         $scope.addDataNodeDrawing("", $scope.selectdata_node);
 
-        
-
+    
         //add NodeDrawing  
         $scope.AddDataGuideWords(false);
 
@@ -4003,6 +4002,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             $scope.data_nodedrawing.push(arrmember[i]);
         }
+
+        //add NodeDrawing  
+        $scope.AddDataGuideWords(false);
 
         set_data_nodeworksheet();
     }
@@ -5190,8 +5192,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
             
         $scope.data_nodeworksheet.splice(index, 0, newData);
-
-        console.log("=========================================$scope.data_nodeworksheet=======================================",newData)
             
         ensureUnique($scope.data_nodeworksheet,newData.id_node);
             
@@ -5234,31 +5234,82 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             apply();
         }
     }
-
-    function running_recommendations_no() {
-        if (true) {
-
-            return;
-            
-            //recommendations != '' ให้ running action no  
-            var arr_copy_def = angular.copy($scope.data_nodeworksheet, arr_copy_def);
-            arr_copy_def.sort((a, b) => Number(b.recommendations_no) - Number(a.recommendations_no));
-            var recommendations_no = Number(Number(arr_copy_def[0].recommendations_no) + 1);
-
-            for (var i = 0; i < $scope.data_nodeworksheet.length; i++) {
-                if ($scope.data_nodeworksheet[i].recommendations_no == null ||
-                    $scope.data_nodeworksheet[i].recommendations_no == '') {
-                    $scope.data_nodeworksheet[i].recommendations_no = recommendations_no;
-                    recommendations_no += 1;
+    $scope.updateFieldItems = function(item, type) {
+        //set copy data
+        // for type causes same cuase no must same value 
+        // for type consequences same cuase_no,consequences_no must same value 
+        // for type category same cuase_no,consequences_no,category_no no must same value         
+        var causes_no = Number(item.causes_no);
+        var consequences_no = Number(item.consequences_no);
+        var category_no = Number(item.category_no);
+        
+        var id_node = Number(item.id_node);
+        var id_guide_word = Number(item.id_guide_word);
+    
+        var newValue = {};
+    
+        switch (type) {
+            case 'causes':
+                newValue.causes = item.causes;
+                break;
+            case 'consequences':
+                newValue.causes = item.causes;
+                newValue.consequences = item.consequences;
+                break;
+            case 'category':
+                newValue.causes = item.causes;
+                newValue.consequences = item.consequences;
+                newValue.category = item.category;
+                break;
+            case 'recommendations':
+                newValue.causes = item.causes;
+                newValue.consequences = item.consequences;
+                newValue.ram_befor_likelihood = item.ram_befor_likelihood;
+                newValue.ram_befor_risk = item.ram_befor_risk;
+                newValue.ram_befor_security = item.ram_befor_security;
+                newValue.ram_after_likelihood = item.ram_after_likelihood;
+                newValue.ram_after_risk = item.ram_after_risk;
+                newValue.ram_after_risk_action = item.ram_after_risk_action;
+                newValue.existing_safeguards = item.existing_safeguards;
+                newValue.major_accident_event = item.major_accident_event;
+                
+                //newValue.recommendations = item.recommendations;
+                break;
+            default:
+                console.error('Unknown update type:', type);
+                return;
+        }
+    
+        angular.forEach($scope.data_nodeworksheet, function(currentItem) {
+            var isMatching = false;
+    
+            if(currentItem.id_node === id_node && currentItem.id_guide_word === id_guide_word){
+                if (type === 'causes') {
+                    isMatching = (Number(currentItem.causes_no) === causes_no);
+                } else if (type === 'consequences') {
+                    isMatching = (Number(currentItem.causes_no) === causes_no && Number(currentItem.consequences_no) === consequences_no);
+                } else if (type === 'category') {
+                    isMatching = (Number(currentItem.causes_no) === causes_no && Number(currentItem.consequences_no) === consequences_no && Number(currentItem.category_no) === category_no);
+                } else if (type === 'recommendations') {
+                    isMatching = (Number(currentItem.causes_no) === causes_no && Number(currentItem.consequences_no) === consequences_no && Number(currentItem.category_no) === category_no);
+                }
+        
+                if (isMatching) {
+                    if (newValue.causes !== undefined) currentItem.causes = newValue.causes;
+                    if (newValue.consequences !== undefined) currentItem.consequences = newValue.consequences;
+                    if (newValue.category !== undefined) currentItem.category = newValue.category;
                 }
             }
-        }
-    }
+
+        });
+
+    };
 
     $scope.removeDataNodeWorksheet = function (row_type, item, index) {
 
         var seq = item.seq;
         var seq_node = item.seq_node;
+        var id_node = item.id_node;
         var seq_guide_word = item.seq_guide_word;
         var seq_causes = item.seq_causes;
         var seq_consequences = item.seq_consequences;
@@ -5312,7 +5363,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                             // ตรวจสอบว่า nextItem เป็นลูกของ item หรือไม่ โดยตรวจสอบ seq_causes + 1
                             if (nextItem.seq_node == seq_node &&
                                 nextItem.seq_guide_word == seq_guide_word &&
-                                nextItem.seq_causes == (seq_causes + 1)) {
+                                nextItem.causes_no == (item.causes_no + 1)) {
                                 hasNextSubSystem = true;
                                 break;
                             }
@@ -5355,7 +5406,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     if (item.seq_node == seq_node &&
                         item.seq_guide_word == seq_guide_word &&
                         item.seq_causes == seq_causes && 
-                        item.consequences_no == (data_consequences_no + 1)) {
+                        item.causes_no == (data_causes_no + 1)) {
                         if (item.row_type === 'consequences') {
                             item.row_type = 'causes';
                         }
@@ -5381,7 +5432,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                             if (nextItem.seq_node == seq_node &&
                                 nextItem.seq_guide_word == seq_guide_word &&
                                 nextItem.seq_causes == seq_causes && 
-                                nextItem.seq_consequences == (item.seq_consequences + 1)) {
+                                nextItem.consequences_no == (item.consequences_no + 1)) {
                                 hasNextSubSystem = true;
                                 break;
                             }
@@ -5414,7 +5465,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     let item = $scope.data_nodeworksheet[i];
 
                         // ถ้า seq_consequences == 2 ต้องเปลี่ยน row_type จาก consequences เป็น causes
-                    if (item.seq_node == seq_node &&
+                    if (item.id_node == id_node &&
                         item.seq_guide_word == seq_guide_word &&
                         item.seq_causes == seq_causes && 
                         item.consequences_no == (data_consequences_no + 1)) {
@@ -5452,11 +5503,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                             let nextItem = $scope.data_nodeworksheet[j];
                             
                             // ตรวจสอบว่า nextItem เป็นลูกของ item หรือไม่
-                            if (nextItem.seq_node == seq_node &&
+                            if (nextItem.id_node == id_node &&
                                 nextItem.seq_guide_word == seq_guide_word &&
                                 nextItem.seq_causes == seq_causes && 
                                 nextItem.seq_consequences == seq_consequences &&
-                                nextItem.seq_category == (item.seq_category + 1) ) {
+                                nextItem.category_no == (item.category_no + 1) ) {
                                 hasNextSubSystem = true;
                                 break;
                             }
@@ -5488,11 +5539,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     let item = $scope.data_nodeworksheet[i];
 
                     // ถ้า seq_consequences == 2 ต้องเปลี่ยน row_type จาก consequences เป็น causes
-                    if (item.seq_node == seq_node &&
+                    if (item.id_node == id_node &&
                         item.seq_guide_word == seq_guide_word &&
                         item.seq_causes == seq_causes && 
                         item.seq_consequences == seq_consequences && 
-                        item.seq_category == (seq_category + 1)) {
+                        item.category_no == (data_category_no + 1)) {
                         if (item.row_type === 'category') {
                             item.row_type = 'causes';
                             console.log("Updating row_type to 'causes' for item:", item);
@@ -5506,7 +5557,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     let item = $scope.data_nodeworksheet[i];
             
                     // ลบข้อมูลที่ seq_consequences = 1
-                    if (item.seq_node == seq_node &&
+                    if (item.id_node == id_node &&
                         item.seq_guide_word == seq_guide_word &&
                         item.seq_causes == seq_causes && 
                         item.seq_consequences == seq_consequences &&
@@ -5521,12 +5572,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                             let nextItem = $scope.data_nodeworksheet[j];
                             
                             // ตรวจสอบว่า nextItem เป็นลูกของ item หรือไม่
-                            if (nextItem.seq_node == seq_node &&
+                            if (nextItem.id_node == id_node &&
                                 nextItem.seq_guide_word == seq_guide_word &&
                                 nextItem.seq_causes == seq_causes && 
                                 nextItem.seq_consequences == seq_consequences &&
                                 nextItem.seq_category == seq_category &&
-                                nextItem.seq_recommendations == (item.seq_recommendations + 1) ) {
+                                nextItem.recommendations_no == (item.recommendations_no + 1) ) {
                                 hasNextSubSystem = true;
                                 break;
                             }
@@ -5558,12 +5609,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                     let item = $scope.data_nodeworksheet[i];
 
                     // ถ้า seq_consequences == 2 ต้องเปลี่ยน row_type จาก consequences เป็น causes
-                    if (item.seq_node == seq_node &&
+                    if (item.id_node == id_node &&
                         item.seq_guide_word == seq_guide_word &&
                         item.seq_causes == seq_causes && 
                         item.seq_consequences == seq_consequences && 
                         nextItem.seq_category == seq_category &&
-                        nextItem.seq_recommendations == (item.seq_recommendations + 1) ) {
+                        nextItem.recommendations_no == (item.data_recommendations_no + 1) ) {
                         if (item.row_type === 'recommendations') {
                             item.row_type = 'causes';
                             console.log("Updating row_type to 'causes' for item:", item);
@@ -5585,6 +5636,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             resetNumbers(resetType, data_causes_no, data_consequences_no, data_category_no);
         }
 
+        ensureUnique($scope.data_nodeworksheet,id_node);
+
         //updaterow span
         $scope.$evalAsync(function() {
             computeRowspan();  // Safely schedule this to update the UI
@@ -5600,6 +5653,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 item[field]--;
             }
         });
+
+        
     }
     
     function set_data_worksheet(item) {
@@ -6894,8 +6949,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             if (typeMap[type]) {
                 clearValidationMessage(typeMap[type] + seq);
             }
+
+
         }
     };
+
+
     
     
     function clear_valid_items(field) {

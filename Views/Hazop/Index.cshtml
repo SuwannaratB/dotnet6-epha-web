@@ -2116,13 +2116,14 @@
                                         <thead class=" text-uppercase  text-center  bg-soft  test" style="font-size: 10px;" id="myHeader">
                                             <tr class="">
                                                 @*<th rowspan="2">no</th>
-                                                <th rowspan="2">node</th>
+                                                <th rowspan="2">node</th>*@
+                                                <th rowspan="2">SEQ</th>
                                                 <th rowspan="2">deviations</th>
                                                 <th rowspan="2">causes_no</th>
                                                 <th rowspan="2">consequences_no</th>
                                                 <th rowspan="2">cat</th>
                                                 <th rowspan="2">Recom</th>
-                                                <th rowspan="2">Row type</th>*@
+                                                <th rowspan="2">Row type</th>
                                                 <th class=" align-middle mx-0" 
                                                     colspan="1" 
                                                     rowspan="2" 
@@ -2301,8 +2302,11 @@
     <!-- Third td for selectedItemNodeView.seq -->
     <td class="align-top border border-light border-active">
         {{ item.id_node }}
+    </td>*@
+    <!-- Fourth td for deviations_no -->
+    <td class="align-top border border-light border-active">
+        {{ item.seq }}
     </td>
-
     <!-- Fourth td for deviations_no -->
     <td class="align-top border border-light border-active">
         {{ item.deviations_no }}
@@ -2328,7 +2332,7 @@
         {{ item.row_type }}
     </td> 
 
-    <!-- Fifth td for causes_no -->
+   @* <!-- Fifth td for causes_no -->
     <td class="align-top border border-light border-active">
         {{ item.seq_causes }}
     </td>
@@ -2431,6 +2435,7 @@
                                                                       ng-readonly="!can_edit "
                                                                       ng-model="item.causes"
                                                                       ng-keyup="clearAllValidationMessages(item.seq,'causes');
+                                                                      updateFieldItems(item,'causes');
                                                                       filterResultHistory(item.causes, 'causes', 'causes_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')">
                                                             </textarea>
                                                             <div class="autocomplete-dropdown" style="position: absolute;" ng-show="isShow == 'causes_worksheet_'+ item.seq"
@@ -2513,6 +2518,7 @@
                                                                       ng-readonly="!can_edit"                                                                      
                                                                       ng-model="item.consequences"
                                                                       ng-keyup="clearAllValidationMessages(item.seq,'consequences');
+                                                                      updateFieldItems(item,'consequences');
                                                                       filterResultHistory(item.consequences, 'consequences', 'consequences_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')">
                                                             </textarea>
                                                             <div class="autocomplete-dropdown" style="position: absolute;" ng-show="isShow == 'consequences_worksheet_'+ item.seq"
@@ -2569,7 +2575,9 @@
                                                         </div>
                                                         <select class="form-select rounded-1 mx-1 p-1  border-start-0  border-end-0 border-top-0 "
                                                                 ng-class="{'disabled-link':(!tab_worksheet_active)}"
-                                                                ng-change="actionChangeWorksheet(item,item.seq,'');clearAllValidationMessages(item.seq,'category')" 
+                                                                ng-change="actionChangeWorksheet(item,item.seq,'');
+                                                                        updateFieldItems(item,'category');
+                                                                        clearAllValidationMessages(item.seq,'category')" 
                                                                 ng-model="item.category_type">
                                                             <option ng-selected="item.category_type == item2.id"
                                                                     ng-repeat="item2 in DataCategory" 
@@ -2820,7 +2828,7 @@
                                                                       ng-readonly="!can_edit"
                                                                       ng-model="item.recommendations"
                                                                       ng-change="clearAllValidationMessages(item.seq,'recom');"
-                                                                      ng-keyup="
+                                                                      ng-keyup="updateFieldItems(item,'recommendations');
                                                                       filterResultHistory(item.recommendations, 'recommendations', 'recommendations_worksheet_'+ item.seq);
                                                                       actionChangeWorksheet(item,item.seq,'recom')">
                                                             </textarea>
