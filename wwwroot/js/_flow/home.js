@@ -161,18 +161,16 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, conFig) {
         const data = { 
             module: module, 
             token: $scope.token,
-            username: $scope.user_name ,
-            role_type: $scope.role_type,
+            user: $scope.user
         };
         const jsonData = JSON.stringify(data);
-        const secretKey = 'your-secret-key'; // คีย์ลับที่ใช้สำหรับเข้ารหัส
-
+        const secretKey = 'adb$dgw832r0hcnfhidc-thaioil#vfweu378fnbwep'; // คีย์ลับที่ใช้สำหรับเข้ารหัส
         // เข้ารหัสข้อมูลด้วย AES และแปลงเป็นสตริง
         const encryptedData = CryptoJS.AES.encrypt(jsonData, secretKey).toString();
-        console.log('Encrypted Data:', encryptedData);
-
+        const domain_dev = 'http://localhost:4200'
+        const domain_prod = ''
         // ส่งข้อมูลผ่าน URL
-        window.location.href = `http://localhost:4200/?key=${encodeURIComponent(encryptedData)}`;
+        window.location.href = `${domain_dev}/?key=${encodeURIComponent(encryptedData)}`;
     }
 
 });

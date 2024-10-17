@@ -7,7 +7,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig){
         var user_name = $scope.user_name;
         var flow_role_type = $scope.flow_role_type;
         $.ajax({
-            url: url_ws + "masterdata/get_master_worker_list", // เปลี่ยน api ใหม่ด้วย
+            url: url_ws + "masterdata/get_master_worker_group", // เปลี่ยน api ใหม่ด้วย
             data: '{"user_name":"' + user_name + '","row_type":"' + flow_role_type + '"}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
             headers: {
@@ -26,7 +26,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig){
                 var arr = data;
                 // general
                 $scope.data_all = arr;
-                // $scope.data = arr.data;
+                $scope.data = arr.data;
                 $scope.data_def = clone_arr_newrow(arr.data);
                 // master
                 $scope.data_worker_group = $filter('filter')(arr.worker_group, item => item.id);
