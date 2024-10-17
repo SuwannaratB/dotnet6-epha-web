@@ -2271,6 +2271,7 @@
                                                                       ng-readonly="!can_edit"
                                                                       ng-model="item.list_system"
                                                                       ng-keyup="clearAllValidationMessages(item.seq,'list_sub_system');
+                                                                      updateFieldItems(item,'list_sub_system');
                                                                       filterResultHistory(item.list_system, 'list', 'list_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')">
                                                             </textarea>
                                                             <div class="autocomplete-dropdown" style="position: absolute;" ng-show="isShow == 'list_worksheet_'+ item.seq"
@@ -2335,6 +2336,7 @@
                                                                       ng-readonly="!can_edit"
                                                                       ng-model="item.list_sub_system"
                                                                       ng-keyup="clearAllValidationMessages(item.seq,'list_sub_system');
+                                                                      updateFieldItems(item,'list_sub_system');
                                                                       filterResultHistory(item.list_sub_system, 'listsub', 'listsub_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')">
                                                             </textarea>
                                                             <div class="autocomplete-dropdown" style="position: absolute;" ng-show="isShow == 'listsub_worksheet_'+ item.seq"
@@ -2398,6 +2400,7 @@
                                                                       ng-readonly="!can_edit"
                                                                       ng-model="item.causes"
                                                                       ng-keyup="clearAllValidationMessages(item.seq,'causes');
+                                                                      updateFieldItems(item,'causes');
                                                                       filterResultHistory(item.causes, 'causes', 'causes_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')">
                                                             </textarea>
                                                             <div class="autocomplete-dropdown" style="position: absolute;" ng-show="isShow == 'listsub_worksheet_'+ item.seq"
@@ -2461,6 +2464,7 @@
                                                                       ng-readonly="!can_edit"
                                                                       ng-model="item.consequences"
                                                                       ng-keyup="clearAllValidationMessages(item.seq,'consequences');
+                                                                      updateFieldItems(item,'consequences');
                                                                       filterResultHistory(item.consequences, 'consequences', 'consequences_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')">
                                                             </textarea>
                                                             <div class="autocomplete-dropdown" style="position: absolute;" ng-show="isShow == 'consequences_worksheet_'+ item.seq"
