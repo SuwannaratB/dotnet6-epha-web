@@ -4021,6 +4021,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             var xMaxSeqdata_nodeworksheet = $scope.MaxSeqdata_nodeworksheet;
 
             arrdata[i].id_node = Number(id_node);
+            arrdata[i].seq_node = Number(id_node);
             arrdata[i].action_type = 'insert';
             arrdata[i].action_change = 1;
 

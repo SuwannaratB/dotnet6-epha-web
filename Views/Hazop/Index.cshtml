@@ -2294,7 +2294,9 @@
                                             <tr class="rowwork border border-dashed" 
                                                 ng-if="( data_node.length == 1 ? (data_node[0].node == null ? false : true) : true) "
                                                 ng-repeat="item in data_nodeworksheet | toArray | filter:{id_node : selectedItemNodeView.seq} | sortNodeworksheet"> 
-    @*<!-- Second td for id_node -->
+    @*<td>{{selectedItemNodeView.seq}}</td>
+    <td>{{"id_node" + item.id_node}}</td>
+    <!-- Second td for id_node -->
     <td class="align-top border border-light border-active">
         {{ item.no }}
     </td>
@@ -2330,7 +2332,7 @@
     </td>
     <td class="align-top border border-light border-active">
         {{ item.row_type }}
-    </td> *@
+    </td>*@
 
    @* <!-- Fifth td for causes_no -->
     <td class="align-top border border-light border-active">
