@@ -1838,10 +1838,11 @@
                                     <table class="table fs--2 mb-0 table-borderless table-condensed " cellpadding="0" cellspacing="0">
                                         <thead class="text-uppercase  text-center py-8 bg-soft" style="font-size: 10px;" id="myHeader">
                                             <tr class="">
-                                                @*<th rowspan="2" >workstep_no}}</th>
+                                                @*<th rowspan="2" >SEQ}}</th>
+                                                <th rowspan="2" >workstep_no}}</th>
                                                 <th rowspan="2" >taskdesc_no}}</th>
                                                 <th rowspan="2" >potentailhazard_no}}</th>
-                                                <th rowspan="2" >possiblecase_no}}</th> *@
+                                                <th rowspan="2" >possiblecase_no}}</th>*@
                                                 <th class="align-middle mx-0" colspan="1" rowspan="2" style="padding: 0 !important; width: 8%;"
                                                     data-tooltip="ลำดับขั้นตอนหลัก" data-bs-placement="top" data-bs-toggle="tooltip">ลำดับขั้นตอนหลัก<br />(Work step)</th>
                                                 <th class=" align-middle   mx-0" colspan="1" rowspan="2" style="padding: 0 !important; width: 8%;"
@@ -1874,7 +1875,8 @@
                                             <tr class="rowwork border border-dashed border-top-0 border-bottom-0"
                                                 ng-repeat="item in data_listworksheet| orderBy:index_row">
 
-                                                @*<td>{{item.workstep_no}}</td>
+                                                @*<td>{{item.seq}}</td>
+                                                <td>{{item.workstep_no}}</td>
                                                 <td>{{item.taskdesc_no}}</td>
                                                 <td>{{item.potentailhazard_no}}</td>
                                                 <td>{{item.possiblecase_no}}</td>*@

@@ -5123,7 +5123,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 for (let j = 0; j < set_category.length; j++) {
                     if (set_category[j].recommendation_no) {
                         index = i + j + 1;
-                        break;
                     }
                 }
                 console.log(set_category.length)
@@ -5154,7 +5153,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 for (let j = 0; j < set_recommendations.length; j++) {
                     if (set_recommendations[j].recommendation_no) {
                         index = i + j + 1;
-                        break;
                     }
                 }
                 
