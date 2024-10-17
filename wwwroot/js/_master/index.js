@@ -144,14 +144,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, conFig) {
                     },
                     {
                         id: 47,
-                        title: 'Worker Group',
-                        path: 'Master/WorkerGroup',
+                        title: 'Set Work Group',
+                        path: 'Master/SetWorkGroup',
                         active: false
                     },
                     {
                         id: 48,
-                        title: 'Worker List',
-                        path: 'Master/WorkerList',
+                        title: 'Set Worker Group',
+                        path: 'Master/SetWorkerGroup',
                         active: false
                     },
                     {
