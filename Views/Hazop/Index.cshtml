@@ -2425,19 +2425,22 @@
                                                             </div>
                                                         </div>
                                                         <div class="autocomplete-container" style=" width: 100%; ">
+
                                                             <textarea class="form-control form-control-sm worksheetscroll rounded-1 p-0 m-0 w-100 border border-0" 
-                                                                      style=" width: 100vh; font-size: 10px; resize: none;"
-                                                                      id="causes_worksheet_{{item.seq}}" 
-                                                                      name="causes_worksheet_{{item.seq}}"
-                                                                      placeholder="Causes" 
-                                                                      rows="3"
-                                                                      ng-style="{'min-height': (30 * (data_nodeworksheet | filter:{id_node : selectedItemNodeView.seq,deviations: item.deviations,causes_no: item.causes_no}).length) + 'px'}"
-                                                                      ng-readonly="!can_edit "
-                                                                      ng-model="item.causes"
-                                                                      ng-keyup="clearAllValidationMessages(item.seq,'causes');
-                                                                      updateFieldItems(item,'causes');
-                                                                      filterResultHistory(item.causes, 'causes', 'causes_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')">
+                                                                    style="width: 100vh; font-size: 10px; resize: none;"
+                                                                    id="causes_worksheet_{{item.seq}}" 
+                                                                    name="causes_worksheet_{{item.seq}}"
+                                                                    placeholder="Causes" 
+                                                                    rows="3"
+                                                                    ng-style="{'min-height': (40 * rowspanMap['causes' + item.id_node + '-' + item.deviations_no + '-' + item.causes_no]) + 'px'}"
+                                                                    ng-readonly="!can_edit"
+                                                                    ng-model="item.causes"
+                                                                    ng-keyup="clearAllValidationMessages(item.seq,'causes');
+                                                                                updateFieldItems(item,'causes');
+                                                                                filterResultHistory(item.causes, 'causes', 'causes_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')">
                                                             </textarea>
+
+
                                                             <div class="autocomplete-dropdown" style="position: absolute;" ng-show="isShow == 'causes_worksheet_'+ item.seq"
                                                                  ng-class="{'ng-show' : (filteredArr[0].fieldID == ('causes_worksheet_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('causes_worksheet_'+item.seq)) }">
                                                                 <div class="autocomplete-option"
@@ -2514,7 +2517,7 @@
                                                                       name="consequences_worksheet_{{item.seq}}"
                                                                       placeholder="Consequences" 
                                                                       rows="3"
-                                                                      ng-style="{'min-height': (30 * (data_nodeworksheet | filter:{id_node : selectedItemNodeView.seq,deviations: item.deviations,causes_no: item.causes_no,consequences_no: item.consequences_no}).length) + 'px'}"
+                                                                      ng-style="{'min-height': (40 * rowspanMap['consequences' + item.id_node + '-' + item.deviations_no + '-' + item.causes_no + '-' + item.consequences_no]) + 'px'}"
                                                                       ng-readonly="!can_edit"                                                                      
                                                                       ng-model="item.consequences"
                                                                       ng-keyup="clearAllValidationMessages(item.seq,'consequences');
@@ -2693,7 +2696,7 @@
                                                                     id="existing_safeguards_worksheet_{{item.seq}}" 
                                                                     name="existing_safeguards_worksheet_{{item.seq}}"
                                                                     placeholder=" Protection/Mitigation Barriers" 
-                                                                    ng-style="{'min-height': (45 * (data_nodeworksheet | filter:{id_node : selectedItemNodeView.seq,deviations: item.deviations,causes_no: item.causes_no,consequences_no: item.consequences_no,category_no: item.category_no}).length) + 'px'}"
+                                                                    ng-style="{'min-height': (40 * rowspanMap[item.id_node + '-' + item.deviations_no + '-' + item.causes_no + '-' + item.consequences_no + '-' + item.category_no]) + 'px'}"
                                                                     ng-readonly="!can_edit"     
                                                                     ng-model="item.existing_safeguards"
                                                                     ng-keyup="filterResultHistory(item.existing_safeguards, 'existing_safeguards', 'existing_safeguards_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')">

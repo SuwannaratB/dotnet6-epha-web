@@ -2267,7 +2267,7 @@
                                                                       id="list_worksheet_{{item.seq}}" 
                                                                       name="list_worksheet_{{item.seq}}"
                                                                       placeholder="List System" 
-                                                                      ng-style="{'min-height': (30 * (data_listworksheet | filter:{id_list : selectedItemListView.seq,list_system_no: item.list_system_no}).length) + 'px'}"
+                                                                      ng-style="{'min-height': (30 * rowspanMap['list_system' + item.id_list + '-' + item.list_system_no]) + 'px'}"
                                                                       ng-readonly="!can_edit"
                                                                       ng-model="item.list_system"
                                                                       ng-keyup="clearAllValidationMessages(item.seq,'list_sub_system');
@@ -2331,7 +2331,7 @@
                                                                       id="listsub_worksheet_{{item.seq}}" 
                                                                       name="listsub_worksheet_{{item.seq}}"
                                                                       placeholder="List Sub System"
-                                                                      ng-style="{'min-height': (30 * (data_listworksheet | filter:{id_list : selectedItemListView.seq,list_system_no: item.list_system_no,list_sub_system_no: item.list_sub_system_no}).length) + 'px'}"
+                                                                      ng-style="{'min-height': (30 * rowspanMap['list_sub_system' + item.id_list + '-' + item.list_system_no + '-' + item.list_sub_system_no]) + 'px'}"
                                                                       ng-readonly="!can_edit"
                                                                       ng-model="item.list_sub_system"
                                                                       ng-keyup="clearAllValidationMessages(item.seq,'list_sub_system');
@@ -2394,7 +2394,7 @@
                                                                       id="causes_worksheet_{{item.seq}}" 
                                                                       name="causes_worksheet_{{item.seq}}"
                                                                       placeholder="What's If (causes)" 
-                                                                      ng-style="{'min-height': (30 * (data_listworksheet | filter:{id_list : selectedItemListView.seq,list_system_no: item.list_system_no,list_sub_system_no: item.list_sub_system_no,causes_no: item.causes_no}).length) + 'px'}"
+                                                                      ng-style="{'min-height': (30 * rowspanMap['causes' + item.id_list + '-' + item.list_system_no + '-' + item.list_sub_system_no + '-' + item.causes_no]) + 'px'}"
                                                                       ng-readonly="!can_edit"
                                                                       ng-model="item.causes"
                                                                       ng-keyup="clearAllValidationMessages(item.seq,'causes');
@@ -2457,7 +2457,7 @@
                                                                       id="consequences_worksheet_{{item.seq}}" 
                                                                       name="consequences_worksheet_{{item.seq}}"
                                                                       placeholder="Consequences" 
-                                                                      ng-style="{'min-height': (30 * (data_listworksheet | filter:{id_list : selectedItemListView.seq,list_system_no: item.list_system_no,list_sub_system_no: item.list_sub_system_no,causes_no: item.causes_no,consequences_no: item.consequences_no}).length) + 'px'}"
+                                                                      ng-style="{'min-height': (30 * rowspanMap['consequences' + item.id_list + '-' + item.list_system_no + '-' + item.list_sub_system_no + '-' + item.causes_no + '-' + item.consequences_no]) + 'px'}"
                                                                       ng-readonly="!can_edit"
                                                                       ng-model="item.consequences"
                                                                       ng-keyup="clearAllValidationMessages(item.seq,'consequences');
@@ -2582,7 +2582,7 @@
                                                                       id="safeguards_worksheet_{{item.seq}}" 
                                                                       name="safeguards_worksheet_{{item.seq}}"
                                                                       placeholder="PROTECTION/MITIGATION BARRIERS" 
-                                                                      ng-style="{'min-height': (50 * (data_listworksheet | filter:{id_list : selectedItemListView.seq,list_system_no: item.list_system_no,list_sub_system_no: item.list_sub_system_no,causes_no: item.causes_no,consequences_no: item.consequences_no,category_no: item.category_no}).length) + 'px'}"
+                                                                      ng-style="{'min-height': (50 * rowspanMap[item.id_list + '-' + item.list_system_no + '-' + item.list_sub_system_no + '-' + item.causes_no + '-' + item.consequences_no + '-' + item.category_no]) + 'px'}"
                                                                       ng-model="item.existing_safeguards"
                                                                       ng-keyup="filterResultHistory(item.existing_safeguards, 'safeguards', 'safeguards_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')">
                                                             </textarea>
