@@ -3838,7 +3838,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
 
 
         $scope.data_nodeworksheet.forEach(node => {
-            console.log(node.nid_node);
+            console.log(node.id_node);
         });
         
         return;
@@ -3950,7 +3950,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         var arr = $filter('filter')($scope.data_node, function (item) {
             return (item.seq == seq);
         });
-        var iNo = 1; if (arr.length > 0) { iNo = arr[0].no; }
+        var iNo = 1; if (arr.length > 0) { iNo = arr[0].no + 1; }
 
         for (let i = 0; i < arr.length; i++) {
 
@@ -3977,8 +3977,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.selectdata_node = xValues;
 
         console.clear();
-        console.log(newInput);
 
+        //add NodeDrawing  
         if ($scope.data_nodedrawing != null) {
             var arr_check = $filter('filter')($scope.data_nodedrawing, function (item) {
                 return (item.id_node == xValues);
@@ -4003,10 +4003,32 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
             $scope.data_nodedrawing.push(arrmember[i]);
         }
 
-        //add NodeDrawing  
-        $scope.AddDataGuideWords(false);
+    
+        //copy worksheet
+        if ($scope.data_nodeworksheet != null) {
+            var arr_check = $filter('filter')($scope.data_nodeworksheet, function (item) {
+                return (item.id_node == xValues);
+            });
+            if (arr_check.length > 0) { return; }
+        }
 
-        set_data_nodeworksheet();
+        var arr_copy = [];
+        angular.copy($scope.data_nodeworksheet, arr_copy);
+        var arrdata = $filter('filter')(arr_copy, function (item) { return (item.id_node == seq); });
+        for (let i = 0; i < arrdata.length; i++) {
+
+            $scope.MaxSeqdata_nodeworksheet = Number($scope.MaxSeqdata_nodeworksheet) + 1;
+            var xMaxSeqdata_nodeworksheet = $scope.MaxSeqdata_nodeworksheet;
+
+            arrdata[i].id_node = Number(id_node);
+            arrdata[i].action_type = 'insert';
+            arrdata[i].action_change = 1;
+
+            arrdata[i].seq = xMaxSeqdata_nodeworksheet;
+            arrdata[i].id = xMaxSeqdata_nodeworksheet;
+
+            $scope.data_nodeworksheet.push(arrdata[i]);
+        }
     }
 
     $scope.removeDataNodeList = function (seq, index) {
@@ -4247,6 +4269,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                             newInput.id_guide_word = arr[i].seq;
                             newInput.guidewords = arr[i].guidewords;
                             newInput.deviations = arr[i].deviations;
+                            newInput.deviations = arr[i].deviations_no;
                             newInput.guidewords_no = arr[i].guidewords_no;
                             newInput.recommendations_no = null;
 
