@@ -2432,7 +2432,7 @@
                                                                     name="causes_worksheet_{{item.seq}}"
                                                                     placeholder="Causes" 
                                                                     rows="3"
-                                                                    ng-style="{'min-height': (40 * rowspanMap['causes' + item.id_node + '-' + item.deviations_no + '-' + item.causes_no]) + 'px'}"
+                                                                    ng-style="{'min-height': (30 * rowspanMap['causes' + item.id_node + '-' + item.deviations_no + '-' + item.causes_no]) + 'px'}"
                                                                     ng-readonly="!can_edit"
                                                                     ng-model="item.causes"
                                                                     ng-keyup="clearAllValidationMessages(item.seq,'causes');
@@ -2517,7 +2517,7 @@
                                                                       name="consequences_worksheet_{{item.seq}}"
                                                                       placeholder="Consequences" 
                                                                       rows="3"
-                                                                      ng-style="{'min-height': (40 * rowspanMap['consequences' + item.id_node + '-' + item.deviations_no + '-' + item.causes_no + '-' + item.consequences_no]) + 'px'}"
+                                                                      ng-style="{'min-height': (30 * rowspanMap['consequences' + item.id_node + '-' + item.deviations_no + '-' + item.causes_no + '-' + item.consequences_no]) + 'px'}"
                                                                       ng-readonly="!can_edit"                                                                      
                                                                       ng-model="item.consequences"
                                                                       ng-keyup="clearAllValidationMessages(item.seq,'consequences');

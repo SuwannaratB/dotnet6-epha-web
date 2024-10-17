@@ -3080,8 +3080,6 @@
                                             <th class=" align-middle" scope="col" >TRACKING FREQUENCY</th>
                                             <th class=" align-middle" scope="col" >TIMES FREQUENCY</th>
                                             <th class=" align-middle" scope="col" >STATUS</th>
-                                            <th class=" align-middle" scope="col" >START DATE</th>
-                                            <th class=" align-middle" scope="col" >END DATE</th>
                                             <th class=" align-middle" scope="col" >NEXT CHECKED</th>
                                             <th class=" align-middle" scope="col" >LAST CHECKED</th>
                                         </tr>
@@ -3124,10 +3122,17 @@
                                             </td>
   
                                             <td class="">
-                                                <div class="">
-                                                    
+                                                <div class="d-flex align-items-center">
+                                                    ทุกๆ
+                                                    <input type="text" 
+                                                        class="form-control form-control-sm rounded-2 ms-2"
+                                                        ng-model="item.status" 
+                                                        style="min-width: 100px;max-width: 120px; font-size: 10.24px;"
+                                                        placeholder="Enter status here">
+                                                    <span class="ms-2">{{item.id_rangtype === 1 ? 'ปี' : 'เดือน'}}</span>
                                                 </div>
                                             </td>
+
 
                                             <td class="">
                                                 <div class="">
@@ -3140,33 +3145,6 @@
                                                     </select>
                                                 </div>
                                             </td>                                           
-
-                                            <td class="">
-                                                <div class="">
-                                                    <input type="date" 
-                                                        class="form-control datetimepicker rounded-1" 
-                                                        placeholder="Start Date dd/mm/yyyy"
-                                                        ng-model="item.create_date">
-                                                    @* <div id="valid-nodeworksheet-estimated-start-{{ws.seq}}"
-                                                        class="invalid-feedback text-danger">
-                                                        Please provide a valid Estimated Start Date.
-                                                    </div> *@
-                                                </div>
-                                            </td>
-
-                                            <td class="">
-                                                <div class="" >
-                                                    <input type="date" 
-                                                        class="form-control datetimepicker rounded-1" 
-                                                        placeholder="End Date dd/mm/yyyy"
-                                                        ng-model="item.create_date">
-                                                    @* <div id="valid-nodeworksheet-estimated-end-{{ws.seq}}"
-                                                        class="invalid-feedback text-danger">
-                                                        Please provide a valid Estimated End Date.
-                                                    </div> *@
-                                                </div>
-                                            </td>
-
                                             <td class="">
                                                 <div class="">
                                                     
@@ -3182,6 +3160,18 @@
                                         </tr>
                                     </tbody>
                                 </table>
+
+                                <div class="my-3">
+                                    <select class="form-select form-select-sm rounded-2" 
+                                        ng-model="item.status" 
+                                        style="min-width: 100px;max-width: 150px; font-size: 10.24px;">
+                                        <option ng-repeat="item_m in status_monitoring" ng-value="item_m.name">
+                                            {{item_m.name}}
+                                        </option>
+                                    </select>
+                                </div>
+
+
                             </div>
                         </div>
                     </div>
