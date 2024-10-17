@@ -5085,7 +5085,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 for (let j = 0; j < set_causes.length; j++) {
                     if (set_causes[j].recommendation_no) {
                         index = i + j + 1;
-                        break;
                     }
                 }
                 
@@ -5120,7 +5119,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 for (let j = 0; j < set_consequences.length; j++) {
                     if (set_consequences[j].recommendation_no) {
                         index = i + j + 1;
-                        break;
                     }
                 }
 
@@ -5154,7 +5152,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 for (let j = 0; j < set_category.length; j++) {
                     if (set_category[j].recommendation_no) {
                         index = i + j + 1;
-                        break;
                     }
                 }
                 console.log(index)

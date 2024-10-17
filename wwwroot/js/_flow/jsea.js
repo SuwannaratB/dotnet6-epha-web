@@ -4502,7 +4502,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         $scope.selectdata_listworksheet = xseq;
 
         //running_index_worksheet(seq);
-        index = index_rows;
 
         console.clear();
 
@@ -4616,11 +4615,15 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 );
     
                 for (let j = 0; j < set_potentailhazard.length; j++) {
-                    if (set_potentailhazard[j].recommendation_no) {
+                    console.log(`Loop iteration: ${j}, i = ${i}, current item:`, set_potentailhazard[j]);
+                
+                    if (set_potentailhazard[j].possiblecase_no) {
+                        console.log("Possible case found, setting index.");
                         index = i + j + 1;
-                        break;
+                        console.log(`Index set to: ${index}`);
                     }
                 }
+                
                 
                 console.log(index)
                 console.log(set_potentailhazard)
@@ -4641,6 +4644,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                 && item.taskdesc_no === newData.taskdesc_no && item.potentailhazard_no === newData.potentailhazard_no ) {
                     
                 index = data_index + 1;
+
+                console.log("index",index)
+                console.log("$scope.data_listworksheet",$scope.data_listworksheet)
     
                 break;
             }
