@@ -5236,9 +5236,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
         // for type causes same cuase no must same value 
         // for type consequences same cuase_no,consequences_no must same value 
         // for type category same cuase_no,consequences_no,category_no no must same value         
-        var causes_no = Number(item.causes_no);
-        var causes_no = Number(item.causes_no);
-        var causes_no = Number(item.causes_no);
+        var list_system_no = Number(item.list_system_no);
+        var list_sub_system_no = Number(item.list_sub_system_no);
         var causes_no = Number(item.causes_no);
         var consequences_no = Number(item.consequences_no);
         var category_no = Number(item.category_no);

@@ -1922,13 +1922,15 @@
                                                                     && user_name === (data_approver | filter: {approver_type: 'approver'})[0].user_name)}">--->                                                            
                                                             <textarea class="form-control worksheetscroll rounded-1 p-0 m-0 w-100 border border-0"
                                                                       style=" width: 100%; font-size: 10px;resize: none;"
-                                                                      ng-style="{'min-height': (34 * (data_listworksheet | filter:{workstep_no: item.workstep_no}).length) + 'px'}"
+                                                                      ng-style="{'min-height': (34 * rowspanMap['workstep' + item.workstep_no ]) + 'px'}"
                                                                       id="workstep_worksheet_{{item.seq}}" 
                                                                       name="workstep_worksheet_{{item.seq}}"
                                                                       placeholder="Work Step" 
                                                                       ng-model="item.workstep"
                                                                       ng-readonly="(data_header[0].pha_status === 21 || data_header[0].pha_status === 81 || data_header[0].pha_status === 91) && params !== 'edit' && !isMainApprover"
-                                                                      ng-keyup="filterResultHistory(item.workstep, 'workstep', 'workstep_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'');
+                                                                      ng-keyup="filterResultHistory(item.workstep, 'workstep', 'workstep_worksheet_'+ item.seq);
+                                                                                updateFieldItems(item,'workstep');
+                                                                                actionChangeWorksheet(item,item.seq,'');
                                                                                 (contentModified && item.workstep.trim() !== '') ? updateWorksheetChanges(item, item.seq, '') : null"
                                                                       ng-mouseenter="showTooltip = true" 
                                                                       ng-mouseleave="showTooltip = false">
@@ -1998,9 +2000,11 @@
                                                                       placeholder="taskdesc" 
                                                                       rows="3"
                                                                       ng-readonly="(data_header[0].pha_status === 21 || data_header[0].pha_status === 81 || data_header[0].pha_status === 91) && params !== 'edit' && !isMainApprover"
-                                                                      ng-style="{'min-height': (34 * (data_listworksheet | filter:{workstep_no: item.workstep_no, taskdesc_no: item.taskdesc_no}).length) + 'px'}"
+                                                                      ng-style="{'min-height': (34 * rowspanMap['taskdesc' + item.workstep_no + '-' + item.taskdesc_no ]) + 'px'}"
                                                                       ng-model="item.taskdesc"
-                                                                      ng-keyup="filterResultHistory(item.taskdesc, 'taskdesc', 'taskdesc_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')">
+                                                                      ng-keyup="filterResultHistory(item.taskdesc, 'taskdesc', 'taskdesc_worksheet_'+ item.seq);
+                                                                        updateFieldItems(item,'taskdesc');
+                                                                        actionChangeWorksheet(item,item.seq,'')">
                                                             </textarea>
                                                             <div class="autocomplete-dropdown" style="position: absolute;"
                                                                  ng-class="{'ng-show' : (filteredArr[0].fieldID == ('taskdesc_worksheet_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('taskdesc_worksheet_'+item.seq)) }">
@@ -2064,9 +2068,12 @@
                                                                       name="potentailhazard_worksheet_{{item.seq}}"
                                                                       placeholder="potentailhazard" 
                                                                       rows="3"
+                                                                      ng-style="{'min-height': (34 * rowspanMap['potentailhazard' + item.workstep_no + '-' + item.taskdesc_no + '-' + item.potentailhazard_no ]) + 'px'}"
                                                                       ng-model="item.potentailhazard"
                                                                       ng-readonly="(data_header[0].pha_status === 21 || data_header[0].pha_status === 81 || data_header[0].pha_status === 91) && params !== 'edit' && !isMainApprover"
-                                                                      ng-keyup="filterResultHistory(item.potentailhazard, 'potentailhazard', 'potentailhazard_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')">
+                                                                      ng-keyup="filterResultHistory(item.potentailhazard, 'potentailhazard', 'potentailhazard_worksheet_'+ item.seq);
+                                                                      updateFieldItems(item,'potentailhazard');
+                                                                      actionChangeWorksheet(item,item.seq,'')">
                                                             </textarea>
                                                             <div class="autocomplete-dropdown" style="position: absolute;"
                                                                  ng-hide="!tab_worksheet_active && !tab_general &&!isMainApprover"
@@ -2132,7 +2139,9 @@
                                                                       rows="3"
                                                                       ng-readonly="(data_header[0].pha_status === 21 || data_header[0].pha_status === 81 || data_header[0].pha_status === 91) && params !== 'edit' && !isMainApprover"
                                                                       ng-model="item.possiblecase"
-                                                                      ng-keyup="filterResultHistory(item.possiblecase, 'possiblecase', 'possiblecase_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')">
+                                                                      ng-keyup="filterResultHistory(item.possiblecase, 'possiblecase', 'possiblecase_worksheet_'+ item.seq);
+                                                                      updateFieldItems(item,'possiblecase');
+                                                                      actionChangeWorksheet(item,item.seq,'')">
                                                             </textarea>
                                                             <div class="autocomplete-dropdown" style="position: absolute;"
                                                                  ng-class="{'ng-show' : (filteredArr[0].fieldID == ('possiblecase_worksheet_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('possiblecase_worksheet_'+item.seq)) }">

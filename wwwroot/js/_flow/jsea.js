@@ -4564,7 +4564,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
                         }
             
                         if (previous.taskdesc_no === item.taskdesc_no && previous.potentailhazard_no === item.potentailhazard_no && 
-                            previous.consequences_no >= item.consequences_no && 
+                            previous.possiblecase_no >= item.possiblecase_no && 
                             (item.row_type === 'potentailhazard' || item.row_type === 'taskdesc' || item.row_type === 'possiblecase')) {
                             item.possiblecase_no = previous.possiblecase_no + 1;
                         }
@@ -5018,6 +5018,109 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig, 
     
         });
     }
+    $scope.updateFieldItems = function(item, type) {
+        //set copy data
+        // for type causes same cuase no must same value 
+        // for type consequences same cuase_no,consequences_no must same value 
+        // for type category same cuase_no,consequences_no,category_no no must same value         
+        var workstep_no = Number(item.workstep_no);
+        var list_sub_system_no = Number(item.list_sub_system_no);
+        var causes_no = Number(item.causes_no);
+        var consequences_no = Number(item.consequences_no);
+        var category_no = Number(item.category_no);
+        
+        var id_list = Number(item.id_list);
+    
+        var newValue = {};
+    
+        switch (type) {
+            case 'workstep':
+                newValue.workstep = item.workstep;
+                break;
+            case 'list_sub_system':
+                newValue.list_system = item.list_system;
+                newValue.list_sub_system = item.list_sub_system;
+                break;
+            case 'causes':
+                newValue.list_system = item.list_system;
+                newValue.list_sub_system = item.list_sub_system;
+                newValue.causes = item.causes;
+                break;
+            case 'consequences':
+                newValue.list_system = item.list_system;
+                newValue.list_sub_system = item.list_sub_system;
+                newValue.causes = item.causes;
+                newValue.consequences = item.consequences;
+                break;  
+            case 'category':
+                newValue.list_system = item.list_system;
+                newValue.list_sub_system = item.list_sub_system;
+                newValue.causes = item.causes;
+                newValue.consequences = item.consequences;
+                break;                                      
+            case 'recommendations':
+                newValue.list_system = item.list_system;
+                newValue.list_sub_system = item.list_sub_system;
+                newValue.causes = item.causes;
+                newValue.category_type = item.category_type;
+
+                newValue.ram_befor_likelihood = item.ram_befor_likelihood;
+                newValue.ram_befor_risk = item.ram_befor_risk;
+                newValue.ram_befor_security = item.ram_befor_security;
+                newValue.ram_after_likelihood = item.ram_after_likelihood;
+                newValue.ram_after_risk = item.ram_after_risk;
+                newValue.ram_after_risk_action = item.ram_after_risk_action;
+                
+                newValue.existing_safeguards = item.existing_safeguards;
+                newValue.major_accident_event = item.major_accident_event;
+                
+                //newValue.recommendations = item.recommendations;
+                break;
+            default:
+                console.error('Unknown update type:', type);
+                return;
+        }
+    
+        angular.forEach($scope.data_nodeworksheet, function(currentItem) {
+            var isMatching = false;
+    
+            if(currentItem.id_list === id_list && currentItem.workstep_no === workstep_no){
+                if (type === 'workstep') {
+                    isMatching = (Number(currentItem.list_system_no) === list_system_no);
+                } else if (type === 'list_sub_system') {
+                    isMatching = (Number(currentItem.list_sub_system_no) === list_sub_system_no);
+                } else if (type === 'causes') {
+                    isMatching = (Number(currentItem.list_sub_system_no) === list_sub_system_no && Number(currentItem.causes_no) === causes_no);
+                } else if (type === 'consequences') {
+                    isMatching = (Number(currentItem.list_sub_system_no) === list_sub_system_no && Number(currentItem.causes_no) === causes_no && Number(currentItem.consequences_no) === consequences_no);
+                } else if (type === 'category') {
+                    isMatching = (Number(currentItem.list_sub_system_no) === list_sub_system_no && Number(currentItem.causes_no) === causes_no && Number(currentItem.consequences_no) === consequences_no && Number(currentItem.category_no) === category_no);
+                } else if (type === 'recommendations') {
+                    isMatching = (Number(currentItem.list_sub_system_no) === list_sub_system_no && Number(currentItem.causes_no) === causes_no && Number(currentItem.consequences_no) === consequences_no && Number(currentItem.category_no) === category_no);
+                }
+        
+                if (isMatching) {
+                    if (newValue.workstep !== undefined) currentItem.workstep = newValue.list_system;
+                    if (newValue.list_sub_system !== undefined) currentItem.list_sub_system = newValue.list_sub_system;
+                    if (newValue.causes !== undefined) currentItem.causes = newValue.causes;
+                    if (newValue.consequences !== undefined) currentItem.consequences = newValue.consequences;
+                    if (newValue.category !== undefined) currentItem.category = newValue.category;
+
+                    if (newValue.ram_befor_likelihood !== undefined) currentItem.ram_befor_likelihood = newValue.ram_befor_likelihood;
+                    if (newValue.ram_befor_risk !== undefined) currentItem.ram_befor_risk = newValue.ram_befor_risk;
+                    if (newValue.ram_befor_security !== undefined) currentItem.ram_befor_security = newValue.ram_befor_security;
+                    if (newValue.ram_after_likelihood !== undefined) currentItem.ram_after_likelihood = newValue.ram_after_likelihood;
+                    if (newValue.ram_after_risk !== undefined) currentItem.ram_after_risk = newValue.ram_after_risk;
+                    if (newValue.ram_after_risk_action !== undefined) currentItem.ram_after_risk_action = newValue.ram_after_risk_action;
+
+                    if (newValue.existing_safeguards !== undefined) currentItem.existing_safeguards = newValue.existing_safeguards;
+                    if (newValue.major_accident_event !== undefined) currentItem.major_accident_event = newValue.major_accident_event;
+                }
+            }
+
+        });
+
+    };
     function set_data_worksheet(item) {
         //กรณีที่เหลือ row เดียว  
         item.action_type = 'update';
