@@ -2,6 +2,21 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig){
     var url_ws = conFig.service_api_url();
     get_data();
 
+
+    $scope.actionfilter = function (type, data) {
+        if (type == 'departments') {
+            // console.log(data)
+            var data_section = $filter('filter')($scope.data_sections_def, function (item) {
+                return (item.departments == data);
+            });
+            $scope.selectOption['sections'] = data_section[0].id
+        }
+
+        setDataFilter();
+        setPagination();
+    }
+
+
     ///////////////////////////  API Function  ///////////////////////////
     function call_api_load() {
         var user_name = $scope.user_name;
@@ -29,9 +44,15 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig){
                 $scope.data = arr.data;
                 $scope.data_def = clone_arr_newrow(arr.data);
                 // master
-                $scope.data_worker_group = $filter('filter')(arr.worker_group, item => item.id);
-                // var
-                $scope.selected['work_group'] = $scope.data_worker_group[0].id;
+                $scope.data_group_list = $filter('filter')(arr.group_list, item => item.id); 
+                $scope.data_departments = $filter('filter')(arr.departments, item => item.id)
+                $scope.data_sections = $filter('filter')(arr.sections, item => item.id)
+
+                // master default
+                $scope.data_group_list_def = $filter('filter')(arr.group_list, item => item.id)
+                $scope.data_departments_def = $filter('filter')(arr.departments, item => item.id)
+                $scope.data_sections_def = $filter('filter')(arr.sections, item => item.id)
+                  
                 // function
                 setDataFilter()
                 setPagination()
@@ -55,10 +76,10 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig){
         var flow_action = action || 'save'; 
         var json_data = check_data();
         $.ajax({
-            url: url_ws + "masterdata/set_master_worker_list",
+            url: url_ws + "masterdata/set_master_worker_group",
             data: '{"user_name":"' + user_name + '"'
                 + ',"role_type":"' + flow_role_type + '"'
-                + ',"page_name":"worker_group"'
+                + ',"page_name":"group_list"'
                 + ',"json_data": ' + JSON.stringify(json_data)
                 + '}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
@@ -100,40 +121,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig){
         });
 
     }
-
-    function getEmployees( indicator, callback){
-        var user_name = $scope.user_name;
-        $.ajax({
-            url: url_ws + "Flow/employees_search",
-            data: '{"user_indicator":"' + indicator + '",'
-            + '"max_rows":"50"}',           
-            type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
-            headers: {
-                'X-CSRF-TOKEN': $scope.token
-            },
-            xhrFields: {
-                withCredentials: true // เปิดการส่ง Cookie ไปพร้อมกับคำขอ
-            },
-            beforeSend: function () {
-                $("#divLoading").show();
-            },
-            complete: function () {
-                $("#divLoading").hide();
-            },
-            success: function (data) {
-                callback(data); 
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                if (jqXHR.status == 500) {
-                    alert('Internal error: ' + jqXHR.responseText);
-                } else {
-                    alert('Unexpected ' + textStatus);
-                }
-            }
-
-        });
-    }
-
+     
     ///////////////////////////  Main Functions  ///////////////////////////
     function get_data() {
         arr_def();
@@ -150,7 +138,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig){
         $scope.data_all = [];
         $scope.data = [];
         // master
-        $scope.data_worker_group = [];
+        $scope.data_group_list = [];
+        $scope.data_departments = [];
+        $scope.data_sections = [];
         // var
         $scope.selected = {
             search_emp: null,
@@ -230,7 +220,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig){
         newInput.disable_page = 0;
         newInput.action_type = 'insert';
         newInput.action_change = 1;
-        newInput.id_worker_group = $scope.selected['work_group'];
+        newInput.id_sections = $scope.selectOption['sections'];
+
         $scope.data.push(newInput);
         $scope.MaxSeqData = Number($scope.MaxSeqData) + 1
         setDataFilter()
@@ -259,6 +250,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig){
         console.log($scope.selected.work_group)
         setDataFilter();
         setPagination();
+    }
+    $scope.actionchangeWorkGroup = function (type, data) {
+      
     }
 
     function check_data() {
@@ -313,7 +307,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig){
 
         data.user_displayname = item.employee_displayname
         data.user_name = item.employee_name
-        data.id_worker_group = $scope.selected['work_group']
+        data.id_group_list = $scope.selected['work_group']
         data.action_change = 1
     }
 
@@ -439,11 +433,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig){
 
     //////////////////////////  Future ///////////////////////////
     function validation(){
-        var list = $filter('filter')($scope.data, function (_item) {
-            return (!_item.user_displayname || !_item.user_name || !_item.id_worker_group);
-        });
+        //var list = $filter('filter')($scope.data, function (_item) {
+        //    return (!_item.user_displayname || !_item.user_name || !_item.id_group_list);
+        //});
 
-        if(list.length > 0) return false
+        //if(list.length > 0) return false
 
         return true
     }
@@ -451,7 +445,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig){
     function setDataFilter(){
         // $scope.data.sort((a, b) => b.seq - a.seq);
         $scope.data_filter = $filter('filter')($scope.data, item =>
-            item.id_worker_group == $scope.selected['work_group']
+            item.id_group_list == $scope.selected['work_group']
        )
     }
 
