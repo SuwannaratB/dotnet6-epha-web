@@ -207,6 +207,12 @@
                                           data-feather="pie-chart"></span>Dashboard
                                 </a>
                             </li>
+                             <li class="nav-item">
+                                <a class="nav-link px-3 disabled-link" href="#!">
+                                    <span class="me-2 text-900"
+                                          data-feather="tracking"></span>E-MOC tracking
+                                </a>
+                            </li>
                             <li class="nav-item" ng-if="(role_type=='admin'?true:false)">
                                 @* <a class="nav-link px-3 disabled-link" href="Master/Index"> *@
                                 <a class="nav-link px-3 " href="Master/Index">
@@ -234,7 +240,7 @@
                             </li>
 
                             <li class="nav-item">
-                                <a class="btn btn-phoenix-secondary d-flex flex-center w-100" href="login/Signout">
+                                <a class="btn btn-phoenix-secondary d-flex flex-center w-100" ng-click="logout()">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24"
                                          fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                          stroke-linejoin="round" class="feather feather-log-out me-2">
@@ -328,7 +334,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
     <script>
-
         const AppConFig = angular.module("conFigmodule", [])
             .service("conFig", function ($http) {
                 this.user_name = function (x) {
@@ -370,33 +375,46 @@
             });
 
         const AppMenuPage = angular.module("app", ["conFigmodule"]);
+
         AppMenuPage.controller("ctrlAppMenu", function ($scope, $http, conFig) {
 
+            // check Auth
+            $scope.token = JSON.parse(localStorage.getItem('token'))
+            $scope.user = JSON.parse(localStorage.getItem('user'))
 
-            $scope.role_type = conFig.role_type();
-            $scope.token_doc = conFig.token_doc();
-            $scope.user_display = conFig.user_display();
-            $scope.pha_no = conFig.pha_no();
-            $scope.pha_seq = conFig.pha_seq();
-            $scope.pha_type_doc = conFig.pha_type_doc();
-            $scope.pha_sub_software = conFig.pha_sub_software();
+            if(!$scope.token || !$scope.user['role_type']) return window.location.href = "Login";
+
+            $scope.user = JSON.parse(localStorage.getItem('user'));
+            
+            $scope.user_display = $scope.user['user_displayname'];
+            $scope.role_type = $scope.user['role_type'];
             $scope.controller_action_befor = conFig.controller_action_befor();
+            // $scope.role_type = conFig.role_type();
+            // $scope.token_doc = conFig.token_doc();
+            // $scope.user_display = conFig.user_display();
+            // $scope.pha_no = conFig.pha_no();
+            // $scope.pha_seq = conFig.pha_seq();
+            // $scope.pha_type_doc = conFig.pha_type_doc();
+            // $scope.pha_sub_software = conFig.pha_sub_software();
 
             $scope.selected_menu = function (page) {
-
                 page = page + "/index?create"
                 window.open(`@Url.Content("~/")${page}`, "_top")
-
                 return true;
             };
-            $scope.back_page = function (page) {
 
+            $scope.back_page = function (page) {
                 alert($scope.controller_action_befor)
                 page = $scope.controller_action_befor;
                 window.open(`@Url.Content("~/")${page}`, "_top")
-
                 return true;
             };
+
+            $scope.logout = function(){
+                localStorage.clear('token');
+                localStorage.clear('user');
+                return window.location.href = "Login";
+            }
 
         });
 

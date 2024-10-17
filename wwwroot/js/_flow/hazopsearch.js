@@ -34,12 +34,17 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
     };
     function arr_def() {
         //AutoComplete
+        $scope.user = JSON.parse(localStorage.getItem('user'));
+        $scope.token = JSON.parse(localStorage.getItem('token'))
+        $scope.user_name = $scope.user['user_name'];
+        $scope.flow_role_type = $scope.user['role_type'];
+        // $scope.user_name = conFig.user_name();
+        // $scope.flow_role_type = conFig.role_type();//admin,request,responder,approver
         $scope.autoText = {};
         $scope.filteredItems = {};
 
         $scope.selectViewTypeFollowup = true;
         $scope.action_part = 1;
-        $scope.user_name = conFig.user_name();
 
         $scope.data_all = [];
 
@@ -52,7 +57,6 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         $scope.data_results = [];
         $scope.data_conditions = [];
 
-        $scope.flow_role_type = conFig.role_type();//admin,request,responder,approver
         $scope.flow_status = 0;
 
         $scope.exportfile = [{ DownloadPath: '', Name: '' }];
@@ -79,8 +83,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         var user_name = $scope.user_name;
         var token_doc = '';
 
-        var sub_software = 'HAZOP';
-        var type_doc = 'create';
+        var sub_software = 'hazop';
+        var type_doc = 'search';
         try {
             if (page_load == false) {
                 sub_software = $scope.data_conditions[0].pha_sub_software;
@@ -91,6 +95,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             url: url_ws + "Flow/load_page_search_details",
             data: '{"sub_software":"' + (sub_software == 'WHAT\'S IF' ? 'WHATIF' : sub_software) + '","user_name":"' + user_name + '","token_doc":"' + token_doc + '","type_doc":"' + type_doc + '"}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+            headers: {
+                'X-CSRF-TOKEN': $scope.token
+            },
+            xhrFields: {
+                withCredentials: true // เปิดการส่ง Cookie ไปพร้อมกับคำขอ
+            },
             beforeSend: function () {
                 if (page_load == false) {
                     //$('#divLoading').hide(); 
@@ -447,12 +457,19 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
     }
     function next_page(controller_text, pha_status, editPage) {
         controller_text = controller_text.toLowerCase();
+        var user_name = $scope.user_name;
 
         $.ajax({
             url: controller_text + "/next_page",
             data: '{"pha_seq":"' + conFig.pha_seq + '","pha_seq":"' + conFig.pha_seq + '","pha_type_doc":"' + conFig.pha_type_doc + '"'
-                + ',"pha_sub_software":"' + controller_text + '","pha_status":"' + pha_status + '"}',
+                + ',"pha_sub_software":"' + controller_text + '","pha_status":"' + pha_status + '","user_name":"' + user_name + '"}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+            headers: {
+                'X-CSRF-TOKEN': $scope.token
+            },
+            xhrFields: {
+                withCredentials: true // เปิดการส่ง Cookie ไปพร้อมกับคำขอ
+            },
             beforeSend: function () {
                 //$('#divLoading').show(); 
                 $('#divLoading').show();
@@ -525,7 +542,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
     };
     $scope.confirmExport = function (_item, data_type) {
 
-        var user_name = ($scope.user_name + '');
+        var user_name = $scope.user_name;
         var seq = _item.seq;
         var sub_software = _item.pha_sub_software;
 
@@ -533,6 +550,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             url: url_ws + "Flow/export_" + sub_software + "_report",
             data: '{"sub_software":"' + sub_software + '","user_name":"' + user_name + '","seq":"' + seq + '","export_type":"' + data_type + '"}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+            headers: {
+                'X-CSRF-TOKEN': $scope.token
+            },
+            xhrFields: {
+                withCredentials: true // เปิดการส่ง Cookie ไปพร้อมกับคำขอ
+            },
             beforeSend: function () {
                 //$('#divLoading').show();
 
@@ -604,6 +627,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                 data: '{"user_name":"' + user_name + '","sub_software":"' + sub_software + '"' +
                     ',"pha_no":"' + pha_no + '","pha_seq":"' + pha_seq + '"}',
                 type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+                headers: {
+                    'X-CSRF-TOKEN': $scope.token
+                },
+                xhrFields: {
+                    withCredentials: true // เปิดการส่ง Cookie ไปพร้อมกับคำขอ
+                },
                 beforeSend: function () {
                     $('#divLoading').show();
                 },
@@ -646,6 +675,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
                     data: '{"user_name":"' + user_name + '","sub_software":"' + sub_software + '"' + ',"pha_status_comment":"' + pha_status_comment + '"' +
                         ',"pha_no":"' + pha_no + '","pha_seq":"' + pha_seq + '"}',
                     type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+                    headers: {
+                        'X-CSRF-TOKEN': $scope.token
+                    },
+                    xhrFields: {
+                        withCredentials: true // เปิดการส่ง Cookie ไปพร้อมกับคำขอ
+                    },
                     beforeSend: function () {
                         $('#divLoading').show();
                     },

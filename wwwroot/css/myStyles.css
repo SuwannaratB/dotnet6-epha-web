@@ -737,7 +737,7 @@ ul.nav li a.btn-nav-menu.btn-outline-primary:hover {
   padding: 18px;
   top: 44px;
   right: 0;
-  border-radius: 4px;
+  border-radius: 8px;
   z-index: 99;
   box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 2px, 
   rgba(0, 0, 0, 0.07) 0px 2px 4px, 
@@ -755,11 +755,11 @@ ul.nav li a.btn-nav-menu.btn-outline-primary:hover {
 
 .list-container {
   display: flex;
-  gap: 56px;
+  gap: 20px;
 }
 
 .checkbox-container {
-  min-width: 150px;
+  min-width: 200px;
   /* min-width: max-content; */
 }
 
@@ -821,4 +821,143 @@ ul.nav li a.btn-nav-menu.btn-outline-primary:hover {
 /*Follow up border*/
 .table-bordered th, .table-bordered td {
   border: 1px solid #ddd; 
+}
+
+/* modal RAM */
+#security_level-0,
+#security_level-1,
+#security_level-2,
+#security_level-3,
+#security_level-4, 
+#security_level-5 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  position: absolute;
+  left: -50px;
+}
+
+#security_level-0 {
+  top: 212px;
+}
+#security_level-1 {
+  top: 284px;  /* up 72 */
+}
+#security_level-2 {
+  top: 356px;  
+}
+#security_level-3 {
+  top: 428px;  
+}
+#security_level-4 {
+  top: 500px;  
+}
+#security_level-5 {
+  top: 572px;  
+}
+
+#likelihood-0,
+#likelihood-1,
+#likelihood-2,
+#likelihood-3,
+#likelihood-4, 
+#likelihood-5 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  position: absolute;
+  top: -30px;
+  right: -50px; 
+}
+
+#likelihood-0 {
+  right: 432px; /* down 98 */
+}
+#likelihood-1 {
+  right: 334px;
+}
+#likelihood-2 {
+  right: 236px;
+}
+#likelihood-3 {
+  right: 138px;
+}
+#likelihood-4 {
+  right: 40px;
+}
+
+@media (max-width: 1200px) {
+  #security_level-0 {
+    top: 144px; /* up 50 */
+  }
+  #security_level-1 {
+    top: 194px;  
+  }
+  #security_level-2 {
+    top: 244px;  
+  }
+  #security_level-3 {
+    top: 294px;  
+  }
+  #security_level-4 {
+    top: 344px; 
+  }
+  #security_level-5 {
+    top: 394px;  
+  }
+
+  #likelihood-0 {
+    right: 293px; /* down 69 */
+  }
+  #likelihood-1 {
+    right: 224px;
+  }
+  #likelihood-2 {
+    right: 155px;
+  }
+  #likelihood-3 {
+    right: 86px;
+  }
+  #likelihood-4 {
+    right: 17px;
+  }
+}
+
+@media (max-width: 992px) {
+  #security_level-0 {
+    top: 80px; /* up 32 */
+  }
+  #security_level-1 {
+    top: 112px;  
+  }
+  #security_level-2 {
+    top: 144px;  
+  }
+  #security_level-3 {
+    top: 176px;  
+  }
+  #security_level-4 {
+    top: 209px; 
+  }
+  #security_level-5 {
+    top: 241px;  
+  }
+
+  #likelihood-0 {
+    right: 174px; /* down 42 */
+  }
+  #likelihood-1 {
+    right: 132px;
+  }
+  #likelihood-2 {
+    right: 90px;
+  }
+  #likelihood-3 {
+    right: 48px;
+  }
+  #likelihood-4 {
+    right: 6px;
+  }
 }

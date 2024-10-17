@@ -48,12 +48,12 @@
         </div>
     </div>
 
-    <div class="row g-0" style="margin-left: auto !important;" ng-if="!tabUpdateFollowUp">
+    <div class="row g-0">
 
         <div class="col-12">
             <div class="row g-3 justify-content-between align-items-center pt-2 pb-3">
                 <div class="col-6 col-md">
-                    <h5 class="text-900 mb-0" data-anchor="data-anchor"> <span class=" me-2 text-primary"><B>|</B></span>  Followup Sub-Software</h5>
+                    <h5 class="text-900 mb-0" data-anchor="data-anchor"> <span class=" me-2 text-primary"><B>|</B></span> Followup Sub-Software {{pha_sub_software}}</h5>
                 </div>
                 <div class="col-6 col-md">
                     <div class="d-flex align-items-center py-2  justify-content-end">
@@ -68,9 +68,26 @@
             </div>
             <div class="card shadow-sm p-2 mb-3 bg-light rounded">
 
+                <div class="col-auto">
+                    <div class="invalid-feedback">Please provide a valid city.</div>
+
+                    <div class="search-box position-relative" ng-if="tabChange == 'worksheet'">
+                        <input class="form-control search-input search"  
+                               ng-model="searchMultiText.pha_no" ng-change="searchMultiChange()" placeholder="Search Document Number" />
+                        <span class="fas fa-search search-box-icon"></span>
+
+
+                    </div>
+                    <div class="search-box position-relative" ng-if="!(tabChange == 'worksheet')">
+                        <input class="form-control search-input search"
+                               ng-model="searchMultiText.user_displayname" ng-change="searchMultiChange()" placeholder="Search Owner" />
+                        <span class="fas fa-search search-box-icon"></span>
+                    </div>
+
+                </div>
                 <div class="card-body p-2" ng-repeat="item_m in data_general">
 
-                    <div class="" ng-if="!searchBySeq">
+                    <div class="">
                         <div class="row g-3 justify-content-between align-items-center pt-2 pb-3" ng-if="flow_role_type=='admin'">
 
                             <ul class="nav nav-underline border-3 border-primary border-bottom " id="myTab" role="tablist">
@@ -83,22 +100,23 @@
                                 <li class="mx-2">
                                     <a class="btn btn-outline-primary border border-0 " style="border-radius: 10px 10px 0px 0px !important; "
                                        id="profile-tab" data-bs-toggle="tab" href="#tab-responder" role="tab" aria-controls="tab-responder"
-                                       aria-selected="false" ng-click="handleLinkClick('responder')">Responder</a>
+                                       aria-selected="false" ng-click="handleLinkClick('owner')">Responder</a>
                                 </li>
                             </ul>
                         </div>
                         <div class="col-12 col-md mx-1 pt-2 ">
-
-                            <div class="table-responsive scrollbar tableFixHead" id="table-container" style="font-size: 10px;" tabindex="1">
+                             
+                            <div class="table-responsive scrollbar tableFixHead" id="table-container" style="font-size: 10px;" tabindex="1"
+                                 ng-if="(flow_role_type =='admin')">
                                 <table class="table fs--2 mb-0 table-bordered " cellpadding="0" cellspacing="0">
                                     <thead class=" text-uppercase  text-center  bg-soft  test" style="font-size: 10px;" id="myHeader">
                                         <tr>
                                             <th class="align-middle text-center" scope="col" style="font-size: 10px;" rowspan="2"></th>
                                             <th class="align-middle" scope="col" style="font-size: 10px;" rowspan="2">Sub-Software</th>
                                             <th class="align-middle" scope="col" style="font-size: 10px;" rowspan="2">PHA Status</th>
-                                            <th class="align-middle" scope="col" style="font-size: 10px;" rowspan="2">PHA No.</th>
-                                            <th class="align-middle" scope="col" style="font-size: 10px;" rowspan="2" ng-if="tabChange == 'worksheet'">Task Name</th>
-                                            <th class="align-middle" scope="col" style="font-size: 10px;" rowspan="2" ng-if="tabChange == 'responder'">Owner</th>
+                                            <th class="align-middle" scope="col" style="font-size: 10px;" rowspan="2" >PHA No.</th>
+                                            <th class="align-middle" scope="col" style="font-size: 10px;" rowspan="2" ng-if="tabChange == 'worksheet'">Project Name/e-MOC Request Number</th>
+                                            <th class="align-middle" scope="col" style="font-size: 10px;" rowspan="2" ng-if="tabChange == 'owner'">Owner</th>
                                             <th class="align-middle text-center" scope="col" colspan="3">Items Status</th>
                                             <th class="align-middle text-center" scope="col" style="font-size: 10px;" rowspan="2" ng-if="tabChange == 'worksheet'"></th>
                                         </tr>
@@ -110,12 +128,15 @@
                                     </thead>
                                     <tbody class="customer-rating-table-body">
                                         <tr class="hover-actions-trigger btn-reveal-trigger position-static rowwork"
-                                            ng-repeat="item_h in data_header | filter:{data_by:tabChange}"
-                                            ng-if="item_h.action_type == 'update'">
+                                            ng-repeat="item_h in data_header | MultiFieldFilter: searchMultiText "
+                                            ng-if="item_h.action_type == 'update' && ((item_h.pha_status == 13 && tabChange == 'owner') || flow_role_type=='admin') ">
                                             <td class="align-top" style="width:100px;">
-                                                <div class="p-1 text-center" style="width:100px;">
-                                                    <h6 class="fw-semi-bold text-primary"><a href="" ng-click="selectDetails(item_h)">See Action Items</a></h6>
-                                                </div>
+
+                                                <button class="btn btn-outline text-primary p-1" style=" background-color: #f1f2f4;width:100px; "
+                                                        ng-click="selectDetails(item_h)">
+                                                    See Action Items
+                                                </button>
+
                                             </td>
                                             <td class="align-top" style="width:150px;">
                                                 <div class="p-1 text-center" style="width:100px;">
@@ -127,8 +148,8 @@
                                                     <h6 class="fw-semi-bold text-uppercase">{{item_h.pha_status_name}}</h6>
                                                 </div>
                                             </td>
-                                            <td class="align-top">
-                                                <div class="p-1 text-center" style="width:100px;">
+                                            <td class="align-top" >@*ng-if="tabChange == 'worksheet'"*@
+                                                <div class="p-1 text-center">
                                                     <h6 class="fw-semi-bold">{{item_h.pha_no}}</h6>
                                                 </div>
                                             </td>
@@ -137,7 +158,7 @@
                                                     <h6 class="fw-semi-bold">{{item_h.pha_request_name}}</h6>
                                                 </div>
                                             </td>
-                                            <td class="align-top" ng-if="tabChange == 'responder'">
+                                            <td class="align-top" ng-if="tabChange == 'owner'">
                                                 <div class="p-1 ">
                                                     <h6 class="fw-semi-bold">{{item_h.responder_user_displayname}}</h6>
                                                 </div>
@@ -157,7 +178,7 @@
                                                     <h6 class="fw-semi-bold text-center text-success">{{item_h.status_closed}}</h6>
                                                 </div>
                                             </td>
-                                            <td class="align-top" style="width:100px;" ng-if="tabChange == 'worksheet'">
+                                            <td class="align-top d-none" style="width:100px;" ng-if="tabChange == 'worksheet'">
                                                 <div class="p-1 text-center" style="width:100px;">
                                                     <h6 class="fw-semi-bold text-primary"><a href="" ng-click="selectDoc(item_h)">See Details</a></h6>
                                                 </div>
@@ -165,10 +186,82 @@
 
                                         </tr>
                                     </tbody>
-                                </table>
-
+                                </table> 
                             </div>
 
+                            @*<div class="table-responsive scrollbar tableFixHead" id="table-container" style="font-size: 10px;" tabindex="1"
+                                 ng-if="!(flow_role_type =='admin')">
+                                <table class="table fs--2 mb-0 table-bordered " cellpadding="0" cellspacing="0">
+                                    <thead class=" text-uppercase  text-center  bg-soft  test" style="font-size: 10px;" id="myHeader">
+                                        <tr>
+                                            <th class="align-middle text-center" scope="col" style="font-size: 10px;" rowspan="2"></th>
+                                            <th class="align-middle" scope="col" style="font-size: 10px;" rowspan="2">Sub-Software</th>
+                                            <th class="align-middle" scope="col" style="font-size: 10px;" rowspan="2">PHA Status</th>
+                                            <th class="align-middle" scope="col" style="font-size: 10px;" rowspan="2">PHA No.</th>
+                                            <th class="align-middle" scope="col" style="font-size: 10px;" rowspan="2">Project Name/e-MOC Request Number</th>
+                                            <th class="align-middle" scope="col" style="font-size: 10px;" rowspan="2">Owner</th>
+                                            <th class="align-middle text-center" scope="col" colspan="3">Items Status</th> 
+                                        </tr>
+                                        <tr>
+                                            <th class="align-middle text-center" scope="col" style="font-size: 10px;">Total</th>
+                                            <th class="align-middle text-center" scope="col" style="font-size: 10px;">Open</th>
+                                            <th class="align-middle text-center" scope="col" style="font-size: 10px;">Close</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="customer-rating-table-body">
+                                        <tr class="hover-actions-trigger btn-reveal-trigger position-static rowwork"
+                                            ng-repeat="item_h in data_header | filter:{data_by:'owner'}"
+                                            ng-if="item_h.action_type == 'update' && item_h.pha_status == 13 ">
+                                            <td class="align-top" style="width:100px;">
+                                                <button class="btn btn-outline text-primary p-1" style=" background-color: #f1f2f4;width:100px; "
+                                                        ng-click="selectDetails(item_h)">
+                                                    See Action Items
+                                                </button> 
+                                            </td>
+                                            <td class="align-top" style="width:150px;">
+                                                <div class="p-1 text-center" style="width:100px;">
+                                                    <h6 class="fw-semi-bold text-uppercase">{{item_h.pha_sub_software}}</h6>
+                                                </div>
+                                            </td>
+                                            <td class="align-top" style="width:150px;">
+                                                <div class="p-1 text-center" style="width:100px;">
+                                                    <h6 class="fw-semi-bold text-uppercase">{{item_h.pha_status_name}}</h6>
+                                                </div>
+                                            </td>
+                                            <td class="align-top"  >
+                                                <div class="p-1 text-center">
+                                                    <h6 class="fw-semi-bold">{{item_h.pha_no}}</h6>
+                                                </div>
+                                            </td>
+                                            <td class="align-top" >
+                                                <div class="p-1 ">
+                                                    <h6 class="fw-semi-bold">{{item_h.pha_request_name}}</h6>
+                                                </div>
+                                            </td>
+                                            <td class="align-top" >
+                                                <div class="p-1  text-center">
+                                                    <h6 class="fw-semi-bold">{{item_h.responder_user_displayname}}</h6>
+                                                </div>
+                                            </td>
+                                            <td class="align-top text-center" style="width:100px;">
+                                                <div class="p-1 text-center" style="width:100px;">
+                                                    <h6 class="fw-semi-bold text-center ">{{item_h.status_total}}</h6>
+                                                </div>
+                                            </td>
+                                            <td class="align-top text-center" style="width:100px;">
+                                                <div class="p-1 text-center" style="width:100px;">
+                                                    <h6 class="fw-semi-bold text-center text-danger">{{item_h.status_open}}</h6>
+                                                </div>
+                                            </td>
+                                            <td class="align-top" style="width:100px;">
+                                                <div class="p-1 text-center" style="width:100px;">
+                                                    <h6 class="fw-semi-bold text-center text-success">{{item_h.status_closed}}</h6>
+                                                </div>
+                                            </td> 
+                                        </tr>
+                                    </tbody>
+                                </table> 
+                            </div>*@
                         </div>
                     </div>
 
@@ -178,271 +271,6 @@
         </div>
 
     </div>
-
-
-    <div class="row g-0" style="margin-left: auto !important;" ng-if="tabUpdateFollowUp">
-
-        <div class="col-12">
-            <div class="card shadow-sm p-2 mb-3 bg-light rounded">
-                <div class="card-body p-2">
-                    <div class="row gx-0 align-items-center">
-
-                        <div class="card px-2 ">
-
-                            <div class="row g-3 justify-content-between align-items-center pt-2 pb-3">
-
-                                <div class="col-6 col-md">
-                                    <h5 class="text-900 mb-0" data-anchor="data-anchor">
-                                        <span class=" me-2 text-primary"><B>|</B></span>Details {{DetailsShow}}
-                                    </h5>  
-                                </div>
-                                <div class="col-6 col-md">
-                                    <div class="d-flex align-items-center py-2  justify-content-end">
-                                        <span class="mx-2" ng-if="cancle_type">
-                                            <button class="btn btn-outline-secondary btn-sm" style="width: 100px;"
-                                                    ng-click="confirmFollowBackSearch()">
-                                                Back
-                                            </button>
-                                        </span>
-                                        <span class="mx-2 d-none">
-                                            <button class="btn btn-outline-secondary btn-sm" style="width: 100px;"
-                                                    ng-click="confirmFollowBack()">
-                                                Back
-                                            </button>
-                                        </span> 
-                                        <div ng-if="flow_status >= 13 && flow_role_type =='admin'">
-                                            <span class="mx-2" ng-if="submit_type">
-                                                <button class="btn btn-success btn-sm" style="width: 100px;"
-                                                        ng-click="showConfirmDialogSubmit()">
-                                                    Submit
-                                                </button>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-12 col-md mx-1 pt-5" ng-if="tabUpdateFollowUp">
-
-                                <div class="table-responsive scrollbar tableFixHead ">
-
-                                    <table class="table fs--2 mb-0 table-bordered " cellpadding="0" cellspacing="0">
-                                        <thead class="text-uppercase  bg-light-secondary">
-                                            <tr class="text-center">
-
-                                                <th class="sort align-middle " colspan="1" rowspan="2">
-                                                    Recommen<br />dations No
-                                                </th>
-                                                <th class="sort align-middle " colspan="1" rowspan="2" scope="col">
-                                                    Work Step
-                                                </th>
-                                                <th class="sort align-middle " colspan="1" rowspan="2" scope="col">
-                                                    Task description No
-                                                </th>
-                                                <th class="sort align-middle " colspan="1" rowspan="2">
-                                                    Recommendations
-                                                </th>
-                                                <th class="sort align-middle " colspan="1" rowspan="2" scope="col">
-                                                    Responder
-                                                </th>
-                                                <th class="sort align-middle" colspan="2" rowspan="1" scope="col">
-                                                    Risk Assessment Matrix
-                                                </th>
-                                                <th class="sort align-middle " colspan="1" rowspan="2" scope="col">
-                                                    Document File
-                                                </th>
-                                                <th class="sort align-middle " colspan="1" rowspan="2" scope="col">
-                                                    Action Status (Items)
-                                                </th>
-                                                <th class="sort align-middle " colspan="2" rowspan="1" scope="col">
-                                                    Estimated Date
-                                                </th>
-
-                                                <th class="sort align-middle " colspan="1" rowspan="2">
-                                                    Over Due (Day)
-                                                </th>
-                                                <th class="sort align-middle " colspan="1" rowspan="2"></th>
-                                            </tr>
-
-                                            <tr class="text-center">
-                                                <th class="sort align-middle" scope="col">Before<br />Action</th>
-                                                <th class="sort align-middle" scope="col">After<br />Action</th>
-                                                <th class="sort align-middle   bg-light-secondary" scope="col">
-                                                    Start<br />Date
-                                                </th>
-                                                <th class="sort align-middle   bg-light-secondary" scope="col">
-                                                    End<br />Date
-                                                </th>
-                                            </tr>
-
-                                        </thead>
-                                        <tbody class="list" id="customer-rating-table-body text-1100 ">
-
-                                            <tr ng-repeat="item_d in data_details"
-                                                class="hover-actions-trigger btn-reveal-trigger position-static px-0 text-center">
-
-                                                <td class="align-top  px-1">
-                                                    <div class="text-center">
-                                                        <p class="" rows="3">
-                                                            {{item_d.recommendations_no}}
-                                                        </p>
-                                                    </div>
-                                                </td>
-                                                <td class="align-top  px-1">
-                                                    <div class="d-flex text-start">
-                                                        <p class="" rows="3">
-                                                            {{item_d.workstep}}
-                                                        </p>
-                                                    </div>
-                                                </td>
-
-                                                <td class="align-top  px-1">
-                                                    <div class="align-items-center ">
-                                                        <p><a> {{item_d.taskdesc_no}}</a></p>
-                                                    </div>
-                                                </td>
-                                                <td class="align-top  px-1">
-                                                    <div class="d-flex text-start">
-                                                        <p class="" rows="3">
-                                                            {{item_d.recommendations}}
-                                                        </p>
-                                                    </div>
-                                                </td>
-                                                <td class="align-top  px-1">
-                                                    <div class="align-items-center ">
-                                                        <p class="mb-0 ms-3 fw-bold" style="width: 120px;">
-                                                            {{item_d.responder_user_displayname}}
-                                                        </p>
-                                                    </div>
-                                                </td>
-                                                <td class="align-top  px-1">
-                                                    <div class="align-items-center ">
-                                                        <button ng-style=" { 'background-color' : ((item_d.ram_after_risk == 'H') ? 'red' : ((item_d.ram_after_risk == 'M') ? 'yellow' : ((item_d.ram_after_risk == 'L') ? 'green' : '#D3D3D3')) ) }"
-                                                                class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end"
-                                                                type="button" ng-click="openModalDataRAM('r',item_d,'after',item_d.id_ram)" style="width: 32px; height:30px">
-                                                            <div class="text-center" style=" width: 32px;"><h6 class="me-1 text-center" style=" width: 32px;">{{item_d.ram_after_risk}}</h6></div>
-                                                        </button>
-                                                    </div>
-                                                </td>
-
-                                                <td class="align-top  px-1">
-                                                    <div class="align-items-center ">
-                                                        <button ng-style=" { 'background-color' : ((item_d.ram_action_risk == 'H') ? 'red' : ((item_d.ram_action_risk == 'M') ? 'yellow' : ((item_d.ram_action_risk == 'L') ? 'green' : '#D3D3D3')) ) }"
-                                                                class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end"
-                                                                type="button" ng-click="openModalDataRAM('r',item_d,'action',item_d.id_ram)" style="width: 32px; height:30px">
-                                                            <div class="text-center" style=" width: 32px;"><h6 class="me-1 text-center" style=" width: 32px;">{{item_d.ram_action_risk}}</h6></div>
-                                                        </button>
-                                                    </div>
-                                                </td>
-                                                <td class="align-top px-1" style="min-width:200px;">
-
-                                                    <span class="mr-3 d-none"
-                                                          id="filename{{item_d.seq}}" ng-click="">
-                                                        {{(item_d.document_file_size>0? item_d.document_file_name + '('+
-                                                        item_d.document_file_size + 'KB)' : item_d.document_file_name )}}
-                                                    </span>
-                                                    <a href="{{item_d.document_file_path}}" target="_blank">
-                                                        {{(item_d.document_file_size>0? item_d.document_file_name + '('+
-                                                        item_d.document_file_size + 'KB)' : item_d.document_file_name )}}
-                                                    </a>
-
-                                                    <br>
-                                                    <label class="dz-message-text text-primary fw-bold"
-                                                           for="attfile-{{item_d.seq}}">
-                                                        <i class="fa-solid fa-arrow-up-from-bracket fa-xl me-3"></i>Upload
-                                                    </label>
-                                                    <input type="file" id="attfile-{{item_d.seq}}"
-                                                           name="file{{item_d.seq}}"
-                                                           onchange="angular.element(this).scope().fileSelect(this)"
-                                                           ng-click="alert(item_d.seq);" style="display:none" />
-
-                                                    <button id="del-{{item_d.seq}}" class="btn btn-link text-danger"
-                                                            ng-click="clearFileName(item_d.seq)">
-                                                        <span class="fa-regular fa-trash-can fa-lg"></span>
-                                                    </button>
-
-                                                </td>
-
-                                                <td class="align-top  px-1" style=" width: 100px;">
-                                                    <div class="align-items-center ">
-                                                        <select class="form-select form-select-sm p-2"
-                                                                ng-model="item_d.action_status"
-                                                                ng-change="actionChangedData(item_d)"
-                                                                ng-if="!(flow_status >= 13 && item_d.responder_action_type == 2)  || flow_role_type =='admin' ">
-                                                            <option id="Open">Open</option>
-                                                            <option id="Responed">Responed</option>
-                                                            <option id="Closed" ng-if="flow_status >= 14 || flow_role_type =='admin'">Closed</option>
-                                                        </select>
-                                                        <p ng-if="flow_status >= 13 && item_d.responder_action_type == 2">
-                                                            <a>{{item_d.action_status}}</a>
-                                                        </p>
-                                                    </div>
-
-                                                </td>
-
-                                                <td class="align-top  px-0" style=" width: 80px;">
-                                                    <div class="align-items-center ">
-                                                        <p><b>{{item_d.estimated_start_date_text}}</b></p>
-                                                    </div>
-                                                </td>
-
-
-                                                <td class="align-top  px-0" style=" width: 80px;">
-                                                    <div class="align-items-center ">
-                                                        <p><b>{{item_d.estimated_end_date_text}}</b></p>
-                                                    </div>
-                                                </td>
-
-
-                                                <td class="align-top  px-0">
-                                                    <div class="align-items-center ">
-                                                        <p class="text-danger"><b>{{item_d.over_due}}</b></p>
-                                                    </div>
-                                                </td>
-                                                <td class="align-top  px-0">
-                                                    <div class="align-items-center ">
-                                                        <input type="text" class="form-control" placeholder="Comment" ng-model="responder_comment">
-                                                    </div>
-                                                </td>
-
-                                                <td class="align-top px-0 pt-0 ">
-                                                    <div class="" ng-if="!(item_d.responder_action_type == 2) || flow_role_type =='admin'">
-                                                        <button class="btn text-primary btn-sm" style="font-size:10px;"
-                                                                ng-click="showConfirmDialog(item_d)">
-                                                            <span class="text-900 fs-3 uil uil-save  text-primary"></span><br />Save
-                                                        </button>
-                                                    </div>
-                                                </td>
-
-                                            </tr>
-                                        </tbody>
-                                    </table>
-
-                                </div>
-
-                                <div>
-                                    <label class="form-label ps-0" for="description_general">Comment :</label>
-                                    <label class="form-label ps-0" ng-if="select_history_tracking_record">
-                                        <a class="form-label far fa-comment-alt text-warning cursor-pointer" data-bs-toggle="tooltip"
-                                           data-bs-placement="top" title="" data-bs-html="true"></a>
-                                    </label>
-                                    <textarea class="form-control rounded-1" ng-class="{'disabled-link':(!tab_general_active)}"
-                                              id="review_folow_comment" name="review_folow_comment"
-                                              placeholder="Comment" style="height: 100px"
-                                              ng-model="data_general[0].review_folow_comment"
-                                              ng-change="actionChangedData(item)"></textarea>
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
 
 
     <div class="modal fade modal-xl shadow-sm p-3 mb-5  rounded" id="modalRAM" tabindex="-1"

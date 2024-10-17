@@ -14,7 +14,7 @@ AppMenuPage.filter('MultiFieldFilter', function () {
         });
     };
 });
-AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) {
+AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig,$timeout) {
     $('#divLoading').hide();
 
 
@@ -82,16 +82,16 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
     function arr_def() {
         //conFig.controller_action_befor = 'Hazop/Index';
         //alert(conFig.controller_action_befor());
-
-
+        $scope.user = JSON.parse(localStorage.getItem('user'));
+        $scope.token = JSON.parse(localStorage.getItem('token'))
+        $scope.user_name = $scope.user['user_name'];
+        $scope.flow_role_type = $scope.user['role_type'];
+        // $scope.user_name = conFig.user_name();
+        // $scope.flow_role_type = conFig.role_type();//admin,request,responder,approver
         $scope.data_all = [];
-
-        $scope.user_name = conFig.user_name();
-        $scope.flow_role_type = conFig.role_type();//admin,request,responder,approver
         $scope.flow_status = 0;
         $scope.due_date_up = true;
         $scope.due_date_sort_by = 'due_date';
-
         $scope.exportfile = [{ DownloadPath: '', Name: '' }];
     }
     function page_load() {
@@ -102,13 +102,20 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
         var user_name = $scope.user_name;
         var token_doc = '';
-        var sub_software = '';
+        var sub_software = 'hazop';
         var type_doc = 'search';
+        var role_type = $scope.flow_role_type;
 
         $.ajax({
             url: url_ws + "Flow/load_home_tasks",
-            data: '{"sub_software":"' + sub_software + '","user_name":"' + user_name + '","token_doc":"' + token_doc + '","type_doc":"' + type_doc + '"}',
+            data: '{"sub_software":"' + sub_software + '","user_name":"' + user_name + '","role_type":"' + role_type + '","token_doc":"' + token_doc + '","type_doc":"' + type_doc + '"}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+            headers: {
+                'X-CSRF-TOKEN': $scope.token
+            },
+            xhrFields: {
+                withCredentials: true // เปิดการส่ง Cookie ไปพร้อมกับคำขอ
+            },
             beforeSend: function () {
                 $("#divLoading").show();
                 $('#divPage').addClass('d-none');
@@ -185,6 +192,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         var controller_text = item.pha_type;
 
         $scope.pha_seq = item.id_pha;
+        $scope.pha_no = item.document_number;
         $scope.pha_type_doc = 'review_document';
 
         next_page(controller_text, '');
@@ -194,7 +202,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         var controller_text = item.pha_type;
 
         $scope.pha_seq = item.id_pha;
-        $scope.pha_type_doc = 'review_document';
+        $scope.pha_no = item.document_number;
+        $scope.pha_type_doc = 'edit';
 
         next_page(controller_text, '', item.user_name);
     }
@@ -203,6 +212,7 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         var controller_text = item.pha_type;
 
         $scope.pha_seq = item.id_pha;
+        $scope.pha_no = item.document_number;
         $scope.pha_type_doc = 'followup';
 
         next_page(controller_text, '', item.user_name);
@@ -212,10 +222,21 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         var controller_text = item.pha_type;
 
         $scope.pha_seq = item.id_pha;
+        $scope.pha_no = item.document_number;
         $scope.pha_type_doc = 'review_followup';
 
         next_page(controller_text, '');
     }
+    $scope.editActionApprover = function (item) {
+        //open document 
+        var controller_text = item.pha_type;
+
+        $scope.pha_seq = item.id_pha;
+        $scope.pha_no = item.document_number;
+        $scope.pha_type_doc = 'edit';
+
+        next_page(controller_text, '');
+    }    
     $scope.confirmApprove = function (item, action) {
 
         $scope.approve_type = 'approve';
@@ -231,8 +252,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
     }
     $scope.confirmArppoved = function () {
 
-        var user_name = conFig.user_name();
-        var role_type = conFig.role_type();
+        var user_name = $scope.user_name
+        var role_type = $scope.flow_role_type;
 
         var pha_seq = $scope.id_pha;
         var action = $scope.approve_type;
@@ -247,6 +268,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             url: url_ws + "flow/set_approve",
             data: '{"user_name":"' + user_name + '","role_type":"' + role_type + '","token_doc":"' + pha_seq + '","action":"' + action + '","comment":"' + comment + '"}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+            headers: {
+                'X-CSRF-TOKEN': $scope.token
+            },
+            xhrFields: {
+                withCredentials: true // เปิดการส่ง Cookie ไปพร้อมกับคำขอ
+            },
             beforeSend: function () {
                 $("#divLoading").show();
             },
@@ -281,18 +308,24 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
         //controller_text = controller_text.toLowerCase();
         var pha_seq = $scope.pha_seq;
+        var pha_no = $scope.pha_no;
         var pha_type_doc = $scope.pha_type_doc;
-
+        var user_name = $scope.user_name;
 
         $.ajax({
             url: "home/next_page",
-            data: '{"pha_seq":"' + pha_seq + '","pha_type_doc":"' + pha_type_doc + '"'
+            data: '{"pha_seq":"' + pha_seq + '","pha_no":"' + pha_no + '","pha_type_doc":"' + pha_type_doc +'"'
                 + ',"pha_sub_software":"' + sub_software + '","pha_status":"' + pha_status + '"'
-                + ',"responder_user_name":"' + responder_user_name + '"'
+                + ',"responder_user_name":"' + responder_user_name + '","user_name":"' + user_name + '"'
                 + ',"controller_action_befor":"home/hometasks"'
                 + '}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
-
+            headers: {
+                'X-CSRF-TOKEN': $scope.token
+            },
+            xhrFields: {
+                withCredentials: true // เปิดการส่ง Cookie ไปพร้อมกับคำขอ
+            },
             beforeSend: function () {
                 $("#divLoading").show();
             },
@@ -325,13 +358,20 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
         var seq = item.id_pha;
         var user_name = $scope.user_name;
+        var role_type = $scope.flow_role_type;
 
         var action_export_report_type = "export_" + sub_software + "_report";
 
         $.ajax({
             url: url_ws + "Flow/" + action_export_report_type,
-            data: '{"sub_software":"hazop","user_name":"' + user_name + '","seq":"' + seq + '","export_type":"' + data_type + '"}',
+            data: '{"sub_software":"hazop","user_name":"' + user_name + '","role_type":"' + role_type + '","seq":"' + seq + '","export_type":"' + data_type + '"}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+            headers: {
+                'X-CSRF-TOKEN': $scope.token
+            },
+            xhrFields: {
+                withCredentials: true // เปิดการส่ง Cookie ไปพร้อมกับคำขอ
+            },
             beforeSend: function () {
                 //$('#modalLoadding').modal('show');
                 $('#divLoading').show();
@@ -343,19 +383,27 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             success: function (data) {
                 var arr = data;
 
-                if (arr.length > 0) {
-                    if (arr[0].ATTACHED_FILE_NAME != '') {
-                        var path = (url_ws).replace('/api/', '') + arr[0].ATTACHED_FILE_PATH;
-                        var name = arr[0].ATTACHED_FILE_NAME;
-                        $scope.exportfile[0].DownloadPath = path;
-                        $scope.exportfile[0].Name = name;
+                                                    
+                if (arr && arr.msg && arr.msg[0].STATUS === "true") {
+
+                    const jsonArray = arr;
+
+                    if (jsonArray) {
+                        var file_path = (url_ws).replace('/api/', '') + jsonArray.msg[0].ATTACHED_FILE_PATH;
+                        var file_name = jsonArray.msg[0].ATTACHED_FILE_NAME;
+                        $scope.exportfile[0].DownloadPath = file_path;
+                        $scope.exportfile[0].Name = file_name;
 
 
                         $('#modalExportFile').modal('show');
                         apply();
                     }
-                } else {
-                    set_alert('Error', arr[0].IMPORT_DATA_MSG);
+
+                    $("#divLoading").hide(); 
+
+                }else{
+                    $("#divLoading").hide();                     
+                    set_alert('Warning', 'An unexpected error occurred. Please try again later or reach out to support if the problem continues.');
                 }
             },
             error: function (jqXHR, textStatus, errorThrown) {
@@ -369,5 +417,23 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         });
 
     }
+
+    function set_alert(header, detail) {
+        $scope.Action_Msg_Header = header;
+        $scope.Action_Msg_Detail = detail;
+
+        $timeout(function() {
+            $('#modalMsgAlert').modal({
+                backdrop: 'static',
+                keyboard: false 
+            }).modal('show');
+    
+            if (header === 'Success') {
+                $timeout(function() {
+                    $('#modalMsgAlert').modal('hide');
+                }, 2000);
+            }
+        });
+    };
 
 });

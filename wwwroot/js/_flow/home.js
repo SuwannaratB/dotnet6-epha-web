@@ -8,10 +8,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, conFig) {
     role_menu();
 
     function role_menu() {
-
-        $scope.role_type = conFig.role_type();
-        $scope.user_name = conFig.user_name();
-
+        $scope.user = JSON.parse(localStorage.getItem('user'))
+        $scope.token = JSON.parse(localStorage.getItem('token'))
+        $scope.user_name = $scope.user['user_name'];
+        $scope.role_type = $scope.user['role_type'];
+        // $scope.role_type = conFig.role_type();
+        // $scope.user_name = conFig.user_name();
         $scope.menu_hometasks = true;
         $scope.menu_search = true;
         $scope.menu_hazop = false;
@@ -27,13 +29,17 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, conFig) {
             $scope.menu_report = false;
         }
 
-        //call api
-        var user_name = $scope.user_name;
-
         $.ajax({
-            url: url_ws + "Login/check_authorization_page_fix",
-            data: '{"user_name":"' + user_name + '"}',
-            type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+            url: url_ws + `Login/check_authorization_page`,
+            // url: url_ws + "Login/check_authorization_page_fix",
+            data: '{"user_name":"' + $scope.user_name + '","page_controller":"' + '' + '"}',
+            type: "POST", contentType: "application/json; charset=utf-8",
+            headers: {
+                'X-CSRF-TOKEN': $scope.token
+            },
+            xhrFields: {
+                withCredentials: true // เปิดการส่ง Cookie ไปพร้อมกับคำขอ
+            },
             beforeSend: function () {
                 $('#divLoading').show();
             },
@@ -41,27 +47,50 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, conFig) {
                 $('#divLoading').hide();
             },
             success: function (data) {
-                var arr = data;
-                console.log("================================================",arr)
-                if (arr.length > 0) {
-                    $scope.menu_hazop = arr.some(item => item.page_controller === 'hazop');
-                    $scope.menu_jsea = arr.some(item => item.page_controller === 'jsea');
-                    $scope.menu_whatif = arr.some(item => item.page_controller === 'whatif');
-                    $scope.menu_hra = arr.some(item => item.page_controller === 'hra');
-                    $scope.menu_bowtie = arr.some(item => item.page_controller === 'bowtie');
-                    $scope.menu_report = arr.some(item => item.page_controller === 'report');
-                    $scope.menu_master = arr.some(item => item.page_controller === 'master');
 
-                    $scopefollowup_page_hazop = arr.some(item => item.page_controller === 'hazop' && item.followup_page === 1);
-                    $scopefollowup_page_jsea = arr.some(item => item.page_controller === 'jsea' && item.followup_page === 1);
-                    $scopefollowup_page_whatif = arr.some(item => item.page_controller === 'whatif' && item.followup_page === 1);
-                    $scopefollowup_page_hra = (arr.some(item => item.page_controller === 'hra' && item.followup_page === 1) ? 1 : 0);
-                    $scopefollowup_page_bowtie = arr.some(item => item.page_controller === 'bowtie' && item.followup_page === 1);
-                    $scopefollowup_page_report = arr.some(item => item.page_controller === 'report' && item.followup_page === 1);
-                    $scopefollowup_page_master = arr.some(item => item.page_controller === 'master' && item.followup_page === 1);
+                try {
+                    if (typeof data === "string") {
+                        // Step 1: Decode the HTML-encoded response
+                        const decodedData = htmlDecode(data);
+        
+                        // Step 2: Try to parse the decoded data as JSON
+                        const jsonData = JSON.parse(decodedData);
+        
+                        console.log("Decoded and Parsed Data:", jsonData);
+
+                        var arr = jsonData;
+                        if (arr) {
+                            console.log("================================================",arr)
+                            if (arr.length > 0) {
+                                $scope.menu_hazop = arr.some(item => item.page_controller === 'hazop');
+                                $scope.menu_jsea = arr.some(item => item.page_controller === 'jsea');
+                                $scope.menu_whatif = arr.some(item => item.page_controller === 'whatif');
+                                $scope.menu_hra = arr.some(item => item.page_controller === 'hra');
+                                $scope.menu_bowtie = arr.some(item => item.page_controller === 'bowtie');
+                                $scope.menu_report = arr.some(item => item.page_controller === 'report');
+                                $scope.menu_master = arr.some(item => item.page_controller === 'master');
+            
+                                $scopefollowup_page_hazop = arr.some(item => item.page_controller === 'hazop' && item.followup_page === 1);
+                                $scopefollowup_page_jsea = arr.some(item => item.page_controller === 'jsea' && item.followup_page === 1);
+                                $scopefollowup_page_whatif = arr.some(item => item.page_controller === 'whatif' && item.followup_page === 1);
+                                $scopefollowup_page_hra = (arr.some(item => item.page_controller === 'hra' && item.followup_page === 1) ? 1 : 0);
+                                $scopefollowup_page_bowtie = arr.some(item => item.page_controller === 'bowtie' && item.followup_page === 1);
+                                $scopefollowup_page_report = arr.some(item => item.page_controller === 'report' && item.followup_page === 1);
+                                $scopefollowup_page_master = arr.some(item => item.page_controller === 'master' && item.followup_page === 1);
+                            }
+            
+                            apply();
+                        }
+
+                    } else {
+                        // If it's already an object, log it
+                        console.log("Parsed Data:", data);
+                    }
+                } catch (err) {
+                    console.error('Failed to parse JSON:', err);
+                    console.error('Received data:', data);
                 }
 
-                apply();
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 if (jqXHR.status == 500) {
@@ -81,17 +110,29 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, conFig) {
             }
         } catch { }
     }
+    function htmlDecode(input) {
+        const doc = new DOMParser().parseFromString(input, 'text/html');
+        return doc.documentElement.textContent;
+    }
+
     $scope.selected_menu = function (page) {
       
         var controller_action_befor = 'Home/Portal'; 
         var controller_text = "home";
         var pha_type_doc = 'create'; 
-        var pha_sub_software = page.toUpperCase();  
+        var pha_sub_software = page.toUpperCase(); 
+        var user_name = $scope.user_name; 
 
         $.ajax({
             url: controller_text + "/next_page",
-            data: '{"controller_action_befor":"' + controller_action_befor + '","pha_type_doc":"' + pha_type_doc + '","pha_sub_software":"' + pha_sub_software + '"}',
+            data: '{"controller_action_befor":"' + controller_action_befor + '","user_name":"' + user_name + '","pha_type_doc":"' + pha_type_doc + '","pha_sub_software":"' + pha_sub_software + '"}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+            headers: {
+                'X-CSRF-TOKEN': $scope.token
+            },
+            xhrFields: {
+                withCredentials: true // เปิดการส่ง Cookie ไปพร้อมกับคำขอ
+            },
             beforeSend: function () {
                 //$("#divLoading").show();
             },
@@ -114,5 +155,22 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, conFig) {
 
         return true;
     }; 
+
+    $scope.redirect = function(module){
+        // ใช้ CryptoJS เพื่อเข้ารหัสข้อมูล
+        const data = { 
+            module: module, 
+            token: $scope.token,
+            user: $scope.user
+        };
+        const jsonData = JSON.stringify(data);
+        const secretKey = 'adb$dgw832r0hcnfhidc-thaioil#vfweu378fnbwep'; // คีย์ลับที่ใช้สำหรับเข้ารหัส
+        // เข้ารหัสข้อมูลด้วย AES และแปลงเป็นสตริง
+        const encryptedData = CryptoJS.AES.encrypt(jsonData, secretKey).toString();
+        const domain_dev = 'http://localhost:4200'
+        const domain_prod = ''
+        // ส่งข้อมูลผ่าน URL
+        window.location.href = `${domain_dev}/?key=${encodeURIComponent(encryptedData)}`;
+    }
 
 });

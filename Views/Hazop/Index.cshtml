@@ -1,4 +1,4 @@
-﻿@{
+@{
     ViewData["Title"] = "HAZOP Sub-Sofware";
 
     Layout = "~/Views/Shared/_LayoutWeb.cshtml";
@@ -25,7 +25,7 @@
 
     <script src="~/assets/js/all.min.js"></script> 
 
-    <script src="employee.js"></script>
+    //<script src="employee.js"></script>
 
     <link rel="stylesheet" href="~/css/myStyles.css">
 }
@@ -203,12 +203,8 @@
                 <div class="card-body tab-content">
                     @* {{action_part}} *@
                     <!-- general information start -->
-                    <div class="" ng-class="{
-                        'tab-pane fade show active':(action_part == 1),
-                        'tab-pane fade show active':(tabs[0].isActive),
-                        'tab-pane fade':(action_part != 1)}"
-                        id="tab-general" role="tabpanel" 
-                        aria-labelledby="general-tab">
+                    <div class="tab-pane fade" id="tab-general" role="tabpanel" aria-labelledby="general-tab">
+                        <!---ng-class="{'show active': action_part == 1 || tabs[0].isActive}"---->
                         <div class="mx-3 row g-3 align-items-center" ng-repeat="item in data_general">
 
                             <div class="col-md-2">
@@ -302,19 +298,19 @@
                                             </a>
                                         </label>
                                         <label class="form-label ps-0" for="area"></label>
-                                        <select class="form-control js-choice-apu mb-0" id="id_apu"
-                                                ng-class="{'disabled-link':(!tab_general_active || !(tab_general_active && data_header[0].pha_status<=12 ))}"
-                                                data-choices="data-choices"
-                                                data-options='{"removeItemButton":true,"placeholder":true}'
-                                                ng-change="actionChange(item,item.seq,'area')"
-                                                ng-model="item.id_apu"
-                                                ng-disabled="!tab_general_active || !(tab_general_active && data_header[0].pha_status <= 12)"
-                                                hide-placeholder-option>
-                                            @*<option value="" selected ng-if="!placeholderHidden">Please select</option>*@
-                                            <option ng-repeat="item2 in master_apu" ng-value="item2.id" >
-                                                {{item2.name}}
-                                            </option>
-                                        </select>
+                                            <select class="form-control js-choice-apu mb-0" id="id_apu"
+                                                    ng-class="{'disabled-link':(!tab_general_active)}"
+                                                    data-choices="data-choices"
+                                                    data-options='{"removeItemButton":true,"placeholder":true}'
+                                                    ng-change="actionChange(item,item.seq,'area')"
+                                                    ng-model="item.id_apu"
+                                                    ng-disabled="!tab_general_active"
+                                                    hide-placeholder-option>
+                                                <option ng-repeat="item2 in master_apu" ng-value="item2.id">
+                                                    {{item2.name}}
+                                                </option>
+                                            </select>
+
                                         @*<select class="form-select rounded-1 disabled-link" ng-if="!tab_general_active"
                                                 ng-model="item.id_apu">
                                             <option ng-selected="item.id_apu == item2.id"
@@ -677,13 +673,9 @@
                     </div>
                     <!-- general information end-->
                     <!-- session start-->
-                    <div class="" ng-class="{
-                        'tab-pane fade show active':(action_part==2),
-                        'tab-pane fade show active':(tabs[1].isActive),
-                        'tab-pane fade':(action_part!==2)}"
-                        id="tab-session" 
-                        role="tabpanel" 
-                        aria-labelledby="session-tab">
+                    <div class="tab-pane fade" id="tab-session" role="tabpanel" aria-labelledby="session-tab">
+                            <!---ng-class="{'show active': action_part == 2 || tabs[1].isActive}"---->
+                        
                         <div class="m-3 row  gx-0 align-items-center">
                             <div class="card px-2 ">
                                 <div class="row g-3 justify-content-between align-items-center pt-2 pb-3 d-none">
@@ -719,12 +711,14 @@
                                                         <div class="row d-flex">
                                                             <!-- Member Team Section -->
                                                             <div class="col-4">
-                                                                <div class="mb-2 d-flex align-items-center" ng-if="tab_general_active">
+                                                                <div class="mb-2 d-flex align-items-center">
                                                                     <button class="btn btn-outline-primary btn-sm d-flex align-items-center mb-2 custom-btn p-2"
+                                                                            ng-class="{'disabled-link': !tab_general_active}"
                                                                             style="color: #2445fc; background-color: #f1f2f4; border-color: #2445fc; transition: all 0.3s ease;"
                                                                             ng-click="openDataEmployeeAdd(item, 'member')">
-                                                                        <span class="far fa-address-book fa-lg pe-2"></span>
-                                                                        Add Member Team
+                                                                        <span ng-if="tab_general_active" class="far fa-address-book fa-lg pe-2"></span>
+                                                                        <span ng-if="tab_general_active">Add Member Team</span>
+                                                                        <span ng-if="!tab_general_active">Member Team</span>
                                                                     </button>
                                                                     <span class="fa-stack fa-md cursor-pointer ms-2"
                                                                         data-bs-toggle="tooltip" 
@@ -734,7 +728,6 @@
                                                                         <i class="fa-solid fa-circle-info fa-lg" style="color: #2445fc;"></i>
                                                                     </span>
                                                                 </div>
-                                                                <div ng-if="!tab_general_active"><h6>Member Team</h6></div>
 
 
                                                                 <div ng-repeat="item2 in data_memberteam" 
@@ -756,12 +749,14 @@
 
                                                             <!-- Approver Section -->
                                                             <div class="col-4" ng-if="data_general[0].expense_type=='CAPEX' && data_general[0].sub_expense_type=='Normal'">
-                                                                <div class="mb-2 d-flex align-items-center" ng-if="tab_general_active">
+                                                                <div class="mb-2 d-flex align-items-center">
                                                                     <button class="btn btn-outline-primary btn-sm d-flex align-items-center mb-2 custom-btn"
+                                                                            ng-class="{'disabled-link': !tab_general_active}"
                                                                             style="color: #2445fc; background-color: #f1f2f4; border-color: #2445fc; transition: all 0.3s ease;"
                                                                             ng-click="openDataEmployeeAdd(item, 'approver')" title="Assign approvers for this session">
-                                                                        <span class="far fa-address-book fa-lg pe-2"></span>
-                                                                        Add Approver
+                                                                        <span ng-if="tab_general_active" class="far fa-address-book fa-lg pe-2"></span>
+                                                                        <span ng-if="tab_general_active">Add Assessment Team Leader</span>
+                                                                        <span ng-if="!tab_general_active">Assessment Team Leader</span>
                                                                     </button>
                                                                     <span class="fa-stack fa-md cursor-pointer ms-2"
                                                                         data-bs-toggle="tooltip" 
@@ -771,7 +766,6 @@
                                                                         <i class="fa-solid fa-circle-info fa-lg" style="color: #2445fc;"></i>
                                                                     </span>
                                                                 </div>
-                                                                <div ng-if="!tab_general_active"><h6>Approver</h6></div>
 
 
                                                                 <div ng-repeat="item2 in data_approver" 
@@ -795,7 +789,7 @@
                                                                         class="form-control rounded-1 datetimepicker cursor-pointer" 
                                                                         id="meeting_date" 
                                                                         name="meeting_date"
-                                                                        ng-change="actionChange(item,item.seq,'')"
+                                                                        ng-change="actionChange(item,item.seq,'meeting_date')"
                                                                         ng-model="item.meeting_date" 
                                                                         placeholder="dd/mm/yyyy">
                                                                 </span>
@@ -806,14 +800,14 @@
                                                                         id="st_meet" 
                                                                         name="st_meet"
                                                                         style="width:20px; height: 20px"
-                                                                        ng-change="actionChange(item,item.seq,'')"
+                                                                        ng-change="actionChange(item,item.seq,'meeting_time')"
                                                                         ng-model="item.meeting_start_time" 
                                                                         value="{{formatTo24Hour(item.meeting_start_time)}}"
                                                                         type="time" placeholder="hour : minute" />
                                                                     <select class="form-select rounded-1  me-1 p-1" 
                                                                         ng-model="item.meeting_start_time_hh"
                                                                         style="width:60px" 
-                                                                        ng-change="actionChange(item,item.seq,'')">
+                                                                        ng-change="actionChange(item,item.seq,'meeting_time')">
                                                                         <option ng-repeat="item2 in master_hours" ng-value="item2.id">
                                                                             {{item2.name}}
                                                                         </option>
@@ -821,7 +815,7 @@
                                                                     <select class="form-select rounded-1  me-1 p-1" 
                                                                         ng-model="item.meeting_start_time_mm"
                                                                         style="width:60px" 
-                                                                        ng-change="actionChange(item,item.seq,'')">
+                                                                        ng-change="actionChange(item,item.seq,'meeting_time')">
                                                                         <option ng-repeat="item2 in master_minutes" ng-value="item2.id">
                                                                             {{item2.name}}
                                                                         </option>
@@ -836,14 +830,14 @@
                                                                     <input class="form-control  d-none" 
                                                                         id="et_meet" 
                                                                         name="et_meet"
-                                                                        ng-change="actionChange(item,item.seq,'')"
+                                                                        ng-change="actionChange(item,item.seq,'meeting_time')"
                                                                         ng-model="item.meeting_end_time"
                                                                         type="time" 
                                                                         placeholder="hour : minute" />
                                                                     <select class="form-select rounded-1  me-1 p-1" 
                                                                         ng-model="item.meeting_end_time_hh"
                                                                         style="width:60px" 
-                                                                        ng-change="actionChange(item,item.seq,'')">
+                                                                        ng-change="actionChange(item,item.seq,'meeting_time')">
                                                                         <option ng-repeat="item2 in master_hours" ng-value="item2.id">
                                                                             {{item2.name}}
                                                                         </option>
@@ -851,7 +845,7 @@
                                                                     <select class="form-select rounded-1  me-1 p-1" 
                                                                         ng-model="item.meeting_end_time_mm"
                                                                         style="width:60px" 
-                                                                        ng-change="actionChange(item,item.seq,'')">
+                                                                        ng-change="actionChange(item,item.seq,'meeting_time')">
                                                                         <option ng-repeat="item2 in master_minutes" ng-value="item2.id">
                                                                             {{item2.name}}
                                                                         </option>
@@ -866,53 +860,48 @@
                                                         </div>
                                                     </td>
 
-                                                    <td class="align-top col-auto p-2 py-3" style="width: 158px;" ng-class="{'d-none': (!tab_general_active)}">
-
+                                                    <td class="align-top " 
+                                                        style="width: 158px;" 
+                                                        ng-hide="!tab_general_active  || (data_header[0].pha_status === 22 && flow_role_type !== 'admin')">
+                                                        @*{{'SEQ' + item.seq}}
+                                                        {{'No' + item.no}}*@
                                                         <div class="col-12" style="width: 158px;">
                                                             <div class="float-end">
                                                                 <span class="mx-1">
                                                                     <button class="btn btn-outline-secondary p-2" 
-                                                                            style="color: #ff2828; background-color: #f1f2f4; border-color: #ff2828;"
-                                                                            data-toggle="tooltip" 
-                                                                            data-placement="top" 
-                                                                            title="Remove"
-                                                                            ng-disabled="!accessInfoMap[item.id].canRemove"
-                                                                            ng-click="triggerRemove(item,item.seq,$index,'session')">
+                                                                        ng-disabled="!sessionAccessInfoMap[item.id].canRemove"
+                                                                        style="color: #ff2828; background-color: #f1f2f4; border-color: #ff2828;"
+                                                                        ng-click="triggerRemove(item,item.seq,$index,'session')">
                                                                         <span class="fa-regular fa-trash-can fa-lg"></span>
                                                                     </button>
                                                                 </span>
+
                                                                 <span class="mx-1">
                                                                     <button class="btn btn-outline-secondary p-2" 
-                                                                            style="color: #2445fc; background-color: #f1f2f4; border-color: #2445fc;"
-                                                                            ng-click=copyDataSession(item.seq,$index)
-                                                                            ng-disabled="!accessInfoMap[item.id].canCopy"                                                                             
-                                                                            data-toggle="tooltip" 
-                                                                            data-placement="top" 
-                                                                            title="Copy">
+                                                                        ng-disabled="!sessionAccessInfoMap[item.id].canCopy"  
+                                                                        style="color: #2445fc; background-color: #f1f2f4; border-color: #2445fc;"
+                                                                        ng-click=copyDataSession(item.seq,$index)>
                                                                         <span class="fas fa-copy fa-lg"></span>
-                                                                    </button>
-                                                                </span>
-                                                                <span class="mx-1 d-none">
-                                                                    <button class="btn btn-outline-secondary p-2" 
-                                                                            style="color: #1336fc; background-color: #f1f2f4; border-color: #a8a8a8;"
-                                                                            ng-click=copyDataSession(item.seq,$index)
-                                                                            data-toggle="tooltip" 
-                                                                            data-placement="top" 
-                                                                            title="Copy">
-                                                                        <span class="fas fa-copy fa-lg"></span>
-                                                                    </button>
-                                                                </span>
-                                                                <span class="mx-1">
-                                                                    <button class="btn btn-outline-secondary p-2" 
-                                                                            style="color: #0abe0a; background-color: #f1f2f4; border-color: #0abe0a;"
-                                                                            ng-click=addDataSession(item.seq,$index)
-                                                                            data-toggle="tooltip" 
-                                                                            data-placement="top" 
-                                                                            title="Add">
-                                                                        <span class="fas fa-square-plus fa-lg"></span>
                                                                     </button>
                                                                 </span>
 
+                                                                <span class="mx-1 d-none">
+                                                                    <button class="btn btn-outline-secondary p-2" 
+                                                                        ng-class="{'disabled-link': isDisableStatus && flow_role_type !== 'admin'}"
+                                                                        style="color: #1336fc; background-color: #f1f2f4; border-color: #a8a8a8;"
+                                                                        ng-click=copyDataSession(item.seq,$index)>
+                                                                        <span class="fas fa-copy fa-lg"></span>
+                                                                    </button>
+                                                                </span>
+
+                                                                <span class="mx-1">
+                                                                    <button class="btn btn-outline-secondary p-2" 
+                                                                        ng-disabled="!sessionAccessInfoMap[item.id].canAdd"                                                                       
+                                                                        style="color: #0abe0a; background-color: #f1f2f4; border-color: #0abe0a;"
+                                                                        ng-click=addDataSession(item.seq,$index)>
+                                                                        <span class="fas fa-square-plus fa-lg"></span>
+                                                                    </button>
+                                                                </span>
                                                             </div>
                                                         </div>
                                                     </td>
@@ -928,12 +917,10 @@
                     </div>
                     <!-- session end-->
                     <!-- Node list -->
-                    <div class="" 
-                        ng-class="{
-                            'tab-pane fade show active':(action_part==3),
-                            'tab-pane fade show active':(tabs[2].isActive),
-                            'tab-pane fade':(action_part!==3)}"
+                    <div class="tab-pane fade"
+                        
                         id="tab-node" role="tabpanel" aria-labelledby="node-tab">
+                        <!---ng-class="{'show active': action_part == 3 || tabs[2].isActive}"---->
 
                         <div class="m-3 row  gx-0 align-items-center">
                             <div class="card px-2">
@@ -990,7 +977,7 @@
                                                     </td>
 
                                                     <td class="align-middle white-space col-3">
-                                                        <div class="row uploadbox align-items-center" ng-if="tab_general_active">
+                                                        <div class="row uploadbox align-items-center">
                                                             <div class="btn-group">
                                                                 <div class="icon-button border p-3" style="border-color: #0d6efd; background-color: #0d6efd;">
                                                                     <span ng-if="!item.document_file_size" class="fa-solid fa-arrow-up-from-bracket fa-lg" style="color: #ffffff;"></span>
@@ -1009,7 +996,6 @@
                                                                     <div class="d-flex align-items-center">
                                                                         <span class="mr-3 nametext"
                                                                             id="filename{{item.seq}}" 
-                                                                            ng-class="{'d-none':(!tab_general_active)}"
                                                                             ng-click="downloadFile(item)"
                                                                             ng-if="item.document_file_size>0">
                                                                             <b style="font-size:x-small;">
@@ -1018,7 +1004,7 @@
                                                                         </span>
                                                                         <a id="deluploadfile-{{item.seq}}" class="btn btn-link text-danger p-0 ms-2"
                                                                                 ng-class="{'d-none':(!tab_general_active)}"
-                                                                                ng-click="clearFileName(item.seq)">
+                                                                                ng-click="triggerRemove(item,item.seq,'','uploadfile')">
                                                                             <span class="fa-regular fa-trash-can fa-lg"></span>
                                                                         </a>
                                                                     </div>
@@ -1075,6 +1061,7 @@
                                                                     <button class="btn btn-outline-secondary p-2" 
                                                                         style="color: #ff2828; background-color: #f1f2f4; border-color: #ff2828;"
                                                                         ng-click="triggerRemove(item,item.seq,$index-1,'DrawingDoc')"
+                                                                        ng-disabled="!drawingAccessInfoMap[item.id].canRemove"  
                                                                         data-toggle="tooltip" 
                                                                         data-placement="top" 
                                                                         title="Remove">
@@ -1378,14 +1365,16 @@
                                                                                     style="height: 14px; width: 30px; font-size: 10px; border-color: #f1f2f4;"
                                                                                     placeholder="Start" 
                                                                                     ng-class="{'disabled-link':(!tab_node_active)}"
-                                                                                    ng-model="item2.page_start_first" />
+                                                                                    ng-model="item2.page_start_first" 
+                                                                                    ng-change="actionChangeNodeDrawing(item,item.seq,'')"/>
                                                                         </div>
                                                                         <div class="p-0 m-0 align-top">
                                                                             <input class=" m-0 border" 
                                                                                     style="height: 14px; width: 30px; font-size: 10px; border-color: #f1f2f4;"
                                                                                     placeholder="End" 
                                                                                     ng-class="{'disabled-link':(!tab_node_active)}"
-                                                                                    ng-model="item2.page_end_first" />
+                                                                                    ng-model="item2.page_end_first" 
+                                                                                    ng-change="actionChangeNodeDrawing(item,item.seq,'')"/>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -1422,12 +1411,10 @@
                     </div>
                     <!-- Node list -->
                     <!-- RAM start-->
-                    <div class="" 
-                        ng-class="{
-                            'tab-pane fade show active':(action_part==4),
-                            'tab-pane fade show active':(tabs[3].isActive),
-                            'tab-pane fade':(action_part!==4)}"
+                    <div class="tab-pane fade"
+                        
                         id="tab-ram" role="tabpanel" aria-labelledby="ram-tab">
+                        <!---ng-class="{'show active': action_part == 4 || tabs[3].isActive}"--->
 
                         <!------&& tab_worksheet_active---->
                         <div class="m-3 row  gx-0 align-items-center" ng-if="flow_role_type == 'admin' && tab_worksheet_active">
@@ -2031,12 +2018,10 @@
 
                     <!-- RAM end-->
                     <!-- HAZOP Worksheet -->
-                    <div class="" 
-                        ng-class="{
-                            'tab-pane fade show active':(action_part==5),
-                            'tab-pane fade show active':(tabs[4].isActive),
-                            'tab-pane fade':(action_part!==5)}"
+                    <div class="tab-pane fade"
+                        
                          id="tab-worksheet" role="tabpanel" aria-labelledby="worksheet-tab">
+                         <!----ng-class="{'show active': action_part == 5 || tabs[4].isActive}"---->
                         <div style="background-color: #ffffff;"
                              ng-if=" ( data_header[0].pha_status == 11 && tab_worksheet_active==true) || (data_header[0].pha_status >  11) || (data_general[0].expense_type == 'OPEX' && (data_general[0].sub_expense_type == 'Study' || data_general[0].sub_expense_type == 'Internal Study'))">
 
@@ -2049,14 +2034,14 @@
                                                 <p class="form-label m-2 ps-0"><b>Node List:</b></p>
                                             </div>
                                             <div class=" col-auto p-0 m-0 ps-1">
-                                                <select class="form-select rounded-1 mx-1 p-1  border-start-0  border-end-0 border-top-0" ng-model="selectedItemNodeView"
-                                                        ng-change="viewDataNodeList(selectedItemNodeView)">
-                                                    <option ng-selected="selectedItemNodeView == item2.seq"
+                                                <select class="form-select rounded-1 mx-1 p-1  border-start-0  border-end-0 border-top-0" ng-model="selectedItemNodeView.seq"
+                                                        ng-change="viewDataNodeList(selectedItemNodeView.seq)">
+                                                    <option ng-selected="selectedItemNodeView.seq == item2.seq"
                                                             ng-repeat="item2 in data_node" ng-value="item2.seq">
                                                         {{item2.node}}
                                                     </option>
                                                 </select>
-                                                <button class="btn btn-link me-4 px-0 text-end d-node pt-0 small " style="font-size:10px;" ng-if="selectedItemNodeView !=0"
+                                                <button class="btn btn-link me-4 px-0 text-end d-node pt-0 small " style="font-size:10px;" ng-if="selectedItemNodeView.seq !=0"
                                                         ng-click="focusNode()">
                                                     <span class="fas fa-share"></span> View record Node List
                                                 </button>
@@ -2066,7 +2051,7 @@
                                 </div>
 
                                 <div class="col-md-6">
-                                    <div ng-repeat="item in data_node | toArray | filter:{id:selectedItemNodeView}" ng-if="item.id == selectedItemNodeView">
+                                    <div ng-repeat="item in data_node | toArray | filter:{id:selectedItemNodeView.seq}" ng-if="item.id == selectedItemNodeView.seq">
                                         <div class="row">
                                             <div class=" col-auto">
                                                 <p class="m-1"><b>Design Intent :</b> {{item.design_intent}}</p>
@@ -2080,7 +2065,7 @@
                                                 <p class="m-1">
                                                     <b>PFD, PID No. :</b>
                                                     <div class="d-flex">
-                                                        <div class="m-0 p-0" ng-repeat="x in data_nodedrawing | toArray | filter:{id_node:selectedItemNodeView}">
+                                                        <div class="m-0 p-0" ng-repeat="x in data_nodedrawing | toArray | filter:{id_node:selectedItemNodeView.seq}">
                                                             <a class="m-1 text-info cursor-pointer"
                                                                href="{{y.document_file_path}}" target="_blank"
                                                                ng-repeat="y in data_drawing"
@@ -2130,6 +2115,15 @@
                                     <table class="table fs--2 mb-0 table-bordered " cellpadding="0" cellspacing="0">
                                         <thead class=" text-uppercase  text-center  bg-soft  test" style="font-size: 10px;" id="myHeader">
                                             <tr class="">
+                                                @*<th rowspan="2">no</th>
+                                                <th rowspan="2">node</th>
+                                                <th rowspan="2">SEQ</th>
+                                                <th rowspan="2">deviations</th>
+                                                <th rowspan="2">causes_no</th>
+                                                <th rowspan="2">consequences_no</th>
+                                                <th rowspan="2">cat</th>
+                                                <th rowspan="2">Recom</th>
+                                                <th rowspan="2">Row type</th>*@
                                                 <th class=" align-middle mx-0" 
                                                     colspan="1" 
                                                     rowspan="2" 
@@ -2296,17 +2290,81 @@
 
 
                                         <tbody class="">
+                                            
                                             <tr class="rowwork border border-dashed" 
                                                 ng-if="( data_node.length == 1 ? (data_node[0].node == null ? false : true) : true) "
-                                                ng-repeat="item in data_nodeworksheet | toArray | filter:{id_node : selectedItemNodeView} | sortNodeworksheet"> 
+                                                ng-repeat="item in data_nodeworksheet | toArray | filter:{id_node : selectedItemNodeView.seq} | sortNodeworksheet"> 
+    @*<td>{{selectedItemNodeView.seq}}</td>
+    <td>{{"id_node" + item.id_node}}</td>
+    <!-- Second td for id_node -->
+    <td class="align-top border border-light border-active">
+        {{ item.no }}
+    </td>
+
+    <!-- Third td for selectedItemNodeView.seq -->
+    <td class="align-top border border-light border-active">
+        {{ item.id_node }}
+    </td>
+    <!-- Fourth td for deviations_no -->
+    <td class="align-top border border-light border-active">
+        {{ item.seq }}
+    </td>
+    <!-- Fourth td for deviations_no -->
+    <td class="align-top border border-light border-active">
+        {{ item.deviations_no }}
+    </td>
+    <!-- Fifth td for causes_no -->
+    <td class="align-top border border-light border-active">
+        {{ item.causes_no }}
+    </td>
+
+    <!-- Sixth td for consequences_no -->
+    <td class="align-top border border-light border-active">
+        {{ item.consequences_no }}
+    </td>
+    <td class="align-top border border-light border-active">
+        {{ item.category_no }}
+    </td>
+
+        <!-- Sixth td for consequences_no -->
+    <td class="align-top border border-light border-active">
+        {{ item.recommendations_no }}
+    </td>
+    <td class="align-top border border-light border-active">
+        {{ item.row_type }}
+    </td>*@
+
+   @* <!-- Fifth td for causes_no -->
+    <td class="align-top border border-light border-active">
+        {{ item.seq_causes }}
+    </td>
+
+    <!-- Sixth td for consequences_no -->
+    <td class="align-top border border-light border-active">
+        {{ item.seq_consequences }}
+    </td>
+    <td class="align-top border border-light border-active">
+        {{ item.seq_category }}
+    </td>
+
+        <!-- Sixth td for consequences_no -->
+    <td class="align-top border border-light border-active">
+        {{ item.recommendations_no }}
+    </td>
+    <td class="align-top border border-light border-active">
+        {{ item.row_type }}
+    </td> *@
                                                 <!-----no---->
                                                 <td class="align-top border border-light border-active " style="padding: 0 !important; width: 80px;"
                                                     ng-if="( item.causes_no == 1 && item.consequences_no == 1) && item.row_type == 'causes' "
-                                                    rowspan="{{ (data_nodeworksheet | filter:{id_node : selectedItemNodeView,deviations: item.deviations}).length }}">
+                                                    rowspan="{{ rowspanMap['deviations' + item.id_node + '-' + item.deviations_no] || 1 }}">
                                                     
-                                                    @*<p class=" mx-1 ms-0  text-1100 fw-bold max-w-100 " ng-if="( item.causes_no == 1 && item.consequences_no == 1) && item.row_type == 'causes' ">{{item.guidewords_no +'.'+  (item.deviations == null? item.guidewords : item.deviations +' '+ item.guidewords  )   }}  </p>*@
+                                                    @*rowspan="{{ (data_nodeworksheet | filter:{id_node : selectedItemNodeView.seq,deviations: item.deviations}).length }}"
+                                                    <p class=" mx-1 ms-0  text-1100 fw-bold max-w-100 " ng-if="( item.causes_no == 1 && item.consequences_no == 1) && item.row_type == 'causes' ">{{item.guidewords_no +'.'+  (item.deviations == null? item.guidewords : item.deviations +' '+ item.guidewords  )   }}  </p>*@
                                                     <p class=" mx-1 ms-0  text-1100 fw-bold max-w-100 " >
-                                                        {{$index + 1}} {{ item.deviations }}
+
+                                                        {{item.deviations_no}} {{ item.deviations }}
+
                                                     </p>
                                                 </td>
 
@@ -2314,10 +2372,14 @@
                                                     <p class=" mx-1  text-1100 fw-bold " ng-if="( item.causes_no == 1 && item.consequences_no == 1) && item.row_type == 'causes' ">{{ item.deviations }}  </p>
                                                 </td>*@
 
+
                                                 @* causes *@
                                                 <td class="align-top border border-light border-active " style="padding: 0 !important;"
                                                     ng-if="item.row_type === 'causes'" 
-                                                    rowspan="{{ (data_nodeworksheet | filter:{id_node : selectedItemNodeView,deviations: item.deviations,causes_no: item.causes_no}).length }}">
+                                                    rowspan="{{ rowspanMap['causes' + item.id_node + '-' + item.deviations_no + '-' + item.causes_no] || 1 }}">
+                                                    
+                                                    
+                                                    @*rowspan="{{ (data_nodeworksheet | filter:{id_node : selectedItemNodeView.seq,deviations: item.deviations,causes_no: item.causes_no}).length }}"*@
                                                     <div class="d-flex align-items-top w-100">
                                                         <div>
                                                             <p class="p-0 m-0 me-1 text-end">{{item.guidewords_no +'.' + item.causes_no +'.'}}</p>
@@ -2335,7 +2397,7 @@
                                                                     <span class="fas fa-cog text-info align-top"></span>
                                                                 </button>
                                                                 <div class="dropdown-menu dropdown-menu-end py-2 align-top">
-                                                                    <a class="dropdown-item text-success" ng-click="adddata_nodeworksheet_lv1('causes',item,$index)">
+                                                                    <a class="dropdown-item text-success" ng-click="adddata_nodeworksheet('causes',item,$index)">
                                                                         <span class="fas fa-copy"></span>
                                                                         Add
                                                                     </a>
@@ -2349,9 +2411,8 @@
                                                                         <span class="fas fa-copy"></span>
                                                                         Paste
                                                                     </a>
-                                                                    <div class="dropdown-divider " ng-if="!(item.causes_no == 1)"></div>
+                                                                    <div class="dropdown-divider "></div>
                                                                     <a class="dropdown-item text-danger"
-                                                                       ng-if="!(item.causes_no == 1)"
                                                                        ng-click="removeDataNodeWorksheet('causes',item,$index)">
                                                                         <span class="fas fa-times-circle"></span> 
                                                                         Remove
@@ -2366,17 +2427,22 @@
                                                             </div>
                                                         </div>
                                                         <div class="autocomplete-container" style=" width: 100%; ">
+
                                                             <textarea class="form-control form-control-sm worksheetscroll rounded-1 p-0 m-0 w-100 border border-0" 
-                                                                      style=" width: 100vh; font-size: 10px; resize: none;"
-                                                                      id="causes_worksheet_{{item.seq}}" 
-                                                                      name="causes_worksheet_{{item.seq}}"
-                                                                      placeholder="Causes" 
-                                                                      rows="3"
-                                                                      ng-style="{'min-height': (30 * (data_nodeworksheet | filter:{id_node : selectedItemNodeView,deviations: item.deviations,causes_no: item.causes_no}).length) + 'px'}"
-                                                                      ng-readonly="!can_edit"
-                                                                      ng-model="item.causes"
-                                                                      ng-keyup="filterResultHistory(item.causes, 'causes', 'causes_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')">
+                                                                    style="width: 100vh; font-size: 10px; resize: none;"
+                                                                    id="causes_worksheet_{{item.seq}}" 
+                                                                    name="causes_worksheet_{{item.seq}}"
+                                                                    placeholder="Causes" 
+                                                                    rows="3"
+                                                                    ng-style="{'min-height': (30 * rowspanMap['causes' + item.id_node + '-' + item.deviations_no + '-' + item.causes_no]) + 'px'}"
+                                                                    ng-readonly="!can_edit"
+                                                                    ng-model="item.causes"
+                                                                    ng-keyup="clearAllValidationMessages(item.seq,'causes');
+                                                                                updateFieldItems(item,'causes');
+                                                                                filterResultHistory(item.causes, 'causes', 'causes_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')">
                                                             </textarea>
+
+
                                                             <div class="autocomplete-dropdown" style="position: absolute;" ng-show="isShow == 'causes_worksheet_'+ item.seq"
                                                                  ng-class="{'ng-show' : (filteredArr[0].fieldID == ('causes_worksheet_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('causes_worksheet_'+item.seq)) }">
                                                                 <div class="autocomplete-option"
@@ -2396,7 +2462,8 @@
                                                 @* consequences *@
                                                 <td class="align-top border border-light border-active " style="padding: 0 !important;"
                                                     ng-if="item.row_type === 'causes' || item.row_type =='consequences' " 
-                                                    rowspan="{{ (data_nodeworksheet | filter:{id_node : selectedItemNodeView,deviations: item.deviations,causes_no: item.causes_no,consequences_no: item.consequences_no}).length }}">
+                                                    rowspan="{{ rowspanMap['consequences' + item.id_node + '-' + item.deviations_no + '-' + item.causes_no + '-' + item.consequences_no] || 1 }}">
+                                                    @*rowspan="{{ (data_nodeworksheet | filter:{id_node : selectedItemNodeView.seq,deviations: item.deviations,causes_no: item.causes_no,consequences_no: item.consequences_no}).length }}"*@
                                                     <div class="d-flex align-items-top w-100" >
                                                         <div>
                                                             <p class="p-0 m-0 me-1 text-end">{{item.guidewords_no +'.' + item.causes_no +'.'+item.consequences_no +'.'}}</p>
@@ -2415,7 +2482,7 @@
                                                                 </button>
                                                                 <div class="dropdown-menu dropdown-menu-end py-2 align-top">
                                                                     <a class="dropdown-item text-success"
-                                                                       ng-click="adddata_nodeworksheet_lv1('consequences',item,$index)">
+                                                                       ng-click="adddata_nodeworksheet('consequences',item,$index)">
                                                                         <span class="fas fa-copy"></span>
                                                                         Add
                                                                     </a>
@@ -2431,9 +2498,8 @@
                                                                         <span class="fas fa-copy"></span>
                                                                         Paste
                                                                     </a>
-                                                                    <div class="dropdown-divider" ng-if="item.consequences_no  > 1"></div> 
+                                                                    <div class="dropdown-divider"></div> 
                                                                     <a class="dropdown-item text-danger"
-                                                                        ng-if="!(item.consequences_no == 1)"
                                                                         ng-click="removeDataNodeWorksheet('consequences',item,$index)">
                                                                         <span class="fas fa-times-circle"></span> 
                                                                         Remove
@@ -2453,10 +2519,12 @@
                                                                       name="consequences_worksheet_{{item.seq}}"
                                                                       placeholder="Consequences" 
                                                                       rows="3"
-                                                                      ng-style="{'min-height': (30 * (data_nodeworksheet | filter:{id_node : selectedItemNodeView,deviations: item.deviations,causes_no: item.causes_no,consequences_no: item.consequences_no}).length) + 'px'}"
+                                                                      ng-style="{'min-height': (30 * rowspanMap['consequences' + item.id_node + '-' + item.deviations_no + '-' + item.causes_no + '-' + item.consequences_no]) + 'px'}"
                                                                       ng-readonly="!can_edit"                                                                      
                                                                       ng-model="item.consequences"
-                                                                      ng-keyup="filterResultHistory(item.consequences, 'consequences', 'consequences_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')">
+                                                                      ng-keyup="clearAllValidationMessages(item.seq,'consequences');
+                                                                      updateFieldItems(item,'consequences');
+                                                                      filterResultHistory(item.consequences, 'consequences', 'consequences_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')">
                                                             </textarea>
                                                             <div class="autocomplete-dropdown" style="position: absolute;" ng-show="isShow == 'consequences_worksheet_'+ item.seq"
                                                                  ng-class="{'ng-show' : (filteredArr[0].fieldID == ('consequences_worksheet_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('consequences_worksheet_'+item.seq)) }">
@@ -2475,10 +2543,12 @@
                                                     </div>
                                                 </td>
 
+                                                @* category *@
                                                 <td class="align-top border border-light border-active "
                                                     style="padding: 0 !important; width: 70px;"
                                                     ng-if="item.row_type === 'causes' || item.row_type =='consequences' || item.row_type == 'category'" 
-                                                    rowspan="{{ (data_nodeworksheet | filter:{id_node : selectedItemNodeView,deviations: item.deviations,causes_no: item.causes_no,consequences_no: item.consequences_no,category_no: item.category_no}).length }}">
+                                                    rowspan="{{ rowspanMap['category' + item.id_node + '-' + item.deviations_no + '-' + item.causes_no + '-' + item.consequences_no + '-' + item.category_no] || 1 }}">
+                                                    @*rowspan="{{ (data_nodeworksheet | filter:{id_node : selectedItemNodeView.seq,deviations: item.deviations,causes_no: item.causes_no,consequences_no: item.consequences_no,category_no: item.category_no}).length }}"*@
                                                     <div class="d-flex align-items-top px-0" style="width: 70px;">
                                                         <div class="align-top font-sans-serif btn-reveal-trigger position-static pt-1 mx-0 px-0" style="width: 20px;">
                                                             <p class="p-0 m-0 me-1 text-end d-none">
@@ -2495,13 +2565,12 @@
                                                                     <span class="fas fa-cog text-info align-top"></span>
                                                                 </button>
                                                                 <div class="dropdown-menu dropdown-menu-end py-2 align-top">
-                                                                    <a class="dropdown-item text-success" ng-click="adddata_nodeworksheet_lv1('category',item)">
+                                                                    <a class="dropdown-item text-success" ng-click="adddata_nodeworksheet('category',item)">
                                                                         <span class="fas fa-copy"></span>
                                                                         Add
                                                                     </a>
-                                                                    <div class="dropdown-divider " ng-if="!(item.category_no == 1)"></div>
+                                                                    <div class="dropdown-divider "></div>
                                                                     <a class="dropdown-item text-danger"
-                                                                       ng-if="!(item.category_no == 1)"
                                                                        ng-click="removeDataNodeWorksheet('category',item,$index)">
                                                                        <span class="fas fa-times-circle"></span> 
                                                                        Remove
@@ -2511,7 +2580,9 @@
                                                         </div>
                                                         <select class="form-select rounded-1 mx-1 p-1  border-start-0  border-end-0 border-top-0 "
                                                                 ng-class="{'disabled-link':(!tab_worksheet_active)}"
-                                                                ng-change="actionChangeWorksheet(item,item.seq,'')" 
+                                                                ng-change="actionChangeWorksheet(item,item.seq,'');
+                                                                        updateFieldItems(item,'category');
+                                                                        clearAllValidationMessages(item.seq,'category')" 
                                                                 ng-model="item.category_type">
                                                             <option ng-selected="item.category_type == item2.id"
                                                                     ng-repeat="item2 in DataCategory" 
@@ -2522,14 +2593,15 @@
                                                     </div>
                                                     <div id="valid-nodeworksheet-category_type-{{item.seq}}"
                                                         class="invalid-feedback text-danger" style="margin-top: 17px;">
-                                                        Please a valid.
+                                                        Please a valid category
                                                     </div>
                                                 </td>
 
                                                 <td class="align-top border border-light border-end-0 border-top-0 "
                                                     style="padding: 0 !important; width: 20px;"
                                                     ng-if="item.row_type === 'causes' || item.row_type =='consequences' || item.row_type == 'category' " 
-                                                    rowspan="{{ (data_nodeworksheet | filter:{id_node : selectedItemNodeView,deviations: item.deviations,causes_no: item.causes_no,consequences_no: item.consequences_no,category_no: item.category_no}).length }}">
+                                                    rowspan="{{ rowspanMap[item.id_node + '-' + item.deviations_no + '-' + item.causes_no + '-' + item.consequences_no + '-' + item.category_no] || 1 }}">
+                                                    @*rowspan="{{ (data_nodeworksheet | filter:{id_node : selectedItemNodeView.seq,deviations: item.deviations,causes_no: item.causes_no,consequences_no: item.consequences_no,category_no: item.category_no}).length }}"*@
                                                     <div class="align-items-center text-end mt-1" style=" width: 20px;"
                                                          ng-class="{'disabled-link':(!tab_worksheet_active)}">
                                                         <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end"
@@ -2542,7 +2614,8 @@
                                                 <td class="align-top border border-light border-end-0 border-top-0"
                                                     style="padding: 0 !important; width: 20px;"
                                                     ng-if="item.row_type === 'causes' || item.row_type =='consequences' || item.row_type == 'category' " 
-                                                    rowspan="{{ (data_nodeworksheet | filter:{id_node : selectedItemNodeView,deviations: item.deviations,causes_no: item.causes_no,consequences_no: item.consequences_no,category_no: item.category_no}).length }}">
+                                                    rowspan="{{ rowspanMap[item.id_node + '-' + item.deviations_no + '-' + item.causes_no + '-' + item.consequences_no + '-' + item.category_no] || 1 }}">
+                                                    @*rowspan="{{ (data_nodeworksheet | filter:{id_node : selectedItemNodeView.seq,deviations: item.deviations,causes_no: item.causes_no,consequences_no: item.consequences_no,category_no: item.category_no}).length }}"*@
                                                     <div class="align-items-center text-end mt-1" style=" width: 20px;"
                                                          ng-class="{'disabled-link':(!tab_worksheet_active)}">
                                                         <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end"
@@ -2559,7 +2632,8 @@
                                                 <td class="align-top border border-light border-active "
                                                     style="padding: 0 !important; width: 30px; height:30;"
                                                     ng-if="item.row_type === 'causes' || item.row_type =='consequences' || item.row_type == 'category' " 
-                                                    rowspan="{{ (data_nodeworksheet | filter:{id_node : selectedItemNodeView,deviations: item.deviations,causes_no: item.causes_no,consequences_no: item.consequences_no,category_no: item.category_no}).length }}">
+                                                    rowspan="{{ rowspanMap[item.id_node + '-' + item.deviations_no + '-' + item.causes_no + '-' + item.consequences_no + '-' + item.category_no] || 1 }}">
+                                                    @*rowspan="{{ (data_nodeworksheet | filter:{id_node : selectedItemNodeView.seq,deviations: item.deviations,causes_no: item.causes_no,consequences_no: item.consequences_no,category_no: item.category_no}).length }}"*@
                                                     <div class="align-items-center text-end mt-1" style=" width: 30px;">
                                                         <button ng-style=" { 'background-color' : ((item.ram_befor_risk == 'H') ? 'red' : ((item.ram_befor_risk == 'M') ? 'yellow' : ((item.ram_befor_risk == 'L') ? 'green' : '#D3D3D3')) ) }"
                                                                 class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end h-100"
@@ -2569,7 +2643,7 @@
                                                                 style="width: 30px;height:30px !important;">
                                                             <div class="d-flex text-center" style=" width: 20px;">
                                                                 <h6 class="me-1 text-center" style=" width: 20px;">{{item.ram_befor_risk}}</h6>
-                                                                <span class="fas fa-pencil-alt fa-sm " style=" width: 8px;"></span>
+                                                                <span class="fas fa-pencil-alt fa-sm " ng-hide="!tab_worksheet_active" style=" width: 8px;"></span>
                                                             </div>
                                                         </button>
                                                     </div>
@@ -2577,7 +2651,8 @@
 
                                                 <td class="align-top border border-lightborder-active" style="padding: 0 !important; width: 40px;"
                                                     ng-if="item.row_type === 'causes' || item.row_type =='consequences' || item.row_type == 'category' " 
-                                                    rowspan="{{ (data_nodeworksheet | filter:{id_node : selectedItemNodeView,deviations: item.deviations,causes_no: item.causes_no,consequences_no: item.consequences_no,category_no: item.category_no}).length }}">
+                                                    rowspan="{{ rowspanMap[item.id_node + '-' + item.deviations_no + '-' + item.causes_no + '-' + item.consequences_no + '-' + item.category_no] || 1 }}">
+                                                    @*rowspan="{{ (data_nodeworksheet | filter:{id_node : selectedItemNodeView.seq,deviations: item.deviations,causes_no: item.causes_no,consequences_no: item.consequences_no,category_no: item.category_no}).length }}"*@
                                                     <div class="d-flex align-items-center text-end mt-1"
                                                          ng-class="{'disabled-link':(!tab_worksheet_active)}">
                                                         <select class="form-select rounded-1 mx-1 p-1  border-start-0  border-end-0 border-top-0 " 
@@ -2613,7 +2688,8 @@
 
                                                 <td id="td_existing_safeguards" class="align-top border border-light border-active" style="padding: 0 !important;"
                                                     ng-if="item.row_type === 'causes' || item.row_type =='consequences' || item.row_type == 'category' " 
-                                                    rowspan="{{ (data_nodeworksheet | filter:{id_node : selectedItemNodeView,deviations: item.deviations,causes_no: item.causes_no,consequences_no: item.consequences_no,category_no: item.category_no}).length }}">
+                                                    rowspan="{{ rowspanMap[item.id_node + '-' + item.deviations_no + '-' + item.causes_no + '-' + item.consequences_no + '-' + item.category_no] || 1 }}">
+                                                    @*rowspan="{{ (data_nodeworksheet | filter:{id_node : selectedItemNodeView.seq,deviations: item.deviations,causes_no: item.causes_no,consequences_no: item.consequences_no,category_no: item.category_no}).length }}"*@
                                                     <div class="d-flex align-items-center w-100">
                                                         <div class="autocomplete-container" style=" width: 100%; " ng-class="{'disabled-link':(!tab_worksheet_active)}">
                                                             <!--Modal RAM Start-->         
@@ -2622,7 +2698,7 @@
                                                                     id="existing_safeguards_worksheet_{{item.seq}}" 
                                                                     name="existing_safeguards_worksheet_{{item.seq}}"
                                                                     placeholder=" Protection/Mitigation Barriers" 
-                                                                    ng-style="{'min-height': (45 * (data_nodeworksheet | filter:{id_node : selectedItemNodeView,deviations: item.deviations,causes_no: item.causes_no,consequences_no: item.consequences_no,category_no: item.category_no}).length) + 'px'}"
+                                                                    ng-style="{'min-height': (40 * rowspanMap[item.id_node + '-' + item.deviations_no + '-' + item.causes_no + '-' + item.consequences_no + '-' + item.category_no]) + 'px'}"
                                                                     ng-readonly="!can_edit"     
                                                                     ng-model="item.existing_safeguards"
                                                                     ng-keyup="filterResultHistory(item.existing_safeguards, 'existing_safeguards', 'existing_safeguards_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'')">
@@ -2649,7 +2725,8 @@
                                                 <td class="align-top border border-light border-right-0 "
                                                     style="padding: 0 !important; width: 20px;"
                                                     ng-if="item.row_type === 'causes' || item.row_type =='consequences' || item.row_type == 'category' " 
-                                                    rowspan="{{ (data_nodeworksheet | filter:{id_node : selectedItemNodeView,deviations: item.deviations,causes_no: item.causes_no,consequences_no: item.consequences_no,category_no: item.category_no}).length }}">
+                                                    rowspan="{{ rowspanMap[item.id_node + '-' + item.deviations_no + '-' + item.causes_no + '-' + item.consequences_no + '-' + item.category_no] || 1 }}">
+                                                    @*rowspan="{{ (data_nodeworksheet | filter:{id_node : selectedItemNodeView.seq,deviations: item.deviations,causes_no: item.causes_no,consequences_no: item.consequences_no,category_no: item.category_no}).length }}"*@
                                                     <div class="align-items-center text-end mt-1" style=" width: 20px;" ng-class="{'disabled-link':(!tab_worksheet_active)}">
                                                         <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end"
                                                                 type="button" 
@@ -2665,7 +2742,7 @@
                                                 <td class="align-top border border-light border-right-0"
                                                     style="padding: 0 !important; width: 20px;"
                                                     ng-if="item.row_type === 'causes' || item.row_type =='consequences' || item.row_type == 'category' " 
-                                                    rowspan="{{ (data_nodeworksheet | filter:{id_node : selectedItemNodeView,deviations: item.deviations,causes_no: item.causes_no,consequences_no: item.consequences_no,category_no: item.category_no}).length }}">
+                                                    rowspan="{{ rowspanMap[item.id_node + '-' + item.deviations_no + '-' + item.causes_no + '-' + item.consequences_no + '-' + item.category_no] || 1 }}">
                                                     <div class="align-items-center text-end mt-1" style=" width: 20px;" ng-class="{'disabled-link':(!tab_worksheet_active)}">
                                                         <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end"
                                                                 type="button" 
@@ -2681,7 +2758,7 @@
                                                 <td class="align-top border border-light border-active "
                                                     style="padding: 0 !important; width: 30px; heigh:30px"
                                                     ng-if="item.row_type === 'causes' || item.row_type =='consequences' || item.row_type == 'category' " 
-                                                    rowspan="{{ (data_nodeworksheet | filter:{id_node : selectedItemNodeView,deviations: item.deviations,causes_no: item.causes_no,consequences_no: item.consequences_no,category_no: item.category_no}).length }}">
+                                                    rowspan="{{ rowspanMap[item.id_node + '-' + item.deviations_no + '-' + item.causes_no + '-' + item.consequences_no + '-' + item.category_no] || 1 }}">
                                                     <div class="align-items-center text-end mt-1" style=" width: 30px;">
                                                         <button ng-style=" { 'background-color' : ((item.ram_after_risk == 'H') ? 'red' : ((item.ram_after_risk == 'M') ? 'yellow' : ((item.ram_after_risk == 'L') ? 'green' : '#D3D3D3')) ) }"
                                                                 class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2p-1 ps-0 text-end"
@@ -2691,7 +2768,7 @@
                                                                 style="width: 30px; height:30px !important;">
                                                             <div class="d-flex text-center" style=" width: 25px;">
                                                                 <h6 class="me-1 text-center" style=" width: 30px;">{{item.ram_after_risk}}</h6>
-                                                                <span class="fas fa-pencil-alt fa-sm " style=" width: 8px;"></span>
+                                                                <span class="fas fa-pencil-alt fa-sm " ng-hide="!tab_worksheet_active" style=" width: 8px;"></span>
                                                             </div>
                                                         </button>
                                                     </div>
@@ -2714,18 +2791,18 @@
                                                             </button>
                                                             <div class="dropdown-menu dropdown-menu-end py-2 align-top">
                                                                 <a class="dropdown-item text-success"
-                                                                   ng-click="adddata_nodeworksheet_lv1('recommendations',item,$index)">
+                                                                   ng-click="adddata_nodeworksheet('recommendations',item,$index)">
                                                                     <span class="fas fa-copy"></span>
                                                                     Add
                                                                 </a>
                                                                 <div class="dropdown-divider "></div>
-                                                                <a class="dropdown-item text-danger" ng-click="remove_listworksheet('category',item,$index)"><span class="fas fa-times-circle"></span> Remove</a>
+                                                                <a class="dropdown-item text-danger" ng-click="removeDataNodeWorksheet('recommendations',item,$index)"><span class="fas fa-times-circle"></span> Remove</a>
                                                             </div>
                                                         </div>                                                          
                                                         <div class="autocomplete-container" 
                                                             style=" width: 100%; " 
                                                             ng-if="item.recommendations!=''">
-                                                            {{item.recommendations_no}} 
+                                                            {{item.recommendations_action_no}} 
                                                             @*<textarea class="form-control form-control-sm rounded-1 p-0 m-0 w-100 border-0 text-center"
                                                                       style=" width: 50px; font-size: 10px;resize: none;"
                                                                       placeholder="No" 
@@ -2748,16 +2825,17 @@
                                                         </span>
                                                         <div class="autocomplete-container" style=" width: 100%; " ng-class="{'disabled-link':(!tab_worksheet_active)}">
                                                             <textarea class="form-control form-control-sm rounded-1 p-0 m-0 w-100 border border-end-0 border-top-0"
-                                                                      style=" width: 400px; font-size: 10px;"
+                                                                      style=" width: 400px; font-size: 10px; resize: none;"
                                                                       id="recommendations_worksheet_{{item.seq}}" 
                                                                       name="recommendations_worksheet_{{item.seq}}"
                                                                       placeholder="Recommendations" 
                                                                       rows="3"
                                                                       ng-readonly="!can_edit"
                                                                       ng-model="item.recommendations"
-                                                                      ng-change="recommentAction($index)"
-                                                                      ng-keyup="
-                                                                      filterResultHistory(item.recommendations, 'recommendations', 'recommendations_worksheet_'+ item.seq);actionChangeWorksheet(item,item.seq,'recom')">
+                                                                      ng-change="clearAllValidationMessages(item.seq,'recom');"
+                                                                      ng-keyup="updateFieldItems(item,'recommendations');
+                                                                      filterResultHistory(item.recommendations, 'recommendations', 'recommendations_worksheet_'+ item.seq);
+                                                                      actionChangeWorksheet(item,item.seq,'recom')">
                                                             </textarea>
                                                             <div class="autocomplete-dropdown" style="position: absolute;" ng-show="isShow == 'recommendations_worksheet_'+ item.seq"
                                                                  ng-class="{'ng-show' : (filteredArr[0].fieldID == ('recommendations_worksheet_'+item.seq)),'ng-hide' : (filteredArr[0].fieldID !== ('recommendations_worksheet_'+item.seq)) }">
@@ -2769,6 +2847,11 @@
                                                             </div>
                                                         </div>
                                                     </div>
+                                                    <div id="valid-worksheet-recommendations-{{item.seq}}"
+                                                         class="invalid-feedback text-danger">
+                                                        Please provide a valid Recommendations.
+                                                    </div>   
+
                                                 </td>
 
                                                 <td class="align-top border border-light border-active" style="padding: 0 !important;"
@@ -2800,7 +2883,7 @@
                                                 <td class="align-top border border-light border-active" style="padding: 0 !important; width: 120px;">
                                                     <div class="d-flex align-items-center ">
                                                         <div ng-class="{'disabled-link': (!action_owner_active) || (item.action_status === 'Responed')}">
-                                                            <button ng-click="openDataEmployeeAdd(item, 'owner'); recommentAction_valid(item);" 
+                                                            <button ng-click="openDataEmployeeAdd(item, 'owner');"
                                                                     class="px-0 mx-1"
                                                                     ng-class="{
                                                                         'btn btn-dark': item.action_status === 'Responded',
@@ -2870,8 +2953,8 @@
                                         ng-class="{'disabled-link':(!tab_worksheet_active)}">
                                     <textarea class="form-control rounded-1"
                                                 placeholder="Note"
-                                                ng-repeat="item in data_node | toArray | filter:{id:selectedItemNodeView}" 
-                                                ng-if="item.id == selectedItemNodeView"
+                                                ng-repeat="item in data_node | toArray | filter:{id:selectedItemNodeView.seq}" 
+                                                ng-if="item.id == selectedItemNodeView.seq"
                                                 ng-model="item.descriptions"
                                                 style="height: 50px">
                                     </textarea>
@@ -3124,12 +3207,10 @@
                     </div>
                     <!-- HAZOP Worksheet -->
                     <!-- manage recment -->
-                    <div class="" 
-                        ng-class="{
-                            'tab-pane fade show active':(action_part==6),
-                            'tab-pane fade show active':(tabs[5].isActive),
-                            'tab-pane fade':(action_part!==6)}"
+                    <div class="tab-pane fade"
+                        
                          id="tab-manage" role="tabpanel" aria-labelledby="manage-tab">
+                         <!---ng-class="{'show active': action_part == 6 || tabs[5].isActive}"---->
 
                         <div class=" border-bottom border-200 my-0" id="NodeTable">
                             <div class="table-responsive scrollbar">
@@ -3356,6 +3437,11 @@
                                                         </button>
                                                     </div>
                                                 </div>
+
+                                                 <div id="valid-nodeworksheet-ram-after-risk-{{item.seq}}"
+                                                     class="invalid-feedback text-danger">
+                                                    Please provide a valid Risk.
+                                                </div>                                               
                                             </td>
 
                                             <td class="align-top rating white-space-nowrap " ng-class="{'disabled-link':(!tab_managerecom_active)}">
@@ -3431,12 +3517,8 @@
                     </div>
                     <!-- manage recment -->
                     <!-- ta2 approver -->
-                    <div class="" 
-                        ng-class="{
-                            'tab-pane fade show active':(action_part==7),
-                            'tab-pane fade show active':(tabs[6].isActive),
-                            'tab-pane fade':(action_part!==7)}"
-                         id="tab-approver" role="tabpanel" aria-labelledby="approver-tab">
+                    <div class="tab-pane fade" id="tab-approver" role="tabpanel" aria-labelledby="approver-tab">
+                         <!---ng-class="{'show active': action_part == 7 || tabs[6].isActive}"---->
 
                         <div class="m-3 row  gx-0 align-items-center">
 
@@ -3457,7 +3539,7 @@
                                         </thead>
 
                                         <tbody class="list" id="customer-rating-table-body">
-                                            <tr ng-repeat="item in data_approver | filter: { id_session: data_drawing_approver[0].id_session }"
+                                            <tr ng-repeat="item in data_approver | filter: { id_session: active_session}"
                                                 ng-init="accessInfo = Access_check(item)"
                                                 ng-style="{ 'background-color': accessInfo.canAccess ? '' : '#f9fbff' }"
                                                 ng-class="{ 'task-highlight':  accessInfo.canAccess}"                                                
@@ -3522,9 +3604,10 @@
 
                                                 </td>
                                                 <td class="align-top white-space-nowrap" ng-class="{'disabled-link':(!tab_approver_active)}">
-                                                    <div class="col-md-12 p-1 ps-3 text-start"  ng-if="(accessInfo.canAccess || accessInfo.isTA2) && item.approver_action_type != 2">
+                                                    <div class="col-md-12 p-1 ps-3 text-start"  ng-if="!isApproveReject && item.approver_action_type != 2">
                                                         <div class="form-check form-check-inline cursor-pointer ps-0">
-                                                            <span class="fa-solid far fa-file-pdf text-danger" style="font-size:15px;" ng-click="confirmExport('hazop_report','pdf')"></span>
+                                                            <span class="fa-solid far fa-file-pdf text-danger" style="font-size:15px;" 
+                                                                ng-click="confirmExport('hazop_report','pdf')"></span>
                                                             <b>
                                                                 HAZOP Report
                                                             </b>
@@ -3546,14 +3629,14 @@
                                                         </div>
                                                     </div>
 
-                                                    <div class="col-md-12 p-1 ps-3 text-start" ng-if="(item.approver_action_type == 2 || data_header[0].pha_status != 21)">
+                                                    <div class="col-md-12 p-1 ps-3 text-start" ng-if="(item.approver_action_type == 2 || isApproveReject)">
                                                         <div class="form-check form-check-inline cursor-pointer p-0">
                                                             <span class="fa-solid far fa-file-pdf text-danger" style="font-size:15px;" ng-click="confirmExport('hazop_report','pdf')"></span>
                                                             <b>
                                                                 HAZOP Report
                                                             </b>
                                                         </div><br />
-                                                        <p>{{item.action_status =='approve' ? 'Approve' : 'Send back with Comment' }}</p>
+                                                        <p>{{item.action_status =='approve' ? 'Approve' : item.action_status =='reject' ? 'Send back with Comment' : '' }}</p>
                                                     </div>
 
                                                 </td>
@@ -3576,44 +3659,53 @@
                                                         </p>
                                                     </div>
                                                 </td>
-                                                <td class="align-top px-1" style="min-width:200px;">
-                                                    @* {{item.seq}} *@
-                                                    <div class=" p-0 cursor-pointer " 
-                                                         ng-repeat="item_x in data_drawing_approver  | toArray | filter:{id_approver : item.seq}  ">
-                                                        <div class="d-flex flex-nowrap">
-                                                            <div class="font-sans-serif btn-reveal-trigger position-static me-1" 
-                                                                ng-if="(accessInfo.canAccess || accessInfo.isTA2 ||accessInfo.isTA3) && (item.approver_action_type != 2)">
+                                                <td class="align-top justify-content-center px-1" style="min-width:200px;">
+                                                    <!-- Loop through approvers -->
+                                                    <div class="p-0 cursor-pointer" 
+                                                        ng-repeat="item_x in data_drawing_approver | toArray | filter:{id_approver : item.seq}">
+                                                        <div class="d-flex flex-nowrap justify-content-center align-items-center">
+                                                            <!-- Cog icon (Only TA2, TA3, and Admins can see it and only if not submitted) -->
+                                                            <div class="font-sans-serif btn-reveal-trigger position-static me-1" ng-hide="isApproveReject">
                                                                 <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2 p-1"
-                                                                        ng-if="(accessInfo.canAccess || accessInfo.isTA2 || accessInfo.isTA3)"
-                                                                        type="button" data-bs-toggle="dropdown" data-boundary="window"
-                                                                        aria-haspopup="true" aria-expanded="false" data-bs-reference="parent">
+                                                                    ng-if="(accessInfo.canAccess || accessInfo.isTA2 || accessInfo.isTA3) && (item.approver_action_type != 2)"
+                                                                    type="button" data-bs-toggle="dropdown" data-boundary="window"
+                                                                    aria-haspopup="true" aria-expanded="false" data-bs-reference="parent">
                                                                     <span class="fas fa-cog text-info"></span>
                                                                 </button>
                                                                 <div class="dropdown-menu dropdown-menu-end py-2">
-                                                                    <a class="dropdown-item text-success"
-                                                                       ng-click=addDataApproverDrawing(item_x,item.seq,item.id_session)>
+                                                                    <!-- Add option (Visible to TA2, TA3, or admin) -->
+                                                                    <a class="dropdown-item text-success" 
+                                                                        ng-click=addDataApproverDrawing(item_x,item.seq,item.id_session)>
                                                                         <span class="fas fa-copy"></span>
                                                                         Add
                                                                     </a>
                                                                     <div class="dropdown-divider"></div>
-                                                                    <a class="dropdown-item text-danger"
-                                                                        ng-click=removeDataApproverDrawing(item_x,item_d.seq)>
-                                                                        <span class="fas fa-times-circle"></span> 
-                                                                         Remove
+                                                                    <!-- Remove option (Visible to TA2, TA3, or admin) -->
+                                                                    <a class="dropdown-item text-danger" 
+                                                                        ng-click="triggerRemove(item_x,item_d.seq, $index,'ApproverDrawing')">
+                                                                        <span class="fas fa-times-circle"></span>
+                                                                        Remove
                                                                     </a>
                                                                 </div>
                                                             </div>
-                                                            <div class="btn-group my-2" >
-                                                                <div class="icon-button border p-3" style="border-color: #0d6efd; background-color: #0d6efd;"
-                                                                    ng-hide="!(accessInfo.canAccess || accessInfo.isTA2 || accessInfo.isTA3) && !item_x.document_file_size">
-                                                                        <span ng-if="!item_x.document_file_size" class="fa-solid fa-arrow-up-from-bracket fa-lg" style="color: #ffffff;"></span>
-                                                                        <span ng-if="item_x.document_file_size" class="fa-solid fa-file-pdf fa-lg" style="color: #ffffff;"></span>                                                                  </div>
+                                                            <!-- File upload/download section -->
+                                                            <div class="btn-group my-2" ng-show="accessInfo.canAccess || accessInfo.canViewOnly">
+                                                                <!-- Upload button (Only visible to TA2 who can still upload) -->
+                                                                
+                                                                <div class="icon-button border p-3" 
+                                                                    style="border-color: #0d6efd; background-color: #0d6efd;">
+                                                                    <span class="fa-solid fa-arrow-up-from-bracket fa-lg"  ng-show="!item_x.document_file_size " style="color: #ffffff;"></span>
+                                                                    <span class="fa-solid fa-file-pdf fa-lg" ng-show="item_x.document_file_size"  style="color: #ffffff;"></span>
+                                                                </div>
+                                                                 
+
+                                                                <!-- Upload input (Only visible to TA2 if no file uploaded yet) -->
                                                                 <button class="Upload-button btn ps-3" 
-                                                                        ng-show="(accessInfo.canAccess || accessInfo.isTA2 || accessInfo.isTA3) && !item_x.document_file_size">
+                                                                        ng-show="!item_x.document_file_size && (accessInfo.isTA2 || accessInfo.canAccess)">
                                                                     <span class="nametext ms-3 filename-text me-2 d-none" id="filename-approver-{{item_x.seq}}">
-                                                                        {{(item_x.document_file_size>0? item_x.document_file_name + '('+  item_x.document_file_size + 'KB)' : '')}}
+                                                                        {{(item_x.document_file_size>0 ? item_x.document_file_name + '(' + item_x.document_file_size + 'KB)' : '')}}
                                                                     </span>
-                                                                    <label class="dz-message-text fw-bold p-1 " for="attfile-approver-{{item_x.seq}}">
+                                                                    <label class="dz-message-text fw-bold p-1" for="attfile-approver-{{item_x.seq}}">
                                                                         Upload File (Max size 10mb)
                                                                     </label>
                                                                     <input type="file" id="attfile-approver-{{item_x.seq}}"
@@ -3621,52 +3713,53 @@
                                                                         onchange="angular.element(this).scope().fileSelectApprover(this, 'approver')"
                                                                         style="display:none" />
                                                                 </button>
-                                                                <button class="Upload-button btn cursor-pointer" style="width:250px;" ng-if="item_x.document_file_size > 0">
+
+                                                                <!-- Download button (Visible to everyone if file exists) -->
+                                                                <button class="Upload-button btn cursor-pointer" style="width:250px;" ng-if="item_x.document_file_size">
                                                                     <div class="d-flex align-items-center">
                                                                         <span class="nametext filename-text me-2 cursor-pointer" ng-click="downloadFile(item_x)">
                                                                             {{truncateFilename(item_x.document_file_name, 20)}} ({{item_x.document_file_size}} KB)
                                                                         </span>
                                                                     </div>
                                                                 </button>
-                                                            </div>                                                              
+                                                            </div>
+
                                                         </div>
                                                     </div>
+
+                                                    <!-- Error message for invalid document -->
                                                     <div ng-class="{'invalid-feedback text-danger': !(form_valid.valid_document_file==true && item.seq == id_approver_select), 'feedback text-danger': form_valid.valid_document_file}">
                                                         Please provide a valid document file.
                                                     </div>
                                                 </td>
-                                                <td class="align-top white-space-nowrap ">
+                                                <td class="align-top white-space-nowrap">
                                                     <div class="col-md-12 ps-3">
-                                                        <span class="col-md-4  p-1 ">
+                                                        <span class="col-md-4 p-1">
                                                             <label class="form-label d-none" for="meeting_date">Action Date</label>
 
+                                                            <!-- Input for action date -->
                                                             <input type="date" class="form-control rounded-1 datetimepicker cursor-pointer flatpickr-input" 
-                                                                    id="action_date" name="action_date"
-                                                                    ng-disabled="item.approver_action_type === 2"
-                                                                    ng-hide="!accessInfo.canAccess"
-                                                                    ng-change="actionChange(item,item.seq,'action_date')"
-                                                                    ng-model="item.date_review" placeholder="dd/mm/yyyy">
-
+                                                                id="action_date" name="action_date"
+                                                                ng-disabled="item.approver_action_type === 2 || !accessInfo.canAccess"
+                                                                ng-hide="!accessInfo.canAccess && !accessInfo.isTA2 && item.approver_action_type !== 2" 
+                                                                ng-model="item.date_review" placeholder="mm/dd/yyyy">
                                                         </span>
-                                                        @*<label class="text-1100 fw-bold ">
-                                                            {{item.date_review_show}}
-                                                        </label>*@
                                                     </div>
                                                 </td>
                                                 <td class="align-top px-1 py-3" ng-class="{'disabled-link': (!tab_approver_active)}">
-                                                    <div class="d-flex" ng-class="{ 'no-drop': !canAccess, 'cursor-pointer': canAccess }">
+                                                    <div class="d-flex"  ng-hide="pha_status != 21">
                                                         <button class="btn btn-outline text-primary p-1 m-2 me-0"
                                                                 style="background-color: #f1f2f4; width:50px;"
                                                                 ng-click="confirmDialogApprover(item, 'save')"
-                                                                ng-show="(accessInfo.canAccess || accessInfo.isTA2 || accessInfo.isTA3) && item.approver_action_type != 2">
+                                                                ng-show="(accessInfo.canAccess || accessInfo.isTA2) && item.approver_action_type != 2">
                                                             <span class="fa fa-save text-primary fa-lg"></span><br />
                                                             <span style="font-size:8px">Save</span>
                                                         </button>
                                                         <button class="btn btn-outline text-success p-1 m-2 ms-1"
                                                                 style="background-color: #f1f2f4; width:80px;"
                                                                 ng-click="confirmDialogApprover(item, 'submit')"
-                                                                ng-show="(accessInfo.canAccess || accessInfo.isTA2 || accessInfo.isTA3) && item.approver_action_type != 2"
-                                                                ng-disabled="!accessInfo.canAccess || accessInfo.isTA3">
+                                                                ng-show="(accessInfo.canAccess || accessInfo.isTA2) && item.approver_action_type != 2"
+                                                                ng-disabled="!accessInfo.canAccess">
                                                             <span class="fa fa-save text-success fa-lg"></span><br />
                                                             <span style="font-size:8px">Submit</span>
                                                         </button>
@@ -3685,27 +3778,20 @@
 
                     </div>
                     <!-- ta2 approver -->
-                    <!-- report start-->
-                    <div class="" 
-                        ng-class="{
-                            'tab-pane fade show active':(action_part==8),
-                            'tab-pane fade show active':(tabs[7].isActive),
-                            'tab-pane fade':(action_part!==8)}"
-                         id="tab-report" role="tabpanel" aria-labelledby="report-tab" ng-if="export_type==true">
 
-                        <div class="m-3 row  gx-0 align-items-center">
+                    <!-- report  ng-if="export_type==true"-->
+                    <div class="tab-pane fade" id="tab-report" role="tabpanel" aria-labelledby="report-tab" >
+                        <div class="m-3 row gx-0 align-items-center">
                             <div class="bg-white position-relative top-1">
                                 <div class="table-responsive scrollbar-overlay mx-n1 px-1">
                                     <table class="table table-sm fs--1 mb-0">
-                                        <thead class=" text-uppercase">
+                                        <thead class="text-uppercase">
                                             <tr>
                                                 <th class="white-space-nowrap fs--1 align-middle ps-0" style="width:5%;"></th>
-                                                <th class=" align-middle pe-5" scope="col" data-sort="email" style="width:70%">
-                                                    Report
-                                                </th>
+                                                <th class="align-middle pe-5" scope="col" data-sort="email" style="width:70%">Report</th>
                                             </tr>
                                         </thead>
-                                        <tbody class=" list text-uppercase" id="customers-table-body">
+                                        <tbody class="list text-uppercase" id="customers-table-body">
                                             <tr class="hover-actions-trigger btn-reveal-trigger position-static">
                                                 <td class="fs--1 align-middle ps-0 py-3">
                                                     <div class="cursor-pointer">
@@ -3714,9 +3800,7 @@
                                                         <span class="fa-solid far fa-file-word text-secondary p-2 d-none" ng-click="confirmExport('hazop_report','none-word')"></span>
                                                     </div>
                                                 </td>
-                                                <td class="email align-middle white-space-nowrap text-1000 pe-5">
-                                                    FULL HAZOP REPORT
-                                                </td>
+                                                <td class="email align-middle white-space-nowrap text-1000 pe-5">FULL HAZOP REPORT</td>
                                             </tr>
                                             <tr class="hover-actions-trigger btn-reveal-trigger position-static">
                                                 <td class="fs--1 align-middle ps-0 py-3">
@@ -3726,10 +3810,7 @@
                                                         <span class="fa-solid far fa-file-word text-secondary p-2 d-none" ng-click="confirmExport('hazop_worksheet','word')"></span>
                                                     </div>
                                                 </td>
-                                                <td class="email align-middle white-space-nowrap text-1000 pe-5">
-                                                    HAZOP WORKSHEET &
-                                                    RECOMMENDATION RESPONSE SHEET
-                                                </td>
+                                                <td class="email align-middle white-space-nowrap text-1000 pe-5">HAZOP WORKSHEET & RECOMMENDATION RESPONSE SHEET</td>
                                             </tr>
                                             <tr class="hover-actions-trigger btn-reveal-trigger position-static">
                                                 <td class="fs--1 align-middle ps-0 py-3">
@@ -3739,27 +3820,20 @@
                                                         <span class="fa-solid far fa-file-word text-secondary p-2 d-none" ng-click="confirmExport('hazop_recommendation','word')"></span>
                                                     </div>
                                                 </td>
-                                                <td class="email align-middle white-space-nowrap text-1000 pe-5">
-                                                    HAZOP RECOMMENDATION
-                                                    RESPONSE SHEET & RECCOMENDATION STATUS TRACKING TABLE
-                                                </td>
+                                                <td class="email align-middle white-space-nowrap text-1000 pe-5">HAZOP RECOMMENDATION RESPONSE SHEET & RECOMMENDATION STATUS TRACKING TABLE</td>
                                             </tr>
                                             <tr class="hover-actions-trigger btn-reveal-trigger position-static">
                                                 <td class="fs--1 align-middle ps-0 py-3">
-
                                                     <div class="cursor-pointer">
                                                         <span class="fa-solid far fa-file-excel text-success p-2" ng-click="confirmExport('hazop_ram','excel')"></span>
                                                         <span class="fa-solid far fa-file-pdf text-danger p-2" ng-click="confirmExport('hazop_ram','pdf')"></span>
                                                         <span class="fa-solid far fa-file-word text-secondary p-2 d-none" ng-click="confirmExport('hazop_ram','word')"></span>
                                                     </div>
                                                 </td>
-                                                <td class="email align-middle white-space-nowrap text-1000 pe-5">
-                                                    Risk Assessment Matrix (RAM)
-                                                </td>
+                                                <td class="email align-middle white-space-nowrap text-1000 pe-5">Risk Assessment Matrix (RAM)</td>
                                             </tr>
                                             <tr class="hover-actions-trigger btn-reveal-trigger position-static">
                                                 <td class="fs--1 align-middle ps-0 py-3">
-
                                                     <div class="cursor-pointer">
                                                         <span class="fa-solid far fa-file-excel text-success p-2" ng-click="confirmExport('hazop_guidewords','excel')"></span>
                                                         <span class="fa-solid far fa-file-pdf text-danger p-2" ng-click="confirmExport('hazop_guidewords','pdf')"></span>
@@ -3768,26 +3842,19 @@
                                                 </td>
                                                 <td class="email align-middle white-space-nowrap text-1000 pe-5">HAZOP Guide Words</td>
                                             </tr>
-
                                         </tbody>
                                     </table>
                                 </div>
-
                             </div>
-
-                            <div class="bg-white position-relative top-1 d-none" ng-repeat="item_doc in exportfile "
-                                 ng-if="(item_doc.DownloadPath !='' || item_doc.DownloadPath != null)">
-                                <h5 class="modal-title" id="modalExportFileLabel">Download File</h5>
-                                <a href="{{item_doc.DownloadPath}}" id="exportfile" name="exportfile" target="_blank">
-                                    {{item_doc.DownloadPath}}-{{item_doc.Name}}
-                                </a>
-                            </div>
-
-
                         </div>
 
+                        <div class="bg-white position-relative top-1 d-none" ng-repeat="item_doc in exportfile" ng-if="(item_doc.DownloadPath != '' || item_doc.DownloadPath != null)">
+                            <h5 class="modal-title" id="modalExportFileLabel">Download File</h5>
+                            <a href="{{item_doc.DownloadPath}}" id="exportfile" name="exportfile" target="_blank">{{item_doc.DownloadPath}}-{{item_doc.Name}}</a>
+                        </div>
                     </div>
-                    <!-- report end-->
+                    <!-- report end -->
+
 
                 </div>
 
@@ -4001,7 +4068,7 @@
                                     data-toggle="tooltip" 
                                     data-placement="top" 
                                     title="Remove"
-                                    ng-click="removeDataEmployee(item2.seq, selectdata_session,selectDatFormType)">
+                                    ng-click="removeDataEmployee(item2, selectdata_session,selectDatFormType)">
                                 <span class="fa-regular fa-trash-can fa-lg"></span>
                             </button>                            
                             <label class="mb-0 ms-3 text-1100 fw-bold" style="width: 25%; border-color: #f1f2f4;">{{ item2.user_displayname }}</label>
@@ -4016,57 +4083,48 @@
     </div>
     <!--Modal Employee Check End-->
 
-    <!--Modal Save Start-->
+    @* msg error file *@
+    <!--Modal Save//Modal File Start-->
     <div class="modal fade" id="modalMsg" tabindex="-1" aria-labelledby="modalMsgLabel"
          aria-hidden="true" style="display: none;">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content" style="width: 100%; min-height: 300px;">
-                <div class="modal-header justify-content-center align-items-center" style="display: flex !important;"
-                     ng-class="{ 'bg-warning' : (Action_Msg_Header == 'Warning'? true :false),'bg-primary' : (Action_Msg_Header == 'Warning'? false :true) }">
-                    <div class="d-flex mb-2 d-none">
-                        <i class="fa-solid fa-triangle-exclamation fa-lg" ng-if="Action_Msg_Header == 'Warning'"
-                           style="color: rgb(255, 255, 255); font-size: 80px; font-weight: bold;"></i>
-                        <i class="fa-solid fa-circle-check fa-lg" ng-if="Action_Msg_Header != 'Warning'"
-                           style="color: rgb(255, 255, 255); font-size: 80px; font-weight: bold;"></i>
-                    </div>
+                <div class="modal-header justify-content-center align-items-center" 
+                    ng-class="{
+                        'bg-danger text-white' : Action_Msg_Header == 'Error',
+                        'bg-warning text-white' : Action_Msg_Header == 'Warning',
+                        'bg-primary text-white' : Action_Msg_Header == 'Success'
+                    }">
+                    @*<div class="d-flex justify-content-center align-items-center">
+                        <i class="fa-solid fa-triangle-exclamation fa-3x me-2" ng-if="Action_Msg_Header == 'Warning'"></i>
+                        <i class="fa-solid fa-circle-check fa-3x me-2" ng-if="Action_Msg_Header == 'Success'"></i>
+                        <i class="fa-solid fa-times-circle fa-3x me-2" ng-if="Action_Msg_Header == 'Error'"></i>
+                        <h5 class="modal-title mb-0" id="modalMsgLabel" style="font-size: 40px; font-weight: bold;">
+                            {{ Action_Msg_Header }}
+                        </h5>
+                    </div>*@
                 </div>
-                <div class="modal-body" ng-if="Action_Msg_Header == 'Success'">
-                    <div class="d-flex justify-content-center align-items-center mb-3">
-                        <h5 class="mb-0 text-center " style="font-size: 40px; font-weight: bold;" data-anchor="data-anchor" id="modalMsgLabel">
+
+                <div class="modal-body" ng-if="Action_Msg_Header">
+                    <div class="text-center">
+                        <h5 class="modal-title" id="modalMsgLabel" style="font-size: 40px; font-weight: bold;">
                             {{Action_Msg_Header}}
                         </h5>
                     </div>
-                    <div class="d-flex justify-content-center align-items-center mt-3 mb-3">
-                        <p class="lh-lg mb-0 text-center" style="font-size: 16px;">
-                            {{ Action_Msg_Detail}}
+                    <div class="text-center mt-3">
+                        <p style="font-size: 18px;">
+                            {{ Action_Msg_Detail }}
                         </p>
                     </div>
-
-                </div>
-                <div class="modal-footer" ng-if="Action_Msg_Header == 'Success'">
-                    <div class="d-flex flex-column align-items-center bg-primary" >
-                        <button class="btn p-2 px-8 text-white" type="button" data-bs-dismiss="modal" aria-label="Close" ng-click="reloadPage()">
-                            OK
-                        </button>
-                    </div>
-                </div>
-
-                <div class="modal-body" ng-if="Action_Msg_Header == 'Warning'">
-                    <div class="d-flex justify-content-center align-items-center mb-3">
-                        <h5 class="mb-0 text-center ms-5" style="font-size: 40px; font-weight: bold;" data-anchor="data-anchor" id="modalMsgLabel">
-                            {{Action_Msg_Header}}
-                        </h5>
-                    </div>
-                    <div class="d-flex justify-content-center align-items-center mt-3 mb-3">
-                        <p class="lh-lg mb-0 text-center" style="font-size: 16px;">
-                            {{ Action_Msg_Detail}}
-                        </p>
-                    </div>
-                    <div class="d-flex flex-column align-items-center" ng-if="!Action_Msg_Confirm">
-                        <button class="btn p-2 px-8 text-white" type="button" data-bs-dismiss="modal" aria-label="Close" 
+                    <div class="d-flex justify-content-center mt-4" ng-hide=" Action_Msg_Header == 'Success'">
+                        <button class="btn text-white px-5 py-2" type="button" data-bs-dismiss="modal" aria-label="Close"
                                 ng-click="goBackToTab()"
-                                ng-class="{ 'bg-warning' : (Action_Msg_Header == 'Warning'? true :false),'bg-primary' : (Action_Msg_Header == 'Warning'? false :true) }">
-                            {{ Action_Msg_Header == 'Warning' ? 'Go back' : 'OK' }}
+                                ng-class="{
+                                    'bg-primary' : Action_Msg_Header == 'Success',
+                                    'bg-warning' : Action_Msg_Header == 'Warning',
+                                    'bg-danger'  : Action_Msg_Header == 'Error'
+                                }">
+                            {{ Action_Msg_Header == 'Error' || Action_Msg_Header == 'Warning' ? 'Go back' : 'OK' }}
                         </button>
                     </div>
                 </div>
@@ -4096,7 +4154,7 @@
             </div>
         </div>
     </div>
-    <!--Modal Save End-->
+    <!--Modal Save//Modal File End-->
     <div class="modal fade" id="modalMsg2" tabindex="-1" aria-labelledby="modalMsg2Label"
          aria-hidden="true" style="display: none;">
         <div class="modal-dialog modal-dialog-centered">
@@ -4729,8 +4787,8 @@
                     <button class="btn p-1" 
                             type="button" 
                             data-bs-dismiss="modal" 
-                            aria-label="Close" n
-                            g-click="closeModalDataRAM_Worksheet()">
+                            aria-label="Close" 
+                            ng-click="closeModalDataRAM_Worksheet()">
                         <svg class="svg-inline--fa fa-xmark fs--1" 
                             aria-hidden="true" 
                             focusable="false" 
@@ -4747,50 +4805,44 @@
                 </div>
                 <div class="modal-body  ">
                     <div class="row" ng-if="data_general[0].id_ram==5">
-                        <div class="row">
-                            <div class="col-1"></div>
-                            <div class="col-5 d-flex justify-content-start gap-10">
-                                <span class="mx-1 d-flex pt-5">
-                                    <a class="m-1 text-info cursor-pointer"
-                                       href="{{y.document_definition_file_path}}" 
-                                       target="_blank"
-                                       ng-repeat="y in master_ram | toArray | filter:{id: data_general[0].id_ram}">
-                                       Definition Consequence Rating
-                                       <span class="fas fa-file-pdf fa-lg ms-1"></span>
-                                    </a>
-                                </span>
-                            </div>
-                            <div class="col-5 d-flex justify-content-center" style="padding: 10px 10px;gap: 65px;">
-                                <div class="d-flex justify-content-end align-items-center flex-column"
-                                     ng-repeat="item_ram in master_likelihood_level | toArray | filter:{id_ram:data_general[0].id_ram,columns_level:item_ram.columns_level}">
-                                    <label for="likelihood"><b>{{item_ram.likelihood_level}}</b></label>
-                                    <input type="radio"
-                                           id="likelihood"
-                                           name="likelihood"
-                                           ng-hide="data_header[0].pha_status === 21 ? !can_edit : false"
-                                           ng-checked="cal_ram_action_likelihood == item_ram.likelihood_level"
-                                           ng-click="selectDataRAM('l',item_ram.likelihood_level)"
-                                           style="cursor: pointer; width:25px; height:25px;">
-                                </div>
-                            </div>
-                            <div class="col-1 d-flex justify-content-end"></div>
-                        </div>
-                        <div class="col-1 d-flex flex-column justify-content-end" style="gap: 40px; padding: 0px;  padding-bottom: 20px;">
-                            <div class="d-flex justify-content-end align-items-center gap-2"
-                                 ng-repeat="item_ram in master_security_level | toArray | filter:{id_ram:data_general[0].id_ram,category_type:item_ram.category_type}">
-                                <label for="security_level"><b>{{item_ram.security_level}}</b></label>
-                                <input type="radio"
-                                       id="security_level"
-                                       name="security_level"
-                                       ng-hide="data_header[0].pha_status === 21 ? !can_edit : false "
-                                       ng-checked="cal_ram_action_security == item_ram.security_level"
-                                       ng-click="selectDataRAM('s',item_ram.security_level)"
-                                       style="cursor: pointer; width:25px; height:25px;">
-                            </div>
-                        </div>
+                        <div class="col-1"></div>
                         <div class="col-11">
-                            <div class="cursor-pointer " ng-repeat="itemRam in master_ram | toArray | filter:{id: data_general[0].id_ram}">
+                            <span class="mx-1 d-flex pt-5">
+                                <a class="m-1 text-info cursor-pointer"
+                                    href="{{y.document_definition_file_path}}" 
+                                    target="_blank"
+                                    ng-repeat="y in master_ram | toArray | filter:{id: data_general[0].id_ram}">
+                                    Definition Consequence Rating
+                                    <span class="fas fa-file-pdf fa-lg ms-1"></span>
+                                </a>
+                            </span>
+                        </div>
+                        <div class="col-1"></div>
+                        <div class="col-11">
+                            <div class="cursor-pointer " style="position: relative;" ng-repeat="itemRam in master_ram | toArray | filter:{id: data_general[0].id_ram}">
                                 <img ng-src="{{itemRam.document_file_path}}" style="width:100%;" />
+                                @* Security *@
+                                 <div id="security_level-{{$index}}" ng-repeat="item_ram in master_security_level | toArray | filter:{id_ram:data_general[0].id_ram,category_type:item_ram.category_type}">
+                                    @* <label for="security_level"><b>{{item_ram.security_level}}</b></label> *@
+                                    <input type="radio"
+                                        id="security_level"
+                                        name="security_level"
+                                        ng-hide="data_header[0].pha_status === 21 ? !can_edit : false "
+                                        ng-checked="cal_ram_action_security == item_ram.security_level"
+                                        ng-click="selectDataRAM('s',item_ram.security_level)"
+                                        style="cursor: pointer; width:25px; height:25px;">
+                                </div>
+                                @* likelihood *@
+                                 <div id="likelihood-{{$index}}" ng-repeat="item_ram in master_likelihood_level | toArray | filter:{id_ram:data_general[0].id_ram,columns_level:item_ram.columns_level}">
+                                    @* <label for="likelihood"><b>{{item_ram.likelihood_level}}</b></label> *@
+                                    <input type="radio"
+                                        id="likelihood"
+                                        name="likelihood"
+                                        ng-hide="data_header[0].pha_status === 21 ? !can_edit : false"
+                                        ng-checked="cal_ram_action_likelihood == item_ram.likelihood_level"
+                                        ng-click="selectDataRAM('l',item_ram.likelihood_level)"
+                                        style="cursor: pointer; width:25px; height:25px;">
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -5184,7 +5236,7 @@
 
                         <label class="form-label ps-0" for="expense_type">Note to Approver</label>
                         <textarea class="form-control rounded-1" placeholder="Note"
-                                  ng-repeat="item in data_node | toArray | filter:{id:selectedItemNodeView}"
+                                  ng-repeat="item in data_node | toArray | filter:{id:selectedItemNodeView.seq}"
                                   ng-model="item.descriptions"
                                   ng-if=" data_header[0].pha_status == 22"
                                   style="height: 50px"></textarea>
@@ -5524,7 +5576,7 @@
 
                 </div>
                 <div class="modal-body">
-                    <p>Are you sure you want to invite <span class="fw-bold">{{selected_TA3.employee_displayname}}</span> to join and assist with tasks? Please confirm.</p>
+                      <p>Are you sure you want to invite <span class="fw-bold">{{selected_TA3.employee_displayname}}</span> to join and assist with tasks? Please confirm.</p>
                     <div class="col-auto" style="float:right">
                         <button style="width:100px;" class="btn btn-primary me-1 mb-1" type="button" ng-click="confirm()">Yes</button>
                         <button style="width:100px;" class="btn btn-outline-secondary me-1 mb-1" type="button" data-bs-dismiss="modal" aria-label="Close">
@@ -5572,6 +5624,9 @@
                         <i class="fa-solid fa-triangle-exclamation" style="color: white; font-size: 1.5rem; margin-right: 10px;"></i>
                         <span class="text-white ms-2" style="font-weight: bold;">Error</span> 
                     </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="border: none; background: none;">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
 
                 <div class="modal-body text-start" style="font-size: 1rem; color: #333;">
@@ -5583,6 +5638,7 @@
                     <a href="Home/Portal" class="btn btn-light" style="border-radius: 5px; padding: 0.5rem 1rem; margin-right: 10px; text-decoration: none; display: inline-block; text-align: center; border: 1px solid #ccc; background-color: #f8f9fa;">
                         Return to Home page
                     </a>
+                    
                 </div>
 
             </div>
@@ -5611,7 +5667,7 @@
     <script src="~/assets/js/phoenix.js"></script>
     <script src="~/assets/js/choices.min.js"></script>
     <script src="~/assets/js/fakedata.js"></script>
-
+    <script type="text/javascript">var service_file_url = "@ViewBag.service_file_url";</script>
     <script src="~/js/_flow/hazop.js"></script>
 
 }

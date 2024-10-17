@@ -462,7 +462,22 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.3/angular.min.js"></script>
 
-     
+    <script>
+
+        const AppConFig = angular.module("conFigmodule", [])
+            .service("conFig", function ($http) {
+                this.user_name = function (x) {
+                    return `@ViewData["user_name"]`;
+                }
+                this.service_api_url = function (x) {
+                    return `@ViewData["service_api_url"]`;
+                }
+            });
+
+        const app = angular.module("app", ["conFigmodule"]);
+
+
+    </script>
 
 </body>
 

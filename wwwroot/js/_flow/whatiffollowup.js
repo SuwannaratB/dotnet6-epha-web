@@ -1,34 +1,38 @@
-
 AppMenuPage.filter('MultiFieldFilter', function () {
     return function (items, searchMultiText) {
-        if (!searchMultiText.pha_no
-            && !searchMultiText.data_by
-            && !searchMultiText.user_displayname) {
-            return items;
+        if (!searchMultiText || (!searchMultiText.pha_no && !searchMultiText.data_by && !searchMultiText.user_displayname)) {
+            return items; 
         }
-        var search_data_by = searchMultiText.data_by.toLowerCase();
 
-        var search_pha_no = searchMultiText.pha_no.toLowerCase();
-        var search_user_displayname = searchMultiText.user_displayname.toLowerCase();
+        var search_data_by = searchMultiText.data_by ? searchMultiText.data_by.toLowerCase() : '';
+        var search_pha_no = searchMultiText.pha_no ? searchMultiText.pha_no.toLowerCase() : '';
+        var search_user_displayname = searchMultiText.user_displayname ? searchMultiText.user_displayname.toLowerCase() : '';
 
-        if (search_data_by == 'worksheet') {
-             
+        console.log("search_pha_no:", search_pha_no);
+        console.log("search_data_by:", search_data_by);
+
+        if (search_data_by === 'worksheet') {
             return items.filter(function (item) {
+                const isPHA = item.pha_sub_software && item.pha_sub_software.toLowerCase() === 'whatif';
+                console.log(`Item PHA check (worksheet): ${item.pha_sub_software} -> ${isPHA}`);
                 return (
-                    item.data_by.toLowerCase().includes(search_data_by.toLowerCase()) &&
-                    item.pha_no.toLowerCase().includes(search_pha_no.toLowerCase()) 
-                )
-
+                    item.data_by.toLowerCase().includes(search_data_by) &&
+                    item.pha_no.toLowerCase().includes(search_pha_no) &&
+                    isPHA
+                );
             });
         } else {
             return items.filter(function (item) {
+                const isPHA = item.pha_sub_software && item.pha_sub_software.toLowerCase() === 'whatif';                
                 return (
-                    item.data_by.toLowerCase().includes(search_data_by.toLowerCase()) &&
-                    item.responder_user_displayname.toLowerCase().includes(search_user_displayname.toLowerCase())
-                )
+                    item.data_by.toLowerCase().includes(search_data_by) &&
+                    item.pha_no.toLowerCase().includes(search_pha_no) &&
+                    item.responder_user_displayname.toLowerCase().includes(search_user_displayname) &&
+                    isPHA
+                );
+
 
             });
-
         }
     };
 });
@@ -189,30 +193,26 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
     function arr_def() {
         //conFig.controller_action_befor = 'Hazop/Index';
         //alert(conFig.controller_action_befor());
-
+        $scope.user = JSON.parse(localStorage.getItem('user'));
+        $scope.token = JSON.parse(localStorage.getItem('token'))
+        $scope.user_name = $scope.user['user_name'];
+        $scope.flow_role_type = $scope.user['role_type'];
+        // $scope.user_name = conFig.user_name();
+        // $scope.flow_role_type = conFig.role_type();//admin,request,responder,approver
         $scope.selectViewTypeFollowup = true;
         $scope.action_part = 1;
-        $scope.user_name = conFig.user_name();
-
         $scope.data_all = [];
-
         $scope.master_apu = [];
         $scope.master_bussiness_unit = [];
         $scope.master_unit_no = [];
         $scope.master_functional = [];
-
-
         $scope.data_header = [];
         $scope.data_header_all = [];
         $scope.data_general = [];
         $scope.data_approver = [];
-
         $scope.select_history_tracking_record = false;
         $scope.selectedDataRamType = null;
-
-
         $scope.employeelist = [];
-
         // ล้างช่องข้อมูลหลังจากเพิ่มข้อความ
         $scope.employee_id = '';
         $scope.employee_name = '';
@@ -220,17 +220,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         $scope.employee_email = '';
         $scope.employee_type = 'Contract';
         $scope.employee_img = 'assets/img/team/avatar.webp'
-
         $scope.searchdata = '';
         $scope.searchEmployee = '';
-
         $scope.tabChange = 'worksheet';
         $scope.tabUpdateFollowUp = true;
-
-        $scope.flow_role_type = conFig.role_type();//admin,request,responder,approver
         $scope.flow_status = 0;
-
-
         $scope.searchMultiText = { pha_no: '', user_displayname: '', data_by: 'worksheet' };
     }
     function page_load() {
@@ -239,6 +233,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
     }
     function get_data(page_load) {
         var user_name = $scope.user_name;
+        var role_type = $scope.flow_role_type;
+
         var token_doc = '';
 
         var sub_software = 'whatif';
@@ -246,8 +242,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
 
         $.ajax({
             url: url_ws + "Flow/load_follow_up",
-            data: '{"sub_software":"whatif","user_name":"' + user_name + '","token_doc":"' + token_doc + '","type_doc":"' + type_doc + '"}',
+            data: '{"sub_software":"whatif","user_name":"' + user_name + '","role_type":"' + role_type + '","token_doc":"' + token_doc + '","type_doc":"' + type_doc + '"}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+            headers: {
+                'X-CSRF-TOKEN': $scope.token
+            },
+            xhrFields: {
+                withCredentials: true // เปิดการส่ง Cookie ไปพร้อมกับคำขอ
+            },
             beforeSend: function () {
                 $("#divLoading").show();
                 $('#divPage').addClass('d-none');
@@ -258,7 +260,14 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             },
             success: function (data) {
                 var arr = data;
-                console.log(arr);
+
+                // Check if the array has at least one element and the status is not 'true'
+                if (arr.length > 0 && arr[0].status && arr[0].status.toString() !== 'true') {
+
+                    console.error('Status is not true. Potential issue detected:', arr[0].remark || 'No remark provided');
+
+                    $scope.confirmCreate();
+                } 
 
                 if (page_load) { 
 
@@ -416,6 +425,8 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
         var pha_seq = arr.pha_seq;
         var pha_status = arr.pha_status;
         var responder_user_name = '';
+        var user_name = $scope.user_name;
+        var role_type = $scope.flow_role_type;
 
 
         //a.pha_sub_software, a.seq as pha_seq,a.pha_no, g.pha_request_name, a.pha_status, vw.user_displayname as responder_user_displayname
@@ -437,15 +448,19 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             responder_user_name = ''; //_arrcheck[0].responder_user_name;
         }
 
-
-
         $.ajax({
             url: controller_text + "/next_page",
             data: '{"pha_sub_software":"' + pha_sub_software + '","pha_seq":"' + pha_seq + '","pha_no":"' + pha_no + '","pha_type_doc":"' + pha_type_doc + '","responder_user_name":"' + responder_user_name + '"'
-                + ',"controller_page":"' + controller_text + '","pha_status":"' + pha_status + '"'
+                + ',"controller_page":"' + controller_text + '","pha_status":"' + pha_status + '","role_type":"' + role_type + '","user_name":"' + user_name +'"'
                 + ',"controller_action_befor":"whatif/followup"'
                 + '}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+            headers: {
+                'X-CSRF-TOKEN': $scope.token
+            },
+            xhrFields: {
+                withCredentials: true // เปิดการส่ง Cookie ไปพร้อมกับคำขอ
+            },
             beforeSend: function () {
                 $("#divLoading").show();
             },
@@ -476,6 +491,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             data: '{"pha_seq":"' + conFig.pha_seq + '","pha_no":"' + conFig.pha_no + '","pha_type_doc":"' + conFig.pha_type_doc + '"'
                 + ',"pha_sub_software":"' + controller_text + '","pha_status":"' + pha_status + '"}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+            headers: {
+                'X-CSRF-TOKEN': $scope.token
+            },
+            xhrFields: {
+                withCredentials: true // เปิดการส่ง Cookie ไปพร้อมกับคำขอ
+            },
             beforeSend: function () {
                 $("#divLoading").show();
             },
@@ -505,7 +526,11 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
     }
     $scope.confirmCreate = function () {
 
-        var controller_text = $scope.data_header[0].pha_sub_software;
+        var controller_text = 'whatif'; 
+
+        /*if ($scope.data_header && $scope.data_header.length > 0 && $scope.data_header[0].pha_sub_software) {
+            controller_text = $scope.data_header[0].pha_sub_software;
+        }*/
         conFig.pha_seq = null;
         conFig.pha_type_doc = 'create';
         var pha_status = '11';
@@ -516,6 +541,12 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             data: '{"pha_seq":"' + conFig.pha_seq + '","pha_type_doc":"' + conFig.pha_type_doc + '"'
                 + ',"pha_sub_software":"' + controller_text + '","pha_status":"' + pha_status + '"}',
             type: "POST", contentType: "application/json; charset=utf-8", dataType: "json",
+            headers: {
+                'X-CSRF-TOKEN': $scope.token
+            },
+            xhrFields: {
+                withCredentials: true // เปิดการส่ง Cookie ไปพร้อมกับคำขอ
+            },
             beforeSend: function () {
                 $("#divLoading").show();
             },
@@ -524,6 +555,9 @@ AppMenuPage.controller("ctrlAppPage", function ($scope, $http, $filter, conFig) 
             },
             success: function (data) {
                 var arr = data;
+
+
+                console.log("arr",arr)
                 window.open(data.page, "_top");
             },
             error: function (jqXHR, textStatus, errorThrown) {
